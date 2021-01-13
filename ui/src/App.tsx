@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
+import './assets/scss/index.scss';
+
 import {Button} from 'antd';
-import './App.css';
 
 const App: FC = () => (
     <div>
