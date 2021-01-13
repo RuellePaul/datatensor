@@ -1,12 +1,11 @@
-import React from 'react';
+import React, {FC} from 'react';
+import {Button} from 'antd';
 import './App.css';
 
-function App() {
-    return (
-        <div>
-            Hello
-        </div>
-    );
-}
+const App: FC = () => (
+    <div>
+        <Button type='primary'>Button</Button>
+    </div>
+);
 
 export default App;
