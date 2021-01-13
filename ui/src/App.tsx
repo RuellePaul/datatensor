@@ -1,3 +1,6 @@
+import 'react-app-polyfill/ie11';
+import 'react-app-polyfill/stable';
+
 import React, {FC} from 'react';
 import './assets/scss/index.scss';
 
