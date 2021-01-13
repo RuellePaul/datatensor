@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import {Route as RouterRoute} from 'react-router-dom';
-import {Layout} from 'layout';
+import {Main} from 'layout';
 
 interface RouteProps {
     component: any,
@@ -12,9 +12,9 @@ const Route: FC<RouteProps> = ({component: Component}: RouteProps) => {
 
     return (
         <RouterRoute
-            render={props => <Layout>
+            render={props => <Main>
                 <Component {...props}/>
-            </Layout>}
+            </Main>}
         />
     )
 };
