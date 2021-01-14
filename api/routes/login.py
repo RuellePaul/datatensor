@@ -9,11 +9,12 @@ from logger import logger
 login = Blueprint('login', __name__)
 
 
-@login.route('/oauth/authorization/<origin>')
-def get_x_connect_authorization(origin):
+@login.route('/oauth/<website>')
+def oauth_authorization(website):
     """
-    This function return origin's OAuth authorization endpoint.
+    This function return OAuth authorization endpoint, depending on requested website.
 
-    :return: authorization_url (keypad)
+    :return: redirect_url
     """
+    logger.info(f'Fetch OAuth endpoint for {website}')
     return ''

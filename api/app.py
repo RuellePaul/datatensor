@@ -19,7 +19,7 @@ app.secret_key = app.config['SECRET_KEY']
 CORS(app)
 CSRFProtect(app)
 
-app.register_blueprint(login, url_prefix='/v2/login')
+app.register_blueprint(login, url_prefix='/v1/login')
 
 
 @app.after_request
