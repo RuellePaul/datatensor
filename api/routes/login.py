@@ -35,8 +35,7 @@ def oauth_authorization(website):
     elif website == 'stackoverflow':
         authorization_url = WebApplicationClient(Config.STACKOVERFLOW_CLIENT_ID).prepare_request_uri(
             Config.STACKOVERFLOW_AUTHORIZATION_ENDPOINT,
-            redirect_uri=f'{Config.UI_URL}/oauthcallback',
-            scope=['openid', 'email', 'profile'],
+            redirect_uri=f'{Config.UI_URL}/oauthcallback'
         )
 
     else:

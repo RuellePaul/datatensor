@@ -1,8 +1,10 @@
 import React, {FC} from 'react';
 
+import {Login} from './components';
+
 const Home: FC = () => (
     <div>
-        Home
+        <Login/>
     </div>
 );
 

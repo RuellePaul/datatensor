@@ -69,7 +69,8 @@ const LoginOAuth: FC<LoginOAuthProps> = ({website}: LoginOAuthProps) => {
                 .then((response: any) => window.location.href = response.data)
             }
             size='large'
-            variant='contained'
+            variant='outlined'
+            fullWidth
         >
             {OAUTH_ICONS[website]}
             &nbsp;
