@@ -3,7 +3,8 @@ import {Redirect, Switch} from 'react-router-dom';
 import {Route} from 'components';
 import {Main} from 'layout';
 
-const Home = lazy(() => import('./views/Home/Home'));
+const Home = lazy(() => import('./views/Home'));
+const Login = lazy(() => import('./views/Login'));
 
 const FallBack: FC = () => {
 
@@ -25,6 +26,12 @@ const Routes: FC = () => {
                     component={Home}
                     path='/'
                     exact
+                />
+                <Route
+                    component={Login}
+                    path='/login'
+                    exact
+                    title='Login | Datatensor'
                 />
                 <Redirect to='/'/>
             </Switch>

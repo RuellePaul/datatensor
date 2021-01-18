@@ -1,10 +1,12 @@
 import React, {FC} from 'react';
 
-import {Login} from './components';
-
 const Home: FC = () => (
     <div>
-        <Login/>
+        Home page
+
+        <a href='/login'>
+            Login
+        </a>
     </div>
 );
 
