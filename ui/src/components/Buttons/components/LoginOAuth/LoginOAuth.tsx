@@ -2,6 +2,7 @@ import React, {FC} from 'react';
 import {api} from 'api';
 
 import {Button, SvgIcon} from '@material-ui/core';
+import {useLoading} from 'hooks';
 
 const GoogleIcon: FC = () => {
     return (
@@ -63,11 +64,16 @@ interface LoginOAuthProps {
 
 const LoginOAuth: FC<LoginOAuthProps> = ({website}: LoginOAuthProps) => {
 
+    const {setLoading} = useLoading();
+
     return (
         <Button
-            onClick={() => api.get(`login/oauth/${website}`)
-                .then((response: any) => window.location.href = response.data)
-            }
+            onClick={() => {
+                setLoading(true);
+
+                api.get(`login/oauth/${website}`)
+                    .then((response: any) => window.location.href = response.data)
+            }}
             size='large'
             variant='outlined'
             fullWidth
