@@ -32,6 +32,13 @@ def oauth_authorization(website):
             scope=['openid', 'email', 'profile'],
         )
 
+    elif website == 'stackoverflow':
+        authorization_url = WebApplicationClient(Config.STACKOVERFLOW_CLIENT_ID).prepare_request_uri(
+            Config.STACKOVERFLOW_AUTHORIZATION_ENDPOINT,
+            redirect_uri=f'{Config.UI_URL}/oauthcallback',
+            scope=['openid', 'email', 'profile'],
+        )
+
     else:
         raise errors.BadRequest('Wrong website provided')
 

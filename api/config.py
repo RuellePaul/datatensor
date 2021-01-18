@@ -32,3 +32,7 @@ class Config:
     GITHUB_AUTHORIZATION_ENDPOINT = 'https://github.com/login/oauth/authorize'
     GITHUB_CLIENT_ID = 'a1c2fca55dd2294221cc'
     GITHUB_CLIENT_SECRET = '2553c55f803457a4e6a199ee6c25358c59fdf67f'
+
+    STACKOVERFLOW_AUTHORIZATION_ENDPOINT = 'https://stackoverflow.com/oauth'
+    STACKOVERFLOW_CLIENT_ID = '19503'
+    STACKOVERFLOW_CLIENT_SECRET = 'TSIjuHsvqZtpsr9Bibx48w(('
