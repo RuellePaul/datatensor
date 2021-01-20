@@ -1,3 +1,5 @@
+import requests
+import os
 from flask import Blueprint, request
 from oauthlib.oauth2 import WebApplicationClient
 from webargs import fields
@@ -6,6 +8,9 @@ from webargs.flaskparser import use_args
 import errors
 from config import Config
 from logger import logger
+
+# Used to login with OAuth2 without https
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 login = Blueprint('login', __name__)
 
@@ -43,20 +48,74 @@ def oauth_authorization(website):
 
     logger.info(f'Fetch OAuth authorization url for {website}')
 
-    return authorization_url
+    return authorization_url, 200
 
 
-@login.route('/oauth/callback/<website>', methods=['POST'])
+@login.route('/oauth/callback', methods=['POST'])
 @use_args({
-    'code': fields.Str(required=True)
+    'code': fields.Str(required=True),
+    'website': fields.Str(required=True)
 })
-def oauth_callback(args,  website):
+def oauth_callback(args):
     """
     This function
 
     :return:
     """
 
-    print(args, website)
+    if args['website'] == 'google':
+        client = WebApplicationClient(Config.GOOGLE_CLIENT_ID)
+        token_url, headers, body = client.prepare_token_request(
+            Config.GOOGLE_TOKEN_ENDPOINT,
+            redirect_url=f"{Config.UI_URL}/oauthcallback/{args['website']}",
+            code=args['code']
+        )
+        response = requests.post(
+            token_url,
+            headers=headers,
+            data=body,
+            auth=(Config.GOOGLE_CLIENT_ID, Config.GOOGLE_CLIENT_SECRET),
+        )
+        client.parse_request_body_response(response.text)
+        uri, headers, body = client.add_token(Config.GOOGLE_USER_ENDPOINT)
+        user_info = requests.get(uri, headers=headers, data=body).json()
 
-    return ''
+    if args['website'] == 'github':
+        client = WebApplicationClient(Config.GITHUB_CLIENT_ID)
+        token_url, headers, body = client.prepare_token_request(
+            Config.GITHUB_TOKEN_ENDPOINT,
+            redirect_url=f"{Config.UI_URL}/oauthcallback/{args['website']}",
+            code=args['code']
+        )
+        response = requests.post(
+            token_url,
+            headers=headers,
+            data=body,
+            auth=(Config.GITHUB_CLIENT_ID, Config.GITHUB_CLIENT_SECRET),
+        )
+        client.parse_request_body_response(response.text)
+        uri, headers, body = client.add_token(Config.GITHUB_USER_ENDPOINT)
+        user_info = requests.get(uri, headers=headers, data=body).json()
+
+    if args['website'] == 'stackoverflow':
+        client = WebApplicationClient(Config.STACKOVERFLOW_CLIENT_ID)
+        token_url, headers, body = client.prepare_token_request(
+            Config.STACKOVERFLOW_TOKEN_ENDPOINT,
+            redirect_url=f"{Config.UI_URL}/oauthcallback/{args['website']}",
+            code=args['code']
+        )
+        response = requests.post(
+            token_url,
+            headers=headers,
+            data=body + '&client_secret=' + Config.STACKOVERFLOW_CLIENT_SECRET
+        )
+        client.parse_request_body_response(response.text)
+        uri, headers, body = client.add_token(Config.STACKOVERFLOW_USER_ENDPOINT)
+        user_info = requests.get(uri, headers=headers, data=body, params={
+            'access_token': response.json()['access_token'],
+            'key': Config.STACKOVERFLOW_KEY
+        }).json()
+
+    print(user_info)
+
+    return {}, 200

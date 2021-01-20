@@ -10,11 +10,12 @@ interface RouteProps {
     title?: string
 }
 
-const Route: FC<RouteProps> = ({component: Component, title = 'Datatensor'}: RouteProps) => {
+const Route: FC<RouteProps> = ({component: Component, title = 'Datatensor', ...rest}: RouteProps) => {
 
     return (
         <>
             <RouterRoute
+                {...rest}
                 render={props => <Main>
                     <Component {...props}/>
                 </Main>}

@@ -1,5 +1,5 @@
 import React, {FC, useEffect} from 'react';
-import {useParams} from 'react-router-dom';
+import {useHistory, useParams} from 'react-router-dom';
 import {api} from 'api';
 import {Fallback} from 'components';
 import {useUser} from 'hooks';
@@ -10,6 +10,8 @@ interface ParamTypes {
 
 const OAuthCallback: FC = () => {
 
+    const history = useHistory();
+
     const {website} = useParams<ParamTypes>();
 
     const {setUser} = useUser();
@@ -17,13 +19,15 @@ const OAuthCallback: FC = () => {
     useEffect(() => {
         const code = new URL(window.location.href).searchParams.get('code');
 
-        api.post(`/login/oauth/callback/${website}`, {code: code})
-            .then(response => {
-                setUser(response.data);
-            })
+        api.post(`/login/oauth/callback`, {
+            code: code,
+            website
+        })
+            .then(response => setUser(response.data))
+            .catch(() => history.push('/login'))
 
         // eslint-disable-next-line
-    }, []);
+    }, [website]);
 
 
     return (

@@ -106,7 +106,7 @@ interface LayoutProps {
     children?: React.ReactNode
 }
 
-const Main: FC<LayoutProps> = ({children}: LayoutProps) => {
+const Main: FC<LayoutProps> = ({children, ...rest}: LayoutProps) => {
 
     return (
         <main>
