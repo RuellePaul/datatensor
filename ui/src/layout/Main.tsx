@@ -1,9 +1,9 @@
 import React, {FC} from 'react';
+import {useHistory} from 'react-router-dom';
 
 import {AppBar, IconButton, InputBase, Toolbar} from '@material-ui/core';
 import {fade, makeStyles} from '@material-ui/core/styles';
-import SearchIcon from '@material-ui/icons/Search';
-import AccountCircle from '@material-ui/icons/AccountCircle';
+import {AccountCircle, Search as SearchIcon} from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -55,7 +55,9 @@ const useStyles = makeStyles((theme) => ({
 
 
 const Header: FC = () => {
+
     const classes = useStyles();
+    const history = useHistory();
 
     return (
         <AppBar
@@ -66,6 +68,7 @@ const Header: FC = () => {
                 <IconButton
                     edge='start'
                     color='inherit'
+                    onClick={() => history.push('/')}
                 >
                     <img
                         className={classes.logo}
