@@ -21,21 +21,21 @@ def oauth_authorization(website):
     if website == 'google':
         authorization_url = WebApplicationClient(Config.GOOGLE_CLIENT_ID).prepare_request_uri(
             Config.GOOGLE_AUTHORIZATION_ENDPOINT,
-            redirect_uri=f'{Config.UI_URL}/oauthcallback',
+            redirect_uri=f'{Config.UI_URL}/oauthcallback/{website}',
             scope=['openid', 'email', 'profile'],
         )
 
     elif website == 'github':
         authorization_url = WebApplicationClient(Config.GITHUB_CLIENT_ID).prepare_request_uri(
             Config.GITHUB_AUTHORIZATION_ENDPOINT,
-            redirect_uri=f'{Config.UI_URL}/oauthcallback',
+            redirect_uri=f'{Config.UI_URL}/oauthcallback/{website}',
             scope=['openid', 'email', 'profile'],
         )
 
     elif website == 'stackoverflow':
         authorization_url = WebApplicationClient(Config.STACKOVERFLOW_CLIENT_ID).prepare_request_uri(
             Config.STACKOVERFLOW_AUTHORIZATION_ENDPOINT,
-            redirect_uri=f'{Config.UI_URL}/oauthcallback'
+            redirect_uri=f'{Config.UI_URL}/oauthcallback/{website}'
         )
 
     else:
@@ -44,3 +44,19 @@ def oauth_authorization(website):
     logger.info(f'Fetch OAuth authorization url for {website}')
 
     return authorization_url
+
+
+@login.route('/oauth/callback/<website>', methods=['POST'])
+@use_args({
+    'code': fields.Str(required=True)
+})
+def oauth_callback(args,  website):
+    """
+    This function
+
+    :return:
+    """
+
+    print(args, website)
+
+    return ''

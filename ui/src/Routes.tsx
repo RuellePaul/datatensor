@@ -5,7 +5,9 @@ import {Fallback, Route} from 'components';
 import {Main} from 'layout';
 
 const Home = lazy(() => import('./views/Home'));
+
 const Login = lazy(() => import('./views/Login'));
+const OAuthCallback = lazy(() => import('./views/OAuthCallback'));
 
 
 const Routes: FC = () => {
@@ -22,11 +24,18 @@ const Routes: FC = () => {
                     path='/'
                     exact
                 />
+
                 <Route
                     component={Login}
                     path='/login'
                     exact
                     title='Login | Datatensor'
+                />
+                <Route
+                    component={OAuthCallback}
+                    path='/oauthcallback/:website'
+                    exact
+                    title='Please wait...'
                 />
                 <Redirect to='/'/>
             </Switch>

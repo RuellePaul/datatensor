@@ -5,6 +5,7 @@ import {Fallback} from 'components';
 const LoadingContext = createContext({
     loading: false,
     setLoading: (loading: boolean) => {
+        return;
     }
 });
 
