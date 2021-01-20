@@ -74,13 +74,11 @@ const LoginOAuth: FC<LoginOAuthProps> = ({website}: LoginOAuthProps) => {
                 api.get(`login/oauth/${website}`)
                     .then((response: any) => window.location.href = response.data)
             }}
-            size='large'
-            variant='outlined'
-            fullWidth
+            variant='contained'
         >
             {OAUTH_ICONS[website]}
             &nbsp;
-            Login with {website.toLowerCase()}
+            With {website}
         </Button>
     )
 };
