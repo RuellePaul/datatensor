@@ -6,6 +6,9 @@ import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 
 const useStyles = makeStyles((theme) => ({
+    root: {
+        background: theme.palette.background.paper
+    },
     grow: {
         flexGrow: 1
     },
@@ -55,7 +58,10 @@ const Header: FC = () => {
     const classes = useStyles();
 
     return (
-        <AppBar position='static'>
+        <AppBar
+            className={classes.root}
+            position='static'
+        >
             <Toolbar>
                 <IconButton
                     edge='start'
@@ -85,9 +91,7 @@ const Header: FC = () => {
                     edge='end'
                     color='inherit'
                 >
-                    <AccountCircle
-                        fontSize='large'
-                    />
+                    <AccountCircle fontSize='large'/>
                 </IconButton>
             </Toolbar>
         </AppBar>
