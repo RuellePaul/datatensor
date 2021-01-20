@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 
-import {Box, Container, Typography} from '@material-ui/core';
+import {Box, Container, Divider, Paper, Typography} from '@material-ui/core';
 
 import {Buttons} from 'components';
 
@@ -19,13 +19,34 @@ const Login: FC = () => {
                     Sign in to Datatensor
                 </Typography>
 
-                <Box
-                    display='flex'
-                    justifyContent='space-evenly'
-                >
-                    <Buttons.LoginOAuth website='github'/>
-                    <Buttons.LoginOAuth website='google'/>
-                    <Buttons.LoginOAuth website='stackoverflow'/>
+                <Box mt='1rem'>
+                    <Paper>
+                        <Box padding='2rem'>
+
+
+                            <Divider/>
+
+                            <Box
+                                mt='1rem'
+                            >
+                                <Typography
+                                    align='center'
+                                    color='textSecondary'
+                                    gutterBottom
+                                >
+                                    Login using social media
+                                </Typography>
+                                <Box
+                                    display='flex'
+                                    justifyContent='space-evenly'
+                                >
+                                    <Buttons.LoginOAuth website='github'/>
+                                    <Buttons.LoginOAuth website='google'/>
+                                    <Buttons.LoginOAuth website='stackoverflow'/>
+                                </Box>
+                            </Box>
+                        </Box>
+                    </Paper>
                 </Box>
             </Container>
         </Box>

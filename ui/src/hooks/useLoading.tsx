@@ -1,6 +1,6 @@
 import React, {createContext, FC, useContext, useState} from 'react';
 
-import {LinearProgress} from '@material-ui/core';
+import {Fallback} from 'components';
 
 const LoadingContext = createContext({
     loading: false,
@@ -23,8 +23,14 @@ export const LoadingProvider: FC = ({children}) => {
 
     return (
         <LoadingContext.Provider value={state}>
-            {state.loading && <LinearProgress/>}
-            {children}
+            {state.loading
+                ? <Fallback>
+                    {children}
+                </Fallback>
+                : <>
+                    {children}
+                </>
+            }
         </LoadingContext.Provider>
     )
 };

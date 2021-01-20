@@ -100,7 +100,7 @@ const Header: FC = () => {
 
 
 interface LayoutProps {
-    children: React.ReactNode
+    children?: React.ReactNode
 }
 
 const Main: FC<LayoutProps> = ({children}: LayoutProps) => {
