@@ -62,7 +62,7 @@ interface LoginOAuthProps {
     website: 'github' | 'google' | 'stackoverflow'
 }
 
-const LoginOAuth: FC<LoginOAuthProps> = ({website}: LoginOAuthProps) => {
+const LoginOAuth: FC<LoginOAuthProps> = ({website}) => {
 
     const {setLoading} = useLoading();
 

@@ -1,8 +1,9 @@
 import React, {FC} from 'react';
 
-import {Box, Container, Divider, Paper, Typography} from '@material-ui/core';
+import {Box, Container, Divider, InputAdornment, Paper, Typography} from '@material-ui/core';
+import {AccountCircle as EmailIcon, LockOutlined as PasswordIcon} from '@material-ui/icons';
 
-import {Buttons, Form} from 'components';
+import {Buttons, Form, Inputs} from 'components';
 
 const Login: FC = () => {
 
@@ -23,8 +24,46 @@ const Login: FC = () => {
                     <Paper>
                         <Box padding='2rem'>
 
-                            <Form>
-
+                            <Form
+                                schema={{
+                                    email: {
+                                        presence: {allowEmpty: false, message: 'Email is required'},
+                                        email: {message: 'Email must be valid'}
+                                    },
+                                    password: {
+                                        presence: {allowEmpty: false, message: 'Password is required'},
+                                        length: {minimum: 8, message: 'Password is too short'},
+                                    }
+                                }}
+                            >
+                                <Box p='1rem'>
+                                    <Inputs.Text
+                                        name='email'
+                                        label='Email'
+                                        autoFocus
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position='start'>
+                                                    <EmailIcon/>
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                        variant='outlined'
+                                    />
+                                    <Inputs.Text
+                                        name='password'
+                                        label='Password'
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position='start'>
+                                                    <PasswordIcon/>
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                        type='password'
+                                        variant='outlined'
+                                    />
+                                </Box>
                             </Form>
 
                             <Divider/>

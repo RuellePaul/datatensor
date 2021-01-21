@@ -20,7 +20,7 @@ export const FormContext = React.createContext({
 });
 
 interface FormInterface {
-    values?: object
+    values?: any
 }
 
 export const FormProvider: FC<FormInterface> = ({children, values}) => {

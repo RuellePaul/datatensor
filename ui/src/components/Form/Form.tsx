@@ -65,7 +65,7 @@ interface FormInterface {
     values?: object
 }
 
-const Form: FC<FormInterface> = ({children, values, ...rest}) => {
+const Form: FC<FormInterface & FormContentInterface> = ({children, values, ...rest}) => {
 
     return (
         <FormProvider values={values}>
