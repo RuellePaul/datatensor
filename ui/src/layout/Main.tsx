@@ -62,7 +62,7 @@ const Header: FC = () => {
     return (
         <AppBar
             className={classes.root}
-            position='static'
+            position='sticky'
         >
             <Toolbar>
                 <IconButton

@@ -1,8 +1,16 @@
 import React, {FC} from 'react';
 import {api} from 'api';
+import {useLoading} from 'hooks';
 
 import {Button, SvgIcon} from '@material-ui/core';
-import {useLoading} from 'hooks';
+import {makeStyles} from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        margin: theme.spacing(1)
+    }
+}));
+
 
 const GoogleIcon: FC = () => {
     return (
@@ -64,21 +72,25 @@ interface LoginOAuthProps {
 
 const LoginOAuth: FC<LoginOAuthProps> = ({website}) => {
 
+    const classes = useStyles();
+
     const {setLoading} = useLoading();
 
     return (
         <Button
+            className={classes.root}
             onClick={() => {
                 setLoading(true);
 
                 api.get(`auth/login/oauth/${website}`)
                     .then((response: any) => window.location.href = response.data)
             }}
+            size='large'
             variant='contained'
         >
             {OAUTH_ICONS[website]}
             &nbsp;
-            With {website}
+            {website}
         </Button>
     )
 };

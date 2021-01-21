@@ -1,11 +1,15 @@
 import React, {FC} from 'react';
 
-import {Box, Container, Divider, InputAdornment, Paper, Typography} from '@material-ui/core';
+import {Box, Container, Divider, InputAdornment, Paper, Typography, useTheme, useMediaQuery} from '@material-ui/core';
 import {AccountCircle as EmailIcon, LockOutlined as PasswordIcon} from '@material-ui/icons';
 
 import {Buttons, Form, Inputs} from 'components';
 
 const Login: FC = () => {
+
+    const theme = useTheme();
+
+    const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
 
     return (
         <Box p='5rem 0'>
@@ -22,7 +26,7 @@ const Login: FC = () => {
 
                 <Box mt='1rem'>
                     <Paper>
-                        <Box padding='2rem'>
+                        <Box padding='2rem 1rem'>
 
                             <Form
                                 schema={{
@@ -72,15 +76,17 @@ const Login: FC = () => {
                                 mt='1rem'
                             >
                                 <Typography
+                                    variant='h5'
                                     align='center'
                                     color='textSecondary'
                                     gutterBottom
                                 >
-                                    Login using social media
+                                    Login using OAuth2
                                 </Typography>
                                 <Box
                                     display='flex'
-                                    justifyContent='space-evenly'
+                                    justifyContent='center'
+                                    flexDirection={isDesktop ? 'row' : 'column'}
                                 >
                                     <Buttons.LoginOAuth website='github'/>
                                     <Buttons.LoginOAuth website='google'/>

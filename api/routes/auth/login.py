@@ -18,7 +18,7 @@ login = Blueprint('login', __name__)
 @login.route('/oauth/<website>')
 def oauth_authorization(website):
     """
-    This function return OAuth authorization url, depending on requested website.
+    This function returns OAuth authorization url, depending on requested website.
 
     :return: authorization_url
     """
@@ -42,9 +42,9 @@ def oauth_authorization(website):
 })
 def oauth_callback(args):
     """
-    This function
+    Using code provided by OAuth workflow, fetch user_info depending on requested website.
 
-    :return:
+    :return: user
     """
 
     website = args['website']
@@ -69,6 +69,4 @@ def oauth_callback(args):
         'key': Config.OAUTH[website]['KEY']
     } if args['website'] == 'stackoverflow' else {}).json()
 
-    print(user_info)
-
-    return {}, 200
+    return user_info, 200
