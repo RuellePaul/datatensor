@@ -13,6 +13,7 @@ const theme = createMuiTheme({
         },
     },
     spacing: 8,
+    // @ts-ignore
     palette
 });
 
