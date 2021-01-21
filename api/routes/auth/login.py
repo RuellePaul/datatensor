@@ -32,7 +32,7 @@ def oauth_authorization(website):
         scope=Config.OAUTH[website]['SCOPES']
     )
 
-    logger.info(f'Fetch OAuth authorization url for {website}')
+    logger.info(f'Fetch OAuth authorization url for `{website}`')
 
     return authorization_url, 200
 
@@ -72,5 +72,7 @@ def oauth_callback(args):
     } if args['website'] == 'stackoverflow' else {}).json()
 
     user = core.user_from_oauth(website, oauth_profile)
+
+    logger.info(f"Successfull logged `{user['name']}` from `{website}`")
 
     return user, 200

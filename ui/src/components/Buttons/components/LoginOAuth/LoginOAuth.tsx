@@ -3,7 +3,7 @@ import {api} from 'api';
 import {useLoading} from 'hooks';
 
 import {Button, SvgIcon} from '@material-ui/core';
-import {makeStyles} from "@material-ui/core/styles";
+import {makeStyles} from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
     root: {

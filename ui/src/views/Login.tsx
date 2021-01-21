@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 
-import {Box, Container, Divider, InputAdornment, Paper, Typography, useTheme, useMediaQuery} from '@material-ui/core';
+import {Box, Container, Divider, InputAdornment, Paper, Typography, useMediaQuery, useTheme} from '@material-ui/core';
 import {AccountCircle as EmailIcon, LockOutlined as PasswordIcon} from '@material-ui/icons';
 
 import {Buttons, Form, Inputs} from 'components';
@@ -66,6 +66,10 @@ const Login: FC = () => {
                                         }}
                                         type='password'
                                         variant='outlined'
+                                    />
+                                    <Buttons.Default
+                                        label='Sign in now'
+                                        submit
                                     />
                                 </Box>
                             </Form>

@@ -1,6 +1,7 @@
-import {LoginOAuth} from './components'
+import {Default, LoginOAuth} from './components'
 
 const Buttons = {
+    Default,
     LoginOAuth
 };
 
