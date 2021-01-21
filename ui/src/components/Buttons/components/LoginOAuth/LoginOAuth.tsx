@@ -71,7 +71,7 @@ const LoginOAuth: FC<LoginOAuthProps> = ({website}) => {
             onClick={() => {
                 setLoading(true);
 
-                api.get(`login/oauth/${website}`)
+                api.get(`auth/login/oauth/${website}`)
                     .then((response: any) => window.location.href = response.data)
             }}
             variant='contained'

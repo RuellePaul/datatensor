@@ -8,7 +8,7 @@ import errors
 from config import Config
 from database import encrypt_init
 from logger import logger
-from routes.login import login
+from routes.auth.login import login
 
 app = Flask(__name__)
 
@@ -19,7 +19,7 @@ app.secret_key = app.config['SECRET_KEY']
 CORS(app)
 CSRFProtect(app)
 
-app.register_blueprint(login, url_prefix='/v1/login')
+app.register_blueprint(login, url_prefix='/v1/auth/login')
 
 
 @app.after_request

@@ -19,7 +19,7 @@ const OAuthCallback: FC = () => {
     useEffect(() => {
         const code = new URL(window.location.href).searchParams.get('code');
 
-        api.post(`/login/oauth/callback`, {
+        api.post(`auth/login/oauth/callback`, {
             code: code,
             website
         })

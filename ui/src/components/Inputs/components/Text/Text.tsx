@@ -26,7 +26,13 @@ const Text: FC<TextProps & TextFieldProps> = ({name, ...rest}) => {
             values: {
                 ...formState.values,
                 [name]: event.target.value
-            },
+            }
+        });
+    };
+
+    const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+        event.target.value && setFormState({
+            ...formState,
             touched: {
                 ...formState.touched,
                 [name]: true
@@ -43,6 +49,7 @@ const Text: FC<TextProps & TextFieldProps> = ({name, ...rest}) => {
             name={name}
             // @ts-ignore
             value={formState.values[name] || ''}
+            onBlur={handleBlur}
             onChange={handleChange}
 
             error={hasError(name)}
