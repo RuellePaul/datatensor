@@ -1,11 +1,10 @@
 import React, {FC} from 'react';
 import {useHistory} from 'react-router-dom';
-import {useUser} from 'hooks';
 import {Account} from './components';
 
-import {AppBar, Avatar, IconButton, InputBase, Toolbar} from '@material-ui/core';
+import {AppBar, IconButton, InputBase, Toolbar} from '@material-ui/core';
 import {fade, makeStyles} from '@material-ui/core/styles';
-import {AccountCircle, Search as SearchIcon} from '@material-ui/icons';
+import {Search as SearchIcon} from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
     root: {
