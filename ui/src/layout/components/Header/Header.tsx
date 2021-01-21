@@ -2,7 +2,7 @@ import React, {FC} from 'react';
 import {useHistory} from 'react-router-dom';
 import {Account} from './components';
 
-import {AppBar, IconButton, InputBase, Toolbar} from '@material-ui/core';
+import {AppBar, Box, IconButton, InputBase, Toolbar, Typography} from '@material-ui/core';
 import {fade, makeStyles} from '@material-ui/core/styles';
 import {Search as SearchIcon} from '@material-ui/icons';
 
@@ -51,6 +51,17 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.up('md')]: {
             width: '20ch'
         }
+    },
+    nav: {
+        display: 'flex',
+        '& > p': {
+            cursor: 'pointer',
+            margin: theme.spacing(0, 1),
+            fontWeight: 600,
+            '&:hover': {
+                color: theme.palette.text.secondary
+            }
+        }
     }
 }));
 
@@ -90,6 +101,21 @@ const Header: FC = () => {
                         }}
                     />
                 </div>
+
+                <Box
+                    className={classes.nav}
+                >
+                    <Typography>
+                        Datasets
+                    </Typography>
+                    <Typography>
+                        Explore
+                    </Typography>
+                    <Typography>
+                        Pricing
+                    </Typography>
+                </Box>
+
                 <div className={classes.grow}/>
 
                 <Account/>
