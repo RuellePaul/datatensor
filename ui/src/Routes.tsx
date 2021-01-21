@@ -1,25 +1,22 @@
 import React, {FC, lazy, Suspense} from 'react';
 import {Redirect, Switch} from 'react-router-dom';
-import {Route} from 'components';
+
+import {Fallback, Route} from 'components';
 import {Main} from 'layout';
 
 const Home = lazy(() => import('./views/Home'));
+
 const Login = lazy(() => import('./views/Login'));
+const OAuthCallback = lazy(() => import('./views/OAuthCallback'));
 
-const FallBack: FC = () => {
-
-    return <>
-        Loading...
-    </>
-};
 
 const Routes: FC = () => {
 
     return (
         <Suspense
-            fallback={<Main>
-                <FallBack/>
-            </Main>}
+            fallback={<Fallback>
+                <Main/>
+            </Fallback>}
         >
             <Switch>
                 <Route
@@ -27,10 +24,18 @@ const Routes: FC = () => {
                     path='/'
                     exact
                 />
+
                 <Route
                     component={Login}
                     path='/login'
                     exact
+                    title='Login | Datatensor'
+                />
+                <Route
+                    component={OAuthCallback}
+                    path='/oauthcallback/:website'
+                    exact
+                    title='Please wait...'
                 />
                 <Redirect to='/'/>
             </Switch>
