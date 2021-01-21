@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const GoogleIcon: FC = () => {
+export const GoogleIcon: FC = () => {
     return (
         <SvgIcon viewBox='0 0 533.5 544.3'>
             <path
@@ -35,7 +35,7 @@ const GoogleIcon: FC = () => {
     );
 };
 
-const GithubIcon: FC = () => {
+export const GithubIcon: FC = () => {
     return (
         <SvgIcon>
             <path
@@ -45,7 +45,7 @@ const GithubIcon: FC = () => {
     );
 };
 
-const StackoverflowIcon: FC = () => {
+export const StackoverflowIcon: FC = () => {
     return (
         <SvgIcon viewBox='0 0 120 120'>
             <path

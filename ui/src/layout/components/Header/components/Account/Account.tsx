@@ -4,9 +4,23 @@ import {useUser} from 'hooks';
 
 import {Avatar, Box, Divider, IconButton, Menu, MenuItem, Typography} from '@material-ui/core';
 import {AccountCircle} from '@material-ui/icons';
+import {makeStyles} from '@material-ui/core/styles';
+
+import {GithubIcon, GoogleIcon, StackoverflowIcon} from 'components/Buttons/components/LoginOAuth/LoginOAuth';
+
+const useStyles = makeStyles((theme) => ({
+    menu: {
+        marginTop: 40
+    },
+    container: {
+        display: 'flex',
+        alignItems: 'center'
+    }
+}));
 
 const Account: FC = () => {
 
+    const classes = useStyles();
     const history = useHistory();
 
     const {user} = useUser();
@@ -45,6 +59,7 @@ const Account: FC = () => {
                 </IconButton>
             }
             <Menu
+                className={classes.menu}
                 anchorEl={anchorEl}
                 keepMounted
                 open={open}
@@ -53,12 +68,18 @@ const Account: FC = () => {
                 <Box width={150} p='0.5rem 1rem'>
                     <Typography
                         variant='body2'
+                        gutterBottom
                     >
                         Signed in as
                     </Typography>
                     <Typography
+                        className={classes.container}
                         variant='body1'
                     >
+                        {user.website === 'github' && <GithubIcon/>}
+                        {user.website === 'google' && <GoogleIcon/>}
+                        {user.website === 'stackoverflow' && <StackoverflowIcon/>}
+                        &nbsp;
                         {user.name}
                     </Typography>
                 </Box>

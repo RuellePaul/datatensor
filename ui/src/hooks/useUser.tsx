@@ -4,7 +4,8 @@ export const UserContext = React.createContext({
     user: {
         id: undefined,
         name: undefined,
-        avatar: undefined
+        avatar: undefined,
+        website: undefined
     },
     setUser: (user: object) => {
         return;
