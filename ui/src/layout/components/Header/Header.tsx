@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
 import {useHistory} from 'react-router-dom';
 import {useUser} from 'hooks';
+import {Account} from './components';
 
 import {AppBar, Avatar, IconButton, InputBase, Toolbar} from '@material-ui/core';
 import {fade, makeStyles} from '@material-ui/core/styles';
@@ -60,8 +61,6 @@ const Header: FC = () => {
     const classes = useStyles();
     const history = useHistory();
 
-    const {user} = useUser();
-
     return (
         <AppBar
             className={classes.root}
@@ -93,24 +92,8 @@ const Header: FC = () => {
                     />
                 </div>
                 <div className={classes.grow}/>
-                {user.id
-                    ? <IconButton
-                        edge='end'
-                        color='inherit'
-                    >
-                        <Avatar
-                            src={user.avatar}
-                            alt='User avatar'
-                        />
-                    </IconButton>
-                    : <IconButton
-                        edge='end'
-                        color='inherit'
-                        onClick={() => history.push('/login')}
-                    >
-                        <AccountCircle fontSize='large'/>
-                    </IconButton>
-                }
+
+                <Account/>
             </Toolbar>
         </AppBar>
     )
