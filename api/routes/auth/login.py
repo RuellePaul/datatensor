@@ -9,6 +9,8 @@ from webargs.flaskparser import use_args
 from config import Config
 from logger import logger
 
+from routes.auth import core
+
 # Used to login with OAuth2 without https
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
@@ -42,7 +44,7 @@ def oauth_authorization(website):
 })
 def oauth_callback(args):
     """
-    Using code provided by OAuth workflow, fetch user_info depending on requested website.
+    Using code provided by OAuth workflow, fetch oauth_profile depending on requested website, then returns DT user.
 
     :return: user
     """
@@ -58,15 +60,17 @@ def oauth_callback(args):
         token_url,
         headers=headers,
         data=f'''{body}{f"&client_secret={Config.OAUTH[website]['CLIENT_SECRET']}"
-        if website == "stackoverflow" else ""}''',
+        if website == 'stackoverflow' else ''}''',
         auth=((Config.OAUTH[website]['CLIENT_ID'], Config.OAUTH[website]['CLIENT_SECRET'])
               if website != 'stackoverflow' else None),
     )
     client.parse_request_body_response(response.text)
     uri, headers, body = client.add_token(Config.OAUTH[website]['USER_URL'])
-    user_info = requests.get(uri, headers=headers, data=body, params={
+    oauth_profile = requests.get(uri, headers=headers, data=body, params={
         'access_token': response.json()['access_token'],
         'key': Config.OAUTH[website]['KEY']
     } if args['website'] == 'stackoverflow' else {}).json()
 
-    return user_info, 200
+    user = core.user_from_oauth(website, oauth_profile)
+
+    return user, 200
