@@ -42,7 +42,6 @@ const Account: FC = () => {
         handleClose();
     };
 
-
     return (
         <>
             {user.id
@@ -104,10 +103,7 @@ const Account: FC = () => {
                     <MenuItem dense onClick={() => handleClick('/')}>Settings</MenuItem>
                     <MenuItem dense onClick={() => handleClick('/logout')}>Sign out</MenuItem>
                 </Box>
-
-
             </Menu>
-
         </>
     )
 };
