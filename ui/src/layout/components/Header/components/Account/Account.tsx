@@ -94,7 +94,7 @@ const Account: FC = () => {
                 </Box>
                 <Divider/>
                 <Box p='0.5rem 0'>
-                    <MenuItem dense onClick={() => handleClick('/')}>Your profile</MenuItem>
+                    <MenuItem dense autoFocus onClick={() => handleClick('/')}>Your profile</MenuItem>
                     <MenuItem dense onClick={() => handleClick('/')}>Your datasets</MenuItem>
                 </Box>
                 <Divider/>
