@@ -73,6 +73,6 @@ def oauth_callback(args):
 
     user = core.user_from_oauth(website, oauth_profile)
 
-    logger.info(f"Successfull logged `{user['name']}` from `{website}`")
+    logger.info(f"Successfully logged in `{user['name']}` from `{website}`")
 
     return user, 200

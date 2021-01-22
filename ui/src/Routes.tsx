@@ -8,6 +8,7 @@ const Home = lazy(() => import('./views/Home'));
 
 const Login = lazy(() => import('./views/Login'));
 const OAuthCallback = lazy(() => import('./views/OAuthCallback'));
+const Logout = lazy(() => import('./views/Logout'));
 
 
 const Routes: FC = () => {
@@ -34,6 +35,12 @@ const Routes: FC = () => {
                 <Route
                     component={OAuthCallback}
                     path='/oauthcallback/:website'
+                    exact
+                    title='Please wait...'
+                />
+                <Route
+                    component={Logout}
+                    path='/logout'
                     exact
                     title='Please wait...'
                 />

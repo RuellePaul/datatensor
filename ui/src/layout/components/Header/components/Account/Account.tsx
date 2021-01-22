@@ -28,12 +28,13 @@ const Account: FC = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const open = Boolean(anchorEl);
 
-    const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
+    const handleOpen = (event: React.MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget);
 
-    const handleClose = () => {
-        setAnchorEl(null);
+    const handleClose = () => setAnchorEl(null);
+
+    const handleClick = (link: string) => {
+        history.push(link);
+        handleClose();
     };
 
 
@@ -43,7 +44,7 @@ const Account: FC = () => {
                 ? <IconButton
                     edge='end'
                     color='inherit'
-                    onClick={handleMenu}
+                    onClick={handleOpen}
                 >
                     <Avatar
                         src={user.avatar}
@@ -85,15 +86,15 @@ const Account: FC = () => {
                 </Box>
                 <Divider/>
                 <Box p='0.5rem 0'>
-                    <MenuItem dense onClick={handleClose}>Your profile</MenuItem>
-                    <MenuItem dense onClick={handleClose}>Your datasets</MenuItem>
+                    <MenuItem dense onClick={() => handleClick('/')}>Your profile</MenuItem>
+                    <MenuItem dense onClick={() => handleClick('/')}>Your datasets</MenuItem>
                 </Box>
                 <Divider/>
                 <Box p='0.5rem 0'>
-                    <MenuItem dense onClick={handleClose}>Upgrade</MenuItem>
-                    <MenuItem dense onClick={handleClose}>Help</MenuItem>
-                    <MenuItem dense onClick={handleClose}>Settings</MenuItem>
-                    <MenuItem dense onClick={handleClose}>Sign out</MenuItem>
+                    <MenuItem dense onClick={() => handleClick('/')}>Upgrade</MenuItem>
+                    <MenuItem dense onClick={() => handleClick('/')}>Help</MenuItem>
+                    <MenuItem dense onClick={() => handleClick('/')}>Settings</MenuItem>
+                    <MenuItem dense onClick={() => handleClick('/logout')}>Sign out</MenuItem>
                 </Box>
 
             </Menu>
