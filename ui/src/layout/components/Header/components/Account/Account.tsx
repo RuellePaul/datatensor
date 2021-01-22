@@ -12,6 +12,11 @@ const useStyles = makeStyles((theme) => ({
     menu: {
         marginTop: 40
     },
+    profile: {
+        width: 150,
+        padding: '0.5rem 1rem',
+        outline: 'none'
+    },
     container: {
         display: 'flex',
         alignItems: 'center'
@@ -66,7 +71,10 @@ const Account: FC = () => {
                 open={open}
                 onClose={handleClose}
             >
-                <Box width={150} p='0.5rem 1rem'>
+                <Box
+                    className={classes.profile}
+                    tabIndex={-1}
+                >
                     <Typography
                         variant='body2'
                         gutterBottom
@@ -96,6 +104,7 @@ const Account: FC = () => {
                     <MenuItem dense onClick={() => handleClick('/')}>Settings</MenuItem>
                     <MenuItem dense onClick={() => handleClick('/logout')}>Sign out</MenuItem>
                 </Box>
+
 
             </Menu>
 
