@@ -1,6 +1,17 @@
 import React, {FC} from 'react';
+import {useHistory} from 'react-router-dom';
 
-import {Box, Container, Divider, InputAdornment, Paper, Typography, useMediaQuery, useTheme} from '@material-ui/core';
+import {
+    Box,
+    Container,
+    Divider,
+    InputAdornment,
+    Link,
+    Paper,
+    Typography,
+    useMediaQuery,
+    useTheme
+} from '@material-ui/core';
 import {AccountCircle as EmailIcon, LockOutlined as PasswordIcon} from '@material-ui/icons';
 
 import {Buttons, Form, Inputs} from 'components';
@@ -8,6 +19,7 @@ import {Buttons, Form, Inputs} from 'components';
 const Login: FC = () => {
 
     const theme = useTheme();
+    const history = useHistory();
 
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
 
@@ -67,10 +79,29 @@ const Login: FC = () => {
                                         type='password'
                                         variant='outlined'
                                     />
+                                    <Typography align='right' variant='body1'>
+                                        <Link
+                                            variant='body1'
+                                            component='button'
+                                            onClick={() => history.push('/forgot-password')}
+                                        >
+                                            Forgot password&nbsp;?
+                                        </Link>
+                                    </Typography>
                                     <Buttons.Default
                                         label='Sign in now'
                                         submit
                                     />
+                                    <Typography align='center' variant='body1' gutterBottom>
+                                        New to Datatensor&nbsp;?&nbsp;
+                                        <Link
+                                            variant='body1'
+                                            component='button'
+                                            onClick={() => history.push('/register')}
+                                        >
+                                            Create an account
+                                        </Link>
+                                    </Typography>
                                 </Box>
                             </Form>
 
