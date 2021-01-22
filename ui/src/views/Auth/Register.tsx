@@ -50,7 +50,7 @@ const Register: FC = () => {
                         name='captcha'
                     />
                     <Buttons.Default
-                        label='Sign in now'
+                        label='Sign up now'
                         submit
                     />
                 </Box>
