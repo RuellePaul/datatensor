@@ -24,7 +24,10 @@ class Config:
     DB_HOST = 'localhost:27017'
     DB_NAME = f'datatensor_{ENVIRONMENT}'
     DB_ENCRYPT_CLIENT, db = encrypt_init(DB_HOST, db_name=DB_NAME, key=DB_ENCRYPTION_KEY)
-    
+
+    GOOGLE_CAPTCHA_PUBLIC_KEY = '6LcFmzcaAAAAAHWoKJ-oEJRO_grEjEjQb0fedPHo'
+    GOOGLE_CAPTCHA_SECRET_KEY = '6LcFmzcaAAAAAOhXyf_-hZ4NIuyHiMqHbgK9P6a3'
+
     OAUTH = {
         'google': {
             'AUTHORIZATION_URL': 'https://accounts.google.com/o/oauth2/v2/auth',

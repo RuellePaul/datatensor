@@ -1,6 +1,7 @@
-import {Text} from './components'
+import {Captcha, Text} from './components'
 
 const Inputs = {
+    Captcha,
     Text
 };
 
