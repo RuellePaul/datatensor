@@ -86,9 +86,9 @@ const Login: FC = () => {
                     justifyContent='center'
                     flexDirection={isDesktop ? 'row' : 'column'}
                 >
-                    <Buttons.LoginOAuth website='github'/>
-                    <Buttons.LoginOAuth website='google'/>
-                    <Buttons.LoginOAuth website='stackoverflow'/>
+                    <Buttons.LoginOAuth scope='github'/>
+                    <Buttons.LoginOAuth scope='google'/>
+                    <Buttons.LoginOAuth scope='stackoverflow'/>
                 </Box>
             </Box>
         </Structure.Paper>

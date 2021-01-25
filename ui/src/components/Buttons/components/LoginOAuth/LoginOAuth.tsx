@@ -67,10 +67,10 @@ const OAUTH_ICONS = {
 };
 
 interface LoginOAuthProps {
-    website: 'github' | 'google' | 'stackoverflow'
+    scope: 'github' | 'google' | 'stackoverflow'
 }
 
-const LoginOAuth: FC<LoginOAuthProps> = ({website}) => {
+const LoginOAuth: FC<LoginOAuthProps> = ({scope}) => {
 
     const classes = useStyles();
 
@@ -82,15 +82,15 @@ const LoginOAuth: FC<LoginOAuthProps> = ({website}) => {
             onClick={() => {
                 setLoading(true);
 
-                api.get(`auth/login/oauth/${website}`)
+                api.get(`auth/login/oauth/${scope}`)
                     .then((response: any) => window.location.href = response.data)
             }}
             size='large'
             variant='contained'
         >
-            {OAUTH_ICONS[website]}
+            {OAUTH_ICONS[scope]}
             &nbsp;
-            {website}
+            {scope}
         </Button>
     )
 };

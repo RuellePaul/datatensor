@@ -4,6 +4,8 @@ from flask import Flask
 
 from database import encrypt_init
 
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'  # to use OAuth2 without https
+
 
 class Config:
     ENVIRONMENT = 'development'

@@ -5,14 +5,14 @@ import {Fallback} from 'components';
 import {useUser} from 'hooks';
 
 interface ParamTypes {
-    website: string
+    scope: string
 }
 
 const OAuthCallback: FC = () => {
 
     const history = useHistory();
 
-    const {website} = useParams<ParamTypes>();
+    const {scope} = useParams<ParamTypes>();
 
     const {setUser} = useUser();
 
@@ -21,13 +21,13 @@ const OAuthCallback: FC = () => {
 
         api.post(`auth/login/oauth/callback`, {
             code: code,
-            website
+            scope
         })
             .then(response => setUser(response.data))
             .catch(() => history.push('/login'))
 
         // eslint-disable-next-line
-    }, [website]);
+    }, [scope]);
 
 
     return (

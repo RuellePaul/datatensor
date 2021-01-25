@@ -49,7 +49,7 @@ const Routes: FC = () => {
                 />
                 <Route
                     component={OAuthCallback}
-                    path='/oauthcallback/:website'
+                    path='/oauthcallback/:scope'
                     exact
                     title='Please wait...'
                 />

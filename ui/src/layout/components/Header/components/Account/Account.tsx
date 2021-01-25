@@ -84,9 +84,9 @@ const Account: FC = () => {
                         className={classes.container}
                         variant='body1'
                     >
-                        {user.website === 'github' && <GithubIcon/>}
-                        {user.website === 'google' && <GoogleIcon/>}
-                        {user.website === 'stackoverflow' && <StackoverflowIcon/>}
+                        {user.scope === 'github' && <GithubIcon/>}
+                        {user.scope === 'google' && <GoogleIcon/>}
+                        {user.scope === 'stackoverflow' && <StackoverflowIcon/>}
                         &nbsp;
                         {user.name}
                     </Typography>
