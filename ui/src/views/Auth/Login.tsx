@@ -48,15 +48,16 @@ const Login: FC = () => {
                         adornment={<PasswordIcon/>}
                         type='password'
                     />
-                    <Typography align='right' variant='body1'>
+                    <Box display='flex' flexDirection='row-reverse'>
                         <Link
                             variant='body1'
                             component='button'
                             onClick={() => history.push('/forgot-password')}
+                            type='button'
                         >
                             Forgot password&nbsp;?
                         </Link>
-                    </Typography>
+                    </Box>
                     <Buttons.Default
                         label='Sign in now'
                         submit

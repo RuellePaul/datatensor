@@ -28,6 +28,6 @@ def do_login(args):
     if not check_password_hash(user_password, args['password']):
         raise errors.InvalidAuthentication('Invalid email or password')
 
-    logger.info(f"Logged in as `{email}`")
+    logger.info(f'Logged in as `{email}`')
 
     return user, 200
