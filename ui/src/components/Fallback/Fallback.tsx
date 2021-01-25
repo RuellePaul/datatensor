@@ -9,16 +9,13 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const FallBack: FC = ({children}) => {
+const Fallback: FC = ({children}) => {
 
     const classes = useStyles();
 
     return (
-        <>
-            <LinearProgress className={classes.progress}/>
-            {children}
-        </>
+        <LinearProgress className={classes.progress}/>
     )
 };
 
-export default FallBack;
+export default Fallback;

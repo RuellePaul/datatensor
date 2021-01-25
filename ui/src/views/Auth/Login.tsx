@@ -1,7 +1,9 @@
 import React, {FC} from 'react';
 import {useHistory} from 'react-router-dom';
 
+import {api} from 'api';
 import {Buttons, Form, Inputs, Structure} from 'components';
+import {useUser} from 'hooks';
 
 import {Box, Divider, Link, Typography, useMediaQuery, useTheme} from '@material-ui/core';
 import {AccountCircle as EmailIcon, LockOutlined as PasswordIcon} from '@material-ui/icons';
@@ -12,6 +14,8 @@ const Login: FC = () => {
     const history = useHistory();
 
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
+
+    const {setUser} = useUser();
 
     return (
         <Structure.Paper
@@ -28,6 +32,8 @@ const Login: FC = () => {
                         length: {minimum: 8, message: 'Password is too short'},
                     }
                 }}
+                submit={formState => api.post('/auth/login/', formState!.values)
+                    .then(response => setUser(response.data))}
             >
                 <Box p='1rem'>
                     <Inputs.Text

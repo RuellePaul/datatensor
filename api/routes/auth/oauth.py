@@ -41,7 +41,7 @@ def oauth_callback(args):
     user = core.user_from_user_id(user_id)
 
     if not user:
-        user = core.register_user(profile, scope)
+        user = core.register_user_from_profile(profile, scope)
         logger.info(f"Registered `{user['name']}` from `{scope}`")
 
     logger.info(f"Logged in as `{user['name']}` from `{scope}`")

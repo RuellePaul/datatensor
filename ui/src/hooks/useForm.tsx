@@ -1,6 +1,6 @@
 import React, {FC, useContext, useState} from 'react';
 
-interface FormStateInterface {
+export interface FormStateInterface {
     isValid: boolean,
     values: object,
     touched: object,

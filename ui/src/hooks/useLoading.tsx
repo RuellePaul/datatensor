@@ -24,14 +24,8 @@ export const LoadingProvider: FC = ({children}) => {
 
     return (
         <LoadingContext.Provider value={state}>
-            {state.loading
-                ? <Fallback>
-                    {children}
-                </Fallback>
-                : <>
-                    {children}
-                </>
-            }
+            {state.loading && <Fallback/>}
+            {children}
         </LoadingContext.Provider>
     )
 };

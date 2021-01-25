@@ -17,9 +17,10 @@ const Routes: FC = () => {
 
     return (
         <Suspense
-            fallback={<Fallback>
+            fallback={<>
+                <Fallback/>
                 <Main/>
-            </Fallback>}
+            </>}
         >
             <Switch>
                 <Route

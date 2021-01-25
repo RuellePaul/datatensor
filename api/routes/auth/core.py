@@ -40,10 +40,6 @@ def profile_from_code(code, scope):
     return profile
 
 
-def user_from_user_id(user_id):
-    return Config.db.users.find_one({'id': user_id}, {'_id': 0})
-
-
 def user_id_from_profile(profile, scope):
     if scope == 'github':
         oauth_id = profile['node_id']
@@ -54,11 +50,20 @@ def user_id_from_profile(profile, scope):
     else:
         raise ValueError('Invalid scope')
 
-    user_id = hashlib.sha256(str(oauth_id).encode('utf-8')).hexdigest()
+    user_id = user_id_hash(oauth_id)
     return user_id
 
 
-def register_user(profile, scope):
+def user_id_hash(identifier):
+    user_id = hashlib.sha256(str(identifier).encode('utf-8')).hexdigest()
+    return user_id
+
+
+def user_from_user_id(user_id):
+    return Config.db.users.find_one({'id': user_id}, {'_id': 0})
+
+
+def register_user_from_profile(profile, scope):
     user_id = user_id_from_profile(profile, scope)
 
     if scope == 'github':
