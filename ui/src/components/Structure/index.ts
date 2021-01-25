@@ -1,7 +1,7 @@
-import {Paper} from './components'
+import {Center} from './components'
 
 const Structure = {
-    Paper
+    Center
 };
 
 export default Structure;

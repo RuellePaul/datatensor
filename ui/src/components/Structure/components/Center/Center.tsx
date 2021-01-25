@@ -6,7 +6,7 @@ interface PaperProps {
     title: string
 }
 
-const Paper: FC<PaperProps> = ({title, children}) => {
+const Center: FC<PaperProps> = ({title, children}) => {
 
     return (
         <Container
@@ -29,4 +29,4 @@ const Paper: FC<PaperProps> = ({title, children}) => {
     )
 };
 
-export default Paper;
+export default Center;

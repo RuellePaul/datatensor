@@ -15,7 +15,7 @@ const Register: FC = () => {
     const {setUser} = useUser();
 
     return (
-        <Structure.Paper
+        <Structure.Center
             title='Join Datatensor'
         >
             <Form
@@ -76,7 +76,7 @@ const Register: FC = () => {
 
                 </Box>
             </Form>
-        </Structure.Paper>
+        </Structure.Center>
     )
 };
 

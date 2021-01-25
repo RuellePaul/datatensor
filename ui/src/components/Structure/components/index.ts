@@ -1,1 +1,1 @@
-export {default as Paper} from './Paper';
+export {default as Center} from './Center';

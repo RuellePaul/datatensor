@@ -18,7 +18,7 @@ const Login: FC = () => {
     const {setUser} = useUser();
 
     return (
-        <Structure.Paper
+        <Structure.Center
             title='Sign in to Datatensor'
         >
             <Form
@@ -98,7 +98,7 @@ const Login: FC = () => {
                     <Buttons.LoginOAuth scope='stackoverflow'/>
                 </Box>
             </Box>
-        </Structure.Paper>
+        </Structure.Center>
     )
 };
 
