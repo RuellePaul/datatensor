@@ -74,6 +74,6 @@ const Form: FC<FormInterface & FormContentInterface> = ({children, values, ...re
             </FormContent>
         </FormProvider>
     )
-}
+};
 
 export default Form;

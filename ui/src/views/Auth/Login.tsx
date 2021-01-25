@@ -55,7 +55,7 @@ const Login: FC = () => {
                         label='Sign in now'
                         submit
                     />
-                    <Typography align='center' variant='body1' gutterBottom>
+                    <Typography align='center' variant='body1' gutterBottom color='textPrimary'>
                         New to Datatensor&nbsp;?&nbsp;
                         <Link
                             variant='body1'
@@ -79,7 +79,7 @@ const Login: FC = () => {
                     color='textSecondary'
                     gutterBottom
                 >
-                    Login using OAuth2
+                    Login with
                 </Typography>
                 <Box
                     display='flex'

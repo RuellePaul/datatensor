@@ -1,11 +1,13 @@
 import React, {FC} from 'react';
-
+import {useHistory} from 'react-router-dom';
 import {Buttons, Form, Inputs, Structure} from 'components';
 
-import {Box, Typography} from '@material-ui/core';
+import {Box, Link, Typography} from '@material-ui/core';
 import {AccountCircle as EmailIcon, LockOutlined as PasswordIcon} from '@material-ui/icons';
 
 const Register: FC = () => {
+
+    const history = useHistory();
 
     return (
         <Structure.Paper
@@ -27,13 +29,6 @@ const Register: FC = () => {
                 }}
             >
                 <Box p='1rem'>
-                    <Typography
-                        align='center'
-                        gutterBottom
-                        variant='h5'
-                    >
-                        Create your account
-                    </Typography>
                     <Inputs.Text
                         name='email'
                         label='Email'
@@ -53,6 +48,17 @@ const Register: FC = () => {
                         label='Sign up now'
                         submit
                     />
+                    <Typography align='center' variant='body1' gutterBottom color='textPrimary'>
+                        Already signed up&nbsp;?&nbsp;
+                        <Link
+                            variant='body1'
+                            component='button'
+                            onClick={() => history.push('/login')}
+                        >
+                            Sign in !
+                        </Link>
+                    </Typography>
+
                 </Box>
             </Form>
         </Structure.Paper>
