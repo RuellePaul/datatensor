@@ -3,7 +3,7 @@ import React, {FC, useContext, useState} from 'react';
 export const UserContext = React.createContext({
     user: {
         id: undefined,
-        name: undefined,
+        name: '',
         avatar: undefined,
         scope: undefined
     },

@@ -30,4 +30,4 @@ def do_login(args):
 
     logger.info(f"Logged in as `{email}`")
 
-    return user
+    return user, 200

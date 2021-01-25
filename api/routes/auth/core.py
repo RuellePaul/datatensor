@@ -3,6 +3,7 @@ import hashlib
 import requests
 from oauthlib.oauth2 import WebApplicationClient
 
+import errors
 from config import Config
 
 
@@ -89,3 +90,18 @@ def register_user_from_profile(profile, scope):
     Config.db.users.insert_one(user)
     del user['_id']
     return user
+
+
+def check_captcha(captcha):
+    if not captcha:
+        raise errors.Forbidden('Invalid captcha')
+    url = 'https://www.google.com/recaptcha/api/siteverify'
+    data = {
+        'secret': Config.GOOGLE_CAPTCHA_SECRET_KEY,
+        'response': captcha
+    }
+    r = requests.post(url, data=data)
+    if r.status_code != 200:
+        raise errors.InternalError('M@Invalid captcha')
+    if not r.json().get('success'):
+        raise errors.BadRequest('Invalid captcha')

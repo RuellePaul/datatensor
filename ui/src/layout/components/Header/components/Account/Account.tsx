@@ -50,10 +50,14 @@ const Account: FC = () => {
                     color='inherit'
                     onClick={handleOpen}
                 >
-                    <Avatar
-                        src={user.avatar}
-                        alt='User avatar'
-                    />
+                    {user.avatar
+                        ? <Avatar
+                            src={user.avatar}
+                            alt='User avatar'
+                        />
+                        : <Avatar>
+                            {user.name.slice(0, 2)}
+                        </Avatar>}
                 </IconButton>
                 : <IconButton
                     edge='end'
