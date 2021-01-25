@@ -5,10 +5,10 @@ from webargs.flaskparser import use_args
 from logger import logger
 from routes.auth import core
 
-login = Blueprint('login', __name__)
+oauth = Blueprint('oauth', __name__)
 
 
-@login.route('/oauth/<scope>')
+@oauth.route('/<scope>', methods=['GET'])
 def oauth_authorization(scope):
     """
     This function returns OAuth authorization url, depending on requested scope.
@@ -21,14 +21,14 @@ def oauth_authorization(scope):
     return authorization_url, 200
 
 
-@login.route('/oauth/callback', methods=['POST'])
+@oauth.route('/callback', methods=['POST'])
 @use_args({
     'code': fields.Str(required=True),
     'scope': fields.Str(required=True)
 })
 def oauth_callback(args):
     """
-    Using code provided by OAuth workflow, fetch oauth_profile depending on requested scope, then returns DT user.
+    Using code provided by OAuth workflow, fetch profile depending on requested scope; register user if doesn't exists
     :return: user
     """
 

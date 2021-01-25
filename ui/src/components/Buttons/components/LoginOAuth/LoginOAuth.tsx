@@ -82,7 +82,7 @@ const LoginOAuth: FC<LoginOAuthProps> = ({scope}) => {
             onClick={() => {
                 setLoading(true);
 
-                api.get(`auth/login/oauth/${scope}`)
+                api.get(`auth/oauth/${scope}`)
                     .then((response: any) => window.location.href = response.data)
             }}
             size='large'
