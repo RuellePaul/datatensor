@@ -7,6 +7,7 @@ import errors
 from config import Config
 from logger import logger
 from routes.auth import core
+from utils import encrypt_field
 
 register = Blueprint('register', __name__)
 
@@ -39,8 +40,13 @@ def do_register(args):
         name=args['name'],
         scope=None
     )
-    Config.db.users.insert_one(user)
-    del user['_id']
+    Config.db.users.insert_one({
+        **user,
+        'id': user['id'],
+        'email': encrypt_field(user['email']),
+        'password': encrypt_field(user['password']),
+        'name': encrypt_field(user['name'])
+    })
 
     response = jsonify(user)
     response.set_cookie('access_token', core.encode_access_token(user_id))

@@ -8,6 +8,7 @@ from oauthlib.oauth2 import WebApplicationClient
 
 import errors
 from config import Config
+from utils import encrypt_field
 
 
 # Token
@@ -121,8 +122,11 @@ def register_user_from_profile(profile, scope):
     else:
         raise ValueError('Invalid scope')
 
-    Config.db.users.insert_one(user)
-    del user['_id']
+    Config.db.users.insert_one({
+        **user,
+        'id': user['id'],
+        'name': encrypt_field(user['name'])
+    })
     return user
 
 
