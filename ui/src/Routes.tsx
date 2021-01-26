@@ -1,7 +1,7 @@
 import React, {FC, lazy, Suspense} from 'react';
 import {Redirect, Switch} from 'react-router-dom';
 
-import {Fallback, Route} from 'components';
+import {Route} from 'components';
 import {Main} from 'layout';
 
 const Home = lazy(() => import('./views/Home'));
@@ -17,10 +17,7 @@ const Routes: FC = () => {
 
     return (
         <Suspense
-            fallback={<>
-                <Fallback/>
-                <Main/>
-            </>}
+            fallback={<Main loading={true}/>}
         >
             <Switch>
                 <Route

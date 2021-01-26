@@ -4,15 +4,16 @@ import {Header} from './components';
 import {LoadingProvider} from 'hooks/useLoading';
 
 interface LayoutProps {
-    children?: React.ReactNode
+    children?: React.ReactNode,
+    loading?: boolean
 }
 
-const Main: FC<LayoutProps> = ({children}: LayoutProps) => {
+const Main: FC<LayoutProps> = ({children, loading}: LayoutProps) => {
 
     return (
         <main>
             <Header/>
-            <LoadingProvider>
+            <LoadingProvider loading={loading}>
                 {children}
             </LoadingProvider>
         </main>
