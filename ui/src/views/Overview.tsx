@@ -1,9 +1,9 @@
 import React, {FC} from 'react';
 
-const Home: FC = () => (
+const Overview: FC = () => (
     <div>
 
     </div>
 );
 
-export default Home;
+export default Overview;

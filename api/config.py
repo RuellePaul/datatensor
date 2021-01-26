@@ -4,6 +4,8 @@ from flask import Flask
 
 from database import encrypt_init
 
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'  # to use OAuth2 without https
+
 
 class Config:
     ENVIRONMENT = 'development'
@@ -14,7 +16,7 @@ class Config:
     API_URI = 'http://127.0.0.1:4069'
 
     SECRET_KEY = 'aUbrkqS8hwxj9xstp77r7s24gZx'
-    SSL_VERIFICATION = True
+
     SESSION_COOKIE_SECURE = True
     REMEMBER_COOKIE_SECURE = True
     SESSION_COOKIE_HTTPONLY = True
@@ -22,9 +24,15 @@ class Config:
 
     DB_ENCRYPTION_KEY = 'yFbcXGnYY2xUrh6I8hwf5lyikIe9x/r21nLiqzWDmj1ZaBST+7Jfu+puRJqwmdjxAzOWivAY3QIHaf61+63kagEXAeE/jcKfDbV/1q3Q3MjR5ePvvS2gx8pvKNCbG+jA'
     DB_HOST = 'localhost:27017'
-    DB_NAME = 'datatensor'
+    DB_NAME = f'datatensor_{ENVIRONMENT}'
     DB_ENCRYPT_CLIENT, db = encrypt_init(DB_HOST, db_name=DB_NAME, key=DB_ENCRYPTION_KEY)
-    
+
+    ACCESS_TOKEN_KEY = 'UDtbpoUT0Fcgr4893JYM8qDCpYrrJabeeD750DLOKoUQMN2S2uw8Jb4E1dFBld5'
+    SESSION_DURATION_IN_MINUTES = 120
+
+    GOOGLE_CAPTCHA_PUBLIC_KEY = '6LcFmzcaAAAAAHWoKJ-oEJRO_grEjEjQb0fedPHo'
+    GOOGLE_CAPTCHA_SECRET_KEY = '6LcFmzcaAAAAAOhXyf_-hZ4NIuyHiMqHbgK9P6a3'
+
     OAUTH = {
         'google': {
             'AUTHORIZATION_URL': 'https://accounts.google.com/o/oauth2/v2/auth',

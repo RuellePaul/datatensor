@@ -1,20 +1,21 @@
 import React, {FC} from 'react';
 import {useForm} from 'hooks';
 
-import {TextField, TextFieldProps} from '@material-ui/core';
-import {makeStyles} from "@material-ui/core/styles";
+import {InputAdornment, TextField, TextFieldProps} from '@material-ui/core';
+import {makeStyles} from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        margin: theme.spacing(1, 0, 2)
+        margin: theme.spacing(1, 0)
     }
 }));
 
 interface TextProps {
-    name: string
+    name: string,
+    adornment?: React.ReactNode
 }
 
-const Text: FC<TextProps & TextFieldProps> = ({name, ...rest}) => {
+const Text: FC<TextProps & TextFieldProps> = ({name, adornment, ...rest}) => {
 
     const classes = useStyles();
 
@@ -56,9 +57,20 @@ const Text: FC<TextProps & TextFieldProps> = ({name, ...rest}) => {
             // @ts-ignore
             helperText={hasError(name) ? formState.errors[name][0] : null}
 
-            spellCheck={false}
             type='primary'
+            variant='outlined'
             fullWidth
+            spellCheck={false}
+            InputProps={adornment
+                ? {
+                    startAdornment: (
+                        <InputAdornment position='start'>
+                            {adornment}
+                        </InputAdornment>
+                    ),
+                }
+                : undefined
+            }
             {...rest}
         />
     )

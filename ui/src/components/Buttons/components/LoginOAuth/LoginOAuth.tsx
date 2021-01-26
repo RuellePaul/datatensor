@@ -3,7 +3,7 @@ import {api} from 'api';
 import {useLoading} from 'hooks';
 
 import {Button, SvgIcon} from '@material-ui/core';
-import {makeStyles} from "@material-ui/core/styles";
+import {makeStyles} from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const GoogleIcon: FC = () => {
+export const GoogleIcon: FC = () => {
     return (
         <SvgIcon viewBox='0 0 533.5 544.3'>
             <path
@@ -35,7 +35,7 @@ const GoogleIcon: FC = () => {
     );
 };
 
-const GithubIcon: FC = () => {
+export const GithubIcon: FC = () => {
     return (
         <SvgIcon>
             <path
@@ -45,7 +45,7 @@ const GithubIcon: FC = () => {
     );
 };
 
-const StackoverflowIcon: FC = () => {
+export const StackoverflowIcon: FC = () => {
     return (
         <SvgIcon viewBox='0 0 120 120'>
             <path
@@ -67,10 +67,10 @@ const OAUTH_ICONS = {
 };
 
 interface LoginOAuthProps {
-    website: 'github' | 'google' | 'stackoverflow'
+    scope: 'github' | 'google' | 'stackoverflow'
 }
 
-const LoginOAuth: FC<LoginOAuthProps> = ({website}) => {
+const LoginOAuth: FC<LoginOAuthProps> = ({scope}) => {
 
     const classes = useStyles();
 
@@ -82,15 +82,15 @@ const LoginOAuth: FC<LoginOAuthProps> = ({website}) => {
             onClick={() => {
                 setLoading(true);
 
-                api.get(`auth/login/oauth/${website}`)
+                api.get(`auth/oauth/${scope}`)
                     .then((response: any) => window.location.href = response.data)
             }}
             size='large'
             variant='contained'
         >
-            {OAUTH_ICONS[website]}
+            {OAUTH_ICONS[scope]}
             &nbsp;
-            {website}
+            {scope}
         </Button>
     )
 };

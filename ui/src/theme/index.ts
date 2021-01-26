@@ -1,8 +1,8 @@
-import {createMuiTheme} from '@material-ui/core';
+import {createMuiTheme, responsiveFontSizes} from '@material-ui/core';
 
 import palette from './palette';
 
-const theme = createMuiTheme({
+let theme = createMuiTheme({
     breakpoints: {
         values: {
             xs: 0,
@@ -13,7 +13,10 @@ const theme = createMuiTheme({
         },
     },
     spacing: 8,
+    // @ts-ignore
     palette
 });
+
+theme = responsiveFontSizes(theme);
 
 export default theme;

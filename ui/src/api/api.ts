@@ -15,6 +15,9 @@ const api = axios.create({
 });
 
 api.interceptors.response.use(response => response, error => {
+    if (error.response?.data?.errorCode === 'expired_authentication')
+        window.location.href = '/logout';
+
     if (error.response?.data?.errorData === 'ERR_CSRF')
         window.location.reload();
 

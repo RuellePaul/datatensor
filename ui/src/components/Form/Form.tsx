@@ -2,11 +2,11 @@ import React, {useEffect, FC} from 'react';
 import clsx from 'clsx';
 import validate from 'validate.js';
 import {useForm, useLoading} from 'hooks';
-import {FormProvider} from 'hooks/useForm';
+import {FormStateInterface, FormProvider} from 'hooks/useForm';
 
 interface FormContentInterface {
     className?: string,
-    submit?(formState?: object, setFormState?: any): any
+    submit?(formState?: FormStateInterface, setFormState?: any): any
     schema?: object,
     dynamic?: boolean
 }
@@ -74,6 +74,6 @@ const Form: FC<FormInterface & FormContentInterface> = ({children, values, ...re
             </FormContent>
         </FormProvider>
     )
-}
+};
 
 export default Form;

@@ -5,29 +5,32 @@ import {Fallback} from 'components';
 import {useUser} from 'hooks';
 
 interface ParamTypes {
-    website: string
+    scope: string
 }
 
 const OAuthCallback: FC = () => {
 
     const history = useHistory();
 
-    const {website} = useParams<ParamTypes>();
+    const {scope} = useParams<ParamTypes>();
 
     const {setUser} = useUser();
 
     useEffect(() => {
         const code = new URL(window.location.href).searchParams.get('code');
 
-        api.post(`auth/login/oauth/callback`, {
+        api.post(`auth/oauth/callback`, {
             code: code,
-            website
+            scope
         })
-            .then(response => setUser(response.data))
+            .then(response => {
+                setUser(response.data);
+                history.push('/overview');
+            })
             .catch(() => history.push('/login'))
 
         // eslint-disable-next-line
-    }, [website]);
+    }, [scope]);
 
 
     return (

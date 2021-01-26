@@ -9,14 +9,18 @@ const LoadingContext = createContext({
     }
 });
 
-export const LoadingProvider: FC = ({children}) => {
+interface LoadingProviderProps {
+    loading?: boolean
+}
+
+export const LoadingProvider: FC<LoadingProviderProps> = ({children, loading}) => {
 
     const setLoading = (loading: boolean) => {
         setState({...state, loading: loading});
     };
 
     const initState = {
-        loading: false,
+        loading: loading || false,
         setLoading: setLoading
     };
 
@@ -24,14 +28,8 @@ export const LoadingProvider: FC = ({children}) => {
 
     return (
         <LoadingContext.Provider value={state}>
-            {state.loading
-                ? <Fallback>
-                    {children}
-                </Fallback>
-                : <>
-                    {children}
-                </>
-            }
+            {state.loading && <Fallback/>}
+            {children}
         </LoadingContext.Provider>
     )
 };

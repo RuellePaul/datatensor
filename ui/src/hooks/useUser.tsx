@@ -1,7 +1,12 @@
 import React, {FC, useContext, useState} from 'react';
 
 export const UserContext = React.createContext({
-    user: {},
+    user: {
+        id: undefined,
+        name: '',
+        avatar: undefined,
+        scope: undefined
+    },
     setUser: (user: object) => {
         return;
     }
