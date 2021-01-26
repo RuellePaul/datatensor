@@ -12,7 +12,7 @@ from config import Config
 
 # Token
 def encode_access_token(user_id):
-    payload = {'user_id': user_id, 'exp': datetime.utcnow() + timedelta(minutes=5)}
+    payload = {'user_id': user_id, 'exp': datetime.utcnow() + timedelta(minutes=Config.SESSION_DURATION_IN_MINUTES)}
     return jwt.encode(payload, Config.ACCESS_TOKEN_KEY, algorithm='HS256')
 
 
