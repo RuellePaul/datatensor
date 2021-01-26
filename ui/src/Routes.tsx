@@ -31,12 +31,14 @@ const Routes: FC = () => {
                     component={Overview}
                     path='/overview'
                     exact
+                    authenticated
                 />
                 <Route
                     component={Settings}
                     path='/settings'
                     exact
                     title='Settings | Datatensor'
+                    authenticated
                 />
 
                 {/* ______ Auth ______ */}
