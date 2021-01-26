@@ -46,6 +46,7 @@ const Settings: FC = () => {
 
                 <Box p='1rem 0'>
                     <Form
+                        dynamic
                         schema={{
                             name: {
                                 presence: {allowEmpty: false, message: 'Username is required'},
