@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, jsonify
 from flask_bcrypt import check_password_hash
 from webargs import fields
 from webargs.flaskparser import use_args
@@ -28,6 +28,9 @@ def do_login(args):
     if not check_password_hash(user_password, args['password']):
         raise errors.InvalidAuthentication('Invalid email or password')
 
+    response = jsonify(user)
+    response.set_cookie('access_token', core.encode_access_token(user_id))
+
     logger.info(f'Logged in as `{email}`')
 
-    return user, 200
+    return response, 200

@@ -8,10 +8,10 @@ import errors
 from config import Config
 from database import encrypt_init
 from logger import logger
-
 from routes.auth.login import login
-from routes.auth.register import register
 from routes.auth.oauth import oauth
+from routes.auth.register import register
+from routes.settings.profile import profile
 
 app = Flask(__name__)
 
@@ -25,6 +25,8 @@ CSRFProtect(app)
 app.register_blueprint(login, url_prefix='/v1/auth/login')
 app.register_blueprint(register, url_prefix='/v1/auth/register')
 app.register_blueprint(oauth, url_prefix='/v1/auth/oauth')
+
+app.register_blueprint(profile, url_prefix='/v1/settings/profile')
 
 
 @app.after_request

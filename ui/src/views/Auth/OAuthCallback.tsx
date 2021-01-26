@@ -23,7 +23,10 @@ const OAuthCallback: FC = () => {
             code: code,
             scope
         })
-            .then(response => setUser(response.data))
+            .then(response => {
+                setUser(response.data);
+                history.push('/overview');
+            })
             .catch(() => history.push('/login'))
 
         // eslint-disable-next-line

@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, jsonify
 from flask_bcrypt import generate_password_hash
 from webargs import fields
 from webargs.flaskparser import use_args
@@ -42,5 +42,9 @@ def do_register(args):
     Config.db.users.insert_one(user)
     del user['_id']
 
+    response = jsonify(user)
+    response.set_cookie('access_token', core.encode_access_token(user_id))
+
     logger.info(f"Registered user `{email}`")
-    return user, 201
+
+    return response, 201

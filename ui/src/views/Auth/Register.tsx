@@ -36,7 +36,10 @@ const Register: FC = () => {
                     }
                 }}
                 submit={formState => api.post('/auth/register/', formState!.values)
-                    .then(response => setUser(response.data))
+                    .then(response => {
+                        setUser(response.data);
+                        history.push('/overview');
+                    })
                 }
             >
                 <Box p='1rem'>

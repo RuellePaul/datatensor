@@ -1,11 +1,42 @@
 import hashlib
+from datetime import datetime, timedelta
 
+import jwt
 import requests
+from flask import request
 from oauthlib.oauth2 import WebApplicationClient
 
 import errors
 from config import Config
 
+
+# Token
+def encode_access_token(user_id):
+    payload = {'user_id': user_id, 'exp': datetime.utcnow() + timedelta(minutes=5)}
+    return jwt.encode(payload, Config.ACCESS_TOKEN_KEY, algorithm='HS256')
+
+
+def verify_access_token(access_token):
+    if not access_token:
+        raise errors.InvalidAuthentication
+
+    user_id = jwt.decode(access_token, Config.ACCESS_TOKEN_KEY, algorithms='HS256').get('user_id')
+    if not user_id:
+        raise errors.InvalidAuthentication
+
+    if not Config.db.users.find_one({'id': user_id}):
+        raise errors.InvalidAuthentication
+
+
+def protect_blueprint(blueprint):
+    def authorized():
+        if request.method == 'POST':
+            verify_access_token(request.cookies.get('access_token'))
+
+    blueprint.before_request(authorized)
+
+
+# User related
 
 def authorization_url_from_scope(scope):
     client = WebApplicationClient(Config.OAUTH[scope]['CLIENT_ID'])

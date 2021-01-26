@@ -33,7 +33,11 @@ const Login: FC = () => {
                     }
                 }}
                 submit={formState => api.post('/auth/login/', formState!.values)
-                    .then(response => setUser(response.data))}
+                    .then(response => {
+                        setUser(response.data);
+                        history.push('/overview');
+                    })
+                }
             >
                 <Box p='1rem'>
                     <Inputs.Text

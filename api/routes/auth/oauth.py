@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, jsonify
 from webargs import fields
 from webargs.flaskparser import use_args
 
@@ -44,5 +44,9 @@ def oauth_callback(args):
         user = core.register_user_from_profile(profile, scope)
         logger.info(f"Registered `{user['name']}` from `{scope}`")
 
+    response = jsonify(user)
+    response.set_cookie('access_token', core.encode_access_token(user_id))
+
     logger.info(f"Logged in as `{user['name']}` from `{scope}`")
-    return user
+
+    return response, 200
