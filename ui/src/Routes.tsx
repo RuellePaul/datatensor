@@ -72,7 +72,7 @@ const Routes: FC = () => {
                     exact
                     title='Please wait...'
                 />
-                <Redirect to='/'/>
+                <Redirect to='/login'/>
             </Switch>
         </Suspense>
     );

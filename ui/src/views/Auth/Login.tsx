@@ -7,6 +7,7 @@ import {useUser} from 'hooks';
 
 import {Box, Divider, Link, Typography, useMediaQuery, useTheme} from '@material-ui/core';
 import {AccountCircle as EmailIcon, LockOutlined as PasswordIcon} from '@material-ui/icons';
+import Cookies from 'js-cookie';
 
 const Login: FC = () => {
 
@@ -15,7 +16,10 @@ const Login: FC = () => {
 
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
 
-    const {setUser} = useUser();
+    const {user, setUser} = useUser();
+
+    if (user.id && Cookies.get('access_token'))
+        history.push('/overview');
 
     return (
         <Structure.Center

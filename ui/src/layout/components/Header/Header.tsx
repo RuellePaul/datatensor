@@ -1,6 +1,8 @@
 import React, {FC} from 'react';
 import {useHistory} from 'react-router-dom';
 import {Account} from './components';
+import {useUser} from 'hooks';
+import Cookies from 'js-cookie';
 
 import {AppBar, Box, IconButton, InputBase, Toolbar, Typography} from '@material-ui/core';
 import {fade, makeStyles} from '@material-ui/core/styles';
@@ -71,6 +73,8 @@ const Header: FC = () => {
     const classes = useStyles();
     const history = useHistory();
 
+    const {user} = useUser();
+
     return (
         <AppBar
             className={classes.root}
@@ -80,7 +84,12 @@ const Header: FC = () => {
                 <IconButton
                     edge='start'
                     color='inherit'
-                    onClick={() => history.push('/')}
+                    onClick={() => {
+                        (user.id && Cookies.get('access_token'))
+                            ? history.push('/overview')
+                            : history.push('/')
+                    }
+                    }
                 >
                     <img
                         className={classes.logo}

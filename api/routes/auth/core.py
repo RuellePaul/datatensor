@@ -33,7 +33,7 @@ def verify_access_token(access_token):
 
 def protect_blueprint(blueprint):
     def authorized():
-        if request.method == 'POST':
+        if request.method in ['GET', 'POST', 'PUT', 'DELETE']:
             verify_access_token(request.cookies.get('access_token'))
 
     blueprint.before_request(authorized)
