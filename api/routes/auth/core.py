@@ -20,9 +20,12 @@ def verify_access_token(access_token):
     if not access_token:
         raise errors.InvalidAuthentication
 
-    user_id = jwt.decode(access_token, Config.ACCESS_TOKEN_KEY, algorithms='HS256').get('user_id')
-    if not user_id:
-        raise errors.InvalidAuthentication
+    try:
+        user_id = jwt.decode(access_token, Config.ACCESS_TOKEN_KEY, algorithms='HS256').get('user_id')
+        if not user_id:
+            raise errors.InvalidAuthentication
+    except jwt.exceptions.ExpiredSignatureError:
+        raise errors.ExpiredAuthentication
 
     if not Config.db.users.find_one({'id': user_id}):
         raise errors.InvalidAuthentication

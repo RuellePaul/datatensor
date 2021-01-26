@@ -9,13 +9,15 @@ const api = axios.create({
     withCredentials: true,
     baseURL: API_URL,
     headers: {
-        'Authorization': `Bearer ${Cookies.get('access_token')}`,
         'Content-Type': 'application/json',
         'X-CSRF-Token': Cookies.get('csrf_token')
     }
 });
 
 api.interceptors.response.use(response => response, error => {
+    if (error.response?.data?.errorCode === 'expired_authentication')
+        window.location.href = '/logout';
+
     if (error.response?.data?.errorData === 'ERR_CSRF')
         window.location.reload();
 
