@@ -28,11 +28,27 @@ const Settings: FC = () => {
     return (
         <Container maxWidth='md'>
             <div className={classes.wrapper}>
-                <Avatar
-                    className={classes.avatar}
-                    src={user.avatar}
-                    alt='User avatar'
-                />
+                <Box display='flex' alignItems='center' justifyContent='center' m='0 1rem'>
+                    <Avatar
+                        className={classes.avatar}
+                        src={user.avatar}
+                        alt='User avatar'
+                    />
+                    <Box ml='1rem'>
+                        <Typography
+                            color='textPrimary'
+                            style={{fontWeight: 'bold'}}
+                        >
+                            {user.name}
+                        </Typography>
+                        <Typography
+                            color='textSecondary'
+                            variant='body1'
+                        >
+                            Account settings
+                        </Typography>
+                    </Box>
+                </Box>
 
                 <Typography
                     variant='h5'
