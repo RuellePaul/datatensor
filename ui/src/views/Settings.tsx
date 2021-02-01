@@ -65,7 +65,7 @@ const Settings: FC = () => {
                         dynamic
                         schema={{
                             name: {
-                                presence: {allowEmpty: false, message: 'Username is required'},
+                                presence: {allowEmpty: false, message: 'Name is required'},
                             }
                         }}
                         submit={formState => api.post('/settings/profile/update_name', formState!.values)
@@ -79,7 +79,7 @@ const Settings: FC = () => {
                         <Typography
                             color='textPrimary'
                         >
-                            Username
+                            Name
                         </Typography>
 
                         <Inputs.Text

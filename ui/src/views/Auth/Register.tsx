@@ -29,7 +29,7 @@ const Register: FC = () => {
                         length: {minimum: 8, message: 'Password is too short'},
                     },
                     name: {
-                        presence: {allowEmpty: false, message: 'Username is required'},
+                        presence: {allowEmpty: false, message: 'Name is required'},
                     },
                     captcha: {
                         presence: {allowEmpty: false, message: 'Captcha is required'},
@@ -57,7 +57,7 @@ const Register: FC = () => {
                     />
                     <Inputs.Text
                         name='name'
-                        label='Username'
+                        label='Name'
                     />
                     <Inputs.Captcha
                         name='captcha'
