@@ -104,7 +104,7 @@ const Account: FC = () => {
                 <Box p='0.5rem 0'>
                     <MenuItem dense onClick={() => handleClick('/')}>Upgrade</MenuItem>
                     <MenuItem dense onClick={() => handleClick('/')}>Help</MenuItem>
-                    <MenuItem dense onClick={() => handleClick('/settings')}>Settings</MenuItem>
+                    <MenuItem dense onClick={() => handleClick('/settings/profile')}>Settings</MenuItem>
                     <MenuItem dense onClick={() => handleClick('/logout')}>Sign out</MenuItem>
                 </Box>
             </Menu>

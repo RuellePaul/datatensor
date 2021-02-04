@@ -6,7 +6,7 @@ import {Main} from 'layout';
 
 const Home = lazy(() => import('./views/Home'));
 const Overview = lazy(() => import('./views/Overview'));
-const Settings = lazy(() => import('./views/Settings'));
+const Settings = lazy(() => import('./views/Settings/Settings'));
 
 const Login = lazy(() => import('./views/Auth/Login'));
 const Register = lazy(() => import('./views/Auth/Register'));
@@ -35,7 +35,7 @@ const Routes: FC = () => {
                 />
                 <Route
                     component={Settings}
-                    path='/settings'
+                    path='/settings/:parameter'
                     exact
                     title='Settings | Datatensor'
                     authenticated
