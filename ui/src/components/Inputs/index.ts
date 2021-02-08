@@ -1,8 +1,9 @@
-import {Captcha, Text} from './components'
+import {Captcha, Select, Text} from './components'
 
 const Inputs = {
     Captcha,
-    Text
+    Select,
+    Text,
 };
 
 export default Inputs;

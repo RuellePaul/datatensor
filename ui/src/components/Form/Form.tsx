@@ -1,12 +1,14 @@
-import React, {useEffect, FC} from 'react';
+import React, {FC, useEffect} from 'react';
 import clsx from 'clsx';
 import validate from 'validate.js';
 import {useForm, useLoading} from 'hooks';
-import {FormStateInterface, FormProvider} from 'hooks/useForm';
+import {FormProvider, FormStateInterface} from 'hooks/useForm';
 
 interface FormContentInterface {
     className?: string,
+
     submit?(formState?: FormStateInterface, setFormState?: any): any
+
     schema?: object,
     dynamic?: boolean
 }
@@ -14,6 +16,17 @@ interface FormContentInterface {
 const FormContent: FC<FormContentInterface> = ({className, schema, submit, dynamic, children, ...rest}) => {
     const {formState, setFormState} = useForm();
     const {setLoading} = useLoading();
+
+    const _submit = () => {
+        if (!submit) return;
+
+        setLoading(true);
+        submit(formState, setFormState)
+            .catch((error: Error) => {
+                throw(error)
+            })
+            .finally(() => setLoading(false))
+    };
 
     useEffect(() => {
         const errors = validate(formState.values, schema, {fullMessages: false});
@@ -24,8 +37,9 @@ const FormContent: FC<FormContentInterface> = ({className, schema, submit, dynam
             errors: errors || {}
         });
 
-        if (submit && dynamic)
-            submit(formState, setFormState)
+        if (dynamic && !errors) {
+            _submit()
+        }
 
         // eslint-disable-next-line
     }, [formState.values]);
@@ -40,14 +54,7 @@ const FormContent: FC<FormContentInterface> = ({className, schema, submit, dynam
             errors: {}
         });
 
-        if (formState.isValid && submit) {
-            setLoading(true);
-            submit(formState, setFormState)
-                .catch((error: Error) => {
-                    throw(error)
-                })
-                .finally(() => setLoading(false))
-        }
+        _submit()
     };
 
     return (

@@ -2,12 +2,13 @@ import React, {FC} from 'react';
 
 import {api} from 'api';
 import {Form, Inputs} from 'components';
+import config from 'config';
 import {useUser} from 'hooks';
 
 import {Box, Divider, Typography} from '@material-ui/core';
 
 
-const Profile: FC = () => {
+const Appearance: FC = () => {
 
     const {user, setUser} = useUser();
 
@@ -18,7 +19,7 @@ const Profile: FC = () => {
                 color='textPrimary'
                 gutterBottom
             >
-                Profile
+                Appearance
             </Typography>
 
             <Divider/>
@@ -27,44 +28,48 @@ const Profile: FC = () => {
                 <Form
                     dynamic
                     schema={{
-                        name: {
-                            presence: {allowEmpty: false, message: 'Name is required'},
+                        theme: {
+                            presence: {allowEmpty: false, message: 'Theme is required'},
                         }
                     }}
-                    submit={formState => api.post('/settings/profile/update_name', {
+                    submit={formState => api.post('/settings/appearance/update_theme', {
                         user_id: user.id,
                         ...formState!.values
                     })
                         .then(response => setUser({
                             ...user,
-                            name: response.data
+                            theme: response.data
                         }))
                     }
                     values={{
-                        name: user.name || ''
+                        theme: user.theme || config.DEFAULT_THEME
                     }}
                 >
 
                     <Typography
-                        color='textSecondary'
+                        color='textPrimary'
                     >
-                        Name
+                        Use the light or dark theme to choose how Datatensor looks to you.
                     </Typography>
 
-                    <Inputs.Text
-                        name='name'
-                        size='small'
+                    <Inputs.Select
+                        name='theme'
+                        options={[
+                            {
+                                label: 'Light',
+                                value: 'light'
+                            },
+                            {
+                                label: 'Dark',
+                                value: 'dark'
+                            }
+                        ]}
+                        helper='The theme is stored automatically'
                     />
-                    <Typography
-                        variant='caption'
-                        color='textSecondary'
-                    >
-                        Your name may appear around Datatensor on your public datasets.
-                    </Typography>
                 </Form>
             </Box>
         </>
     )
 };
 
-export default Profile;
+export default Appearance;

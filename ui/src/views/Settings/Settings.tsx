@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import {useHistory, useParams} from 'react-router-dom';
-import {Profile} from './components';
+import {Appearance, Profile} from './components';
 
 import {Avatar, Box, Button, ButtonGroup, Container, Grid, Typography} from '@material-ui/core';
 import {useUser} from 'hooks';
@@ -47,11 +47,16 @@ const Menu: FC = () => {
             >
                 <Button className={classes.button} onClick={() => history.push('/settings/profile')}>Profile</Button>
                 <Button className={classes.button} onClick={() => history.push('/settings/account')}>Account</Button>
-                <Button className={classes.button} onClick={() => history.push('/settings/appearance')}>Appearance</Button>
-                <Button className={classes.button} onClick={() => history.push('/settings/security')}>Account security</Button>
-                <Button className={classes.button} onClick={() => history.push('/settings/billing')}>Billing & plans</Button>
-                <Button className={classes.button} onClick={() => history.push('/settings/notifications')}>Notifications</Button>
-                <Button className={classes.button} onClick={() => history.push('/settings/developer')}>Developer settings</Button>
+                <Button className={classes.button}
+                        onClick={() => history.push('/settings/appearance')}>Appearance</Button>
+                <Button className={classes.button} onClick={() => history.push('/settings/security')}>Account
+                    security</Button>
+                <Button className={classes.button} onClick={() => history.push('/settings/billing')}>Billing &
+                    plans</Button>
+                <Button className={classes.button}
+                        onClick={() => history.push('/settings/notifications')}>Notifications</Button>
+                <Button className={classes.button} onClick={() => history.push('/settings/developer')}>Developer
+                    settings</Button>
             </ButtonGroup>
         </>
     )
@@ -106,6 +111,7 @@ const Settings: FC = () => {
                         xs={9}
                     >
                         {parameter === 'profile' && <Profile/>}
+                        {parameter === 'appearance' && <Appearance/>}
                     </Grid>
                 </Grid>
             </div>
