@@ -2,10 +2,9 @@ from flask import Blueprint
 from webargs import fields
 from webargs.flaskparser import use_args
 
-import errors
 from config import Config
-from logger import logger
 from routes.auth.core import protect_blueprint
+from utils import encrypt_field
 
 profile = Blueprint('profile', __name__)
 protect_blueprint(profile)
@@ -21,5 +20,5 @@ def update_name(args):
     name = args['name']
 
     Config.db.users.find_one_and_update({'id': user_id},
-                                        {'$set': {'name': name}})
+                                        {'$set': {'name': encrypt_field(name)}})
     return name, 200

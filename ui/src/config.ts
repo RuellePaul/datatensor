@@ -1,5 +1,5 @@
 const config = {
-    DEFAULT_THEME: 'light'
+    DEFAULT_THEME: 'dark'
 };
 
 export default config;
