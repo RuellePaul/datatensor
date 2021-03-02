@@ -2,21 +2,32 @@ import {createMuiTheme, responsiveFontSizes} from '@material-ui/core';
 
 import palette from './palette';
 
-let theme = createMuiTheme({
+let build = (theme: 'light' | 'dark') => createMuiTheme({
     breakpoints: {
         values: {
             xs: 0,
             sm: 700,
-            md: 960,
+            md: 1050,
             lg: 1280,
             xl: 1920,
         },
     },
     spacing: 8,
-    // @ts-ignore
-    palette
+    palette: {
+        ...palette,
+        type: theme
+    }
 });
 
-theme = responsiveFontSizes(theme);
+let light = build('light');
+let dark = build('dark');
 
-export default theme;
+light = responsiveFontSizes(light);
+dark = responsiveFontSizes(dark);
+
+const themes = {
+    light,
+    dark
+};
+
+export default themes;

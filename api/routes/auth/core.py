@@ -140,6 +140,6 @@ def check_captcha(captcha):
     }
     r = requests.post(url, data=data)
     if r.status_code != 200:
-        raise errors.InternalError('M@Invalid captcha')
+        raise errors.InternalError('Invalid captcha')
     if not r.json().get('success'):
         raise errors.BadRequest('Invalid captcha')

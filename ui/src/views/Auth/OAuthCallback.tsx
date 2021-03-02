@@ -20,7 +20,7 @@ const OAuthCallback: FC = () => {
         const code = new URL(window.location.href).searchParams.get('code');
 
         api.post(`auth/oauth/callback`, {
-            code: code,
+            code,
             scope
         })
             .then(response => {

@@ -9,9 +9,7 @@ import {fade, makeStyles} from '@material-ui/core/styles';
 import {Search as SearchIcon} from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        background: theme.palette.background.paper
-    },
+    root: {},
     grow: {
         flexGrow: 1
     },
@@ -20,14 +18,18 @@ const useStyles = makeStyles((theme) => ({
     },
     search: {
         position: 'relative',
-        borderRadius: theme.shape.borderRadius,
-        backgroundColor: fade(theme.palette.common.white, 0.15),
-        '&:hover': {
-            backgroundColor: fade(theme.palette.common.white, 0.25),
-        },
-        marginRight: theme.spacing(2),
-        marginLeft: 0,
         width: '100%',
+        borderRadius: theme.shape.borderRadius,
+        backgroundColor: fade(theme.palette.type === 'dark'
+            ? theme.palette.common.white
+            : theme.palette.common.black, 0.08),
+        '&:hover': {
+            backgroundColor: fade(theme.palette.type === 'dark'
+                ? theme.palette.common.white
+                : theme.palette.common.black, 0.16),
+        },
+        marginLeft: 0,
+        marginRight: theme.spacing(2),
         [theme.breakpoints.up('sm')]: {
             marginLeft: theme.spacing(3),
             width: 'auto',
@@ -78,6 +80,7 @@ const Header: FC = () => {
     return (
         <AppBar
             className={classes.root}
+            color='default'
             position='sticky'
         >
             <Toolbar>
