@@ -14,6 +14,8 @@ const ForgotPassword = lazy(() => import('./views/Auth/ForgotPassword'));
 const OAuthCallback = lazy(() => import('./views/Auth/OAuthCallback'));
 const Logout = lazy(() => import('./views/Auth/Logout'));
 
+const Datasets = lazy(() => import('./views/Datasets'));
+
 
 const Routes: FC = () => {
 
@@ -30,6 +32,12 @@ const Routes: FC = () => {
                 <Route
                     component={Overview}
                     path='/overview'
+                    exact
+                    authenticated
+                />
+                <Route
+                    component={Datasets}
+                    path='/datasets/:dataset_id'
                     exact
                     authenticated
                 />

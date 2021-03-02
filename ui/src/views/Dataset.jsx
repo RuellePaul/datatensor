@@ -1,4 +1,5 @@
 import React from 'react';
+import {useHistory} from 'react-router-dom';
 
 import {
     Avatar,
@@ -45,6 +46,7 @@ const useStyles = makeStyles((theme) =>
 function Dataset({dataset}) {
 
     const classes = useStyles();
+    const history = useHistory();
 
     return (
         <Card className={classes.root}>
@@ -62,7 +64,9 @@ function Dataset({dataset}) {
                 title={dataset.name}
                 subheader='September 14, 2016'
             />
-            <CardActionArea>
+            <CardActionArea
+                onClick={() => history.push(`/datasets/${dataset.id}`)}
+            >
                 <CardMedia
                     className={classes.media}
                     image='/'
