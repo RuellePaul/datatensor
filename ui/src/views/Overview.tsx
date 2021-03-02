@@ -1,15 +1,19 @@
 import React, {useEffect, useState} from 'react';
 
+import Dataset from './Dataset';
+
 import {api} from 'api';
 import {Buttons, Form, Inputs} from 'components';
 import {useUser} from 'hooks';
 
-import {Drawer} from '@material-ui/core';
+import {Drawer, Grid} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        padding: theme.spacing(4, 6)
+        padding: theme.spacing(4, 6),
+        maxWidth: 1550,
+        margin: 'auto'
     },
     drawer: {
         '& > .MuiPaper-root': {
@@ -19,7 +23,14 @@ const useStyles = makeStyles((theme) => ({
     dataset: {
         padding: theme.spacing(2),
         margin: theme.spacing(2),
-        border: 'dashed 2px red'
+        border: `dashed 2px white`
+    },
+    form: {
+        padding: theme.spacing(3, 2)
+    },
+    button: {
+        width: 200,
+        float: 'right'
     }
 }));
 
@@ -32,19 +43,14 @@ function Overview() {
 
     const {user} = useUser();
 
+    const [open, setOpen] = useState(false);
+
     const [datasets, setDatasets] = useState([{name: ''}]);
     useEffect(() => {
         api.post('/datasets/management/', {user_id: user.id})
             .then(response => setDatasets(response.data))
 
     }, [user.id]);
-
-    const [state, setState] = useState({
-        top: false,
-        left: false,
-        bottom: false,
-        right: false
-    });
 
     const toggleDrawer = (anchor: Anchor, open: boolean) => (
         event: React.KeyboardEvent | React.MouseEvent,
@@ -57,51 +63,63 @@ function Overview() {
             return;
         }
 
-        setState({...state, [anchor]: open});
+        setOpen(open)
     };
 
-    const list = (anchor: Anchor) => (
-        <Form
-            schema={{
-                name: {
-                    presence: {allowEmpty: false, message: 'Name is required'},
-                }
-            }}
-            submit={(formState) => api.post('/datasets/management/create', {
-                user_id: user.id,
-                ...formState!.values
-            })
-                .then(response => setDatasets([...datasets, response.data]))}
-        >
-            <Inputs.Text
-                name='name'
-                label='Dataset name'
-            />
-            <Buttons.Default
-                label='Create !'
-                submit
-            />
-        </Form>
-    );
 
     return (
         <div className={classes.root}>
-            {(['right'] as Anchor[]).map((anchor) => (
-                <React.Fragment key={anchor}>
-                    <Buttons.Default
-                        label='Add dataset'
-                        onClick={toggleDrawer(anchor, true)}
+            <Buttons.Default
+                className={classes.button}
+                label='Add dataset'
+                onClick={toggleDrawer('right', true)}
+            />
+            <Drawer
+                anchor='right'
+                className={classes.drawer}
+                open={open}
+                onClose={toggleDrawer('right', false)}
+            >
+                <Form
+                    className={classes.form}
+                    schema={{
+                        name: {
+                            presence: {allowEmpty: false, message: 'Name is required'},
+                        }
+                    }}
+                    submit={(formState) => api.post('/datasets/management/create', {
+                        user_id: user.id,
+                        ...formState!.values
+                    })
+                        .then(response => setDatasets([...datasets, response.data]))}
+                >
+                    <Inputs.Text
+                        name='name'
+                        label='Dataset name'
                     />
-                    <Drawer anchor={anchor} className={classes.drawer} open={state[anchor]}
-                            onClose={toggleDrawer(anchor, false)}>
-                        {list(anchor)}
-                    </Drawer>
-                </React.Fragment>
-            ))}
+                    <Buttons.Default
+                        label='Create !'
+                        submit
+                    />
+                </Form>
+            </Drawer>
 
-            {datasets.map((dataset, index) => <div className={classes.dataset}>
-                Dataset {index} : {dataset.name}
-            </div>)}
+            <Grid container spacing={4}>
+                {datasets.map((dataset, index) => (
+                    <Grid
+                        key={`dataset-${index}`}
+                        item
+                        lg={3}
+                        md={4}
+                        sm={6}
+                        xs={12}
+                    >
+                        <Dataset
+                            dataset={dataset}
+                        />
+                    </Grid>
+                ))}
+            </Grid>
         </div>
     );
 }
