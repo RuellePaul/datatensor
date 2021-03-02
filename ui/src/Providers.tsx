@@ -15,8 +15,6 @@ const ThemeProvider: FC = ({children}) => {
     useEffect(() => {
         // @ts-ignore
         document.body.style.background = themes[user.theme || config.DEFAULT_THEME].palette.background.default;
-        // @ts-ignore
-        console.log(themes[user.theme || config.DEFAULT_THEME].palette)
     }, [user.theme]);
 
     return (

@@ -13,6 +13,7 @@ from routes.auth.oauth import oauth
 from routes.auth.register import register
 from routes.settings.appearance import appearance
 from routes.settings.profile import profile
+from routes.datasets.management import management
 
 app = Flask(__name__)
 
@@ -29,6 +30,8 @@ app.register_blueprint(oauth, url_prefix='/v1/auth/oauth')
 
 app.register_blueprint(appearance, url_prefix='/v1/settings/appearance')
 app.register_blueprint(profile, url_prefix='/v1/settings/profile')
+
+app.register_blueprint(management, url_prefix='/v1/datasets/management')
 
 
 @app.after_request
