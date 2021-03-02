@@ -84,7 +84,11 @@ function Overview() {
                     className={classes.form}
                     schema={{
                         name: {
-                            presence: {allowEmpty: false, message: 'Name is required'},
+                            presence: {allowEmpty: false, message: 'Dataset name is required'},
+                            length: {
+                                minimum: 3,
+                                maximum: 20
+                            }
                         }
                     }}
                     submit={(formState) => api.post('/datasets/management/create', {
