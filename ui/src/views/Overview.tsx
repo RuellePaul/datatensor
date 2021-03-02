@@ -1,7 +1,8 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {api} from 'api';
 import {Buttons, Form, Inputs} from 'components';
+import {useUser} from 'hooks';
 
 import {Drawer} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
@@ -14,6 +15,11 @@ const useStyles = makeStyles((theme) => ({
         '& > .MuiPaper-root': {
             width: 400
         }
+    },
+    dataset: {
+        padding: theme.spacing(2),
+        margin: theme.spacing(2),
+        border: 'dashed 2px red'
     }
 }));
 
@@ -23,6 +29,15 @@ type Anchor = 'top' | 'left' | 'bottom' | 'right';
 function Overview() {
 
     const classes = useStyles();
+
+    const {user} = useUser();
+
+    const [datasets, setDatasets] = useState([{name: ''}]);
+    useEffect(() => {
+        api.post('/datasets/management/', {user_id: user.id})
+            .then(response => setDatasets(response.data))
+
+    }, [user.id]);
 
     const [state, setState] = useState({
         top: false,
@@ -52,8 +67,11 @@ function Overview() {
                     presence: {allowEmpty: false, message: 'Name is required'},
                 }
             }}
-            submit={(formState) => api.post('/datasets/management/create', formState!.values)
-                .then(response => console.log(response.data))}
+            submit={(formState) => api.post('/datasets/management/create', {
+                user_id: user.id,
+                ...formState!.values
+            })
+                .then(response => setDatasets([...datasets, response.data]))}
         >
             <Inputs.Text
                 name='name'
@@ -71,7 +89,7 @@ function Overview() {
             {(['right'] as Anchor[]).map((anchor) => (
                 <React.Fragment key={anchor}>
                     <Buttons.Default
-                        label='Dataset name'
+                        label='Add dataset'
                         onClick={toggleDrawer(anchor, true)}
                     />
                     <Drawer anchor={anchor} className={classes.drawer} open={state[anchor]}
@@ -80,6 +98,10 @@ function Overview() {
                     </Drawer>
                 </React.Fragment>
             ))}
+
+            {datasets.map((dataset, index) => <div className={classes.dataset}>
+                Dataset {index} : {dataset.name}
+            </div>)}
         </div>
     );
 }
