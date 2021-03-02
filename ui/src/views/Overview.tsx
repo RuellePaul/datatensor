@@ -11,7 +11,9 @@ import {makeStyles} from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        padding: theme.spacing(4, 6),
+        padding: theme.spacing(4, 6)
+    },
+    wrapper: {
         maxWidth: 1550,
         margin: 'auto'
     },
@@ -95,7 +97,10 @@ function Overview() {
                         user_id: user.id,
                         ...formState!.values
                     })
-                        .then(response => setDatasets([...datasets, response.data]))}
+                        .then(response => {
+                            setDatasets([...datasets, response.data]);
+                            setOpen(false);
+                        })}
                 >
                     <Inputs.Text
                         name='name'
@@ -108,7 +113,7 @@ function Overview() {
                 </Form>
             </Drawer>
 
-            <Grid container spacing={4}>
+            <Grid container spacing={4} className={classes.wrapper}>
                 {datasets.map((dataset, index) => (
                     <Grid
                         key={`dataset-${index}`}
