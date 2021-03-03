@@ -16,8 +16,6 @@ import {
 import {createStyles, makeStyles} from '@material-ui/core/styles';
 import {Favorite, MoreVert, Share} from '@material-ui/icons'
 
-import {red} from '@material-ui/core/colors';
-
 const useStyles = makeStyles((theme) =>
     createStyles({
         root: {
@@ -79,10 +77,10 @@ function Dataset({dataset}) {
                 </CardContent>
             </CardActionArea>
             <CardActions disableSpacing>
-                <IconButton aria-label='add to favorites'>
-                    <Favorite/>
+                <IconButton>
+                    <Favorite color='secondary'/>
                 </IconButton>
-                <IconButton aria-label='share'>
+                <IconButton >
                     <Share/>
                 </IconButton>
             </CardActions>

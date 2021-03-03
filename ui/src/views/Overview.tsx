@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(4, 6)
     },
     wrapper: {
-        maxWidth: 1550,
+        maxWidth: 1500,
         margin: 'auto'
     },
     drawer: {
