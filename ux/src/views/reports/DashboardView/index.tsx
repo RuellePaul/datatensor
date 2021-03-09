@@ -21,7 +21,7 @@ const DashboardView: FC = () => {
             title="Admin dashboard"
         >
             <Container maxWidth={false}>
-
+                ...
             </Container>
         </Page>
     );

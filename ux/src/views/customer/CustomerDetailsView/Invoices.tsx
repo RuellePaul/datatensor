@@ -20,7 +20,7 @@ import {
     TableRow
 } from '@material-ui/core';
 import {ArrowRight as ArrowRightIcon} from 'react-feather';
-import axios from 'src/utils/axios';
+import api from 'src/utils/api';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import Label from 'src/components/Label';
 import GenericMoreButton from 'src/components/GenericMoreButton';
@@ -41,7 +41,7 @@ const Invoices: FC<InvoicesProps> = ({className, ...rest}) => {
 
     const getInvoices = useCallback(async () => {
         try {
-            const response = await axios.get<{ invoices: Invoice[]; }>('/api/customers/1/invoices');
+            const response = await api.get<{ invoices: Invoice[]; }>('/api/customers/1/invoices');
 
             if (isMountedRef.current) {
                 setInvoices(response.data.invoices);
@@ -62,7 +62,7 @@ const Invoices: FC<InvoicesProps> = ({className, ...rest}) => {
         >
             <CardHeader
                 action={<GenericMoreButton/>}
-                title="Customer invoices"
+                title="User invoices"
             />
             <Divider/>
             <PerfectScrollbar>

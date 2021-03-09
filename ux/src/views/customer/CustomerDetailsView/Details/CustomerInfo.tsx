@@ -44,7 +44,7 @@ const CustomerInfo: FC<CustomerInfoProps> = ({
             className={clsx(classes.root, className)}
             {...rest}
         >
-            <CardHeader title="Customer info"/>
+            <CardHeader title="User info"/>
             <Divider/>
             <Table>
                 <TableBody>

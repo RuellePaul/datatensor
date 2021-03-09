@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const API_URI = `https://${window.location.hostname}:7000`;
+const API_URI = `http://${window.location.hostname}:4069`;
 
 axios.defaults.withCredentials = true;
 

@@ -15,7 +15,7 @@ import {
     TableRow,
     Typography
 } from '@material-ui/core';
-import axios from 'src/utils/axios';
+import api from 'src/utils/api';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import Label from 'src/components/Label';
 import {CustomerLog} from 'src/types/customer';
@@ -41,7 +41,7 @@ const Logs: FC<LogsProps> = ({className, ...rest}) => {
 
     const getLogs = useCallback(async () => {
         try {
-            const response = await axios.get<{ logs: CustomerLog[]; }>('/api/customers/1/logs');
+            const response = await api.get<{ logs: CustomerLog[]; }>('/api/customers/1/logs');
 
             if (isMountedRef.current) {
                 setLogs(response.data.logs);
@@ -60,7 +60,7 @@ const Logs: FC<LogsProps> = ({className, ...rest}) => {
             className={clsx(classes.root, className)}
             {...rest}
         >
-            <CardHeader title="Customer logs"/>
+            <CardHeader title="User logs"/>
             <Divider/>
             <PerfectScrollbar>
                 <Box minWidth={1150}>

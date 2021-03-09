@@ -15,7 +15,7 @@ import {
     Typography
 } from '@material-ui/core';
 import {Theme} from 'src/theme';
-import axios from 'src/utils/axios';
+import api from 'src/utils/api';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 
 interface SubscriptionProps {
@@ -60,7 +60,7 @@ const Subscription: FC<SubscriptionProps> = ({className, ...rest}) => {
 
     const getSubscription = useCallback(async () => {
         try {
-            const response = await axios.get('/api/account/subscription');
+            const response = await api.get('/api/account/subscription');
 
             if (isMountedRef.current) {
                 setSubscription(response.data.subscription);

@@ -17,7 +17,7 @@ import {
     Typography
 } from '@material-ui/core';
 import {Search as SearchIcon, XCircle as XIcon} from 'react-feather';
-import axios from 'src/utils/axios';
+import api from 'src/utils/api';
 
 interface Result {
     description: string;
@@ -51,7 +51,7 @@ const Search: FC = () => {
         try {
             setLoading(true);
 
-            const response = await axios.get<{ results: Result[]; }>('/api/search');
+            const response = await api.get<{ results: Result[]; }>('/api/search');
 
             setResults(response.data.results);
         } catch (err) {

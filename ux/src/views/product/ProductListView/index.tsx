@@ -1,7 +1,7 @@
 import React, {FC, useCallback, useEffect, useState} from 'react';
 import {Box, Container, makeStyles} from '@material-ui/core';
 import {Theme} from 'src/theme';
-import axios from 'src/utils/axios';
+import api from 'src/utils/api';
 import Page from 'src/components/Page';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import {Product} from 'src/types/product';
@@ -24,7 +24,7 @@ const ProductListView: FC = () => {
 
     const getProducts = useCallback(async () => {
         try {
-            const response = await axios.get<{ products: Product[]; }>('/api/products');
+            const response = await api.get<{ products: Product[]; }>('/api/products');
 
             if (isMountedRef.current) {
                 setProducts(response.data.products);

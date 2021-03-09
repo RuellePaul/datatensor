@@ -1,6 +1,6 @@
 import React, {FC, useCallback, useEffect, useState} from 'react';
 import {Box, Container, makeStyles} from '@material-ui/core';
-import axios from 'src/utils/axios';
+import api from 'src/utils/api';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
@@ -24,7 +24,7 @@ const CustomerEditView: FC = () => {
 
     const getCustomer = useCallback(async () => {
         try {
-            const response = await axios.get<{ customer: Customer; }>('/api/customers/1');
+            const response = await api.get<{ customer: Customer; }>('/api/customers/1');
 
             if (isMountedRef.current) {
                 setCustomer(response.data.customer);
@@ -45,7 +45,7 @@ const CustomerEditView: FC = () => {
     return (
         <Page
             className={classes.root}
-            title="Customer Edit"
+            title="User Edit"
         >
             <Container maxWidth={false}>
                 <Header/>

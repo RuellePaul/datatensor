@@ -1,6 +1,6 @@
 import React, {FC, useCallback, useEffect, useState} from 'react';
 import {Box, Container, makeStyles} from '@material-ui/core';
-import axios from 'src/utils/axios';
+import api from 'src/utils/api';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
@@ -24,7 +24,8 @@ const CustomerListView: FC = () => {
 
     const getCustomers = useCallback(async () => {
         try {
-            const response = await axios.get<{ customers: Customer[]; }>('/api/customers');
+            const response = await api.get<{ customers: Customer[]; }>('/api/customers');
+            console.log(response)
 
             if (isMountedRef.current) {
                 setCustomers(response.data.customers);
@@ -41,7 +42,7 @@ const CustomerListView: FC = () => {
     return (
         <Page
             className={classes.root}
-            title="Customer List"
+            title="User List"
         >
             <Container maxWidth={false}>
                 <Header/>

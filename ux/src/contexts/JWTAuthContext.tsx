@@ -2,7 +2,7 @@ import React, {createContext, FC, ReactNode, useEffect, useReducer} from 'react'
 import jwtDecode from 'jwt-decode';
 import {User} from 'src/types/user';
 import SplashScreen from 'src/components/SplashScreen';
-import axios from 'src/utils/axios';
+import api from 'src/utils/api';
 
 interface AuthState {
     isInitialised: boolean;
@@ -73,10 +73,10 @@ const isValidToken = (accessToken: string): boolean => {
 const setSession = (accessToken: string | null): void => {
     if (accessToken) {
         localStorage.setItem('accessToken', accessToken);
-        axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+        api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
     } else {
         localStorage.removeItem('accessToken');
-        delete axios.defaults.headers.common.Authorization;
+        delete api.defaults.headers.common.Authorization;
     }
 };
 
@@ -136,7 +136,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
     const [state, dispatch] = useReducer(reducer, initialAuthState);
 
     const login = async (email: string, password: string) => {
-        const response = await axios.post<{ accessToken: string; user: User }>('/api/account/login', {email, password});
+        const response = await api.post<{ accessToken: string; user: User }>('/api/account/login', {email, password});
         const {accessToken, user} = response.data;
 
         setSession(accessToken);
@@ -154,7 +154,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
     };
 
     const register = async (email: string, name: string, password: string) => {
-        const response = await axios.post<{ accessToken: string; user: User }>('/api/account/register', {
+        const response = await api.post<{ accessToken: string; user: User }>('/api/account/register', {
             email,
             name,
             password
@@ -179,7 +179,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
                 if (accessToken && isValidToken(accessToken)) {
                     setSession(accessToken);
 
-                    const response = await axios.get<{ user: User; }>('/api/account/me');
+                    const response = await api.get<{ user: User; }>('/api/account/me');
                     const {user} = response.data;
 
                     dispatch({

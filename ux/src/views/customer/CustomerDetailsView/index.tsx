@@ -2,7 +2,7 @@ import React, {ChangeEvent, FC, useCallback, useEffect, useState} from 'react';
 import {Box, Container, Divider, makeStyles, Tab, Tabs} from '@material-ui/core';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
-import axios from 'src/utils/axios';
+import api from 'src/utils/api';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import {Customer} from 'src/types/customer';
 import Header from './Header';
@@ -37,7 +37,7 @@ const CustomerDetailsView: FC = () => {
 
     const getCustomer = useCallback(async () => {
         try {
-            const response = await axios.get<{ customer: Customer; }>('/api/customers/1');
+            const response = await api.get<{ customer: Customer; }>('/api/customers/1');
 
             if (isMountedRef.current) {
                 setCustomer(response.data.customer);
@@ -58,7 +58,7 @@ const CustomerDetailsView: FC = () => {
     return (
         <Page
             className={classes.root}
-            title="Customer Details"
+            title="User Details"
         >
             <Container maxWidth={false}>
                 <Header customer={customer}/>

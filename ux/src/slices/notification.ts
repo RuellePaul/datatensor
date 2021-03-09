@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {AppThunk} from 'src/store'
-import axios from 'src/utils/axios';
+import api from 'src/utils/api';
 import {Notification} from 'src/types/notification';
 
 interface NotificationsState {
@@ -26,7 +26,7 @@ const slice = createSlice({
 export const reducer = slice.reducer;
 
 export const getNotifications = (): AppThunk => async (dispatch) => {
-    const response = await axios.get<{ notifications: Notification[]; }>('/api/notifications');
+    const response = await api.get<{ notifications: Notification[]; }>('/api/notifications');
 
     dispatch(slice.actions.getNotifications(response.data));
 };

@@ -17,7 +17,7 @@ import {
     TextField
 } from '@material-ui/core';
 import MaiIcon from '@material-ui/icons/MailOutline';
-import axios from 'src/utils/axios';
+import api from 'src/utils/api';
 import {Theme} from 'src/theme';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import {CustomerEmail} from 'src/types/customer';
@@ -47,7 +47,7 @@ const Emails: FC<EmailsProps> = ({className, ...rest}) => {
 
     const getMails = useCallback(async () => {
         try {
-            const response = await axios.get<{ emails: CustomerEmail[]; }>('/api/customers/1/emails');
+            const response = await api.get<{ emails: CustomerEmail[]; }>('/api/customers/1/emails');
 
             if (isMountedRef.current) {
                 setEmails(response.data.emails);
