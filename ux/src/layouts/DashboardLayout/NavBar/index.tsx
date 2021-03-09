@@ -27,7 +27,6 @@ import {
     Edit as EditIcon,
     Folder as FolderIcon,
     Layout as LayoutIcon,
-    Lock as LockIcon,
     Mail as MailIcon,
     MessageCircle as MessageCircleIcon,
     PieChart as PieChartIcon,
@@ -43,8 +42,8 @@ import useAuth from 'src/hooks/useAuth';
 import NavItem from './NavItem';
 
 interface NavBarProps {
-    onMobileClose: () => void;
     openMobile: boolean;
+    onMobileClose: () => void;
 }
 
 interface Item {
@@ -220,11 +219,6 @@ const sections: Section[] = [
     {
         subheader: 'Auth',
         items: [
-            {
-                title: 'Login',
-                href: '/login-unprotected',
-                icon: LockIcon
-            },
             {
                 title: 'Register',
                 href: '/register-unprotected',

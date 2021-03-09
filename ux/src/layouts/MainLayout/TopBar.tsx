@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import {Link as RouterLink} from 'react-router-dom';
+import {Link as RouterLink, useHistory} from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {AppBar, Box, Button, Divider, Hidden, Link, makeStyles, Toolbar, Typography} from '@material-ui/core';
@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
 
 const TopBar: FC<TopBarProps> = ({className, ...rest}) => {
     const classes = useStyles();
+    const history = useHistory();
 
     return (
         <AppBar
@@ -66,13 +67,13 @@ const TopBar: FC<TopBarProps> = ({className, ...rest}) => {
                     underline="none"
                     variant="body2"
                 >
-                    Dashboard
+                    About
                 </Link>
                 <Link
                     className={classes.link}
                     color="textSecondary"
                     component={RouterLink}
-                    to="/docs"
+                    to="/app"
                     underline="none"
                     variant="body2"
                 >
@@ -82,11 +83,11 @@ const TopBar: FC<TopBarProps> = ({className, ...rest}) => {
                 <Button
                     color="secondary"
                     component="a"
-                    href="https://material-ui.com/store/items/devias-kit-pro"
                     variant="contained"
                     size="small"
+                    onClick={() => history.push('/app')}
                 >
-                    Get the kit
+                    Dashboard
                 </Button>
             </Toolbar>
         </AppBar>

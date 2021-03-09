@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import {Box, Button, Container, makeStyles, Typography} from '@material-ui/core';
+import {Container, makeStyles, Typography} from '@material-ui/core';
 import {Theme} from 'src/theme';
 
 interface CTAProps {
@@ -42,21 +42,6 @@ const CTA: FC<CTAProps> = ({className, ...rest}) => {
                 >
                     Download Devias Material Kit today.
                 </Typography>
-                <Box
-                    mt={6}
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                >
-                    <Button
-                        color="secondary"
-                        component="a"
-                        href="https://material-ui.com/store/items/devias-kit-pro"
-                        variant="contained"
-                    >
-                        Get the kit
-                    </Button>
-                </Box>
             </Container>
         </div>
     );
