@@ -1,94 +1,86 @@
-import React from 'react';
-import type { FC } from 'react';
+import React, {FC} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import {
-  Box,
-  Card,
-  CardContent,
-  Grid,
-  Typography,
-  makeStyles
-} from '@material-ui/core';
-import { Rating } from '@material-ui/lab';
-import type { Theme } from 'src/theme';
+import {Box, Card, CardContent, Grid, makeStyles, Typography} from '@material-ui/core';
+import {Rating} from '@material-ui/lab';
+import {Theme} from 'src/theme';
 
 interface OverallReviewsProps {
-  className?: string;
-  rating: number;
-  reviewsCount: number;
+    className?: string;
+    rating: number;
+    reviewsCount: number;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
-  rating: {
-    marginLeft: theme.spacing(2),
-    fontWeight: theme.typography.fontWeightBold
-  }
+    root: {},
+    rating: {
+        marginLeft: theme.spacing(2),
+        fontWeight: theme.typography.fontWeightBold
+    }
 }));
 
 const OverallReviews: FC<OverallReviewsProps> = ({
-  className,
-  rating,
-  reviewsCount,
-  ...rest
-}) => {
-  const classes = useStyles();
+                                                     className,
+                                                     rating,
+                                                     reviewsCount,
+                                                     ...rest
+                                                 }) => {
+    const classes = useStyles();
 
-  return (
-    <Card
-      className={clsx(classes.root, className)}
-      {...rest}
-    >
-      <CardContent>
-        <Grid
-          alignItems="center"
-          container
-          spacing={3}
+    return (
+        <Card
+            className={clsx(classes.root, className)}
+            {...rest}
         >
-          <Grid item>
-            <Typography
-              variant="h5"
-              color="textPrimary"
-            >
-              Overall Reviews
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Box
-              display="flex"
-              alignItems="center"
-            >
-              <Rating value={rating} />
-              <Typography
-                className={classes.rating}
-                variant="h6"
-                color="textPrimary"
-              >
-                {rating.toFixed(1)}
-              </Typography>
-            </Box>
-          </Grid>
-          <Grid item>
-            <Typography
-              color="textSecondary"
-              variant="body2"
-            >
-              {reviewsCount}
-              {' '}
-              reviews in total
-            </Typography>
-          </Grid>
-        </Grid>
-      </CardContent>
-    </Card>
-  );
+            <CardContent>
+                <Grid
+                    alignItems="center"
+                    container
+                    spacing={3}
+                >
+                    <Grid item>
+                        <Typography
+                            variant="h5"
+                            color="textPrimary"
+                        >
+                            Overall Reviews
+                        </Typography>
+                    </Grid>
+                    <Grid item>
+                        <Box
+                            display="flex"
+                            alignItems="center"
+                        >
+                            <Rating value={rating}/>
+                            <Typography
+                                className={classes.rating}
+                                variant="h6"
+                                color="textPrimary"
+                            >
+                                {rating.toFixed(1)}
+                            </Typography>
+                        </Box>
+                    </Grid>
+                    <Grid item>
+                        <Typography
+                            color="textSecondary"
+                            variant="body2"
+                        >
+                            {reviewsCount}
+                            {' '}
+                            reviews in total
+                        </Typography>
+                    </Grid>
+                </Grid>
+            </CardContent>
+        </Card>
+    );
 };
 
 OverallReviews.propTypes = {
-  className: PropTypes.string,
-  rating: PropTypes.number.isRequired,
-  reviewsCount: PropTypes.number.isRequired
+    className: PropTypes.string,
+    rating: PropTypes.number.isRequired,
+    reviewsCount: PropTypes.number.isRequired
 };
 
 export default OverallReviews;

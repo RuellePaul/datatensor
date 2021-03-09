@@ -1,153 +1,144 @@
-import React from 'react';
-import type {
-  ElementType,
-  FC,
-  ReactNode
-} from 'react';
+import React, {ElementType, FC, ReactNode} from 'react';
 import clsx from 'clsx';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import {
-  Button,
-  ButtonGroup,
-  Grid,
-  Hidden,
-  IconButton,
-  Tooltip,
-  Typography,
-  makeStyles
-} from '@material-ui/core';
+import {Button, ButtonGroup, Grid, Hidden, IconButton, makeStyles, Tooltip, Typography} from '@material-ui/core';
 import ViewConfigIcon from '@material-ui/icons/ViewComfyOutlined';
 import ViewWeekIcon from '@material-ui/icons/ViewWeekOutlined';
 import ViewDayIcon from '@material-ui/icons/ViewDayOutlined';
 import ViewAgendaIcon from '@material-ui/icons/ViewAgendaOutlined';
-import type { View } from 'src/types/calendar';
+import {View} from 'src/types/calendar';
 
 interface ToolbarProps {
-  children?: ReactNode;
-  className?: string;
-  date: Date;
-  onDateNext?: () => void;
-  onDatePrev?: () => void;
-  onDateToday?: () => void;
-  onAddClick?: () => void;
-  onViewChange?: (view: View) => void;
-  view: View;
+    children?: ReactNode;
+    className?: string;
+    date: Date;
+    onDateNext?: () => void;
+    onDatePrev?: () => void;
+    onDateToday?: () => void;
+    onAddClick?: () => void;
+    onViewChange?: (view: View) => void;
+    view: View;
 }
 
 interface ViewOption {
-  label: string;
-  value: View;
-  icon: ElementType;
+    label: string;
+    value: View;
+    icon: ElementType;
 }
 
 const viewOptions: ViewOption[] = [
-  {
-    label: 'Month',
-    value: 'dayGridMonth',
-    icon: ViewConfigIcon
-  },
-  {
-    label: 'Week',
-    value: 'timeGridWeek',
-    icon: ViewWeekIcon
-  },
-  {
-    label: 'Day',
-    value: 'timeGridDay',
-    icon: ViewDayIcon
-  },
-  {
-    label: 'Agenda',
-    value: 'listWeek',
-    icon: ViewAgendaIcon
-  }
+    {
+        label: 'Month',
+        value: 'dayGridMonth',
+        icon: ViewConfigIcon
+    },
+    {
+        label: 'Week',
+        value: 'timeGridWeek',
+        icon: ViewWeekIcon
+    },
+    {
+        label: 'Day',
+        value: 'timeGridDay',
+        icon: ViewDayIcon
+    },
+    {
+        label: 'Agenda',
+        value: 'listWeek',
+        icon: ViewAgendaIcon
+    }
 ];
 
 const useStyles = makeStyles(() => ({
-  root: {}
+    root: {}
 }));
 
 const Toolbar: FC<ToolbarProps> = ({
-  className,
-  date,
-  onDateNext,
-  onDatePrev,
-  onDateToday,
-  onAddClick,
-  onViewChange,
-  view,
-  ...rest
-}) => {
-  const classes = useStyles();
+                                       className,
+                                       date,
+                                       onDateNext,
+                                       onDatePrev,
+                                       onDateToday,
+                                       onAddClick,
+                                       onViewChange,
+                                       view,
+                                       ...rest
+                                   }) => {
+    const classes = useStyles();
 
-  return (
-    <Grid
-      className={clsx(classes.root, className)}
-      alignItems="center"
-      container
-      justify="space-between"
-      spacing={3}
-      {...rest}
-    >
-      <Grid item>
-        <ButtonGroup size="small">
-          <Button onClick={onDatePrev}>Prev</Button>
-          <Button onClick={onDateToday}>Today</Button>
-          <Button onClick={onDateNext}>Next</Button>
-        </ButtonGroup>
-      </Grid>
-      <Hidden smDown>
-        <Grid item>
-          <Typography
-            variant="h3"
-            color="textPrimary"
-          >
-            {moment(date).format('MMMM YYYY')}
-          </Typography>
-        </Grid>
-        <Grid item>
-          {viewOptions.map((viewOption) => {
-            const Icon = viewOption.icon;
+    return (
+        <Grid
+            className={clsx(classes.root, className)}
+            alignItems="center"
+            container
+            justify="space-between"
+            spacing={3}
+            {...rest}
+        >
+            <Grid item>
+                <ButtonGroup size="small">
+                    <Button onClick={onDatePrev}>Prev</Button>
+                    <Button onClick={onDateToday}>Today</Button>
+                    <Button onClick={onDateNext}>Next</Button>
+                </ButtonGroup>
+            </Grid>
+            <Hidden smDown>
+                <Grid item>
+                    <Typography
+                        variant="h3"
+                        color="textPrimary"
+                    >
+                        {moment(date).format('MMMM YYYY')}
+                    </Typography>
+                </Grid>
+                <Grid item>
+                    {viewOptions.map((viewOption) => {
+                        const Icon = viewOption.icon;
 
-            return (
-              <Tooltip
-                key={viewOption.value}
-                title={viewOption.label}
-              >
-                <IconButton
-                  color={viewOption.value === view ? 'secondary' : 'default'}
-                  onClick={() => onViewChange(viewOption.value)}
-                >
-                  <Icon />
-                </IconButton>
-              </Tooltip>
-            );
-          })}
+                        return (
+                            <Tooltip
+                                key={viewOption.value}
+                                title={viewOption.label}
+                            >
+                                <IconButton
+                                    color={viewOption.value === view ? 'secondary' : 'default'}
+                                    onClick={() => onViewChange(viewOption.value)}
+                                >
+                                    <Icon/>
+                                </IconButton>
+                            </Tooltip>
+                        );
+                    })}
+                </Grid>
+            </Hidden>
         </Grid>
-      </Hidden>
-    </Grid>
-  );
+    );
 };
 
 Toolbar.propTypes = {
-  children: PropTypes.node,
-  className: PropTypes.string,
-  date: PropTypes.instanceOf(Date).isRequired,
-  onDateNext: PropTypes.func,
-  onDatePrev: PropTypes.func,
-  onDateToday: PropTypes.func,
-  onAddClick: PropTypes.func,
-  onViewChange: PropTypes.func,
-  view: PropTypes.oneOf(['dayGridMonth', 'timeGridWeek', 'timeGridDay', 'listWeek'])
+    children: PropTypes.node,
+    className: PropTypes.string,
+    date: PropTypes.instanceOf(Date).isRequired,
+    onDateNext: PropTypes.func,
+    onDatePrev: PropTypes.func,
+    onDateToday: PropTypes.func,
+    onAddClick: PropTypes.func,
+    onViewChange: PropTypes.func,
+    view: PropTypes.oneOf(['dayGridMonth', 'timeGridWeek', 'timeGridDay', 'listWeek'])
 };
 
 Toolbar.defaultProps = {
-  onDateNext: () => {},
-  onDatePrev: () => {},
-  onDateToday: () => {},
-  onAddClick: () => {},
-  onViewChange: () => {}
+    onDateNext: () => {
+    },
+    onDatePrev: () => {
+    },
+    onDateToday: () => {
+    },
+    onAddClick: () => {
+    },
+    onViewChange: () => {
+    }
 };
 
 export default Toolbar;

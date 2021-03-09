@@ -13,22 +13,22 @@ import 'src/assets/css/prism.css';
 import 'src/mixins/chartjs';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { enableES5 } from 'immer';
+import {Provider} from 'react-redux';
+import {enableES5} from 'immer';
 import * as serviceWorker from 'src/serviceWorker';
 import store from 'src/store';
-import { SettingsProvider } from 'src/contexts/SettingsContext';
+import {SettingsProvider} from 'src/contexts/SettingsContext';
 import App from 'src/App';
 
 enableES5();
 
 ReactDOM.render(
-  <Provider store={store}>
-    <SettingsProvider>
-      <App />
-    </SettingsProvider>
-  </Provider>,
-  document.getElementById('root')
+    <Provider store={store}>
+        <SettingsProvider>
+            <App/>
+        </SettingsProvider>
+    </Provider>,
+    document.getElementById('root')
 );
 
 serviceWorker.register();

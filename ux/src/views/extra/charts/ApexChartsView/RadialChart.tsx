@@ -1,75 +1,69 @@
-import React from 'react';
-import type { FC } from 'react';
+import React, {FC} from 'react';
 import Chart from 'react-apexcharts';
-import {
-  Card,
-  CardContent,
-  Typography,
-  useTheme
-} from '@material-ui/core';
-import type { Theme } from 'src/theme';
+import {Card, CardContent, Typography, useTheme} from '@material-ui/core';
+import {Theme} from 'src/theme';
 
 const RadialChart: FC = () => {
-  const theme = useTheme<Theme>();
+    const theme = useTheme<Theme>();
 
-  const data = {
-    options: {
-      chart: {
-        background: theme.palette.background.paper,
-        stacked: false,
-        toolbar: {
-          show: false
-        },
-        zoom: false
-      },
-      colors: ['#27c6db'],
-      labels: ['System Health'],
-      plotOptions: {
-        radialBar: {
-          hollow: {
-            size: '60%',
-          },
-          dataLabels: {
-            name: {
-              fontFamily: theme.typography.fontFamily,
-              color: theme.palette.text.primary
+    const data = {
+        options: {
+            chart: {
+                background: theme.palette.background.paper,
+                stacked: false,
+                toolbar: {
+                    show: false
+                },
+                zoom: false
             },
-            value: {
-              color: theme.palette.text.secondary
+            colors: ['#27c6db'],
+            labels: ['System Health'],
+            plotOptions: {
+                radialBar: {
+                    hollow: {
+                        size: '60%',
+                    },
+                    dataLabels: {
+                        name: {
+                            fontFamily: theme.typography.fontFamily,
+                            color: theme.palette.text.primary
+                        },
+                        value: {
+                            color: theme.palette.text.secondary
+                        }
+                    },
+                    track: {
+                        background: theme.palette.background.dark
+                    }
+                }
+            },
+            theme: {
+                mode: theme.palette.type
             }
-          },
-          track: {
-            background: theme.palette.background.dark
-          }
-        }
-      },
-      theme: {
-        mode: theme.palette.type
-      }
-    },
-    series: [83]
-  };
+        },
+        series: [83]
+    };
 
-  return (
-    <Card>
-      <CardContent>
-        <Chart
-          options={data.options}
-          series={data.series}
-          type="radialBar"
-          height="300"
-        />
-        <Typography
-          align="center"
-          color="textSecondary"
-          variant="caption"
-          component="p"
-        >
-          This shouldn&apos;t be bellow 80%
-        </Typography>
-      </CardContent>
-    </Card>
-  );
+    return (
+        <Card>
+            <CardContent>
+                <Chart
+                    options={data.options}
+                    series={data.series}
+                    type="radialBar"
+                    height="300"
+                />
+                <Typography
+                    align="center"
+                    color="textSecondary"
+                    variant="caption"
+                    component="p"
+                >
+                    This shouldn&apos;t be bellow 80%
+                </Typography>
+            </CardContent>
+        </Card>
+    );
 };
 
 export default RadialChart;

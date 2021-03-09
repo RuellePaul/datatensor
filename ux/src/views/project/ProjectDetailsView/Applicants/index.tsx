@@ -1,46 +1,45 @@
-import React from 'react';
-import type { FC } from 'react';
+import React, {FC} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { Grid, makeStyles } from '@material-ui/core';
+import {Grid, makeStyles} from '@material-ui/core';
 import ApplicantCard from './ApplicantCard';
 
 interface ApplicantsProps {
-  className?: string;
-  applicants: any[];
+    className?: string;
+    applicants: any[];
 }
 
 const useStyles = makeStyles(() => ({
-  root: {}
+    root: {}
 }));
 
-const Applicants: FC<ApplicantsProps> = ({ className, applicants, ...rest }) => {
-  const classes = useStyles();
+const Applicants: FC<ApplicantsProps> = ({className, applicants, ...rest}) => {
+    const classes = useStyles();
 
-  return (
-    <Grid
-      className={clsx(classes.root, className)}
-      container
-      spacing={3}
-      {...rest}
-    >
-      {applicants.map((applicant) => (
+    return (
         <Grid
-          item
-          key={applicant.id}
-          lg={4}
-          xs={12}
+            className={clsx(classes.root, className)}
+            container
+            spacing={3}
+            {...rest}
         >
-          <ApplicantCard applicant={applicant} />
+            {applicants.map((applicant) => (
+                <Grid
+                    item
+                    key={applicant.id}
+                    lg={4}
+                    xs={12}
+                >
+                    <ApplicantCard applicant={applicant}/>
+                </Grid>
+            ))}
         </Grid>
-      ))}
-    </Grid>
-  );
+    );
 };
 
 Applicants.propTypes = {
-  className: PropTypes.string,
-  applicants: PropTypes.array.isRequired
+    className: PropTypes.string,
+    applicants: PropTypes.array.isRequired
 };
 
 export default Applicants;
