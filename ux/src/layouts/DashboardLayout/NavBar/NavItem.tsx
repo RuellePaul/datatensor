@@ -116,8 +116,9 @@ const NavItem: FC<NavItemProps> = ({
                         />
                     )}
                     <span className={classes.title}>
-            {title}
-          </span>
+                        {title}
+                    </span>
+                    {Info && <Info/>}
                     {open ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
                 </Button>
                 <Collapse in={open}>
@@ -149,8 +150,8 @@ const NavItem: FC<NavItemProps> = ({
                     />
                 )}
                 <span className={classes.title}>
-          {title}
-        </span>
+                    {title}
+                </span>
                 {Info && <Info/>}
             </Button>
         </ListItem>

@@ -17,24 +17,11 @@ import {
     makeStyles,
     Typography
 } from '@material-ui/core';
-import ReceiptIcon from '@material-ui/icons/ReceiptOutlined';
 import {
     AlertCircle as AlertCircleIcon,
-    BarChart as BarChartIcon,
-    Briefcase as BriefcaseIcon,
-    Calendar as CalendarIcon,
-    DollarSign as DollarSignIcon,
-    Edit as EditIcon,
     Folder as FolderIcon,
-    Layout as LayoutIcon,
-    Mail as MailIcon,
-    MessageCircle as MessageCircleIcon,
     PieChart as PieChartIcon,
-    Share2 as ShareIcon,
     ShoppingCart as ShoppingCartIcon,
-    Trello as TrelloIcon,
-    User as UserIcon,
-    UserPlus as UserPlusIcon,
     Users as UsersIcon
 } from 'react-feather';
 import Logo from 'src/components/Logo';
@@ -64,6 +51,18 @@ const sections: Section[] = [
         subheader: 'Reports',
         items: [
             {
+                title: 'App dashboard',
+                icon: PieChartIcon,
+                href: '/app/admin/reports/dashboard',
+                info: () => (
+                    <Chip
+                        color="primary"
+                        size="small"
+                        label="Admin"
+                    />
+                )
+            },
+            {
                 title: 'Dashboard',
                 icon: PieChartIcon,
                 href: '/app/reports/dashboard'
@@ -74,219 +73,85 @@ const sections: Section[] = [
         subheader: 'Management',
         items: [
             {
-                title: 'Customers',
+                title: 'Users',
                 icon: UsersIcon,
-                href: '/app/management/customers',
+                href: '/app/management/users',
+                info: () => (
+                    <Chip
+                        color="primary"
+                        size="small"
+                        label="Admin"
+                    />
+                ),
                 items: [
                     {
-                        title: 'List Customers',
-                        href: '/app/management/customers'
+                        title: 'List Users',
+                        href: '/app/admin/management/users'
                     },
                     {
                         title: 'View Customer',
-                        href: '/app/management/customers/1'
+                        href: '/app/admin/management/users/1'
                     },
                     {
                         title: 'Edit Customer',
-                        href: '/app/management/customers/1/edit'
+                        href: '/app/admin/management/users/1/edit'
                     }
                 ]
             },
             {
-                title: 'Products',
+                title: 'Datasets',
                 icon: ShoppingCartIcon,
+                href: '/app/management',
+                items: [
+                    {
+                        title: 'Overview',
+                        href: '/app/management/datasets'
+                    },
+                    {
+                        title: 'Create a dataset',
+                        href: '/app/management/datasets/create'
+                    }
+                ]
+            },
+            {
+                title: 'Training data',
+                icon: AlertCircleIcon,
                 href: '/app/management/products',
                 items: [
                     {
-                        title: 'List Products',
-                        href: '/app/management/products'
+                        title: 'Upload',
+                        href: '/404'
                     },
                     {
-                        title: 'Create Product',
-                        href: '/app/management/products/create'
+                        title: 'Video to images',
+                        href: '/404'
+                    },
+                    {
+                        title: 'From the web',
+                        href: '/404'
+                    },
+                    {
+                        title: 'Augmentation',
+                        href: '/404'
                     }
                 ]
             },
             {
-                title: 'Orders',
+                title: 'Models',
                 icon: FolderIcon,
                 href: '/app/management/orders',
                 items: [
                     {
-                        title: 'List Orders',
-                        href: '/app/management/orders'
+                        title: 'Train a model',
+                        href: '/404'
                     },
                     {
-                        title: 'View Order',
-                        href: '/app/management/orders/1'
-                    }
-                ]
-            },
-            {
-                title: 'Invoices',
-                icon: ReceiptIcon,
-                href: '/app/management/invoices',
-                items: [
-                    {
-                        title: 'List Invoices',
-                        href: '/app/management/invoices'
+                        title: 'Compute mAP',
+                        href: '/404'
                     },
                     {
-                        title: 'View Invoice',
-                        href: '/app/management/invoices/1'
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        subheader: 'Applications',
-        items: [
-            {
-                title: 'Projects Platform',
-                href: '/app/projects',
-                icon: BriefcaseIcon,
-                items: [
-                    {
-                        title: 'Overview',
-                        href: '/app/projects/overview'
-                    },
-                    {
-                        title: 'Browse Projects',
-                        href: '/app/projects/browse'
-                    },
-                    {
-                        title: 'Create Project',
-                        href: '/app/projects/create'
-                    },
-                    {
-                        title: 'View Project',
-                        href: '/app/projects/1'
-                    }
-                ]
-            },
-            {
-                title: 'Social Platform',
-                href: '/app/social',
-                icon: ShareIcon,
-                items: [
-                    {
-                        title: 'Profile',
-                        href: '/app/social/profile'
-                    },
-                    {
-                        title: 'Feed',
-                        href: '/app/social/feed'
-                    }
-                ]
-            },
-            {
-                title: 'Kanban',
-                href: '/app/kanban',
-                icon: TrelloIcon
-            },
-            {
-                title: 'Mail',
-                href: '/app/mail',
-                icon: MailIcon
-            },
-            {
-                title: 'Chat',
-                href: '/app/chat',
-                icon: MessageCircleIcon,
-                info: () => (
-                    <Chip
-                        color="secondary"
-                        size="small"
-                        label="Updated"
-                    />
-                )
-            },
-            {
-                title: 'Calendar',
-                href: '/app/calendar',
-                icon: CalendarIcon,
-                info: () => (
-                    <Chip
-                        color="secondary"
-                        size="small"
-                        label="Updated"
-                    />
-                )
-            }
-        ]
-    },
-    {
-        subheader: 'Auth',
-        items: [
-            {
-                title: 'Register',
-                href: '/register-unprotected',
-                icon: UserPlusIcon
-            }
-        ]
-    },
-    {
-        subheader: 'Pages',
-        items: [
-            {
-                title: 'Account',
-                href: '/app/account',
-                icon: UserIcon
-            },
-            {
-                title: 'Error',
-                href: '/404',
-                icon: AlertCircleIcon
-            },
-            {
-                title: 'Pricing',
-                href: '/pricing',
-                icon: DollarSignIcon
-            }
-        ]
-    },
-    {
-        subheader: 'Extra',
-        items: [
-            {
-                title: 'Charts',
-                href: '/app/extra/charts',
-                icon: BarChartIcon,
-                items: [
-                    {
-                        title: 'Apex Charts',
-                        href: '/app/extra/charts/apex'
-                    }
-                ]
-            },
-            {
-                title: 'Forms',
-                href: '/app/extra/forms',
-                icon: EditIcon,
-                items: [
-                    {
-                        title: 'Formik',
-                        href: '/app/extra/forms/formik'
-                    },
-                    {
-                        title: 'Redux Forms',
-                        href: '/app/extra/forms/redux'
-                    },
-                ]
-            },
-            {
-                title: 'Editors',
-                href: '/app/extra/editors',
-                icon: LayoutIcon,
-                items: [
-                    {
-                        title: 'DraftJS Editor',
-                        href: '/app/extra/editors/draft-js'
-                    },
-                    {
-                        title: 'Quill Editor',
-                        href: '/app/extra/editors/quill'
+                        title: 'Real time inference',
+                        href: '/404'
                     }
                 ]
             }
