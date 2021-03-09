@@ -19,6 +19,7 @@ import {
 } from '@material-ui/core';
 import {
     AlertCircle as AlertCircleIcon,
+    BarChart as BarChartIcon,
     Folder as FolderIcon,
     PieChart as PieChartIcon,
     ShoppingCart as ShoppingCartIcon,
@@ -52,7 +53,7 @@ const sections: Section[] = [
         items: [
             {
                 title: 'App dashboard',
-                icon: PieChartIcon,
+                icon: BarChartIcon,
                 href: '/app/admin/reports/dashboard',
                 info: () => (
                     <Chip
