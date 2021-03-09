@@ -33,7 +33,7 @@ const Page = forwardRef<HTMLDivElement, PageProps>(({
             {...rest}
         >
             <Helmet>
-                <title>{title}</title>
+                <title>Datatensor | {title}</title>
             </Helmet>
             {children}
         </div>
