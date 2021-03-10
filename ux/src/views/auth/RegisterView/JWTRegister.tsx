@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import {Formik} from 'formik';
 import {Box, Button, Checkbox, FormHelperText, Link, makeStyles, TextField, Typography} from '@material-ui/core';
+import GoogleCaptcha from 'src/components/GoogleCaptcha';
 import useAuth from 'src/hooks/useAuth';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 
@@ -26,6 +27,7 @@ const JWTRegister: FC<JWTRegisterProps> = ({className, ...rest}) => {
                 email: '',
                 name: '',
                 password: '',
+                recaptcha: '',
                 policy: false,
                 submit: null
             }}
@@ -33,6 +35,7 @@ const JWTRegister: FC<JWTRegisterProps> = ({className, ...rest}) => {
                 email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
                 name: Yup.string().max(255).required('Name is required'),
                 password: Yup.string().min(7).max(255).required('Password is required'),
+                recaptcha: Yup.string().required('Captcha is required'),
                 policy: Yup.boolean().oneOf([true], 'This field must be checked')
             })}
             onSubmit={async (values, {
@@ -41,7 +44,7 @@ const JWTRegister: FC<JWTRegisterProps> = ({className, ...rest}) => {
                 setSubmitting
             }) => {
                 try {
-                    await register(values.email, values.name, values.password);
+                    await register(values.email, values.name, values.password, values.recaptcha);
 
                     if (isMountedRef.current) {
                         setStatus({success: true});
@@ -62,7 +65,8 @@ const JWTRegister: FC<JWTRegisterProps> = ({className, ...rest}) => {
                   handleSubmit,
                   isSubmitting,
                   touched,
-                  values
+                  values,
+                  setFieldValue
               }) => (
                 <form
                     noValidate
@@ -108,6 +112,14 @@ const JWTRegister: FC<JWTRegisterProps> = ({className, ...rest}) => {
                         value={values.password}
                         variant="outlined"
                     />
+                    <Box
+                        mt={2}
+                    >
+                        <GoogleCaptcha
+                            name='recaptcha'
+                            onChange={value => setFieldValue('recaptcha', value)}
+                        />
+                    </Box>
                     <Box
                         alignItems="center"
                         display="flex"

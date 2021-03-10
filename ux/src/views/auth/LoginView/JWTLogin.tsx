@@ -97,7 +97,7 @@ const JWTLogin: FC<JWTLoginProps> = ({className, ...rest}) => {
                         variant="outlined"
                     />
                     {errors.submit && (
-                        <Box mt={3}>
+                        <Box mt={1}>
                             <FormHelperText error>
                                 {errors.submit}
                             </FormHelperText>

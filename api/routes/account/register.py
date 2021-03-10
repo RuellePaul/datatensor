@@ -17,10 +17,10 @@ register = Blueprint('register', __name__)
     'email': fields.Str(required=True),
     'password': fields.Str(required=True),
     'name': fields.Str(required=True),
-    'captcha': fields.Str(required=True)
+    'recaptcha': fields.Str(required=True)
 })
 def do_register(args):
-    captcha = args['captcha']
+    captcha = args['recaptcha']
     core.check_captcha(captcha)
 
     email = args['email']

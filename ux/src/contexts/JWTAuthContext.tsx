@@ -11,10 +11,9 @@ interface AuthState {
 }
 
 interface AuthContextValue extends AuthState {
-    method: 'Auth0',
     login: (email: string, password: string) => Promise<void>;
     logout: () => void;
-    register: (email: string, name: string, password: string) => Promise<void>;
+    register: (email: string, name: string, password: string, recaptcha: string) => Promise<void>;
 }
 
 interface AuthProviderProps {
@@ -125,7 +124,6 @@ const reducer = (state: AuthState, action: Action): AuthState => {
 
 const AuthContext = createContext<AuthContextValue>({
     ...initialAuthState,
-    method: 'Auth0',
     login: () => Promise.resolve(),
     logout: () => {
     },
@@ -153,11 +151,12 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         dispatch({type: 'LOGOUT'});
     };
 
-    const register = async (email: string, name: string, password: string) => {
+    const register = async (email: string, name: string, password: string, recaptcha: string) => {
         const response = await api.post<{ accessToken: string; user: User }>('/api/v1/account/register/', {
             email,
             name,
-            password
+            password,
+            recaptcha
         });
         const {accessToken, user} = response.data;
 
@@ -221,7 +220,6 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         <AuthContext.Provider
             value={{
                 ...state,
-                method: 'Auth0',
                 login,
                 logout,
                 register

@@ -1,20 +1,9 @@
 import React, {FC} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
-import {
-    Box,
-    Card,
-    CardContent,
-    Container,
-    Divider,
-    Link,
-    makeStyles,
-    Typography
-} from '@material-ui/core';
+import {Box, Card, CardContent, Container, Divider, Link, makeStyles, Typography} from '@material-ui/core';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
 import Logo from 'src/components/Logo';
-import useAuth from 'src/hooks/useAuth';
-import Auth0Login from './Auth0Login';
 import JWTLogin from './JWTLogin';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -38,7 +27,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const LoginView: FC = () => {
     const classes = useStyles();
-    const {method} = useAuth() as any;
 
     return (
         <Page
@@ -86,8 +74,7 @@ const LoginView: FC = () => {
                             flexGrow={1}
                             mt={3}
                         >
-                            {method === 'Auth0' && <Auth0Login/>}
-                            {method === 'JWT' && <JWTLogin/>}
+                            <JWTLogin/>
                         </Box>
                         <Box my={3}>
                             <Divider/>

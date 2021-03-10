@@ -12,8 +12,7 @@ import ScrollReset from 'src/components/ScrollReset';
 import CookiesNotification from 'src/components/CookiesNotification';
 import GoogleAnalytics from 'src/components/GoogleAnalytics';
 import SettingsNotification from 'src/components/SettingsNotification';
-import {AuthProvider as Auth0Provider} from 'src/contexts/Auth0Context';
-import {AuthProvider as JWTAuthProvider} from 'src/contexts/JWTAuthContext';
+import {AuthProvider} from 'src/contexts/JWTAuthContext';
 import useSettings from 'src/hooks/useSettings';
 import {createTheme} from 'src/theme';
 import routes, {renderRoutes} from 'src/routes';
@@ -39,16 +38,14 @@ const App: FC = () => {
                         maxSnack={3}
                     >
                         <Router history={history}>
-                            <Auth0Provider>
-                                <JWTAuthProvider>
+                                <AuthProvider>
                                     <GlobalStyles/>
                                     <ScrollReset/>
                                     <GoogleAnalytics/>
                                     <CookiesNotification/>
                                     <SettingsNotification/>
                                     {renderRoutes(routes)}
-                                </JWTAuthProvider>
-                            </Auth0Provider>
+                                </AuthProvider>
                         </Router>
                     </SnackbarProvider>
                 </MuiPickersUtilsProvider>

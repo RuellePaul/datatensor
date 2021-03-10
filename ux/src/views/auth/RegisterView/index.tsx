@@ -4,8 +4,6 @@ import {Box, Card, CardContent, Container, Divider, Link, makeStyles, Typography
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
 import Logo from 'src/components/Logo';
-import useAuth from 'src/hooks/useAuth';
-import Auth0Register from './Auth0Register';
 import JWTRegister from './JWTRegister';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -29,7 +27,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const RegisterView: FC = () => {
     const classes = useStyles();
-    const {method} = useAuth() as any;
 
     return (
         <Page
@@ -77,8 +74,7 @@ const RegisterView: FC = () => {
                             flexGrow={1}
                             mt={3}
                         >
-                            {method === 'Auth0' && <Auth0Register/>}
-                            {method === 'JWT' && <JWTRegister/>}
+                            <JWTRegister/>
                         </Box>
                         <Box my={3}>
                             <Divider/>

@@ -14,8 +14,8 @@ class APIError(Exception):
 
     def as_dict(self):
         return {'status': self.http_status,
-                'errorCode': self.code,
-                'errorMessage': self.message,
+                'code': self.code,
+                'message': self.message,
                 'errorData': self.data}
 
     def flask_response(self):
