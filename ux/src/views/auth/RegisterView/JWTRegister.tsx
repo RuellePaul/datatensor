@@ -118,6 +118,7 @@ const JWTRegister: FC<JWTRegisterProps> = ({className, ...rest}) => {
                         <GoogleCaptcha
                             name='recaptcha'
                             onChange={value => setFieldValue('recaptcha', value)}
+                            helperText={touched.recaptcha && errors.recaptcha}
                         />
                     </Box>
                     <Box

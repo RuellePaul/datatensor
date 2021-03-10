@@ -1,16 +1,24 @@
-import React, {FC, ReactNode} from 'react';
+import React, {FC} from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
+import {FormHelperText} from '@material-ui/core';
 
 interface GoogleCaptchaProps {
     name: string;
     onChange: (name: string) => void;
+    helperText?: string
 }
 
-const GoogleCaptcha: FC<GoogleCaptchaProps> = ({...rest}) => (
-    <ReCAPTCHA
-        sitekey={process.env.REACT_APP_GOOGLE_CAPTCHA_SITE_KEY}
-        {...rest}
-    />
+const GoogleCaptcha: FC<GoogleCaptchaProps> = ({helperText, ...rest}) => (
+    <>
+        <ReCAPTCHA
+            sitekey={process.env.REACT_APP_GOOGLE_CAPTCHA_SITE_KEY}
+            {...rest}
+        />
+        <FormHelperText error>
+            {helperText}
+        </FormHelperText>
+
+    </>
 );
 
 export default GoogleCaptcha;
