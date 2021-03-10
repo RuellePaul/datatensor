@@ -1,28 +1,15 @@
 import React, {FC} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
-import {
-    Box,
-    Card,
-    CardContent,
-    Chip,
-    Container,
-    Divider,
-    Link,
-    makeStyles,
-    Tooltip,
-    Typography
-} from '@material-ui/core';
+import {Box, Card, CardContent, Container, Divider, Link, makeStyles, Typography} from '@material-ui/core';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
 import Logo from 'src/components/Logo';
 import useAuth from 'src/hooks/useAuth';
 import Auth0Register from './Auth0Register';
-import FirebaseAuthRegister from './FirebaseAuthRegister';
 import JWTRegister from './JWTRegister';
 
 const methodIcons = {
     'Auth0': '/static/images/auth0.svg',
-    'FirebaseAuth': '/static/images/firebase.svg',
     'JWT': '/static/images/jwt.svg'
 };
 
@@ -32,15 +19,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100vh'
-    },
-    banner: {
-        backgroundColor: theme.palette.background.paper,
-        paddingBottom: theme.spacing(2),
-        paddingTop: theme.spacing(2),
-        borderBottom: `1px solid ${theme.palette.divider}`
-    },
-    bannerChip: {
-        marginRight: theme.spacing(2)
     },
     methodIcon: {
         height: 30,
@@ -75,63 +53,6 @@ const RegisterView: FC = () => {
             className={classes.root}
             title="Register"
         >
-            <div className={classes.banner}>
-                <Container maxWidth="md">
-                    <Box
-                        alignItems="center"
-                        display="flex"
-                        justifyContent="center"
-                    >
-                        <Chip
-                            color="secondary"
-                            label="NEW"
-                            size="small"
-                            className={classes.bannerChip}
-                        />
-                        <Box
-                            alignItems="center"
-                            display="flex"
-                        >
-                            <Typography
-                                color="textPrimary"
-                                variant="h6"
-                            >
-                                Visit our
-                                {' '}
-                                <Link
-                                    component={RouterLink}
-                                    to="/docs"
-                                >
-                                    docs
-                                </Link>
-                                {' '}
-                                and find out how to switch between
-                            </Typography>
-                            <Tooltip title="Auth0">
-                                <img
-                                    alt="Auth0"
-                                    className={classes.methodIcon}
-                                    src={methodIcons['Auth0']}
-                                />
-                            </Tooltip>
-                            <Tooltip title="Firebase">
-                                <img
-                                    alt="Firebase"
-                                    className={classes.methodIcon}
-                                    src={methodIcons['FirebaseAuth']}
-                                />
-                            </Tooltip>
-                            <Tooltip title="JSON Web Token">
-                                <img
-                                    alt="JWT"
-                                    className={classes.methodIcon}
-                                    src={methodIcons['JWT']}
-                                />
-                            </Tooltip>
-                        </Box>
-                    </Box>
-                </Container>
-            </div>
             <Container
                 className={classes.cardContainer}
                 maxWidth="sm"
@@ -179,9 +100,8 @@ const RegisterView: FC = () => {
                             flexGrow={1}
                             mt={3}
                         >
-                            {method === 'Auth0' && <Auth0Register/>}
-                            {method === 'FirebaseAuth' && <FirebaseAuthRegister/>}
-                            {method === 'JWT' && <JWTRegister/>}
+                            <Auth0Register/>
+                            <JWTRegister/>
                         </Box>
                         <Box my={3}>
                             <Divider/>

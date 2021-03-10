@@ -11,7 +11,7 @@ interface AuthState {
 }
 
 interface AuthContextValue extends AuthState {
-    method: 'JWT',
+    method: 'Auth0',
     login: (email: string, password: string) => Promise<void>;
     logout: () => void;
     register: (email: string, name: string, password: string) => Promise<void>;
@@ -125,7 +125,7 @@ const reducer = (state: AuthState, action: Action): AuthState => {
 
 const AuthContext = createContext<AuthContextValue>({
     ...initialAuthState,
-    method: 'JWT',
+    method: 'Auth0',
     login: () => Promise.resolve(),
     logout: () => {
     },
@@ -221,7 +221,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         <AuthContext.Provider
             value={{
                 ...state,
-                method: 'JWT',
+                method: 'Auth0',
                 login,
                 logout,
                 register

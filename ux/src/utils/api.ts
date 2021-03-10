@@ -16,7 +16,12 @@ api.defaults.withCredentials = true;
 
 api.interceptors.response.use(
     (response) => response,
-    (error) => Promise.reject((error.response && error.response.data) || 'Something went wrong')
+    (error) => {
+        if (error.response?.data?.errorData === 'ERR_CSRF')
+            window.location.reload();
+
+        return Promise.reject((error.response && error.response.data) || 'Something went wrong')
+    }
 );
 
 export default api;

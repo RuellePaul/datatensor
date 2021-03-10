@@ -12,6 +12,7 @@ from routes.account.login import login
 from routes.account.oauth import oauth
 from routes.account.register import register
 from routes.datasets.management import management
+from routes.users.users import users
 
 app = Flask(__name__)
 
@@ -24,9 +25,11 @@ CSRFProtect(app)
 
 app.register_blueprint(login, url_prefix='/api/v1/account/login')
 app.register_blueprint(register, url_prefix='/api/v1/account/register')
-app.register_blueprint(oauth, url_prefix='/api/v1/auth/oauth')
+app.register_blueprint(oauth, url_prefix='/api/v1/account/oauth')
 
 app.register_blueprint(management, url_prefix='/api/v1/datasets/management')
+
+app.register_blueprint(users, url_prefix='/api/v1/users/')
 
 
 @app.after_request
