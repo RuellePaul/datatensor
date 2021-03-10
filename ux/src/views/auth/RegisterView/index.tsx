@@ -100,8 +100,8 @@ const RegisterView: FC = () => {
                             flexGrow={1}
                             mt={3}
                         >
-                            <Auth0Register/>
-                            <JWTRegister/>
+                            {method === 'Auth0' && <Auth0Register/>}
+                            {method === 'JWT' && <JWTRegister/>}
                         </Box>
                         <Box my={3}>
                             <Divider/>
