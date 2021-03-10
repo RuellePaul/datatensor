@@ -17,22 +17,12 @@ import useAuth from 'src/hooks/useAuth';
 import Auth0Login from './Auth0Login';
 import JWTLogin from './JWTLogin';
 
-const methodIcons = {
-    'Auth0': '/static/images/auth0.svg',
-    'JWT': '/static/images/jwt.svg'
-};
-
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         backgroundColor: theme.palette.background.dark,
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100vh'
-    },
-    methodIcon: {
-        height: 30,
-        marginLeft: theme.spacing(2),
-        marginRight: theme.spacing(2)
     },
     cardContainer: {
         paddingBottom: 80,
@@ -43,13 +33,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         display: 'flex',
         flexDirection: 'column',
         minHeight: 400
-    },
-    currentMethodIcon: {
-        height: 40,
-        '& > img': {
-            width: 'auto',
-            maxHeight: '100%'
-        }
     }
 }));
 
@@ -97,12 +80,6 @@ const LoginView: FC = () => {
                                 >
                                     Sign in on the internal platform
                                 </Typography>
-                            </div>
-                            <div className={classes.currentMethodIcon}>
-                                <img
-                                    alt="Auth method"
-                                    src={methodIcons[method]}
-                                />
                             </div>
                         </Box>
                         <Box
