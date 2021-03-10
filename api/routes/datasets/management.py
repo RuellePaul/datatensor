@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify
 from webargs import fields
 from webargs.flaskparser import use_args
 
-from routes.auth.core import protect_blueprint
+from routes.account.core import protect_blueprint
 from routes.datasets import core
 
 management = Blueprint('management', __name__)

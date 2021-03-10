@@ -23,7 +23,7 @@ const users = [
     }
 ];
 
-mock.onPost('/api/account/login').reply(async (config) => {
+mock.onPost('/api/v1/account/login/').reply(async (config) => {
     try {
         await wait(1000);
 
@@ -60,7 +60,7 @@ mock.onPost('/api/account/login').reply(async (config) => {
     }
 });
 
-mock.onPost('/api/account/register').reply(async (config) => {
+mock.onPost('/api/v1/account/register/').reply(async (config) => {
     try {
         await wait(1000);
 
@@ -108,7 +108,7 @@ mock.onPost('/api/account/register').reply(async (config) => {
     }
 });
 
-mock.onGet('/api/account/me').reply((config) => {
+mock.onGet('/api/v1/account/me').reply((config) => {
     try {
         const {Authorization} = config.headers;
 

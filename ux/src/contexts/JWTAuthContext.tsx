@@ -136,7 +136,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
     const [state, dispatch] = useReducer(reducer, initialAuthState);
 
     const login = async (email: string, password: string) => {
-        const response = await api.post<{ accessToken: string; user: User }>('/api/account/login', {email, password});
+        const response = await api.post<{ accessToken: string; user: User }>('/api/v1/account/login/', {email, password});
         const {accessToken, user} = response.data;
 
         setSession(accessToken);
@@ -154,7 +154,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
     };
 
     const register = async (email: string, name: string, password: string) => {
-        const response = await api.post<{ accessToken: string; user: User }>('/api/account/register', {
+        const response = await api.post<{ accessToken: string; user: User }>('/api/v1/account/register/', {
             email,
             name,
             password

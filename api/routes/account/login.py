@@ -5,7 +5,7 @@ from webargs.flaskparser import use_args
 
 import errors
 from logger import logger
-from routes.auth import core
+from routes.account import core
 
 
 login = Blueprint('login', __name__)

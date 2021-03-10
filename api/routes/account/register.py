@@ -6,7 +6,7 @@ from webargs.flaskparser import use_args
 import errors
 from config import Config
 from logger import logger
-from routes.auth import core
+from routes.account import core
 from utils import encrypt_field
 
 register = Blueprint('register', __name__)

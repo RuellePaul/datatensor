@@ -1,9 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const API_URI = `http://${window.location.hostname}:4069`;
-
-axios.defaults.withCredentials = true;
+const API_URI = `https://${window.location.hostname}:7069`;
 
 const api = axios.create({
     withCredentials: true,
@@ -13,6 +11,8 @@ const api = axios.create({
         'X-CSRF-Token': Cookies.get('csrf_token')
     }
 });
+
+api.defaults.withCredentials = true;
 
 api.interceptors.response.use(
     (response) => response,
