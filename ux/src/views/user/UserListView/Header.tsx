@@ -57,14 +57,14 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                         variant="body1"
                         color="textPrimary"
                     >
-                        Customers
+                        Users
                     </Typography>
                 </Breadcrumbs>
                 <Typography
                     variant="h3"
                     color="textPrimary"
                 >
-                    All Customers
+                    All Users
                 </Typography>
                 <Box mt={2}>
                     <Button startIcon={
@@ -93,7 +93,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                         </SvgIcon>
                     }
                 >
-                    New Customer
+                    New User
                 </Button>
             </Grid>
         </Grid>

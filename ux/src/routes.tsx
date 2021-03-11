@@ -82,17 +82,17 @@ const routes: Routes = [
             {
                 exact: true,
                 path: '/app/admin/management/users',
-                component: lazy(() => import('src/views/customer/CustomerListView'))
+                component: lazy(() => import('src/views/user/UserListView'))
             },
             {
                 exact: true,
                 path: '/app/admin/management/users/:userId',
-                component: lazy(() => import('src/views/customer/CustomerDetailsView'))
+                component: lazy(() => import('src/views/user/UserDetailsView'))
             },
             {
                 exact: true,
                 path: '/app/admin/management/users/:userId/edit',
-                component: lazy(() => import('src/views/customer/CustomerEditView'))
+                component: lazy(() => import('src/views/user/UserEditView'))
             },
             {
                 exact: true,

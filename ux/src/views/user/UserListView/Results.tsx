@@ -30,11 +30,11 @@ import {
 import {ArrowRight as ArrowRightIcon, Edit as EditIcon, Search as SearchIcon} from 'react-feather';
 import {Theme} from 'src/theme';
 import getInitials from 'src/utils/getInitials';
-import {Customer} from 'src/types/customer';
+import {User} from 'src/types/user';
 
 interface ResultsProps {
     className?: string;
-    customers: Customer[];
+    users: User[];
 }
 
 type Sort =
@@ -86,8 +86,8 @@ const sortOptions: SortOption[] = [
     }
 ];
 
-const applyFilters = (customers: Customer[], query: string, filters: any): Customer[] => {
-    return customers.filter((customer) => {
+const applyFilters = (users: User[], query: string, filters: any): User[] => {
+    return users.filter((user) => {
         let matches = true;
 
         if (query) {
@@ -95,7 +95,7 @@ const applyFilters = (customers: Customer[], query: string, filters: any): Custo
             let containsQuery = false;
 
             properties.forEach((property) => {
-                if (customer[property].toLowerCase().includes(query.toLowerCase())) {
+                if (user[property].toLowerCase().includes(query.toLowerCase())) {
                     containsQuery = true;
                 }
             });
@@ -108,7 +108,7 @@ const applyFilters = (customers: Customer[], query: string, filters: any): Custo
         Object.keys(filters).forEach((key) => {
             const value = filters[key];
 
-            if (value && customer[key] !== value) {
+            if (value && user[key] !== value) {
                 matches = false;
             }
         });
@@ -117,11 +117,11 @@ const applyFilters = (customers: Customer[], query: string, filters: any): Custo
     });
 };
 
-const applyPagination = (customers: Customer[], page: number, limit: number): Customer[] => {
-    return customers.slice(page * limit, page * limit + limit);
+const applyPagination = (users: User[], page: number, limit: number): User[] => {
+    return users.slice(page * limit, page * limit + limit);
 };
 
-const descendingComparator = (a: Customer, b: Customer, orderBy: string): number => {
+const descendingComparator = (a: User, b: User, orderBy: string): number => {
     if (b[orderBy] < a[orderBy]) {
         return -1;
     }
@@ -135,14 +135,14 @@ const descendingComparator = (a: Customer, b: Customer, orderBy: string): number
 
 const getComparator = (order: 'asc' | 'desc', orderBy: string) => {
     return order === 'desc'
-        ? (a: Customer, b: Customer) => descendingComparator(a, b, orderBy)
-        : (a: Customer, b: Customer) => -descendingComparator(a, b, orderBy);
+        ? (a: User, b: User) => descendingComparator(a, b, orderBy)
+        : (a: User, b: User) => -descendingComparator(a, b, orderBy);
 };
 
-const applySort = (customers: Customer[], sort: Sort): Customer[] => {
+const applySort = (users: User[], sort: Sort): User[] => {
     const [orderBy, order] = sort.split('|') as [string, 'asc' | 'desc'];
     const comparator = getComparator(order, orderBy);
-    const stabilizedThis = customers.map((el, index) => [el, index]);
+    const stabilizedThis = users.map((el, index) => [el, index]);
 
     stabilizedThis.sort((a, b) => {
         // @ts-ignore
@@ -187,7 +187,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const Results: FC<ResultsProps> = ({
                                        className,
-                                       customers,
+                                       users,
                                        ...rest
                                    }) => {
     const classes = useStyles();
@@ -232,7 +232,7 @@ const Results: FC<ResultsProps> = ({
 
     const handleSelectAllCustomers = (event: ChangeEvent<HTMLInputElement>): void => {
         setSelectedCustomers(event.target.checked
-            ? customers.map((customer) => customer.id)
+            ? users.map((user) => user.id)
             : []);
     };
 
@@ -252,12 +252,12 @@ const Results: FC<ResultsProps> = ({
         setLimit(parseInt(event.target.value));
     };
 
-    const filteredCustomers = applyFilters(customers, query, filters);
+    const filteredCustomers = applyFilters(users, query, filters);
     const sortedCustomers = applySort(filteredCustomers, sort);
     const paginatedCustomers = applyPagination(sortedCustomers, page, limit);
     const enableBulkOperations = selectedCustomers.length > 0;
-    const selectedSomeCustomers = selectedCustomers.length > 0 && selectedCustomers.length < customers.length;
-    const selectedAllCustomers = selectedCustomers.length === customers.length;
+    const selectedSomeCustomers = selectedCustomers.length > 0 && selectedCustomers.length < users.length;
+    const selectedAllCustomers = selectedCustomers.length === users.length;
 
     return (
         <Card
@@ -301,7 +301,7 @@ const Results: FC<ResultsProps> = ({
                         )
                     }}
                     onChange={handleQueryChange}
-                    placeholder="Search customers"
+                    placeholder="Search users"
                     value={query}
                     variant="outlined"
                 />
@@ -378,19 +378,19 @@ const Results: FC<ResultsProps> = ({
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {paginatedCustomers.map((customer) => {
-                                const isCustomerSelected = selectedCustomers.includes(customer.id);
+                            {paginatedCustomers.map((user) => {
+                                const isCustomerSelected = selectedCustomers.includes(user.id);
 
                                 return (
                                     <TableRow
                                         hover
-                                        key={customer.id}
+                                        key={user.id}
                                         selected={isCustomerSelected}
                                     >
                                         <TableCell padding="checkbox">
                                             <Checkbox
                                                 checked={isCustomerSelected}
-                                                onChange={(event) => handleSelectOneCustomer(event, customer.id)}
+                                                onChange={(event) => handleSelectOneCustomer(event, user.id)}
                                                 value={isCustomerSelected}
                                             />
                                         </TableCell>
@@ -401,41 +401,41 @@ const Results: FC<ResultsProps> = ({
                                             >
                                                 <Avatar
                                                     className={classes.avatar}
-                                                    src={customer.avatar}
+                                                    src={user.avatar}
                                                 >
-                                                    {getInitials(customer.name)}
+                                                    {getInitials(user.name)}
                                                 </Avatar>
                                                 <div>
                                                     <Link
                                                         color="inherit"
                                                         component={RouterLink}
-                                                        to="/app/management/customers/1"
+                                                        to="/app/management/users/1"
                                                         variant="h6"
                                                     >
-                                                        {customer.name}
+                                                        {user.name}
                                                     </Link>
                                                     <Typography
                                                         variant="body2"
                                                         color="textSecondary"
                                                     >
-                                                        {customer.email}
+                                                        {user.email}
                                                     </Typography>
                                                 </div>
                                             </Box>
                                         </TableCell>
                                         <TableCell>
-                                            {`${customer.city}, ${customer.state}, ${customer.country}`}
+                                            {`${user.city}, ${user.state}, ${user.country}`}
                                         </TableCell>
                                         <TableCell>
-                                            {customer.totalOrders}
+                                            {user.totalOrders}
                                         </TableCell>
                                         <TableCell>
-                                            {numeral(customer.totalAmountSpent).format(`${customer.currency}0,0.00`)}
+                                            {numeral(user.totalAmountSpent).format(`${user.currency}0,0.00`)}
                                         </TableCell>
                                         <TableCell align="right">
                                             <IconButton
                                                 component={RouterLink}
-                                                to="/app/management/customers/1/edit"
+                                                to="/app/management/users/1/edit"
                                             >
                                                 <SvgIcon fontSize="small">
                                                     <EditIcon/>
@@ -443,7 +443,7 @@ const Results: FC<ResultsProps> = ({
                                             </IconButton>
                                             <IconButton
                                                 component={RouterLink}
-                                                to="/app/management/customers/1"
+                                                to="/app/management/users/1"
                                             >
                                                 <SvgIcon fontSize="small">
                                                     <ArrowRightIcon/>
@@ -472,11 +472,11 @@ const Results: FC<ResultsProps> = ({
 
 Results.propTypes = {
     className: PropTypes.string,
-    customers: PropTypes.array.isRequired
+    users: PropTypes.array.isRequired
 };
 
 Results.defaultProps = {
-    customers: []
+    users: []
 };
 
 export default Results;

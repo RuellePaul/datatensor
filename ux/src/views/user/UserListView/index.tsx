@@ -4,7 +4,7 @@ import api from 'src/utils/api';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
-import {Customer} from 'src/types/customer';
+import {User} from 'src/types/user';
 import Header from './Header';
 import Results from './Results';
 
@@ -17,17 +17,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const CustomerListView: FC = () => {
+const UserListView: FC = () => {
     const classes = useStyles();
     const isMountedRef = useIsMountedRef();
-    const [customers, setCustomers] = useState<Customer[]>([]);
+    const [users, setUsers] = useState<User[]>([]);
 
     const getCustomers = useCallback(async () => {
         try {
-            const response = await api.get<{ users: Customer[]; }>('/v1/admin/management/users');
+            const response = await api.get<User[]>('/v1/admin/management/users');
 
             if (isMountedRef.current) {
-                setCustomers(response.data.users);
+                setUsers(response.data);
             }
         } catch (err) {
             console.error(err);
@@ -46,11 +46,11 @@ const CustomerListView: FC = () => {
             <Container maxWidth={false}>
                 <Header/>
                 <Box mt={3}>
-                    <Results customers={customers}/>
+                    <Results users={users}/>
                 </Box>
             </Container>
         </Page>
     );
 };
 
-export default CustomerListView;
+export default UserListView;

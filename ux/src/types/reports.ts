@@ -1,7 +1,7 @@
 export interface CustomerActivity {
     id: string;
     createdAt: number;
-    customer: {
+    user: {
         id: string;
         avatar: string | null;
         name: string;
@@ -19,7 +19,7 @@ export interface Order {
     id: string;
     createdAt: number;
     currency: string;
-    customer: {
+    user: {
         email: string;
         name: string;
     };

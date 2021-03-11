@@ -90,11 +90,11 @@ const sections: Section[] = [
                         href: '/app/admin/management/users'
                     },
                     {
-                        title: 'View Customer',
+                        title: 'View User',
                         href: '/app/admin/management/users/1'
                     },
                     {
-                        title: 'Edit Customer',
+                        title: 'Edit User',
                         href: '/app/admin/management/users/1/edit'
                     }
                 ]
