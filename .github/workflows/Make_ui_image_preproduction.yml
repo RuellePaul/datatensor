@@ -30,4 +30,4 @@ jobs:
       - name: Docker login
         run: docker login docker.pkg.github.com -u $GITHUB_ACTOR -p ${{ secrets.GITHUB_TOKEN }}
       - name: 'Pushing images to distant repository'
-        run: export ENVIRONMENT=preproduction && docker push docker.pkg.github.com/RuellePaul/datatensor/datatensor-ux:${{ steps.branch_name.outputs.SOURCE_TAG }}_$ENVIRONMENT
+        run: export ENVIRONMENT=preproduction && docker push docker.pkg.github.com/ruellepaul/datatensor/datatensor-ux:${{ steps.branch_name.outputs.SOURCE_TAG }}_$ENVIRONMENT
