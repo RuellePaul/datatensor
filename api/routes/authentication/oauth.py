@@ -3,7 +3,7 @@ from webargs import fields
 from webargs.flaskparser import use_args
 
 from logger import logger
-from routes.account import core
+from routes.authentication import core
 
 oauth = Blueprint('oauth', __name__)
 

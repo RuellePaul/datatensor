@@ -31,13 +31,16 @@ def verify_access_token(access_token):
     if not Config.db.users.find_one({'id': user_id}, {'_id': 0}):
         raise errors.InvalidAuthentication
 
+    return user_id
 
-def protect_blueprint(blueprint):
+
+def require_authorization(blueprints):
     def authorized():
         if request.method in ['GET', 'POST', 'PUT', 'DELETE']:
-            verify_access_token(request.cookies.get('access_token'))
+            verify_access_token(request.headers.get('Authorization'))
 
-    blueprint.before_request(authorized)
+    for blueprint in blueprints:
+        blueprint.before_request(authorized)
 
 
 # User related

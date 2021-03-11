@@ -72,7 +72,7 @@ const isValidToken = (accessToken: string): boolean => {
 const setSession = (accessToken: string | null): void => {
     if (accessToken) {
         localStorage.setItem('accessToken', accessToken);
-        api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+        api.defaults.headers.common.Authorization = accessToken;
     } else {
         localStorage.removeItem('accessToken');
         delete api.defaults.headers.common.Authorization;
@@ -134,7 +134,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
     const [state, dispatch] = useReducer(reducer, initialAuthState);
 
     const login = async (email: string, password: string) => {
-        const response = await api.post<{ accessToken: string; user: User }>('/api/v1/account/login/', {email, password});
+        const response = await api.post<{ accessToken: string; user: User }>('/v1/auth/login', {email, password});
         const {accessToken, user} = response.data;
 
         setSession(accessToken);
@@ -152,7 +152,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
     };
 
     const register = async (email: string, name: string, password: string, recaptcha: string) => {
-        const response = await api.post<{ accessToken: string; user: User }>('/api/v1/account/register/', {
+        const response = await api.post<{ accessToken: string; user: User }>('/v1/auth/register', {
             email,
             name,
             password,
@@ -178,7 +178,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
                 if (accessToken && isValidToken(accessToken)) {
                     setSession(accessToken);
 
-                    const response = await api.get<{ user: User; }>('/api/account/me');
+                    const response = await api.get<{ user: User; }>('/v1/auth/me');
                     const {user} = response.data;
 
                     dispatch({

@@ -2,7 +2,7 @@ import moment from 'moment';
 import mock from 'src/utils/mock';
 import {Customer, CustomerEmail, CustomerLog, Invoice} from 'src/types/customer';
 
-mock.onGet('/api/customers').reply(() => {
+mock.onGet('/v1/admin/management/users').reply(() => {
     const customers: Customer[] = [
         {
             id: '5e887ac47eed253091be10cb',

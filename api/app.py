@@ -8,11 +8,12 @@ import errors
 from config import Config
 from database import encrypt_init
 from logger import logger
-from routes.account.login import login
-from routes.account.oauth import oauth
-from routes.account.register import register
-from routes.datasets.management import management
-from routes.users.users import users
+
+from routes.authentication.auth import auth
+from routes.authentication.oauth import oauth
+from routes.admin.management import management
+
+from routes.authentication.core import require_authorization
 
 app = Flask(__name__)
 
@@ -23,13 +24,12 @@ app.secret_key = app.config['SECRET_KEY']
 CORS(app)
 CSRFProtect(app)
 
-app.register_blueprint(login, url_prefix='/api/v1/account/login')
-app.register_blueprint(register, url_prefix='/api/v1/account/register')
-app.register_blueprint(oauth, url_prefix='/api/v1/account/oauth')
+require_authorization([management])
 
-app.register_blueprint(management, url_prefix='/api/v1/datasets/management')
+app.register_blueprint(auth, url_prefix='/v1/auth')
+app.register_blueprint(oauth, url_prefix='/v1/oauth')
 
-app.register_blueprint(users, url_prefix='/api/v1/users/')
+app.register_blueprint(management, url_prefix='/v1/admin/management')
 
 
 @app.after_request
