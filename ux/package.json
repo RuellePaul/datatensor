@@ -11,7 +11,9 @@
         "start": "export HTTPS=true && PORT=5069 react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
-        "eject": "react-scripts eject"
+        "eject": "react-scripts eject",
+        "deployment": "run-p server serve",
+        "serve": "serve -s build -l 5002"
     },
     "browserslist": {
         "production": [

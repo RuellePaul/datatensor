@@ -1,0 +1,4 @@
+# Applicative envs
+export ENVIRONMENT='preproduction'
+export DB_ENCRYPTION_KEY='PwK03OeaWN6Z30X+KHVtVUyQ6JBtXRrCMcecbZtmlSQH8wk/lkGueOLXw4Lhjrjvn7HIQH4JbPr7Fy3oQfzPCBpwXgy/81aXodUxUz2s5+uZRlYWWRbC31Bq6HPyDyOk'
+export FLASK_SECRET_KEY='xeRqo7E58MwQ9wS2tdxoaJbY1zNpcrWy'
