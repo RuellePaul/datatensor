@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   api:
-    image: docker.pkg.github.com/RuellePaul/datatensor/easyprojets-v2-api:${VERSION}
+    image: docker.pkg.github.com/widmee/axa-easyprojets-v2/easyprojets-v2-api:${VERSION}
     environment:
       - 'DB_ENCRYPTION_KEY=${DB_ENCRYPTION_KEY}'
       - 'ENVIRONMENT=${ENVIRONMENT}'
@@ -16,7 +16,7 @@ services:
       - './${ENVIRONMENT}/key.pem:/api/key.pem'
     network_mode: host
   ui:
-    image: docker.pkg.github.com/RuellePaul/datatensor/easyprojets-v2-ui:${VERSION}_${ENVIRONMENT}
+    image: docker.pkg.github.com/widmee/axa-easyprojets-v2/easyprojets-v2-ui:${VERSION}_${ENVIRONMENT}
     build:
       args:
         - 'ENVIRONMENT=${ENVIRONMENT}'
