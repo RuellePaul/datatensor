@@ -29,6 +29,10 @@ const App: FC = () => {
         theme: settings.theme
     });
 
+    if (process.env.REACT_APP_IS_MOCK_ACTIVE === "true") {
+        import('src/__mocks__')
+    }
+
     return (
         <ThemeProvider theme={theme}>
             <StylesProvider jss={jss}>
@@ -38,14 +42,14 @@ const App: FC = () => {
                         maxSnack={3}
                     >
                         <Router history={history}>
-                                <AuthProvider>
-                                    <GlobalStyles/>
-                                    <ScrollReset/>
-                                    <GoogleAnalytics/>
-                                    <CookiesNotification/>
-                                    <SettingsNotification/>
-                                    {renderRoutes(routes)}
-                                </AuthProvider>
+                            <AuthProvider>
+                                <GlobalStyles/>
+                                <ScrollReset/>
+                                <GoogleAnalytics/>
+                                <CookiesNotification/>
+                                <SettingsNotification/>
+                                {renderRoutes(routes)}
+                            </AuthProvider>
                         </Router>
                     </SnackbarProvider>
                 </MuiPickersUtilsProvider>
