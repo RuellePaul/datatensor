@@ -17,6 +17,8 @@ class Config:
 
     SECRET_KEY = 'aUbrkqS8hwxj9xstp77r7s24gZx'
 
+    ADMIN_USER_IDS = ['58a802c1b350056c737ca447db48c7c645581b265e61d2ceeae5e0320adc7e6a']
+
     SESSION_COOKIE_SECURE = True
     REMEMBER_COOKIE_SECURE = True
     SESSION_COOKIE_HTTPONLY = True

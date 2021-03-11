@@ -13,7 +13,7 @@ from routes.authentication.auth import auth
 from routes.authentication.oauth import oauth
 from routes.admin.management import management
 
-from routes.authentication.core import require_authorization
+from routes.authentication.core import require_authorization, require_admin
 
 app = Flask(__name__)
 
@@ -25,6 +25,7 @@ CORS(app)
 CSRFProtect(app)
 
 require_authorization([management])
+require_admin([management])
 
 app.register_blueprint(auth, url_prefix='/v1/auth')
 app.register_blueprint(oauth, url_prefix='/v1/oauth')

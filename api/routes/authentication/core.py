@@ -43,6 +43,17 @@ def require_authorization(blueprints):
         blueprint.before_request(authorized)
 
 
+def require_admin(blueprints):
+    def admin_authorized():
+        if request.method in ['GET', 'POST', 'PUT', 'DELETE']:
+            user_id = verify_access_token(request.headers.get('Authorization'))
+            if user_id not in Config.ADMIN_USER_IDS:
+                raise errors.Forbidden('Not an admin user')
+
+    for blueprint in blueprints:
+        blueprint.before_request(admin_authorized)
+
+
 # User related
 
 def authorization_url_from_scope(scope):
