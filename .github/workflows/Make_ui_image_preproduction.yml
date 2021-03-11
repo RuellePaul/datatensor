@@ -1,4 +1,4 @@
-name: Make ui preproduction image
+name: Make ux preproduction image
 
 on:
   push:
@@ -25,7 +25,7 @@ jobs:
           SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
 
       - uses: actions/checkout@v1
-      - name: 'Build ui image'
+      - name: 'Build ux image'
         run: export VERSION=${{ steps.branch_name.outputs.SOURCE_TAG }} && export ENVIRONMENT=preproduction && docker-compose -f ./builds/docker-compose.yml build ui
       - name: Docker login
         run: docker login docker.pkg.github.com -u $GITHUB_ACTOR -p ${{ secrets.GITHUB_TOKEN }}
