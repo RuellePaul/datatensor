@@ -24,11 +24,10 @@ const CustomerListView: FC = () => {
 
     const getCustomers = useCallback(async () => {
         try {
-            const response = await api.get<{ customers: Customer[]; }>('/v1/admin/management/users');
-            console.log(response)
+            const response = await api.get<{ users: Customer[]; }>('/v1/admin/management/users');
 
             if (isMountedRef.current) {
-                setCustomers(response.data.customers);
+                setCustomers(response.data.users);
             }
         } catch (err) {
             console.error(err);
