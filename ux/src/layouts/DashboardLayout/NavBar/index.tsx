@@ -57,9 +57,10 @@ const sections: Section[] = [
                 href: '/app/admin/reports/dashboard',
                 info: () => (
                     <Chip
-                        color="primary"
+                        color="secondary"
                         size="small"
                         label="Admin"
+                        variant="outlined"
                     />
                 )
             },
@@ -79,9 +80,10 @@ const sections: Section[] = [
                 href: '/app/management/users',
                 info: () => (
                     <Chip
-                        color="primary"
+                        color="secondary"
                         size="small"
                         label="Admin"
+                        variant="outlined"
                     />
                 ),
                 items: [
