@@ -21,7 +21,7 @@ services:
       args:
         - 'ENVIRONMENT=${ENVIRONMENT}'
       context: ../
-      dockerfile: Dockerfile-ui
+      dockerfile: Dockerfile-ux
     volumes:
       - './${ENVIRONMENT}/cert.pem:/ui/server/cert.pem'
       - './${ENVIRONMENT}/key.pem:/ui/server/key.pem'
