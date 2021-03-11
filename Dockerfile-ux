@@ -9,13 +9,13 @@ ARG ENVIRONMENT
 # System env
 ENV ENVIRONMENT=$ENVIRONMENT
 
-WORKDIR /ui
+WORKDIR /ux
 
-ENV PATH /ui/node_modules/.bin:$PATH
+ENV PATH /ux/node_modules/.bin:$PATH
 
-COPY ui /ui
+COPY ux /ux
 
-COPY builds/${ENVIRONMENT}/.env /ui/.env
+COPY builds/${ENVIRONMENT}/.env /ux/.env
 
 RUN yarn add package.json --silent
 RUN yarn run build
