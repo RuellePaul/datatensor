@@ -1,0 +1,33 @@
+name: Make ui preproduction image
+
+on:
+  push:
+    tags:
+      - 'v_[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Branch name
+        id: branch_name
+        run: |
+          echo ::set-output name=SOURCE_NAME::${GITHUB_REF#refs/*/}
+          echo ::set-output name=SOURCE_BRANCH::${GITHUB_REF#refs/heads/}
+          echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
+      - name: Build base image
+        run: |
+          echo $SOURCE_NAME
+          echo $SOURCE_BRANCH
+          echo $SOURCE_TAG
+        env:
+          SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
+
+      - uses: actions/checkout@v1
+      - name: 'Build ui image'
+        run: export VERSION=${{ steps.branch_name.outputs.SOURCE_TAG }} && export ENVIRONMENT=preproduction && docker-compose -f ./builds/docker-compose.yml build ui
+      - name: Docker login
+        run: docker login docker.pkg.github.com -u $GITHUB_ACTOR -p ${{ secrets.GITHUB_TOKEN }}
+      - name: 'Pushing images to distant repository'
+        run: export ENVIRONMENT=preproduction && docker push docker.pkg.github.com/RuellePaul/datatensor/datatensor-ux:${{ steps.branch_name.outputs.SOURCE_TAG }}_$ENVIRONMENT
