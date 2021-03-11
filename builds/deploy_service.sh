@@ -8,12 +8,12 @@ read -p "Which image VERSION do you want to deploy ? " version
 while [ "$environment" != "sandbox" ] && [ "$environment" != "recette" ] && [ "$environment" != "preproduction" ] && [ "$environment" != "production" ]; do
   read -p "Which ENVIRONMENT are you deploying in ? " environment
 done
-while [ "$service" != "all" ] && [ "$service" != "api" ] && [ "$service" != "ui" ] && [ "$service" != "filebeat" ] && [ "$service" != "db" ]; do
+while [ "$service" != "all" ] && [ "$service" != "api" ] && [ "$service" != "ui" ] && [ "$service" != "db" ]; do
   read -p "Which SERVICE do you want to deploy ? " service
 done
 if [ "$service" = "all" ]
 then
-  service=api\ ui\ filebeat
+  service=api\ ui\
 fi
 
 
