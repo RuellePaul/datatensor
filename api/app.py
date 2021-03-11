@@ -8,11 +8,12 @@ import errors
 from config import Config
 from database import encrypt_init
 from logger import logger
-from routes.auth.login import login
-from routes.auth.oauth import oauth
-from routes.auth.register import register
-from routes.settings.appearance import appearance
-from routes.settings.profile import profile
+
+from routes.authentication.auth import auth
+from routes.authentication.oauth import oauth
+from routes.admin.management import management
+
+from routes.authentication.core import require_authorization, require_admin
 
 app = Flask(__name__)
 
@@ -23,18 +24,19 @@ app.secret_key = app.config['SECRET_KEY']
 CORS(app)
 CSRFProtect(app)
 
-app.register_blueprint(login, url_prefix='/v1/auth/login')
-app.register_blueprint(register, url_prefix='/v1/auth/register')
-app.register_blueprint(oauth, url_prefix='/v1/auth/oauth')
+require_authorization([management])
+require_admin([management])
 
-app.register_blueprint(appearance, url_prefix='/v1/settings/appearance')
-app.register_blueprint(profile, url_prefix='/v1/settings/profile')
+app.register_blueprint(auth, url_prefix='/v1/auth')
+app.register_blueprint(oauth, url_prefix='/v1/oauth')
+
+app.register_blueprint(management, url_prefix='/v1/admin/management')
 
 
 @app.after_request
 def inject_csrf_token_cookie(response):
     response.headers['Access-Control-Allow-Credentials'] = 'true'
-    response.set_cookie('csrf_token', generate_csrf())
+    response.set_cookie('csrf_token', generate_csrf(), samesite='Lax', secure=True)
     return response
 
 

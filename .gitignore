@@ -16,6 +16,9 @@ ui/node_modules/
 /.pnp
 .pnp.js
 
+## Boilerplate
+boilerplate/
+
 # testing
 /coverage
 
