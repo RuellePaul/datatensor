@@ -15,7 +15,7 @@ services:
       - './${ENVIRONMENT}/cert.pem:/api/cert.pem'
       - './${ENVIRONMENT}/key.pem:/api/key.pem'
     network_mode: host
-  ui:
+  ux:
     image: docker.pkg.github.com/ruellepaul/datatensor/datatensor-ux:${VERSION}_${ENVIRONMENT}
     build:
       args:
