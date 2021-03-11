@@ -18,7 +18,8 @@ def oauth_authorization(scope):
     authorization_url = core.authorization_url_from_scope(scope)
     logger.info(f'Fetch OAuth authorization url for `{scope}`')
 
-    return authorization_url, 200
+    response = {'authorization_url': authorization_url}
+    return response, 200
 
 
 @oauth.route('/callback', methods=['POST'])
@@ -44,9 +45,12 @@ def oauth_callback(args):
         user = core.register_user_from_profile(profile, scope)
         logger.info(f"Registered `{user['name']}` from `{scope}`")
 
-    response = jsonify(user)
-    response.set_cookie('access_token', core.encode_access_token(user_id))
-
     logger.info(f"Logged in as `{user['name']}` from `{scope}`")
+
+    access_token = core.encode_access_token(user_id)
+    response = {
+        'accessToken': access_token,
+        'user': user
+    }
 
     return response, 200

@@ -18,7 +18,7 @@ def me():
     user = core.user_from_user_id(user_id)
     if not user:
         raise errors.ExpiredAuthentication
-    del user['password']
+    user.pop('password', None)
     response = {'user': user}
     return response, 200
 
@@ -77,7 +77,7 @@ def do_register(args):
         email=args['email'],
         name=args['name'],
         avatar=None,
-        tier='premium'
+        tier='premium',
     )
     Config.db.users.insert_one({
         **user,

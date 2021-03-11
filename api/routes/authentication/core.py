@@ -107,20 +107,26 @@ def register_user_from_profile(profile, scope):
 
     if scope == 'github':
         user = dict(id=user_id,
+                    email='',
                     name=profile.get('name'),
                     avatar=profile.get('avatar_url'),
+                    tier='premium',
                     scope=scope)
 
     elif scope == 'google':
         user = dict(id=user_id,
+                    email='',
                     name=profile.get('name'),
                     avatar=profile.get('picture'),
+                    tier='premium',
                     scope=scope)
 
     elif scope == 'stackoverflow':
         user = dict(id=user_id,
+                    email='',
                     name=profile['items'][0]['display_name'],
                     avatar=profile['items'][0]['profile_image'],
+                    tier='premium',
                     scope=scope)
     else:
         raise ValueError('Invalid scope')

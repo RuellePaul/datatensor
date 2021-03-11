@@ -60,6 +60,12 @@ const routes: Routes = [
     {
         exact: true,
         guard: GuestGuard,
+        path: '/oauthcallback/:scope',
+        component: lazy(() => import('src/views/auth/OAuthCallbackView'))
+    },
+    {
+        exact: true,
+        guard: GuestGuard,
         path: '/register',
         component: lazy(() => import('src/views/auth/RegisterView'))
     },

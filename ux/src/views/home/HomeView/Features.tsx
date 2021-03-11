@@ -35,7 +35,7 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
                     color="secondary"
                     align="center"
                 >
-                    Explore Devias Kit Pro
+                    Explore Datatensor
                 </Typography>
                 <Typography
                     variant="h1"
@@ -64,14 +64,14 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
                                         gutterBottom
                                         color="textPrimary"
                                     >
-                                        Complete User Flows
+                                        Complete Dataset Flows
                                     </Typography>
                                     <Typography
                                         variant="body1"
                                         color="textPrimary"
                                     >
-                                        Not just a set of tools, the package includes the most common use cases of
-                                        user flows like User Management, Second Level Layout.
+                                        Not just a set of tools, the application includes the most common use cases of
+                                        image dataset flows like object labeling, web scraping, image augmentation...
                                     </Typography>
                                 </Box>
                             </Box>
@@ -91,15 +91,25 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
                                         gutterBottom
                                         color="textPrimary"
                                     >
-                                        Support for Plugins
+                                        On-board integration support
                                     </Typography>
                                     <Typography
                                         variant="body1"
                                         color="textPrimary"
                                     >
-                                        The kit provides support for multiple third-party plugins right out of the box
-                                        like Chart.js, Dropzone.js, Kanban Plugin and many more.
+                                        Once you have trained models, you can use Datatensor API to make real-time
+                                        inference.
                                     </Typography>
+                                    <Box mt={2}>
+                                        <Button
+                                            variant="outlined"
+                                            component="a"
+                                            href="https://www.google.com"
+                                            target="_blank"
+                                        >
+                                            Getting started
+                                        </Button>
+                                    </Box>
                                 </Box>
                             </Box>
                         </Grid>
@@ -118,24 +128,17 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
                                         gutterBottom
                                         color="textPrimary"
                                     >
-                                        Designers, we got you
+                                        Developers, we got you
                                     </Typography>
                                     <Typography
                                         variant="body1"
                                         color="textPrimary"
                                         gutterBottom
                                     >
-                                        We&apos;ve included the source Sketch &amp; Figma files to Plus &amp;
-                                        Extended licenses so you can get creative! Build layouts with confidence.
+                                        We&apos;ve included the feature to export dataset state.
+                                        Check our docs to use Datatensor in combination of your
+                                        existing backend Python code !
                                     </Typography>
-                                    <Button
-                                        variant="outlined"
-                                        component="a"
-                                        href="https://sketch.cloud/s/q4a8e"
-                                        target="_blank"
-                                    >
-                                        Preview Design
-                                    </Button>
                                 </Box>
                             </Box>
                         </Grid>

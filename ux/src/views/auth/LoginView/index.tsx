@@ -5,6 +5,7 @@ import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
 import Logo from 'src/components/Logo';
 import JWTLogin from './JWTLogin';
+import OAuthLoginButton from './OAuthLoginButton';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -66,9 +67,23 @@ const LoginView: FC = () => {
                                     variant="body2"
                                     color="textSecondary"
                                 >
-                                    Sign in on the internal platform
+                                    Sign in on Datatensor App
                                 </Typography>
                             </div>
+                        </Box>
+
+                        <Box
+                            display='flex'
+                            mt={3}
+                        >
+                            <OAuthLoginButton scope='github'/>
+                            <OAuthLoginButton scope='google'/>
+                            <OAuthLoginButton scope='stackoverflow'/>
+                        </Box>
+                        <Box
+                            mt={3}
+                        >
+                            <Divider/>
                         </Box>
                         <Box
                             flexGrow={1}
