@@ -46,13 +46,13 @@ const DatasetCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
         <Formik
             initialValues={{
                 description: '',
-                files: [],
+                images: [],
                 name: '',
                 submit: null
             }}
             validationSchema={Yup.object().shape({
                 description: Yup.string().max(5000),
-                files: Yup.array(),
+                images: Yup.array(),
                 name: Yup.string().max(255).required()
             })}
             onSubmit={async (values, {

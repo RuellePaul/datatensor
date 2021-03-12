@@ -15,7 +15,7 @@ dataset_manage = Blueprint('dataset_manage', __name__)
 @use_args({
     'name': fields.Str(required=True),
     'description': fields.Str(),
-    'files': fields.List(fields.Dict(), required=True),
+    'images': fields.List(fields.Dict(), required=True),
 })
 def create_dataset(args):
     user_id = verify_access_token(request.headers['Authorization'])
@@ -28,8 +28,8 @@ def create_dataset(args):
                    user_id=user_id)
     Config.db.datasets.insert_one(dataset)
 
-    files = args['files']
-    if files:
+    images = args['images']
+    if images:
         pass
 
     return {}, 200
