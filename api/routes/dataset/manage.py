@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from flask import Blueprint, request
+from flask import Blueprint, jsonify, request
 from webargs import fields
 from webargs.flaskparser import use_args
 
@@ -9,6 +9,12 @@ from config import Config
 from routes.authentication.core import verify_access_token
 
 dataset_manage = Blueprint('dataset_manage', __name__)
+
+
+@dataset_manage.route('/')
+def fetch_datasets():
+    datasets = list(Config.db.datasets.find({}, {'_id': 0}))
+    return jsonify(datasets), 200
 
 
 @dataset_manage.route('/create', methods=['POST'])
