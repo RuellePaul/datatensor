@@ -192,7 +192,7 @@ const Results: FC<ResultsProps> = ({
                                    }) => {
     const classes = useStyles();
     const [currentTab, setCurrentTab] = useState<string>('all');
-    const [selectedCustomers, setSelectedCustomers] = useState<string[]>([]);
+    const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
     const [page, setPage] = useState<number>(0);
     const [limit, setLimit] = useState<number>(10);
     const [query, setQuery] = useState<string>('');
@@ -216,7 +216,7 @@ const Results: FC<ResultsProps> = ({
         }
 
         setFilters(updatedFilters);
-        setSelectedCustomers([]);
+        setSelectedUsers([]);
         setCurrentTab(value);
     };
 
@@ -230,17 +230,17 @@ const Results: FC<ResultsProps> = ({
         setSort(event.target.value as Sort);
     };
 
-    const handleSelectAllCustomers = (event: ChangeEvent<HTMLInputElement>): void => {
-        setSelectedCustomers(event.target.checked
+    const handleSelectAllUsers = (event: ChangeEvent<HTMLInputElement>): void => {
+        setSelectedUsers(event.target.checked
             ? users.map((user) => user.id)
             : []);
     };
 
-    const handleSelectOneCustomer = (event: ChangeEvent<HTMLInputElement>, customerId: string): void => {
-        if (!selectedCustomers.includes(customerId)) {
-            setSelectedCustomers((prevSelected) => [...prevSelected, customerId]);
+    const handleSelectOneUser = (event: ChangeEvent<HTMLInputElement>, customerId: string): void => {
+        if (!selectedUsers.includes(customerId)) {
+            setSelectedUsers((prevSelected) => [...prevSelected, customerId]);
         } else {
-            setSelectedCustomers((prevSelected) => prevSelected.filter((id) => id !== customerId));
+            setSelectedUsers((prevSelected) => prevSelected.filter((id) => id !== customerId));
         }
     };
 
@@ -252,12 +252,12 @@ const Results: FC<ResultsProps> = ({
         setLimit(parseInt(event.target.value));
     };
 
-    const filteredCustomers = applyFilters(users, query, filters);
-    const sortedCustomers = applySort(filteredCustomers, sort);
-    const paginatedCustomers = applyPagination(sortedCustomers, page, limit);
-    const enableBulkOperations = selectedCustomers.length > 0;
-    const selectedSomeCustomers = selectedCustomers.length > 0 && selectedCustomers.length < users.length;
-    const selectedAllCustomers = selectedCustomers.length === users.length;
+    const filteredUsers = applyFilters(users, query, filters);
+    const sortedUsers = applySort(filteredUsers, sort);
+    const paginatedUsers = applyPagination(sortedUsers, page, limit);
+    const enableBulkOperations = selectedUsers.length > 0;
+    const selectedSomeUsers = selectedUsers.length > 0 && selectedUsers.length < users.length;
+    const selectedAllUsers = selectedUsers.length === users.length;
 
     return (
         <Card
@@ -329,9 +329,9 @@ const Results: FC<ResultsProps> = ({
                 <div className={classes.bulkOperations}>
                     <div className={classes.bulkActions}>
                         <Checkbox
-                            checked={selectedAllCustomers}
-                            indeterminate={selectedSomeCustomers}
-                            onChange={handleSelectAllCustomers}
+                            checked={selectedAllUsers}
+                            indeterminate={selectedSomeUsers}
+                            onChange={handleSelectAllUsers}
                         />
                         <Button
                             variant="outlined"
@@ -355,9 +355,9 @@ const Results: FC<ResultsProps> = ({
                             <TableRow>
                                 <TableCell padding="checkbox">
                                     <Checkbox
-                                        checked={selectedAllCustomers}
-                                        indeterminate={selectedSomeCustomers}
-                                        onChange={handleSelectAllCustomers}
+                                        checked={selectedAllUsers}
+                                        indeterminate={selectedSomeUsers}
+                                        onChange={handleSelectAllUsers}
                                     />
                                 </TableCell>
                                 <TableCell>
@@ -372,20 +372,20 @@ const Results: FC<ResultsProps> = ({
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {paginatedCustomers.map((user) => {
-                                const isCustomerSelected = selectedCustomers.includes(user.id);
+                            {paginatedUsers.map((user) => {
+                                const isUserSelected = selectedUsers.includes(user.id);
 
                                 return (
                                     <TableRow
                                         hover
                                         key={user.id}
-                                        selected={isCustomerSelected}
+                                        selected={isUserSelected}
                                     >
                                         <TableCell padding="checkbox">
                                             <Checkbox
-                                                checked={isCustomerSelected}
-                                                onChange={(event) => handleSelectOneCustomer(event, user.id)}
-                                                value={isCustomerSelected}
+                                                checked={isUserSelected}
+                                                onChange={(event) => handleSelectOneUser(event, user.id)}
+                                                value={isUserSelected}
                                             />
                                         </TableCell>
                                         <TableCell>
@@ -403,7 +403,7 @@ const Results: FC<ResultsProps> = ({
                                                     <Link
                                                         color="inherit"
                                                         component={RouterLink}
-                                                        to="/admin/management/users/1"
+                                                        to={`/app/admin/manage/users/${user.id}`}
                                                         variant="h6"
                                                     >
                                                         {user.name}
@@ -423,7 +423,7 @@ const Results: FC<ResultsProps> = ({
                                         <TableCell align="right">
                                             <IconButton
                                                 component={RouterLink}
-                                                to="/admin/management/users/1/edit"
+                                                to={`/app/admin/manage/users/${user.id}/edit`}
                                             >
                                                 <SvgIcon fontSize="small">
                                                     <EditIcon/>
@@ -431,7 +431,7 @@ const Results: FC<ResultsProps> = ({
                                             </IconButton>
                                             <IconButton
                                                 component={RouterLink}
-                                                to="/admin/management/users/1"
+                                                to={`/app/admin/manage/users/${user.id}`}
                                             >
                                                 <SvgIcon fontSize="small">
                                                     <ArrowRightIcon/>
@@ -447,7 +447,7 @@ const Results: FC<ResultsProps> = ({
             </PerfectScrollbar>
             <TablePagination
                 component="div"
-                count={filteredCustomers.length}
+                count={filteredUsers.length}
                 onChangePage={handlePageChange}
                 onChangeRowsPerPage={handleLimitChange}
                 page={page}

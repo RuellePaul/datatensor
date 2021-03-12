@@ -24,10 +24,10 @@ const DatasetListView: FC = () => {
 
     const getDatasets = useCallback(async () => {
         try {
-            const response = await api.get<{ datasets: Dataset[]; }>('/api/datasets');
+            const response = await api.get<Dataset[]>('/v1/dataset/manage/');
 
             if (isMountedRef.current) {
-                setDatasets(response.data.datasets);
+                setDatasets(response.data);
             }
         } catch (err) {
             console.error(err);

@@ -1,3 +1,4 @@
+import functools
 import hashlib
 from datetime import datetime, timedelta
 
@@ -42,6 +43,20 @@ def require_authorization(blueprints):
 
     for blueprint in blueprints:
         blueprint.before_request(authorized)
+
+
+def admin_guard(func):
+
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        if request.method in ['GET', 'POST', 'PUT', 'DELETE']:
+            user_id = verify_access_token(request.headers.get('Authorization'))
+            if user_id not in Config.ADMIN_USER_IDS:
+                raise errors.Forbidden('Not an admin user')
+        result = func(*args, **kwargs)
+        return result
+
+    return wrapper
 
 
 def require_admin(blueprints):

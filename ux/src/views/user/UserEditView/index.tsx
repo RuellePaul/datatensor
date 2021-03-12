@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const CustomerEditView: FC = () => {
+const UserEditView: FC = () => {
     const classes = useStyles();
 
     return (
@@ -25,4 +25,4 @@ const CustomerEditView: FC = () => {
     );
 };
 
-export default CustomerEditView;
+export default UserEditView;

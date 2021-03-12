@@ -77,7 +77,7 @@ const sections: Section[] = [
             {
                 title: 'Users',
                 icon: UsersIcon,
-                href: '/admin/management/users',
+                href: '/admin/manage/users',
                 info: () => (
                     <Chip
                         color="secondary"
@@ -89,37 +89,29 @@ const sections: Section[] = [
                 items: [
                     {
                         title: 'List Users',
-                        href: '/app/admin/management/users'
-                    },
-                    {
-                        title: 'View User',
-                        href: '/app/admin/management/users/1'
-                    },
-                    {
-                        title: 'Edit User',
-                        href: '/app/admin/management/users/1/edit'
+                        href: '/app/admin/manage/users'
                     }
                 ]
             },
             {
                 title: 'Datasets',
                 icon: ShoppingCartIcon,
-                href: '/admin/management',
+                href: '/admin/manage',
                 items: [
                     {
                         title: 'Overview',
-                        href: '/app/management/datasets'
+                        href: '/app/manage/datasets'
                     },
                     {
                         title: 'Create a dataset',
-                        href: '/app/management/datasets/create'
+                        href: '/app/manage/datasets/create'
                     }
                 ]
             },
             {
                 title: 'Training data',
                 icon: AlertCircleIcon,
-                href: '/admin/management/datasets',
+                href: '/admin/manage/datasets',
                 items: [
                     {
                         title: 'Upload',
@@ -142,7 +134,7 @@ const sections: Section[] = [
             {
                 title: 'Models',
                 icon: FolderIcon,
-                href: '/admin/management/orders',
+                href: '/admin/manage/orders',
                 items: [
                     {
                         title: 'Train a model',

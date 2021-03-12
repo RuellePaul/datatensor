@@ -22,7 +22,7 @@ const UserListView: FC = () => {
     const isMountedRef = useIsMountedRef();
     const [users, setUsers] = useState<User[]>([]);
 
-    const getCustomers = useCallback(async () => {
+    const getUsers = useCallback(async () => {
         try {
             const response = await api.get<User[]>('/v1/admin/manage/users');
 
@@ -35,8 +35,8 @@ const UserListView: FC = () => {
     }, [isMountedRef]);
 
     useEffect(() => {
-        getCustomers();
-    }, [getCustomers]);
+        getUsers();
+    }, [getUsers]);
 
     return (
         <Page

@@ -81,33 +81,33 @@ const routes: Routes = [
             },
             {
                 exact: true,
-                path: '/app/admin/management/users',
+                path: '/app/admin/manage/users',
                 component: lazy(() => import('src/views/user/UserListView'))
             },
             {
                 exact: true,
-                path: '/app/admin/management/users/:userId',
+                path: '/app/admin/manage/users/:userId',
                 component: lazy(() => import('src/views/user/UserDetailsView'))
             },
             {
                 exact: true,
-                path: '/app/admin/management/users/:userId/edit',
+                path: '/app/admin/manage/users/:userId/edit',
                 component: lazy(() => import('src/views/user/UserEditView'))
             },
             {
                 exact: true,
-                path: '/app/management/datasets',
+                path: '/app/manage/datasets',
                 component: lazy(() => import('src/views/dataset/DatasetListView'))
             },
             {
                 exact: true,
-                path: '/app/management/datasets/create',
+                path: '/app/manage/datasets/create',
                 component: lazy(() => import('src/views/dataset/DatasetCreateView'))
             },
             {
                 exact: true,
-                path: '/app/management',
-                component: () => <Redirect to="/app/management/datasets"/>
+                path: '/app/manage',
+                component: () => <Redirect to="/app/manage/datasets"/>
             },
             {
                 exact: true,

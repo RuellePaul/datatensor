@@ -2,26 +2,21 @@ import React, {FC} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import {Box, Breadcrumbs, Button, Grid, Link, makeStyles, SvgIcon, Typography} from '@material-ui/core';
-import {Download as DownloadIcon, PlusCircle as PlusCircleIcon, Upload as UploadIcon} from 'react-feather';
+import {Breadcrumbs, Button, Grid, Link, makeStyles, SvgIcon, Typography} from '@material-ui/core';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import {Theme} from 'src/theme';
+import {Edit as EditIcon} from 'react-feather';
+import {User} from 'src/types/user';
 
 interface HeaderProps {
     className?: string;
+    userId: string;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-    root: {},
-    action: {
-        marginBottom: theme.spacing(1),
-        '& + &': {
-            marginLeft: theme.spacing(1)
-        }
-    }
+const useStyles = makeStyles(() => ({
+    root: {}
 }));
 
-const Header: FC<HeaderProps> = ({className, ...rest}) => {
+const Header: FC<HeaderProps> = ({className, userId, ...rest}) => {
     const classes = useStyles();
 
     return (
@@ -48,7 +43,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                     <Link
                         variant="body1"
                         color="inherit"
-                        to="/admin/manage"
+                        to="/app/manage"
                         component={RouterLink}
                     >
                         Management
@@ -57,52 +52,29 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                         variant="body1"
                         color="textPrimary"
                     >
-                        Datasets
+                        Users
                     </Typography>
                 </Breadcrumbs>
                 <Typography
                     variant="h3"
                     color="textPrimary"
                 >
-                    All Datasets
+                    {userId}
                 </Typography>
-                <Box mt={2}>
-                    <Button
-                        className={classes.action}
-                        startIcon={
-                            <SvgIcon fontSize="small">
-                                <UploadIcon/>
-                            </SvgIcon>
-                        }
-                    >
-                        Import
-                    </Button>
-                    <Button
-                        className={classes.action}
-                        startIcon={
-                            <SvgIcon fontSize="small">
-                                <DownloadIcon/>
-                            </SvgIcon>
-                        }
-                    >
-                        Export
-                    </Button>
-                </Box>
             </Grid>
             <Grid item>
                 <Button
                     color="secondary"
                     variant="contained"
-                    className={classes.action}
                     component={RouterLink}
-                    to="/admin/manage/datasets/create"
+                    to="/app/manage/users/1/edit"
                     startIcon={
                         <SvgIcon fontSize="small">
-                            <PlusCircleIcon/>
+                            <EditIcon/>
                         </SvgIcon>
                     }
                 >
-                    New Dataset
+                    Edit
                 </Button>
             </Grid>
         </Grid>
@@ -110,7 +82,9 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
 };
 
 Header.propTypes = {
-    className: PropTypes.string
+    className: PropTypes.string,
+    // @ts-ignore
+    user: PropTypes.object.isRequired
 };
 
 export default Header;
