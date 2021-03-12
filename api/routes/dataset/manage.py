@@ -13,18 +13,18 @@ dataset_manage = Blueprint('dataset_manage', __name__)
 
 @dataset_manage.route('/create', methods=['POST'])
 @use_args({
-    'name': fields.Str(required=True),
     'description': fields.Str(),
     'images': fields.List(fields.Dict(), required=True),
+    'name': fields.Str(required=True)
 })
 def create_dataset(args):
     user_id = verify_access_token(request.headers['Authorization'])
 
     dataset_id = str(uuid.uuid4())
     dataset = dict(id=dataset_id,
-                   name=args['name'],
+                   created_at=datetime.now().isoformat(),
                    description=args['description'],
-                   createdAt=datetime.now().isoformat(),
+                   name=args['name'],
                    user_id=user_id)
     Config.db.datasets.insert_one(dataset)
 

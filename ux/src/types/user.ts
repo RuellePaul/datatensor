@@ -2,7 +2,7 @@ export interface User {
     id: string;
     email: string;
     name: string;
-    createdAt: string;
+    created_at: string;
     scope?: string;
     avatar?: string;
 

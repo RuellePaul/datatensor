@@ -418,7 +418,7 @@ const Results: FC<ResultsProps> = ({
                                             </Box>
                                         </TableCell>
                                         <TableCell>
-                                            {moment(user.createdAt).format('DD/MM/YYYY | HH:mm:ss')}
+                                            {moment(user.created_at).format('DD/MM/YYYY | HH:mm:ss')}
                                         </TableCell>
                                         <TableCell align="right">
                                             <IconButton

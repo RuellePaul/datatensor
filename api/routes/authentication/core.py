@@ -116,7 +116,7 @@ def user_from_user_id(user_id):
 
 def register_user(user_id, name, email, password):
     user = dict(id=user_id,
-                createdAt=datetime.now().isoformat(),
+                created_at=datetime.now().isoformat(),
                 email=email,
                 name=name,
                 avatar=None,
@@ -136,7 +136,7 @@ def register_user_from_profile(profile, scope):
 
     if scope == 'github':
         user = dict(id=user_id,
-                    createdAt=datetime.now().isoformat(),
+                    created_at=datetime.now().isoformat(),
                     email=None,
                     name=profile.get('name'),
                     avatar=profile.get('avatar_url'),
@@ -145,7 +145,7 @@ def register_user_from_profile(profile, scope):
 
     elif scope == 'google':
         user = dict(id=user_id,
-                    createdAt=datetime.now().isoformat(),
+                    created_at=datetime.now().isoformat(),
                     email=profile.get('email'),
                     name=profile.get('name'),
                     avatar=profile.get('picture'),
@@ -154,7 +154,7 @@ def register_user_from_profile(profile, scope):
 
     elif scope == 'stackoverflow':
         user = dict(id=user_id,
-                    createdAt=datetime.now().isoformat(),
+                    created_at=datetime.now().isoformat(),
                     email=None,
                     name=profile['items'][0]['display_name'],
                     avatar=profile['items'][0]['profile_image'],

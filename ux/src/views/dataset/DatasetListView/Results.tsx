@@ -1,7 +1,6 @@
 import React, {ChangeEvent, FC, useState} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
-import numeral from 'numeral';
 import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
@@ -23,7 +22,7 @@ import {
     TableRow,
     TextField
 } from '@material-ui/core';
-import {ArrowRight as ArrowRightIcon, Edit as EditIcon, Image as ImageIcon, Search as SearchIcon} from 'react-feather';
+import {ArrowRight as ArrowRightIcon, Edit as EditIcon, Search as SearchIcon} from 'react-feather';
 import {Theme} from 'src/theme';
 import {Dataset} from 'src/types/dataset';
 
@@ -101,24 +100,6 @@ const applyFilters = (datasets: Dataset[], query: string, filters: Filters): Dat
         let matches = true;
 
         if (query && !dataset.name.toLowerCase().includes(query.toLowerCase())) {
-            matches = false;
-        }
-
-        if (filters.category && dataset.category !== filters.category) {
-            matches = false;
-        }
-
-        if (filters.availability) {
-            if (filters.availability === 'available' && !dataset.isAvailable) {
-                matches = false;
-            }
-
-            if (filters.availability === 'unavailable' && dataset.isAvailable) {
-                matches = false;
-            }
-        }
-
-        if (filters.isShippable && !dataset.isShippable) {
             matches = false;
         }
 
@@ -479,22 +460,7 @@ const Results: FC<ResultsProps> = ({className, datasets, ...rest}) => {
                                             />
                                         </TableCell>
                                         <TableCell className={classes.imageCell}>
-                                            {dataset.image ? (
-                                                <img
-                                                    alt="Dataset"
-                                                    src={dataset.image}
-                                                    className={classes.image}
-                                                />
-                                            ) : (
-                                                <Box
-                                                    p={2}
-                                                    bgcolor="background.dark"
-                                                >
-                                                    <SvgIcon>
-                                                        <ImageIcon/>
-                                                    </SvgIcon>
-                                                </Box>
-                                            )}
+                                            ...
                                         </TableCell>
                                         <TableCell>
                                             <Link
@@ -511,16 +477,16 @@ const Results: FC<ResultsProps> = ({className, datasets, ...rest}) => {
                                             :/
                                         </TableCell>
                                         <TableCell>
-                                            {dataset.quantity}
+                                            4
                                             {' '}
                                             in stock
-                                            {dataset.variants > 1 && ` in ${dataset.variants} variants`}
+                                            ...
                                         </TableCell>
                                         <TableCell>
-                                            {dataset.attributes.map((attr) => attr)}
+                                            ...
                                         </TableCell>
                                         <TableCell>
-                                            {numeral(dataset.price).format(`${dataset.currency}0,0.00`)}
+                                            4
                                         </TableCell>
                                         <TableCell align="right">
                                             <IconButton>
