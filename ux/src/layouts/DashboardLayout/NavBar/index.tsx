@@ -119,7 +119,7 @@ const sections: Section[] = [
             {
                 title: 'Training data',
                 icon: AlertCircleIcon,
-                href: '/admin/management/products',
+                href: '/admin/management/datasets',
                 items: [
                     {
                         title: 'Upload',

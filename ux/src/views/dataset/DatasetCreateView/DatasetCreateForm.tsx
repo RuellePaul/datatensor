@@ -28,21 +28,6 @@ interface ProductCreateFormProps {
     className?: string;
 }
 
-const categories = [
-    {
-        id: 'shirts',
-        name: 'Shirts'
-    },
-    {
-        id: 'phones',
-        name: 'Phones'
-    },
-    {
-        id: 'cars',
-        name: 'Cars'
-    }
-];
-
 const useStyles = makeStyles(() => ({
     root: {},
     editor: {
@@ -52,7 +37,7 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-const ProductCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => {
+const DatasetCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => {
     const classes = useStyles();
     const history = useHistory();
     const {enqueueSnackbar} = useSnackbar();
@@ -93,10 +78,10 @@ const ProductCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
                     // NOTE: Make API request
                     setStatus({success: true});
                     setSubmitting(false);
-                    enqueueSnackbar('Product Created', {
+                    enqueueSnackbar('Dataset Created', {
                         variant: 'success'
                     });
-                    history.push('/app/products');
+                    history.push('/app/datasets');
                 } catch (err) {
                     console.error(err);
                     setStatus({success: false});
@@ -135,7 +120,7 @@ const ProductCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
                                         error={Boolean(touched.name && errors.name)}
                                         fullWidth
                                         helperText={touched.name && errors.name}
-                                        label="Product Name"
+                                        label="Dataset Name"
                                         name="name"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
@@ -228,7 +213,7 @@ const ProductCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
                                                         name="isTaxable"
                                                     />
                                                 )}
-                                                label="Product is taxable"
+                                                label="Dataset is taxable"
                                             />
                                         </Box>
                                         <Box mt={2}>
@@ -248,63 +233,6 @@ const ProductCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
                                 </Card>
                             </Box>
                         </Grid>
-                        <Grid
-                            item
-                            xs={12}
-                            lg={4}
-                        >
-                            <Card>
-                                <CardHeader title="Organize"/>
-                                <Divider/>
-                                <CardContent>
-                                    <TextField
-                                        fullWidth
-                                        label="Category"
-                                        name="category"
-                                        onChange={handleChange}
-                                        select
-                                        SelectProps={{native: true}}
-                                        value={values.category}
-                                        variant="outlined"
-                                    >
-                                        {categories.map((category) => (
-                                            <option
-                                                key={category.id}
-                                                value={category.id}
-                                            >
-                                                {category.name}
-                                            </option>
-                                        ))}
-                                    </TextField>
-                                    <Box mt={2}>
-                                        <TextField
-                                            error={Boolean(touched.productCode && errors.productCode)}
-                                            fullWidth
-                                            helperText={touched.productCode && errors.productCode}
-                                            label="Product Code"
-                                            name="productCode"
-                                            onBlur={handleBlur}
-                                            onChange={handleChange}
-                                            value={values.productCode}
-                                            variant="outlined"
-                                        />
-                                    </Box>
-                                    <Box mt={2}>
-                                        <TextField
-                                            error={Boolean(touched.productSku && errors.productSku)}
-                                            fullWidth
-                                            helperText={touched.productSku && errors.productSku}
-                                            label="Product Sku"
-                                            name="productSku"
-                                            onBlur={handleBlur}
-                                            onChange={handleChange}
-                                            value={values.productSku}
-                                            variant="outlined"
-                                        />
-                                    </Box>
-                                </CardContent>
-                            </Card>
-                        </Grid>
                     </Grid>
                     {errors.submit && (
                         <Box mt={3}>
@@ -320,7 +248,7 @@ const ProductCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
                             type="submit"
                             disabled={isSubmitting}
                         >
-                            Create product
+                            Create dataset
                         </Button>
                     </Box>
                 </form>
@@ -329,8 +257,8 @@ const ProductCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
     );
 };
 
-ProductCreateForm.propTypes = {
+DatasetCreateForm.propTypes = {
     className: PropTypes.string
 };
 
-export default ProductCreateForm;
+export default DatasetCreateForm;

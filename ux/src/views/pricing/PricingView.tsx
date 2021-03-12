@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         paddingTop: 120,
         paddingBottom: 120
     },
-    product: {
+    dataset: {
         position: 'relative',
         padding: theme.spacing(5, 3),
         cursor: 'pointer',
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
             transform: 'scale(1.1)'
         }
     },
-    productImage: {
+    datasetImage: {
         borderRadius: theme.shape.borderRadius,
         position: 'absolute',
         top: -24,
@@ -82,13 +82,13 @@ const PricingView: FC = () => {
                             xs={12}
                         >
                             <Paper
-                                className={classes.product}
+                                className={classes.dataset}
                                 elevation={1}
                             >
                                 <img
-                                    alt="Product"
-                                    className={classes.productImage}
-                                    src="/static/images/products/product_standard.svg"
+                                    alt="Dataset"
+                                    className={classes.datasetImage}
+                                    src="/static/images/datasets/product_standard.svg"
                                 />
                                 <Typography
                                     component="h3"
@@ -155,13 +155,13 @@ const PricingView: FC = () => {
                             xs={12}
                         >
                             <Paper
-                                className={clsx(classes.product, classes.recommendedProduct)}
+                                className={clsx(classes.dataset, classes.recommendedProduct)}
                                 elevation={1}
                             >
                                 <img
-                                    alt="Product"
-                                    className={classes.productImage}
-                                    src="/static/images/products/product_premium--outlined.svg"
+                                    alt="Dataset"
+                                    className={classes.datasetImage}
+                                    src="/static/images/datasets/product_premium--outlined.svg"
                                 />
                                 <Typography
                                     component="h3"
@@ -228,13 +228,13 @@ const PricingView: FC = () => {
                             xs={12}
                         >
                             <Paper
-                                className={classes.product}
+                                className={classes.dataset}
                                 elevation={1}
                             >
                                 <img
-                                    alt="Product"
-                                    className={classes.productImage}
-                                    src="/static/images/products/product_extended.svg"
+                                    alt="Dataset"
+                                    className={classes.datasetImage}
+                                    src="/static/images/datasets/product_extended.svg"
                                 />
                                 <Typography
                                     component="h3"

@@ -43,26 +43,26 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                         to="/admin/management"
                         component={RouterLink}
                     >
-                        Management
+                        Dataset
                     </Link>
                     <Typography
                         variant="body1"
                         color="textPrimary"
                     >
-                        Products
+                        Creation
                     </Typography>
                 </Breadcrumbs>
                 <Typography
                     variant="h3"
                     color="textPrimary"
                 >
-                    Create a new product
+                    Create a new dataset
                 </Typography>
             </Grid>
             <Grid item>
                 <Button
                     component={RouterLink}
-                    to="/admin/management/products"
+                    to="/admin/management/datasets"
                 >
                     Cancel
                 </Button>

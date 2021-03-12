@@ -4,7 +4,7 @@ import {Theme} from 'src/theme';
 import api from 'src/utils/api';
 import Page from 'src/components/Page';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
-import {Product} from 'src/types/product';
+import {Dataset} from 'src/types/dataset';
 import Header from './Header';
 import Results from './Results';
 
@@ -17,17 +17,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const ProductListView: FC = () => {
+const DatasetListView: FC = () => {
     const classes = useStyles();
     const isMountedRef = useIsMountedRef();
-    const [products, setProducts] = useState<Product[]>([]);
+    const [datasets, setDatasets] = useState<Dataset[]>([]);
 
-    const getProducts = useCallback(async () => {
+    const getDatasets = useCallback(async () => {
         try {
-            const response = await api.get<{ products: Product[]; }>('/api/products');
+            const response = await api.get<{ datasets: Dataset[]; }>('/api/datasets');
 
             if (isMountedRef.current) {
-                setProducts(response.data.products);
+                setDatasets(response.data.datasets);
             }
         } catch (err) {
             console.error(err);
@@ -35,19 +35,19 @@ const ProductListView: FC = () => {
     }, [isMountedRef]);
 
     useEffect(() => {
-        getProducts();
-    }, [getProducts]);
+        getDatasets();
+    }, [getDatasets]);
 
     return (
         <Page
             className={classes.root}
-            title="Product List"
+            title="Dataset List"
         >
             <Container maxWidth={false}>
                 <Header/>
-                {products && (
+                {datasets && (
                     <Box mt={3}>
-                        <Results products={products}/>
+                        <Results datasets={datasets}/>
                     </Box>
                 )}
             </Container>
@@ -55,4 +55,4 @@ const ProductListView: FC = () => {
     );
 };
 
-export default ProductListView;
+export default DatasetListView;

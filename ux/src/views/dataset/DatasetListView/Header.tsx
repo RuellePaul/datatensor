@@ -57,14 +57,14 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                         variant="body1"
                         color="textPrimary"
                     >
-                        Products
+                        Datasets
                     </Typography>
                 </Breadcrumbs>
                 <Typography
                     variant="h3"
                     color="textPrimary"
                 >
-                    All Products
+                    All Datasets
                 </Typography>
                 <Box mt={2}>
                     <Button
@@ -95,14 +95,14 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                     variant="contained"
                     className={classes.action}
                     component={RouterLink}
-                    to="/admin/management/products/create"
+                    to="/admin/management/datasets/create"
                     startIcon={
                         <SvgIcon fontSize="small">
                             <PlusCircleIcon/>
                         </SvgIcon>
                     }
                 >
-                    New Product
+                    New Dataset
                 </Button>
             </Grid>
         </Grid>

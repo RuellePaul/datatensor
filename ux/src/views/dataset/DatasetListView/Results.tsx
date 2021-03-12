@@ -25,12 +25,11 @@ import {
 } from '@material-ui/core';
 import {ArrowRight as ArrowRightIcon, Edit as EditIcon, Image as ImageIcon, Search as SearchIcon} from 'react-feather';
 import {Theme} from 'src/theme';
-import Label from 'src/components/Label';
-import {InventoryType, Product} from 'src/types/product';
+import {Dataset} from 'src/types/dataset';
 
 interface ResultsProps {
     className?: string;
-    products: Product[];
+    datasets: Dataset[];
 }
 
 interface Filters {
@@ -63,7 +62,7 @@ const categoryOptions = [
     }
 ];
 
-const avalabilityOptions = [
+const availabilityOptions = [
     {
         id: 'all',
         name: 'All'
@@ -97,58 +96,29 @@ const sortOptions = [
     }
 ];
 
-const getInventoryLabel = (inventoryType: InventoryType): JSX.Element => {
-    const map = {
-        in_stock: {
-            text: 'In Stock',
-            color: 'success'
-        },
-        limited: {
-            text: 'Limited',
-            color: 'warning'
-        },
-        out_of_stock: {
-            text: 'Out of Stock',
-            color: 'error'
-        }
-    };
-
-    const {text, color}: any = map[inventoryType];
-
-    return (
-        <Label color={color}>
-            {text}
-        </Label>
-    );
-};
-
-const applyFilters = (products: Product[], query: string, filters: Filters): Product[] => {
-    return products.filter((product) => {
+const applyFilters = (datasets: Dataset[], query: string, filters: Filters): Dataset[] => {
+    return datasets.filter((dataset) => {
         let matches = true;
 
-        if (query && !product.name.toLowerCase().includes(query.toLowerCase())) {
+        if (query && !dataset.name.toLowerCase().includes(query.toLowerCase())) {
             matches = false;
         }
 
-        if (filters.category && product.category !== filters.category) {
+        if (filters.category && dataset.category !== filters.category) {
             matches = false;
         }
 
         if (filters.availability) {
-            if (filters.availability === 'available' && !product.isAvailable) {
+            if (filters.availability === 'available' && !dataset.isAvailable) {
                 matches = false;
             }
 
-            if (filters.availability === 'unavailable' && product.isAvailable) {
+            if (filters.availability === 'unavailable' && dataset.isAvailable) {
                 matches = false;
             }
         }
 
-        if (filters.inStock && !['in_stock', 'limited'].includes(product.inventoryType)) {
-            matches = false;
-        }
-
-        if (filters.isShippable && !product.isShippable) {
+        if (filters.isShippable && !dataset.isShippable) {
             matches = false;
         }
 
@@ -156,8 +126,8 @@ const applyFilters = (products: Product[], query: string, filters: Filters): Pro
     });
 };
 
-const applyPagination = (products: Product[], page: number, limit: number): Product[] => {
-    return products.slice(page * limit, page * limit + limit);
+const applyPagination = (datasets: Dataset[], page: number, limit: number): Dataset[] => {
+    return datasets.slice(page * limit, page * limit + limit);
 };
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -206,9 +176,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const Results: FC<ResultsProps> = ({className, products, ...rest}) => {
+const Results: FC<ResultsProps> = ({className, datasets, ...rest}) => {
     const classes = useStyles();
-    const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
+    const [selectedDatasets, setSelectedDatasets] = useState<string[]>([]);
     const [page, setPage] = useState<number>(0);
     const [limit, setLimit] = useState<number>(10);
     const [query, setQuery] = useState<string>('');
@@ -290,17 +260,17 @@ const Results: FC<ResultsProps> = ({className, products, ...rest}) => {
         setSort(event.target.value);
     };
 
-    const handleSelectAllProducts = (event: ChangeEvent<HTMLInputElement>): void => {
-        setSelectedProducts(event.target.checked
-            ? products.map((product) => product.id)
+    const handleSelectAllDatasets = (event: ChangeEvent<HTMLInputElement>): void => {
+        setSelectedDatasets(event.target.checked
+            ? datasets.map((dataset) => dataset.id)
             : []);
     };
 
-    const handleSelectOneProduct = (event: ChangeEvent<HTMLInputElement>, productId: string): void => {
-        if (!selectedProducts.includes(productId)) {
-            setSelectedProducts((prevSelected) => [...prevSelected, productId]);
+    const handleSelectOneProduct = (event: ChangeEvent<HTMLInputElement>, datasetId: string): void => {
+        if (!selectedDatasets.includes(datasetId)) {
+            setSelectedDatasets((prevSelected) => [...prevSelected, datasetId]);
         } else {
-            setSelectedProducts((prevSelected) => prevSelected.filter((id) => id !== productId));
+            setSelectedDatasets((prevSelected) => prevSelected.filter((id) => id !== datasetId));
         }
     };
 
@@ -313,11 +283,11 @@ const Results: FC<ResultsProps> = ({className, products, ...rest}) => {
     };
 
     // Usually query is done on backend with indexing solutions
-    const filteredProducts = applyFilters(products, query, filters);
-    const paginatedProducts = applyPagination(filteredProducts, page, limit);
-    const enableBulkOperations = selectedProducts.length > 0;
-    const selectedSomeProducts = selectedProducts.length > 0 && selectedProducts.length < products.length;
-    const selectedAllProducts = selectedProducts.length === products.length;
+    const filteredDatasets = applyFilters(datasets, query, filters);
+    const paginatedDatasets = applyPagination(filteredDatasets, page, limit);
+    const enableBulkOperations = selectedDatasets.length > 0;
+    const selectedSomeDatasets = selectedDatasets.length > 0 && selectedDatasets.length < datasets.length;
+    const selectedAllDatasets = selectedDatasets.length === datasets.length;
 
     return (
         <Card
@@ -344,7 +314,7 @@ const Results: FC<ResultsProps> = ({className, products, ...rest}) => {
                             )
                         }}
                         onChange={handleQueryChange}
-                        placeholder="Search products"
+                        placeholder="Search datasets"
                         value={query}
                         variant="outlined"
                     />
@@ -402,7 +372,7 @@ const Results: FC<ResultsProps> = ({className, products, ...rest}) => {
                         value={filters.availability || 'all'}
                         variant="outlined"
                     >
-                        {avalabilityOptions.map((avalabilityOption) => (
+                        {availabilityOptions.map((avalabilityOption) => (
                             <option
                                 key={avalabilityOption.id}
                                 value={avalabilityOption.id}
@@ -439,9 +409,9 @@ const Results: FC<ResultsProps> = ({className, products, ...rest}) => {
                 <div className={classes.bulkOperations}>
                     <div className={classes.bulkActions}>
                         <Checkbox
-                            checked={selectedAllProducts}
-                            indeterminate={selectedSomeProducts}
-                            onChange={handleSelectAllProducts}
+                            checked={selectedAllDatasets}
+                            indeterminate={selectedSomeDatasets}
+                            onChange={handleSelectAllDatasets}
                         />
                         <Button
                             variant="outlined"
@@ -465,9 +435,9 @@ const Results: FC<ResultsProps> = ({className, products, ...rest}) => {
                             <TableRow>
                                 <TableCell padding="checkbox">
                                     <Checkbox
-                                        checked={selectedAllProducts}
-                                        indeterminate={selectedSomeProducts}
-                                        onChange={handleSelectAllProducts}
+                                        checked={selectedAllDatasets}
+                                        indeterminate={selectedSomeDatasets}
+                                        onChange={handleSelectAllDatasets}
                                     />
                                 </TableCell>
                                 <TableCell/>
@@ -492,27 +462,27 @@ const Results: FC<ResultsProps> = ({className, products, ...rest}) => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {paginatedProducts.map((product) => {
-                                const isProductSelected = selectedProducts.includes(product.id);
+                            {paginatedDatasets.map((dataset) => {
+                                const isProductSelected = selectedDatasets.includes(dataset.id);
 
                                 return (
                                     <TableRow
                                         hover
-                                        key={product.id}
+                                        key={dataset.id}
                                         selected={isProductSelected}
                                     >
                                         <TableCell padding="checkbox">
                                             <Checkbox
                                                 checked={isProductSelected}
-                                                onChange={(event) => handleSelectOneProduct(event, product.id)}
+                                                onChange={(event) => handleSelectOneProduct(event, dataset.id)}
                                                 value={isProductSelected}
                                             />
                                         </TableCell>
                                         <TableCell className={classes.imageCell}>
-                                            {product.image ? (
+                                            {dataset.image ? (
                                                 <img
-                                                    alt="Product"
-                                                    src={product.image}
+                                                    alt="Dataset"
+                                                    src={dataset.image}
                                                     className={classes.image}
                                                 />
                                             ) : (
@@ -534,23 +504,23 @@ const Results: FC<ResultsProps> = ({className, products, ...rest}) => {
                                                 underline="none"
                                                 to="#"
                                             >
-                                                {product.name}
+                                                {dataset.name}
                                             </Link>
                                         </TableCell>
                                         <TableCell>
-                                            {getInventoryLabel(product.inventoryType)}
+                                            :/
                                         </TableCell>
                                         <TableCell>
-                                            {product.quantity}
+                                            {dataset.quantity}
                                             {' '}
                                             in stock
-                                            {product.variants > 1 && ` in ${product.variants} variants`}
+                                            {dataset.variants > 1 && ` in ${dataset.variants} variants`}
                                         </TableCell>
                                         <TableCell>
-                                            {product.attributes.map((attr) => attr)}
+                                            {dataset.attributes.map((attr) => attr)}
                                         </TableCell>
                                         <TableCell>
-                                            {numeral(product.price).format(`${product.currency}0,0.00`)}
+                                            {numeral(dataset.price).format(`${dataset.currency}0,0.00`)}
                                         </TableCell>
                                         <TableCell align="right">
                                             <IconButton>
@@ -571,7 +541,7 @@ const Results: FC<ResultsProps> = ({className, products, ...rest}) => {
                     </Table>
                     <TablePagination
                         component="div"
-                        count={filteredProducts.length}
+                        count={filteredDatasets.length}
                         onChangePage={handlePageChange}
                         onChangeRowsPerPage={handleLimitChange}
                         page={page}
@@ -586,11 +556,11 @@ const Results: FC<ResultsProps> = ({className, products, ...rest}) => {
 
 Results.propTypes = {
     className: PropTypes.string,
-    products: PropTypes.array.isRequired
+    datasets: PropTypes.array.isRequired
 };
 
 Results.defaultProps = {
-    products: []
+    datasets: []
 };
 
 export default Results;

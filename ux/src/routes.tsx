@@ -97,12 +97,12 @@ const routes: Routes = [
             {
                 exact: true,
                 path: '/app/management/datasets',
-                component: lazy(() => import('src/views/product/ProductListView'))
+                component: lazy(() => import('src/views/dataset/DatasetListView'))
             },
             {
                 exact: true,
                 path: '/app/management/datasets/create',
-                component: lazy(() => import('src/views/product/ProductCreateView'))
+                component: lazy(() => import('src/views/dataset/DatasetCreateView'))
             },
             {
                 exact: true,

@@ -3,7 +3,7 @@ import {Container, makeStyles} from '@material-ui/core';
 import Page from 'src/components/Page';
 import {Theme} from 'src/theme';
 import Header from './Header';
-import ProductCreateForm from './ProductCreateForm';
+import DatasetCreateForm from './DatasetCreateForm';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -20,11 +20,11 @@ const ProductCreateView: FC = () => {
     return (
         <Page
             className={classes.root}
-            title="Product Create"
+            title="Dataset Creation"
         >
             <Container maxWidth="lg">
                 <Header/>
-                <ProductCreateForm/>
+                <DatasetCreateForm/>
             </Container>
         </Page>
     );
