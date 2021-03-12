@@ -1,0 +1,470 @@
+import React, {ChangeEvent, FC, useState} from 'react';
+import {Link as RouterLink} from 'react-router-dom';
+import clsx from 'clsx';
+import moment from 'moment';
+import PropTypes from 'prop-types';
+import PerfectScrollbar from 'react-perfect-scrollbar';
+import {
+    Avatar,
+    Box,
+    Button,
+    Card,
+    Checkbox,
+    Divider,
+    IconButton,
+    InputAdornment,
+    Link,
+    makeStyles,
+    SvgIcon,
+    Tab,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TablePagination,
+    TableRow,
+    Tabs,
+    TextField,
+    Typography
+} from '@material-ui/core';
+import {ArrowRight as ArrowRightIcon, Edit as EditIcon, Search as SearchIcon} from 'react-feather';
+import {Theme} from 'src/theme';
+import getInitials from 'src/utils/getInitials';
+import {User} from 'src/types/user';
+
+interface ResultsProps {
+    className?: string;
+    users: User[];
+}
+
+type Sort =
+    | 'updatedAt|desc'
+    | 'updatedAt|asc'
+    | 'orders|desc'
+    | 'orders|asc';
+
+interface SortOption {
+    value: Sort,
+    label: string
+}
+
+const tabs = [
+    {
+        value: 'all',
+        label: 'All'
+    },
+    {
+        value: 'hasAcceptedMarketing',
+        label: 'Accepts Marketing'
+    },
+    {
+        value: 'isProspect',
+        label: 'Prospect'
+    },
+    {
+        value: 'isReturning',
+        label: 'Returning'
+    }
+];
+
+const sortOptions: SortOption[] = [
+    {
+        value: 'updatedAt|desc',
+        label: 'Last update (newest first)'
+    },
+    {
+        value: 'updatedAt|asc',
+        label: 'Last update (oldest first)'
+    },
+    {
+        value: 'orders|desc',
+        label: 'Total orders (high to low)'
+    },
+    {
+        value: 'orders|asc',
+        label: 'Total orders (low to high)'
+    }
+];
+
+const applyFilters = (users: User[], query: string, filters: any): User[] => {
+    return users.filter((user) => {
+        let matches = true;
+
+        if (query) {
+            const properties = ['email', 'name'];
+            let containsQuery = false;
+
+            properties.forEach((property) => {
+                if (user[property].toLowerCase().includes(query.toLowerCase())) {
+                    containsQuery = true;
+                }
+            });
+
+            if (!containsQuery) {
+                matches = false;
+            }
+        }
+
+        Object.keys(filters).forEach((key) => {
+            const value = filters[key];
+
+            if (value && user[key] !== value) {
+                matches = false;
+            }
+        });
+
+        return matches;
+    });
+};
+
+const applyPagination = (users: User[], page: number, limit: number): User[] => {
+    return users.slice(page * limit, page * limit + limit);
+};
+
+const descendingComparator = (a: User, b: User, orderBy: string): number => {
+    if (b[orderBy] < a[orderBy]) {
+        return -1;
+    }
+
+    if (b[orderBy] > a[orderBy]) {
+        return 1;
+    }
+
+    return 0;
+};
+
+const getComparator = (order: 'asc' | 'desc', orderBy: string) => {
+    return order === 'desc'
+        ? (a: User, b: User) => descendingComparator(a, b, orderBy)
+        : (a: User, b: User) => -descendingComparator(a, b, orderBy);
+};
+
+const applySort = (users: User[], sort: Sort): User[] => {
+    const [orderBy, order] = sort.split('|') as [string, 'asc' | 'desc'];
+    const comparator = getComparator(order, orderBy);
+    const stabilizedThis = users.map((el, index) => [el, index]);
+
+    stabilizedThis.sort((a, b) => {
+        // @ts-ignore
+        const order = comparator(a[0], b[0]);
+
+        if (order !== 0) return order;
+
+        // @ts-ignore
+        return a[1] - b[1];
+    });
+
+    // @ts-ignore
+    return stabilizedThis.map((el) => el[0]);
+};
+
+const useStyles = makeStyles((theme: Theme) => ({
+    root: {},
+    queryField: {
+        width: 500
+    },
+    bulkOperations: {
+        position: 'relative'
+    },
+    bulkActions: {
+        paddingLeft: 4,
+        paddingRight: 4,
+        marginTop: 6,
+        position: 'absolute',
+        width: '100%',
+        zIndex: 2,
+        backgroundColor: theme.palette.background.default
+    },
+    bulkAction: {
+        marginLeft: theme.spacing(2)
+    },
+    avatar: {
+        height: 42,
+        width: 42,
+        marginRight: theme.spacing(1)
+    }
+}));
+
+const Results: FC<ResultsProps> = ({
+                                       className,
+                                       users,
+                                       ...rest
+                                   }) => {
+    const classes = useStyles();
+    const [currentTab, setCurrentTab] = useState<string>('all');
+    const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
+    const [page, setPage] = useState<number>(0);
+    const [limit, setLimit] = useState<number>(10);
+    const [query, setQuery] = useState<string>('');
+    const [sort, setSort] = useState<Sort>(sortOptions[0].value);
+    const [filters, setFilters] = useState<any>({
+        hasAcceptedMarketing: null,
+        isProspect: null,
+        isReturning: null
+    });
+
+    const handleTabsChange = (event: ChangeEvent<{}>, value: string): void => {
+        const updatedFilters = {
+            ...filters,
+            hasAcceptedMarketing: null,
+            isProspect: null,
+            isReturning: null
+        };
+
+        if (value !== 'all') {
+            updatedFilters[value] = true;
+        }
+
+        setFilters(updatedFilters);
+        setSelectedUsers([]);
+        setCurrentTab(value);
+    };
+
+    const handleQueryChange = (event: ChangeEvent<HTMLInputElement>): void => {
+        event.persist();
+        setQuery(event.target.value);
+    };
+
+    const handleSortChange = (event: ChangeEvent<HTMLInputElement>): void => {
+        event.persist();
+        setSort(event.target.value as Sort);
+    };
+
+    const handleSelectAllUsers = (event: ChangeEvent<HTMLInputElement>): void => {
+        setSelectedUsers(event.target.checked
+            ? users.map((user) => user.id)
+            : []);
+    };
+
+    const handleSelectOneUser = (event: ChangeEvent<HTMLInputElement>, customerId: string): void => {
+        if (!selectedUsers.includes(customerId)) {
+            setSelectedUsers((prevSelected) => [...prevSelected, customerId]);
+        } else {
+            setSelectedUsers((prevSelected) => prevSelected.filter((id) => id !== customerId));
+        }
+    };
+
+    const handlePageChange = (event: any, newPage: number): void => {
+        setPage(newPage);
+    };
+
+    const handleLimitChange = (event: ChangeEvent<HTMLInputElement>): void => {
+        setLimit(parseInt(event.target.value));
+    };
+
+    const filteredUsers = applyFilters(users, query, filters);
+    const sortedUsers = applySort(filteredUsers, sort);
+    const paginatedUsers = applyPagination(sortedUsers, page, limit);
+    const enableBulkOperations = selectedUsers.length > 0;
+    const selectedSomeUsers = selectedUsers.length > 0 && selectedUsers.length < users.length;
+    const selectedAllUsers = selectedUsers.length === users.length;
+
+    return (
+        <Card
+            className={clsx(classes.root, className)}
+            {...rest}
+        >
+            <Tabs
+                onChange={handleTabsChange}
+                scrollButtons="auto"
+                textColor="secondary"
+                value={currentTab}
+                variant="scrollable"
+            >
+                {tabs.map((tab) => (
+                    <Tab
+                        key={tab.value}
+                        value={tab.value}
+                        label={tab.label}
+                    />
+                ))}
+            </Tabs>
+            <Divider/>
+            <Box
+                p={2}
+                minHeight={56}
+                display="flex"
+                alignItems="center"
+            >
+                <TextField
+                    className={classes.queryField}
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <SvgIcon
+                                    fontSize="small"
+                                    color="action"
+                                >
+                                    <SearchIcon/>
+                                </SvgIcon>
+                            </InputAdornment>
+                        )
+                    }}
+                    onChange={handleQueryChange}
+                    placeholder="Search users"
+                    value={query}
+                    variant="outlined"
+                />
+                <Box flexGrow={1}/>
+                <TextField
+                    label="Sort By"
+                    name="sort"
+                    onChange={handleSortChange}
+                    select
+                    SelectProps={{native: true}}
+                    value={sort}
+                    variant="outlined"
+                >
+                    {sortOptions.map((option) => (
+                        <option
+                            key={option.value}
+                            value={option.value}
+                        >
+                            {option.label}
+                        </option>
+                    ))}
+                </TextField>
+            </Box>
+            {enableBulkOperations && (
+                <div className={classes.bulkOperations}>
+                    <div className={classes.bulkActions}>
+                        <Checkbox
+                            checked={selectedAllUsers}
+                            indeterminate={selectedSomeUsers}
+                            onChange={handleSelectAllUsers}
+                        />
+                        <Button
+                            variant="outlined"
+                            className={classes.bulkAction}
+                        >
+                            Delete
+                        </Button>
+                        <Button
+                            variant="outlined"
+                            className={classes.bulkAction}
+                        >
+                            Edit
+                        </Button>
+                    </div>
+                </div>
+            )}
+            <PerfectScrollbar>
+                <Box minWidth={700}>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell padding="checkbox">
+                                    <Checkbox
+                                        checked={selectedAllUsers}
+                                        indeterminate={selectedSomeUsers}
+                                        onChange={handleSelectAllUsers}
+                                    />
+                                </TableCell>
+                                <TableCell>
+                                    Name
+                                </TableCell>
+                                <TableCell>
+                                    Created at
+                                </TableCell>
+                                <TableCell align="right">
+                                    Actions
+                                </TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {paginatedUsers.map((user) => {
+                                const isUserSelected = selectedUsers.includes(user.id);
+
+                                return (
+                                    <TableRow
+                                        hover
+                                        key={user.id}
+                                        selected={isUserSelected}
+                                    >
+                                        <TableCell padding="checkbox">
+                                            <Checkbox
+                                                checked={isUserSelected}
+                                                onChange={(event) => handleSelectOneUser(event, user.id)}
+                                                value={isUserSelected}
+                                            />
+                                        </TableCell>
+                                        <TableCell>
+                                            <Box
+                                                display="flex"
+                                                alignItems="center"
+                                            >
+                                                <Avatar
+                                                    className={classes.avatar}
+                                                    src={user.avatar}
+                                                >
+                                                    {getInitials(user.name)}
+                                                </Avatar>
+                                                <div>
+                                                    <Link
+                                                        color="inherit"
+                                                        component={RouterLink}
+                                                        to={`/app/admin/manage/users/${user.id}`}
+                                                        variant="h6"
+                                                    >
+                                                        {user.name}
+                                                    </Link>
+                                                    <Typography
+                                                        variant="body2"
+                                                        color="textSecondary"
+                                                    >
+                                                        {user.email}
+                                                    </Typography>
+                                                </div>
+                                            </Box>
+                                        </TableCell>
+                                        <TableCell>
+                                            {moment(user.created_at).format('DD/MM/YYYY | HH:mm:ss')}
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            <IconButton
+                                                component={RouterLink}
+                                                to={`/app/admin/manage/users/${user.id}/edit`}
+                                            >
+                                                <SvgIcon fontSize="small">
+                                                    <EditIcon/>
+                                                </SvgIcon>
+                                            </IconButton>
+                                            <IconButton
+                                                component={RouterLink}
+                                                to={`/app/admin/manage/users/${user.id}`}
+                                            >
+                                                <SvgIcon fontSize="small">
+                                                    <ArrowRightIcon/>
+                                                </SvgIcon>
+                                            </IconButton>
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                    </Table>
+                </Box>
+            </PerfectScrollbar>
+            <TablePagination
+                component="div"
+                count={filteredUsers.length}
+                onChangePage={handlePageChange}
+                onChangeRowsPerPage={handleLimitChange}
+                page={page}
+                rowsPerPage={limit}
+                rowsPerPageOptions={[5, 10, 25]}
+            />
+        </Card>
+    );
+};
+
+Results.propTypes = {
+    className: PropTypes.string,
+    users: PropTypes.array.isRequired
+};
+
+Results.defaultProps = {
+    users: []
+};
+
+export default Results;

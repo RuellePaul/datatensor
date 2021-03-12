@@ -29,10 +29,6 @@ const App: FC = () => {
         theme: settings.theme
     });
 
-    if (process.env.REACT_APP_IS_MOCK_ACTIVE === "true") {
-        import('src/__mocks__')
-    }
-
     return (
         <ThemeProvider theme={theme}>
             <StylesProvider jss={jss}>

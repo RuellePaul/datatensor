@@ -57,9 +57,10 @@ const sections: Section[] = [
                 href: '/app/admin/reports/dashboard',
                 info: () => (
                     <Chip
-                        color="primary"
+                        color="secondary"
                         size="small"
                         label="Admin"
+                        variant="outlined"
                     />
                 )
             },
@@ -76,48 +77,41 @@ const sections: Section[] = [
             {
                 title: 'Users',
                 icon: UsersIcon,
-                href: '/app/management/users',
+                href: '/admin/manage/users',
                 info: () => (
                     <Chip
-                        color="primary"
+                        color="secondary"
                         size="small"
                         label="Admin"
+                        variant="outlined"
                     />
                 ),
                 items: [
                     {
                         title: 'List Users',
-                        href: '/app/admin/management/users'
-                    },
-                    {
-                        title: 'View Customer',
-                        href: '/app/admin/management/users/1'
-                    },
-                    {
-                        title: 'Edit Customer',
-                        href: '/app/admin/management/users/1/edit'
+                        href: '/app/admin/manage/users'
                     }
                 ]
             },
             {
                 title: 'Datasets',
                 icon: ShoppingCartIcon,
-                href: '/app/management',
+                href: '/admin/manage',
                 items: [
                     {
                         title: 'Overview',
-                        href: '/app/management/datasets'
+                        href: '/app/manage/datasets'
                     },
                     {
                         title: 'Create a dataset',
-                        href: '/app/management/datasets/create'
+                        href: '/app/manage/datasets/create'
                     }
                 ]
             },
             {
                 title: 'Training data',
                 icon: AlertCircleIcon,
-                href: '/app/management/products',
+                href: '/admin/manage/datasets',
                 items: [
                     {
                         title: 'Upload',
@@ -140,7 +134,7 @@ const sections: Section[] = [
             {
                 title: 'Models',
                 icon: FolderIcon,
-                href: '/app/management/orders',
+                href: '/admin/manage/orders',
                 items: [
                     {
                         title: 'Train a model',

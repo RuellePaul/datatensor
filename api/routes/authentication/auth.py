@@ -1,13 +1,11 @@
 from flask import Blueprint, request
-from flask_bcrypt import check_password_hash, generate_password_hash
+from flask_bcrypt import check_password_hash
 from webargs import fields
 from webargs.flaskparser import use_args
 
 import errors
-from config import Config
 from logger import logger
 from routes.authentication import core
-from utils import encrypt_field
 
 auth = Blueprint('auth', __name__)
 
@@ -70,21 +68,7 @@ def do_register(args):
     if user:
         raise errors.Forbidden(f'User {user_id} already exists')
 
-    encrypted_password = generate_password_hash(args['password']).decode('utf-8')
-
-    user = dict(
-        id=user_id,
-        email=args['email'],
-        name=args['name'],
-        avatar=None,
-        tier='premium',
-    )
-    Config.db.users.insert_one({
-        **user,
-        'name': encrypt_field(user['name']),
-        'email': encrypt_field(user['email']),
-        'password': encrypt_field(encrypted_password),
-    })
+    user = core.register_user(user_id, args['name'], args['email'], args['password'])
 
     logger.info(f'Registered user `{email}`')
 

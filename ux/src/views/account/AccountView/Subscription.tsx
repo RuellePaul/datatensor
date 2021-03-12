@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
             alignItems: 'flex-start'
         }
     },
-    productImage: {
+    datasetImage: {
         marginRight: theme.spacing(1),
         height: 48,
         width: 48
@@ -109,9 +109,9 @@ const Subscription: FC<SubscriptionProps> = ({className, ...rest}) => {
                             alignItems="center"
                         >
                             <img
-                                alt="Product"
-                                className={classes.productImage}
-                                src="/static/images/products/product_premium.svg"
+                                alt="Dataset"
+                                className={classes.datasetImage}
+                                src="/static/images/datasets/product_premium.svg"
                             />
                             <Typography
                                 variant="overline"

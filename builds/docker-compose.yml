@@ -1,0 +1,29 @@
+version: '3.7'
+
+services:
+  api:
+    image: docker.pkg.github.com/ruellepaul/datatensor/datatensor-api:${VERSION}
+    environment:
+      - 'DB_ENCRYPTION_KEY=${DB_ENCRYPTION_KEY}'
+      - 'ENVIRONMENT=${ENVIRONMENT}'
+      - 'FLASK_SECRET_KEY=${FLASK_SECRET_KEY}'
+    build:
+      context: ../
+      dockerfile: Dockerfile-api
+    volumes:
+      - './${ENVIRONMENT}/config.py:/api/config.py'
+      - './${ENVIRONMENT}/cert.pem:/api/cert.pem'
+      - './${ENVIRONMENT}/key.pem:/api/key.pem'
+    network_mode: host
+  ux:
+    image: docker.pkg.github.com/ruellepaul/datatensor/datatensor-ux:${VERSION}_${ENVIRONMENT}
+    build:
+      args:
+        - 'ENVIRONMENT=${ENVIRONMENT}'
+      context: ../
+      dockerfile: Dockerfile-ux
+    volumes:
+      - './${ENVIRONMENT}/cert.pem:/ux/server/cert.pem'
+      - './${ENVIRONMENT}/key.pem:/ux/server/key.pem'
+      - '/ux/node_modules'
+    network_mode: host

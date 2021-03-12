@@ -15,19 +15,16 @@ class Config:
     UI_URL = 'https://localhost:5069'
     API_URI = 'http://127.0.0.1:4069'
 
-    SECRET_KEY = 'aUbrkqS8hwxj9xstp77r7s24gZx'
+    SECRET_KEY = os.environ['FLASK_SECRET_KEY']
 
-    ADMIN_USER_IDS = [
-        '58a802c1b350056c737ca447db48c7c645581b265e61d2ceeae5e0320adc7e6a',  # RuellePaul (github)
-        'ac586bc7204fefce386b92981a14ac4dc9ba570e76954ddcf25663fb4dda1f0a'  # ThomasRoudil (github)
-    ]
+    ADMIN_USER_IDS = ['58a802c1b350056c737ca447db48c7c645581b265e61d2ceeae5e0320adc7e6a']
 
     SESSION_COOKIE_SECURE = True
     REMEMBER_COOKIE_SECURE = True
     SESSION_COOKIE_HTTPONLY = True
     REMEMBER_COOKIE_HTTPONLY = True
 
-    DB_ENCRYPTION_KEY = 'yFbcXGnYY2xUrh6I8hwf5lyikIe9x/r21nLiqzWDmj1ZaBST+7Jfu+puRJqwmdjxAzOWivAY3QIHaf61+63kagEXAeE/jcKfDbV/1q3Q3MjR5ePvvS2gx8pvKNCbG+jA'
+    DB_ENCRYPTION_KEY = os.environ['DB_ENCRYPTION_KEY']
     DB_HOST = 'localhost:27017'
     DB_NAME = f'datatensor_{ENVIRONMENT}'
     DB_ENCRYPT_CLIENT, db = encrypt_init(DB_HOST, db_name=DB_NAME, key=DB_ENCRYPTION_KEY)
