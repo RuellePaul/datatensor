@@ -23,6 +23,7 @@ import QuillEditor from 'src/components/QuillEditor';
 import ImagesDropzone from 'src/components/ImagesDropzone';
 import api from 'src/utils/api';
 import {Dataset} from 'src/types/dataset';
+import {Image} from 'src/types/image';
 
 interface ProductCreateFormProps {
     className?: string;
@@ -149,7 +150,9 @@ const DatasetCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
                                     <CardHeader title="Upload Images"/>
                                     <Divider/>
                                     <CardContent>
-                                        <ImagesDropzone/>
+                                        <ImagesDropzone
+                                            onChange={(images: Image[]) => setFieldValue('images', images)}
+                                        />
                                     </CardContent>
                                 </Card>
                             </Box>

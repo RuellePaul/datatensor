@@ -1,4 +1,4 @@
-import React, {FC, useCallback, useState} from 'react';
+import React, {FC, useCallback, useEffect, useState} from 'react';
 import clsx from 'clsx';
 import {useDropzone} from 'react-dropzone';
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -20,9 +20,11 @@ import FileCopyIcon from '@material-ui/icons/FileCopy';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import {Theme} from 'src/theme';
 import bytesToSize from 'src/utils/bytesToSize';
+import {Image} from 'src/types/image';
 
 interface ImagesDropzoneProps {
     className?: string;
+    onChange: (images: Image[]) => void;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -64,19 +66,26 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const ImagesDropzone: FC<ImagesDropzoneProps> = ({className, ...rest}) => {
+const ImagesDropzone: FC<ImagesDropzoneProps> = ({className, onChange, ...rest}) => {
     const classes = useStyles();
-    const [images, setImages] = useState<any[]>([]);
+    const [images, setImages] = useState<Image[]>([]);
 
-    const handleDrop = useCallback((acceptedFiles) => {
-        setImages((prevFiles) => [...prevFiles].concat(acceptedFiles));
+    const handleDrop = useCallback((acceptedImages) => {
+        setImages((prevImages) => [...prevImages].concat(acceptedImages));
     }, []);
+
+    useEffect(() => {
+        onChange(images);
+
+        // eslint-disable-next-line
+    }, [images]);
 
     const handleRemoveAll = () => {
         setImages([]);
     };
 
     const {getRootProps, getInputProps, isDragActive} = useDropzone({
+        accept: 'image/jpeg, image/png',
         onDrop: handleDrop
     });
 
@@ -95,7 +104,7 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({className, ...rest}) => {
                 <input {...getInputProps()} />
                 <div>
                     <img
-                        alt="Select files"
+                        alt="Select Images"
                         className={classes.image}
                         src="/static/images/undraw_add_file2_gvbb.svg"
                     />
