@@ -21,7 +21,7 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import {Theme} from 'src/theme';
 import bytesToSize from 'src/utils/bytesToSize';
 
-interface FilesDropzoneProps {
+interface ImagesDropzoneProps {
     className?: string;
 }
 
@@ -64,16 +64,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const FilesDropzone: FC<FilesDropzoneProps> = ({className, ...rest}) => {
+const ImagesDropzone: FC<ImagesDropzoneProps> = ({className, ...rest}) => {
     const classes = useStyles();
-    const [files, setFiles] = useState<any[]>([]);
+    const [images, setImages] = useState<any[]>([]);
 
     const handleDrop = useCallback((acceptedFiles) => {
-        setFiles((prevFiles) => [...prevFiles].concat(acceptedFiles));
+        setImages((prevFiles) => [...prevFiles].concat(acceptedFiles));
     }, []);
 
     const handleRemoveAll = () => {
-        setFiles([]);
+        setImages([]);
     };
 
     const {getRootProps, getInputProps, isDragActive} = useDropzone({
@@ -95,7 +95,7 @@ const FilesDropzone: FC<FilesDropzoneProps> = ({className, ...rest}) => {
                 <input {...getInputProps()} />
                 <div>
                     <img
-                        alt="Select file"
+                        alt="Select files"
                         className={classes.image}
                         src="/static/images/undraw_add_file2_gvbb.svg"
                     />
@@ -105,14 +105,14 @@ const FilesDropzone: FC<FilesDropzoneProps> = ({className, ...rest}) => {
                         gutterBottom
                         variant="h3"
                     >
-                        Select files
+                        Select images
                     </Typography>
                     <Box mt={2}>
                         <Typography
                             color="textPrimary"
                             variant="body1"
                         >
-                            Drop files here or click
+                            Drop images here or click
                             {' '}
                             <Link underline="always">browse</Link>
                             {' '}
@@ -121,13 +121,13 @@ const FilesDropzone: FC<FilesDropzoneProps> = ({className, ...rest}) => {
                     </Box>
                 </div>
             </div>
-            {files.length > 0 && (
+            {images.length > 0 && (
                 <>
                     <PerfectScrollbar options={{suppressScrollX: true}}>
                         <List className={classes.list}>
-                            {files.map((file, i) => (
+                            {images.map((file, i) => (
                                 <ListItem
-                                    divider={i < files.length - 1}
+                                    divider={i < images.length - 1}
                                     key={i}
                                 >
                                     <ListItemIcon>
@@ -159,7 +159,7 @@ const FilesDropzone: FC<FilesDropzoneProps> = ({className, ...rest}) => {
                             size="small"
                             variant="contained"
                         >
-                            Upload files
+                            Upload images
                         </Button>
                     </div>
                 </>
@@ -168,8 +168,8 @@ const FilesDropzone: FC<FilesDropzoneProps> = ({className, ...rest}) => {
     );
 };
 
-FilesDropzone.propTypes = {
+ImagesDropzone.propTypes = {
     className: PropTypes.string
 };
 
-export default FilesDropzone;
+export default ImagesDropzone;
