@@ -77,7 +77,7 @@ const sections: Section[] = [
             {
                 title: 'Users',
                 icon: UsersIcon,
-                href: '/app/management/users',
+                href: '/admin/management/users',
                 info: () => (
                     <Chip
                         color="secondary"
@@ -104,7 +104,7 @@ const sections: Section[] = [
             {
                 title: 'Datasets',
                 icon: ShoppingCartIcon,
-                href: '/app/management',
+                href: '/admin/management',
                 items: [
                     {
                         title: 'Overview',
@@ -119,7 +119,7 @@ const sections: Section[] = [
             {
                 title: 'Training data',
                 icon: AlertCircleIcon,
-                href: '/app/management/products',
+                href: '/admin/management/products',
                 items: [
                     {
                         title: 'Upload',
@@ -142,7 +142,7 @@ const sections: Section[] = [
             {
                 title: 'Models',
                 icon: FolderIcon,
-                href: '/app/management/orders',
+                href: '/admin/management/orders',
                 items: [
                     {
                         title: 'Train a model',

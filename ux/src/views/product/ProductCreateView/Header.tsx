@@ -40,7 +40,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                     <Link
                         variant="body1"
                         color="inherit"
-                        to="/app/management"
+                        to="/admin/management"
                         component={RouterLink}
                     >
                         Management
@@ -62,7 +62,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
             <Grid item>
                 <Button
                     component={RouterLink}
-                    to="/app/management/products"
+                    to="/admin/management/products"
                 >
                     Cancel
                 </Button>

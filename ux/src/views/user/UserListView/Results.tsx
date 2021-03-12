@@ -1,7 +1,7 @@
 import React, {ChangeEvent, FC, useState} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
-import numeral from 'numeral';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
@@ -364,13 +364,7 @@ const Results: FC<ResultsProps> = ({
                                     Name
                                 </TableCell>
                                 <TableCell>
-                                    Location
-                                </TableCell>
-                                <TableCell>
-                                    Orders
-                                </TableCell>
-                                <TableCell>
-                                    Spent
+                                    Created at
                                 </TableCell>
                                 <TableCell align="right">
                                     Actions
@@ -409,7 +403,7 @@ const Results: FC<ResultsProps> = ({
                                                     <Link
                                                         color="inherit"
                                                         component={RouterLink}
-                                                        to="/app/management/users/1"
+                                                        to="/admin/management/users/1"
                                                         variant="h6"
                                                     >
                                                         {user.name}
@@ -424,18 +418,12 @@ const Results: FC<ResultsProps> = ({
                                             </Box>
                                         </TableCell>
                                         <TableCell>
-                                            {`${user.city}, ${user.state}, ${user.country}`}
-                                        </TableCell>
-                                        <TableCell>
-                                            {user.totalOrders}
-                                        </TableCell>
-                                        <TableCell>
-                                            {numeral(user.totalAmountSpent).format(`${user.currency}0,0.00`)}
+                                            {moment(user.createdAt).format('DD/MM/YYYY | HH:mm:ss')}
                                         </TableCell>
                                         <TableCell align="right">
                                             <IconButton
                                                 component={RouterLink}
-                                                to="/app/management/users/1/edit"
+                                                to="/admin/management/users/1/edit"
                                             >
                                                 <SvgIcon fontSize="small">
                                                     <EditIcon/>
@@ -443,7 +431,7 @@ const Results: FC<ResultsProps> = ({
                                             </IconButton>
                                             <IconButton
                                                 component={RouterLink}
-                                                to="/app/management/users/1"
+                                                to="/admin/management/users/1"
                                             >
                                                 <SvgIcon fontSize="small">
                                                     <ArrowRightIcon/>

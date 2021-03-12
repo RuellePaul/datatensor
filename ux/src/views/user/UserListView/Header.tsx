@@ -48,7 +48,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                     <Link
                         variant="body1"
                         color="inherit"
-                        to="/app/management"
+                        to="/admin/management"
                         component={RouterLink}
                     >
                         Management

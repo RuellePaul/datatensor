@@ -48,7 +48,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                     <Link
                         variant="body1"
                         color="inherit"
-                        to="/app/management"
+                        to="/admin/management"
                         component={RouterLink}
                     >
                         Management
@@ -95,7 +95,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                     variant="contained"
                     className={classes.action}
                     component={RouterLink}
-                    to="/app/management/products/create"
+                    to="/admin/management/products/create"
                     startIcon={
                         <SvgIcon fontSize="small">
                             <PlusCircleIcon/>

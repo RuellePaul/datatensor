@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import jwt
 import requests
 from flask import request
+from flask_bcrypt import generate_password_hash
 from oauthlib.oauth2 import WebApplicationClient
 
 import errors
@@ -113,12 +114,30 @@ def user_from_user_id(user_id):
     return Config.db.users.find_one({'id': user_id}, {'_id': 0})
 
 
+def register_user(user_id, name, email, password):
+    user = dict(id=user_id,
+                createdAt=datetime.now().isoformat(),
+                email=email,
+                name=name,
+                avatar=None,
+                tier='premium')
+    encrypted_password = generate_password_hash(password).decode('utf-8')
+    Config.db.users.insert_one({
+        **user,
+        'name': encrypt_field(user['name']),
+        'email': encrypt_field(user['email']),
+        'password': encrypt_field(encrypted_password),
+    })
+    return user
+
+
 def register_user_from_profile(profile, scope):
     user_id = user_id_from_profile(profile, scope)
 
     if scope == 'github':
         user = dict(id=user_id,
-                    email='',
+                    createdAt=datetime.now().isoformat(),
+                    email=None,
                     name=profile.get('name'),
                     avatar=profile.get('avatar_url'),
                     tier='premium',
@@ -126,7 +145,8 @@ def register_user_from_profile(profile, scope):
 
     elif scope == 'google':
         user = dict(id=user_id,
-                    email='',
+                    createdAt=datetime.now().isoformat(),
+                    email=profile.get('email'),
                     name=profile.get('name'),
                     avatar=profile.get('picture'),
                     tier='premium',
@@ -134,7 +154,8 @@ def register_user_from_profile(profile, scope):
 
     elif scope == 'stackoverflow':
         user = dict(id=user_id,
-                    email='',
+                    createdAt=datetime.now().isoformat(),
+                    email=None,
                     name=profile['items'][0]['display_name'],
                     avatar=profile['items'][0]['profile_image'],
                     tier='premium',
@@ -145,7 +166,8 @@ def register_user_from_profile(profile, scope):
     Config.db.users.insert_one({
         **user,
         'id': user['id'],
-        'name': encrypt_field(user['name'])
+        'name': encrypt_field(user['name']),
+        'email': encrypt_field(user['email']) if user.get('email') else None,
     })
     return user
 
