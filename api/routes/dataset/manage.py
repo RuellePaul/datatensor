@@ -13,6 +13,6 @@ dataset_manage = Blueprint('dataset_manage', __name__)
     'description': fields.Str(),
     'files': fields.List(fields.Dict(), required=True),
 })
-def func_name(args):
+def create_dataset(args):
     print(args)
     return {}, 200
