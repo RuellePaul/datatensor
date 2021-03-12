@@ -23,6 +23,8 @@ import {
 } from '@material-ui/core';
 import QuillEditor from 'src/components/QuillEditor';
 import FilesDropzone from 'src/components/FilesDropzone';
+import api from 'src/utils/api';
+import {Dataset} from 'src/types/dataset';
 
 interface ProductCreateFormProps {
     className?: string;
@@ -45,29 +47,15 @@ const DatasetCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
     return (
         <Formik
             initialValues={{
-                category: '',
                 description: '',
-                images: [],
-                includesTaxes: false,
-                isTaxable: false,
+                files: [],
                 name: '',
-                price: '',
-                productCode: '',
-                productSku: '',
-                salePrice: '',
                 submit: null
             }}
             validationSchema={Yup.object().shape({
-                category: Yup.string().max(255),
                 description: Yup.string().max(5000),
-                images: Yup.array(),
-                includesTaxes: Yup.bool().required(),
-                isTaxable: Yup.bool().required(),
-                name: Yup.string().max(255).required(),
-                price: Yup.number().min(0).required(),
-                productCode: Yup.string().max(255),
-                productSku: Yup.string().max(255),
-                salePrice: Yup.number().min(0)
+                files: Yup.array(),
+                name: Yup.string().max(255).required()
             })}
             onSubmit={async (values, {
                 setErrors,
@@ -75,13 +63,17 @@ const DatasetCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
                 setSubmitting
             }) => {
                 try {
-                    // NOTE: Make API request
+                    const {submit, ...payload} = values;
+                    const response = await api.post<Dataset>('/v1/dataset/manage/create', payload);
+                    const dataset = response.data;
+                    console.log(dataset);
+
                     setStatus({success: true});
                     setSubmitting(false);
                     enqueueSnackbar('Dataset Created', {
                         variant: 'success'
                     });
-                    history.push('/app/datasets');
+                    history.push('/app/management/datasets/create');
                 } catch (err) {
                     console.error(err);
                     setStatus({success: false});
@@ -165,70 +157,10 @@ const DatasetCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
                             </Box>
                             <Box mt={3}>
                                 <Card>
-                                    <CardHeader title="Prices"/>
+                                    <CardHeader title="Options"/>
                                     <Divider/>
                                     <CardContent>
-                                        <Grid
-                                            container
-                                            spacing={3}
-                                        >
-                                            <Grid item xs={12} md={6}>
-                                                <TextField
-                                                    error={Boolean(touched.price && errors.price)}
-                                                    fullWidth
-                                                    helperText={touched.price && errors.price
-                                                        ? errors.price
-                                                        : 'If you have a sale price this will be shown as old price'}
-                                                    label="Price"
-                                                    name="price"
-                                                    type="number"
-                                                    onBlur={handleBlur}
-                                                    onChange={handleChange}
-                                                    value={values.price}
-                                                    variant="outlined"
-                                                />
-                                            </Grid>
-                                            <Grid item xs={12} md={6}>
-                                                <TextField
-                                                    error={Boolean(touched.salePrice && errors.salePrice)}
-                                                    fullWidth
-                                                    helperText={touched.salePrice && errors.salePrice}
-                                                    label="Sale price"
-                                                    name="salePrice"
-                                                    type="number"
-                                                    onBlur={handleBlur}
-                                                    onChange={handleChange}
-                                                    value={values.salePrice}
-                                                    variant="outlined"
-                                                />
-                                            </Grid>
-                                        </Grid>
-                                        <Box mt={2}>
-                                            <FormControlLabel
-                                                control={(
-                                                    <Checkbox
-                                                        checked={values.isTaxable}
-                                                        onChange={handleChange}
-                                                        value={values.isTaxable}
-                                                        name="isTaxable"
-                                                    />
-                                                )}
-                                                label="Dataset is taxable"
-                                            />
-                                        </Box>
-                                        <Box mt={2}>
-                                            <FormControlLabel
-                                                control={(
-                                                    <Checkbox
-                                                        checked={values.includesTaxes}
-                                                        onChange={handleChange}
-                                                        value={values.includesTaxes}
-                                                        name="includesTaxes"
-                                                    />
-                                                )}
-                                                label="Price includes taxes"
-                                            />
-                                        </Box>
+                                        ...
                                     </CardContent>
                                 </Card>
                             </Box>

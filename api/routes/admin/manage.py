@@ -2,10 +2,10 @@ from flask import Blueprint, jsonify
 
 from config import Config
 
-management = Blueprint('management', __name__)
+admin_manage = Blueprint('admin_manage', __name__)
 
 
-@management.route('/users')
+@admin_manage.route('/users')
 def fetch_users():
     users = list(Config.db.users.find({}, {'_id': 0, 'password': 0}))
     return jsonify(users), 200
