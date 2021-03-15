@@ -28,6 +28,7 @@ import {
 import Logo from 'src/components/Logo';
 import useAuth from 'src/hooks/useAuth';
 import NavItem from './NavItem';
+import {User} from 'src/types/user';
 
 interface NavBarProps {
     openMobile: boolean;
@@ -47,11 +48,11 @@ interface Section {
     subheader: string;
 }
 
-const sections: Section[] = [
+const sections = (user: User) : Section[] => [
     {
         subheader: 'Reports',
         items: [
-            {
+            ...(user.is_admin ? [{
                 title: 'App dashboard',
                 icon: BarChartIcon,
                 href: '/app/admin/reports/dashboard',
@@ -62,7 +63,7 @@ const sections: Section[] = [
                         variant="outlined"
                     />
                 )
-            },
+            }] : []),
             {
                 title: 'Dashboard',
                 icon: PieChartIcon,
@@ -73,7 +74,7 @@ const sections: Section[] = [
     {
         subheader: 'Management',
         items: [
-            {
+            ...(user.is_admin ? [{
                 title: 'Users',
                 icon: UsersIcon,
                 href: '/app/admin/manage/users',
@@ -90,7 +91,7 @@ const sections: Section[] = [
                         href: '/app/admin/manage/users'
                     }
                 ]
-            },
+            }] : []),
             {
                 title: 'Datasets',
                 icon: ShoppingCartIcon,
@@ -317,7 +318,7 @@ const NavBar: FC<NavBarProps> = ({onMobileClose, openMobile}) => {
                 </Box>
                 <Divider/>
                 <Box p={2}>
-                    {sections.map((section) => (
+                    {sections(user).map((section) => (
                         <List
                             key={section.subheader}
                             className={classes.list}
