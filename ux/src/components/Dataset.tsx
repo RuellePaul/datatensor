@@ -43,10 +43,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-// TODO : replace with stored images
-const IMAGES = [
-    ''
-];
 
 const DTDataset: FC<DatasetProps> = ({
                                           className,
