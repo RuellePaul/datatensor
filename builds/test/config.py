@@ -8,12 +8,12 @@ os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'  # to use OAuth2 without https
 
 
 class Config:
-    ENVIRONMENT = 'development'
+    ENVIRONMENT = os.environ['ENVIRONMENT']
 
     ROOT_PATH = os.path.abspath(os.path.join(Flask(__name__).root_path, os.pardir))
 
-    UI_URL = 'https://localhost:5069'
-    API_URI = 'http://127.0.0.1:4069'
+    UI_URL = 'https://127.0.0.1:5069'
+    API_URI = 'http://ec2-15-188-53-201.eu-west-3.compute.amazonaws.com:4069'
 
     SECRET_KEY = os.environ['FLASK_SECRET_KEY']
 
@@ -25,11 +25,11 @@ class Config:
     REMEMBER_COOKIE_HTTPONLY = True
 
     DB_ENCRYPTION_KEY = os.environ['DB_ENCRYPTION_KEY']
-    DB_HOST = 'localhost:27017'
+    DB_HOST = 'mongodb://db:27017/'
     DB_NAME = f'datatensor_{ENVIRONMENT}'
     DB_ENCRYPT_CLIENT, db = encrypt_init(DB_HOST, db_name=DB_NAME, key=DB_ENCRYPTION_KEY)
 
-    ACCESS_TOKEN_KEY = 'UDtbpoUT0Fcgr4893JYM8qDCpYrrJabeeD750DLOKoUQMN2S2uw8Jb4E1dFBld5'
+    ACCESS_TOKEN_KEY = os.environ['ACCESS_TOKEN_KEY']
     SESSION_DURATION_IN_MINUTES = 120
 
     GOOGLE_CAPTCHA_PUBLIC_KEY = '6LcFmzcaAAAAAHWoKJ-oEJRO_grEjEjQb0fedPHo'

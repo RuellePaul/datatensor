@@ -1,0 +1,15 @@
+version: '3.7'
+
+services:
+  db:
+    image: mongo
+    ports:
+      - '27017:27017'
+  proxy:
+    build:
+      context: proxy
+    ports:
+      - '443:443'
+    volumes:
+      - './cert.pem:/etc/nginx/ssl/sandbox.easyprojets.com.cer'
+      - './key.pem:/etc/nginx/ssl/sandbox.easyprojets.com.key'
