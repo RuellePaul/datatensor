@@ -1,4 +1,4 @@
-name: Make ui preproduction image
+name: Make ui test image
 
 on:
   push:
