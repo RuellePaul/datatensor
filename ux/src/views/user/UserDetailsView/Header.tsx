@@ -1,6 +1,5 @@
 import React, {FC} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {Breadcrumbs, Button, Grid, Link, makeStyles, SvgIcon, Typography} from '@material-ui/core';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
@@ -8,14 +7,14 @@ import {Edit as EditIcon} from 'react-feather';
 
 interface HeaderProps {
     className?: string;
-    userId: string;
+    user: object;
 }
 
 const useStyles = makeStyles(() => ({
     root: {}
 }));
 
-const Header: FC<HeaderProps> = ({className, userId, ...rest}) => {
+const Header: FC<HeaderProps> = ({className, user, ...rest}) => {
     const classes = useStyles();
 
     return (
@@ -58,7 +57,7 @@ const Header: FC<HeaderProps> = ({className, userId, ...rest}) => {
                     variant="h3"
                     color="textPrimary"
                 >
-                    {userId}
+                    User details
                 </Typography>
             </Grid>
             <Grid item>
@@ -66,7 +65,7 @@ const Header: FC<HeaderProps> = ({className, userId, ...rest}) => {
                     color="secondary"
                     variant="contained"
                     component={RouterLink}
-                    to="/app/manage/users/1/edit"
+                    to="/app/admin/manage/users/edit"
                     startIcon={
                         <SvgIcon fontSize="small">
                             <EditIcon/>
@@ -78,12 +77,6 @@ const Header: FC<HeaderProps> = ({className, userId, ...rest}) => {
             </Grid>
         </Grid>
     );
-};
-
-Header.propTypes = {
-    className: PropTypes.string,
-    // @ts-ignore
-    user: PropTypes.object.isRequired
 };
 
 export default Header;

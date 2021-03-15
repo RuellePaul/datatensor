@@ -1,6 +1,5 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import {Formik} from 'formik';
 import {useSnackbar} from 'notistack';
@@ -290,12 +289,6 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) =
             )}
         </Formik>
     );
-};
-
-GeneralSettings.propTypes = {
-    className: PropTypes.string,
-    // @ts-ignore
-    user: PropTypes.object.isRequired
 };
 
 export default GeneralSettings;

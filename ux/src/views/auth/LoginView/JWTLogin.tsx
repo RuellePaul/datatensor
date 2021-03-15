@@ -1,7 +1,6 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
 import * as Yup from 'yup';
-import PropTypes from 'prop-types';
 import {Formik} from 'formik';
 import {Box, Button, FormHelperText, makeStyles, TextField} from '@material-ui/core';
 import {Alert} from '@material-ui/lab';
@@ -134,10 +133,6 @@ const JWTLogin: FC<JWTLoginProps> = ({className, ...rest}) => {
             )}
         </Formik>
     );
-};
-
-JWTLogin.propTypes = {
-    className: PropTypes.string,
 };
 
 export default JWTLogin;

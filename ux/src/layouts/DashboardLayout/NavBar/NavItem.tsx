@@ -1,7 +1,6 @@
 import React, {FC, ReactNode, useState} from 'react';
 import {NavLink as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import {Button, Collapse, ListItem, makeStyles} from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
@@ -156,17 +155,6 @@ const NavItem: FC<NavItemProps> = ({
             </Button>
         </ListItem>
     );
-};
-
-NavItem.propTypes = {
-    children: PropTypes.node,
-    className: PropTypes.string,
-    depth: PropTypes.number.isRequired,
-    href: PropTypes.string,
-    icon: PropTypes.elementType,
-    info: PropTypes.elementType,
-    open: PropTypes.bool,
-    title: PropTypes.string.isRequired
 };
 
 NavItem.defaultProps = {

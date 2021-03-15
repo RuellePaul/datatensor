@@ -1,5 +1,4 @@
 import React, {FC} from 'react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {colors, makeStyles} from '@material-ui/core';
 
@@ -63,12 +62,6 @@ const OnlineIndicator: FC<OnlineIndicatorProps> = ({
             {...rest}
         />
     );
-};
-
-OnlineIndicator.propTypes = {
-    className: PropTypes.string,
-    size: PropTypes.oneOf(['small', 'medium', 'large']),
-    status: PropTypes.oneOf(['online', 'offline', 'away', 'busy'])
 };
 
 OnlineIndicator.defaultProps = {

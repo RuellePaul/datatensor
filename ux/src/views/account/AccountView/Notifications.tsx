@@ -1,5 +1,4 @@
 import React, {FC, FormEvent} from 'react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
     Box,
@@ -166,10 +165,6 @@ const Notifications: FC<NotificationProps> = ({className, ...rest}) => {
             </Card>
         </form>
     );
-};
-
-Notifications.propTypes = {
-    className: PropTypes.string
 };
 
 export default Notifications;

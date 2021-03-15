@@ -1,6 +1,5 @@
 import React, {FC} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {Breadcrumbs, Button, Grid, Link, makeStyles, Typography} from '@material-ui/core';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
@@ -43,13 +42,13 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                         to="/admin/manage"
                         component={RouterLink}
                     >
-                        Dataset
+                        Management
                     </Link>
                     <Typography
                         variant="body1"
                         color="textPrimary"
                     >
-                        Creation
+                        Datasets
                     </Typography>
                 </Breadcrumbs>
                 <Typography
@@ -69,10 +68,6 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
             </Grid>
         </Grid>
     );
-};
-
-Header.propTypes = {
-    className: PropTypes.string
 };
 
 export default Header;

@@ -86,12 +86,12 @@ const routes: Routes = [
             },
             {
                 exact: true,
-                path: '/app/admin/manage/users/:userId',
+                path: '/app/admin/manage/users/:user_id/details',
                 component: lazy(() => import('src/views/user/UserDetailsView'))
             },
             {
                 exact: true,
-                path: '/app/admin/manage/users/:userId/edit',
+                path: '/app/admin/manage/users/edit',
                 component: lazy(() => import('src/views/user/UserEditView'))
             },
             {
@@ -107,7 +107,7 @@ const routes: Routes = [
             {
                 exact: true,
                 path: '/app/manage',
-                component: () => <Redirect to="/app/manage/datasets"/>
+                component: () => <Redirect to="/app/admin/manage/users"/>
             },
             {
                 exact: true,

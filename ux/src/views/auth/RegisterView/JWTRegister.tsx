@@ -1,7 +1,6 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
 import * as Yup from 'yup';
-import PropTypes from 'prop-types';
 import {Formik} from 'formik';
 import {Box, Button, Checkbox, FormHelperText, Link, makeStyles, TextField, Typography} from '@material-ui/core';
 import GoogleCaptcha from 'src/components/GoogleCaptcha';
@@ -175,10 +174,6 @@ const JWTRegister: FC<JWTRegisterProps> = ({className, ...rest}) => {
             )}
         </Formik>
     );
-};
-
-JWTRegister.propTypes = {
-    className: PropTypes.string
 };
 
 export default JWTRegister;

@@ -1,6 +1,5 @@
 import React, {FC} from 'react';
 import {useHistory} from 'react-router-dom';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import * as Yup from 'yup';
 import {Formik} from 'formik';
@@ -72,7 +71,7 @@ const DatasetCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
                     enqueueSnackbar('Dataset Created', {
                         variant: 'success'
                     });
-                    history.push('/app/manage/datasets/create');
+                    history.push('/app/manage/datasets');
                 } catch (err) {
                     console.error(err);
                     setStatus({success: false});
@@ -190,8 +189,5 @@ const DatasetCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
     );
 };
 
-DatasetCreateForm.propTypes = {
-    className: PropTypes.string
-};
 
 export default DatasetCreateForm;

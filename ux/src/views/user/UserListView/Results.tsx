@@ -2,7 +2,6 @@ import React, {ChangeEvent, FC, useState} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
 import moment from 'moment';
-import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
     Avatar,
@@ -381,7 +380,7 @@ const Results: FC<ResultsProps> = ({
                                                     <Link
                                                         color="inherit"
                                                         component={RouterLink}
-                                                        to={`/app/admin/manage/users/${user.id}`}
+                                                        to={`/app/admin/manage/users/${user.id}/details`}
                                                         variant="h6"
                                                     >
                                                         {user.name}
@@ -401,7 +400,7 @@ const Results: FC<ResultsProps> = ({
                                         <TableCell align="right">
                                             <IconButton
                                                 component={RouterLink}
-                                                to={`/app/admin/manage/users/${user.id}/edit`}
+                                                to='/app/admin/manage/users/edit'
                                             >
                                                 <SvgIcon fontSize="small">
                                                     <EditIcon/>
@@ -409,7 +408,7 @@ const Results: FC<ResultsProps> = ({
                                             </IconButton>
                                             <IconButton
                                                 component={RouterLink}
-                                                to={`/app/admin/manage/users/${user.id}`}
+                                                to={`/app/admin/manage/users/${user.id}/details`}
                                             >
                                                 <SvgIcon fontSize="small">
                                                     <ArrowRightIcon/>
@@ -434,11 +433,6 @@ const Results: FC<ResultsProps> = ({
             />
         </Card>
     );
-};
-
-Results.propTypes = {
-    className: PropTypes.string,
-    users: PropTypes.array.isRequired
 };
 
 Results.defaultProps = {

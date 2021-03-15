@@ -1,7 +1,6 @@
 import React, {ChangeEvent, FC, useState} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
     Box,
@@ -247,11 +246,11 @@ const Results: FC<ResultsProps> = ({className, datasets, ...rest}) => {
             : []);
     };
 
-    const handleSelectOneProduct = (event: ChangeEvent<HTMLInputElement>, datasetId: string): void => {
-        if (!selectedDatasets.includes(datasetId)) {
-            setSelectedDatasets((prevSelected) => [...prevSelected, datasetId]);
+    const handleSelectOneProduct = (event: ChangeEvent<HTMLInputElement>, dataset_id: string): void => {
+        if (!selectedDatasets.includes(dataset_id)) {
+            setSelectedDatasets((prevSelected) => [...prevSelected, dataset_id]);
         } else {
-            setSelectedDatasets((prevSelected) => prevSelected.filter((id) => id !== datasetId));
+            setSelectedDatasets((prevSelected) => prevSelected.filter((id) => id !== dataset_id));
         }
     };
 
@@ -518,11 +517,6 @@ const Results: FC<ResultsProps> = ({className, datasets, ...rest}) => {
             </PerfectScrollbar>
         </Card>
     );
-};
-
-Results.propTypes = {
-    className: PropTypes.string,
-    datasets: PropTypes.array.isRequired
 };
 
 Results.defaultProps = {

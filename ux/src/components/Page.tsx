@@ -1,7 +1,6 @@
 import React, {forwardRef, HTMLProps, ReactNode, useCallback, useEffect} from 'react';
 import {Helmet} from 'react-helmet';
 import {useLocation} from 'react-router-dom';
-import PropTypes from 'prop-types';
 import track from 'src/utils/analytics';
 
 interface PageProps extends HTMLProps<HTMLDivElement> {
@@ -39,10 +38,5 @@ const Page = forwardRef<HTMLDivElement, PageProps>(({
         </div>
     );
 });
-
-Page.propTypes = {
-    children: PropTypes.node.isRequired,
-    title: PropTypes.string
-};
 
 export default Page;

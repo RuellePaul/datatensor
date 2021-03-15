@@ -3,7 +3,6 @@
 import React, {FC, ReactNode, useEffect} from 'react';
 import {Link as RouterLink, matchPath, useLocation} from 'react-router-dom';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import PropTypes from 'prop-types';
 import {
     Avatar,
     Box,
@@ -18,11 +17,11 @@ import {
     Typography
 } from '@material-ui/core';
 import {
-    AlertCircle as AlertCircleIcon,
-    BarChart as BarChartIcon,
+    Activity as ActivityIcon,
+    Database as DatabaseIcon,
+    Package as PackageIcon,
     Folder as FolderIcon,
     PieChart as PieChartIcon,
-    ShoppingCart as ShoppingCartIcon,
     Users as UsersIcon
 } from 'react-feather';
 import Logo from 'src/components/Logo';
@@ -48,13 +47,13 @@ interface Section {
     subheader: string;
 }
 
-const sections = (user: User) : Section[] => [
+const sections = (user: User): Section[] => [
     {
         subheader: 'Reports',
         items: [
             ...(user.is_admin ? [{
                 title: 'App dashboard',
-                icon: BarChartIcon,
+                icon: ActivityIcon,
                 href: '/app/admin/reports/dashboard',
                 info: () => (
                     <Chip
@@ -89,13 +88,17 @@ const sections = (user: User) : Section[] => [
                     {
                         title: 'List Users',
                         href: '/app/admin/manage/users'
+                    },
+                    {
+                        title: 'View User',
+                        href: `/app/admin/manage/users/${user.id}/details`  // FIXME (match)
                     }
                 ]
             }] : []),
             {
                 title: 'Datasets',
-                icon: ShoppingCartIcon,
-                href: '/admin/manage',
+                icon: PackageIcon,
+                href: '/app/manage/datasets',
                 items: [
                     {
                         title: 'Overview',
@@ -109,7 +112,7 @@ const sections = (user: User) : Section[] => [
             },
             {
                 title: 'Training data',
-                icon: AlertCircleIcon,
+                icon: DatabaseIcon,
                 href: '/admin/manage/datasets',
                 items: [
                     {
@@ -382,11 +385,6 @@ const NavBar: FC<NavBarProps> = ({onMobileClose, openMobile}) => {
             </Hidden>
         </>
     );
-};
-
-NavBar.propTypes = {
-    onMobileClose: PropTypes.func,
-    openMobile: PropTypes.bool
 };
 
 export default NavBar;

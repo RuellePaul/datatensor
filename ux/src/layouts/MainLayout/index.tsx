@@ -1,5 +1,4 @@
 import React, {FC, ReactNode} from 'react';
-import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/core';
 import TopBar from './TopBar';
 
@@ -48,10 +47,6 @@ const MainLayout: FC<MainLayoutProps> = ({children}) => {
             </div>
         </div>
     );
-};
-
-MainLayout.propTypes = {
-    children: PropTypes.node
 };
 
 export default MainLayout;

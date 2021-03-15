@@ -1,6 +1,5 @@
 import React, {FC} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {Box, Breadcrumbs, Button, Grid, Link, makeStyles, SvgIcon, Typography} from '@material-ui/core';
 import {Download as DownloadIcon, PlusCircle as PlusCircleIcon, Upload as UploadIcon} from 'react-feather';
@@ -43,7 +42,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                         to="/app"
                         component={RouterLink}
                     >
-                        Management
+                        Dashboard
                     </Link>
                     <Link
                         variant="body1"
@@ -51,13 +50,13 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                         to="/admin/manage"
                         component={RouterLink}
                     >
-                        Datasets
+                        Management
                     </Link>
                     <Typography
                         variant="body1"
                         color="textPrimary"
                     >
-                        All datasets
+                        Datasets
                     </Typography>
                 </Breadcrumbs>
                 <Typography
@@ -95,7 +94,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                     variant="contained"
                     className={classes.action}
                     component={RouterLink}
-                    to="/admin/manage/datasets/create"
+                    to="/app/manage/datasets/create"
                     startIcon={
                         <SvgIcon fontSize="small">
                             <PlusCircleIcon/>
@@ -107,10 +106,6 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
             </Grid>
         </Grid>
     );
-};
-
-Header.propTypes = {
-    className: PropTypes.string
 };
 
 export default Header;

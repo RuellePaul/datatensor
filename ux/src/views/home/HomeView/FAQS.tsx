@@ -1,5 +1,4 @@
 import React, {FC} from 'react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {Box, Container, Divider, Grid, makeStyles, Typography} from '@material-ui/core';
 import {Theme} from 'src/theme';
@@ -147,8 +146,5 @@ const FAQS: FC<FAQSProps> = ({className, ...rest}) => {
     );
 };
 
-FAQS.propTypes = {
-    className: PropTypes.string
-};
 
 export default FAQS;

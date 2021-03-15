@@ -1,6 +1,5 @@
 import React, {FC} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {Avatar, Box, Button, Card, CardActions, CardContent, Link, makeStyles, Typography} from '@material-ui/core';
 import {Theme} from 'src/theme';
@@ -74,12 +73,6 @@ const ProfileDetails: FC<ProfileDetailsProps> = ({className, user, ...rest}) => 
             </CardActions>
         </Card>
     );
-};
-
-ProfileDetails.propTypes = {
-    className: PropTypes.string,
-    // @ts-ignore
-    user: PropTypes.object.isRequired
 };
 
 export default ProfileDetails;
