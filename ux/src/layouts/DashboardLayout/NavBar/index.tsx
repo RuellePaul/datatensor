@@ -19,8 +19,8 @@ import {
 import {
     Activity as ActivityIcon,
     Database as DatabaseIcon,
-    Package as PackageIcon,
     Folder as FolderIcon,
+    Package as PackageIcon,
     PieChart as PieChartIcon,
     Users as UsersIcon
 } from 'react-feather';
@@ -101,13 +101,13 @@ const sections = (user: User): Section[] => [
                 href: '/app/manage/datasets',
                 items: [
                     {
-                        title: 'Overview',
-                        href: '/app/manage/datasets'
-                    },
-                    {
                         title: 'Create a dataset',
                         href: '/app/manage/datasets/create'
-                    }
+                    },
+                    {
+                        title: 'Browse datasets',
+                        href: '/app/manage/datasets'
+                    },
                 ]
             },
             {
