@@ -38,8 +38,8 @@ interface ResultsProps {
 }
 
 type Sort =
-    | 'updatedAt|desc'
-    | 'updatedAt|asc'
+    | 'created_at|desc'
+    | 'created_at|asc'
 
 interface SortOption {
     value: Sort,
@@ -59,12 +59,12 @@ const tabs = [
 
 const sortOptions: SortOption[] = [
     {
-        value: 'updatedAt|desc',
-        label: 'Last update (newest first)'
+        value: 'created_at|desc',
+        label: 'Last register (newest first)'
     },
     {
-        value: 'updatedAt|asc',
-        label: 'Last update (oldest first)'
+        value: 'created_at|asc',
+        label: 'Last register (oldest first)'
     }
 ];
 
