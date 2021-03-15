@@ -57,7 +57,6 @@ const sections: Section[] = [
                 href: '/app/admin/reports/dashboard',
                 info: () => (
                     <Chip
-                        color="secondary"
                         size="small"
                         label="Admin"
                         variant="outlined"
@@ -77,10 +76,9 @@ const sections: Section[] = [
             {
                 title: 'Users',
                 icon: UsersIcon,
-                href: '/admin/manage/users',
+                href: '/app/admin/manage/users',
                 info: () => (
                     <Chip
-                        color="secondary"
                         size="small"
                         label="Admin"
                         variant="outlined"
@@ -224,7 +222,7 @@ function reduceChildRoutes({
     return acc;
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
     mobileDrawer: {
         width: 256
     },
@@ -237,6 +235,12 @@ const useStyles = makeStyles(() => ({
         cursor: 'pointer',
         width: 64,
         height: 64
+    },
+    list: {
+        '& .MuiChip-outlined': {
+            color: theme.palette.warning.main,
+            border: `solid 1px ${theme.palette.warning.main}`
+        }
     }
 }));
 
@@ -316,6 +320,7 @@ const NavBar: FC<NavBarProps> = ({onMobileClose, openMobile}) => {
                     {sections.map((section) => (
                         <List
                             key={section.subheader}
+                            className={classes.list}
                             subheader={(
                                 <ListSubheader
                                     disableGutters

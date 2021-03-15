@@ -40,8 +40,6 @@ interface ResultsProps {
 type Sort =
     | 'updatedAt|desc'
     | 'updatedAt|asc'
-    | 'orders|desc'
-    | 'orders|asc';
 
 interface SortOption {
     value: Sort,
@@ -54,16 +52,8 @@ const tabs = [
         label: 'All'
     },
     {
-        value: 'hasAcceptedMarketing',
-        label: 'Accepts Marketing'
-    },
-    {
-        value: 'isProspect',
-        label: 'Prospect'
-    },
-    {
-        value: 'isReturning',
-        label: 'Returning'
+        value: 'is_admin',
+        label: 'Admin only'
     }
 ];
 
@@ -75,14 +65,6 @@ const sortOptions: SortOption[] = [
     {
         value: 'updatedAt|asc',
         label: 'Last update (oldest first)'
-    },
-    {
-        value: 'orders|desc',
-        label: 'Total orders (high to low)'
-    },
-    {
-        value: 'orders|asc',
-        label: 'Total orders (low to high)'
     }
 ];
 
@@ -95,7 +77,7 @@ const applyFilters = (users: User[], query: string, filters: any): User[] => {
             let containsQuery = false;
 
             properties.forEach((property) => {
-                if (user[property].toLowerCase().includes(query.toLowerCase())) {
+                if (user[property] && user[property].toLowerCase().includes(query.toLowerCase())) {
                     containsQuery = true;
                 }
             });
@@ -198,17 +180,13 @@ const Results: FC<ResultsProps> = ({
     const [query, setQuery] = useState<string>('');
     const [sort, setSort] = useState<Sort>(sortOptions[0].value);
     const [filters, setFilters] = useState<any>({
-        hasAcceptedMarketing: null,
-        isProspect: null,
-        isReturning: null
+        is_admin: null
     });
 
     const handleTabsChange = (event: ChangeEvent<{}>, value: string): void => {
         const updatedFilters = {
             ...filters,
-            hasAcceptedMarketing: null,
-            isProspect: null,
-            isReturning: null
+            is_admin: null
         };
 
         if (value !== 'all') {

@@ -5,7 +5,6 @@ import clsx from 'clsx';
 import {Breadcrumbs, Button, Grid, Link, makeStyles, SvgIcon, Typography} from '@material-ui/core';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import {Edit as EditIcon} from 'react-feather';
-import {User} from 'src/types/user';
 
 interface HeaderProps {
     className?: string;

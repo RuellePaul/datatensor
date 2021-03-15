@@ -62,7 +62,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
             <Grid item>
                 <Button
                     component={RouterLink}
-                    to="/admin/manage/datasets"
+                    to="/app/manage/datasets"
                 >
                     Cancel
                 </Button>

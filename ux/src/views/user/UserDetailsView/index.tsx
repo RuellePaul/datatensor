@@ -44,7 +44,7 @@ const UserDetailsView: FC = () => {
         } catch (err) {
             console.error(err);
         }
-    }, [isMountedRef]);
+    }, [userId, isMountedRef]);
 
     useEffect(() => {
         getDatasets();

@@ -43,7 +43,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                         to="/app"
                         component={RouterLink}
                     >
-                        Dashboard
+                        Management
                     </Link>
                     <Link
                         variant="body1"
@@ -51,13 +51,13 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                         to="/admin/manage"
                         component={RouterLink}
                     >
-                        Management
+                        Datasets
                     </Link>
                     <Typography
                         variant="body1"
                         color="textPrimary"
                     >
-                        Datasets
+                        All datasets
                     </Typography>
                 </Breadcrumbs>
                 <Typography
