@@ -27,7 +27,7 @@ docker rm $(docker ps -a -q)
 docker rmi $(docker images -a -q)
 docker volume prune -f
 docker system prune -f
-printf "* Done ! \n\n"
+printf "* Done ! *\n\n"
 
 # Additional deployments for test env (needs DB & proxy)
 if [ "$environment" = "test" ]
