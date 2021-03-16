@@ -48,7 +48,7 @@ Run the api using :
 
 <br/>
 
-## Deployment
+## Deployment :bow_and_arrow:
 
 _This section show deployment for `test` env, but the same apply for other envs._
 
