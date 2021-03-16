@@ -25,7 +25,7 @@ class Config:
     REMEMBER_COOKIE_HTTPONLY = True
 
     DB_ENCRYPTION_KEY = os.environ['DB_ENCRYPTION_KEY']
-    DB_HOST = 'mongodb://db:27017/'
+    DB_HOST = 'mongodb://127.0.0.1:27017/'
     DB_NAME = f'datatensor_{ENVIRONMENT}'
     DB_ENCRYPT_CLIENT, db = encrypt_init(DB_HOST, db_name=DB_NAME, key=DB_ENCRYPTION_KEY)
 
