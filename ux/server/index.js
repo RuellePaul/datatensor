@@ -10,19 +10,15 @@ const app = express();
 
 app.use('/', (req, res) => {
 
-  process.stdout.clearLine();
-  process.stdout.cursorTo(0);
-  process.stdout.write(`Last API call : ⚡ ${req.method} ${req.url} ⚡`);
-
-  req.pipe(
-    request(
-      API_URL + req.url,
-      (error) => {
-        if (error && error.code === 'ECONNREFUSED')
-          console.error('Connexion refused');
-      }
-    )
-  ).pipe(res);
+    req.pipe(
+        request(
+            API_URL + req.url,
+            (error) => {
+                if (error && error.code === 'ECONNREFUSED')
+                    console.error('Connexion refused');
+            }
+        )
+    ).pipe(res);
 });
 
 const fs = require('fs');
