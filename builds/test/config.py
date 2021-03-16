@@ -12,7 +12,7 @@ class Config:
 
     ROOT_PATH = os.path.abspath(os.path.join(Flask(__name__).root_path, os.pardir))
 
-    UI_URL = 'https://127.0.0.1:5069'
+    UI_URL = 'https://ec2-15-188-53-201.eu-west-3.compute.amazonaws.com:5069'
     API_URI = 'http://ec2-15-188-53-201.eu-west-3.compute.amazonaws.com:4069'
 
     SECRET_KEY = os.environ['FLASK_SECRET_KEY']
@@ -51,8 +51,8 @@ class Config:
             'AUTHORIZATION_URL': 'https://github.com/login/oauth/authorize',
             'TOKEN_URL': 'https://github.com/login/oauth/access_token',
             'USER_URL': 'https://api.github.com/user',
-            'CLIENT_ID': 'a1c2fca55dd2294221cc',
-            'CLIENT_SECRET': '2553c55f803457a4e6a199ee6c25358c59fdf67f',
+            'CLIENT_ID': '6ae3c85edc3eed0601cb',
+            'CLIENT_SECRET': 'e8167d787efbdff3af1d3d92346b139eda5a0aaa',
             'SCOPES': ['openid', 'email', 'profile']
         },
         'stackoverflow': {
