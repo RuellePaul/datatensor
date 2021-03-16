@@ -26,7 +26,7 @@ Paste these commands in your project folder. This will clone the project & insta
 (venv) $ cd datatensor
 (venv) $ pip install --upgrade pip
 (venv) $ pip install -r api/requirements.txt
-(venv) $ cd ui
+(venv) $ cd ux
 (venv) $ yarn add package.json
 ```
 
@@ -45,6 +45,6 @@ Run the api using :
 **Front end**
 
 ```bash
-(venv) $ cd ui
+(venv) $ cd ux
 (venv) $ yarn run development
 ```

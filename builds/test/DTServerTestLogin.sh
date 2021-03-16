@@ -15,6 +15,8 @@ ssh -i "DTServerTestKeys.pem" ec2-user@ec2-15-188-53-201.eu-west-3.compute.amazo
 
 # cd builds/test
 # nano init_env.sh
+# nano cert.pem
+# nano key.pem
 
 # cd ..
 # source deploy_service.sh
