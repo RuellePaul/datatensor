@@ -2,7 +2,6 @@ import React, {FC, useCallback, useEffect, useState} from 'react';
 import clsx from 'clsx';
 import {useDropzone} from 'react-dropzone';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import PropTypes from 'prop-types';
 import {
     Box,
     Button,
@@ -177,8 +176,5 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({className, onChange, ...rest})
     );
 };
 
-ImagesDropzone.propTypes = {
-    className: PropTypes.string
-};
 
 export default ImagesDropzone;

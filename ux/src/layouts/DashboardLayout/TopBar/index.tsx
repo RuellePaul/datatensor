@@ -1,6 +1,5 @@
 import React, {FC} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {AppBar, Box, Hidden, IconButton, makeStyles, SvgIcon, Toolbar} from '@material-ui/core';
 import {Menu as MenuIcon} from 'react-feather';
@@ -74,11 +73,6 @@ const TopBar: FC<TopBarProps> = ({
             </Toolbar>
         </AppBar>
     );
-};
-
-TopBar.propTypes = {
-    className: PropTypes.string,
-    onMobileNavOpen: PropTypes.func
 };
 
 TopBar.defaultProps = {

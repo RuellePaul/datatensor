@@ -9,6 +9,11 @@ jenkins-test-reports/
 /.idea/**
 
 
+## Security
+*.pem
+/builds/test/init_env.sh
+
+
 ## React dependencies
 ui/.eslintcache
 ui/node_modules/

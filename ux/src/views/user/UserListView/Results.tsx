@@ -2,7 +2,6 @@ import React, {ChangeEvent, FC, useState} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
 import moment from 'moment';
-import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
     Avatar,
@@ -38,10 +37,8 @@ interface ResultsProps {
 }
 
 type Sort =
-    | 'updatedAt|desc'
-    | 'updatedAt|asc'
-    | 'orders|desc'
-    | 'orders|asc';
+    | 'created_at|desc'
+    | 'created_at|asc'
 
 interface SortOption {
     value: Sort,
@@ -54,35 +51,19 @@ const tabs = [
         label: 'All'
     },
     {
-        value: 'hasAcceptedMarketing',
-        label: 'Accepts Marketing'
-    },
-    {
-        value: 'isProspect',
-        label: 'Prospect'
-    },
-    {
-        value: 'isReturning',
-        label: 'Returning'
+        value: 'is_admin',
+        label: 'Admin only'
     }
 ];
 
 const sortOptions: SortOption[] = [
     {
-        value: 'updatedAt|desc',
-        label: 'Last update (newest first)'
+        value: 'created_at|desc',
+        label: 'Last register (newest first)'
     },
     {
-        value: 'updatedAt|asc',
-        label: 'Last update (oldest first)'
-    },
-    {
-        value: 'orders|desc',
-        label: 'Total orders (high to low)'
-    },
-    {
-        value: 'orders|asc',
-        label: 'Total orders (low to high)'
+        value: 'created_at|asc',
+        label: 'Last register (oldest first)'
     }
 ];
 
@@ -95,7 +76,7 @@ const applyFilters = (users: User[], query: string, filters: any): User[] => {
             let containsQuery = false;
 
             properties.forEach((property) => {
-                if (user[property].toLowerCase().includes(query.toLowerCase())) {
+                if (user[property] && user[property].toLowerCase().includes(query.toLowerCase())) {
                     containsQuery = true;
                 }
             });
@@ -198,17 +179,13 @@ const Results: FC<ResultsProps> = ({
     const [query, setQuery] = useState<string>('');
     const [sort, setSort] = useState<Sort>(sortOptions[0].value);
     const [filters, setFilters] = useState<any>({
-        hasAcceptedMarketing: null,
-        isProspect: null,
-        isReturning: null
+        is_admin: null
     });
 
     const handleTabsChange = (event: ChangeEvent<{}>, value: string): void => {
         const updatedFilters = {
             ...filters,
-            hasAcceptedMarketing: null,
-            isProspect: null,
-            isReturning: null
+            is_admin: null
         };
 
         if (value !== 'all') {
@@ -403,7 +380,7 @@ const Results: FC<ResultsProps> = ({
                                                     <Link
                                                         color="inherit"
                                                         component={RouterLink}
-                                                        to={`/app/admin/manage/users/${user.id}`}
+                                                        to={`/app/admin/manage/users/${user.id}/details`}
                                                         variant="h6"
                                                     >
                                                         {user.name}
@@ -423,7 +400,7 @@ const Results: FC<ResultsProps> = ({
                                         <TableCell align="right">
                                             <IconButton
                                                 component={RouterLink}
-                                                to={`/app/admin/manage/users/${user.id}/edit`}
+                                                to='/app/admin/manage/users/edit'
                                             >
                                                 <SvgIcon fontSize="small">
                                                     <EditIcon/>
@@ -431,7 +408,7 @@ const Results: FC<ResultsProps> = ({
                                             </IconButton>
                                             <IconButton
                                                 component={RouterLink}
-                                                to={`/app/admin/manage/users/${user.id}`}
+                                                to={`/app/admin/manage/users/${user.id}/details`}
                                             >
                                                 <SvgIcon fontSize="small">
                                                     <ArrowRightIcon/>
@@ -456,11 +433,6 @@ const Results: FC<ResultsProps> = ({
             />
         </Card>
     );
-};
-
-Results.propTypes = {
-    className: PropTypes.string,
-    users: PropTypes.array.isRequired
 };
 
 Results.defaultProps = {

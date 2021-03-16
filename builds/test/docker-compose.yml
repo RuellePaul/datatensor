@@ -1,0 +1,13 @@
+version: '3.7'
+
+services:
+  db:
+    image: mongo
+    network_mode: host
+  proxy:
+    build:
+      context: proxy
+    network_mode: host
+    volumes:
+      - './cert.pem:/etc/nginx/ssl/sandbox.easyprojets.com.cer'
+      - './key.pem:/etc/nginx/ssl/sandbox.easyprojets.com.key'

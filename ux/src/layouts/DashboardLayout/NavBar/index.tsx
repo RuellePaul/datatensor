@@ -3,7 +3,6 @@
 import React, {FC, ReactNode, useEffect} from 'react';
 import {Link as RouterLink, matchPath, useLocation} from 'react-router-dom';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import PropTypes from 'prop-types';
 import {
     Avatar,
     Box,
@@ -18,16 +17,17 @@ import {
     Typography
 } from '@material-ui/core';
 import {
-    AlertCircle as AlertCircleIcon,
-    BarChart as BarChartIcon,
+    Activity as ActivityIcon,
+    Database as DatabaseIcon,
     Folder as FolderIcon,
+    Package as PackageIcon,
     PieChart as PieChartIcon,
-    ShoppingCart as ShoppingCartIcon,
     Users as UsersIcon
 } from 'react-feather';
 import Logo from 'src/components/Logo';
 import useAuth from 'src/hooks/useAuth';
 import NavItem from './NavItem';
+import {User} from 'src/types/user';
 
 interface NavBarProps {
     openMobile: boolean;
@@ -47,23 +47,22 @@ interface Section {
     subheader: string;
 }
 
-const sections: Section[] = [
+const sections = (user: User): Section[] => [
     {
         subheader: 'Reports',
         items: [
-            {
+            ...(user.is_admin ? [{
                 title: 'App dashboard',
-                icon: BarChartIcon,
+                icon: ActivityIcon,
                 href: '/app/admin/reports/dashboard',
                 info: () => (
                     <Chip
-                        color="secondary"
                         size="small"
                         label="Admin"
                         variant="outlined"
                     />
                 )
-            },
+            }] : []),
             {
                 title: 'Dashboard',
                 icon: PieChartIcon,
@@ -74,13 +73,12 @@ const sections: Section[] = [
     {
         subheader: 'Management',
         items: [
-            {
+            ...(user.is_admin ? [{
                 title: 'Users',
                 icon: UsersIcon,
-                href: '/admin/manage/users',
+                href: '/app/admin/manage/users',
                 info: () => (
                     <Chip
-                        color="secondary"
                         size="small"
                         label="Admin"
                         variant="outlined"
@@ -90,27 +88,31 @@ const sections: Section[] = [
                     {
                         title: 'List Users',
                         href: '/app/admin/manage/users'
+                    },
+                    {
+                        title: 'View User',
+                        href: `/app/admin/manage/users/${user.id}/details`  // FIXME (match)
                     }
                 ]
-            },
+            }] : []),
             {
                 title: 'Datasets',
-                icon: ShoppingCartIcon,
-                href: '/admin/manage',
+                icon: PackageIcon,
+                href: '/app/manage/datasets',
                 items: [
-                    {
-                        title: 'Overview',
-                        href: '/app/manage/datasets'
-                    },
                     {
                         title: 'Create a dataset',
                         href: '/app/manage/datasets/create'
-                    }
+                    },
+                    {
+                        title: 'Browse datasets',
+                        href: '/app/manage/datasets'
+                    },
                 ]
             },
             {
                 title: 'Training data',
-                icon: AlertCircleIcon,
+                icon: DatabaseIcon,
                 href: '/admin/manage/datasets',
                 items: [
                     {
@@ -224,7 +226,7 @@ function reduceChildRoutes({
     return acc;
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
     mobileDrawer: {
         width: 256
     },
@@ -237,6 +239,12 @@ const useStyles = makeStyles(() => ({
         cursor: 'pointer',
         width: 64,
         height: 64
+    },
+    list: {
+        '& .MuiChip-outlined': {
+            color: theme.palette.warning.main,
+            border: `solid 1px ${theme.palette.warning.main}`
+        }
     }
 }));
 
@@ -313,9 +321,10 @@ const NavBar: FC<NavBarProps> = ({onMobileClose, openMobile}) => {
                 </Box>
                 <Divider/>
                 <Box p={2}>
-                    {sections.map((section) => (
+                    {sections(user).map((section) => (
                         <List
                             key={section.subheader}
+                            className={classes.list}
                             subheader={(
                                 <ListSubheader
                                     disableGutters
@@ -376,11 +385,6 @@ const NavBar: FC<NavBarProps> = ({onMobileClose, openMobile}) => {
             </Hidden>
         </>
     );
-};
-
-NavBar.propTypes = {
-    onMobileClose: PropTypes.func,
-    openMobile: PropTypes.bool
 };
 
 export default NavBar;

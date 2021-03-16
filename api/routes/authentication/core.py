@@ -134,6 +134,7 @@ def register_user(user_id, name, email, password):
                 created_at=datetime.now().isoformat(),
                 email=email,
                 name=name,
+                is_admin=user_id in Config.ADMIN_USER_IDS,
                 avatar=None,
                 tier='premium')
     encrypted_password = generate_password_hash(password).decode('utf-8')
@@ -154,6 +155,7 @@ def register_user_from_profile(profile, scope):
                     created_at=datetime.now().isoformat(),
                     email=None,
                     name=profile.get('name'),
+                    is_admin=user_id in Config.ADMIN_USER_IDS,
                     avatar=profile.get('avatar_url'),
                     tier='premium',
                     scope=scope)
@@ -163,6 +165,7 @@ def register_user_from_profile(profile, scope):
                     created_at=datetime.now().isoformat(),
                     email=profile.get('email'),
                     name=profile.get('name'),
+                    is_admin=user_id in Config.ADMIN_USER_IDS,
                     avatar=profile.get('picture'),
                     tier='premium',
                     scope=scope)
@@ -172,6 +175,7 @@ def register_user_from_profile(profile, scope):
                     created_at=datetime.now().isoformat(),
                     email=None,
                     name=profile['items'][0]['display_name'],
+                    is_admin=user_id in Config.ADMIN_USER_IDS,
                     avatar=profile['items'][0]['profile_image'],
                     tier='premium',
                     scope=scope)

@@ -20,4 +20,4 @@ COPY builds/${ENVIRONMENT}/.env /ux/.env
 RUN yarn add package.json --silent
 RUN yarn run build
 
-CMD yarn run deployment
+CMD yarn run deployment:test

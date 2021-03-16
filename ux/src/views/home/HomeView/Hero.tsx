@@ -1,5 +1,4 @@
 import React, {FC} from 'react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {Box, Container, Grid, makeStyles, Typography} from '@material-ui/core';
 import {Theme} from 'src/theme';
@@ -177,10 +176,6 @@ const Hero: FC<HeroProps> = ({className, ...rest}) => {
             </Container>
         </div>
     );
-};
-
-Hero.propTypes = {
-    className: PropTypes.string
 };
 
 export default Hero;

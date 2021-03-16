@@ -1,5 +1,4 @@
 import React, {FC, ReactNode} from 'react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {fade, makeStyles} from '@material-ui/core';
 import {Theme} from 'src/theme';
@@ -73,13 +72,6 @@ const Label: FC<LabelProps> = ({
       {children}
     </span>
     );
-};
-
-Label.propTypes = {
-    children: PropTypes.node,
-    className: PropTypes.string,
-    style: PropTypes.object,
-    color: PropTypes.oneOf(['primary', 'secondary', 'error', 'warning', 'success'])
 };
 
 export default Label;

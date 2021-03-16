@@ -7,6 +7,7 @@ services:
       - 'DB_ENCRYPTION_KEY=${DB_ENCRYPTION_KEY}'
       - 'ENVIRONMENT=${ENVIRONMENT}'
       - 'FLASK_SECRET_KEY=${FLASK_SECRET_KEY}'
+      - 'ACCESS_TOKEN_KEY=${ACCESS_TOKEN_KEY}'
     build:
       context: ../
       dockerfile: Dockerfile-api

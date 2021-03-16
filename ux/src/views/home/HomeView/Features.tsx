@@ -1,5 +1,4 @@
 import React, {FC} from 'react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {Avatar, Box, Button, Container, Grid, makeStyles, Typography} from '@material-ui/core';
 import {Theme} from 'src/theme';
@@ -147,10 +146,6 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
             </Container>
         </div>
     );
-};
-
-Features.propTypes = {
-    className: PropTypes.string
 };
 
 export default Features;

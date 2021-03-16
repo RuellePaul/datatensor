@@ -8,16 +8,19 @@ os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'  # to use OAuth2 without https
 
 
 class Config:
-    ENVIRONMENT = 'development'
+    ENVIRONMENT = os.environ['ENVIRONMENT']
 
     ROOT_PATH = os.path.abspath(os.path.join(Flask(__name__).root_path, os.pardir))
 
-    UI_URL = 'https://localhost:5069'
-    API_URI = 'http://127.0.0.1:4069'
+    UI_URL = 'https://ec2-15-188-53-201.eu-west-3.compute.amazonaws.com:5069'
+    API_URI = 'http://ec2-15-188-53-201.eu-west-3.compute.amazonaws.com:4069'
 
     SECRET_KEY = os.environ['FLASK_SECRET_KEY']
 
-    ADMIN_USER_IDS = ['58a802c1b350056c737ca447db48c7c645581b265e61d2ceeae5e0320adc7e6a']
+    ADMIN_USER_IDS = [
+        '58a802c1b350056c737ca447db48c7c645581b265e61d2ceeae5e0320adc7e6a',  # RuellePaul (github)
+        'ac586bc7204fefce386b92981a14ac4dc9ba570e76954ddcf25663fb4dda1f0a'  # ThomasRoudil (github)
+    ]
 
     SESSION_COOKIE_SECURE = True
     REMEMBER_COOKIE_SECURE = True
@@ -25,15 +28,15 @@ class Config:
     REMEMBER_COOKIE_HTTPONLY = True
 
     DB_ENCRYPTION_KEY = os.environ['DB_ENCRYPTION_KEY']
-    DB_HOST = 'localhost:27017'
+    DB_HOST = 'mongodb://127.0.0.1:27017/'
     DB_NAME = f'datatensor_{ENVIRONMENT}'
     DB_ENCRYPT_CLIENT, db = encrypt_init(DB_HOST, db_name=DB_NAME, key=DB_ENCRYPTION_KEY)
 
-    ACCESS_TOKEN_KEY = 'UDtbpoUT0Fcgr4893JYM8qDCpYrrJabeeD750DLOKoUQMN2S2uw8Jb4E1dFBld5'
+    ACCESS_TOKEN_KEY = os.environ['ACCESS_TOKEN_KEY']
     SESSION_DURATION_IN_MINUTES = 120
 
-    GOOGLE_CAPTCHA_PUBLIC_KEY = '6LcFmzcaAAAAAHWoKJ-oEJRO_grEjEjQb0fedPHo'
-    GOOGLE_CAPTCHA_SECRET_KEY = '6LcFmzcaAAAAAOhXyf_-hZ4NIuyHiMqHbgK9P6a3'
+    GOOGLE_CAPTCHA_PUBLIC_KEY = '6LcOwYEaAAAAAHyOrVAYf4arn2jrrJi3-OBWURm5'
+    GOOGLE_CAPTCHA_SECRET_KEY = '6LcOwYEaAAAAAOq9jJs07V_kxDHeWnBbHE9Io4Px'
 
     OAUTH = {
         'google': {
@@ -48,8 +51,8 @@ class Config:
             'AUTHORIZATION_URL': 'https://github.com/login/oauth/authorize',
             'TOKEN_URL': 'https://github.com/login/oauth/access_token',
             'USER_URL': 'https://api.github.com/user',
-            'CLIENT_ID': 'a1c2fca55dd2294221cc',
-            'CLIENT_SECRET': '2553c55f803457a4e6a199ee6c25358c59fdf67f',
+            'CLIENT_ID': '6ae3c85edc3eed0601cb',
+            'CLIENT_SECRET': 'e8167d787efbdff3af1d3d92346b139eda5a0aaa',
             'SCOPES': ['openid', 'email', 'profile']
         },
         'stackoverflow': {

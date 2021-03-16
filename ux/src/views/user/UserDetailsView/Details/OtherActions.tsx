@@ -1,5 +1,4 @@
 import React, {FC} from 'react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {Box, Button, Card, CardContent, CardHeader, Divider, makeStyles, Typography} from '@material-ui/core';
 import NotInterestedIcon from '@material-ui/icons/NotInterested';
@@ -66,10 +65,6 @@ const OtherActions: FC<OtherActionsProps> = ({className, ...rest}) => {
             </CardContent>
         </Card>
     );
-};
-
-OtherActions.propTypes = {
-    className: PropTypes.string
 };
 
 export default OtherActions;

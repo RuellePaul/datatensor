@@ -1,10 +1,9 @@
 import React, {FC} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {Box, Breadcrumbs, Button, Grid, Link, makeStyles, SvgIcon, Typography} from '@material-ui/core';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import {Download as DownloadIcon, PlusCircle as PlusCircleIcon, Upload as UploadIcon} from 'react-feather';
+import {Download as DownloadIcon} from 'react-feather';
 import {Theme} from 'src/theme';
 
 interface HeaderProps {
@@ -28,7 +27,6 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
         <Grid
             className={clsx(classes.root, className)}
             container
-            justify="space-between"
             spacing={3}
             {...rest}
         >
@@ -69,13 +67,6 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                 <Box mt={2}>
                     <Button startIcon={
                         <SvgIcon fontSize="small">
-                            <UploadIcon/>
-                        </SvgIcon>
-                    }>
-                        Import
-                    </Button>
-                    <Button startIcon={
-                        <SvgIcon fontSize="small">
                             <DownloadIcon/>
                         </SvgIcon>
                     }>
@@ -83,25 +74,8 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                     </Button>
                 </Box>
             </Grid>
-            <Grid item>
-                <Button
-                    color="secondary"
-                    variant="contained"
-                    startIcon={
-                        <SvgIcon fontSize="small">
-                            <PlusCircleIcon/>
-                        </SvgIcon>
-                    }
-                >
-                    New User
-                </Button>
-            </Grid>
         </Grid>
     );
-};
-
-Header.propTypes = {
-    className: PropTypes.string
 };
 
 export default Header;

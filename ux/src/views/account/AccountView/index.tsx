@@ -4,7 +4,6 @@ import Page from 'src/components/Page';
 import {Theme} from 'src/theme';
 import Header from './Header';
 import General from './General';
-import Subscription from './Subscription';
 import Notifications from './Notifications';
 import Security from './Security';
 
@@ -23,7 +22,6 @@ const AccountView: FC = () => {
 
     const tabs = [
         {value: 'general', label: 'General'},
-        {value: 'subscription', label: 'Subscription'},
         {value: 'notifications', label: 'Notifications'},
         {value: 'security', label: 'Security'}
     ];
@@ -59,7 +57,6 @@ const AccountView: FC = () => {
                 <Divider/>
                 <Box mt={3}>
                     {currentTab === 'general' && <General/>}
-                    {currentTab === 'subscription' && <Subscription/>}
                     {currentTab === 'notifications' && <Notifications/>}
                     {currentTab === 'security' && <Security/>}
                 </Box>

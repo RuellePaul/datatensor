@@ -6,18 +6,14 @@ from webargs import fields
 from webargs.flaskparser import use_args
 
 from config import Config
-from routes.authentication.core import admin_guard, verify_access_token
+from routes.authentication.core import verify_access_token
 
 dataset_manage = Blueprint('dataset_manage', __name__)
 
 
 @dataset_manage.route('/')
-@admin_guard
-@use_args({
-    'user_id': fields.Str(),
-}, location='query')
-def fetch_datasets(args):
-    user_id = args.get('user_id', verify_access_token(request.headers['Authorization']))
+def fetch_datasets():
+    user_id = verify_access_token(request.headers['Authorization'])
     datasets = list(Config.db.datasets.find({'user_id': user_id}, {'_id': 0}))
     return jsonify(datasets), 200
 

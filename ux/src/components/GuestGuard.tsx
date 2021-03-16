@@ -1,6 +1,5 @@
 import React, {FC, ReactNode} from 'react';
 import {Redirect} from 'react-router-dom';
-import PropTypes from 'prop-types';
 import useAuth from '../hooks/useAuth';
 
 interface GuestGuardProps {
@@ -21,8 +20,5 @@ const GuestGuard: FC<GuestGuardProps> = ({children}) => {
     );
 };
 
-GuestGuard.propTypes = {
-    children: PropTypes.node
-};
 
 export default GuestGuard;

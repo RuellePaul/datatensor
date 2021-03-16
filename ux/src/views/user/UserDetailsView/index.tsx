@@ -5,6 +5,7 @@ import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import {Dataset} from 'src/types/dataset';
+import {User} from 'src/types/user';
 import api from 'src/utils/api';
 import Header from './Header';
 import Details from './Details';
@@ -13,18 +14,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     root: {
         backgroundColor: theme.palette.background.dark,
         minHeight: '100%',
-        paddingTop: theme.spacing(3),
-        paddingBottom: theme.spacing(3)
+        padding: theme.spacing(3, 0),
     }
 }));
 
 const UserDetailsView: FC = () => {
     const classes = useStyles();
     const isMountedRef = useIsMountedRef();
+    const [user, setUser] = useState<User>();
     const [datasets, setDatasets] = useState<Dataset[]>([]);
     const [currentTab, setCurrentTab] = useState<string>('details');
 
-    const {userId} = useParams();
+    const {user_id} = useParams();
 
     const tabs = [
         {value: 'details', label: 'Details'}
@@ -36,21 +37,23 @@ const UserDetailsView: FC = () => {
 
     const getDatasets = useCallback(async () => {
         try {
-            const response = await api.get<Dataset[]>(`/v1/dataset/manage/`, {params: {user_id: userId}});
+            const responseUser = await api.get<User>(`/v1/admin/manage/users/${user_id}`);
+            const responseDatasets = await api.get<Dataset[]>(`/v1/admin/manage/datasets/${user_id}`);
 
             if (isMountedRef.current) {
-                setDatasets(response.data);
+                setUser(responseUser.data);
+                setDatasets(responseDatasets.data);
             }
         } catch (err) {
             console.error(err);
         }
-    }, [isMountedRef]);
+    }, [user_id, isMountedRef]);
 
     useEffect(() => {
         getDatasets();
     }, [getDatasets]);
 
-    if (!datasets) {
+    if (!user) {
         return null;
     }
 
@@ -60,7 +63,7 @@ const UserDetailsView: FC = () => {
             title="User Details"
         >
             <Container maxWidth={false}>
-                <Header userId={userId}/>
+                <Header user={user}/>
                 <Box mt={3}>
                     <Tabs
                         onChange={handleTabsChange}
@@ -83,6 +86,7 @@ const UserDetailsView: FC = () => {
                     {currentTab === 'details' && (
                         <Details
                             datasets={datasets}
+                            user={user}
                         />
                     )}
                 </Box>

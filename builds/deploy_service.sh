@@ -5,7 +5,7 @@ environment=0
 service=0
 
 read -p "Which image VERSION do you want to deploy ? " version
-while [ "$environment" != "sandbox" ] && [ "$environment" != "recette" ] && [ "$environment" != "preproduction" ] && [ "$environment" != "production" ]; do
+while [ "$environment" != "test" ] && [ "$environment" != "recette" ] && [ "$environment" != "preproduction" ] && [ "$environment" != "production" ]; do
   read -p "Which ENVIRONMENT are you deploying in ? " environment
 done
 while [ "$service" != "all" ] && [ "$service" != "api" ] && [ "$service" != "ux" ]&& [ "$service" != "db" ]; do
@@ -17,21 +17,23 @@ then
 fi
 
 
-
 export VERSION=$version
 export ENVIRONMENT=$environment
 source ./$environment/init_env.sh
-# Additional deployments for sanbdox env (needs DB & proxy)
-if [ "$environment" = "sandbox" ]
-then
-  docker-compose -f sandbox/docker-compose.yml up --build -d db proxy
-fi
 
-printf "\n\n ***** cleaning workspace from n-2 images... ***** \n"
+printf "\n\n* Cleaning workspace *\n"
+docker kill $(docker ps -q)
+docker rm $(docker ps -a -q)
 docker rmi $(docker images -a -q)
 docker volume prune -f
 docker system prune -f
-printf "\n ***** workspace cleaned ! ***** \n\n"
+printf "* Done ! *\n\n"
+
+# Additional deployments for test env (needs DB & proxy)
+if [ "$environment" = "test" ]
+then
+  docker-compose -f test/docker-compose.yml up --build -d db proxy
+fi
 
 docker-compose pull $service
 docker-compose up -d $service

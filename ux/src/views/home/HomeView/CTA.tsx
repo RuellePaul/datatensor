@@ -1,5 +1,4 @@
 import React, {FC} from 'react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {Container, makeStyles, Typography} from '@material-ui/core';
 import {Theme} from 'src/theme';
@@ -45,10 +44,6 @@ const CTA: FC<CTAProps> = ({className, ...rest}) => {
             </Container>
         </div>
     );
-};
-
-CTA.propTypes = {
-    className: PropTypes.string
 };
 
 export default CTA;

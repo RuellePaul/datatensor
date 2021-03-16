@@ -1,7 +1,6 @@
 import React, {forwardRef, HTMLProps, ReactNode, useCallback, useEffect} from 'react';
 import {Helmet} from 'react-helmet';
 import {useLocation} from 'react-router-dom';
-import PropTypes from 'prop-types';
 import track from 'src/utils/analytics';
 
 interface PageProps extends HTMLProps<HTMLDivElement> {
@@ -27,22 +26,26 @@ const Page = forwardRef<HTMLDivElement, PageProps>(({
         sendPageViewEvent();
     }, [sendPageViewEvent]);
 
+    console.log(process.env.REACT_APP_ENVIRONMENT)
+
     return (
         <div
             ref={ref as any}
             {...rest}
         >
             <Helmet>
-                <title>Datatensor | {title}</title>
+                <title>
+                    {title}
+                    {' | '}
+                    Datatensor
+                    {' '}
+                    {process.env.REACT_APP_ENVIRONMENT === 'development' ? '🔥' : ''}
+                    {process.env.REACT_APP_ENVIRONMENT === 'test' ? '🧪' : ''}
+                </title>
             </Helmet>
             {children}
         </div>
     );
 });
-
-Page.propTypes = {
-    children: PropTypes.node.isRequired,
-    title: PropTypes.string
-};
 
 export default Page;

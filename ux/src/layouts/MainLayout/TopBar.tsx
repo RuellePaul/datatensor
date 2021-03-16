@@ -1,7 +1,6 @@
 import React, {FC} from 'react';
 import {Link as RouterLink, useHistory} from 'react-router-dom';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import {AppBar, Box, Button, Divider, Hidden, Link, makeStyles, Toolbar, Typography} from '@material-ui/core';
 import {APP_VERSION} from 'src/constants';
 import Logo from 'src/components/Logo';
@@ -92,10 +91,6 @@ const TopBar: FC<TopBarProps> = ({className, ...rest}) => {
             </Toolbar>
         </AppBar>
     );
-};
-
-TopBar.propTypes = {
-    className: PropTypes.string
 };
 
 export default TopBar;

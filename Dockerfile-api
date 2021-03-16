@@ -1,8 +1,6 @@
 # === Api image ====
 FROM python:3.8-slim AS release
 
-RUN apt-get update && apt-get install gcc -y && apt-get -y install build-essential python3-dev python3-pip python3-setuptools python3-wheel python3-cffi
-
 COPY api /api
 WORKDIR /api
 RUN pip install --user -r requirements.txt --no-warn-script-location

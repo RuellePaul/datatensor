@@ -1,5 +1,4 @@
 import React, {FC} from 'react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {Avatar, Box, Container, makeStyles, Typography} from '@material-ui/core';
 import {Theme} from 'src/theme';
@@ -64,10 +63,6 @@ const Testimonials: FC<TestimonialsProps> = ({className, ...rest}) => {
             </Container>
         </div>
     );
-};
-
-Testimonials.propTypes = {
-    className: PropTypes.string
 };
 
 export default Testimonials;

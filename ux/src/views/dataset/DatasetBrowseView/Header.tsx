@@ -2,23 +2,16 @@ import React, {FC} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import {Box, Breadcrumbs, Button, Grid, Link, makeStyles, SvgIcon, Typography} from '@material-ui/core';
-import {Download as DownloadIcon, PlusCircle as PlusCircleIcon, Upload as UploadIcon} from 'react-feather';
+import {Breadcrumbs, Button, Grid, Link, makeStyles, SvgIcon, Typography} from '@material-ui/core';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import {Theme} from 'src/theme';
+import {PlusCircle as PlusIcon} from 'react-feather';
 
 interface HeaderProps {
     className?: string;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-    root: {},
-    action: {
-        marginBottom: theme.spacing(1),
-        '& + &': {
-            marginLeft: theme.spacing(1)
-        }
-    }
+const useStyles = makeStyles(() => ({
+    root: {}
 }));
 
 const Header: FC<HeaderProps> = ({className, ...rest}) => {
@@ -26,9 +19,10 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
 
     return (
         <Grid
+            alignItems="center"
             container
-            spacing={3}
             justify="space-between"
+            spacing={3}
             className={clsx(classes.root, className)}
             {...rest}
         >
@@ -48,61 +42,38 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                     <Link
                         variant="body1"
                         color="inherit"
-                        to="/admin/manage"
+                        to="/app/datasets"
                         component={RouterLink}
                     >
-                        Management
+                        Datasets
                     </Link>
                     <Typography
                         variant="body1"
                         color="textPrimary"
                     >
-                        Datasets
+                        Browse
                     </Typography>
                 </Breadcrumbs>
                 <Typography
                     variant="h3"
                     color="textPrimary"
                 >
-                    All Datasets
+                    See the latest datasets
                 </Typography>
-                <Box mt={2}>
-                    <Button
-                        className={classes.action}
-                        startIcon={
-                            <SvgIcon fontSize="small">
-                                <UploadIcon/>
-                            </SvgIcon>
-                        }
-                    >
-                        Import
-                    </Button>
-                    <Button
-                        className={classes.action}
-                        startIcon={
-                            <SvgIcon fontSize="small">
-                                <DownloadIcon/>
-                            </SvgIcon>
-                        }
-                    >
-                        Export
-                    </Button>
-                </Box>
             </Grid>
             <Grid item>
                 <Button
                     color="secondary"
-                    variant="contained"
-                    className={classes.action}
                     component={RouterLink}
-                    to="/admin/manage/datasets/create"
+                    to="/app/datasets/create"
+                    variant="contained"
                     startIcon={
                         <SvgIcon fontSize="small">
-                            <PlusCircleIcon/>
+                            <PlusIcon/>
                         </SvgIcon>
                     }
                 >
-                    New Dataset
+                    Add new dataset
                 </Button>
             </Grid>
         </Grid>
