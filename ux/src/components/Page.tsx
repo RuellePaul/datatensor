@@ -32,7 +32,7 @@ const Page = forwardRef<HTMLDivElement, PageProps>(({
             {...rest}
         >
             <Helmet>
-                <title>Datatensor | {title}</title>
+                <title>DT ({process.env.REACT_APP_ENVIRONMENT}) | {title}</title>
             </Helmet>
             {children}
         </div>
