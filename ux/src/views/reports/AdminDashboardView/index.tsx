@@ -2,11 +2,32 @@ import React, {FC, useCallback, useEffect, useState} from 'react';
 import {Container, Grid, makeStyles} from '@material-ui/core';
 import Page from 'src/components/Page';
 import {Theme} from 'src/theme';
+import useIsMountedRef from 'src/hooks/useIsMountedRef';
+import {User} from 'src/types/user';
+import api from 'src/utils/api';
 import Header from './Header';
 import UsersOverTime from './UsersOverTime';
-import useIsMountedRef from '../../../hooks/useIsMountedRef';
-import {User} from '../../../types/user';
-import api from '../../../utils/api';
+import {TimeRange} from 'src/types/timeRange'
+
+
+const timeRanges: TimeRange[] = [
+    {
+        value: 'today',
+        text: 'Today'
+    },
+    {
+        value: 'yesterday',
+        text: 'Yesterday'
+    },
+    {
+        value: 'this_month',
+        text: 'This month'
+    },
+    {
+        value: 'this_year',
+        text: 'This year'
+    }
+];
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -16,6 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         paddingBottom: theme.spacing(3)
     }
 }));
+
 
 const AdminDashboardView: FC = () => {
     const classes = useStyles();
@@ -39,6 +61,7 @@ const AdminDashboardView: FC = () => {
         getUsers();
     }, [getUsers]);
 
+    const [timeRange, setTimeRange] = useState<TimeRange>(timeRanges[2]);
 
     return (
         <Page
@@ -46,7 +69,11 @@ const AdminDashboardView: FC = () => {
             title="Dashboard"
         >
             <Container maxWidth={false}>
-                <Header/>
+                <Header
+                    timeRange={timeRange}
+                    setTimeRange={setTimeRange}
+                    timeRanges={timeRanges}
+                />
                 <Grid
                     container
                     spacing={3}
@@ -64,6 +91,7 @@ const AdminDashboardView: FC = () => {
                         xs={12}
                     >
                         <UsersOverTime
+                            timeRange={timeRange}
                             users={users}
                         />
                     </Grid>

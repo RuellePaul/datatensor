@@ -7,10 +7,12 @@ import GenericMoreButton from 'src/components/GenericMoreButton';
 import Chart from './Chart';
 import {User} from 'src/types/user';
 import moment from 'moment';
+import {TimeRange} from 'src/types/timeRange';
 
 interface PerformanceOverTimeProps {
     className?: string;
     users: User[];
+    timeRange: TimeRange;
 }
 
 const useStyles = makeStyles(() => ({
@@ -20,48 +22,61 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-const UsersOverTime: FC<PerformanceOverTimeProps> = ({className, users, ...rest}) => {
+const formatDDArray = (size) => Array.apply(null, Array(size)).map((_, i) => i < 9 ? `0${i + 1}` : `${i + 1}`);
+
+const UsersOverTime: FC<PerformanceOverTimeProps> = ({className, users, timeRange, ...rest}) => {
     const classes = useStyles();
 
     const performance = {
-        thisWeek: {
-            data: [],
-            labels: []
-        },
-        thisMonth: {
-            data: [],
-            labels: []
-        },
-        thisYear: {
-            data: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
-                .map(month => (
+        today: {
+            data: formatDDArray(new Date().getHours())
+                .map((hour, index) => (
                     users
                         .filter(user => moment(user.created_at).isBetween(
-                            moment(`01/${month}/2021`, "DD/MM/YYYY"),
-                            moment(`31/${month}/2021`, "DD/MM/YYYY")
+                            moment(new Date()).subtract(index + 1, 'hours'),
+                            moment(new Date()).subtract(index, 'hours'),
+                        ))
+                        .length
+                )).reverse(),
+            labels: formatDDArray(new Date().getHours()).map(hour => `${hour}h`)
+        },
+        yesterday: {
+            data: formatDDArray(24)
+                .map((hour, index) => (
+                    users
+                        .filter(user => moment(user.created_at).isBetween(
+                            moment(new Date()).subtract(1, 'days').subtract(index + 1, 'hours'),
+                            moment(new Date()).subtract(1, 'days').subtract(index, 'hours'),
+                        ))
+                        .length
+                )).reverse(),
+            labels: formatDDArray(24).map(hour => `${hour}h`)
+        },
+        this_month: {
+            data: formatDDArray(new Date().getDate())
+                .map((day, index) => (
+                    users
+                        .filter(user => moment(user.created_at).isBetween(
+                            moment(new Date()).subtract(index + 0.5, 'days'),
+                            moment(new Date()).subtract(index - 0.5, 'days'),
+                        ))
+                        .length
+                )).reverse(),
+            labels: formatDDArray(new Date().getDate())
+        },
+        this_year: {
+            data: formatDDArray(12)
+                .map((month, index) => (
+                    users
+                        .filter(user => moment(user.created_at).isBetween(
+                            moment(`01/${month}/${new Date().getFullYear()}`, "DD/MM/YYYY"),
+                            moment(`31/${month}/${new Date().getFullYear()}`, "DD/MM/YYYY")
                         ))
                         .length
                 )),
-            labels: [
-                'Jan',
-                'Feb',
-                'Mar',
-                'Apr',
-                'May',
-                'Jun',
-                'Jul',
-                'Aug',
-                'Sep',
-                'Oct',
-                'Nov',
-                'Dec'
-            ]
+            labels: formatDDArray(12).map(month => moment(`01/${month}/${new Date().getFullYear()}`, "DD/MM/YYYY").format('MMMM'))
         }
     };
-
-    console.log(
-
-    );
 
     return (
         <Card
@@ -81,8 +96,8 @@ const UsersOverTime: FC<PerformanceOverTimeProps> = ({className, users, ...rest}
                     >
                         <Chart
                             className={classes.chart}
-                            data={performance.thisYear.data}
-                            labels={performance.thisYear.labels}
+                            data={performance[timeRange.value].data}
+                            labels={performance[timeRange.value].labels}
                         />
                     </Box>
                 </PerfectScrollbar>

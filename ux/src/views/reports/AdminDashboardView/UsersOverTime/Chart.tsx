@@ -53,7 +53,9 @@ const Chart: FC<ChartProps> = ({
     const options = {
         responsive: true,
         maintainAspectRatio: false,
-        animation: false,
+        animation: {
+            duration: 350
+        },
         legend: {
             display: false
         },

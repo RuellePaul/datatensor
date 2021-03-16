@@ -5,39 +5,23 @@ import clsx from 'clsx';
 import {Breadcrumbs, Button, Grid, Link, makeStyles, Menu, MenuItem, SvgIcon, Typography} from '@material-ui/core';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import {Calendar as CalendarIcon} from 'react-feather';
+import {TimeRange} from 'src/types/timeRange'
 
 interface HeaderProps {
     className?: string;
+    timeRange: TimeRange;
+    setTimeRange: (timeRange: TimeRange) => void;
+    timeRanges: TimeRange[];
 }
-
-const timeRanges = [
-    {
-        value: 'today',
-        text: 'Today'
-    },
-    {
-        value: 'yesterday',
-        text: 'Yesterday'
-    },
-    {
-        value: 'last_30_days',
-        text: 'Last 30 days'
-    },
-    {
-        value: 'last_year',
-        text: 'Last year'
-    }
-];
 
 const useStyles = makeStyles(() => ({
     root: {}
 }));
 
-const Header: FC<HeaderProps> = ({className, ...rest}) => {
+const Header: FC<HeaderProps> = ({className, timeRange, setTimeRange, timeRanges, ...rest}) => {
     const classes = useStyles();
     const actionRef = useRef<any>(null);
     const [isMenuOpen, setMenuOpen] = useState<boolean>(false);
-    const [timeRange, setTimeRange] = useState<string>(timeRanges[3].text);
 
     return (
         <Grid
@@ -84,7 +68,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                         </SvgIcon>
                     }
                 >
-                    {timeRange}
+                    {timeRange.text}
                 </Button>
                 <Menu
                     anchorEl={actionRef.current}
@@ -103,7 +87,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                     {timeRanges.map((_timeRange) => (
                         <MenuItem
                             key={_timeRange.value}
-                            onClick={() => setTimeRange(_timeRange.text)}
+                            onClick={() => setTimeRange(_timeRange)}
                         >
                             {_timeRange.text}
                         </MenuItem>
