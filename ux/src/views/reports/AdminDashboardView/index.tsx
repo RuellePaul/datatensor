@@ -1,7 +1,33 @@
-import React, {FC} from 'react';
-import {Container, makeStyles} from '@material-ui/core';
-import {Theme} from 'src/theme';
+import React, {FC, useCallback, useEffect, useState} from 'react';
+import {Container, Grid, makeStyles} from '@material-ui/core';
 import Page from 'src/components/Page';
+import {Theme} from 'src/theme';
+import useIsMountedRef from 'src/hooks/useIsMountedRef';
+import {User} from 'src/types/user';
+import api from 'src/utils/api';
+import Header from './Header';
+import UsersOverTime from './UsersOverTime';
+import {TimeRange} from 'src/types/timeRange'
+
+
+const timeRanges: TimeRange[] = [
+    {
+        value: 'today',
+        text: 'Today'
+    },
+    {
+        value: 'yesterday',
+        text: 'Yesterday'
+    },
+    {
+        value: 'this_month',
+        text: 'This month'
+    },
+    {
+        value: 'this_year',
+        text: 'This year'
+    }
+];
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -12,16 +38,64 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
+
 const AdminDashboardView: FC = () => {
     const classes = useStyles();
+
+    const isMountedRef = useIsMountedRef();
+    const [users, setUsers] = useState<User[]>([]);
+
+    const getUsers = useCallback(async () => {
+        try {
+            const response = await api.get<User[]>('/v1/admin/manage/users');
+
+            if (isMountedRef.current) {
+                setUsers(response.data);
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }, [isMountedRef]);
+
+    useEffect(() => {
+        getUsers();
+    }, [getUsers]);
+
+    const [timeRange, setTimeRange] = useState<TimeRange>(timeRanges[2]);
 
     return (
         <Page
             className={classes.root}
-            title="Admin dashboard"
+            title="Dashboard"
         >
             <Container maxWidth={false}>
-                ...
+                <Header
+                    timeRange={timeRange}
+                    setTimeRange={setTimeRange}
+                    timeRanges={timeRanges}
+                />
+                <Grid
+                    container
+                    spacing={3}
+                >
+                    <Grid
+                        item
+                        lg={3}
+                        xs={12}
+                    >
+
+                    </Grid>
+                    <Grid
+                        item
+                        lg={9}
+                        xs={12}
+                    >
+                        <UsersOverTime
+                            timeRange={timeRange}
+                            users={users}
+                        />
+                    </Grid>
+                </Grid>
             </Container>
         </Page>
     );
