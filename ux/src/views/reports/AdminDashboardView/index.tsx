@@ -12,20 +12,24 @@ import {TimeRange} from 'src/types/timeRange'
 
 const timeRanges: TimeRange[] = [
     {
-        value: 'today',
-        text: 'Today'
+        value: 'last_hour',
+        text: 'Last hour'
     },
     {
-        value: 'yesterday',
-        text: 'Yesterday'
+        value: 'last_day',
+        text: 'Last day'
     },
     {
-        value: 'this_month',
-        text: 'This month'
+        value: 'last_week',
+        text: 'Last week'
     },
     {
-        value: 'this_year',
-        text: 'This year'
+        value: 'last_month',
+        text: 'Last month'
+    },
+    {
+        value: 'last_year',
+        text: 'Last year'
     }
 ];
 

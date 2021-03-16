@@ -22,60 +22,33 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-const formatDDArray = (size) => Array.apply(null, Array(size)).map((_, i) => i < 9 ? `0${i + 1}` : `${i + 1}`);
+const buildArray = (size: number) => Array.apply(null, Array(size)).map((_, i) => i).reverse();
 
 const UsersOverTime: FC<PerformanceOverTimeProps> = ({className, users, timeRange, ...rest}) => {
+
     const classes = useStyles();
 
-    const performance = {
-        today: {
-            data: formatDDArray(new Date().getHours())
-                .map((hour, index) => (
+    const generateChartData = (size: number, interval: string, format: string) => (
+        {
+            data: buildArray(size + 1)
+                .map(index => (
                     users
                         .filter(user => moment(user.created_at).isBetween(
-                            moment(new Date()).subtract(index + 1, 'hours'),
-                            moment(new Date()).subtract(index, 'hours'),
-                        ))
-                        .length
-                )).reverse(),
-            labels: formatDDArray(new Date().getHours()).map(hour => `${hour}h`)
-        },
-        yesterday: {
-            data: formatDDArray(24)
-                .map((hour, index) => (
-                    users
-                        .filter(user => moment(user.created_at).isBetween(
-                            moment(new Date()).subtract(1, 'days').subtract(index + 1, 'hours'),
-                            moment(new Date()).subtract(1, 'days').subtract(index, 'hours'),
-                        ))
-                        .length
-                )).reverse(),
-            labels: formatDDArray(24).map(hour => `${hour}h`)
-        },
-        this_month: {
-            data: formatDDArray(new Date().getDate())
-                .map((day, index) => (
-                    users
-                        .filter(user => moment(user.created_at).isBetween(
-                            moment(new Date()).subtract(index + 0.5, 'days'),
-                            moment(new Date()).subtract(index - 0.5, 'days'),
-                        ))
-                        .length
-                )).reverse(),
-            labels: formatDDArray(new Date().getDate())
-        },
-        this_year: {
-            data: formatDDArray(12)
-                .map((month, index) => (
-                    users
-                        .filter(user => moment(user.created_at).isBetween(
-                            moment(`01/${month}/${new Date().getFullYear()}`, "DD/MM/YYYY"),
-                            moment(`31/${month}/${new Date().getFullYear()}`, "DD/MM/YYYY")
+                            moment(new Date()).subtract(index + 1, interval),
+                            moment(new Date()).subtract(index, interval),
                         ))
                         .length
                 )),
-            labels: formatDDArray(12).map(month => moment(`01/${month}/${new Date().getFullYear()}`, "DD/MM/YYYY").format('MMMM'))
+            labels: buildArray(size + 1).map(index => moment(new Date()).subtract(index, interval).format(format))
         }
+    );
+
+    const usersOverTime = {
+        last_hour: generateChartData(60, 'minutes', 'HH:mm'),
+        last_day: generateChartData(24, 'hours', 'HH:00'),
+        last_week: generateChartData(7, 'days', 'DD MMM'),
+        last_month: generateChartData(31, 'days', 'DD MMM'),
+        last_year: generateChartData(12, 'months', 'MMM'),
     };
 
     return (
@@ -96,8 +69,8 @@ const UsersOverTime: FC<PerformanceOverTimeProps> = ({className, users, timeRang
                     >
                         <Chart
                             className={classes.chart}
-                            data={performance[timeRange.value].data}
-                            labels={performance[timeRange.value].labels}
+                            data={usersOverTime[timeRange.value].data}
+                            labels={usersOverTime[timeRange.value].labels}
                         />
                     </Box>
                 </PerfectScrollbar>

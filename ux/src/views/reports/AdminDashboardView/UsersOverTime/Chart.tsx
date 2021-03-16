@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import {Line} from 'react-chartjs-2';
+import {Bar} from 'react-chartjs-2';
 import {fade, makeStyles, useTheme} from '@material-ui/core';
 import {Theme} from 'src/theme';
 
@@ -30,8 +30,8 @@ const Chart: FC<ChartProps> = ({
         const ctx = canvas.getContext('2d');
         const gradient = ctx.createLinearGradient(0, 0, 0, 400);
 
-        gradient.addColorStop(0, fade(theme.palette.secondary.main, 0.2));
-        gradient.addColorStop(0.9, 'rgba(255,255,255,0)');
+        gradient.addColorStop(0, fade(theme.palette.secondary.main, 0.4));
+        gradient.addColorStop(0.9, fade(theme.palette.secondary.main, 0.1));
         gradient.addColorStop(1, 'rgba(255,255,255,0)');
 
         return {
@@ -54,7 +54,8 @@ const Chart: FC<ChartProps> = ({
         responsive: true,
         maintainAspectRatio: false,
         animation: {
-            duration: 350
+            duration: 500,
+            easing: 'easeOutQuint'
         },
         legend: {
             display: false
@@ -70,29 +71,33 @@ const Chart: FC<ChartProps> = ({
                         drawBorder: false
                     },
                     ticks: {
-                        padding: 20,
-                        fontColor: theme.palette.text.secondary
+                        padding: 10,
+                        fontColor: theme.palette.text.secondary,
+                        fontSize: 14,
+                        autoSkip: true,
+                        maxTicksLimit: 20
                     }
                 }
             ],
             yAxes: [
                 {
                     gridLines: {
-                        borderDash: [2],
-                        borderDashOffset: [2],
+                        borderDash: [3],
+                        borderDashOffset: [3],
                         color: theme.palette.divider,
                         drawBorder: false,
-                        zeroLineBorderDash: [2],
-                        zeroLineBorderDashOffset: [2],
+                        zeroLineBorderDash: [3],
+                        zeroLineBorderDashOffset: [3],
                         zeroLineColor: theme.palette.divider
                     },
                     ticks: {
                         padding: 20,
                         fontColor: theme.palette.text.secondary,
                         beginAtZero: true,
+                        fontSize: 14,
                         min: 0,
                         maxTicksLimit: 7,
-                        callback: (value: number) => (value > 0 ? `${value}` : value)
+                        callback: (value: number) => (value % 1 === 0 ? value : '')
                     }
                 }
             ]
@@ -101,7 +106,7 @@ const Chart: FC<ChartProps> = ({
             enabled: true,
             mode: 'index',
             intersect: false,
-            caretSize: 10,
+            caretSize: 0,
             yPadding: 20,
             xPadding: 20,
             borderWidth: 1,
@@ -114,8 +119,8 @@ const Chart: FC<ChartProps> = ({
                 title: () => {
                 },
                 label: (tooltipItem: any) => tooltipItem.yLabel > 0
-                    ? `${tooltipItem.yLabel} users created`
-                    : `No users`
+                    ? ` ${tooltipItem.yLabel} users created`
+                    : ` No users`
             }
         }
     };
@@ -125,7 +130,7 @@ const Chart: FC<ChartProps> = ({
             className={clsx(classes.root, className)}
             {...rest}
         >
-            <Line
+            <Bar
                 data={data}
                 options={options}
             />
