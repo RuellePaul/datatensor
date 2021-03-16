@@ -69,7 +69,7 @@ Then, login using SSH to this instance using `DTServerTestLogin.sh` script :
 (venv) $ source DTServerTestLogin.sh
 ```
 
-⚠️You must have `DTServerTestKeys.pem` in `builds/test`.
+⚠️&nbsp;&nbsp;You must have `DTServerTestKeys.pem` in `builds/test`.
 
 Next, on the machine, install `git`, `docker` and `docker-compose` :
 
@@ -90,7 +90,7 @@ Then, use login to Github Packages :
 cat ~/github_token.txt | docker login https://docker.pkg.github.com -u <username> --password-stdin
 ```
 
-⚠️ `<username>` must be authorized to collaborate on Datatensor github project, and you must have a `github_token.txt` *with repo, workflow and packages* enabled. 
+⚠️&nbsp;&nbsp;`<username>` must be authorized to collaborate on Datatensor github project, and you must have a `github_token.txt` *with repo, workflow and packages* enabled. 
 Retrieve it from github here : https://github.com/settings/tokens/new
 
 You can now clone the project :
