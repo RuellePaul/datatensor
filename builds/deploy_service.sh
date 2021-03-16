@@ -21,11 +21,13 @@ export VERSION=$version
 export ENVIRONMENT=$environment
 source ./$environment/init_env.sh
 
-printf "\n\n* Cleaning workspace *\n\n"
+printf "\n\n* Cleaning workspace *\n"
+docker kill $(docker ps -q)
+docker rm $(docker ps -a -q)
 docker rmi $(docker images -a -q)
 docker volume prune -f
 docker system prune -f
-printf "\n* Done ! \n\n"
+printf "* Done ! \n\n"
 
 # Additional deployments for test env (needs DB & proxy)
 if [ "$environment" = "test" ]
