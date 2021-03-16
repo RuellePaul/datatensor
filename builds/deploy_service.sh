@@ -21,17 +21,17 @@ export VERSION=$version
 export ENVIRONMENT=$environment
 source ./$environment/init_env.sh
 
-# Additional deployments for test env (needs DB & proxy)
-if [ "$environment" = "test" ]
-then
-  docker-compose -f test/docker-compose.yml up --build -d db proxy
-fi
-
 printf "\n\n* Cleaning workspace *\n"
 docker rmi $(docker images -a -q)
 docker volume prune -f
 docker system prune -f
 printf "\n * Done ! \n"
+
+# Additional deployments for test env (needs DB & proxy)
+if [ "$environment" = "test" ]
+then
+  docker-compose -f test/docker-compose.yml up --build -d db proxy
+fi
 
 docker-compose pull $service
 docker-compose up -d $service
