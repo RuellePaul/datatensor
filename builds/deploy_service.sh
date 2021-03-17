@@ -1,6 +1,9 @@
 #!/bin/bash
 SERVICES=api\ ux
 
+environment=0
+reset=0
+
 # Prompt version, environment, reset
 read -p "⚙  Version : " version
 
@@ -18,27 +21,28 @@ printf "\n⚙  Deploying datatensor $version in $environment environment\n\n"; s
 # Cleaning or reset
 if [ "$reset" = "yes" ]
 then
-  printf "⚙  Reset workspace..."; sleep 5s
+  printf "⚙  Reset workspace...\n"; sleep 5s
   docker kill $(docker ps -q)
   docker rm $(docker ps -a -q)
   docker rmi $(docker images -a -q)
 else
-  printf "⚙  Cleaning workspace...";
+  printf "⚙  Cleaning workspace...\n";
   docker kill $(docker ps -a | grep -v "mongo" | cut -d ' ' -f1)
   docker rm $(docker ps -a | grep -v "mongo" | cut -d ' ' -f1)
   docker rmi $(docker images -a -q)
 fi
 docker volume prune -f
 docker system prune -f
-printf "⚙  Done !"
+printf "⚙  Done !\n\n"
 
 # Init env
 export VERSION=$version
 export ENVIRONMENT=$environment
 source ./$environment/init_env.sh
 
+# Deployment
 docker-compose -f test/docker-compose.yml up --build -d db proxy
-
 docker-compose pull $SERVICES
 docker-compose up -d $SERVICES
+
 printf "\n⚙  Deployed datatensor $version in $environment environment !"
