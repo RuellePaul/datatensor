@@ -33,7 +33,7 @@ else
 fi
 docker volume prune -f
 docker system prune -f
-printf "⚙  Done !\n\n"
+printf "\n⚙  Done !\n\n"
 
 # Init env
 export VERSION=$version
@@ -45,4 +45,4 @@ docker-compose -f test/docker-compose.yml up --build -d db proxy
 docker-compose pull $SERVICES
 docker-compose up -d $SERVICES
 
-printf "\n⚙  Deployed datatensor $version in $environment environment !"
+printf "\n⚙  Deployed datatensor $version in $environment environment !\n\n"
