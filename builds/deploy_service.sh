@@ -1,39 +1,44 @@
 #!/bin/bash
-# Specify version, environment and a service to deploy
+SERVICES=api\ ux
 
-environment=0
-service=0
+# Prompt version, environment, reset
+read -p "⚙ Version : v_" version
 
-read -p "Which image VERSION do you want to deploy ? " version
-while [ "$environment" != "test" ] && [ "$environment" != "recette" ] && [ "$environment" != "preproduction" ] && [ "$environment" != "production" ]; do
-  read -p "Which ENVIRONMENT are you deploying in ? " environment
+while [ "$environment" != "test" ] && [ "$environment" != "production" ]; do
+  read -p "⚙ Environment (test | production) : " environment
 done
-while [ "$service" != "all" ] && [ "$service" != "api" ] && [ "$service" != "ux" ]&& [ "$service" != "db" ]; do
-  read -p "Which SERVICE do you want to deploy ? " service
+
+while [ "$reset" != "yes" ] && [ "$reset" != "no" ]; do
+  read -p "⚙ Reset database : (yes | no) : " reset
 done
-if [ "$service" = "all" ]
+
+# Show deployment infos
+printf "\n⚙ Deploying datatensor v_$version in $environment environment\n\n"; sleep 5s
+
+# Cleaning or reset
+if [ "$reset" = "yes" ]
 then
-  service=api\ ux
+  printf "⚙ Reset workspace..."; sleep 5s
+  docker kill $(docker ps -q)
+  docker rm $(docker ps -a -q)
+  docker rmi $(docker images -a -q)
+else
+  printf "⚙ Cleaning workspace...";
+  docker kill $(docker ps -a | grep -v "mongo" | cut -d ' ' -f1)
+  docker rm $(docker ps -a | grep -v "mongo" | cut -d ' ' -f1)
+  docker rmi $(docker images -a -q)
 fi
+docker volume prune -f
+docker system prune -f
+printf "⚙ Done !"
 
-
+# Init env
 export VERSION=$version
 export ENVIRONMENT=$environment
 source ./$environment/init_env.sh
 
-printf "\n\n* Cleaning workspace *\n"
-docker kill $(docker ps -q)
-docker rm $(docker ps -a -q)
-docker rmi $(docker images -a -q)
-docker volume prune -f
-docker system prune -f
-printf "* Done ! *\n\n"
+docker-compose -f test/docker-compose.yml up --build -d db proxy
 
-# Additional deployments for test env (needs DB & proxy)
-if [ "$environment" = "test" ]
-then
-  docker-compose -f test/docker-compose.yml up --build -d db proxy
-fi
-
-docker-compose pull $service
-docker-compose up -d $service
+docker-compose pull $SERVICES
+docker-compose up -d $SERVICES
+printf "\n⚙ Deployed datatensor v_$version in $environment environment !"
