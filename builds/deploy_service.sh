@@ -2,35 +2,35 @@
 SERVICES=api\ ux
 
 # Prompt version, environment, reset
-read -p "⚙ Version : v_" version
+read -p "⚙  Version : " version
 
 while [ "$environment" != "test" ] && [ "$environment" != "production" ]; do
-  read -p "⚙ Environment (test | production) : " environment
+  read -p "⚙  Environment (test | production) : " environment
 done
 
 while [ "$reset" != "yes" ] && [ "$reset" != "no" ]; do
-  read -p "⚙ Reset database : (yes | no) : " reset
+  read -p "⚙  Reset database : (yes | no) : " reset
 done
 
 # Show deployment infos
-printf "\n⚙ Deploying datatensor v_$version in $environment environment\n\n"; sleep 5s
+printf "\n⚙  Deploying datatensor $version in $environment environment\n\n"; sleep 5s
 
 # Cleaning or reset
 if [ "$reset" = "yes" ]
 then
-  printf "⚙ Reset workspace..."; sleep 5s
+  printf "⚙  Reset workspace..."; sleep 5s
   docker kill $(docker ps -q)
   docker rm $(docker ps -a -q)
   docker rmi $(docker images -a -q)
 else
-  printf "⚙ Cleaning workspace...";
+  printf "⚙  Cleaning workspace...";
   docker kill $(docker ps -a | grep -v "mongo" | cut -d ' ' -f1)
   docker rm $(docker ps -a | grep -v "mongo" | cut -d ' ' -f1)
   docker rmi $(docker images -a -q)
 fi
 docker volume prune -f
 docker system prune -f
-printf "⚙ Done !"
+printf "⚙  Done !"
 
 # Init env
 export VERSION=$version
@@ -41,4 +41,4 @@ docker-compose -f test/docker-compose.yml up --build -d db proxy
 
 docker-compose pull $SERVICES
 docker-compose up -d $SERVICES
-printf "\n⚙ Deployed datatensor v_$version in $environment environment !"
+printf "\n⚙  Deployed datatensor $version in $environment environment !"
