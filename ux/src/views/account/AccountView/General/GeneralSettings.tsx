@@ -90,7 +90,7 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) =
                   isSubmitting,
                   touched,
                   values
-              }) => (
+            }) => (
                 <form onSubmit={handleSubmit}>
                     <Card
                         className={clsx(classes.root, className)}

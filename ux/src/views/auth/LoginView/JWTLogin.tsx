@@ -61,7 +61,7 @@ const JWTLogin: FC<JWTLoginProps> = ({className, ...rest}) => {
                   isSubmitting,
                   touched,
                   values
-              }) => (
+            }) => (
                 <form
                     noValidate
                     onSubmit={handleSubmit}
