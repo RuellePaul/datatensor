@@ -12,8 +12,8 @@ class Config:
 
     ROOT_PATH = os.path.abspath(os.path.join(Flask(__name__).root_path, os.pardir))
 
-    UI_URL = 'https://ec2-15-188-53-201.eu-west-3.compute.amazonaws.com:5069'
-    API_URI = 'http://ec2-15-188-53-201.eu-west-3.compute.amazonaws.com:4069'
+    UI_URL = 'https://test.datatensor.io'
+    API_URI = 'https://test.datatensor.io/api'
 
     SECRET_KEY = os.environ['FLASK_SECRET_KEY']
 
