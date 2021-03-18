@@ -1,7 +1,9 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const API_URI = `https://${window.location.hostname}/api`;
+const API_URI = process.env.REACT_APP_ENVIRONMENT === 'development'
+    ? `https://${window.location.hostname}:7069`
+    : `https://${window.location.hostname}/api`;
 
 const api = axios.create({
     withCredentials: true,
