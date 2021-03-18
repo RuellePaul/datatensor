@@ -31,13 +31,13 @@ const ComposedChart: FC<ChartProps> = ({
 
         const gradientBar = ctx.createLinearGradient(0, 0, 0, 600);
         gradientBar.addColorStop(0, fade(theme.palette.primary.main, 0.4));
-        gradientBar.addColorStop(0.9, fade(theme.palette.primary.main, 0.1));
+        gradientBar.addColorStop(0.75, fade(theme.palette.primary.main, 0.1));
         gradientBar.addColorStop(1, 'rgba(255,255,255,0)');
 
         const gradientLine = ctx.createLinearGradient(0, 0, 0, 300);
         gradientLine.addColorStop(0, fade(theme.palette.secondary.main, 0.2));
-        gradientLine.addColorStop(0.9, fade(theme.palette.secondary.main, 0.1));
-        gradientLine.addColorStop(1, 'rgba(255,255,255,0)');
+        gradientLine.addColorStop(0.6, fade(theme.palette.secondary.main, 0.1));
+        gradientLine.addColorStop(1, fade(theme.palette.secondary.main, 0.05));
         return {
             datasets: [
                 {
