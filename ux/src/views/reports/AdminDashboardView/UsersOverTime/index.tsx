@@ -31,7 +31,7 @@ const UsersOverTime: FC<PerformanceOverTimeProps> = ({className, users, timeRang
     const generateChartData = (size: number, interval: string, format: string) => (
         {
             data: buildArray(size + 1)
-                .map(index => (
+                .map((index: number) => (
                     users
                         .filter(user => moment(user.created_at).isBetween(
                             moment(new Date()).subtract(index + 1, interval),
@@ -39,7 +39,7 @@ const UsersOverTime: FC<PerformanceOverTimeProps> = ({className, users, timeRang
                         ))
                         .length
                 )),
-            labels: buildArray(size + 1).map(index => moment(new Date()).subtract(index, interval).format(format))
+            labels: buildArray(size + 1).map((index: number) => moment(new Date()).subtract(index, interval).format(format))
         }
     );
 
