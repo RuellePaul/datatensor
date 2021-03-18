@@ -17,8 +17,15 @@ api.defaults.withCredentials = true;
 api.interceptors.response.use(
     (response) => response,
     (error) => {
-        if (error.response?.data?.errorData === 'ERR_CSRF')
-            window.location.reload();
+        if (error.response?.data?.errorData === 'ERR_CSRF') {
+            return api.request({
+                ...error.config,
+                headers: {
+                    ...error.config.headers,
+                    'X-CSRF-Token': Cookies.get('csrf_token')
+                }
+            })
+        }
 
         return Promise.reject((error.response && error.response.data) || 'Something went wrong')
     }

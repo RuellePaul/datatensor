@@ -44,8 +44,7 @@ def inject_csrf_token_cookie(response):
 
 @app.errorhandler(CSRFError)
 def handle_csrf_error(error):
-    logger.warning(f'{error.code} Rejected by CSRF protection : {error.description}')
-    return errors.Forbidden(error.description, data='ERR_CSRF').flask_response()
+    return errors.CSRF(error.description).flask_response()
 
 
 @app.errorhandler(errors.APIError)
