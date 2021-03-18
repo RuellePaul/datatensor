@@ -25,7 +25,7 @@ class APIError(Exception):
 
 
 class CSRF(APIError):
-    def __init__(self, message=None, data=None):
+    def __init__(self, message=None):
         super().__init__(302,
                          code='csrf_error',
                          message=message or 'CSRF Error',
