@@ -89,7 +89,7 @@ const DatasetCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
                   setFieldValue,
                   touched,
                   values
-              }) => (
+            }) => (
                 <form
                     onSubmit={handleSubmit}
                     className={clsx(classes.root, className)}
@@ -107,6 +107,7 @@ const DatasetCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
                             <Card>
                                 <CardContent>
                                     <TextField
+                                        autoFocus
                                         error={Boolean(touched.name && errors.name)}
                                         fullWidth
                                         helperText={touched.name && errors.name}

@@ -44,8 +44,7 @@ def inject_csrf_token_cookie(response):
 
 @app.errorhandler(CSRFError)
 def handle_csrf_error(error):
-    logger.warning(f'{error.code} Rejected by CSRF protection : {error.description}')
-    return errors.Forbidden(error.description, data='ERR_CSRF').flask_response()
+    return errors.CSRF(error.description).flask_response()
 
 
 @app.errorhandler(errors.APIError)
@@ -57,4 +56,4 @@ def handle_api_error(error):
 
 if __name__ == '__main__':
     encrypt_init(Config.DB_HOST, key=Config.DB_ENCRYPTION_KEY, setup=True)
-    app.run(debug=True, threaded=True, host='0.0.0.0', port=4069)
+    app.run(debug=Config.ENVIRONMENT != 'production', threaded=True, host='0.0.0.0', port=4069)

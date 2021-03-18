@@ -50,7 +50,7 @@ const FAQS: FC<FAQSProps> = ({className, ...rest}) => {
                             variant="overline"
                             color="secondary"
                         >
-                            Technical &amp; Licensing
+                            Technical
                         </Typography>
                         <Box mt={6}>
                             <dt>
@@ -58,7 +58,7 @@ const FAQS: FC<FAQSProps> = ({className, ...rest}) => {
                                     variant="h4"
                                     color="textPrimary"
                                 >
-                                    What do we use for styling our components?
+                                    What is it for?
                                 </Typography>
                             </dt>
                             <dd>
@@ -66,8 +66,9 @@ const FAQS: FC<FAQSProps> = ({className, ...rest}) => {
                                     variant="body1"
                                     color="textSecondary"
                                 >
-                                    We use Material-ui&apos;s hooks api as we think it’s
-                                    the best way of avoiding clutter.
+                                    Use Datatensor tools for creating and labeling images database (called `dataset`).
+                                    These datasets can be used for training AI models, such as YOLOv3, to perform complex
+                                    object detection tasks.
                                 </Typography>
                             </dd>
                         </Box>
@@ -77,7 +78,7 @@ const FAQS: FC<FAQSProps> = ({className, ...rest}) => {
                                     variant="h4"
                                     color="textPrimary"
                                 >
-                                    Is Typescript available?
+                                    Is this free?
                                 </Typography>
                             </dt>
                             <dd>
@@ -85,8 +86,7 @@ const FAQS: FC<FAQSProps> = ({className, ...rest}) => {
                                     variant="body1"
                                     color="textSecondary"
                                 >
-                                    Yes, we have the Typescript version available for Standard Plus and Extended
-                                    license.
+                                    Yes, you can use Datatensor freely upon a certain limit.
                                 </Typography>
                             </dd>
                         </Box>
@@ -119,7 +119,7 @@ const FAQS: FC<FAQSProps> = ({className, ...rest}) => {
                             variant="overline"
                             color="secondary"
                         >
-                            Design
+                            Features
                         </Typography>
                         <Box mt={6}>
                             <dt>
@@ -127,7 +127,7 @@ const FAQS: FC<FAQSProps> = ({className, ...rest}) => {
                                     variant="h4"
                                     color="textPrimary"
                                 >
-                                    Are the design files (Sketch, Figma) included in the Standard License?
+                                     Can I use Datatensor API to perform object detection on cats ?
                                 </Typography>
                             </dt>
                             <dd>
@@ -135,7 +135,29 @@ const FAQS: FC<FAQSProps> = ({className, ...rest}) => {
                                     variant="body1"
                                     color="textSecondary"
                                 >
-                                    No, we offer the design source file only to Standard Plus and Extended License.
+                                    Yes, for common objects you can browse existing public datasets, or create your
+                                    own using our web scraping tool to begins with a dataset filled up with
+                                    thousands of images of `cat` object.
+                                </Typography>
+                            </dd>
+                        </Box>
+                        <Box mt={6}>
+                            <dt>
+                                <Typography
+                                    variant="h4"
+                                    color="textPrimary"
+                                >
+                                     Can I use Datatensor API to perform object detection on custom objects ?
+                                </Typography>
+                            </dt>
+                            <dd>
+                                <Typography
+                                    variant="body1"
+                                    color="textSecondary"
+                                >
+                                    Yes, take several hundred pictures of your objects, upload them to a Datatensor
+                                    dataset. Use Datatensor tools for labeling and augmenting images, then launch a
+                                    training task on a model.
                                 </Typography>
                             </dd>
                         </Box>

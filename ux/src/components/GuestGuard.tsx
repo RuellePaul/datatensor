@@ -7,10 +7,10 @@ interface GuestGuardProps {
 }
 
 const GuestGuard: FC<GuestGuardProps> = ({children}) => {
-    const {isAuthenticated} = useAuth();
+    const {isAuthenticated, user} = useAuth();
 
     if (isAuthenticated) {
-        return <Redirect to="/app/account"/>;
+        return <Redirect to={user.is_admin ? "/app/admin/reports/dashboard" : "/app/reports/dashboard"}/>;
     }
 
     return (

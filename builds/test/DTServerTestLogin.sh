@@ -1,1 +1,1 @@
-ssh -i "DTServerTestKeys.pem" ec2-user@ec2-15-188-53-201.eu-west-3.compute.amazonaws.com;
+ssh -i "DTServerTestKeys.pem" ec2-user@ec2-35-181-88-143.eu-west-3.compute.amazonaws.com;

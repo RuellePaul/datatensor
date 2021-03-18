@@ -14,6 +14,9 @@ interface QuillEditorProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
+        '& .ql-editor': {
+            maxHeight: 180
+        },
         '& .ql-toolbar': {
             borderLeft: 'none',
             borderTop: 'none',

@@ -20,7 +20,7 @@ const ProductCreateView: FC = () => {
     return (
         <Page
             className={classes.root}
-            title="Dataset Creation"
+            title="Add Dataset"
         >
             <Container maxWidth="lg">
                 <Header/>

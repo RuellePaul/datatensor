@@ -24,6 +24,14 @@ class APIError(Exception):
                               mimetype='application/json')
 
 
+class CSRF(APIError):
+    def __init__(self, message=None):
+        super().__init__(302,
+                         code='csrf_error',
+                         message=message or 'CSRF Error',
+                         data='ERR_CSRF')
+
+
 class BadRequest(APIError):
     def __init__(self, message=None, data=None):
         super().__init__(400,
