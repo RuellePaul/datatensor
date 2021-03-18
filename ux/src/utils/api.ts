@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const API_URI = `https://${window.location.hostname}:7069`;
+const API_URI = `https://${window.location.hostname}/api`;
 
 const api = axios.create({
     withCredentials: true,
