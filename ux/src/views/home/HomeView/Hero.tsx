@@ -127,28 +127,16 @@ const Hero: FC<HeroProps> = ({className, ...rest}) => {
                                             variant="h1"
                                             color="secondary"
                                         >
-                                            300+
+                                            10+
                                         </Typography>
                                         <Typography
                                             variant="overline"
                                             color="textSecondary"
                                         >
-                                            Components
+                                            Dataset Tools
                                         </Typography>
                                     </Grid>
                                 </Grid>
-                            </Box>
-                            <Box mt={3}>
-                                <img
-                                    alt="Javascript"
-                                    className={classes.technologyIcon}
-                                    src="/static/images/javascript.svg"
-                                />
-                                <img
-                                    alt="Typescript"
-                                    className={classes.technologyIcon}
-                                    src="/static/images/typescript.svg"
-                                />
                             </Box>
                         </Box>
                     </Grid>
@@ -167,7 +155,7 @@ const Hero: FC<HeroProps> = ({className, ...rest}) => {
                             <div className={classes.image}>
                                 <img
                                     alt="Presentation"
-                                    src="/static/home/dark-light.png"
+                                    src="https://via.placeholder.com/900x500"
                                 />
                             </div>
                         </Box>

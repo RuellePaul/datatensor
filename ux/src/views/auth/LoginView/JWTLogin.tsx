@@ -23,7 +23,7 @@ const JWTLogin: FC<JWTLoginProps> = ({className, ...rest}) => {
     return (
         <Formik
             initialValues={{
-                email: 'demo@devias.io',
+                email: 'demo@datatensor.io',
                 password: 'Password123',
                 submit: null
             }}
@@ -121,7 +121,7 @@ const JWTLogin: FC<JWTLoginProps> = ({className, ...rest}) => {
                             <div>
                                 Use
                                 {' '}
-                                <b>demo@devias.io</b>
+                                <b>demo@datatensor.io</b>
                                 {' '}
                                 and password
                                 {' '}

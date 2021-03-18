@@ -1,7 +1,8 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
-import {Container, makeStyles, Typography} from '@material-ui/core';
+import {Container, Link, makeStyles, Typography} from '@material-ui/core';
 import {Theme} from 'src/theme';
+import {Link as RouterLink} from 'react-router-dom';
 
 interface CTAProps {
     className?: string;
@@ -11,10 +12,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     root: {
         backgroundColor: theme.palette.background.default,
         paddingTop: 128,
-        paddingBottom: 128
-    },
-    browseButton: {
-        marginLeft: theme.spacing(2)
+        paddingBottom: 128,
+        textAlign: 'center'
     }
 }));
 
@@ -34,13 +33,14 @@ const CTA: FC<CTAProps> = ({className, ...rest}) => {
                 >
                     Ready to start building?
                 </Typography>
-                <Typography
-                    variant="h1"
-                    align="center"
+                <Link
+                    variant="h2"
                     color="secondary"
+                    component={RouterLink}
+                    to="/app"
                 >
-                    Download Devias Material Kit today.
-                </Typography>
+                    Login to Datatensor
+                </Link>
             </Container>
         </div>
     );
