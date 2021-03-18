@@ -17,8 +17,14 @@ const useStyles = makeStyles((theme: Theme) => ({
         fontWeight: theme.typography.fontWeightRegular
     },
     avatar: {
-        width: 50,
-        height: 50
+        width: 60,
+        height: 60
+    },
+    creator: {
+        cursor: 'pointer',
+        '&:hover': {
+            textDecoration: 'underline'
+        }
     }
 }));
 
@@ -49,7 +55,7 @@ const Testimonials: FC<TestimonialsProps> = ({className, ...rest}) => {
                 >
                     <Avatar
                         className={classes.avatar}
-                        src="/static/home/paul.png"
+                        src="/static/home/paul.jpg"
                         alt="Creator"
                     />
                     <Box ml={2}>
@@ -57,7 +63,13 @@ const Testimonials: FC<TestimonialsProps> = ({className, ...rest}) => {
                             variant="body1"
                             color="textPrimary"
                         >
-                            Paul Ruelle
+                            <span
+                                className={classes.creator}
+                                title='LinkedIn profile'
+                                onClick={() => window.location.href = 'https://www.linkedin.com/in/paulruelle'}
+                            >
+                                Paul Ruelle
+                            </span>
                             <Typography
                                 color="textSecondary"
                                 display="inline"
