@@ -56,4 +56,4 @@ def handle_api_error(error):
 
 if __name__ == '__main__':
     encrypt_init(Config.DB_HOST, key=Config.DB_ENCRYPTION_KEY, setup=True)
-    app.run(debug=True, threaded=True, host='0.0.0.0', port=4069)
+    app.run(debug=Config.ENVIRONMENT != 'production', threaded=True, host='0.0.0.0', port=4069)
