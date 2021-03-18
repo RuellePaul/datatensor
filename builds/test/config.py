@@ -59,9 +59,9 @@ class Config:
             'AUTHORIZATION_URL': 'https://stackoverflow.com/oauth',
             'TOKEN_URL': 'https://stackoverflow.com/oauth/access_token/json',
             'USER_URL': 'https://api.stackexchange.com/2.2/me?site=stackoverflow',
-            'CLIENT_ID': '19511',
-            'CLIENT_SECRET': 'WVoNFqJgR7R6sVr3cxKa8A((',
+            'CLIENT_ID': '19844',
+            'CLIENT_SECRET': 'Qkm*o*4BR3cukTkzVTCa3A((',
             'SCOPES': [],
-            'KEY': 'XF2kUGVIBKKXSRFw2)u)*Q(('
+            'KEY': 'KJ42cvws83mKc5MQ*JUSpg(('
         }
     }
