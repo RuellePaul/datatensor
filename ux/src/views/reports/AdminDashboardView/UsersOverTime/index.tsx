@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {Box, Card, CardContent, CardHeader, Divider, makeStyles} from '@material-ui/core';
 import GenericMoreButton from 'src/components/GenericMoreButton';
-import Chart from './Chart';
+import ComposedChart from './ComposedChart';
 import {User} from 'src/types/user';
 import moment from 'moment';
 import {TimeRange} from 'src/types/timeRange';
@@ -67,7 +67,7 @@ const UsersOverTime: FC<PerformanceOverTimeProps> = ({className, users, timeRang
                         height={375}
                         minWidth={500}
                     >
-                        <Chart
+                        <ComposedChart
                             className={classes.chart}
                             data={usersOverTime[timeRange.value].data}
                             labels={usersOverTime[timeRange.value].labels}

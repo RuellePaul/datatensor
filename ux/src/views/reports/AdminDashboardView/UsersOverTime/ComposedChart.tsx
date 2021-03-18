@@ -17,34 +17,50 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-const Chart: FC<ChartProps> = ({
-                                   className,
-                                   data: dataProp,
-                                   labels,
-                                   ...rest
-                               }) => {
+const ComposedChart: FC<ChartProps> = ({
+                                           className,
+                                           data: dataProp,
+                                           labels,
+                                           ...rest
+                                       }) => {
     const classes = useStyles();
     const theme: Theme = useTheme();
 
     const data = (canvas: HTMLCanvasElement) => {
         const ctx = canvas.getContext('2d');
-        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
 
-        gradient.addColorStop(0, fade(theme.palette.secondary.main, 0.4));
-        gradient.addColorStop(0.9, fade(theme.palette.secondary.main, 0.1));
-        gradient.addColorStop(1, 'rgba(255,255,255,0)');
+        const gradientBar = ctx.createLinearGradient(0, 0, 0, 600);
+        gradientBar.addColorStop(0, fade(theme.palette.primary.main, 0.4));
+        gradientBar.addColorStop(0.9, fade(theme.palette.primary.main, 0.1));
+        gradientBar.addColorStop(1, 'rgba(255,255,255,0)');
 
+        const gradientLine = ctx.createLinearGradient(0, 0, 0, 300);
+        gradientLine.addColorStop(0, fade(theme.palette.secondary.main, 0.2));
+        gradientLine.addColorStop(0.9, fade(theme.palette.secondary.main, 0.1));
+        gradientLine.addColorStop(1, 'rgba(255,255,255,0)');
         return {
             datasets: [
                 {
                     data: dataProp,
-                    backgroundColor: gradient,
+                    backgroundColor: gradientBar,
                     borderColor: theme.palette.secondary.main,
                     pointBorderColor: theme.palette.background.default,
                     pointBorderWidth: 3,
                     pointRadius: 6,
-                    pointBackgroundColor: theme.palette.secondary.main
-                }
+                    pointBackgroundColor: theme.palette.secondary.main,
+                    yAxisID: 'y-axis-count'
+                },
+                {
+                    type: 'line',
+                    data: dataProp.map((elem, index) => dataProp.slice(0, index + 1).reduce((a, b) => a + b)),
+                    backgroundColor: gradientLine,
+                    borderColor: theme.palette.secondary.main,
+                    pointBorderColor: theme.palette.background.default,
+                    pointBorderWidth: 3,
+                    pointRadius: 6,
+                    pointBackgroundColor: theme.palette.secondary.main,
+                    yAxisID: 'y-axis-total'
+                },
             ],
             labels
         };
@@ -81,6 +97,10 @@ const Chart: FC<ChartProps> = ({
             ],
             yAxes: [
                 {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                    id: 'y-axis-count',
                     gridLines: {
                         borderDash: [3],
                         borderDashOffset: [3],
@@ -90,6 +110,21 @@ const Chart: FC<ChartProps> = ({
                         zeroLineBorderDashOffset: [3],
                         zeroLineColor: theme.palette.divider
                     },
+                    ticks: {
+                        padding: 20,
+                        fontColor: theme.palette.text.secondary,
+                        beginAtZero: true,
+                        fontSize: 14,
+                        min: 0,
+                        maxTicksLimit: 7,
+                        callback: (value: number) => (value % 1 === 0 ? value : '')
+                    }
+                },
+                {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    id: 'y-axis-total',
                     ticks: {
                         padding: 20,
                         fontColor: theme.palette.text.secondary,
@@ -118,9 +153,15 @@ const Chart: FC<ChartProps> = ({
             callbacks: {
                 title: () => {
                 },
-                label: (tooltipItem: any) => tooltipItem.yLabel > 0
-                    ? ` ${tooltipItem.yLabel} users created`
-                    : ` No users`
+                label: (tooltipItem: any) => {
+                    if (tooltipItem.datasetIndex === 0) {
+                        return tooltipItem.yLabel > 0
+                            ? ` ${tooltipItem.yLabel} (registered)`
+                            : ` No users`
+                    } else if (tooltipItem.datasetIndex === 1) {
+                        return ` ${tooltipItem.yLabel} (total)`
+                    }
+                }
             }
         }
     };
@@ -138,10 +179,10 @@ const Chart: FC<ChartProps> = ({
     );
 };
 
-Chart.propTypes = {
+ComposedChart.propTypes = {
     className: PropTypes.string,
     data: PropTypes.array.isRequired,
     labels: PropTypes.array.isRequired
 };
 
-export default Chart;
+export default ComposedChart;
