@@ -342,6 +342,14 @@ const NavBar: FC<NavBarProps> = ({onMobileClose, openMobile}) => {
                         >
                             Need Help?
                         </Typography>
+                        <Link
+                            variant="subtitle1"
+                            color="secondary"
+                            component={RouterLink}
+                            to="/docs"
+                        >
+                            Check our docs
+                        </Link>
                     </Box>
                 </Box>
             </PerfectScrollbar>

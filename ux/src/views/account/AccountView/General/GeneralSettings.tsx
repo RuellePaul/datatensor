@@ -71,9 +71,7 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) =
                     resetForm();
                     setStatus({success: true});
                     setSubmitting(false);
-                    enqueueSnackbar('Profile updated', {
-                        variant: 'success'
-                    });
+                    enqueueSnackbar('Profile updated');
                 } catch (err) {
                     console.error(err);
                     setStatus({success: false});

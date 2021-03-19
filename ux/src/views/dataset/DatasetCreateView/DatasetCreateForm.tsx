@@ -10,7 +10,9 @@ import {
     Card,
     CardContent,
     CardHeader,
+    Checkbox,
     Divider,
+    FormControlLabel,
     FormHelperText,
     Grid,
     makeStyles,
@@ -48,12 +50,14 @@ const DatasetCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
                 description: '',
                 images: [],
                 name: '',
-                submit: null
+                submit: null,
+                is_public: true
             }}
             validationSchema={Yup.object().shape({
                 description: Yup.string().max(5000),
                 images: Yup.array(),
-                name: Yup.string().max(255).required()
+                name: Yup.string().max(255).required(),
+                is_public: Yup.boolean().required(),
             })}
             onSubmit={async (values, {
                 setErrors,
@@ -64,13 +68,11 @@ const DatasetCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
                     const {submit, ...payload} = values;
                     const response = await api.post<Dataset>('/v1/dataset/manage/create', payload);
                     const dataset = response.data;
-                    console.log(dataset);
+                    console.info(dataset);
 
                     setStatus({success: true});
                     setSubmitting(false);
-                    enqueueSnackbar('Dataset Created', {
-                        variant: 'success'
-                    });
+                    enqueueSnackbar('Dataset Created');
                     history.push('/app/manage/datasets');
                 } catch (err) {
                     console.error(err);
@@ -89,7 +91,7 @@ const DatasetCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
                   setFieldValue,
                   touched,
                   values
-            }) => (
+              }) => (
                 <form
                     onSubmit={handleSubmit}
                     className={clsx(classes.root, className)}
@@ -156,17 +158,42 @@ const DatasetCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
                                     </CardContent>
                                 </Card>
                             </Box>
+
                             <Box mt={3}>
                                 <Card>
-                                    <CardHeader title="Options"/>
+                                    <CardHeader title="Models"/>
                                     <Divider/>
                                     <CardContent>
-                                        ...
+                                        {/* TODO : Model dropdown + multiple select */}
+                                    </CardContent>
+                                </Card>
+                            </Box>
+
+                            <Box mt={3}>
+                                <Card>
+                                    <CardHeader title="Settings"/>
+                                    <Divider/>
+                                    <CardContent>
+                                        <Box mt={2}>
+                                            <FormControlLabel
+                                                control={(
+                                                    <Checkbox
+                                                        checked={values.is_public}
+                                                        onChange={handleChange}
+                                                        value={values.is_public}
+                                                        name="is_public"
+                                                    />
+                                                )}
+                                                label="Public dataset"
+                                            />
+                                            <FormHelperText>A public dataset is visible by anyone.</FormHelperText>
+                                        </Box>
                                     </CardContent>
                                 </Card>
                             </Box>
                         </Grid>
                     </Grid>
+
                     {errors.submit && (
                         <Box mt={3}>
                             <FormHelperText error>
@@ -174,6 +201,7 @@ const DatasetCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
                             </FormHelperText>
                         </Box>
                     )}
+
                     <Box mt={2}>
                         <Button
                             color="secondary"
