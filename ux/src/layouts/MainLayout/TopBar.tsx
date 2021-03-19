@@ -72,7 +72,7 @@ const TopBar: FC<TopBarProps> = ({className, ...rest}) => {
                     className={classes.link}
                     color="textSecondary"
                     component={RouterLink}
-                    to="/app"
+                    to="/docs"
                     underline="none"
                     variant="body2"
                 >
