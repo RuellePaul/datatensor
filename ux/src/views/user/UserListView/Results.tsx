@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
-    Avatar,
     Box,
     Button,
     Card,
@@ -27,8 +26,8 @@ import {
     Typography
 } from '@material-ui/core';
 import {ArrowRight as ArrowRightIcon, Edit as EditIcon, Search as SearchIcon} from 'react-feather';
+import UserAvatar from 'src/components/UserAvatar';
 import {Theme} from 'src/theme';
-import getInitials from 'src/utils/getInitials';
 import {User} from 'src/types/user';
 
 interface ResultsProps {
@@ -370,13 +369,11 @@ const Results: FC<ResultsProps> = ({
                                                 display="flex"
                                                 alignItems="center"
                                             >
-                                                <Avatar
+                                                <UserAvatar
                                                     className={classes.avatar}
-                                                    src={user.avatar}
-                                                >
-                                                    {getInitials(user.name)}
-                                                </Avatar>
-                                                <div>
+                                                    user={user}
+                                                />
+                                                <Box ml={1}>
                                                     <Link
                                                         color="inherit"
                                                         component={RouterLink}
@@ -391,7 +388,7 @@ const Results: FC<ResultsProps> = ({
                                                     >
                                                         {user.email}
                                                     </Typography>
-                                                </div>
+                                                </Box>
                                             </Box>
                                         </TableCell>
                                         <TableCell>

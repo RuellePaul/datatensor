@@ -3,19 +3,7 @@
 import React, {FC, ReactNode, useEffect} from 'react';
 import {Link as RouterLink, matchPath, useLocation} from 'react-router-dom';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import {
-    Avatar,
-    Box,
-    Chip,
-    Divider,
-    Drawer,
-    Hidden,
-    Link,
-    List,
-    ListSubheader,
-    makeStyles,
-    Typography
-} from '@material-ui/core';
+import {Box, Chip, Divider, Drawer, Hidden, Link, List, ListSubheader, makeStyles, Typography} from '@material-ui/core';
 import {
     Activity as ActivityIcon,
     Database as DatabaseIcon,
@@ -25,6 +13,7 @@ import {
     Users as UsersIcon
 } from 'react-feather';
 import Logo from 'src/components/Logo';
+import UserAvatar from 'src/components/UserAvatar';
 import useAuth from 'src/hooks/useAuth';
 import NavItem from './NavItem';
 import {User} from 'src/types/user';
@@ -238,7 +227,7 @@ const useStyles = makeStyles(theme => ({
     avatar: {
         cursor: 'pointer',
         width: 64,
-        height: 64
+        height: 64,
     },
     list: {
         '& .MuiChip-outlined': {
@@ -284,10 +273,9 @@ const NavBar: FC<NavBarProps> = ({onMobileClose, openMobile}) => {
                         justifyContent="center"
                     >
                         <RouterLink to="/app/account">
-                            <Avatar
-                                alt="User"
+                            <UserAvatar
                                 className={classes.avatar}
-                                src={user.avatar}
+                                user={user}
                             />
                         </RouterLink>
                     </Box>

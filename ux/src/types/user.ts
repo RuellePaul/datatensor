@@ -4,7 +4,7 @@ export interface User {
     name: string;
     created_at: string;
     is_admin: boolean;
-    scope?: string;
+    scope: 'github' | 'google' | 'stackoverflow' | null;
     avatar?: string;
 
     [key: string]: any;

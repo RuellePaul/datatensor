@@ -48,7 +48,8 @@ const ComposedChart: FC<ChartProps> = ({
                     pointBorderWidth: 3,
                     pointRadius: 6,
                     pointBackgroundColor: theme.palette.secondary.main,
-                    yAxisID: 'y-axis-count'
+                    yAxisID: 'y-axis-count',
+                    label: 'users-count'
                 },
                 {
                     type: 'line',
@@ -59,7 +60,8 @@ const ComposedChart: FC<ChartProps> = ({
                     pointBorderWidth: 3,
                     pointRadius: 6,
                     pointBackgroundColor: theme.palette.secondary.main,
-                    yAxisID: 'y-axis-total'
+                    yAxisID: 'y-axis-total',
+                    label: 'users-total'
                 },
             ],
             labels
