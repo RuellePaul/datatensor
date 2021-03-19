@@ -8,7 +8,10 @@ import useAuth from 'src/hooks/useAuth';
 const useStyles = makeStyles((theme) => ({
     avatar: {
         height: 32,
-        width: 32
+        width: 32,
+        '& + span > .MuiAvatar-root': {
+            border: `solid 1px ${theme.palette.primary.main}`
+        }
     },
     username: {
         marginLeft: '8px !important'

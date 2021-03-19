@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         maxWidth: 35,
         maxHeight: 35,
         background: theme.palette.background.paper,
+        opacity: 0.8,
         '& svg': {
             padding: 2,
             color: theme.palette.background.paper,
