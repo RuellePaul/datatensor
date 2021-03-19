@@ -5,7 +5,8 @@ export interface User {
     created_at: string;
     is_admin: boolean;
     scope: 'github' | 'google' | 'stackoverflow' | null;
-    avatar?: string;
+    avatar: string | null;
+    tier: 'standard' | 'premium' | 'business';
 
     [key: string]: any;
 }
