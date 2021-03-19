@@ -28,11 +28,11 @@ CSRFProtect(app)
 require_authorization([admin_manage, dataset_manage])
 require_admin([admin_manage])
 
-app.register_blueprint(auth, url_prefix='/v1/auth')
-app.register_blueprint(oauth, url_prefix='/v1/oauth')
-app.register_blueprint(dataset_manage, url_prefix='/v1/dataset/manage')
+app.register_blueprint(auth, url_prefix='/api/v1/auth')
+app.register_blueprint(oauth, url_prefix='/api/v1/oauth')
+app.register_blueprint(dataset_manage, url_prefix='/api/v1/dataset/manage')
 
-app.register_blueprint(admin_manage, url_prefix='/v1/admin/manage')
+app.register_blueprint(admin_manage, url_prefix='/api/v1/admin/manage')
 
 
 @app.after_request
