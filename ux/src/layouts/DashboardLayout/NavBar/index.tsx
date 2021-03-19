@@ -42,7 +42,7 @@ const sections = (user: User): Section[] => [
         items: [
             ...(user.is_admin ? [{
                 title: 'App dashboard',
-                icon: ActivityIcon,
+                icon: PieChartIcon,
                 href: '/app/admin/reports/dashboard',
                 info: () => (
                     <Chip
@@ -54,7 +54,7 @@ const sections = (user: User): Section[] => [
             }] : []),
             {
                 title: 'Dashboard',
-                icon: PieChartIcon,
+                icon: ActivityIcon,
                 href: '/app/reports/dashboard'
             }
         ]
