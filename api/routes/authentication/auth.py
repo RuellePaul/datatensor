@@ -66,7 +66,7 @@ def do_register(args):
     user = core.user_from_user_id(user_id)
 
     if user:
-        raise errors.Forbidden(f'User {user_id} already exists')
+        raise errors.Forbidden(f'User `{email}` already exists')
 
     user = core.register_user(user_id, args['name'], args['email'], args['password'])
 
