@@ -2,7 +2,6 @@
 
 environment=0
 reset=0
-services=0
 
 # Prompt version, environment, reset
 read -p "\n⚙  Version : v_" version
@@ -26,13 +25,11 @@ then
   docker kill $(docker ps -q)
   docker rm $(docker ps -a -q)
   docker rmi $(docker images -a -q)
-  services=api\ db\ proxy\ ux
 else
   printf "⚙  Cleaning workspace...\n";
   docker kill $(docker ps -a | grep -v "mongo" | cut -d ' ' -f1)
   docker rm $(docker ps -a | grep -v "mongo" | cut -d ' ' -f1)
   docker rmi $(docker images -a -q)
-  services=api\ proxy\ ux
 fi
 docker volume prune -f
 docker system prune -f
@@ -44,7 +41,8 @@ export ENVIRONMENT=$environment
 source ./$environment/init_env.sh
 
 # Deployment
-docker-compose pull $services
-docker-compose up -d $services
+docker-compose -f docker-compose.yml up --build -d db proxy
+docker-compose pull api\ ux
+docker-compose up -d api\ ux
 
 printf "\n⚙  Deployed datatensor $version in $environment environment !\n\n"
