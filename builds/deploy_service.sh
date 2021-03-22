@@ -5,7 +5,7 @@ reset=0
 services=0
 
 # Prompt version, environment, reset
-read -p "⚙  Version : v_" version
+read -p "\n⚙  Version : v_" version
 version="v_${version}"
 
 while [ "$environment" != "test" ] && [ "$environment" != "production" ]; do
