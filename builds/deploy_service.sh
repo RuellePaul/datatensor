@@ -26,13 +26,13 @@ then
   docker kill $(docker ps -q)
   docker rm $(docker ps -a -q)
   docker rmi $(docker images -a -q)
-  services=api\ db \proxy \ux
+  services=api\ db\ proxy\ ux
 else
   printf "⚙  Cleaning workspace...\n";
   docker kill $(docker ps -a | grep -v "mongo" | cut -d ' ' -f1)
   docker rm $(docker ps -a | grep -v "mongo" | cut -d ' ' -f1)
   docker rmi $(docker images -a -q)
-  services=api \proxy \ux
+  services=api\ proxy\ ux
 fi
 docker volume prune -f
 docker system prune -f
