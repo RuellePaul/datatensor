@@ -44,8 +44,8 @@ source ./$environment/init_env.sh
 
 # Deployment
 SERVICES=api\ ux
-docker-compose -f docker-compose.yml up --build -d --quiet-pull db proxy
-docker-compose pull --quiet $SERVICES
-docker-compose up -d --quiet-pull $SERVICES
+docker-compose -f docker-compose.yml up --build -d db proxy
+docker-compose pull $SERVICES
+docker-compose up -d $SERVICES
 
 printf "\n⚙  Deployed datatensor $version in $environment environment !\n\n"
