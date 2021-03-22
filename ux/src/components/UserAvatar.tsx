@@ -64,6 +64,7 @@ const UserAvatar: FC<UserAvatarProps> = ({
                         <Avatar
                             className={clsx(classes.smallAvatar, user.scope === 'github' && classes.border)}
                             alt={user.scope}
+                            title={`Logged with ${user.scope}`}
                         >
                             {user.scope === 'github' && <GithubIcon/>}
                             {user.scope === 'google' && <GoogleIcon/>}

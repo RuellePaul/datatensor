@@ -121,25 +121,6 @@ const sections = (user: User): Section[] => [
                         href: '/404'
                     }
                 ]
-            },
-            {
-                title: 'Models',
-                icon: FolderIcon,
-                href: '/admin/manage/orders',
-                items: [
-                    {
-                        title: 'Train a model',
-                        href: '/404'
-                    },
-                    {
-                        title: 'Compute mAP',
-                        href: '/404'
-                    },
-                    {
-                        title: 'Real time inference',
-                        href: '/404'
-                    }
-                ]
             }
         ]
     }

@@ -42,13 +42,13 @@ const Header: FC<HeaderProps> = ({className, timeRange, setTimeRange, timeRanges
                         to="/app"
                         component={RouterLink}
                     >
-                        Dashboard
+                        Reports
                     </Link>
                     <Typography
                         variant="body1"
                         color="textPrimary"
                     >
-                        Reports
+                        App dashboard
                     </Typography>
                 </Breadcrumbs>
                 <Typography
