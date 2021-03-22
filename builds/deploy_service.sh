@@ -3,8 +3,10 @@
 environment=0
 reset=0
 
+printf "\n"
+
 # Prompt version, environment, reset
-read -p "\n⚙  Version : v_" version
+read -p "⚙  Version : v_" version
 version="v_${version}"
 
 while [ "$environment" != "test" ] && [ "$environment" != "production" ]; do
