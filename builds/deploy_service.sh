@@ -44,7 +44,7 @@ source ./$environment/init_env.sh
 
 # Deployment
 SERVICES=api\ ux
-docker-compose -f docker-compose.yml up --quiet --build -d --quiet db proxy
+docker-compose -f docker-compose.yml up --build -d --quiet-pull db proxy
 docker-compose pull --quiet $SERVICES
 docker-compose up -d --quiet-pull $SERVICES
 
