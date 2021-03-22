@@ -1,11 +1,12 @@
 #!/bin/bash
-SERVICES=api\ ux
 
 environment=0
 reset=0
+services=0
 
 # Prompt version, environment, reset
-read -p "⚙  Version : " version
+read -p "⚙  Version : v_" version
+version="v_${version}"
 
 while [ "$environment" != "test" ] && [ "$environment" != "production" ]; do
   read -p "⚙  Environment (test | production) : " environment
@@ -25,11 +26,13 @@ then
   docker kill $(docker ps -q)
   docker rm $(docker ps -a -q)
   docker rmi $(docker images -a -q)
+  services=api\ db \proxy \ux
 else
   printf "⚙  Cleaning workspace...\n";
   docker kill $(docker ps -a | grep -v "mongo" | cut -d ' ' -f1)
   docker rm $(docker ps -a | grep -v "mongo" | cut -d ' ' -f1)
   docker rmi $(docker images -a -q)
+  services=api \proxy \ux
 fi
 docker volume prune -f
 docker system prune -f
@@ -41,7 +44,6 @@ export ENVIRONMENT=$environment
 source ./$environment/init_env.sh
 
 # Deployment
-docker-compose -f test/docker-compose.yml up --build -d db proxy
 docker-compose pull $SERVICES
 docker-compose up -d $SERVICES
 

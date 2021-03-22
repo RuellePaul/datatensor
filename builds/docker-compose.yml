@@ -16,6 +16,15 @@ services:
       - './${ENVIRONMENT}/cert.pem:/api/cert.pem'
       - './${ENVIRONMENT}/key.pem:/api/key.pem'
     network_mode: host
+  db:
+    image: mongo
+    network_mode: host
+  proxy:
+    build:
+      context: proxy
+    network_mode: host
+    volumes:
+      - '/root/letsencrypt:/etc/letsencrypt'
   ux:
     image: docker.pkg.github.com/ruellepaul/datatensor/datatensor-ux:${VERSION}_${ENVIRONMENT}
     build:
