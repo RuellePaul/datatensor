@@ -44,7 +44,7 @@ export ENVIRONMENT=$environment
 source ./$environment/init_env.sh
 
 # Deployment
-docker-compose pull $SERVICES
-docker-compose up -d $SERVICES
+docker-compose pull $services
+docker-compose up -d $services
 
 printf "\n⚙  Deployed datatensor $version in $environment environment !\n\n"
