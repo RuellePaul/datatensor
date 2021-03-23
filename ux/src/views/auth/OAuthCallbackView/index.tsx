@@ -1,6 +1,6 @@
 import React, {FC, useEffect} from 'react';
 import {useParams} from 'react-router';
-import SplashScreen from 'src/components/SplashScreen';
+import SplashScreen from 'src/components/screens/SplashScreen';
 import useAuth from 'src/hooks/useAuth';
 import parseQueryArgs from 'src/utils/parseQueryArgs';
 

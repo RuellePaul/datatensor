@@ -1,7 +1,7 @@
 import React, {createContext, FC, ReactNode, useEffect, useReducer} from 'react';
 import jwtDecode from 'jwt-decode';
 import {User} from 'src/types/user';
-import SplashScreen from 'src/components/SplashScreen';
+import SplashScreen from 'src/components/screens/SplashScreen';
 import api from 'src/utils/api';
 
 interface AuthState {

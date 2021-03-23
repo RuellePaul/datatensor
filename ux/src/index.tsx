@@ -9,7 +9,6 @@ import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-jsx';
 import 'nprogress/nprogress.css';
 import 'src/assets/css/prism.css';
-import 'src/mixins/chartjs';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';

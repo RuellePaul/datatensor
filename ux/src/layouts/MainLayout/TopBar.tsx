@@ -3,7 +3,7 @@ import {Link as RouterLink, useHistory} from 'react-router-dom';
 import clsx from 'clsx';
 import {AppBar, Box, Button, Divider, Hidden, Link, makeStyles, Toolbar, Typography} from '@material-ui/core';
 import {APP_VERSION} from 'src/constants';
-import Logo from 'src/components/Logo';
+import Logo from 'src/components/utils/Logo';
 
 interface TopBarProps {
     className?: string;

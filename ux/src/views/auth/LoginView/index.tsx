@@ -3,7 +3,7 @@ import {Link as RouterLink} from 'react-router-dom';
 import {Box, Card, CardContent, Container, Divider, Link, makeStyles, Typography} from '@material-ui/core';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
-import Logo from 'src/components/Logo';
+import Logo from 'src/components/utils/Logo';
 import JWTLogin from './JWTLogin';
 import OAuthLoginButton from './OAuthLoginButton';
 

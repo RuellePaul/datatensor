@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import * as Yup from 'yup';
 import {Formik} from 'formik';
 import {Box, Button, Checkbox, FormHelperText, Link, makeStyles, TextField, Typography} from '@material-ui/core';
-import GoogleCaptcha from 'src/components/GoogleCaptcha';
+import GoogleCaptcha from 'src/components/utils/GoogleCaptcha';
 import useAuth from 'src/hooks/useAuth';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 

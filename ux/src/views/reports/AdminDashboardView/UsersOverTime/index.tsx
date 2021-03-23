@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {Box, Card, CardContent, CardHeader, Divider, makeStyles} from '@material-ui/core';
-import GenericMoreButton from 'src/components/GenericMoreButton';
+import GenericMoreButton from 'src/components/utils/GenericMoreButton';
 import ComposedChart from './ComposedChart';
 import {User} from 'src/types/user';
 import moment from 'moment';

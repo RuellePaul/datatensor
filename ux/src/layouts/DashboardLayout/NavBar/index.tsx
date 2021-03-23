@@ -11,7 +11,7 @@ import {
     PieChart as PieChartIcon,
     Users as UsersIcon
 } from 'react-feather';
-import Logo from 'src/components/Logo';
+import Logo from 'src/components/utils/Logo';
 import UserAvatar from 'src/components/UserAvatar';
 import useAuth from 'src/hooks/useAuth';
 import NavItem from './NavItem';
