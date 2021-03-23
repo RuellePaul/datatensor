@@ -225,7 +225,7 @@ def send_activation_code(email, activation_code):
     subject = "Datatensor | Confirm your registration"
     html_content = f"""Hi !</br> Your activation code is : {activation_code}"""
     message = Mail(
-        from_email='datatensor@noreply.io',
+        from_email='noreply@test.datatensor.io',
         to_emails=email,
         subject=subject,
         html_content=html_content
