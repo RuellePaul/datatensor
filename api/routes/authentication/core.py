@@ -24,7 +24,7 @@ def encode_access_token(user_id):
     return access_token
 
 
-def verify_access_token(access_token):
+def verify_access_token(access_token, verified=False):
     if not access_token:
         raise errors.InvalidAuthentication
 
@@ -39,7 +39,10 @@ def verify_access_token(access_token):
     if not user:
         raise errors.InvalidAuthentication("User doesn't exists")
 
-    return user_id
+    if verified and not user.get('is_verified'):
+        raise errors.InvalidAuthentication("User email is not verified")
+
+    return user
 
 
 def require_authorization(blueprints):
@@ -55,8 +58,8 @@ def admin_guard(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         if request.method in ['GET', 'POST', 'PUT', 'DELETE']:
-            user_id = verify_access_token(request.headers.get('Authorization'))
-            if user_id not in Config.ADMIN_USER_IDS:
+            user = verify_access_token(request.headers.get('Authorization'))
+            if user['id'] not in Config.ADMIN_USER_IDS:
                 raise errors.Forbidden('Not an admin user')
         result = func(*args, **kwargs)
         return result
@@ -67,8 +70,8 @@ def admin_guard(func):
 def require_admin(blueprints):
     def admin_authorized():
         if request.method in ['GET', 'POST', 'PUT', 'DELETE']:
-            user_id = verify_access_token(request.headers.get('Authorization'))
-            if user_id not in Config.ADMIN_USER_IDS:
+            user = verify_access_token(request.headers.get('Authorization'))
+            if user['id'] not in Config.ADMIN_USER_IDS:
                 raise errors.Forbidden('Not an admin user')
 
     for blueprint in blueprints:

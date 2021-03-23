@@ -13,8 +13,8 @@ dataset_manage = Blueprint('dataset_manage', __name__)
 
 @dataset_manage.route('/')
 def fetch_datasets():
-    user_id = verify_access_token(request.headers['Authorization'])
-    datasets = list(Config.db.datasets.find({'user_id': user_id}, {'_id': 0}))
+    user = verify_access_token(request.headers['Authorization'])
+    datasets = list(Config.db.datasets.find({'user_id': user['id']}, {'_id': 0}))
     return jsonify(datasets), 200
 
 
@@ -26,11 +26,11 @@ def fetch_datasets():
     'is_public': fields.Boolean(missing=False)
 })
 def create_dataset(args):
-    user_id = verify_access_token(request.headers['Authorization'])
+    user = verify_access_token(request.headers['Authorization'], verified=True)
 
     dataset_id = str(uuid.uuid4())
     dataset = dict(id=dataset_id,
-                   user_id=user_id,
+                   user_id=user['id'],
                    created_at=datetime.now().isoformat(),
                    description=args['description'],
                    is_public=args['is_public'],
