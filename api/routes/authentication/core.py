@@ -20,10 +20,11 @@ from utils import encrypt_field
 # Token
 def encode_access_token(user_id):
     payload = {'user_id': user_id, 'exp': datetime.utcnow() + timedelta(minutes=Config.SESSION_DURATION_IN_MINUTES)}
-    return jwt.encode(payload, Config.ACCESS_TOKEN_KEY, algorithm='HS256')
+    access_token = jwt.encode(payload, Config.ACCESS_TOKEN_KEY, algorithm='HS256')
+    return access_token
 
 
-def verify_access_token(access_token):
+def verify_access_token(access_token, verified=False):
     if not access_token:
         raise errors.InvalidAuthentication
 
@@ -37,7 +38,7 @@ def verify_access_token(access_token):
     user = Config.db.users.find_one({'id': user_id}, {'_id': 0, 'password': 0})
     if not user:
         raise errors.InvalidAuthentication("User doesn't exists")
-    if not user.get('is_verified'):
+    if verified and not user.get('is_verified'):
         raise errors.Forbidden('User must verify email', data='ERR_VERIFY')
 
     return user_id

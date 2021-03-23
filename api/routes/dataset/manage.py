@@ -25,7 +25,7 @@ def fetch_datasets():
     'name': fields.Str(required=True)
 })
 def create_dataset(args):
-    user_id = verify_access_token(request.headers['Authorization'])
+    user_id = verify_access_token(request.headers['Authorization'], verified=True)
 
     dataset_id = str(uuid.uuid4())
     dataset = dict(id=dataset_id,
