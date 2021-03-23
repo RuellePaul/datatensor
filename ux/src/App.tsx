@@ -12,7 +12,7 @@ import ScrollReset from 'src/components/ScrollReset';
 import CookiesNotification from 'src/components/CookiesNotification';
 import GoogleAnalytics from 'src/components/GoogleAnalytics';
 import SettingsNotification from 'src/components/SettingsNotification';
-import {AuthProvider} from 'src/contexts/JWTAuthContext';
+import {AuthProvider} from 'src/contexts/AuthContext';
 import useSettings from 'src/hooks/useSettings';
 import {createTheme} from 'src/theme';
 import routes, {renderRoutes} from 'src/routes';
