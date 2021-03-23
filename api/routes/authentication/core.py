@@ -222,8 +222,17 @@ def check_captcha(captcha):
 
 
 def send_activation_code(email, activation_code):
-    subject = "Datatensor | Confirm your registration"
-    html_content = f"""Hi !</br> Your activation code is : {activation_code}"""
+    if Config.ENVIRONMENT == 'development':
+        raise errors.Forbidden('Not available in dev environment')
+
+    subject = "Welcome to Datatensor ! Confirm your email"
+    html_content = f"""
+        <h2>You're on your way!</h2><br/>
+        <h4>Let's confirm your email address.</h4><br/>
+        <h5>By clicking on the following link, you are confirming your email address.</h5><br/>
+        {Config.UI_URL}/email-confirmation?activation_code={activation_code}
+   """
+
     message = Mail(
         from_email='noreply@test.datatensor.io',
         to_emails=email,
@@ -236,4 +245,13 @@ def send_activation_code(email, activation_code):
     except Exception as e:
         raise errors.InternalError(f'Unable to send email with SendGrid | {str(e)}')
 
-    return activation_code
+
+def verify_user_email(user, activation_code):
+    if user.get('is_verified'):
+        raise errors.BadRequest(f"User already verified")
+
+    if user.get('activation_code') != activation_code:
+        raise errors.Forbidden('Invalid code provided')
+
+    Config.db.users.find_one_and_update({'id': user['id']},
+                                        {'$set': {'is_verified': True, 'activation_code': None}})

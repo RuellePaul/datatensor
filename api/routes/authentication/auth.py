@@ -73,6 +73,7 @@ def do_register(args):
     user = core.register_user(user_id, args['name'], args['email'], args['password'], activation_code)
 
     logger.info(f'Registered user `{email}`')
+
     access_token = core.encode_access_token(user_id)
     response = {
         'accessToken': access_token,
@@ -84,9 +85,15 @@ def do_register(args):
 
 @auth.route('/email-confirmation', methods=['POST'])
 @use_args({
-    'code': fields.Str(required=True)
+    'activation_code': fields.Str(required=True)
 })
 def do_email_confirmation(args):
-    code = args['code']
-
-    return response, 201
+    user_id = core.verify_access_token(request.headers.get('Authorization'))
+    user = core.user_from_user_id(user_id)
+    core.verify_user_email(user, args['activation_code'])
+    access_token = core.encode_access_token(user_id)
+    response = {
+        'accessToken': access_token,
+        'user': user
+    }
+    return response, 200

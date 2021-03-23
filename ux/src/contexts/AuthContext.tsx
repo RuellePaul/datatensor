@@ -15,6 +15,7 @@ interface AuthContextValue extends AuthState {
     loginOAuth: (code: string, scope: string) => Promise<void>;
     logout: () => void;
     register: (email: string, name: string, password: string, recaptcha: string) => Promise<void>;
+    confirmEmail: (activation_code: string) => Promise<void>;
 }
 
 interface AuthProviderProps {
@@ -129,7 +130,8 @@ const AuthContext = createContext<AuthContextValue>({
     loginOAuth: () => Promise.resolve(),
     logout: () => {
     },
-    register: () => Promise.resolve()
+    register: () => Promise.resolve(),
+    confirmEmail: () => Promise.resolve()
 });
 
 export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
@@ -172,6 +174,22 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
             name,
             password,
             recaptcha
+        });
+        const {accessToken, user} = response.data;
+
+        setSession(accessToken);
+
+        dispatch({
+            type: 'REGISTER',
+            payload: {
+                user
+            }
+        });
+    };
+
+    const confirmEmail = async (activation_code: string) => {
+        const response = await api.post<{ accessToken: string; user: User }>('/v1/auth/email-confirmation', {
+            activation_code
         });
         const {accessToken, user} = response.data;
 
@@ -238,7 +256,8 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
                 login,
                 loginOAuth,
                 logout,
-                register
+                register,
+                confirmEmail
             }}
         >
             {children}

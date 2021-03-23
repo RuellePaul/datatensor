@@ -7,11 +7,14 @@ interface AuthGuardProps {
 }
 
 const AuthGuard: FC<AuthGuardProps> = ({children}) => {
-    const {isAuthenticated} = useAuth();
+    const {isAuthenticated, user} = useAuth();
 
     if (!isAuthenticated) {
         return <Redirect to="/login"/>;
     }
+
+    if (!user.is_verified)
+        return <Redirect to="/email-confirmation"/>;
 
     return (
         <>

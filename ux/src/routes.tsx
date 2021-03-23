@@ -70,6 +70,12 @@ const routes: Routes = [
         component: lazy(() => import('src/views/auth/RegisterView'))
     },
     {
+        exact: true,
+        guard: AuthGuard,
+        path: '/email-confirmation',
+        component: lazy(() => import('src/views/auth/EmailConfirmationView'))
+    },
+    {
         path: '/app',
         guard: AuthGuard,
         layout: DashboardLayout,
