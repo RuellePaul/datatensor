@@ -38,7 +38,7 @@ def verify_access_token(access_token):
     if not user:
         raise errors.InvalidAuthentication("User doesn't exists")
     if not user.get('is_verified'):
-        raise errors.Forbidden('User must verify email')
+        raise errors.Forbidden('User must verify email', data='ERR_VERIFY')
 
     return user_id
 

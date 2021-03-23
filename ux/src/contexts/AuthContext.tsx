@@ -196,7 +196,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         setSession(accessToken);
 
         dispatch({
-            type: 'REGISTER',
+            type: 'LOGIN',
             payload: {
                 user
             }

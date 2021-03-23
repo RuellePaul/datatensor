@@ -29,6 +29,11 @@ api.interceptors.response.use(
             })
         }
 
+        if (error.response?.data?.errorData === 'ERR_VERIFY') {
+            if (window.location.pathname !== '/email-confirmation')
+                window.location.replace('/email-confirmation')
+        }
+
         return Promise.reject((error.response && error.response.data) || 'Something went wrong')
     }
 );
