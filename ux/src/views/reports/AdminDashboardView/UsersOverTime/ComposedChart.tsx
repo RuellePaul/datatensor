@@ -2,7 +2,7 @@ import React, {FC} from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {Bar} from 'react-chartjs-2';
-import {fade, makeStyles, useTheme} from '@material-ui/core';
+import {fade, makeStyles, useTheme, useMediaQuery} from '@material-ui/core';
 import {Theme} from 'src/theme';
 
 interface ChartProps {
@@ -70,7 +70,7 @@ const ComposedChart: FC<ChartProps> = ({
 
     const options = {
         responsive: true,
-        maintainAspectRatio: false,
+        maintainAspectRatio: useMediaQuery(theme.breakpoints.down('xs')),
         animation: {
             duration: 500,
             easing: 'easeOutQuint'
@@ -91,7 +91,7 @@ const ComposedChart: FC<ChartProps> = ({
                     ticks: {
                         padding: 10,
                         fontColor: theme.palette.text.secondary,
-                        fontSize: 14,
+                        fontSize: 15,
                         autoSkip: true,
                         maxTicksLimit: 20
                     }
@@ -100,7 +100,7 @@ const ComposedChart: FC<ChartProps> = ({
             yAxes: [
                 {
                     type: 'linear',
-                    display: true,
+                    display: useMediaQuery(theme.breakpoints.up('sm')),
                     position: 'left',
                     id: 'y-axis-count',
                     gridLines: {
@@ -113,10 +113,10 @@ const ComposedChart: FC<ChartProps> = ({
                         zeroLineColor: theme.palette.divider
                     },
                     ticks: {
-                        padding: 20,
+                        padding: 8,
                         fontColor: theme.palette.text.secondary,
                         beginAtZero: true,
-                        fontSize: 14,
+                        fontSize: 15,
                         min: 0,
                         maxTicksLimit: 7,
                         callback: (value: number) => (value % 1 === 0 ? value : '')
@@ -124,14 +124,14 @@ const ComposedChart: FC<ChartProps> = ({
                 },
                 {
                     type: 'linear',
-                    display: true,
+                    display: useMediaQuery(theme.breakpoints.up('sm')),
                     position: 'right',
                     id: 'y-axis-total',
                     ticks: {
-                        padding: 20,
+                        padding: 8,
                         fontColor: theme.palette.text.secondary,
                         beginAtZero: true,
-                        fontSize: 14,
+                        fontSize: 15,
                         min: 0,
                         maxTicksLimit: 7,
                         callback: (value: number) => (value % 1 === 0 ? value : '')

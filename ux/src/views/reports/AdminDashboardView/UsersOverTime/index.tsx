@@ -2,7 +2,7 @@ import React, {FC} from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import {Box, Card, CardContent, CardHeader, Divider, makeStyles} from '@material-ui/core';
+import {Box, Card, CardContent, CardHeader, Divider, makeStyles, Theme} from '@material-ui/core';
 import GenericMoreButton from 'src/components/utils/GenericMoreButton';
 import ComposedChart from './ComposedChart';
 import {User} from 'src/types/user';
@@ -15,8 +15,15 @@ interface PerformanceOverTimeProps {
     timeRange: TimeRange;
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
     root: {},
+    shrink: {
+        paddingBottom: 0,
+        [theme.breakpoints.down('xs')]: {
+            paddingLeft: 0,
+            paddingRight: 0
+        }
+    },
     chart: {
         height: '100%'
     }
@@ -61,7 +68,7 @@ const UsersOverTime: FC<PerformanceOverTimeProps> = ({className, users, timeRang
                 title="Users Over Time"
             />
             <Divider/>
-            <CardContent>
+            <CardContent className={classes.shrink}>
                 <PerfectScrollbar>
                     <Box
                         height={375}
