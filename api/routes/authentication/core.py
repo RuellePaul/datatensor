@@ -40,7 +40,7 @@ def verify_access_token(access_token, verified=False):
         raise errors.InvalidAuthentication("User doesn't exists")
 
     if verified and not user.get('is_verified'):
-        raise errors.InvalidAuthentication("User email is not verified")
+        raise errors.InvalidAuthentication("User email is not verified", data='ERR_VERIFY')
 
     return user
 
