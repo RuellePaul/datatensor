@@ -23,6 +23,11 @@ const useStyles = makeStyles((theme: Theme) => ({
         display: 'flex',
         flexDirection: 'column',
         minHeight: 400
+    },
+    auth0buttons: {
+        [theme.breakpoints.down('xs')]: {
+            flexDirection: 'column'
+        }
     }
 }));
 
@@ -74,6 +79,7 @@ const LoginView: FC = () => {
 
                         <Box
                             display='flex'
+                            className={classes.auth0buttons}
                             mt={3}
                         >
                             <OAuthLoginButton scope='github'/>
