@@ -1,5 +1,5 @@
 import React, {ChangeEvent, FC, useState} from 'react';
-import {Link as RouterLink} from 'react-router-dom';
+import {Link as RouterLink, useHistory} from 'react-router-dom';
 import clsx from 'clsx';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -9,7 +9,6 @@ import {
     Card,
     Checkbox,
     Divider,
-    IconButton,
     InputAdornment,
     Link,
     makeStyles,
@@ -25,7 +24,7 @@ import {
     TextField,
     Typography
 } from '@material-ui/core';
-import {ArrowRight as ArrowRightIcon, Edit as EditIcon, Search as SearchIcon} from 'react-feather';
+import {Search as SearchIcon} from 'react-feather';
 import UserAvatar from 'src/components/UserAvatar';
 import {Theme} from 'src/theme';
 import {User} from 'src/types/user';
@@ -158,6 +157,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     bulkAction: {
         marginLeft: theme.spacing(2)
     },
+    red: {
+        color: theme.palette.error.light,
+        borderColor: theme.palette.error.light,
+        '&:hover': {
+            color: theme.palette.error.main,
+            borderColor: theme.palette.error.main,
+        },
+    },
+    row: {
+        cursor: 'pointer'
+    },
     avatar: {
         height: 42,
         width: 42,
@@ -171,6 +181,7 @@ const Results: FC<ResultsProps> = ({
                                        ...rest
                                    }) => {
     const classes = useStyles();
+    const history = useHistory();
     const [currentTab, setCurrentTab] = useState<string>('all');
     const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
     const [page, setPage] = useState<number>(0);
@@ -212,7 +223,7 @@ const Results: FC<ResultsProps> = ({
             : []);
     };
 
-    const handleSelectOneUser = (event: ChangeEvent<HTMLInputElement>, customerId: string): void => {
+    const handleSelectOneUser = (event: any, customerId: string): void => {
         if (!selectedUsers.includes(customerId)) {
             setSelectedUsers((prevSelected) => [...prevSelected, customerId]);
         } else {
@@ -309,17 +320,21 @@ const Results: FC<ResultsProps> = ({
                             indeterminate={selectedSomeUsers}
                             onChange={handleSelectAllUsers}
                         />
+                        {selectedUsers.length === 1 && (
+                            <Button
+                                className={classes.bulkAction}
+                                variant="outlined"
+                                onClick={() => history.push(`/app/admin/manage/users/${selectedUsers[0]}/details`)}
+                            >
+                                View details
+                            </Button>
+                        )}
                         <Button
+                            className={clsx(classes.bulkAction, classes.red)}
                             variant="outlined"
-                            className={classes.bulkAction}
                         >
                             Delete
-                        </Button>
-                        <Button
-                            variant="outlined"
-                            className={classes.bulkAction}
-                        >
-                            Edit
+                            {selectedUsers.length > 1 && ` ${selectedUsers.length} users`}
                         </Button>
                     </div>
                 </div>
@@ -342,9 +357,6 @@ const Results: FC<ResultsProps> = ({
                                 <TableCell>
                                     Created at
                                 </TableCell>
-                                <TableCell align="right">
-                                    Actions
-                                </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -353,14 +365,17 @@ const Results: FC<ResultsProps> = ({
 
                                 return (
                                     <TableRow
+                                        className={classes.row}
                                         hover
                                         key={user.id}
                                         selected={isUserSelected}
+                                        onClick={(event) => handleSelectOneUser(event, user.id)}
                                     >
                                         <TableCell padding="checkbox">
                                             <Checkbox
                                                 checked={isUserSelected}
                                                 onChange={(event) => handleSelectOneUser(event, user.id)}
+                                                onClick={(event) => event.stopPropagation()}
                                                 value={isUserSelected}
                                             />
                                         </TableCell>
@@ -393,24 +408,6 @@ const Results: FC<ResultsProps> = ({
                                         </TableCell>
                                         <TableCell>
                                             {moment(user.created_at).format('DD/MM/YYYY | HH:mm:ss')}
-                                        </TableCell>
-                                        <TableCell align="right">
-                                            <IconButton
-                                                component={RouterLink}
-                                                to='/app/admin/manage/users/edit'
-                                            >
-                                                <SvgIcon fontSize="small">
-                                                    <EditIcon/>
-                                                </SvgIcon>
-                                            </IconButton>
-                                            <IconButton
-                                                component={RouterLink}
-                                                to={`/app/admin/manage/users/${user.id}/details`}
-                                            >
-                                                <SvgIcon fontSize="small">
-                                                    <ArrowRightIcon/>
-                                                </SvgIcon>
-                                            </IconButton>
                                         </TableCell>
                                     </TableRow>
                                 );

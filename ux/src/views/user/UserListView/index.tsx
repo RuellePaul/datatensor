@@ -41,7 +41,7 @@ const UserListView: FC = () => {
     return (
         <Page
             className={classes.root}
-            title="User List"
+            title="Users | Admin"
         >
             <Container maxWidth={false}>
                 <Header/>

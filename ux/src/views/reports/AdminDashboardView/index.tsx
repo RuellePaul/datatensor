@@ -70,7 +70,7 @@ const AdminDashboardView: FC = () => {
     return (
         <Page
             className={classes.root}
-            title="Dashboard"
+            title="Dashboard | Admin"
         >
             <Container maxWidth={false}>
                 <Header

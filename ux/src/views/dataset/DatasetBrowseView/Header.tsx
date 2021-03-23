@@ -65,7 +65,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                 <Button
                     color="secondary"
                     component={RouterLink}
-                    to="/app/datasets/create"
+                    to="/app/manage/datasets/create"
                     variant="contained"
                     startIcon={
                         <SvgIcon fontSize="small">

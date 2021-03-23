@@ -42,7 +42,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                         to="/admin/manage"
                         component={RouterLink}
                     >
-                        Management
+                        Manage
                     </Link>
                     <Typography
                         variant="body1"

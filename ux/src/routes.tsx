@@ -91,11 +91,6 @@ const routes: Routes = [
             },
             {
                 exact: true,
-                path: '/app/admin/manage/users/edit',
-                component: lazy(() => import('src/views/user/UserEditView'))
-            },
-            {
-                exact: true,
                 path: '/app/manage/datasets',
                 component: lazy(() => import('src/views/dataset/DatasetBrowseView'))
             },

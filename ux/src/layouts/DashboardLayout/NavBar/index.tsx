@@ -59,7 +59,7 @@ const sections = (user: User): Section[] => [
         ]
     },
     {
-        subheader: 'Management',
+        subheader: 'Manage',
         items: [
             ...(user.is_admin ? [{
                 title: 'Users',
@@ -71,32 +71,12 @@ const sections = (user: User): Section[] => [
                         label="Admin"
                         variant="outlined"
                     />
-                ),
-                items: [
-                    {
-                        title: 'List Users',
-                        href: '/app/admin/manage/users'
-                    },
-                    {
-                        title: 'View User',
-                        href: `/app/admin/manage/users/${user.id}/details`  // FIXME (match)
-                    }
-                ]
+                )
             }] : []),
             {
                 title: 'Datasets',
                 icon: PackageIcon,
-                href: '/app/manage/datasets',
-                items: [
-                    {
-                        title: 'Create a dataset',
-                        href: '/app/manage/datasets/create'
-                    },
-                    {
-                        title: 'Browse datasets',
-                        href: '/app/manage/datasets'
-                    },
-                ]
+                href: '/app/manage/datasets'
             },
             {
                 title: 'Training data',

@@ -18,7 +18,7 @@ const DashboardView: FC = () => {
     return (
         <Page
             className={classes.root}
-            title="Admin dashboard"
+            title="Dashboard"
         >
             <Container maxWidth={false}>
                 ...
