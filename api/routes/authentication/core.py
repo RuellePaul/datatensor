@@ -227,9 +227,9 @@ def send_activation_code(email, activation_code):
 
     subject = "Welcome to Datatensor ! Confirm your email"
     html_content = f"""
-        <h2>You're on your way!</h2><br/>
-        <h4>Let's confirm your email address.</h4><br/>
-        <h5>By clicking on the following link, you are confirming your email address.</h5><br/>
+        <h5>You're on your way!</h2>
+        Let's confirm your email address.
+        By clicking on the following link, you are confirming your email address.
         {Config.UI_URL}/email-confirmation?activation_code={activation_code}
    """
 
