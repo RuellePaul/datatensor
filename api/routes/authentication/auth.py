@@ -68,14 +68,25 @@ def do_register(args):
     if user:
         raise errors.Forbidden(f'User `{email}` already exists')
 
-    user = core.register_user(user_id, args['name'], args['email'], args['password'])
+    activation_code = core.generate_activation_code()
+    core.send_activation_code(email, activation_code)
+    user = core.register_user(user_id, args['name'], args['email'], args['password'], activation_code)
 
     logger.info(f'Registered user `{email}`')
-
     access_token = core.encode_access_token(user_id)
     response = {
         'accessToken': access_token,
         'user': user
     }
+
+    return response, 201
+
+
+@auth.route('/email-confirmation', methods=['POST'])
+@use_args({
+    'code': fields.Str(required=True)
+})
+def do_email_confirmation(args):
+    code = args['code']
 
     return response, 201

@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, useState} from 'react';
 import clsx from 'clsx';
 import * as Yup from 'yup';
 import {Formik} from 'formik';
@@ -19,6 +19,8 @@ const JWTRegister: FC<JWTRegisterProps> = ({className, ...rest}) => {
     const classes = useStyles();
     const {register} = useAuth() as any;
     const isMountedRef = useIsMountedRef();
+
+    const [reload, setReload] = useState<string>('');
 
     return (
         <Formik
@@ -54,6 +56,7 @@ const JWTRegister: FC<JWTRegisterProps> = ({className, ...rest}) => {
                     setStatus({success: false});
                     setErrors({submit: err.message});
                     setSubmitting(false);
+                    setReload(Math.random().toString(36).substring(7))
                 }
             }}
         >
@@ -118,6 +121,7 @@ const JWTRegister: FC<JWTRegisterProps> = ({className, ...rest}) => {
                             name='recaptcha'
                             onChange={value => setFieldValue('recaptcha', value)}
                             helperText={touched.recaptcha && errors.recaptcha}
+                            key={reload}
                         />
                     </Box>
                     <Box

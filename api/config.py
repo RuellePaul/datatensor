@@ -38,6 +38,8 @@ class Config:
     GOOGLE_CAPTCHA_PUBLIC_KEY = '6LcFmzcaAAAAAHWoKJ-oEJRO_grEjEjQb0fedPHo'
     GOOGLE_CAPTCHA_SECRET_KEY = '6LcFmzcaAAAAAOhXyf_-hZ4NIuyHiMqHbgK9P6a3'
 
+    SENDGRID_API_KEY = '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'
+
     OAUTH = {
         'google': {
             'AUTHORIZATION_URL': 'https://accounts.google.com/o/oauth2/v2/auth',

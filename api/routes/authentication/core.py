@@ -1,5 +1,7 @@
 import functools
 import hashlib
+import random
+import string
 from datetime import datetime, timedelta
 
 import jwt
@@ -7,6 +9,8 @@ import requests
 from flask import request
 from flask_bcrypt import generate_password_hash
 from oauthlib.oauth2 import WebApplicationClient
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 
 import errors
 from config import Config
@@ -30,8 +34,11 @@ def verify_access_token(access_token):
     except jwt.exceptions.ExpiredSignatureError:
         raise errors.ExpiredAuthentication
 
-    if not Config.db.users.find_one({'id': user_id}, {'_id': 0, 'password': 0}):
-        raise errors.InvalidAuthentication
+    user = Config.db.users.find_one({'id': user_id}, {'_id': 0, 'password': 0})
+    if not user:
+        raise errors.InvalidAuthentication("User doesn't exists")
+    if not user.get('is_verified'):
+        raise errors.Forbidden('User must verify email')
 
     return user_id
 
@@ -46,7 +53,6 @@ def require_authorization(blueprints):
 
 
 def admin_guard(func):
-
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         if request.method in ['GET', 'POST', 'PUT', 'DELETE']:
@@ -129,20 +135,26 @@ def user_from_user_id(user_id):
     return Config.db.users.find_one({'id': user_id}, {'_id': 0})
 
 
-def register_user(user_id, name, email, password):
+def generate_activation_code():
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=32))
+
+
+def register_user(user_id, name, email, password, activation_code):
     user = dict(id=user_id,
                 created_at=datetime.now().isoformat(),
                 email=email,
                 name=name,
                 is_admin=user_id in Config.ADMIN_USER_IDS,
                 avatar=None,
-                tier='premium')
+                tier='premium',
+                is_verified=False)
     encrypted_password = generate_password_hash(password).decode('utf-8')
     Config.db.users.insert_one({
         **user,
         'name': encrypt_field(user['name']),
         'email': encrypt_field(user['email']),
         'password': encrypt_field(encrypted_password),
+        'activation_code': activation_code
     })
     return user
 
@@ -158,7 +170,8 @@ def register_user_from_profile(profile, scope):
                     is_admin=user_id in Config.ADMIN_USER_IDS,
                     avatar=profile.get('avatar_url'),
                     tier='premium',
-                    scope=scope)
+                    scope=scope,
+                    is_verified=True)
 
     elif scope == 'google':
         user = dict(id=user_id,
@@ -168,7 +181,8 @@ def register_user_from_profile(profile, scope):
                     is_admin=user_id in Config.ADMIN_USER_IDS,
                     avatar=profile.get('picture'),
                     tier='premium',
-                    scope=scope)
+                    scope=scope,
+                    is_verified=True)
 
     elif scope == 'stackoverflow':
         user = dict(id=user_id,
@@ -178,7 +192,8 @@ def register_user_from_profile(profile, scope):
                     is_admin=user_id in Config.ADMIN_USER_IDS,
                     avatar=profile['items'][0]['profile_image'],
                     tier='premium',
-                    scope=scope)
+                    scope=scope,
+                    is_verified=True)
     else:
         raise ValueError('Invalid scope')
 
@@ -204,3 +219,21 @@ def check_captcha(captcha):
         raise errors.InternalError('Invalid captcha')
     if not r.json().get('success'):
         raise errors.BadRequest('Invalid captcha')
+
+
+def send_activation_code(email, activation_code):
+    subject = "Datatensor | Confirm your registration"
+    html_content = f"""Hi !</br> Your activation code is : {activation_code}"""
+    message = Mail(
+        from_email='datatensor@noreply.io',
+        to_emails=email,
+        subject=subject,
+        html_content=html_content
+    )
+    try:
+        sg = SendGridAPIClient(Config.SENDGRID_API_KEY)
+        sg.send(message)
+    except Exception as e:
+        raise errors.InternalError(f'Unable to send email with SendGrid | {str(e)}')
+
+    return activation_code
