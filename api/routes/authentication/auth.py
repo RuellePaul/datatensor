@@ -92,6 +92,9 @@ def do_email_confirmation(args):
     user = core.user_from_user_id(user_id)
     core.verify_user_email(user, args['activation_code'])
     access_token = core.encode_access_token(user_id)
+
+    logger.info(f"Verified email `{user['email']}`")
+
     response = {
         'accessToken': access_token,
         'user': {
