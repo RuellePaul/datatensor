@@ -70,7 +70,7 @@ const ComposedChart: FC<ChartProps> = ({
 
     const options = {
         responsive: true,
-        maintainAspectRatio: useMediaQuery(theme.breakpoints.down('xs')),
+        maintainAspectRatio: false,
         animation: {
             duration: 500,
             easing: 'easeOutQuint'
@@ -93,7 +93,7 @@ const ComposedChart: FC<ChartProps> = ({
                         fontColor: theme.palette.text.secondary,
                         fontSize: 15,
                         autoSkip: true,
-                        maxTicksLimit: 20
+                        maxTicksLimit: useMediaQuery(theme.breakpoints.down('xs')) ? 5 : 20
                     }
                 }
             ],

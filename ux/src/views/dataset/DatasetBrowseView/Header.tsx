@@ -34,24 +34,16 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                     <Link
                         variant="body1"
                         color="inherit"
-                        to="/app"
-                        component={RouterLink}
-                    >
-                        Dashboard
-                    </Link>
-                    <Link
-                        variant="body1"
-                        color="inherit"
                         to="/app/datasets"
                         component={RouterLink}
                     >
-                        Datasets
+                        Manage
                     </Link>
                     <Typography
                         variant="body1"
                         color="textPrimary"
                     >
-                        Browse
+                        Datasets
                     </Typography>
                 </Breadcrumbs>
                 <Typography

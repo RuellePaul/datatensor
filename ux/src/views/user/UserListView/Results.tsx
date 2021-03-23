@@ -28,6 +28,7 @@ import {Search as SearchIcon} from 'react-feather';
 import UserAvatar from 'src/components/UserAvatar';
 import {Theme} from 'src/theme';
 import {User} from 'src/types/user';
+import Label from '../../../components/Label';
 
 interface ResultsProps {
     className?: string;
@@ -357,6 +358,9 @@ const Results: FC<ResultsProps> = ({
                                 <TableCell>
                                     Created at
                                 </TableCell>
+                                <TableCell>
+                                    Verified
+                                </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -405,6 +409,11 @@ const Results: FC<ResultsProps> = ({
                                                     </Typography>
                                                 </Box>
                                             </Box>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Label color={user.is_verified ? 'success' : 'error'}>
+                                                {user.is_verified ? 'Email verified' : 'Email not verified'}
+                                            </Label>
                                         </TableCell>
                                         <TableCell>
                                             {moment(user.created_at).format('DD/MM/YYYY | HH:mm:ss')}

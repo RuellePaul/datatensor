@@ -1,10 +1,6 @@
-import React, {FC, memo, useRef, useState} from 'react';
-import {IconButton, ListItemIcon, ListItemText, makeStyles, Menu, MenuItem, Tooltip} from '@material-ui/core';
+import React, {FC, memo, ReactNode, useRef, useState} from 'react';
+import {IconButton, makeStyles, Menu, Tooltip} from '@material-ui/core';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import GetAppIcon from '@material-ui/icons/GetApp';
-import FileCopyIcon from '@material-ui/icons/FileCopy';
-import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
-import ArchiveIcon from '@material-ui/icons/ArchiveOutlined';
 
 const useStyles = makeStyles(() => ({
     menu: {
@@ -13,7 +9,11 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-const GenericMoreButton: FC = (props) => {
+interface GenericMoreButtonProps {
+    children?: ReactNode;
+}
+
+const GenericMoreButton: FC<GenericMoreButtonProps> = ({children, ...rest}) => {
     const classes = useStyles();
     const moreRef = useRef<any>(null);
     const [openMenu, setOpenMenu] = useState<boolean>(false);
@@ -32,7 +32,7 @@ const GenericMoreButton: FC = (props) => {
                 <IconButton
                     onClick={handleMenuOpen}
                     ref={moreRef}
-                    {...props}
+                    {...rest}
                 >
                     <MoreIcon fontSize="small"/>
                 </IconButton>
@@ -51,30 +51,7 @@ const GenericMoreButton: FC = (props) => {
                     horizontal: 'left'
                 }}
             >
-                <MenuItem>
-                    <ListItemIcon>
-                        <GetAppIcon/>
-                    </ListItemIcon>
-                    <ListItemText primary="Import"/>
-                </MenuItem>
-                <MenuItem>
-                    <ListItemIcon>
-                        <FileCopyIcon/>
-                    </ListItemIcon>
-                    <ListItemText primary="Copy"/>
-                </MenuItem>
-                <MenuItem>
-                    <ListItemIcon>
-                        <PictureAsPdfIcon/>
-                    </ListItemIcon>
-                    <ListItemText primary="Export"/>
-                </MenuItem>
-                <MenuItem>
-                    <ListItemIcon>
-                        <ArchiveIcon/>
-                    </ListItemIcon>
-                    <ListItemText primary="Archive"/>
-                </MenuItem>
+                {children}
             </Menu>
         </>
     );

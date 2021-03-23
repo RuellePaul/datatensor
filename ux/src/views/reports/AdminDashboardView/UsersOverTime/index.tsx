@@ -1,8 +1,21 @@
 import React, {FC} from 'react';
+import {useHistory} from 'react-router';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import {Box, Card, CardContent, CardHeader, Divider, makeStyles, Theme} from '@material-ui/core';
+import {
+    Box,
+    Card,
+    CardContent,
+    CardHeader,
+    Divider,
+    ListItemIcon,
+    ListItemText,
+    makeStyles,
+    MenuItem,
+    Theme
+} from '@material-ui/core';
+import {Users as UsersIcon} from 'react-feather';
 import GenericMoreButton from 'src/components/utils/GenericMoreButton';
 import ComposedChart from './ComposedChart';
 import {User} from 'src/types/user';
@@ -34,6 +47,7 @@ const buildArray = (size: number) => Array.apply(null, Array(size)).map((_, i) =
 const UsersOverTime: FC<PerformanceOverTimeProps> = ({className, users, timeRange, ...rest}) => {
 
     const classes = useStyles();
+    const history = useHistory();
 
     const generateChartData = (size: number, interval: string, format: string) => (
         {
@@ -64,7 +78,16 @@ const UsersOverTime: FC<PerformanceOverTimeProps> = ({className, users, timeRang
             {...rest}
         >
             <CardHeader
-                action={<GenericMoreButton/>}
+                action={(
+                    <GenericMoreButton>
+                        <MenuItem onClick={() => history.push('/app/admin/manage/users')}>
+                            <ListItemIcon>
+                                <UsersIcon/>
+                            </ListItemIcon>
+                            <ListItemText primary="View all users"/>
+                        </MenuItem>
+                    </GenericMoreButton>
+                )}
                 title="Users Over Time"
             />
             <Divider/>
