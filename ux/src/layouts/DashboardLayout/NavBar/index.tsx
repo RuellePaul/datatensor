@@ -7,7 +7,6 @@ import {Box, Chip, Divider, Drawer, Hidden, Link, List, ListSubheader, makeStyle
 import {
     Activity as ActivityIcon,
     Database as DatabaseIcon,
-    Folder as FolderIcon,
     Package as PackageIcon,
     PieChart as PieChartIcon,
     Users as UsersIcon
