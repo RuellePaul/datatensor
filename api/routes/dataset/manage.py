@@ -22,17 +22,19 @@ def fetch_datasets():
 @use_args({
     'description': fields.Str(),
     'images': fields.List(fields.Dict(), required=True),
-    'name': fields.Str(required=True)
+    'name': fields.Str(required=True),
+    'is_public': fields.Boolean(missing=False)
 })
 def create_dataset(args):
     user_id = verify_access_token(request.headers['Authorization'], verified=True)
 
     dataset_id = str(uuid.uuid4())
     dataset = dict(id=dataset_id,
+                   user_id=user_id,
                    created_at=datetime.now().isoformat(),
                    description=args['description'],
-                   name=args['name'],
-                   user_id=user_id)
+                   is_public=args['is_public'],
+                   name=args['name'])
     Config.db.datasets.insert_one(dataset)
 
     images = args['images']

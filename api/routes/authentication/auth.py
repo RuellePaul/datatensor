@@ -94,6 +94,9 @@ def do_email_confirmation(args):
     access_token = core.encode_access_token(user_id)
     response = {
         'accessToken': access_token,
-        'user': user
+        'user': {
+            **user,
+            'is_verified': True
+        }
     }
     return response, 200
