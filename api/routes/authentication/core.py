@@ -24,7 +24,7 @@ def encode_access_token(user_id):
     return access_token
 
 
-def verify_access_token(access_token, verified=False):
+def verify_access_token(access_token):
     if not access_token:
         raise errors.InvalidAuthentication
 
@@ -38,8 +38,6 @@ def verify_access_token(access_token, verified=False):
     user = Config.db.users.find_one({'id': user_id}, {'_id': 0, 'password': 0})
     if not user:
         raise errors.InvalidAuthentication("User doesn't exists")
-    if verified and not user.get('is_verified'):
-        raise errors.Forbidden('User must verify email', data='ERR_VERIFY')
 
     return user_id
 

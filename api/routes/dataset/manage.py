@@ -26,7 +26,7 @@ def fetch_datasets():
     'is_public': fields.Boolean(missing=False)
 })
 def create_dataset(args):
-    user_id = verify_access_token(request.headers['Authorization'], verified=True)
+    user_id = verify_access_token(request.headers['Authorization'])
 
     dataset_id = str(uuid.uuid4())
     dataset = dict(id=dataset_id,

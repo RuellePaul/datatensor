@@ -1,6 +1,6 @@
 import React, {FC, ReactNode} from 'react';
 import {Redirect} from 'react-router-dom';
-import useAuth from '../../hooks/useAuth';
+import useAuth from 'src/hooks/useAuth';
 
 interface GuestGuardProps {
     children?: ReactNode;

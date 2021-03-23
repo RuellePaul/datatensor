@@ -71,7 +71,6 @@ const routes: Routes = [
     },
     {
         exact: true,
-        guard: GuestGuard,
         path: '/email-confirmation',
         component: lazy(() => import('src/views/auth/EmailConfirmationView'))
     },
