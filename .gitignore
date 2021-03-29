@@ -11,6 +11,7 @@ jenkins-test-reports/
 
 ## Security
 *.pem
+*.csv
 /builds/test/init_env.sh
 
 
