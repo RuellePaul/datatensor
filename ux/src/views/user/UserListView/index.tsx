@@ -46,7 +46,10 @@ const UserListView: FC = () => {
             <Container maxWidth={false}>
                 <Header/>
                 <Box mt={3}>
-                    <Results users={users}/>
+                    <Results
+                        users={users}
+                        setUsers={setUsers}
+                    />
                 </Box>
             </Container>
         </Page>

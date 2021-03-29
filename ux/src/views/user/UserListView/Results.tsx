@@ -25,14 +25,17 @@ import {
     Typography
 } from '@material-ui/core';
 import {Search as SearchIcon} from 'react-feather';
+import Label from 'src/components/Label';
 import UserAvatar from 'src/components/UserAvatar';
+import useAuth from 'src/hooks/useAuth';
 import {Theme} from 'src/theme';
 import {User} from 'src/types/user';
-import Label from '../../../components/Label';
+import api from 'src/utils/api';
 
 interface ResultsProps {
     className?: string;
     users: User[];
+    setUsers: any;
 }
 
 type Sort =
@@ -179,9 +182,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Results: FC<ResultsProps> = ({
                                        className,
                                        users,
+                                       setUsers,
                                        ...rest
                                    }) => {
     const classes = useStyles();
+    const {user: admin} = useAuth();
     const history = useHistory();
     const [currentTab, setCurrentTab] = useState<string>('all');
     const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
@@ -219,17 +224,26 @@ const Results: FC<ResultsProps> = ({
     };
 
     const handleSelectAllUsers = (event: ChangeEvent<HTMLInputElement>): void => {
+        console.log(event.target.checked)
         setSelectedUsers(event.target.checked
-            ? users.map((user) => user.id)
+            ? users.filter(user => user.id !== admin.id).map((user) => user.id)
             : []);
     };
 
     const handleSelectOneUser = (event: any, customerId: string): void => {
+        if (customerId === admin.id)
+            return;
         if (!selectedUsers.includes(customerId)) {
             setSelectedUsers((prevSelected) => [...prevSelected, customerId]);
         } else {
             setSelectedUsers((prevSelected) => prevSelected.filter((id) => id !== customerId));
         }
+    };
+
+    const handleDeleteSelectedUsers = async () => {
+        await api.post('/v1/admin/manage/delete-users', {user_ids: selectedUsers});
+        setUsers(users => users.filter(user => !selectedUsers.includes(user.id)));
+        setSelectedUsers([]);
     };
 
     const handlePageChange = (event: any, newPage: number): void => {
@@ -244,8 +258,8 @@ const Results: FC<ResultsProps> = ({
     const sortedUsers = applySort(filteredUsers, sort);
     const paginatedUsers = applyPagination(sortedUsers, page, limit);
     const enableBulkOperations = selectedUsers.length > 0;
-    const selectedSomeUsers = selectedUsers.length > 0 && selectedUsers.length < users.length;
-    const selectedAllUsers = selectedUsers.length === users.length;
+    const selectedSomeUsers = selectedUsers.length > 0 && selectedUsers.length < users.length - 1;
+    const selectedAllUsers = selectedUsers.length === users.length - 1;
 
     return (
         <Card
@@ -333,6 +347,7 @@ const Results: FC<ResultsProps> = ({
                         <Button
                             className={clsx(classes.bulkAction, classes.red)}
                             variant="outlined"
+                            onClick={handleDeleteSelectedUsers}
                         >
                             Delete
                             {selectedUsers.length > 1 && ` ${selectedUsers.length} users`}
@@ -381,6 +396,7 @@ const Results: FC<ResultsProps> = ({
                                                 onChange={(event) => handleSelectOneUser(event, user.id)}
                                                 onClick={(event) => event.stopPropagation()}
                                                 value={isUserSelected}
+                                                disabled={user.id === admin.id}
                                             />
                                         </TableCell>
                                         <TableCell>
