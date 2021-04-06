@@ -12,7 +12,12 @@ dataset_manage = Blueprint('dataset_manage', __name__)
 
 
 @dataset_manage.route('/')
-def fetch_datasets():
+@dataset_manage.route('/<dataset_id>')
+def fetch_datasets(dataset_id=None):
+    if dataset_id:
+        user = verify_access_token(request.headers['Authorization'])
+        dataset = Config.db.datasets.find_one({'id': dataset_id, 'user_id': user['id']}, {'_id': 0})
+        return dataset, 200
     user = verify_access_token(request.headers['Authorization'])
     datasets = list(Config.db.datasets.find({'user_id': user['id']}, {'_id': 0}))
     return jsonify(datasets), 200

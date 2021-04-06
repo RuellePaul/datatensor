@@ -106,6 +106,11 @@ const routes: Routes = [
             },
             {
                 exact: true,
+                path: '/app/manage/datasets/:dataset_id',
+                component: lazy(() => import('src/views/dataset/DatasetMainView'))
+            },
+            {
+                exact: true,
                 path: '/app/manage',
                 component: () => <Redirect to="/app/admin/manage/users"/>
             },

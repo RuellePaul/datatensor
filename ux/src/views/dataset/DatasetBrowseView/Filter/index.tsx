@@ -12,31 +12,22 @@ interface FilterProps {
 
 const selectOptions = [
     {
-        label: 'Type',
+        label: 'Object class',
         options: [
-            'Freelance',
-            'Full Time',
-            'Part Time',
-            'Internship']
-    },
-    {
-        label: 'Level',
-        options: ['Novice', 'Expert']
-    },
-    {
-        label: 'Location',
-        options: [
-            'Africa',
-            'Asia',
-            'Australia',
-            'Europe',
-            'North America',
-            'South America'
+            'Cat',
+            'Dog',
+            'Human',
+            'Bicycle'
         ]
     },
     {
-        label: 'Roles',
-        options: ['Android', 'Web Developer', 'iOS']
+        label: 'Features',
+        options: [
+            'Labeled',
+            'Augmented',
+            'Weighted',
+            'Tested'
+        ]
     }
 ];
 
@@ -54,12 +45,10 @@ const Filter: FC<FilterProps> = ({className, ...rest}) => {
     const classes = useStyles();
     const [inputValue, setInputValue] = useState<string>('');
     const [chips, setChips] = useState<string[]>([
-        'Freelance',
-        'Full Time',
-        'Novice',
-        'Europe',
-        'Android',
-        'Web Developer'
+        'Cat',
+        'Dog',
+        'Human',
+        'Bicycle'
     ]);
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -144,7 +133,7 @@ const Filter: FC<FilterProps> = ({className, ...rest}) => {
                     control={(
                         <Checkbox defaultChecked/>
                     )}
-                    label="In network"
+                    label="Show public datasets"
                 />
             </Box>
         </Card>
