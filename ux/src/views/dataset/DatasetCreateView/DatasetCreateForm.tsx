@@ -21,7 +21,6 @@ import {
     Typography
 } from '@material-ui/core';
 import QuillEditor from 'src/components/QuillEditor';
-import ImagesDropzone from 'src/components/ImagesDropzone';
 import api from 'src/utils/api';
 import {Dataset} from 'src/types/dataset';
 
@@ -145,15 +144,6 @@ const DatasetCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
                                     )}
                                 </CardContent>
                             </Card>
-                            <Box mt={3}>
-                                <Card>
-                                    <CardHeader title="Upload Images"/>
-                                    <Divider/>
-                                    <CardContent>
-                                        <ImagesDropzone/>
-                                    </CardContent>
-                                </Card>
-                            </Box>
 
                             <Box mt={3}>
                                 <Card>

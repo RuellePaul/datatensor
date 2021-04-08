@@ -22,6 +22,7 @@ import api from 'src/utils/api';
 import bytesToSize from 'src/utils/bytesToSize';
 
 interface ImagesDropzoneProps {
+    dataset_id: string;
     className?: string;
 }
 
@@ -64,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const ImagesDropzone: FC<ImagesDropzoneProps> = ({className, ...rest}) => {
+const ImagesDropzone: FC<ImagesDropzoneProps> = ({dataset_id, className, ...rest}) => {
     const classes = useStyles();
     const [files, setFiles] = useState([]);
 
@@ -86,11 +87,10 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({className, ...rest}) => {
     const handleUpload = async () => {
         let formData = new FormData();
         files.map(image => formData.append(image.name, image));
-        const response = await api.post('/v1/images/upload/', formData, {
+        await api.post(`/v1/images/upload/${dataset_id}`, formData, {
             headers: {'Content-Type': 'multipart/form-data'}
         });
         setFiles([]);
-        console.log(response.data)
     };
 
     return (
