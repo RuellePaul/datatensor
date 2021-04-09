@@ -22,11 +22,17 @@ def upload_file(file):
 
 @images_upload.route('/<dataset_id>', methods=['POST'])
 def upload_images(dataset_id):
+
+    for file in request.files.values():
+        file.id = str(uuid.uuid4())
+
     images = [{
-        'id': str(uuid.uuid4()),
+        'id': file.id,
         'dataset_id': dataset_id,
         'path': upload_file(file),
         'name': secure_filename(file.filename)
     } for file in request.files.values() if file and allowed_file(file.filename)]
+
     Config.db.images.insert_many(images)
+
     return 'OK', 200
