@@ -8,4 +8,6 @@ def delete_users(user_ids):
     user = verify_access_token(request.headers.get('Authorization'))
     if user['id'] in user_ids:
         user_ids.remove(user['id'])
+    if user['id'] in Config.ADMIN_USER_IDS:
+        user_ids.remove(user['id'])
     Config.db.users.delete_many({'id': {'$in': user_ids}})
