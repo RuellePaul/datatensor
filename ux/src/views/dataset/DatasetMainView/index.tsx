@@ -1,19 +1,38 @@
 import React, {FC, useCallback, useEffect, useState} from 'react';
 import {useParams} from 'react-router';
-import {Box, Card, CardContent, CardHeader, Container, Divider, makeStyles} from '@material-ui/core';
+import {
+    Box,
+    Card,
+    CardContent,
+    CardHeader,
+    Container,
+    Divider,
+    GridList,
+    GridListTile,
+    makeStyles
+} from '@material-ui/core';
+import Header from './Header';
 import {Theme} from 'src/theme';
+import DTImage from 'src/components/Image';
 import ImagesDropzone from 'src/components/ImagesDropzone';
 import Page from 'src/components/Page';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import {Dataset} from 'src/types/dataset';
 import {Image} from 'src/types/image';
-import api from 'src/utils/api'
+import api from 'src/utils/api';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         backgroundColor: theme.palette.background.dark,
         minHeight: '100%',
         padding: theme.spacing(3, 0)
+    },
+    container: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'space-around',
+        overflow: 'hidden',
+        backgroundColor: theme.palette.background.paper,
     }
 }));
 
@@ -58,12 +77,16 @@ const DatasetMainView: FC = () => {
         getImages();
     }, [getImages]);
 
+    if (!dataset)
+        return null;
+
     return (
         <Page
             className={classes.root}
             title="Dataset List"
         >
-            <Container maxWidth="lg">
+            <Container maxWidth="xl">
+                <Header dataset={dataset}/>
                 <Box mt={3}>
                     <Card>
                         <CardHeader title="Upload Images"/>
@@ -76,15 +99,14 @@ const DatasetMainView: FC = () => {
                     </Card>
                 </Box>
 
-                <Box mt={3}>
-                    {images.map(image => (
-                        <img
-                            src={image.path}
-                            alt={image.id}
-                            width="300"
-                            height="300"
-                        />
-                    ))}
+                <Box className={classes.container} mt={3}>
+                    <GridList cellHeight={250} cols={5}>
+                        {images.map((image) => (
+                            <GridListTile key={image.id} cols={1}>
+                                <DTImage image={image}/>
+                            </GridListTile>
+                        ))}
+                    </GridList>
                 </Box>
             </Container>
         </Page>
