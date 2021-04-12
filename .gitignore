@@ -14,6 +14,7 @@ jenkins-test-reports/
 *.csv
 /builds/development/init_env.sh
 /builds/test/init_env.sh
+run_ui.sh
 
 
 ## React dependencies
