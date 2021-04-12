@@ -40,7 +40,7 @@ printf "\n⚙  Done !\n\n"
 # Init env
 export VERSION=$version
 export ENVIRONMENT=$environment
-source ./$environment/init_env.sh
+source ~/datatensor/builds/$environment/init_env.sh
 
 # Deployment
 SERVICES=api\ ux
