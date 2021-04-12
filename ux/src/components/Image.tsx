@@ -51,7 +51,7 @@ const DTImage: FC<ImageProps> = ({
             <ButtonBase
                 onClick={handleOpen}
             >
-                <img src={image.path} alt={image.id}/>
+                <img src={image.path} alt={image.id} width="100%"/>
             </ButtonBase>
             <Dialog
                 open={open}
@@ -62,7 +62,7 @@ const DTImage: FC<ImageProps> = ({
                 <DialogTitle>{image.name}</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        <img src={image.path} alt={image.id}/>
+                        <img src={image.path} alt={image.id} width="100%"/>
                     </DialogContentText>
                 </DialogContent>
             </Dialog>
