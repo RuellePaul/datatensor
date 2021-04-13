@@ -2,9 +2,8 @@ import React, {FC} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import {Breadcrumbs, Button, Grid, Link, makeStyles, SvgIcon, Typography} from '@material-ui/core';
+import {Breadcrumbs, Grid, Link, makeStyles, Typography} from '@material-ui/core';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import {PlusCircle as PlusIcon} from 'react-feather';
 import {Dataset} from 'src/types/dataset';
 
 interface HeaderProps {
@@ -60,23 +59,8 @@ const Header: FC<HeaderProps> = ({dataset, className, ...rest}) => {
                     variant="h3"
                     color="textPrimary"
                 >
-                    See the latest datasets
+                    Manage {dataset.name} dataset
                 </Typography>
-            </Grid>
-            <Grid item>
-                <Button
-                    color="secondary"
-                    component={RouterLink}
-                    to="/app/manage/datasets/create"
-                    variant="contained"
-                    startIcon={
-                        <SvgIcon fontSize="small">
-                            <PlusIcon/>
-                        </SvgIcon>
-                    }
-                >
-                    Add new dataset
-                </Button>
             </Grid>
         </Grid>
     );

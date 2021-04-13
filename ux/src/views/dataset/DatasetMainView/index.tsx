@@ -100,7 +100,7 @@ const DatasetMainView: FC = () => {
                 </Box>
 
                 <Box className={classes.container} mt={3}>
-                    <GridList cellHeight={250} cols={5}>
+                    <GridList cellHeight={220} cols={6} spacing={10}>
                         {images.map((image) => (
                             <GridListTile key={image.id} cols={1}>
                                 <DTImage image={image}/>

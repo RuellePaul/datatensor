@@ -19,9 +19,10 @@ interface ImageProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {},
-    media: {
-        height: 150,
+    root: {
+        '&:hover img': {
+            boxShadow: theme.shadows[6]
+        }
     }
 }));
 
@@ -43,6 +44,8 @@ const DTImage: FC<ImageProps> = ({
         setOpen(false);
     };
 
+    const ImageHTMLElement = () => <img src={image.path} alt={image.name} width="100%" draggable={false}/>;
+
     return (
         <div
             className={clsx(classes.root, className)}
@@ -51,7 +54,7 @@ const DTImage: FC<ImageProps> = ({
             <ButtonBase
                 onClick={handleOpen}
             >
-                <img src={image.path} alt={image.id} width="100%"/>
+                <ImageHTMLElement/>
             </ButtonBase>
             <Dialog
                 open={open}
@@ -62,7 +65,7 @@ const DTImage: FC<ImageProps> = ({
                 <DialogTitle>{image.name}</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        <img src={image.path} alt={image.id} width="100%"/>
+                        <ImageHTMLElement/>
                     </DialogContentText>
                 </DialogContent>
             </Dialog>
