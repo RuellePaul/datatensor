@@ -9,24 +9,21 @@ import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-jsx';
 import 'nprogress/nprogress.css';
 import 'src/assets/css/prism.css';
-import 'src/mixins/chartjs';
+import {enableES5} from 'immer';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Provider} from 'react-redux';
-import {enableES5} from 'immer';
 import * as serviceWorker from 'src/serviceWorker';
-import store from 'src/store';
-import {SettingsProvider} from 'src/contexts/SettingsContext';
-import App from 'src/App';
+
+import App from './App';
+import Providers from './providers';
 
 enableES5();
 
 ReactDOM.render(
-    <Provider store={store}>
-        <SettingsProvider>
-            <App/>
-        </SettingsProvider>
-    </Provider>,
+    <Providers>
+        <App/>
+    </Providers>,
     document.getElementById('root')
 );
 

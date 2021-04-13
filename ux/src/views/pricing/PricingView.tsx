@@ -266,7 +266,7 @@ const PricingView: FC = () => {
                                     variant="overline"
                                     color="textSecondary"
                                 >
-                                    Unlimited
+                                    Company
                                 </Typography>
                                 <Box my={2}>
                                     <Divider/>

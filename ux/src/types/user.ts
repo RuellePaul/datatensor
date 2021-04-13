@@ -3,9 +3,11 @@ export interface User {
     email: string;
     name: string;
     created_at: string;
+    is_verified: boolean;
     is_admin: boolean;
-    scope?: string;
-    avatar?: string;
+    scope: 'github' | 'google' | 'stackoverflow' | null;
+    avatar: string | null;
+    tier: 'standard' | 'premium' | 'business';
 
     [key: string]: any;
 }

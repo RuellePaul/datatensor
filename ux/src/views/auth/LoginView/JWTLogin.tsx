@@ -71,7 +71,6 @@ const JWTLogin: FC<JWTLoginProps> = ({className, ...rest}) => {
                     <TextField
                         error={Boolean(touched.email && errors.email)}
                         fullWidth
-                        autoFocus
                         helperText={touched.email && errors.email}
                         label="Email Address"
                         margin="normal"

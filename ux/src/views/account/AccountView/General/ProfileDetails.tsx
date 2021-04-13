@@ -1,7 +1,8 @@
 import React, {FC} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
-import {Avatar, Box, Button, Card, CardActions, CardContent, Link, makeStyles, Typography} from '@material-ui/core';
+import {Box, Button, Card, CardActions, CardContent, Link, makeStyles, Typography} from '@material-ui/core';
+import UserAvatar from 'src/components/UserAvatar';
 import {Theme} from 'src/theme';
 import {User} from 'src/types/user';
 
@@ -36,9 +37,9 @@ const ProfileDetails: FC<ProfileDetailsProps> = ({className, user, ...rest}) => 
                     flexDirection="column"
                     textAlign="center"
                 >
-                    <Avatar
+                    <UserAvatar
                         className={classes.avatar}
-                        src={user.avatar}
+                        user={user}
                     />
                     <Typography
                         className={classes.name}

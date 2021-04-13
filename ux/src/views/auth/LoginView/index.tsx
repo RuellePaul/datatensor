@@ -3,7 +3,7 @@ import {Link as RouterLink} from 'react-router-dom';
 import {Box, Card, CardContent, Container, Divider, Link, makeStyles, Typography} from '@material-ui/core';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
-import Logo from 'src/components/Logo';
+import Logo from 'src/components/utils/Logo';
 import JWTLogin from './JWTLogin';
 import OAuthLoginButton from './OAuthLoginButton';
 
@@ -23,6 +23,11 @@ const useStyles = makeStyles((theme: Theme) => ({
         display: 'flex',
         flexDirection: 'column',
         minHeight: 400
+    },
+    auth0buttons: {
+        [theme.breakpoints.down('xs')]: {
+            flexDirection: 'column'
+        }
     }
 }));
 
@@ -74,6 +79,7 @@ const LoginView: FC = () => {
 
                         <Box
                             display='flex'
+                            className={classes.auth0buttons}
                             mt={3}
                         >
                             <OAuthLoginButton scope='github'/>

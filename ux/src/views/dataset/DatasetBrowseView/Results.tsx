@@ -2,8 +2,7 @@ import React, {FC, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {Box, Button, Grid, ListItemText, makeStyles, Menu, MenuItem, Typography} from '@material-ui/core';
-import {Pagination, ToggleButton, ToggleButtonGroup} from '@material-ui/lab';
-import ViewModuleIcon from '@material-ui/icons/ViewModule';
+import {Pagination} from '@material-ui/lab';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import {Theme} from 'src/theme';
 import DTDataset from 'src/components/Dataset';
@@ -39,8 +38,7 @@ const Results: FC<ResultsProps> = ({className, datasets, ...rest}) => {
     const classes = useStyles();
     const sortRef = useRef<HTMLButtonElement | null>(null);
     const [openSort, setOpenSort] = useState<boolean>(false);
-    const [selectedSort, setSelectedSort] = useState<string>('Most popular');
-    const [mode, setMode] = useState<string>('grid');
+    const [selectedSort, setSelectedSort] = useState<string>('Most recent');
 
     const handleSortOpen = (): void => {
         setOpenSort(true);
@@ -55,9 +53,6 @@ const Results: FC<ResultsProps> = ({className, datasets, ...rest}) => {
         setOpenSort(false);
     };
 
-    const handleModeChange = (event: any, value: string): void => {
-        setMode(value);
-    };
 
     return (
         <div
@@ -94,16 +89,6 @@ const Results: FC<ResultsProps> = ({className, datasets, ...rest}) => {
                         {selectedSort}
                         <ArrowDropDownIcon/>
                     </Button>
-                    <ToggleButtonGroup
-                        exclusive
-                        onChange={handleModeChange}
-                        size="small"
-                        value={mode}
-                    >
-                        <ToggleButton value="grid">
-                            <ViewModuleIcon/>
-                        </ToggleButton>
-                    </ToggleButtonGroup>
                 </Box>
             </Box>
             <Grid
@@ -114,8 +99,8 @@ const Results: FC<ResultsProps> = ({className, datasets, ...rest}) => {
                     <Grid
                         item
                         key={dataset.id}
-                        md={mode === 'grid' ? 4 : 12}
-                        sm={mode === 'grid' ? 6 : 12}
+                        md={4}
+                        sm={6}
                         xs={12}
                     >
                         <DTDataset dataset={dataset}/>
@@ -127,7 +112,7 @@ const Results: FC<ResultsProps> = ({className, datasets, ...rest}) => {
                 display="flex"
                 justifyContent="center"
             >
-                <Pagination count={3}/>
+                <Pagination count={1}/>
             </Box>
             <Menu
                 anchorEl={sortRef.current}
@@ -135,7 +120,7 @@ const Results: FC<ResultsProps> = ({className, datasets, ...rest}) => {
                 open={openSort}
                 elevation={1}
             >
-                {['Most recent', 'Popular', 'Price high', 'Price low', 'On sale'].map(
+                {['Most recent', 'Best mAP'].map(
                     (option) => (
                         <MenuItem
                             key={option}

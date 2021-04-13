@@ -57,9 +57,7 @@ const Security: FC<SecurityProps> = ({className, ...rest}) => {
                     resetForm();
                     setStatus({success: true});
                     setSubmitting(false);
-                    enqueueSnackbar('Password updated', {
-                        variant: 'success'
-                    });
+                    enqueueSnackbar('Password updated', {variant: 'info'});
                 } catch (err) {
                     console.error(err);
                     setStatus({success: false});

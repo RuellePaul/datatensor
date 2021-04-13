@@ -1,7 +1,7 @@
 import React, {createContext, FC, ReactNode, useEffect, useReducer} from 'react';
 import jwtDecode from 'jwt-decode';
 import {User} from 'src/types/user';
-import SplashScreen from 'src/components/SplashScreen';
+import SplashScreen from 'src/components/screens/SplashScreen';
 import api from 'src/utils/api';
 
 interface AuthState {
@@ -15,6 +15,7 @@ interface AuthContextValue extends AuthState {
     loginOAuth: (code: string, scope: string) => Promise<void>;
     logout: () => void;
     register: (email: string, name: string, password: string, recaptcha: string) => Promise<void>;
+    confirmEmail: (activation_code: string) => Promise<void>;
 }
 
 interface AuthProviderProps {
@@ -129,7 +130,8 @@ const AuthContext = createContext<AuthContextValue>({
     loginOAuth: () => Promise.resolve(),
     logout: () => {
     },
-    register: () => Promise.resolve()
+    register: () => Promise.resolve(),
+    confirmEmail: () => Promise.resolve()
 });
 
 export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
@@ -175,10 +177,26 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         });
         const {accessToken, user} = response.data;
 
-        window.localStorage.setItem('accessToken', accessToken);
+        setSession(accessToken);
 
         dispatch({
             type: 'REGISTER',
+            payload: {
+                user
+            }
+        });
+    };
+
+    const confirmEmail = async (activation_code: string) => {
+        const response = await api.post<{ accessToken: string; user: User }>('/v1/auth/email-confirmation', {
+            activation_code
+        });
+        const {accessToken, user} = response.data;
+
+        setSession(accessToken);
+
+        dispatch({
+            type: 'LOGIN',
             payload: {
                 user
             }
@@ -238,7 +256,8 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
                 login,
                 loginOAuth,
                 logout,
-                register
+                register,
+                confirmEmail
             }}
         >
             {children}

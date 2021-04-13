@@ -12,9 +12,14 @@ dataset_manage = Blueprint('dataset_manage', __name__)
 
 
 @dataset_manage.route('/')
-def fetch_datasets():
-    user_id = verify_access_token(request.headers['Authorization'])
-    datasets = list(Config.db.datasets.find({'user_id': user_id}, {'_id': 0}))
+@dataset_manage.route('/<dataset_id>')
+def fetch_datasets(dataset_id=None):
+    if dataset_id:
+        user = verify_access_token(request.headers['Authorization'])
+        dataset = Config.db.datasets.find_one({'id': dataset_id, 'user_id': user['id']}, {'_id': 0})
+        return dataset, 200
+    user = verify_access_token(request.headers['Authorization'])
+    datasets = list(Config.db.datasets.find({'user_id': user['id']}, {'_id': 0}))
     return jsonify(datasets), 200
 
 
@@ -22,17 +27,19 @@ def fetch_datasets():
 @use_args({
     'description': fields.Str(),
     'images': fields.List(fields.Dict(), required=True),
-    'name': fields.Str(required=True)
+    'name': fields.Str(required=True),
+    'is_public': fields.Boolean(missing=False)
 })
 def create_dataset(args):
-    user_id = verify_access_token(request.headers['Authorization'])
+    user = verify_access_token(request.headers['Authorization'], verified=True)
 
     dataset_id = str(uuid.uuid4())
     dataset = dict(id=dataset_id,
+                   user_id=user['id'],
                    created_at=datetime.now().isoformat(),
                    description=args['description'],
-                   name=args['name'],
-                   user_id=user_id)
+                   is_public=args['is_public'],
+                   name=args['name'])
     Config.db.datasets.insert_one(dataset)
 
     images = args['images']

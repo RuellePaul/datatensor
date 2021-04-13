@@ -19,7 +19,7 @@ class Config:
 
     ADMIN_USER_IDS = [
         '58a802c1b350056c737ca447db48c7c645581b265e61d2ceeae5e0320adc7e6a',  # RuellePaul (github)
-        'ac586bc7204fefce386b92981a14ac4dc9ba570e76954ddcf25663fb4dda1f0a'  # ThomasRoudil (github)
+        '83d2218ec37d73a99944dbcd90e5753908a418b99fa79678402ba6bc97a81f83'  # ThomasRoudil (github)
     ]
 
     SESSION_COOKIE_SECURE = True
@@ -36,23 +36,25 @@ class Config:
     SESSION_DURATION_IN_MINUTES = 120
 
     GOOGLE_CAPTCHA_PUBLIC_KEY = '6LcOwYEaAAAAAHyOrVAYf4arn2jrrJi3-OBWURm5'
-    GOOGLE_CAPTCHA_SECRET_KEY = '6LcOwYEaAAAAAOq9jJs07V_kxDHeWnBbHE9Io4Px'
+    GOOGLE_CAPTCHA_SECRET_KEY = os.environ['GOOGLE_CAPTCHA_SECRET_KEY']
+
+    SENDGRID_API_KEY = os.environ['SENDGRID_API_KEY']
 
     OAUTH = {
-        'google': {
-            'AUTHORIZATION_URL': 'https://accounts.google.com/o/oauth2/v2/auth',
-            'TOKEN_URL': 'https://oauth2.googleapis.com/token',
-            'USER_URL': 'https://openidconnect.googleapis.com/v1/userinfo',
-            'CLIENT_ID': '1020592902157-8elmelc4n4l2fh3jk4jltf5ulb3mqp5v.apps.googleusercontent.com',
-            'CLIENT_SECRET': 'LTixFBum9XdzDScsnckmfTaE',
-            'SCOPES': ['openid', 'email', 'profile']
-        },
         'github': {
             'AUTHORIZATION_URL': 'https://github.com/login/oauth/authorize',
             'TOKEN_URL': 'https://github.com/login/oauth/access_token',
             'USER_URL': 'https://api.github.com/user',
             'CLIENT_ID': '6ae3c85edc3eed0601cb',
-            'CLIENT_SECRET': 'e8167d787efbdff3af1d3d92346b139eda5a0aaa',
+            'CLIENT_SECRET': os.environ['OAUTH_GITHUB_CLIENT_SECRET'],
+            'SCOPES': ['openid', 'email', 'profile']
+        },
+        'google': {
+            'AUTHORIZATION_URL': 'https://accounts.google.com/o/oauth2/v2/auth',
+            'TOKEN_URL': 'https://oauth2.googleapis.com/token',
+            'USER_URL': 'https://openidconnect.googleapis.com/v1/userinfo',
+            'CLIENT_ID': '1020592902157-8elmelc4n4l2fh3jk4jltf5ulb3mqp5v.apps.googleusercontent.com',
+            'CLIENT_SECRET': os.environ['OAUTH_GOOGLE_CLIENT_SECRET'],
             'SCOPES': ['openid', 'email', 'profile']
         },
         'stackoverflow': {
@@ -60,8 +62,13 @@ class Config:
             'TOKEN_URL': 'https://stackoverflow.com/oauth/access_token/json',
             'USER_URL': 'https://api.stackexchange.com/2.2/me?site=stackoverflow',
             'CLIENT_ID': '19844',
-            'CLIENT_SECRET': 'Qkm*o*4BR3cukTkzVTCa3A((',
+            'CLIENT_SECRET': os.environ['OAUTH_STACKOVERFLOW_CLIENT_SECRET'],
             'SCOPES': [],
-            'KEY': 'KJ42cvws83mKc5MQ*JUSpg(('
+            'KEY': os.environ['OAUTH_STACKOVERFLOW_KEY']
         }
     }
+
+    S3_BUCKET = 'dtservertestbucket'
+    S3_KEY = os.environ['S3_KEY']
+    S3_SECRET = os.environ['S3_SECRET']
+    S3_LOCATION = f'http://{S3_BUCKET}.s3.amazonaws.com/'

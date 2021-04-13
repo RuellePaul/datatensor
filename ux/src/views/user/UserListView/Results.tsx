@@ -1,16 +1,14 @@
 import React, {ChangeEvent, FC, useState} from 'react';
-import {Link as RouterLink} from 'react-router-dom';
+import {Link as RouterLink, useHistory} from 'react-router-dom';
 import clsx from 'clsx';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
-    Avatar,
     Box,
     Button,
     Card,
     Checkbox,
     Divider,
-    IconButton,
     InputAdornment,
     Link,
     makeStyles,
@@ -26,14 +24,18 @@ import {
     TextField,
     Typography
 } from '@material-ui/core';
-import {ArrowRight as ArrowRightIcon, Edit as EditIcon, Search as SearchIcon} from 'react-feather';
+import {Search as SearchIcon} from 'react-feather';
+import Label from 'src/components/Label';
+import UserAvatar from 'src/components/UserAvatar';
+import useAuth from 'src/hooks/useAuth';
 import {Theme} from 'src/theme';
-import getInitials from 'src/utils/getInitials';
 import {User} from 'src/types/user';
+import api from 'src/utils/api';
 
 interface ResultsProps {
     className?: string;
     users: User[];
+    setUsers: any;
 }
 
 type Sort =
@@ -159,6 +161,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     bulkAction: {
         marginLeft: theme.spacing(2)
     },
+    red: {
+        color: theme.palette.error.light,
+        borderColor: theme.palette.error.light,
+        '&:hover': {
+            color: theme.palette.error.main,
+            borderColor: theme.palette.error.main,
+        },
+    },
+    row: {
+        cursor: 'pointer'
+    },
     avatar: {
         height: 42,
         width: 42,
@@ -169,9 +182,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Results: FC<ResultsProps> = ({
                                        className,
                                        users,
+                                       setUsers,
                                        ...rest
                                    }) => {
     const classes = useStyles();
+    const {user: admin} = useAuth();
+    const history = useHistory();
     const [currentTab, setCurrentTab] = useState<string>('all');
     const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
     const [page, setPage] = useState<number>(0);
@@ -208,17 +224,26 @@ const Results: FC<ResultsProps> = ({
     };
 
     const handleSelectAllUsers = (event: ChangeEvent<HTMLInputElement>): void => {
+        console.log(event.target.checked)
         setSelectedUsers(event.target.checked
-            ? users.map((user) => user.id)
+            ? users.filter(user => user.id !== admin.id).map((user) => user.id)
             : []);
     };
 
-    const handleSelectOneUser = (event: ChangeEvent<HTMLInputElement>, customerId: string): void => {
+    const handleSelectOneUser = (event: any, customerId: string): void => {
+        if (customerId === admin.id)
+            return;
         if (!selectedUsers.includes(customerId)) {
             setSelectedUsers((prevSelected) => [...prevSelected, customerId]);
         } else {
             setSelectedUsers((prevSelected) => prevSelected.filter((id) => id !== customerId));
         }
+    };
+
+    const handleDeleteSelectedUsers = async () => {
+        await api.post('/v1/admin/manage/delete-users', {user_ids: selectedUsers});
+        setUsers(users => users.filter(user => !selectedUsers.includes(user.id)));
+        setSelectedUsers([]);
     };
 
     const handlePageChange = (event: any, newPage: number): void => {
@@ -233,8 +258,8 @@ const Results: FC<ResultsProps> = ({
     const sortedUsers = applySort(filteredUsers, sort);
     const paginatedUsers = applyPagination(sortedUsers, page, limit);
     const enableBulkOperations = selectedUsers.length > 0;
-    const selectedSomeUsers = selectedUsers.length > 0 && selectedUsers.length < users.length;
-    const selectedAllUsers = selectedUsers.length === users.length;
+    const selectedSomeUsers = selectedUsers.length > 0 && selectedUsers.length < users.length - 1;
+    const selectedAllUsers = selectedUsers.length === users.length - 1;
 
     return (
         <Card
@@ -310,17 +335,22 @@ const Results: FC<ResultsProps> = ({
                             indeterminate={selectedSomeUsers}
                             onChange={handleSelectAllUsers}
                         />
+                        {selectedUsers.length === 1 && (
+                            <Button
+                                className={classes.bulkAction}
+                                variant="outlined"
+                                onClick={() => history.push(`/app/admin/manage/users/${selectedUsers[0]}/details`)}
+                            >
+                                View details
+                            </Button>
+                        )}
                         <Button
+                            className={clsx(classes.bulkAction, classes.red)}
                             variant="outlined"
-                            className={classes.bulkAction}
+                            onClick={handleDeleteSelectedUsers}
                         >
                             Delete
-                        </Button>
-                        <Button
-                            variant="outlined"
-                            className={classes.bulkAction}
-                        >
-                            Edit
+                            {selectedUsers.length > 1 && ` ${selectedUsers.length} users`}
                         </Button>
                     </div>
                 </div>
@@ -343,8 +373,8 @@ const Results: FC<ResultsProps> = ({
                                 <TableCell>
                                     Created at
                                 </TableCell>
-                                <TableCell align="right">
-                                    Actions
+                                <TableCell>
+                                    Verified
                                 </TableCell>
                             </TableRow>
                         </TableHead>
@@ -354,15 +384,19 @@ const Results: FC<ResultsProps> = ({
 
                                 return (
                                     <TableRow
+                                        className={classes.row}
                                         hover
                                         key={user.id}
                                         selected={isUserSelected}
+                                        onClick={(event) => handleSelectOneUser(event, user.id)}
                                     >
                                         <TableCell padding="checkbox">
                                             <Checkbox
                                                 checked={isUserSelected}
                                                 onChange={(event) => handleSelectOneUser(event, user.id)}
+                                                onClick={(event) => event.stopPropagation()}
                                                 value={isUserSelected}
+                                                disabled={user.id === admin.id}
                                             />
                                         </TableCell>
                                         <TableCell>
@@ -370,13 +404,11 @@ const Results: FC<ResultsProps> = ({
                                                 display="flex"
                                                 alignItems="center"
                                             >
-                                                <Avatar
+                                                <UserAvatar
                                                     className={classes.avatar}
-                                                    src={user.avatar}
-                                                >
-                                                    {getInitials(user.name)}
-                                                </Avatar>
-                                                <div>
+                                                    user={user}
+                                                />
+                                                <Box ml={1}>
                                                     <Link
                                                         color="inherit"
                                                         component={RouterLink}
@@ -391,29 +423,16 @@ const Results: FC<ResultsProps> = ({
                                                     >
                                                         {user.email}
                                                     </Typography>
-                                                </div>
+                                                </Box>
                                             </Box>
                                         </TableCell>
                                         <TableCell>
-                                            {moment(user.created_at).format('DD/MM/YYYY | HH:mm:ss')}
+                                            <Label color={user.is_verified ? 'success' : 'error'}>
+                                                {user.is_verified ? 'Email verified' : 'Email not verified'}
+                                            </Label>
                                         </TableCell>
-                                        <TableCell align="right">
-                                            <IconButton
-                                                component={RouterLink}
-                                                to='/app/admin/manage/users/edit'
-                                            >
-                                                <SvgIcon fontSize="small">
-                                                    <EditIcon/>
-                                                </SvgIcon>
-                                            </IconButton>
-                                            <IconButton
-                                                component={RouterLink}
-                                                to={`/app/admin/manage/users/${user.id}/details`}
-                                            >
-                                                <SvgIcon fontSize="small">
-                                                    <ArrowRightIcon/>
-                                                </SvgIcon>
-                                            </IconButton>
+                                        <TableCell>
+                                            {moment(user.created_at).format('DD/MM/YYYY | HH:mm:ss')}
                                         </TableCell>
                                     </TableRow>
                                 );

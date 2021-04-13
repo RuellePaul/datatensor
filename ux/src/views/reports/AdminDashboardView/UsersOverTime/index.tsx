@@ -1,10 +1,23 @@
 import React, {FC} from 'react';
+import {useHistory} from 'react-router';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import {Box, Card, CardContent, CardHeader, Divider, makeStyles} from '@material-ui/core';
-import GenericMoreButton from 'src/components/GenericMoreButton';
-import Chart from './Chart';
+import {
+    Box,
+    Card,
+    CardContent,
+    CardHeader,
+    Divider,
+    ListItemIcon,
+    ListItemText,
+    makeStyles,
+    MenuItem,
+    Theme
+} from '@material-ui/core';
+import {Users as UsersIcon} from 'react-feather';
+import GenericMoreButton from 'src/components/utils/GenericMoreButton';
+import ComposedChart from './ComposedChart';
 import {User} from 'src/types/user';
 import moment from 'moment';
 import {TimeRange} from 'src/types/timeRange';
@@ -15,8 +28,15 @@ interface PerformanceOverTimeProps {
     timeRange: TimeRange;
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
     root: {},
+    shrink: {
+        paddingBottom: 0,
+        [theme.breakpoints.down('xs')]: {
+            paddingLeft: 0,
+            paddingRight: 0
+        }
+    },
     chart: {
         height: '100%'
     }
@@ -27,6 +47,7 @@ const buildArray = (size: number) => Array.apply(null, Array(size)).map((_, i) =
 const UsersOverTime: FC<PerformanceOverTimeProps> = ({className, users, timeRange, ...rest}) => {
 
     const classes = useStyles();
+    const history = useHistory();
 
     const generateChartData = (size: number, interval: string, format: string) => (
         {
@@ -57,17 +78,26 @@ const UsersOverTime: FC<PerformanceOverTimeProps> = ({className, users, timeRang
             {...rest}
         >
             <CardHeader
-                action={<GenericMoreButton/>}
+                action={(
+                    <GenericMoreButton>
+                        <MenuItem onClick={() => history.push('/app/admin/manage/users')}>
+                            <ListItemIcon>
+                                <UsersIcon/>
+                            </ListItemIcon>
+                            <ListItemText primary="View all users"/>
+                        </MenuItem>
+                    </GenericMoreButton>
+                )}
                 title="Users Over Time"
             />
             <Divider/>
-            <CardContent>
+            <CardContent className={classes.shrink}>
                 <PerfectScrollbar>
                     <Box
                         height={375}
                         minWidth={500}
                     >
-                        <Chart
+                        <ComposedChart
                             className={classes.chart}
                             data={usersOverTime[timeRange.value].data}
                             labels={usersOverTime[timeRange.value].labels}

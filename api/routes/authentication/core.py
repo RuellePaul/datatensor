@@ -1,5 +1,7 @@
 import functools
 import hashlib
+import random
+import string
 from datetime import datetime, timedelta
 
 import jwt
@@ -7,6 +9,8 @@ import requests
 from flask import request
 from flask_bcrypt import generate_password_hash
 from oauthlib.oauth2 import WebApplicationClient
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 
 import errors
 from config import Config
@@ -16,10 +20,11 @@ from utils import encrypt_field
 # Token
 def encode_access_token(user_id):
     payload = {'user_id': user_id, 'exp': datetime.utcnow() + timedelta(minutes=Config.SESSION_DURATION_IN_MINUTES)}
-    return jwt.encode(payload, Config.ACCESS_TOKEN_KEY, algorithm='HS256')
+    access_token = jwt.encode(payload, Config.ACCESS_TOKEN_KEY, algorithm='HS256')
+    return access_token
 
 
-def verify_access_token(access_token):
+def verify_access_token(access_token, verified=False):
     if not access_token:
         raise errors.InvalidAuthentication
 
@@ -30,10 +35,14 @@ def verify_access_token(access_token):
     except jwt.exceptions.ExpiredSignatureError:
         raise errors.ExpiredAuthentication
 
-    if not Config.db.users.find_one({'id': user_id}, {'_id': 0, 'password': 0}):
-        raise errors.InvalidAuthentication
+    user = Config.db.users.find_one({'id': user_id}, {'_id': 0, 'password': 0})
+    if not user:
+        raise errors.InvalidAuthentication("User doesn't exists")
 
-    return user_id
+    if verified and not user.get('is_verified'):
+        raise errors.InvalidAuthentication("User email is not verified", data='ERR_VERIFY')
+
+    return user
 
 
 def require_authorization(blueprints):
@@ -46,12 +55,11 @@ def require_authorization(blueprints):
 
 
 def admin_guard(func):
-
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         if request.method in ['GET', 'POST', 'PUT', 'DELETE']:
-            user_id = verify_access_token(request.headers.get('Authorization'))
-            if user_id not in Config.ADMIN_USER_IDS:
+            user = verify_access_token(request.headers.get('Authorization'))
+            if user['id'] not in Config.ADMIN_USER_IDS:
                 raise errors.Forbidden('Not an admin user')
         result = func(*args, **kwargs)
         return result
@@ -62,8 +70,8 @@ def admin_guard(func):
 def require_admin(blueprints):
     def admin_authorized():
         if request.method in ['GET', 'POST', 'PUT', 'DELETE']:
-            user_id = verify_access_token(request.headers.get('Authorization'))
-            if user_id not in Config.ADMIN_USER_IDS:
+            user = verify_access_token(request.headers.get('Authorization'))
+            if user['id'] not in Config.ADMIN_USER_IDS:
                 raise errors.Forbidden('Not an admin user')
 
     for blueprint in blueprints:
@@ -129,20 +137,26 @@ def user_from_user_id(user_id):
     return Config.db.users.find_one({'id': user_id}, {'_id': 0})
 
 
-def register_user(user_id, name, email, password):
+def generate_activation_code():
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=32))
+
+
+def register_user(user_id, name, email, password, activation_code):
     user = dict(id=user_id,
                 created_at=datetime.now().isoformat(),
                 email=email,
                 name=name,
                 is_admin=user_id in Config.ADMIN_USER_IDS,
                 avatar=None,
-                tier='premium')
+                tier='premium',
+                is_verified=False)
     encrypted_password = generate_password_hash(password).decode('utf-8')
     Config.db.users.insert_one({
         **user,
         'name': encrypt_field(user['name']),
         'email': encrypt_field(user['email']),
         'password': encrypt_field(encrypted_password),
+        'activation_code': activation_code
     })
     return user
 
@@ -158,7 +172,8 @@ def register_user_from_profile(profile, scope):
                     is_admin=user_id in Config.ADMIN_USER_IDS,
                     avatar=profile.get('avatar_url'),
                     tier='premium',
-                    scope=scope)
+                    scope=scope,
+                    is_verified=True)
 
     elif scope == 'google':
         user = dict(id=user_id,
@@ -168,7 +183,8 @@ def register_user_from_profile(profile, scope):
                     is_admin=user_id in Config.ADMIN_USER_IDS,
                     avatar=profile.get('picture'),
                     tier='premium',
-                    scope=scope)
+                    scope=scope,
+                    is_verified=True)
 
     elif scope == 'stackoverflow':
         user = dict(id=user_id,
@@ -178,7 +194,8 @@ def register_user_from_profile(profile, scope):
                     is_admin=user_id in Config.ADMIN_USER_IDS,
                     avatar=profile['items'][0]['profile_image'],
                     tier='premium',
-                    scope=scope)
+                    scope=scope,
+                    is_verified=True)
     else:
         raise ValueError('Invalid scope')
 
@@ -204,3 +221,39 @@ def check_captcha(captcha):
         raise errors.InternalError('Invalid captcha')
     if not r.json().get('success'):
         raise errors.BadRequest('Invalid captcha')
+
+
+def send_activation_code(email, activation_code):
+    if Config.ENVIRONMENT == 'development':
+        raise errors.Forbidden('Not available in dev environment')
+
+    subject = "Welcome to Datatensor ! Confirm your email"
+    html_content = f"""
+        <h5>You're on your way!</h2>
+        Let's confirm your email address.
+        By clicking on the following link, you are confirming your email address.
+        {Config.UI_URL}/email-confirmation?activation_code={activation_code}
+   """
+
+    message = Mail(
+        from_email='noreply@test.datatensor.io',
+        to_emails=email,
+        subject=subject,
+        html_content=html_content
+    )
+    try:
+        sg = SendGridAPIClient(Config.SENDGRID_API_KEY)
+        sg.send(message)
+    except Exception as e:
+        raise errors.InternalError(f'Unable to send email with SendGrid | {str(e)}')
+
+
+def verify_user_email(user, activation_code):
+    if user.get('is_verified'):
+        raise errors.BadRequest(f"User already verified")
+
+    if user.get('activation_code') != activation_code:
+        raise errors.Forbidden('Invalid code provided')
+
+    Config.db.users.find_one_and_update({'id': user['id']},
+                                        {'$set': {'is_verified': True, 'activation_code': None}})

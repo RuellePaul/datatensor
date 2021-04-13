@@ -1,11 +1,13 @@
 #!/bin/bash
-SERVICES=api\ ux
 
 environment=0
 reset=0
 
+printf "\n"
+
 # Prompt version, environment, reset
-read -p "⚙  Version : " version
+read -p "⚙  Version : v_" version
+version="v_${version}"
 
 while [ "$environment" != "test" ] && [ "$environment" != "production" ]; do
   read -p "⚙  Environment (test | production) : " environment
@@ -38,10 +40,11 @@ printf "\n⚙  Done !\n\n"
 # Init env
 export VERSION=$version
 export ENVIRONMENT=$environment
-source ./$environment/init_env.sh
+source ~/datatensor/builds/$environment/init_env.sh
 
 # Deployment
-docker-compose -f test/docker-compose.yml up --build -d db proxy
+SERVICES=api\ ux
+docker-compose -f docker-compose.yml up --build -d db proxy
 docker-compose pull $SERVICES
 docker-compose up -d $SERVICES
 

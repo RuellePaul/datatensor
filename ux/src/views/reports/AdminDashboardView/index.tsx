@@ -20,7 +20,7 @@ const timeRanges: TimeRange[] = [
         text: 'Last day'
     },
     {
-        value: 'last_week',
+        value: 'last_month',
         text: 'Last week'
     },
     {
@@ -70,7 +70,7 @@ const AdminDashboardView: FC = () => {
     return (
         <Page
             className={classes.root}
-            title="Dashboard"
+            title="Dashboard | Admin"
         >
             <Container maxWidth={false}>
                 <Header

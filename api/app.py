@@ -8,31 +8,35 @@ import errors
 from config import Config
 from database import encrypt_init
 from logger import logger
-
-from routes.authentication.auth import auth
-from routes.authentication.oauth import oauth
 from routes.admin.manage import admin_manage
-from routes.dataset.manage import dataset_manage
-
+from routes.authentication.auth import auth
 from routes.authentication.core import require_authorization, require_admin
+from routes.authentication.oauth import oauth
+from routes.dataset.manage import dataset_manage
+from routes.images.manage import images_manage
+from routes.images.upload import images_upload
 
 app = Flask(__name__)
 
 config_name = os.getenv('FLASK_UI_CONFIGURATION', 'development')
 app.config.from_object(Config)
+
 app.secret_key = app.config['SECRET_KEY']
 
 CORS(app)
 CSRFProtect(app)
 
-require_authorization([admin_manage, dataset_manage])
+require_authorization([admin_manage, dataset_manage, images_manage, images_upload])
 require_admin([admin_manage])
 
-app.register_blueprint(auth, url_prefix='/v1/auth')
-app.register_blueprint(oauth, url_prefix='/v1/oauth')
-app.register_blueprint(dataset_manage, url_prefix='/v1/dataset/manage')
+app.register_blueprint(auth, url_prefix='/api/v1/auth')
+app.register_blueprint(oauth, url_prefix='/api/v1/oauth')
+app.register_blueprint(dataset_manage, url_prefix='/api/v1/dataset/manage')
 
-app.register_blueprint(admin_manage, url_prefix='/v1/admin/manage')
+app.register_blueprint(admin_manage, url_prefix='/api/v1/admin/manage')
+
+app.register_blueprint(images_manage, url_prefix='/api/v1/images/manage')
+app.register_blueprint(images_upload, url_prefix='/api/v1/images/upload')
 
 
 @app.after_request

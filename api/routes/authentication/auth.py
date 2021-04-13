@@ -12,8 +12,7 @@ auth = Blueprint('auth', __name__)
 
 @auth.route('/me')
 def me():
-    user_id = core.verify_access_token(request.headers.get('Authorization'))
-    user = core.user_from_user_id(user_id)
+    user = core.verify_access_token(request.headers.get('Authorization'))
     if not user:
         raise errors.ExpiredAuthentication
     user.pop('password', None)
@@ -66,9 +65,11 @@ def do_register(args):
     user = core.user_from_user_id(user_id)
 
     if user:
-        raise errors.Forbidden(f'User {user_id} already exists')
+        raise errors.Forbidden(f'User `{email}` already exists')
 
-    user = core.register_user(user_id, args['name'], args['email'], args['password'])
+    activation_code = core.generate_activation_code()
+    core.send_activation_code(email, activation_code)
+    user = core.register_user(user_id, args['name'], args['email'], args['password'], activation_code)
 
     logger.info(f'Registered user `{email}`')
 
@@ -79,3 +80,24 @@ def do_register(args):
     }
 
     return response, 201
+
+
+@auth.route('/email-confirmation', methods=['POST'])
+@use_args({
+    'activation_code': fields.Str(required=True)
+})
+def do_email_confirmation(args):
+    user = core.verify_access_token(request.headers.get('Authorization'))
+    core.verify_user_email(user, args['activation_code'])
+    access_token = core.encode_access_token(user['id'])
+
+    logger.info(f"Verified email `{user['email']}`")
+
+    response = {
+        'accessToken': access_token,
+        'user': {
+            **user,
+            'is_verified': True
+        }
+    }
+    return response, 200

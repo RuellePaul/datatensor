@@ -3,9 +3,9 @@ import {Redirect, Route, Switch} from 'react-router-dom';
 import DashboardLayout from 'src/layouts/DashboardLayout';
 import MainLayout from 'src/layouts/MainLayout';
 import HomeView from 'src/views/home/HomeView';
-import LoadingScreen from 'src/components/LoadingScreen';
-import AuthGuard from 'src/components/AuthGuard';
-import GuestGuard from 'src/components/GuestGuard';
+import LoadingScreen from 'src/components/screens/LoadingScreen';
+import AuthGuard from 'src/components/guards/AuthGuard';
+import GuestGuard from 'src/components/guards/GuestGuard';
 
 type Routes = {
     exact?: boolean;
@@ -70,6 +70,11 @@ const routes: Routes = [
         component: lazy(() => import('src/views/auth/RegisterView'))
     },
     {
+        exact: true,
+        path: '/email-confirmation',
+        component: lazy(() => import('src/views/auth/EmailConfirmationView'))
+    },
+    {
         path: '/app',
         guard: AuthGuard,
         layout: DashboardLayout,
@@ -91,11 +96,6 @@ const routes: Routes = [
             },
             {
                 exact: true,
-                path: '/app/admin/manage/users/edit',
-                component: lazy(() => import('src/views/user/UserEditView'))
-            },
-            {
-                exact: true,
                 path: '/app/manage/datasets',
                 component: lazy(() => import('src/views/dataset/DatasetBrowseView'))
             },
@@ -103,6 +103,11 @@ const routes: Routes = [
                 exact: true,
                 path: '/app/manage/datasets/create',
                 component: lazy(() => import('src/views/dataset/DatasetCreateView'))
+            },
+            {
+                exact: true,
+                path: '/app/manage/datasets/:dataset_id',
+                component: lazy(() => import('src/views/dataset/DatasetMainView'))
             },
             {
                 exact: true,

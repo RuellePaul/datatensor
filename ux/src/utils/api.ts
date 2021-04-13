@@ -2,7 +2,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const API_URI = process.env.REACT_APP_ENVIRONMENT === 'development'
-    ? `https://${window.location.hostname}:7069`
+    ? `https://${window.location.hostname}:7069/api`
     : `https://${window.location.hostname}/api`;
 
 const api = axios.create({
@@ -27,6 +27,11 @@ api.interceptors.response.use(
                     'X-CSRF-Token': Cookies.get('csrf_token')
                 }
             })
+        }
+
+        if (error.response?.data?.errorData === 'ERR_VERIFY') {
+            if (window.location.pathname !== '/email-confirmation')
+                window.location.replace('/email-confirmation')
         }
 
         return Promise.reject((error.response && error.response.data) || 'Something went wrong')

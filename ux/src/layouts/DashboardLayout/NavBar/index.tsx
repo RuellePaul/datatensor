@@ -3,28 +3,16 @@
 import React, {FC, ReactNode, useEffect} from 'react';
 import {Link as RouterLink, matchPath, useLocation} from 'react-router-dom';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import {
-    Avatar,
-    Box,
-    Chip,
-    Divider,
-    Drawer,
-    Hidden,
-    Link,
-    List,
-    ListSubheader,
-    makeStyles,
-    Typography
-} from '@material-ui/core';
+import {Box, Chip, Divider, Drawer, Hidden, Link, List, ListSubheader, makeStyles, Typography} from '@material-ui/core';
 import {
     Activity as ActivityIcon,
     Database as DatabaseIcon,
-    Folder as FolderIcon,
     Package as PackageIcon,
     PieChart as PieChartIcon,
     Users as UsersIcon
 } from 'react-feather';
-import Logo from 'src/components/Logo';
+import Logo from 'src/components/utils/Logo';
+import UserAvatar from 'src/components/UserAvatar';
 import useAuth from 'src/hooks/useAuth';
 import NavItem from './NavItem';
 import {User} from 'src/types/user';
@@ -53,7 +41,7 @@ const sections = (user: User): Section[] => [
         items: [
             ...(user.is_admin ? [{
                 title: 'App dashboard',
-                icon: ActivityIcon,
+                icon: PieChartIcon,
                 href: '/app/admin/reports/dashboard',
                 info: () => (
                     <Chip
@@ -65,13 +53,13 @@ const sections = (user: User): Section[] => [
             }] : []),
             {
                 title: 'Dashboard',
-                icon: PieChartIcon,
+                icon: ActivityIcon,
                 href: '/app/reports/dashboard'
             }
         ]
     },
     {
-        subheader: 'Management',
+        subheader: 'Manage',
         items: [
             ...(user.is_admin ? [{
                 title: 'Users',
@@ -83,32 +71,12 @@ const sections = (user: User): Section[] => [
                         label="Admin"
                         variant="outlined"
                     />
-                ),
-                items: [
-                    {
-                        title: 'List Users',
-                        href: '/app/admin/manage/users'
-                    },
-                    {
-                        title: 'View User',
-                        href: `/app/admin/manage/users/${user.id}/details`  // FIXME (match)
-                    }
-                ]
+                )
             }] : []),
             {
                 title: 'Datasets',
                 icon: PackageIcon,
-                href: '/app/manage/datasets',
-                items: [
-                    {
-                        title: 'Create a dataset',
-                        href: '/app/manage/datasets/create'
-                    },
-                    {
-                        title: 'Browse datasets',
-                        href: '/app/manage/datasets'
-                    },
-                ]
+                href: '/app/manage/datasets'
             },
             {
                 title: 'Training data',
@@ -129,25 +97,6 @@ const sections = (user: User): Section[] => [
                     },
                     {
                         title: 'Augmentation',
-                        href: '/404'
-                    }
-                ]
-            },
-            {
-                title: 'Models',
-                icon: FolderIcon,
-                href: '/admin/manage/orders',
-                items: [
-                    {
-                        title: 'Train a model',
-                        href: '/404'
-                    },
-                    {
-                        title: 'Compute mAP',
-                        href: '/404'
-                    },
-                    {
-                        title: 'Real time inference',
                         href: '/404'
                     }
                 ]
@@ -238,7 +187,7 @@ const useStyles = makeStyles(theme => ({
     avatar: {
         cursor: 'pointer',
         width: 64,
-        height: 64
+        height: 64,
     },
     list: {
         '& .MuiChip-outlined': {
@@ -284,10 +233,9 @@ const NavBar: FC<NavBarProps> = ({onMobileClose, openMobile}) => {
                         justifyContent="center"
                     >
                         <RouterLink to="/app/account">
-                            <Avatar
-                                alt="User"
+                            <UserAvatar
                                 className={classes.avatar}
-                                src={user.avatar}
+                                user={user}
                             />
                         </RouterLink>
                     </Box>
@@ -354,6 +302,14 @@ const NavBar: FC<NavBarProps> = ({onMobileClose, openMobile}) => {
                         >
                             Need Help?
                         </Typography>
+                        <Link
+                            variant="subtitle1"
+                            color="secondary"
+                            component={RouterLink}
+                            to="/docs"
+                        >
+                            Check our docs
+                        </Link>
                     </Box>
                 </Box>
             </PerfectScrollbar>

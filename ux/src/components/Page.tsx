@@ -26,8 +26,6 @@ const Page = forwardRef<HTMLDivElement, PageProps>(({
         sendPageViewEvent();
     }, [sendPageViewEvent]);
 
-    console.log(process.env.REACT_APP_ENVIRONMENT)
-
     return (
         <div
             ref={ref as any}

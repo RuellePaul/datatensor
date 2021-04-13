@@ -1,10 +1,12 @@
-import React, {FC, useCallback, useEffect, useState} from 'react';
+import React, {FC, useCallback, useState} from 'react';
 import clsx from 'clsx';
 import {useDropzone} from 'react-dropzone';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import {useSnackbar} from 'notistack';
 import {
     Box,
     Button,
+    CircularProgress,
     IconButton,
     Link,
     List,
@@ -18,12 +20,14 @@ import {
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import {Theme} from 'src/theme';
+import api from 'src/utils/api';
 import bytesToSize from 'src/utils/bytesToSize';
 import {Image} from 'src/types/image';
 
 interface ImagesDropzoneProps {
+    dataset_id: string;
+    setImages: any;
     className?: string;
-    onChange: (images: Image[]) => void;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -31,7 +35,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     dropZone: {
         border: `1px dashed ${theme.palette.divider}`,
         padding: theme.spacing(6),
-        outline: 'none',
         display: 'flex',
         justifyContent: 'center',
         flexWrap: 'wrap',
@@ -61,32 +64,56 @@ const useStyles = makeStyles((theme: Theme) => ({
         justifyContent: 'flex-end',
         '& > * + *': {
             marginLeft: theme.spacing(2)
-        }
+        },
+        color: theme.palette.background.dark
+    },
+    loader: {
+        width: '20px !important',
+        height: '20px !important'
     }
 }));
 
-const ImagesDropzone: FC<ImagesDropzoneProps> = ({className, onChange, ...rest}) => {
+const ImagesDropzone: FC<ImagesDropzoneProps> = ({dataset_id, setImages, className, ...rest}) => {
     const classes = useStyles();
-    const [images, setImages] = useState<Image[]>([]);
+    const {enqueueSnackbar} = useSnackbar();
+
+    const [isUploading, setIsUploading] = useState<boolean>(false);
+    const [files, setFiles] = useState([]);
 
     const handleDrop = useCallback((acceptedImages) => {
-        setImages((prevImages) => [...prevImages].concat(acceptedImages));
+        setFiles((prevImages) => [...prevImages].concat(acceptedImages));
     }, []);
 
-    useEffect(() => {
-        onChange(images);
-
-        // eslint-disable-next-line
-    }, [images]);
-
     const handleRemoveAll = () => {
-        setImages([]);
+        setFiles([]);
     };
 
     const {getRootProps, getInputProps, isDragActive} = useDropzone({
         accept: 'image/jpeg, image/png',
-        onDrop: handleDrop
+        onDrop: handleDrop,
+        minSize: 0,
+        maxSize: 1000 * 1024 * 1024
     });
+
+    const handleUpload = async () => {
+        if (!isUploading) {
+            setIsUploading(true);
+            let formData = new FormData();
+            files.map(image => formData.append(image.name, image));
+            try {
+                const response = await api.post<Image[]>(`/v1/images/upload/${dataset_id}`, formData, {
+                    headers: {'Content-Type': 'multipart/form-data'}
+                });
+                setImages((images: Image[]) => [...images, ...response.data]);
+                enqueueSnackbar(`${files.length} images uploaded`, {variant: 'info'});
+            } catch (error) {
+                enqueueSnackbar((error.response && error.response.data) || 'Something went wrong', {variant: 'error'});
+            } finally {
+                setIsUploading(false);
+                setFiles([]);
+            }
+        }
+    };
 
     return (
         <div
@@ -129,13 +156,13 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({className, onChange, ...rest})
                     </Box>
                 </div>
             </div>
-            {images.length > 0 && (
+            {files.length > 0 && (
                 <>
                     <PerfectScrollbar options={{suppressScrollX: true}}>
                         <List className={classes.list}>
-                            {images.map((file, i) => (
+                            {files.map((file, i) => (
                                 <ListItem
-                                    divider={i < images.length - 1}
+                                    divider={i < files.length - 1}
                                     key={i}
                                 >
                                     <ListItemIcon>
@@ -166,6 +193,13 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({className, onChange, ...rest})
                             color="secondary"
                             size="small"
                             variant="contained"
+                            onClick={handleUpload}
+                            endIcon={isUploading && (
+                                <CircularProgress
+                                    className={classes.loader}
+                                    color="inherit"
+                                />
+                            )}
                         >
                             Upload images
                         </Button>

@@ -29,7 +29,7 @@ Paste these commands in your project folder. This will clone the project & insta
 
 ### Run
 
-Set an environment variable `export ENVIRONMENT="development"`
+Set environment variable in `/development/init_env.sh`
 
 **Backend**
 

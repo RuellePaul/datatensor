@@ -41,12 +41,15 @@ const UserListView: FC = () => {
     return (
         <Page
             className={classes.root}
-            title="User List"
+            title="Users | Admin"
         >
             <Container maxWidth={false}>
                 <Header/>
                 <Box mt={3}>
-                    <Results users={users}/>
+                    <Results
+                        users={users}
+                        setUsers={setUsers}
+                    />
                 </Box>
             </Container>
         </Page>

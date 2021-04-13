@@ -1,14 +1,20 @@
 import React, {FC, useRef, useState} from 'react';
 import {Link as RouterLink, useHistory} from 'react-router-dom';
 import {useSnackbar} from 'notistack';
-import {Avatar, Box, ButtonBase, Hidden, makeStyles, Menu, MenuItem, Typography} from '@material-ui/core';
+import {Box, ButtonBase, Hidden, makeStyles, Menu, MenuItem, Typography} from '@material-ui/core';
+import UserAvatar from 'src/components/UserAvatar';
 import useAuth from 'src/hooks/useAuth';
 
 const useStyles = makeStyles((theme) => ({
     avatar: {
         height: 32,
         width: 32,
-        marginRight: theme.spacing(1)
+        '& + span > .MuiAvatar-root': {
+            border: `solid 1px ${theme.palette.primary.main}`
+        }
+    },
+    username: {
+        marginLeft: '8px !important'
     },
     popover: {
         width: 200
@@ -54,13 +60,13 @@ const Account: FC = () => {
                 // @ts-ignore
                 ref={ref}
             >
-                <Avatar
-                    alt="User"
+                <UserAvatar
                     className={classes.avatar}
-                    src={user.avatar}
+                    user={user}
                 />
                 <Hidden smDown>
                     <Typography
+                        className={classes.username}
                         variant="h6"
                         color="inherit"
                     >

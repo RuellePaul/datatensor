@@ -3,7 +3,7 @@ import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
 import {AppBar, Box, Hidden, IconButton, makeStyles, SvgIcon, Toolbar} from '@material-ui/core';
 import {Menu as MenuIcon} from 'react-feather';
-import Logo from 'src/components/Logo';
+import Logo from 'src/components/utils/Logo';
 import {THEMES} from 'src/constants';
 import {Theme} from 'src/theme';
 import Account from './Account';

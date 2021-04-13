@@ -73,8 +73,8 @@ const UserInfo: FC<UserInfoProps> = ({
                             >
                                 {user.email}
                             </Typography>
-                            <Label color={user.isVerified ? 'success' : 'error'}>
-                                {user.isVerified ? 'Email verified' : 'Email not verified'}
+                            <Label color={user.is_verified ? 'success' : 'error'}>
+                                {user.is_verified ? 'Email verified' : 'Email not verified'}
                             </Label>
                         </TableCell>
                     </TableRow>
