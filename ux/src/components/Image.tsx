@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
-import {Backdrop, ButtonBase, Grow, makeStyles, Modal} from '@material-ui/core';
+import {Backdrop, ButtonBase, IconButton, makeStyles, Modal, Typography} from '@material-ui/core';
+import {ArrowLeft as BackIcon} from 'react-feather';
 import {Theme} from 'src/theme';
 import {Image} from 'src/types/image';
 
@@ -11,6 +12,9 @@ interface ImageProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
+        '& img': {
+            userSelect: 'none'
+        },
         '&:hover img': {
             boxShadow: theme.shadows[6]
         }
@@ -22,12 +26,22 @@ const useStyles = makeStyles((theme: Theme) => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-    },
-    content: {
-        maxWidth: theme.breakpoints.values.lg
+        padding: theme.spacing(1)
     },
     buttonBase: {
         outline: 'initial !important'
+    },
+    header: {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        color: 'white',
+        margin: theme.spacing(1),
+        display: 'flex',
+        alignItems: 'center'
+    },
+    content: {
+        maxWidth: theme.breakpoints.values.lg,
     }
 }));
 
@@ -58,24 +72,39 @@ const DTImage: FC<ImageProps> = ({
                 className={classes.buttonBase}
                 onClick={handleOpen}
             >
-               <ImageHTMLElement/>
+                <ImageHTMLElement/>
             </ButtonBase>
             <Modal
                 className={classes.modal}
                 open={open}
                 onClose={handleClose}
-                closeAfterTransition
                 BackdropComponent={Backdrop}
                 BackdropProps={{
                     className: classes.backdrop,
-                    timeout: 300,
                 }}
             >
-                <Grow in={open} >
+                <>
+                    <div className={classes.header}>
+                        <IconButton
+                            onClick={handleClose}
+                        >
+                            <BackIcon
+                                width={40}
+                                height={40}
+                                color='white'
+                            />
+                        </IconButton>
+                        <Typography
+                            variant='h5'
+                        >
+                            {image.name}
+                        </Typography>
+                    </div>
+
                     <div className={classes.content}>
                         <ImageHTMLElement/>
                     </div>
-                </Grow>
+                </>
             </Modal>
         </div>
 
