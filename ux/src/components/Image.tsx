@@ -1,15 +1,6 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
-import {
-    ButtonBase,
-    Dialog,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    makeStyles,
-    useMediaQuery,
-    useTheme
-} from '@material-ui/core';
+import {Backdrop, ButtonBase, Grow, makeStyles, Modal} from '@material-ui/core';
 import {Theme} from 'src/theme';
 import {Image} from 'src/types/image';
 
@@ -23,6 +14,20 @@ const useStyles = makeStyles((theme: Theme) => ({
         '&:hover img': {
             boxShadow: theme.shadows[6]
         }
+    },
+    backdrop: {
+        background: 'rgba(0, 0, 0, 0.75)'
+    },
+    modal: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    content: {
+        maxWidth: theme.breakpoints.values.lg
+    },
+    buttonBase: {
+        outline: 'initial !important'
     }
 }));
 
@@ -32,9 +37,7 @@ const DTImage: FC<ImageProps> = ({
                                      ...rest
                                  }) => {
     const classes = useStyles();
-    const theme = useTheme();
     const [open, setOpen] = React.useState(false);
-    const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     const handleOpen = () => {
         setOpen(true);
@@ -52,23 +55,28 @@ const DTImage: FC<ImageProps> = ({
             {...rest}
         >
             <ButtonBase
+                className={classes.buttonBase}
                 onClick={handleOpen}
             >
-                <ImageHTMLElement/>
+               <ImageHTMLElement/>
             </ButtonBase>
-            <Dialog
+            <Modal
+                className={classes.modal}
                 open={open}
                 onClose={handleClose}
-                fullScreen={fullScreen}
-                maxWidth="lg"
+                closeAfterTransition
+                BackdropComponent={Backdrop}
+                BackdropProps={{
+                    className: classes.backdrop,
+                    timeout: 300,
+                }}
             >
-                <DialogTitle>{image.name}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
+                <Grow in={open} >
+                    <div className={classes.content}>
                         <ImageHTMLElement/>
-                    </DialogContentText>
-                </DialogContent>
-            </Dialog>
+                    </div>
+                </Grow>
+            </Modal>
         </div>
 
     );

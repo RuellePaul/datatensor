@@ -2,9 +2,11 @@ import React, {FC, useCallback, useState} from 'react';
 import clsx from 'clsx';
 import {useDropzone} from 'react-dropzone';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import {useSnackbar} from 'notistack';
 import {
     Box,
     Button,
+    CircularProgress,
     IconButton,
     Link,
     List,
@@ -20,9 +22,11 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import {Theme} from 'src/theme';
 import api from 'src/utils/api';
 import bytesToSize from 'src/utils/bytesToSize';
+import {Image} from 'src/types/image';
 
 interface ImagesDropzoneProps {
     dataset_id: string;
+    setImages: any;
     className?: string;
 }
 
@@ -31,7 +35,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     dropZone: {
         border: `1px dashed ${theme.palette.divider}`,
         padding: theme.spacing(6),
-        outline: 'none',
         display: 'flex',
         justifyContent: 'center',
         flexWrap: 'wrap',
@@ -61,12 +64,20 @@ const useStyles = makeStyles((theme: Theme) => ({
         justifyContent: 'flex-end',
         '& > * + *': {
             marginLeft: theme.spacing(2)
-        }
+        },
+        color: theme.palette.background.dark
+    },
+    loader: {
+        width: '20px !important',
+        height: '20px !important'
     }
 }));
 
-const ImagesDropzone: FC<ImagesDropzoneProps> = ({dataset_id, className, ...rest}) => {
+const ImagesDropzone: FC<ImagesDropzoneProps> = ({dataset_id, setImages, className, ...rest}) => {
     const classes = useStyles();
+    const {enqueueSnackbar} = useSnackbar();
+
+    const [isUploading, setIsUploading] = useState<boolean>(false);
     const [files, setFiles] = useState([]);
 
     const handleDrop = useCallback((acceptedImages) => {
@@ -81,16 +92,27 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({dataset_id, className, ...rest
         accept: 'image/jpeg, image/png',
         onDrop: handleDrop,
         minSize: 0,
-        maxSize: 1000000000
+        maxSize: 1000 * 1024 * 1024
     });
 
     const handleUpload = async () => {
-        let formData = new FormData();
-        files.map(image => formData.append(image.name, image));
-        await api.post(`/v1/images/upload/${dataset_id}`, formData, {
-            headers: {'Content-Type': 'multipart/form-data'}
-        });
-        setFiles([]);
+        if (!isUploading) {
+            setIsUploading(true);
+            let formData = new FormData();
+            files.map(image => formData.append(image.name, image));
+            try {
+                const response = await api.post<Image[]>(`/v1/images/upload/${dataset_id}`, formData, {
+                    headers: {'Content-Type': 'multipart/form-data'}
+                });
+                setImages((images: Image[]) => [...images, ...response.data]);
+                enqueueSnackbar(`${files.length} images uploaded`, {variant: 'info'});
+            } catch (error) {
+                enqueueSnackbar(error.response && error.response.data || 'Something went wrong', {variant: 'error'});
+            } finally {
+                setIsUploading(false);
+                setFiles([]);
+            }
+        }
     };
 
     return (
@@ -172,6 +194,12 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({dataset_id, className, ...rest
                             size="small"
                             variant="contained"
                             onClick={handleUpload}
+                            endIcon={isUploading && (
+                                <CircularProgress
+                                    className={classes.loader}
+                                    color="inherit"
+                                />
+                            )}
                         >
                             Upload images
                         </Button>

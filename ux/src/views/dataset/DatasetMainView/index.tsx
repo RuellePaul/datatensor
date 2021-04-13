@@ -94,6 +94,7 @@ const DatasetMainView: FC = () => {
                         <CardContent>
                             <ImagesDropzone
                                 dataset_id={dataset_id}
+                                setImages={setImages}
                             />
                         </CardContent>
                     </Card>
@@ -104,6 +105,7 @@ const DatasetMainView: FC = () => {
                         {images.map((image) => (
                             <GridListTile key={image.id} cols={1}>
                                 <DTImage image={image}/>
+                                {image.width / image.height}
                             </GridListTile>
                         ))}
                     </GridList>
