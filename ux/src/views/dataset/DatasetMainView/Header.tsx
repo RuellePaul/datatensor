@@ -55,12 +55,6 @@ const Header: FC<HeaderProps> = ({dataset, className, ...rest}) => {
                         {dataset.name}
                     </Typography>
                 </Breadcrumbs>
-                <Typography
-                    variant="h3"
-                    color="textPrimary"
-                >
-                    Manage {dataset.name} dataset
-                </Typography>
             </Grid>
         </Grid>
     );
