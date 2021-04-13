@@ -22,6 +22,8 @@ class Config:
 
     SECRET_KEY = os.environ['FLASK_SECRET_KEY']
 
+    MAX_CONTENT_LENGTH = 1 * 1000 * 1024 * 1024  # 1 Go
+
     ADMIN_USER_IDS = [
         '58a802c1b350056c737ca447db48c7c645581b265e61d2ceeae5e0320adc7e6a',  # RuellePaul (github)
         '83d2218ec37d73a99944dbcd90e5753908a418b99fa79678402ba6bc97a81f83'  # ThomasRoudil (github)
