@@ -1,5 +1,6 @@
 import boto3
 
+import errors
 from config import Config
 
 s3 = boto3.client(
@@ -14,14 +15,23 @@ def upload_file_to_s3(file, bucket_name, acl="public-read"):
         s3.upload_fileobj(
             file,
             bucket_name,
-            file.filename,
+            file.id,
             ExtraArgs={
                 "ACL": acl,
                 "ContentType": file.content_type
             }
         )
+        path = f"{Config.S3_LOCATION}{file.id}"
+        return path
     except Exception as e:
-        print("Something Happened: ", e)
-        return e
-    path = f"{Config.S3_LOCATION}{file.filename}"
-    return path
+        raise errors.InternalError(f'Cannot upload file to S3, {str(e)}')
+
+
+def delete_file_from_s3(image_id, bucket_name):
+    try:
+        s3.delete_object(
+            Bucket=bucket_name,
+            Key=image_id
+        )
+    except Exception as e:
+        raise errors.InternalError(f'Cannot delete file from S3, {str(e)}')

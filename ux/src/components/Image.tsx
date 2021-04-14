@@ -1,9 +1,10 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
-import {Backdrop, ButtonBase, IconButton, makeStyles, Modal, Typography} from '@material-ui/core';
-import {ArrowLeft as BackIcon} from 'react-feather';
+import {Backdrop, ButtonBase, IconButton, makeStyles, Menu, MenuItem, Modal, Typography} from '@material-ui/core';
+import {ArrowLeft as BackIcon, MoreVertical as MoreIcon} from 'react-feather';
 import {Theme} from 'src/theme';
 import {Image} from 'src/types/image';
+import api from 'src/utils/api'
 
 interface ImageProps {
     className?: string;
@@ -35,10 +36,11 @@ const useStyles = makeStyles((theme: Theme) => ({
         position: 'fixed',
         top: 0,
         left: 0,
-        color: 'white',
-        margin: theme.spacing(1),
+        width: '100%',
+        padding: theme.spacing(1),
         display: 'flex',
-        alignItems: 'center'
+        alignItems: 'center',
+        color: 'white'
     },
     content: {
         maxWidth: theme.breakpoints.values.lg,
@@ -51,7 +53,11 @@ const DTImage: FC<ImageProps> = ({
                                      ...rest
                                  }) => {
     const classes = useStyles();
+
     const [open, setOpen] = React.useState(false);
+
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const openMenu = Boolean(anchorEl);
 
     const handleOpen = () => {
         setOpen(true);
@@ -59,6 +65,21 @@ const DTImage: FC<ImageProps> = ({
 
     const handleClose = () => {
         setOpen(false);
+    };
+
+    const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleCloseMenu = () => {
+        setAnchorEl(null);
+    };
+
+    const handleDelete = event => {
+        event.stopPropagation();
+        handleCloseMenu();
+
+        api.post(`/v1/images/manage/${image.id}/delete`);
     };
 
     const ImageHTMLElement = () => <img src={image.path} alt={image.name} width="100%" draggable={false}/>;
@@ -99,7 +120,33 @@ const DTImage: FC<ImageProps> = ({
                         >
                             {image.name}
                         </Typography>
+                        <div className='flexGrow'/>
+                        <IconButton
+                            onClick={handleOpenMenu}
+                        >
+                            <MoreIcon
+                                width={30}
+                                height={30}
+                                color='white'
+                            />
+                        </IconButton>
+                        <Menu
+                            anchorEl={anchorEl}
+                            keepMounted
+                            open={openMenu}
+                            onClose={handleCloseMenu}
+                            PaperProps={{
+                                style: {
+                                    width: '20ch'
+                                }
+                            }}
+                        >
+                            <MenuItem onClick={handleDelete}>
+                                Delete
+                            </MenuItem>
+                        </Menu>
                     </div>
+
 
                     <div className={classes.content}>
                         <ImageHTMLElement/>
