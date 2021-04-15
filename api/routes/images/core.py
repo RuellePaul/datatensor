@@ -18,18 +18,36 @@ def upload_file(file):
     return path
 
 
+def get_size(file):
+    if file.content_length:
+        return file.content_length
+
+    try:
+        pos = file.tell()
+        file.seek(0, 2)  # seek to end
+        size = file.tell()
+        file.seek(pos)  # back to original position
+        return size
+    except (AttributeError, IOError):
+        pass
+
+    return 0
+
+
 def upload_images(dataset_id, request_files):
     images = []
     for file in request_files.values():
         file.id = str(uuid.uuid4())
         if file and allowed_file(file.filename):
+            name = secure_filename(file.filename)
+            size = get_size(file)  # TODO : compression before upload
             images.append({
                 'id': file.id,
                 'dataset_id': dataset_id,
                 'path': upload_file(file),
-                'name': secure_filename(file.filename),
-                'size': 0,  # TODO : size
-                'width': 0,
+                'name': name,
+                'size': size,
+                'width': 0,  # TODO : resolution
                 'height': 0
             })
 

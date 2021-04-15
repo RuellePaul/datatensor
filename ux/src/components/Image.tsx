@@ -5,6 +5,7 @@ import {ArrowLeft as BackIcon, MoreVertical as MoreIcon} from 'react-feather';
 import {Theme} from 'src/theme';
 import {Image} from 'src/types/image';
 import api from 'src/utils/api'
+import bytesToSize from 'src/utils/bytesToSize';
 
 interface ImageProps {
     className?: string;
@@ -115,11 +116,20 @@ const DTImage: FC<ImageProps> = ({
                                 color='white'
                             />
                         </IconButton>
-                        <Typography
-                            variant='h5'
-                        >
-                            {image.name}
-                        </Typography>
+                        <div>
+                            <Typography
+                                variant='h5'
+                            >
+                                {image.name}
+                            </Typography>
+                            <Typography
+                                variant='h6'
+                                color='textSecondary'
+                            >
+                                {bytesToSize(image.size)}
+                            </Typography>
+                        </div>
+
                         <div className='flexGrow'/>
                         <IconButton
                             onClick={handleOpenMenu}
