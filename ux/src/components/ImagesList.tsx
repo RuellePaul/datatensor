@@ -46,6 +46,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         alignItems: 'center'
     },
     content: {
+        position: 'relative',
         maxWidth: theme.breakpoints.values.lg,
     },
     footer: {
@@ -57,6 +58,11 @@ const useStyles = makeStyles((theme: Theme) => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    resolution: {
+        position: 'absolute',
+        top: -25,
+        right: 0
     }
 }));
 
@@ -73,6 +79,8 @@ const DTImagesList: FC<ImagesListProps> = ({
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const openMenu = Boolean(anchorEl);
+
+    const imageSelected = images[selected];
 
     const handleOpen = (index) => {
         setOpen(true);
@@ -95,9 +103,9 @@ const DTImagesList: FC<ImagesListProps> = ({
         event.stopPropagation();
         handleCloseMenu();
 
-        await api.post(`/v1/images/manage/${images[selected].id}/delete`);
+        await api.post(`/v1/images/manage/${imageSelected.id}/delete`);
         setSelected(Math.max(0, selected - 1));
-        setImages(images.filter(image => image.id !== images[selected].id));
+        setImages(images.filter(image => image.id !== imageSelected.id));
     };
 
     const handleKeyDown = (event: React.KeyboardEvent<unknown>) => {
@@ -110,9 +118,6 @@ const DTImagesList: FC<ImagesListProps> = ({
     const handlePaginationChange = (event: React.ChangeEvent<unknown>, value: number) => {
         setSelected(value - 1);
     };
-
-    if (!images[selected])
-        return null;
 
     return (
         <div
@@ -130,7 +135,7 @@ const DTImagesList: FC<ImagesListProps> = ({
                     </GridListTile>
                 ))}
             </GridList>
-            <Modal
+            {imageSelected && <Modal
                 className={classes.modal}
                 open={open}
                 onClose={handleClose}
@@ -155,13 +160,13 @@ const DTImagesList: FC<ImagesListProps> = ({
                                 variant='h5'
                                 color='textPrimary'
                             >
-                                {images[selected].name}
+                                {imageSelected.name}
                             </Typography>
                             <Typography
                                 variant='h6'
                                 color='textSecondary'
                             >
-                                {bytesToSize(images[selected].size)}
+                                {bytesToSize(imageSelected.size)}
                             </Typography>
                         </div>
 
@@ -193,7 +198,14 @@ const DTImagesList: FC<ImagesListProps> = ({
                     </div>
 
                     <div className={classes.content}>
-                        <DTImage image={images[selected]}/>
+                        <div className={classes.resolution}>
+                            <Typography
+                                color='textSecondary'
+                            >
+                                {imageSelected.width} x {imageSelected.height}
+                            </Typography>
+                        </div>
+                        <DTImage image={imageSelected}/>
                     </div>
 
                     <div className={classes.footer}>
@@ -205,9 +217,8 @@ const DTImagesList: FC<ImagesListProps> = ({
                         />
                     </div>
                 </>
-            </Modal>
+            </Modal>}
         </div>
-
     );
 };
 

@@ -23,15 +23,15 @@ def allowed_file(filename):
 
 
 def compress_image(image):
-    width = image.shape[0]
-    height = image.shape[1]
+    width = image.shape[1]
+    height = image.shape[0]
     if width > 1280:
         compression_ratio = width / 1280
-        dist_shape = (int(height / compression_ratio), int(width / compression_ratio))
+        dist_shape = (int(width / compression_ratio), int(height / compression_ratio))
         image = cv2.resize(image, dist_shape)
     elif height > 720:
         compression_ratio = height / 1280
-        dist_shape = (int(height / compression_ratio), int(width / compression_ratio))
+        dist_shape = (int(width / compression_ratio), int(height / compression_ratio))
         image = cv2.resize(image, dist_shape)
     return image
 
@@ -71,8 +71,8 @@ def upload_images(dataset_id, request_files):
                 'path': path,
                 'name': name,
                 'size': len(image_bytes),
-                'width': image.shape[0],
-                'height': image.shape[1]
+                'width': image.shape[1],
+                'height': image.shape[0]
             })
 
     Config.db.images.insert_many(images)
