@@ -40,7 +40,7 @@ def upload_images(dataset_id, request_files):
         file.id = str(uuid.uuid4())
         if file and allowed_file(file.filename):
             name = secure_filename(file.filename)
-            size = get_size(file)  # TODO : compression before upload
+            size = get_size(file)  # TODO : compression / conversion before upload
             images.append({
                 'id': file.id,
                 'dataset_id': dataset_id,
