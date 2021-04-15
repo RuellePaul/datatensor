@@ -1,19 +1,9 @@
 import React, {FC, useCallback, useEffect, useState} from 'react';
 import {useParams} from 'react-router';
-import {
-    Box,
-    Card,
-    CardContent,
-    CardHeader,
-    Container,
-    Divider,
-    GridList,
-    GridListTile,
-    makeStyles
-} from '@material-ui/core';
+import {Box, Card, CardContent, CardHeader, Container, Divider, makeStyles} from '@material-ui/core';
 import Header from './Header';
 import {Theme} from 'src/theme';
-import DTImage from 'src/components/Image';
+import DTImagesList from 'src/components/ImagesList';
 import ImagesDropzone from 'src/components/ImagesDropzone';
 import Page from 'src/components/Page';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
@@ -101,14 +91,10 @@ const DatasetMainView: FC = () => {
                 </Box>
 
                 <Box className={classes.container} mt={3}>
-                    <GridList cellHeight={220} cols={6} spacing={10}>
-                        {images.map((image) => (
-                            <GridListTile key={image.id} cols={1}>
-                                <DTImage image={image}/>
-                                {image.width / image.height}
-                            </GridListTile>
-                        ))}
-                    </GridList>
+                    <DTImagesList
+                        images={images}
+                        setImages={setImages}
+                    />
                 </Box>
             </Container>
         </Page>
