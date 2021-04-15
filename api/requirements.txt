@@ -1,10 +1,11 @@
-boto3==1.17.40
+boto3==1.17.53
 Flask==1.1.2
 Flask-Bcrypt==0.7.1
 Flask-Cors==3.0.10
 Flask-WTF==0.14.3
 PyJWT==2.0.1
 oauthlib==3.1.0
+opencv-python==4.5.1.48
 pymongo==3.11.3
 pymongocrypt==1.1.0
 requests==2.25.1
