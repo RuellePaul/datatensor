@@ -1,16 +1,6 @@
 import React, {FC, useState} from 'react';
 import clsx from 'clsx';
-import {
-    Backdrop,
-    GridList,
-    GridListTile,
-    IconButton,
-    makeStyles,
-    Menu,
-    MenuItem,
-    Modal,
-    Typography
-} from '@material-ui/core';
+import {Backdrop, IconButton, makeStyles, Menu, MenuItem, Modal, Typography, useTheme} from '@material-ui/core';
 import {Pagination} from '@material-ui/lab';
 import {ArrowLeft as BackIcon, MoreVertical as MoreIcon} from 'react-feather';
 import DTImage from 'src/components/Image';
@@ -18,6 +8,7 @@ import {Theme} from 'src/theme';
 import {Image} from 'src/types/image';
 import api from 'src/utils/api'
 import bytesToSize from 'src/utils/bytesToSize';
+import Masonry from 'react-masonry-css';
 
 interface ImagesListProps {
     images: Image[];
@@ -49,6 +40,18 @@ const useStyles = makeStyles((theme: Theme) => ({
         position: 'relative',
         maxWidth: theme.breakpoints.values.lg,
     },
+    grid: {
+        display: 'flex',
+        marginLeft: -10,
+        width: 'auto',
+    },
+    column: {
+        paddingLeft: 10,
+        backgroundClip: 'padding-box',
+        '& img': {
+            marginBottom: 10
+        }
+    },
     footer: {
         position: 'fixed',
         bottom: 0,
@@ -73,6 +76,7 @@ const DTImagesList: FC<ImagesListProps> = ({
                                                ...rest
                                            }) => {
     const classes = useStyles();
+    const theme = useTheme();
 
     const [open, setOpen] = React.useState(false);
     const [selected, setSelected] = useState(0);
@@ -125,17 +129,25 @@ const DTImagesList: FC<ImagesListProps> = ({
             onKeyDown={handleKeyDown}
             {...rest}
         >
-            <GridList cols={5} spacing={8}>
+            <Masonry
+                breakpointCols={{
+                    default: 4,
+                    [theme.breakpoints.values.md]: 3,
+                    700: 2,
+                    500: 1
+                }}
+                className={classes.grid}
+                columnClassName={classes.column}
+            >
                 {images.map((image, index) => (
-                    <GridListTile key={image.id}>
-                        <DTImage
-                            image={image}
-                            clickable
-                            onClick={() => handleOpen(index)}
-                        />
-                    </GridListTile>
+                    <DTImage
+                        key={image.id}
+                        image={image}
+                        clickable
+                        onClick={() => handleOpen(index)}
+                    />
                 ))}
-            </GridList>
+            </Masonry>
             {imageSelected && <Modal
                 className={classes.modal}
                 open={open}

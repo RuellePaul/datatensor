@@ -16,13 +16,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         backgroundColor: theme.palette.background.dark,
         minHeight: '100%',
         padding: theme.spacing(3, 0)
-    },
-    container: {
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'space-around',
-        overflow: 'hidden',
-        backgroundColor: theme.palette.background.paper,
     }
 }));
 
@@ -90,7 +83,7 @@ const DatasetMainView: FC = () => {
                     </Card>
                 </Box>
 
-                <Box className={classes.container} mt={3}>
+                <Box mt={3}>
                     <DTImagesList
                         images={images}
                         setImages={setImages}
