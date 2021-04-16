@@ -30,7 +30,7 @@ def compress_image(image):
         dist_shape = (int(width / compression_ratio), int(height / compression_ratio))
         image = cv2.resize(image, dist_shape)
     elif height > 720:
-        compression_ratio = height / 1280
+        compression_ratio = height / 720
         dist_shape = (int(width / compression_ratio), int(height / compression_ratio))
         image = cv2.resize(image, dist_shape)
     return image
