@@ -75,7 +75,7 @@ const DatasetMainView: FC = () => {
             className={classes.root}
             title="Dataset List"
         >
-            <Container maxWidth="xl">
+            <Container maxWidth="lg">
                 <Header dataset={dataset}/>
                 <Box mt={3}>
                     <Card>

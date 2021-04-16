@@ -125,11 +125,12 @@ const DTImagesList: FC<ImagesListProps> = ({
             onKeyDown={handleKeyDown}
             {...rest}
         >
-            <GridList cols={6} spacing={8}>
+            <GridList cols={5} spacing={8}>
                 {images.map((image, index) => (
-                    <GridListTile key={image.id} cols={1}>
+                    <GridListTile key={image.id}>
                         <DTImage
                             image={image}
+                            clickable
                             onClick={() => handleOpen(index)}
                         />
                     </GridListTile>

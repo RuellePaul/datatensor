@@ -7,6 +7,7 @@ import {Image} from 'src/types/image';
 interface DTImageProps {
     className?: string;
     image: Image;
+    clickable?: boolean;
     onClick?: () => void;
 }
 
@@ -15,8 +16,11 @@ const useStyles = makeStyles((theme: Theme) => ({
         '& img': {
             userSelect: 'none'
         },
+    },
+    clickable: {
         '&:hover img': {
-            boxShadow: theme.shadows[6]
+            boxShadow: theme.shadows[6],
+            opacity: 0.85
         }
     }
 }));
@@ -24,22 +28,37 @@ const useStyles = makeStyles((theme: Theme) => ({
 const DTImage: FC<DTImageProps> = ({
                                        className,
                                        image,
+                                       clickable = false,
                                        ...rest
                                    }) => {
     const classes = useStyles();
 
+    const Image = () => (
+        <img
+            src={image.path}
+            alt={image.name}
+            width="100%"
+            draggable={false}
+        />
+    );
+
+    if (clickable)
+        return (
+            <ButtonBase
+                className={clsx(classes.root, classes.clickable, className)}
+                {...rest}
+            >
+                <Image/>
+            </ButtonBase>
+        );
+
     return (
-        <ButtonBase
+        <div
             className={clsx(classes.root, className)}
             {...rest}
         >
-            <img
-                src={image.path}
-                alt={image.name}
-                width="100%"
-                draggable={false}
-            />
-        </ButtonBase>
+            <Image/>
+        </div>
     );
 };
 
