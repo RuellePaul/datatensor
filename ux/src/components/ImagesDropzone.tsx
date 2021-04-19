@@ -20,18 +20,20 @@ import {
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import {Theme} from 'src/theme';
+import useImages from 'src/hooks/useImages';
 import api from 'src/utils/api';
 import bytesToSize from 'src/utils/bytesToSize';
 import {Image} from 'src/types/image';
 
 interface ImagesDropzoneProps {
     dataset_id: string;
-    setImages: any;
     className?: string;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {},
+    root: {
+        margin: theme.spacing(0, 0, 1)
+    },
     dropZone: {
         border: `1px dashed ${theme.palette.divider}`,
         padding: theme.spacing(6),
@@ -50,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         opacity: 0.5
     },
     image: {
-        width: 130
+        width: 80
     },
     info: {
         marginTop: theme.spacing(1)
@@ -73,9 +75,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const ImagesDropzone: FC<ImagesDropzoneProps> = ({dataset_id, setImages, className, ...rest}) => {
+const ImagesDropzone: FC<ImagesDropzoneProps> = ({dataset_id, className, ...rest}) => {
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
+
+    const {saveImages} = useImages();
 
     const [isUploading, setIsUploading] = useState<boolean>(false);
     const [files, setFiles] = useState([]);
@@ -104,7 +108,7 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({dataset_id, setImages, classNa
                 const response = await api.post<Image[]>(`/v1/images/upload/${dataset_id}`, formData, {
                     headers: {'Content-Type': 'multipart/form-data'}
                 });
-                setImages((images: Image[]) => [...images, ...response.data]);
+                saveImages((images: Image[]) => [...images, ...response.data]);
                 enqueueSnackbar(`${files.length} images uploaded`, {variant: 'info'});
             } catch (error) {
                 enqueueSnackbar((error.response && error.response.data) || 'Something went wrong', {variant: 'error'});
@@ -130,9 +134,9 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({dataset_id, setImages, classNa
                 <input {...getInputProps()} />
                 <div>
                     <img
-                        alt="Select Images"
                         className={classes.image}
                         src="/static/images/undraw_add_file2_gvbb.svg"
+                        alt="Select Images"
                     />
                 </div>
                 <div>
