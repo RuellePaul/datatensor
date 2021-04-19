@@ -1,3 +1,7 @@
+.flexGrow {
+    flex-grow: 700;
+}
+
 pre {
     border-radius: 4px;
     background-color: #191c27;
