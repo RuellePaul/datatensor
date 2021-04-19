@@ -1,6 +1,6 @@
 import React, {FC, useCallback, useEffect, useState} from 'react';
 import {useParams} from 'react-router';
-import {Box, Card, CardContent, CardHeader, Container, Divider, makeStyles} from '@material-ui/core';
+import {Box, Card, CardContent, CardHeader, Container, Divider, makeStyles, Tab, Tabs} from '@material-ui/core';
 import Header from './Header';
 import {Theme} from 'src/theme';
 import DTImagesList from 'src/components/ImagesList';
@@ -16,6 +16,9 @@ const useStyles = makeStyles((theme: Theme) => ({
         backgroundColor: theme.palette.background.dark,
         minHeight: '100%',
         padding: theme.spacing(3, 0)
+    },
+    tabs: {
+        margin: theme.spacing(2, 0, 0)
     }
 }));
 
@@ -24,6 +27,12 @@ const DatasetMainView: FC = () => {
 
     const classes = useStyles();
     const isMountedRef = useIsMountedRef();
+
+    const [tab, setTab] = useState(0);
+
+    const handleTabChange = (event: React.ChangeEvent<{}>, newTab: number) => {
+        setTab(newTab);
+    };
 
     const [dataset, setDataset] = useState<Dataset>();
     const [images, setImages] = useState<Image[]>([]);
@@ -70,6 +79,21 @@ const DatasetMainView: FC = () => {
         >
             <Container maxWidth="lg">
                 <Header dataset={dataset}/>
+
+                <Tabs
+                    className={classes.tabs}
+                    value={tab}
+                    onChange={handleTabChange}
+                    indicatorColor="primary"
+                    textColor="primary"
+                >
+                    <Tab label="Overview"/>
+                    <Tab label="Images"/>
+                    <Tab label="Labeling"/>
+                </Tabs>
+
+                <Divider/>
+
                 <Box mt={3}>
                     <Card>
                         <CardHeader title="Upload Images"/>
