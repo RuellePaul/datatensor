@@ -3,6 +3,7 @@ import {useParams} from 'react-router';
 import {Box, Container, Divider, makeStyles, Tab, Tabs} from '@material-ui/core';
 import Header from './Header';
 import SectionImages from './sections/SectionImages';
+import SectionLabeling from './sections/SectionLabeling';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
@@ -19,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const SECTIONS = [<div/>, <SectionImages/>, <div/>];
+const SECTIONS = [<div/>, <SectionImages/>, <SectionLabeling/>];
 
 const DatasetMainView: FC = () => {
     const {dataset_id} = useParams();
