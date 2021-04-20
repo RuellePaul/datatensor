@@ -17,7 +17,7 @@ import {LockOutlined} from '@material-ui/icons';
 import {Theme} from 'src/theme';
 import {Dataset} from 'src/types/dataset';
 import {User} from 'src/types/user';
-import Label from 'src/components/Label';
+import FancyLabel from 'src/components/FancyLabel';
 
 interface UserInfoProps {
     user: User;
@@ -73,9 +73,9 @@ const UserInfo: FC<UserInfoProps> = ({
                             >
                                 {user.email}
                             </Typography>
-                            <Label color={user.is_verified ? 'success' : 'error'}>
+                            <FancyLabel color={user.is_verified ? 'success' : 'error'}>
                                 {user.is_verified ? 'Email verified' : 'Email not verified'}
-                            </Label>
+                            </FancyLabel>
                         </TableCell>
                     </TableRow>
                     <TableRow>

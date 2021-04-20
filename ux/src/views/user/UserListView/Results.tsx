@@ -25,7 +25,7 @@ import {
     Typography
 } from '@material-ui/core';
 import {Search as SearchIcon} from 'react-feather';
-import Label from 'src/components/Label';
+import FancyLabel from 'src/components/FancyLabel';
 import UserAvatar from 'src/components/UserAvatar';
 import useAuth from 'src/hooks/useAuth';
 import {Theme} from 'src/theme';
@@ -427,9 +427,9 @@ const Results: FC<ResultsProps> = ({
                                             </Box>
                                         </TableCell>
                                         <TableCell>
-                                            <Label color={user.is_verified ? 'success' : 'error'}>
+                                            <FancyLabel color={user.is_verified ? 'success' : 'error'}>
                                                 {user.is_verified ? 'Email verified' : 'Email not verified'}
-                                            </Label>
+                                            </FancyLabel>
                                         </TableCell>
                                         <TableCell>
                                             {moment(user.created_at).format('DD/MM/YYYY | HH:mm:ss')}
