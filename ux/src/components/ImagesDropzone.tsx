@@ -140,12 +140,6 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({dataset_id, className, ...rest
                     />
                 </div>
                 <div>
-                    <Typography
-                        gutterBottom
-                        variant="h3"
-                    >
-                        Select images
-                    </Typography>
                     <Box mt={2}>
                         <Typography
                             color="textPrimary"

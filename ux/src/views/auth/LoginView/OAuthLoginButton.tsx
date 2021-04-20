@@ -2,6 +2,7 @@ import React, {FC} from 'react';
 import {Button, SvgIcon} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 import api from 'src/utils/api';
+import {useSnackbar} from 'notistack';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -70,14 +71,19 @@ interface OAuthLoginButtonProps {
 const OAuthLoginButton: FC<OAuthLoginButtonProps> = ({scope}) => {
 
     const classes = useStyles();
+    const {enqueueSnackbar} = useSnackbar();
 
     return (
         <Button
             className={classes.root}
             onClick={async () => {
-                const response = await api.get<{ authorization_url: string; }>(`/v1/oauth/${scope}`);
-                const {authorization_url} = response.data;
-                window.location.href = authorization_url;
+                try {
+                    const response = await api.get<{ authorization_url: string; }>(`/v1/oauth/${scope}`);
+                    const {authorization_url} = response.data;
+                    window.location.href = authorization_url;
+                } catch (error) {
+                    enqueueSnackbar((error.response && error.response.data) || 'Something went wrong', {variant: 'error'});
+                }
             }}
             size='large'
             variant='contained'
