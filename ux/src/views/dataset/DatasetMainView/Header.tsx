@@ -2,7 +2,7 @@ import React, {FC} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import {Breadcrumbs, Grid, Link, makeStyles, Typography} from '@material-ui/core';
+import {Breadcrumbs, capitalize, Grid, Link, makeStyles, Typography} from '@material-ui/core';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import {Dataset} from 'src/types/dataset';
 
@@ -52,7 +52,7 @@ const Header: FC<HeaderProps> = ({dataset, className, ...rest}) => {
                         variant="body1"
                         color="textPrimary"
                     >
-                        {dataset.name}
+                        {capitalize(dataset.name)}
                     </Typography>
                 </Breadcrumbs>
             </Grid>

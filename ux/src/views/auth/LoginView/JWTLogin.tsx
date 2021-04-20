@@ -16,8 +16,10 @@ const useStyles = makeStyles(() => ({
 }));
 
 const JWTLogin: FC<JWTLoginProps> = ({className, ...rest}) => {
+
     const classes = useStyles();
-    const {login} = useAuth() as any;
+
+    const {login} = useAuth();
     const isMountedRef = useIsMountedRef();
 
     return (
@@ -43,11 +45,11 @@ const JWTLogin: FC<JWTLoginProps> = ({className, ...rest}) => {
                         setStatus({success: true});
                         setSubmitting(false);
                     }
-                } catch (err) {
-                    console.error(err);
+                } catch (error) {
+                    console.error(error);
                     if (isMountedRef.current) {
                         setStatus({success: false});
-                        setErrors({submit: err.message});
+                        setErrors({submit: error.message});
                         setSubmitting(false);
                     }
                 }

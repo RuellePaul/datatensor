@@ -3,6 +3,7 @@ import {useHistory} from 'react-router';
 import clsx from 'clsx';
 import {
     Button,
+    capitalize,
     Card,
     CardActionArea,
     CardActions,
@@ -50,7 +51,7 @@ const DTDataset: FC<DatasetProps> = ({
                 />
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="h2">
-                        {dataset.name}
+                        {capitalize(dataset.name)}
                     </Typography>
                     <Typography
                         color="textSecondary"

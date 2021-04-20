@@ -4,15 +4,13 @@ import {Backdrop, IconButton, makeStyles, Menu, MenuItem, Modal, Typography, use
 import {Pagination} from '@material-ui/lab';
 import {ArrowLeft as BackIcon, MoreVertical as MoreIcon} from 'react-feather';
 import DTImage from 'src/components/Image';
+import useImages from 'src/hooks/useImages';
 import {Theme} from 'src/theme';
-import {Image} from 'src/types/image';
 import api from 'src/utils/api'
 import bytesToSize from 'src/utils/bytesToSize';
 import Masonry from 'react-masonry-css';
 
 interface ImagesListProps {
-    images: Image[];
-    setImages: any;
     className?: string;
 }
 
@@ -38,6 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     content: {
         position: 'relative',
+        minWidth: 100,
         maxWidth: theme.breakpoints.values.lg,
     },
     grid: {
@@ -71,17 +70,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const DTImagesList: FC<ImagesListProps> = ({
                                                className,
-                                               images,
-                                               setImages,
                                                ...rest
                                            }) => {
     const classes = useStyles();
     const theme = useTheme();
 
-    const [open, setOpen] = React.useState(false);
+    const {images, saveImages} = useImages();
+
+    const [open, setOpen] = useState(false);
     const [selected, setSelected] = useState(0);
 
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const openMenu = Boolean(anchorEl);
 
     const imageSelected = images[selected];
@@ -109,7 +108,7 @@ const DTImagesList: FC<ImagesListProps> = ({
 
         await api.post(`/v1/images/manage/${imageSelected.id}/delete`);
         setSelected(Math.max(0, selected - 1));
-        setImages(images.filter(image => image.id !== imageSelected.id));
+        saveImages(images.filter(image => image.id !== imageSelected.id));
     };
 
     const handleKeyDown = (event: React.KeyboardEvent<unknown>) => {
