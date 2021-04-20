@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, useRef} from 'react';
 import clsx from 'clsx';
 import {makeStyles} from '@material-ui/core';
 import {Theme} from 'src/theme';
@@ -24,12 +24,44 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
+const currentOffset = (event) => ([event.offsetX, event.offsetY]);
+
+const reset = (canvas) => {
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
+    canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+};
+
+const drawCursorLines = (canvas, offset) => {
+    let context = canvas.getContext('2d');
+    context.beginPath();
+    context.setLineDash([5]);
+    context.moveTo(offset[0], 0);
+    context.lineTo(offset[0], 720);
+    context.moveTo(0, offset[1]);
+    context.lineTo(1280, offset[1]);
+    context.stroke();
+};
+
 const DTLabelisator: FC<DTLabelisatorProps> = ({
                                                    className,
                                                    ...rest
                                                }) => {
     const classes = useStyles();
+
+    const canvasRef = useRef();
+
     const {images} = useImages();
+
+    const handleMouseMove = (event) => {
+        reset(canvasRef.current);
+        let offset = currentOffset(event.nativeEvent);
+        drawCursorLines(canvasRef.current, offset);
+    };
+
+    const handleMouseLeave = (event) => {
+        reset(canvasRef.current);
+    };
 
     return (
         <div
@@ -38,6 +70,9 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
         >
             <canvas
                 className={classes.canvas}
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
+                ref={canvasRef}
             />
             <DTImage
                 image={images[0]}

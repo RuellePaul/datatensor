@@ -50,7 +50,10 @@ const SectionImage: FC = () => {
         <>
             <div className={classes.header}>
                 <Typography variant="h4" color="textSecondary">
-                    Showing {images.length} images
+                    {images.length > 0
+                        ? `Showing ${images.length} images`
+                        : `No images found`
+                    }
                 </Typography>
 
                 <Box display='flex'>
