@@ -109,7 +109,7 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({dataset_id, className, ...rest
                     headers: {'Content-Type': 'multipart/form-data'}
                 });
                 saveImages((images: Image[]) => [...images, ...response.data]);
-                enqueueSnackbar(`${files.length} images uploaded`, {variant: 'info'});
+                enqueueSnackbar(`${files.length} images uploaded`, {variant: 'success'});
             } catch (error) {
                 enqueueSnackbar((error.response && error.response.data) || 'Something went wrong', {variant: 'error'});
             } finally {
@@ -154,56 +154,53 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({dataset_id, className, ...rest
                     </Box>
                 </div>
             </div>
-            {files.length > 0 && (
-                <>
-                    <PerfectScrollbar options={{suppressScrollX: true}}>
-                        <List className={classes.list}>
-                            {files.map((file, i) => (
-                                <ListItem
-                                    divider={i < files.length - 1}
-                                    key={i}
-                                >
-                                    <ListItemIcon>
-                                        <FileCopyIcon/>
-                                    </ListItemIcon>
-                                    <ListItemText
-                                        primary={file.name}
-                                        primaryTypographyProps={{variant: 'h5'}}
-                                        secondary={bytesToSize(file.size)}
-                                    />
-                                    <Tooltip title="More options">
-                                        <IconButton edge="end">
-                                            <MoreIcon/>
-                                        </IconButton>
-                                    </Tooltip>
-                                </ListItem>
-                            ))}
-                        </List>
-                    </PerfectScrollbar>
-                    <div className={classes.actions}>
-                        <Button
-                            onClick={handleRemoveAll}
-                            size="small"
+            <PerfectScrollbar options={{suppressScrollX: true}}>
+                <List className={classes.list}>
+                    {files.map((file, i) => (
+                        <ListItem
+                            divider={i < files.length - 1}
+                            key={i}
                         >
-                            Remove all
-                        </Button>
-                        <Button
-                            color="secondary"
-                            size="small"
-                            variant="contained"
-                            onClick={handleUpload}
-                            endIcon={isUploading && (
-                                <CircularProgress
-                                    className={classes.loader}
-                                    color="inherit"
-                                />
-                            )}
-                        >
-                            Upload images
-                        </Button>
-                    </div>
-                </>
-            )}
+                            <ListItemIcon>
+                                <FileCopyIcon/>
+                            </ListItemIcon>
+                            <ListItemText
+                                primary={file.name}
+                                primaryTypographyProps={{variant: 'h5'}}
+                                secondary={bytesToSize(file.size)}
+                            />
+                            <Tooltip title="More options">
+                                <IconButton edge="end">
+                                    <MoreIcon/>
+                                </IconButton>
+                            </Tooltip>
+                        </ListItem>
+                    ))}
+                </List>
+            </PerfectScrollbar>
+            <div className={classes.actions}>
+                {files.length > 0 && <Button
+                    onClick={handleRemoveAll}
+                    size="small"
+                >
+                    Remove all
+                </Button>}
+                <Button
+                    color="secondary"
+                    size="small"
+                    variant="contained"
+                    onClick={handleUpload}
+                    endIcon={isUploading && (
+                        <CircularProgress
+                            className={classes.loader}
+                            color="inherit"
+                        />
+                    )}
+                    disabled={files.length === 0 || isUploading}
+                >
+                    Upload images
+                </Button>
+            </div>
         </div>
     );
 };

@@ -4,9 +4,22 @@ import {Box, Button, Dialog, DialogContent, DialogTitle, IconButton, makeStyles,
 import {Close as CloseIcon} from '@material-ui/icons';
 import DTImagesList from 'src/components/ImagesList';
 import ImagesDropzone from 'src/components/ImagesDropzone';
+import useImages from 'src/hooks/useImages';
 import {Theme} from 'src/theme';
 
 const useStyles = makeStyles((theme: Theme) => ({
+    header: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        [theme.breakpoints.down('xs')]: {
+            alignItems: 'flex-start',
+            flexDirection: 'column',
+            '& h4': {
+                margin: theme.spacing(0, 0, 1)
+            }
+        }
+    },
     closeButton: {
         position: 'absolute',
         right: theme.spacing(1),
@@ -21,6 +34,8 @@ const SectionImage: FC = () => {
     const classes = useStyles();
     const {dataset_id} = useParams();
 
+    const {images} = useImages();
+
     const [openUpload, setOpenUpload] = useState(false);
 
     const handleUploadOpen = () => {
@@ -33,25 +48,28 @@ const SectionImage: FC = () => {
 
     return (
         <>
-            <Box display='flex' flexDirection='row-reverse'>
-                <Box ml={1}>
-                    <Button variant="contained" color="primary">
-                        Crawl images from the web
-                    </Button>
-                </Box>
+            <div className={classes.header}>
+                <Typography variant="h4" color="textSecondary">
+                    Showing {images.length} images
+                </Typography>
 
-                <Button variant="outlined" color="primary" onClick={handleUploadOpen}>
-                    Upload images
-                </Button>
+                <Box display='flex'>
+                    <Button variant="outlined" color="primary" onClick={handleUploadOpen} size="small">
+                        Upload images
+                    </Button>
+                    <Box ml={1}>
+                        <Button variant="contained" color="primary" size="small">
+                            Crawl images from the web
+                        </Button>
+                    </Box>
+                </Box>
 
                 <Dialog
                     open={openUpload}
                     onClose={handleUploadClose}
                 >
                     <DialogTitle>
-                        <Typography variant="h5">
-                            Upload Images
-                        </Typography>
+                        Upload Images
                         <IconButton
                             className={classes.closeButton}
                             onClick={handleUploadClose}
@@ -63,7 +81,7 @@ const SectionImage: FC = () => {
                         <ImagesDropzone dataset_id={dataset_id}/>
                     </DialogContent>
                 </Dialog>
-            </Box>
+            </div>
 
             <Box mt={3}>
                 <DTImagesList/>
