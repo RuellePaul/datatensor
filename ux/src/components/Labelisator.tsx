@@ -1,7 +1,7 @@
-import React, {FC, useRef} from 'react';
+import React, {FC, useRef, useState} from 'react';
 import clsx from 'clsx';
-import {makeStyles} from '@material-ui/core';
-import {ToggleButton, ToggleButtonGroup} from '@material-ui/lab';
+import {Box, makeStyles} from '@material-ui/core';
+import {Pagination, ToggleButton, ToggleButtonGroup} from '@material-ui/lab';
 import {Maximize as LabelIcon, Move as MoveIcon} from 'react-feather';
 import {Theme} from 'src/theme';
 import DTImage from 'src/components/Image';
@@ -12,7 +12,9 @@ interface DTLabelisatorProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {},
+    root: {
+        outline: 'none'
+    },
     container: {
         position: 'relative',
     },
@@ -24,6 +26,11 @@ const useStyles = makeStyles((theme: Theme) => ({
         height: '100%',
         zIndex: 1000,
         cursor: 'crosshair'
+    },
+    pagination: {
+        display: 'flex',
+        justifyContent: 'center',
+        margin: theme.spacing(1, 2)
     }
 }));
 
@@ -40,9 +47,9 @@ const drawCursorLines = (canvas, offset) => {
     context.beginPath();
     context.setLineDash([5]);
     context.moveTo(offset[0], 0);
-    context.lineTo(offset[0], 720);
+    context.lineTo(offset[0], canvas.height);
     context.moveTo(0, offset[1]);
-    context.lineTo(1280, offset[1]);
+    context.lineTo(canvas.width, offset[1]);
     context.stroke();
 };
 
@@ -55,18 +62,20 @@ const Tools = () => {
     };
 
     return (
-        <ToggleButtonGroup
-            value={tool}
-            exclusive
-            onChange={handleToolChange}
-        >
-            <ToggleButton value="label">
-                <LabelIcon/>
-            </ToggleButton>
-            <ToggleButton value="move">
-                <MoveIcon/>
-            </ToggleButton>
-        </ToggleButtonGroup>
+        <Box mb={1}>
+            <ToggleButtonGroup
+                value={tool}
+                exclusive
+                onChange={handleToolChange}
+            >
+                <ToggleButton value="label">
+                    <LabelIcon/>
+                </ToggleButton>
+                <ToggleButton value="move">
+                    <MoveIcon/>
+                </ToggleButton>
+            </ToggleButtonGroup>
+        </Box>
     );
 };
 
@@ -80,6 +89,20 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
 
     const {images} = useImages();
 
+    const [selected, setSelected] = useState(0);
+
+    const handleKeyDown = (event: React.KeyboardEvent<unknown>) => {
+        if (event.key === 'ArrowLeft')
+            setSelected(Math.max(0, selected - 1));
+        else if (event.key === 'ArrowRight')
+            setSelected(Math.min(selected + 1, images.length - 1));
+    };
+
+    const handlePaginationChange = (event: React.ChangeEvent<unknown>, value: number) => {
+        setSelected(value - 1);
+    };
+
+    // canvas related
     const handleMouseMove = (event) => {
         reset(canvasRef.current);
         let offset = currentOffset(event.nativeEvent);
@@ -93,11 +116,15 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
     return (
         <div
             className={clsx(classes.root, className)}
+            onKeyDown={handleKeyDown}
+            tabIndex={1000}
             {...rest}
         >
             <Tools/>
 
-            <div className={classes.container}>
+            <div
+                className={classes.container}
+            >
                 <canvas
                     className={classes.canvas}
                     onMouseMove={handleMouseMove}
@@ -105,9 +132,17 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                     ref={canvasRef}
                 />
                 <DTImage
-                    image={images[0]}
+                    image={images[selected]}
                 />
             </div>
+
+            <Pagination
+                className={classes.pagination}
+                color='primary'
+                count={images.length}
+                page={selected + 1}
+                onChange={handlePaginationChange}
+            />
         </div>
     );
 };
