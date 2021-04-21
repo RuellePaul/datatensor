@@ -1,6 +1,8 @@
 import React, {FC, useRef} from 'react';
 import clsx from 'clsx';
 import {makeStyles} from '@material-ui/core';
+import {ToggleButton, ToggleButtonGroup} from '@material-ui/lab';
+import {Maximize as LabelIcon, Move as MoveIcon} from 'react-feather';
 import {Theme} from 'src/theme';
 import DTImage from 'src/components/Image';
 import useImages from 'src/hooks/useImages';
@@ -10,7 +12,8 @@ interface DTLabelisatorProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {
+    root: {},
+    container: {
         position: 'relative',
     },
     canvas: {
@@ -43,6 +46,30 @@ const drawCursorLines = (canvas, offset) => {
     context.stroke();
 };
 
+const Tools = () => {
+    const [tool, setTool] = React.useState<string | null>('label');
+
+    const handleToolChange = (event: React.MouseEvent<HTMLElement>, newTool: string | null) => {
+        if (newTool !== null)
+            setTool(newTool);
+    };
+
+    return (
+        <ToggleButtonGroup
+            value={tool}
+            exclusive
+            onChange={handleToolChange}
+        >
+            <ToggleButton value="label">
+                <LabelIcon/>
+            </ToggleButton>
+            <ToggleButton value="move">
+                <MoveIcon/>
+            </ToggleButton>
+        </ToggleButtonGroup>
+    );
+};
+
 const DTLabelisator: FC<DTLabelisatorProps> = ({
                                                    className,
                                                    ...rest
@@ -68,15 +95,19 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
             className={clsx(classes.root, className)}
             {...rest}
         >
-            <canvas
-                className={classes.canvas}
-                onMouseMove={handleMouseMove}
-                onMouseLeave={handleMouseLeave}
-                ref={canvasRef}
-            />
-            <DTImage
-                image={images[0]}
-            />
+            <Tools/>
+
+            <div className={classes.container}>
+                <canvas
+                    className={classes.canvas}
+                    onMouseMove={handleMouseMove}
+                    onMouseLeave={handleMouseLeave}
+                    ref={canvasRef}
+                />
+                <DTImage
+                    image={images[0]}
+                />
+            </div>
         </div>
     );
 };
