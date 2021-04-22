@@ -1,7 +1,8 @@
 import React, {FC, useEffect, useRef, useState} from 'react';
 import clsx from 'clsx';
+import {useSnackbar} from 'notistack';
 import {v4 as uuid} from 'uuid';
-import {Box, Button, makeStyles} from '@material-ui/core';
+import {Button, makeStyles} from '@material-ui/core';
 import {Pagination, ToggleButton, ToggleButtonGroup} from '@material-ui/lab';
 import {Maximize as LabelIcon, Move as MoveIcon} from 'react-feather';
 import {Theme} from 'src/theme';
@@ -38,8 +39,16 @@ const useStyles = makeStyles((theme: Theme) => ({
         display: 'flex',
         justifyContent: 'center',
         margin: theme.spacing(1, 2)
+    },
+    actions: {
+        display: 'flex',
+        alignItems: 'center',
+        margin: theme.spacing(0, 0, 1)
     }
 }));
+
+const LABEL_MIN_WIDTH = 20;
+const LABEL_MIN_HEIGHT = 20;
 
 const currentPoint = (nativeEvent) => ([nativeEvent.offsetX, nativeEvent.offsetY]);
 
@@ -67,7 +76,7 @@ const drawRect = (canvas: HTMLCanvasElement, pointA: Point, pointB: Point) => {
     let y = pointA[1];
     let w = pointB[0] - pointA[0];
     let h = pointB[1] - pointA[1];
-    let color = '#000000';
+    let color = (Math.abs(w) < LABEL_MIN_WIDTH || Math.abs(h) < LABEL_MIN_HEIGHT) ? '#FF0000' : '#000000';
     let context = canvas.getContext('2d');
     context.lineWidth = 2;
     context.setLineDash([5]);
@@ -92,6 +101,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                                                    ...rest
                                                }) => {
     const classes = useStyles();
+    const {enqueueSnackbar} = useSnackbar();
 
     const canvasRef = useRef();
 
@@ -106,6 +116,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
     const saveLabels = async (labels: Label[]) => {
         if (labelsChanged) {
             const response = await api.post<Image>(`/v1/images/labeling/${images[selected].id}`, {labels});
+            enqueueSnackbar('Labels saved');
             saveImages(
                 images.map(image => image.id === response.data.id
                     ? {
@@ -175,6 +186,8 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
             let point = currentPoint(event.nativeEvent);
             let canvas = canvasRef.current || null;
             if (canvas === null) return;
+            if (Math.abs(storedPoint[0] - point[0]) < LABEL_MIN_WIDTH) return;
+            if (Math.abs(storedPoint[1] - point[1]) < LABEL_MIN_HEIGHT) return;
             let newLabel = {
                 id: uuid(),
                 x: formatRatio(Math.min(point[0], storedPoint[0]) / canvas.width),
@@ -193,11 +206,12 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
             tabIndex={1000}
             {...rest}
         >
-            <Box mb={1}>
+            <div className={classes.actions}>
                 <ToggleButtonGroup
                     value={tool}
                     exclusive
                     onChange={handleToolChange}
+                    size="small"
                 >
                     <ToggleButton value="label">
                         <LabelIcon/>
@@ -207,15 +221,25 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                     </ToggleButton>
                 </ToggleButtonGroup>
 
+                <div className='flexGrow'/>
+
                 <Button
-                    size="small"
+                    onClick={() => setLabels(images[selected].labels)}
+                    disabled={!labelsChanged}
+                    size='small'
+                >
+                    Clear
+                </Button>
+                <Button
+                    variant="contained"
                     color="primary"
                     onClick={() => saveLabels(labels)}
                     disabled={!labelsChanged}
+                    size='small'
                 >
-                    Save labels
+                    Save
                 </Button>
-            </Box>
+            </div>
 
             <div
                 className={classes.container}
