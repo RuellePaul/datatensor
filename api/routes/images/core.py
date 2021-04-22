@@ -72,7 +72,8 @@ def upload_images(dataset_id, request_files):
                 'name': name,
                 'size': len(image_bytes),
                 'width': image.shape[1],
-                'height': image.shape[0]
+                'height': image.shape[0],
+                'labels': []
             })
 
     Config.db.images.insert_many(images)

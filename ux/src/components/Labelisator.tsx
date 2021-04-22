@@ -1,5 +1,7 @@
-import React, {FC, useRef, useState} from 'react';
+import React, {FC, useEffect, useRef, useState} from 'react';
 import clsx from 'clsx';
+import {useSnackbar} from 'notistack';
+import {v4 as uuid} from 'uuid';
 import {Box, makeStyles} from '@material-ui/core';
 import {Pagination, ToggleButton, ToggleButtonGroup} from '@material-ui/lab';
 import {Maximize as LabelIcon, Move as MoveIcon} from 'react-feather';
@@ -7,6 +9,8 @@ import {Theme} from 'src/theme';
 import DTImage from 'src/components/Image';
 import useImages from 'src/hooks/useImages';
 import {Label} from 'src/types/label';
+import {Image} from 'src/types/image';
+import api from 'src/utils/api';
 
 interface DTLabelisatorProps {
     className?: string;
@@ -73,22 +77,11 @@ const drawRect = (canvas: HTMLCanvasElement, pointA: Point, pointB: Point) => {
     context.fillRect(x, y, w, h);
 };
 
-const drawLabels = (canvas: HTMLCanvasElement, labels: Label[]) => {
-    for (const label of labels) {
-        let x = label.x * canvas.width;
-        let y = label.y * canvas.height;
-        let w = label.w * canvas.width;
-        let h = label.h * canvas.height;
-        let color = '#000000';
-        let context = canvas.getContext('2d');
-        context.lineWidth = 2;
-        context.setLineDash([0]);
-        context.strokeStyle = color;
-        context.strokeRect(x, y, w, h);
-        context.fillStyle = `${color}33`;
-        context.fillRect(x, y, w, h);
-    }
-};
+
+const arrayOfLabelsEquals = (labels, newLabels) => (
+    labels.map(label => label.id).sort().join('') === newLabels.map(label => label.id).sort().join('')
+);
+
 
 const formatRatio = ratio => Math.abs(Math.round(ratio * 1e6) / 1e6);
 
@@ -99,25 +92,50 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                                                    ...rest
                                                }) => {
     const classes = useStyles();
+    const {enqueueSnackbar} = useSnackbar();
 
     const canvasRef = useRef();
 
-    const {images} = useImages();
+    const {images, saveImages} = useImages();
 
 
     // Pagination
     const [selected, setSelected] = useState(0);
 
-    const handlePaginationChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    const saveLabels = async (labels: Label[]) => {
+        if (!arrayOfLabelsEquals(labels, images[selected].labels)) {
+            const response = await api.post<Image>(`/v1/images/labeling/${images[selected].id}`, {labels});
+            saveImages(
+                images.map(image => image.id === response.data.id
+                    ? {
+                        ...image,
+                        labels: response.data.labels
+                    }
+                    : image
+                )
+            );
+            enqueueSnackbar(`${labels.length} labels saved`);
+        }
+    };
+
+    const handlePaginationChange = async (event: React.ChangeEvent<unknown>, value: number) => {
+        await saveLabels(labels);
         setSelected(value - 1);
     };
 
-    const handleKeyDown = (event: React.KeyboardEvent<unknown>) => {
-        if (event.key === 'ArrowLeft')
+    const handleKeyDown = async (event: React.KeyboardEvent<unknown>) => {
+        if (event.key === 'ArrowLeft') {
+            await saveLabels(labels);
             setSelected(Math.max(0, selected - 1));
-        else if (event.key === 'ArrowRight')
+        } else if (event.key === 'ArrowRight') {
+            await saveLabels(labels);
             setSelected(Math.min(selected + 1, images.length - 1));
+        }
     };
+
+    useEffect(() => {
+        setLabels(images[selected].labels);
+    }, [images, selected]);
 
 
     // Tools
@@ -128,7 +146,6 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
             setTool(newTool);
     };
 
-
     // Mouse events
     const [labels, setLabels] = useState<Label[]>(images[selected].labels || []);
 
@@ -138,7 +155,6 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
 
         if (event.nativeEvent.which === 0) { // IDLE
             drawCursorLines(canvasRef.current, point);
-            drawLabels(canvasRef.current, labels);
         }
 
         if (event.nativeEvent.which === 1)  // LEFT CLICK
@@ -160,7 +176,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
             let canvas = canvasRef.current || null;
             if (canvas === null) return;
             let newLabel = {
-                id: '0',
+                id: uuid(),
                 x: formatRatio(Math.min(point[0], storedPoint[0]) / canvas.width),
                 y: formatRatio(Math.min(point[1], storedPoint[1]) / canvas.height),
                 w: formatRatio((point[0] - storedPoint[0]) / canvas.width),
@@ -205,6 +221,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                 />
                 <DTImage
                     image={images[selected]}
+                    labels={labels}
                 />
             </div>
 
@@ -215,10 +232,6 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                 page={selected + 1}
                 onChange={handlePaginationChange}
             />
-
-            <pre style={{color: 'white'}}>
-                {JSON.stringify(labels, null, 4)}
-            </pre>
         </div>
     );
 };
