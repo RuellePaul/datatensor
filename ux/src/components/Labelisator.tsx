@@ -11,6 +11,8 @@ interface DTLabelisatorProps {
     className?: string;
 }
 
+type Point = number[];
+
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         outline: 'none'
@@ -34,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const currentOffset = (event) => ([event.offsetX, event.offsetY]);
+const currentPoint = (event) => ([event.offsetX, event.offsetY]);
 
 const reset = (canvas) => {
     canvas.width = canvas.clientWidth;
@@ -42,24 +44,24 @@ const reset = (canvas) => {
     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
 };
 
-const drawCursorLines = (canvas, offset) => {
+const drawCursorLines = (canvas: HTMLCanvasElement, point: Point) => {
     let context = canvas.getContext('2d');
     context.beginPath();
     context.setLineDash([5]);
-    context.moveTo(offset[0], 0);
-    context.lineTo(offset[0], canvas.height);
-    context.moveTo(0, offset[1]);
-    context.lineTo(canvas.width, offset[1]);
+    context.moveTo(point[0], 0);
+    context.lineTo(point[0], canvas.height);
+    context.moveTo(0, point[1]);
+    context.lineTo(canvas.width, point[1]);
     context.stroke();
 };
 
-const drawRect = (canvas, offsetA, offsetB) => {
-    if (!offsetA || !offsetB)
+const drawRect = (canvas: HTMLCanvasElement, pointA: Point, pointB: Point) => {
+    if (!pointA || !pointB)
         return;
-    let x = offsetA[0];
-    let y = offsetA[1];
-    let w = offsetB[0] - offsetA[0];
-    let h = offsetB[1] - offsetA[1];
+    let x = pointA[0];
+    let y = pointA[1];
+    let w = pointB[0] - pointA[0];
+    let h = pointB[1] - pointA[1];
     let color = '#000000';
     let context = canvas.getContext('2d');
     context.lineWidth = 2;
@@ -71,7 +73,7 @@ const drawRect = (canvas, offsetA, offsetB) => {
 
 
 const Tools = () => {
-    const [tool, setTool] = React.useState<string | null>('label');
+    const [tool, setTool] = useState<string>('label');
 
     const handleToolChange = (event: React.MouseEvent<HTMLElement>, newTool: string | null) => {
         if (newTool !== null)
@@ -122,13 +124,13 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
     // canvas related
     const handleMouseMove = (event: React.MouseEvent<HTMLElement>) => {
         reset(canvasRef.current);
-        let offset = currentOffset(event.nativeEvent);
+        let point = currentPoint(event.nativeEvent);
 
         if (event.nativeEvent.which === 0)  // IDLE
-            drawCursorLines(canvasRef.current, offset);
+            drawCursorLines(canvasRef.current, point);
 
         if (event.nativeEvent.which === 1)  // LEFT CLICK
-            drawRect(canvasRef.current, offset, storeOffset)
+            drawRect(canvasRef.current, point, storedPoint)
     };
 
     const handleMouseLeave = (event: React.MouseEvent<HTMLElement>) => {
@@ -137,10 +139,10 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
 
     const handleMouseDown = (event: React.MouseEvent<HTMLElement>) => {
         if (event.nativeEvent.which === 1)
-            storeOffset = currentOffset(event.nativeEvent);
+            storedPoint = currentPoint(event.nativeEvent);
     };
 
-    let storeOffset;
+    let storedPoint;
 
     return (
         <div
