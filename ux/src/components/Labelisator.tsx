@@ -66,11 +66,31 @@ const drawRect = (canvas: HTMLCanvasElement, pointA: Point, pointB: Point) => {
     let color = '#000000';
     let context = canvas.getContext('2d');
     context.lineWidth = 2;
+    context.setLineDash([5]);
     context.strokeStyle = color;
     context.strokeRect(x, y, w, h);
     context.fillStyle = `${color}33`;
     context.fillRect(x, y, w, h);
 };
+
+const drawLabels = (canvas: HTMLCanvasElement, labels: Label[]) => {
+    for (const label of labels) {
+        let x = label.x * canvas.width;
+        let y = label.y * canvas.height;
+        let w = label.w * canvas.width;
+        let h = label.h * canvas.height;
+        let color = '#000000';
+        let context = canvas.getContext('2d');
+        context.lineWidth = 2;
+        context.setLineDash([0]);
+        context.strokeStyle = color;
+        context.strokeRect(x, y, w, h);
+        context.fillStyle = `${color}33`;
+        context.fillRect(x, y, w, h);
+    }
+};
+
+const formatRatio = ratio => Math.abs(Math.round(ratio * 1e6) / 1e6);
 
 let storedPoint;
 
@@ -116,8 +136,10 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
         reset(canvasRef.current);
         let point = currentPoint(event.nativeEvent);
 
-        if (event.nativeEvent.which === 0)  // IDLE
+        if (event.nativeEvent.which === 0) { // IDLE
             drawCursorLines(canvasRef.current, point);
+            drawLabels(canvasRef.current, labels);
+        }
 
         if (event.nativeEvent.which === 1)  // LEFT CLICK
             drawRect(canvasRef.current, point, storedPoint)
@@ -135,12 +157,14 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
     const handleMouseUp = (event: React.MouseEvent<HTMLElement>) => {
         if (event.nativeEvent.which === 1) {
             let point = currentPoint(event.nativeEvent);
+            let canvas = canvasRef.current || null;
+            if (canvas === null) return;
             let newLabel = {
                 id: '0',
-                x: point[0],
-                y: point[1],
-                w: point[0] - storedPoint[0],
-                h: point[1] - storedPoint[1]
+                x: formatRatio(Math.min(point[0], storedPoint[0]) / canvas.width),
+                y: formatRatio(Math.min(point[1], storedPoint[1]) / canvas.height),
+                w: formatRatio((point[0] - storedPoint[0]) / canvas.width),
+                h: formatRatio((point[1] - storedPoint[1]) / canvas.height)
             };
             setLabels([...labels, newLabel]);
         }

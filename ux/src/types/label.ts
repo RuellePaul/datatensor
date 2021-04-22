@@ -1,7 +1,7 @@
 export interface Label {
     id: string;
-    x: number;
-    y: number;
-    w: number;
-    h: number;
+    x: number;  // ratio
+    y: number;  // ratio
+    w: number;  // ratio
+    h: number;  // ratio
 }
