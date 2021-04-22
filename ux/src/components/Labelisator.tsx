@@ -1,8 +1,7 @@
 import React, {FC, useEffect, useRef, useState} from 'react';
 import clsx from 'clsx';
-import {useSnackbar} from 'notistack';
 import {v4 as uuid} from 'uuid';
-import {Box, makeStyles} from '@material-ui/core';
+import {Box, Button, makeStyles} from '@material-ui/core';
 import {Pagination, ToggleButton, ToggleButtonGroup} from '@material-ui/lab';
 import {Maximize as LabelIcon, Move as MoveIcon} from 'react-feather';
 import {Theme} from 'src/theme';
@@ -92,18 +91,19 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                                                    ...rest
                                                }) => {
     const classes = useStyles();
-    const {enqueueSnackbar} = useSnackbar();
 
     const canvasRef = useRef();
 
     const {images, saveImages} = useImages();
-
-
-    // Pagination
     const [selected, setSelected] = useState(0);
 
+    // Labels
+    const [labels, setLabels] = useState<Label[]>(images[selected].labels || []);
+
+    const labelsChanged: boolean = !arrayOfLabelsEquals(labels, images[selected].labels);
+
     const saveLabels = async (labels: Label[]) => {
-        if (!arrayOfLabelsEquals(labels, images[selected].labels)) {
+        if (labelsChanged) {
             const response = await api.post<Image>(`/v1/images/labeling/${images[selected].id}`, {labels});
             saveImages(
                 images.map(image => image.id === response.data.id
@@ -114,10 +114,10 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                     : image
                 )
             );
-            enqueueSnackbar(`${labels.length} labels saved`);
         }
     };
 
+    // Pagination
     const handlePaginationChange = async (event: React.ChangeEvent<unknown>, value: number) => {
         await saveLabels(labels);
         setSelected(value - 1);
@@ -125,11 +125,13 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
 
     const handleKeyDown = async (event: React.KeyboardEvent<unknown>) => {
         if (event.key === 'ArrowLeft') {
+            if (selected === 0) return;
             await saveLabels(labels);
-            setSelected(Math.max(0, selected - 1));
+            setSelected(selected - 1);
         } else if (event.key === 'ArrowRight') {
+            if (selected === images.length -1) return;
             await saveLabels(labels);
-            setSelected(Math.min(selected + 1, images.length - 1));
+            setSelected(selected + 1);
         }
     };
 
@@ -147,8 +149,6 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
     };
 
     // Mouse events
-    const [labels, setLabels] = useState<Label[]>(images[selected].labels || []);
-
     const handleMouseMove = (event: React.MouseEvent<HTMLElement>) => {
         reset(canvasRef.current);
         let point = currentPoint(event.nativeEvent);
@@ -206,6 +206,15 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                         <MoveIcon/>
                     </ToggleButton>
                 </ToggleButtonGroup>
+
+                <Button
+                    size="small"
+                    color="primary"
+                    onClick={() => saveLabels(labels)}
+                    disabled={!labelsChanged}
+                >
+                    Save labels
+                </Button>
             </Box>
 
             <div
