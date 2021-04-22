@@ -153,9 +153,8 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
         reset(canvasRef.current);
         let point = currentPoint(event.nativeEvent);
 
-        if (event.nativeEvent.which === 0) { // IDLE
+        if (event.nativeEvent.which === 0) // IDLE
             drawCursorLines(canvasRef.current, point);
-        }
 
         if (event.nativeEvent.which === 1)  // LEFT CLICK
             drawRect(canvasRef.current, point, storedPoint)
