@@ -53,6 +53,23 @@ const drawCursorLines = (canvas, offset) => {
     context.stroke();
 };
 
+const drawRect = (canvas, offsetA, offsetB) => {
+    if (!offsetA || !offsetB)
+        return;
+    let x = offsetA[0];
+    let y = offsetA[1];
+    let w = offsetB[0] - offsetA[0];
+    let h = offsetB[1] - offsetA[1];
+    let color = '#000000';
+    let context = canvas.getContext('2d');
+    context.lineWidth = 2;
+    context.strokeStyle = color;
+    context.strokeRect(x, y, w, h);
+    context.fillStyle = `${color}33`;
+    context.fillRect(x, y, w, h);
+};
+
+
 const Tools = () => {
     const [tool, setTool] = React.useState<string | null>('label');
 
@@ -103,15 +120,27 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
     };
 
     // canvas related
-    const handleMouseMove = (event) => {
+    const handleMouseMove = (event: React.MouseEvent<HTMLElement>) => {
         reset(canvasRef.current);
         let offset = currentOffset(event.nativeEvent);
-        drawCursorLines(canvasRef.current, offset);
+
+        if (event.nativeEvent.which === 0)  // IDLE
+            drawCursorLines(canvasRef.current, offset);
+
+        if (event.nativeEvent.which === 1)  // LEFT CLICK
+            drawRect(canvasRef.current, offset, storeOffset)
     };
 
-    const handleMouseLeave = (event) => {
+    const handleMouseLeave = (event: React.MouseEvent<HTMLElement>) => {
         reset(canvasRef.current);
     };
+
+    const handleMouseDown = (event: React.MouseEvent<HTMLElement>) => {
+        if (event.nativeEvent.which === 1)
+            storeOffset = currentOffset(event.nativeEvent);
+    };
+
+    let storeOffset;
 
     return (
         <div
@@ -127,6 +156,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
             >
                 <canvas
                     className={classes.canvas}
+                    onMouseDown={handleMouseDown}
                     onMouseMove={handleMouseMove}
                     onMouseLeave={handleMouseLeave}
                     ref={canvasRef}
