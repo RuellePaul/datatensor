@@ -71,32 +71,7 @@ const drawRect = (canvas: HTMLCanvasElement, pointA: Point, pointB: Point) => {
     context.fillRect(x, y, w, h);
 };
 
-
-const Tools = () => {
-    const [tool, setTool] = useState<string>('label');
-
-    const handleToolChange = (event: React.MouseEvent<HTMLElement>, newTool: string | null) => {
-        if (newTool !== null)
-            setTool(newTool);
-    };
-
-    return (
-        <Box mb={1}>
-            <ToggleButtonGroup
-                value={tool}
-                exclusive
-                onChange={handleToolChange}
-            >
-                <ToggleButton value="label">
-                    <LabelIcon/>
-                </ToggleButton>
-                <ToggleButton value="move">
-                    <MoveIcon/>
-                </ToggleButton>
-            </ToggleButtonGroup>
-        </Box>
-    );
-};
+let storedPoint;
 
 const DTLabelisator: FC<DTLabelisatorProps> = ({
                                                    className,
@@ -108,7 +83,12 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
 
     const {images} = useImages();
 
+    // Pagination
     const [selected, setSelected] = useState(0);
+
+    const handlePaginationChange = (event: React.ChangeEvent<unknown>, value: number) => {
+        setSelected(value - 1);
+    };
 
     const handleKeyDown = (event: React.KeyboardEvent<unknown>) => {
         if (event.key === 'ArrowLeft')
@@ -117,11 +97,17 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
             setSelected(Math.min(selected + 1, images.length - 1));
     };
 
-    const handlePaginationChange = (event: React.ChangeEvent<unknown>, value: number) => {
-        setSelected(value - 1);
+
+    // Tools
+    const [tool, setTool] = useState<string>('label');
+
+    const handleToolChange = (event: React.MouseEvent<HTMLElement>, newTool: string | null) => {
+        if (newTool !== null)
+            setTool(newTool);
     };
 
-    // canvas related
+
+    // Mouse events
     const handleMouseMove = (event: React.MouseEvent<HTMLElement>) => {
         reset(canvasRef.current);
         let point = currentPoint(event.nativeEvent);
@@ -142,8 +128,6 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
             storedPoint = currentPoint(event.nativeEvent);
     };
 
-    let storedPoint;
-
     return (
         <div
             className={clsx(classes.root, className)}
@@ -151,7 +135,20 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
             tabIndex={1000}
             {...rest}
         >
-            <Tools/>
+            <Box mb={1}>
+                <ToggleButtonGroup
+                    value={tool}
+                    exclusive
+                    onChange={handleToolChange}
+                >
+                    <ToggleButton value="label">
+                        <LabelIcon/>
+                    </ToggleButton>
+                    <ToggleButton value="move">
+                        <MoveIcon/>
+                    </ToggleButton>
+                </ToggleButtonGroup>
+            </Box>
 
             <div
                 className={classes.container}
