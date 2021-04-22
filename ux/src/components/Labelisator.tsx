@@ -6,6 +6,7 @@ import {Maximize as LabelIcon, Move as MoveIcon} from 'react-feather';
 import {Theme} from 'src/theme';
 import DTImage from 'src/components/Image';
 import useImages from 'src/hooks/useImages';
+import {Label} from 'src/types/label';
 
 interface DTLabelisatorProps {
     className?: string;
@@ -36,9 +37,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const currentPoint = (event) => ([event.offsetX, event.offsetY]);
+const currentPoint = (nativeEvent) => ([nativeEvent.offsetX, nativeEvent.offsetY]);
 
-const reset = (canvas) => {
+const reset = (canvas: HTMLCanvasElement) => {
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
@@ -83,6 +84,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
 
     const {images} = useImages();
 
+
     // Pagination
     const [selected, setSelected] = useState(0);
 
@@ -108,6 +110,8 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
 
 
     // Mouse events
+    const [labels, setLabels] = useState<Label[]>(images[selected].labels || []);
+
     const handleMouseMove = (event: React.MouseEvent<HTMLElement>) => {
         reset(canvasRef.current);
         let point = currentPoint(event.nativeEvent);
@@ -126,6 +130,20 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
     const handleMouseDown = (event: React.MouseEvent<HTMLElement>) => {
         if (event.nativeEvent.which === 1)
             storedPoint = currentPoint(event.nativeEvent);
+    };
+
+    const handleMouseUp = (event: React.MouseEvent<HTMLElement>) => {
+        if (event.nativeEvent.which === 1) {
+            let point = currentPoint(event.nativeEvent);
+            let newLabel = {
+                id: '0',
+                x: point[0],
+                y: point[1],
+                w: point[0] - storedPoint[0],
+                h: point[1] - storedPoint[1]
+            };
+            setLabels([...labels, newLabel]);
+        }
     };
 
     return (
@@ -156,6 +174,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                 <canvas
                     className={classes.canvas}
                     onMouseDown={handleMouseDown}
+                    onMouseUp={handleMouseUp}
                     onMouseMove={handleMouseMove}
                     onMouseLeave={handleMouseLeave}
                     ref={canvasRef}
@@ -172,6 +191,10 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                 page={selected + 1}
                 onChange={handlePaginationChange}
             />
+
+            <pre style={{color: 'white'}}>
+                {JSON.stringify(labels, null, 4)}
+            </pre>
         </div>
     );
 };
