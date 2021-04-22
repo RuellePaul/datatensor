@@ -46,12 +46,15 @@ const SectionImage: FC = () => {
         setOpenUpload(false);
     };
 
+    const imagesCount = images.length;
+    const labelsCount = images.map(image => image.labels.length).reduce((acc, val) => acc + val, 0);
+
     return (
         <>
             <div className={classes.header}>
                 <Typography variant="h4" color="textSecondary">
                     {images.length > 0
-                        ? `Showing ${images.length} images`
+                        ? `Showing ${imagesCount} images & ${labelsCount} labels`
                         : `No images found`
                     }
                 </Typography>

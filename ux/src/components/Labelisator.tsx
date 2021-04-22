@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     container: {
         position: 'relative',
+        margin: 'auto'
     },
     canvas: {
         position: 'absolute',
@@ -129,7 +130,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
             await saveLabels(labels);
             setSelected(selected - 1);
         } else if (event.key === 'ArrowRight') {
-            if (selected === images.length -1) return;
+            if (selected === images.length - 1) return;
             await saveLabels(labels);
             setSelected(selected + 1);
         }
@@ -218,6 +219,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
 
             <div
                 className={classes.container}
+                style={{maxWidth: 700 * images[selected].width / images[selected].height}}
             >
                 <canvas
                     className={classes.canvas}
