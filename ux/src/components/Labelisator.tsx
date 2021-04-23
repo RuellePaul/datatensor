@@ -218,16 +218,12 @@ const ToolMove: FC<ToolLabelProps> = ({labels, setLabels}) => {
                 let delta: Point = [(point[0] - storedPoint[0]) / canvas.width, (point[1] - storedPoint[1]) / canvas.height];
                 return ({
                     ...label,
-                    x: label.x + delta[0],
-                    y: label.y + delta[1],
+                    x: Math.min(Math.max(label.x + delta[0], 0), 1 - label.w),
+                    y: Math.min(Math.max(label.y + delta[1], 0), 1 - label.h)
                 });
             });
             drawLabelsHovered(canvasRef.current, labelsTranslated);
         }
-    };
-
-    const handleMouseLeave = (event: React.MouseEvent<HTMLElement>) => {
-        reset(canvasRef.current);
     };
 
     const handleMouseDown = (event: React.MouseEvent<HTMLElement>) => {
@@ -244,9 +240,19 @@ const ToolMove: FC<ToolLabelProps> = ({labels, setLabels}) => {
     };
 
     const handleMouseUp = (event: React.MouseEvent<HTMLElement>) => {
-        if (event.nativeEvent.which === 1) {
-            let point = currentPoint(event.nativeEvent);
+        let canvas = canvasRef.current;
+        let point = currentPoint(event.nativeEvent);
 
+        if (event.nativeEvent.which === 1) { // LEFT CLICK
+            let labelsTranslated = storedLabels.map(label => {
+                let delta: Point = [(point[0] - storedPoint[0]) / canvas.width, (point[1] - storedPoint[1]) / canvas.height];
+                return ({
+                    ...label,
+                    x: Math.min(Math.max(label.x + delta[0], 0), 1 - label.w),
+                    y: Math.min(Math.max(label.y + delta[1], 0), 1 - label.h)
+                });
+            });
+            setLabels([...labels, ...labelsTranslated]);
         }
     };
 
@@ -256,7 +262,6 @@ const ToolMove: FC<ToolLabelProps> = ({labels, setLabels}) => {
             onMouseDown={handleMouseDown}
             onMouseUp={handleMouseUp}
             onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
             ref={canvasRef}
         />
     )
