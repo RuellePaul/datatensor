@@ -95,6 +95,24 @@ const drawRect = (canvas: HTMLCanvasElement, pointA: Point, pointB: Point) => {
     context.fillRect(x, y, w, h);
 };
 
+const drawLabelsHovered = (canvas: HTMLCanvasElement, labels: Label[]) => {
+    if (!labels)
+        return;
+    for (const label of labels) {
+        let x = label.x * canvas.width;
+        let y = label.y * canvas.height;
+        let w = label.w * canvas.width;
+        let h = label.h * canvas.height;
+        let color = '#000000';
+        let context = canvas.getContext('2d');
+        context.lineWidth = 2;
+        context.setLineDash([0]);
+        context.strokeStyle = color;
+        context.strokeRect(x, y, w, h);
+        context.fillStyle = `${color}55`;
+        context.fillRect(x, y, w, h);
+    }
+};
 
 const arrayOfLabelsEquals = (labels, newLabels) => (
     labels.map(label => label.id).sort().join('') === newLabels.map(label => label.id).sort().join('')
@@ -104,6 +122,7 @@ const arrayOfLabelsEquals = (labels, newLabels) => (
 const formatRatio = ratio => Math.abs(Math.round(ratio * 1e6) / 1e6);
 
 let storedPoint;
+
 
 const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels}) => {
     const classes = useStyles();
@@ -163,14 +182,30 @@ const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels}) => {
 
 const ToolMove: FC<ToolLabelProps> = ({labels, setLabels}) => {
     const classes = useStyles();
-    const canvasRef = useRef();
+
+    const canvasRef = useRef<HTMLCanvasElement>();
 
     const handleMouseMove = (event: React.MouseEvent<HTMLElement>) => {
         reset(canvasRef.current);
         let point = currentPoint(event.nativeEvent);
 
-        if (event.nativeEvent.which === 0) // IDLE
-            console.log('Idle')
+        if (event.nativeEvent.which === 0) { // IDLE
+            let canvas = canvasRef.current;
+            let labelsHovered = [];
+            for (const label of labels) {
+                if (label.x * canvas.width < point[0]) {
+                    if (label.y * canvas.height < point[1]) {
+                        if ((label.x + label.w) * canvas.width > point[0]) {
+                            if ((label.y + label.h) * canvas.height > point[1]) {
+                                labelsHovered.push(label);
+                            }
+                        }
+                    }
+
+                }
+            }
+            drawLabelsHovered(canvasRef.current, labelsHovered);
+        }
 
         if (event.nativeEvent.which === 1)  // LEFT CLICK
             console.log('Left')
@@ -188,8 +223,6 @@ const ToolMove: FC<ToolLabelProps> = ({labels, setLabels}) => {
     const handleMouseUp = (event: React.MouseEvent<HTMLElement>) => {
         if (event.nativeEvent.which === 1) {
             let point = currentPoint(event.nativeEvent);
-            let canvas = canvasRef.current || null;
-            if (canvas === null) return;
 
         }
     };
@@ -202,10 +235,11 @@ const ToolMove: FC<ToolLabelProps> = ({labels, setLabels}) => {
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             ref={canvasRef}
-            style={{cursor: 'not-allowed'}}
+            style={{cursor: 'move'}}
         />
     )
 };
+
 
 const DTLabelisator: FC<DTLabelisatorProps> = ({
                                                    className,
