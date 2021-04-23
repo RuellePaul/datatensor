@@ -215,7 +215,7 @@ const ToolMove: FC<ToolLabelProps> = ({labels, setLabels}) => {
 
         if (event.nativeEvent.which === 1) { // LEFT CLICK
             let labelsTranslated = storedLabels.map(label => {
-                let delta: Point = [point[0] / canvas.width - label.x, point[1] / canvas.height - label.y];
+                let delta: Point = [(point[0] - storedPoint[0]) / canvas.width, (point[1] - storedPoint[1]) / canvas.height];
                 return ({
                     ...label,
                     x: label.x + delta[0],
@@ -236,6 +236,7 @@ const ToolMove: FC<ToolLabelProps> = ({labels, setLabels}) => {
         if (event.nativeEvent.which === 1) {
             let labelsHoverIds = currentLabelsHoverIds(canvasRef.current, point, labels);
             if (labelsHoverIds.length > 0) {
+                storedPoint = point;
                 storedLabels = labels.filter(label => labelsHoverIds.includes(label.id));
                 setLabels(labels.filter(label => !labelsHoverIds.includes(label.id)));
             }
