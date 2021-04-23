@@ -16,6 +16,16 @@ interface DTLabelisatorProps {
     className?: string;
 }
 
+interface ToolLabelProps {
+    labels: Label[];
+    setLabels: (labels: Label[]) => void;
+}
+
+interface ToolMoveProps {
+    labels: Label[];
+    setLabels: (labels: Label[]) => void;
+}
+
 type Point = number[];
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -32,8 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         left: 0,
         width: '100%',
         height: '100%',
-        zIndex: 1000,
-        cursor: 'crosshair'
+        zIndex: 1000
     },
     pagination: {
         display: 'flex',
@@ -96,14 +105,114 @@ const formatRatio = ratio => Math.abs(Math.round(ratio * 1e6) / 1e6);
 
 let storedPoint;
 
+const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels}) => {
+    const classes = useStyles();
+    const canvasRef = useRef();
+
+    const handleMouseMove = (event: React.MouseEvent<HTMLElement>) => {
+        reset(canvasRef.current);
+        let point = currentPoint(event.nativeEvent);
+
+        if (event.nativeEvent.which === 0) // IDLE
+            drawCursorLines(canvasRef.current, point);
+
+        if (event.nativeEvent.which === 1)  // LEFT CLICK
+            drawRect(canvasRef.current, point, storedPoint)
+    };
+
+    const handleMouseLeave = (event: React.MouseEvent<HTMLElement>) => {
+        reset(canvasRef.current);
+    };
+
+    const handleMouseDown = (event: React.MouseEvent<HTMLElement>) => {
+        if (event.nativeEvent.which === 1)
+            storedPoint = currentPoint(event.nativeEvent);
+    };
+
+    const handleMouseUp = (event: React.MouseEvent<HTMLElement>) => {
+        if (event.nativeEvent.which === 1) {
+            let point = currentPoint(event.nativeEvent);
+            let canvas = canvasRef.current || null;
+            if (canvas === null) return;
+            if (Math.abs(storedPoint[0] - point[0]) < LABEL_MIN_WIDTH) return;
+            if (Math.abs(storedPoint[1] - point[1]) < LABEL_MIN_HEIGHT) return;
+            let newLabel = {
+                id: uuid(),
+                x: formatRatio(Math.min(point[0], storedPoint[0]) / canvas.width),
+                y: formatRatio(Math.min(point[1], storedPoint[1]) / canvas.height),
+                w: formatRatio((point[0] - storedPoint[0]) / canvas.width),
+                h: formatRatio((point[1] - storedPoint[1]) / canvas.height)
+            };
+            setLabels([...labels, newLabel]);
+        }
+    };
+
+    return (
+        <canvas
+            className={classes.canvas}
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            ref={canvasRef}
+            style={{cursor: 'crosshair'}}
+        />
+    )
+};
+
+
+const ToolMove: FC<ToolLabelProps> = ({labels, setLabels}) => {
+    const classes = useStyles();
+    const canvasRef = useRef();
+
+    const handleMouseMove = (event: React.MouseEvent<HTMLElement>) => {
+        reset(canvasRef.current);
+        let point = currentPoint(event.nativeEvent);
+
+        if (event.nativeEvent.which === 0) // IDLE
+            console.log('Idle')
+
+        if (event.nativeEvent.which === 1)  // LEFT CLICK
+            console.log('Left')
+    };
+
+    const handleMouseLeave = (event: React.MouseEvent<HTMLElement>) => {
+        reset(canvasRef.current);
+    };
+
+    const handleMouseDown = (event: React.MouseEvent<HTMLElement>) => {
+        if (event.nativeEvent.which === 1)
+            storedPoint = currentPoint(event.nativeEvent);
+    };
+
+    const handleMouseUp = (event: React.MouseEvent<HTMLElement>) => {
+        if (event.nativeEvent.which === 1) {
+            let point = currentPoint(event.nativeEvent);
+            let canvas = canvasRef.current || null;
+            if (canvas === null) return;
+
+        }
+    };
+
+    return (
+        <canvas
+            className={classes.canvas}
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            ref={canvasRef}
+            style={{cursor: 'not-allowed'}}
+        />
+    )
+};
+
 const DTLabelisator: FC<DTLabelisatorProps> = ({
                                                    className,
                                                    ...rest
                                                }) => {
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
-
-    const canvasRef = useRef();
 
     const {images, saveImages} = useImages();
     const [selected, setSelected] = useState(0);
@@ -160,44 +269,6 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
             setTool(newTool);
     };
 
-    // Mouse events
-    const handleMouseMove = (event: React.MouseEvent<HTMLElement>) => {
-        reset(canvasRef.current);
-        let point = currentPoint(event.nativeEvent);
-
-        if (event.nativeEvent.which === 0) // IDLE
-            drawCursorLines(canvasRef.current, point);
-
-        if (event.nativeEvent.which === 1)  // LEFT CLICK
-            drawRect(canvasRef.current, point, storedPoint)
-    };
-
-    const handleMouseLeave = (event: React.MouseEvent<HTMLElement>) => {
-        reset(canvasRef.current);
-    };
-
-    const handleMouseDown = (event: React.MouseEvent<HTMLElement>) => {
-        if (event.nativeEvent.which === 1)
-            storedPoint = currentPoint(event.nativeEvent);
-    };
-
-    const handleMouseUp = (event: React.MouseEvent<HTMLElement>) => {
-        if (event.nativeEvent.which === 1) {
-            let point = currentPoint(event.nativeEvent);
-            let canvas = canvasRef.current || null;
-            if (canvas === null) return;
-            if (Math.abs(storedPoint[0] - point[0]) < LABEL_MIN_WIDTH) return;
-            if (Math.abs(storedPoint[1] - point[1]) < LABEL_MIN_HEIGHT) return;
-            let newLabel = {
-                id: uuid(),
-                x: formatRatio(Math.min(point[0], storedPoint[0]) / canvas.width),
-                y: formatRatio(Math.min(point[1], storedPoint[1]) / canvas.height),
-                w: formatRatio((point[0] - storedPoint[0]) / canvas.width),
-                h: formatRatio((point[1] - storedPoint[1]) / canvas.height)
-            };
-            setLabels([...labels, newLabel]);
-        }
-    };
 
     return (
         <div
@@ -245,14 +316,18 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                 className={classes.container}
                 style={{maxWidth: 700 * images[selected].width / images[selected].height}}
             >
-                <canvas
-                    className={classes.canvas}
-                    onMouseDown={handleMouseDown}
-                    onMouseUp={handleMouseUp}
-                    onMouseMove={handleMouseMove}
-                    onMouseLeave={handleMouseLeave}
-                    ref={canvasRef}
-                />
+                {tool === 'label' && (
+                    <ToolLabel
+                        labels={labels}
+                        setLabels={setLabels}
+                    />
+                )}
+                {tool === 'move' && (
+                    <ToolMove
+                        labels={labels}
+                        setLabels={setLabels}
+                    />
+                )}
                 <DTImage
                     image={images[selected]}
                     labels={labels}
