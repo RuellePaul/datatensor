@@ -1,5 +1,6 @@
 import React, {FC, useEffect, useRef, useState} from 'react';
 import clsx from 'clsx';
+import _ from 'lodash';
 import {useSnackbar} from 'notistack';
 import {v4 as uuid} from 'uuid';
 import {Button, makeStyles} from '@material-ui/core';
@@ -131,10 +132,7 @@ const currentLabelsHoverIds = (canvas: HTMLCanvasElement, point: Point, labels: 
     return labelsHoverIds;
 };
 
-const arrayOfLabelsEquals = (labels: Label[], newLabels: Label[]) => (
-    labels.map(label => label.id).sort().join('') === newLabels.map(label => label.id).sort().join('')
-);
-
+const checkLabelsEquality = (labels: Label[], newLabels: Label[]) => _.isEqual(labels, newLabels);
 
 const formatRatio = ratio => Math.abs(Math.round(ratio * 1e6) / 1e6);
 
@@ -281,7 +279,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
     // Labels
     const [labels, setLabels] = useState<Label[]>(images[selected].labels || []);
 
-    const labelsChanged: boolean = !arrayOfLabelsEquals(labels, images[selected].labels);
+    const labelsChanged: boolean = !checkLabelsEquality(labels, images[selected].labels);
 
     const saveLabels = async (labels: Label[]) => {
         if (labelsChanged) {
