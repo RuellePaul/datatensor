@@ -372,7 +372,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                     disabled={!labelsChanged}
                     size='small'
                 >
-                    Clear
+                    Reset
                 </Button>
                 <Button
                     variant="contained"
