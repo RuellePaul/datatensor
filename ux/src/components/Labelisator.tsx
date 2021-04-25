@@ -107,7 +107,7 @@ const drawLabelsHovered = (canvas: HTMLCanvasElement, labels: Label[]) => {
         let color = '#000000';
         let context = canvas.getContext('2d');
         context.lineWidth = 2;
-        context.setLineDash([0]);
+        context.setLineDash([5]);
         context.strokeStyle = color;
         context.strokeRect(x, y, w, h);
         context.fillStyle = `${color}55`;
@@ -207,7 +207,7 @@ const ToolMove: FC<ToolLabelProps> = ({labels, setLabels}) => {
 
         if (event.nativeEvent.which === 0) { // IDLE
             let labelsHoverIds = currentLabelsHoverIds(canvas, point, labels);
-            canvas.style.cursor = labelsHoverIds.length > 0 ? 'move' : 'not-allowed';
+            canvas.style.cursor = labelsHoverIds.length > 0 ? 'grab' : 'not-allowed';
             drawLabelsHovered(canvasRef.current, labels.filter(label => labelsHoverIds.includes(label.id)));
         }
 
@@ -220,6 +220,7 @@ const ToolMove: FC<ToolLabelProps> = ({labels, setLabels}) => {
                     y: Math.min(Math.max(label.y + delta[1], 0), 1 - label.h)
                 });
             });
+            canvas.style.cursor = 'grabbing';
             drawLabelsHovered(canvasRef.current, labelsTranslated);
         }
     };
@@ -242,6 +243,9 @@ const ToolMove: FC<ToolLabelProps> = ({labels, setLabels}) => {
         let point = currentPoint(event.nativeEvent);
 
         if (event.nativeEvent.which === 1) { // LEFT CLICK
+            if (!storedPoint) return;
+            if (storedLabels.length === 0) return;
+
             let labelsTranslated = storedLabels.map(label => {
                 let delta: Point = [(point[0] - storedPoint[0]) / canvas.width, (point[1] - storedPoint[1]) / canvas.height];
                 return ({
@@ -251,6 +255,11 @@ const ToolMove: FC<ToolLabelProps> = ({labels, setLabels}) => {
                 });
             });
             setLabels([...labels, ...labelsTranslated]);
+
+            storedPoint = null;
+            storedLabels = [];
+
+            canvas.style.cursor = 'grab';
         }
     };
 
