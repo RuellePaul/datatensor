@@ -226,6 +226,7 @@ const ToolMove: FC<ToolLabelProps> = ({labels, setLabels}) => {
         }
 
         if (event.nativeEvent.which === 1) { // LEFT CLICK
+            if (!storedLabels) return;
             let labelsTranslated = currentLabelsTranslated(canvas, point, storedLabels);
             drawLabelsHovered(canvasRef.current, labelsTranslated);
             canvas.style.cursor = 'grabbing';
