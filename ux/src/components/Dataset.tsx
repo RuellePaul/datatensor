@@ -54,6 +54,10 @@ const DTDataset: FC<DatasetProps> = ({
         dataset.style.transform = `matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1)`
     };
 
+    const handleDeleteDataset = () => {
+        console.log('Delete dataset')
+    };
+
     return (
         <Card
             className={clsx(classes.root, className)}
@@ -83,11 +87,12 @@ const DTDataset: FC<DatasetProps> = ({
                 </CardContent>
             </CardActionArea>
             <CardActions>
-                <Button size="small" color="primary">
+                <Button
+                    color="primary"
+                    onClick={handleDeleteDataset}
+                    size="small"
+                >
                     Share
-                </Button>
-                <Button size="small" color="primary">
-                    Learn More
                 </Button>
             </CardActions>
         </Card>
