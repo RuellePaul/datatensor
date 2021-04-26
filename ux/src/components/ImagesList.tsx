@@ -85,12 +85,12 @@ const DTImagesList: FC<ImagesListProps> = ({
 
     const imageSelected = images[selected];
 
-    const handleOpen = (index) => {
+    const handleOpenImage = (index) => {
         setOpen(true);
         setSelected(index);
     };
 
-    const handleClose = () => {
+    const handleCloseImage = () => {
         setOpen(false);
     };
 
@@ -104,11 +104,12 @@ const DTImagesList: FC<ImagesListProps> = ({
 
     const handleDelete = async event => {
         event.stopPropagation();
-        handleCloseMenu();
 
         await api.post(`/v1/images/manage/${imageSelected.id}/delete`);
         setSelected(Math.max(0, selected - 1));
         saveImages(images.filter(image => image.id !== imageSelected.id));
+        handleCloseMenu();
+        images.length <= 1 && handleCloseImage();
     };
 
     const handleKeyDown = (event: React.KeyboardEvent<unknown>) => {
@@ -143,14 +144,14 @@ const DTImagesList: FC<ImagesListProps> = ({
                         key={image.id}
                         image={image}
                         clickable
-                        onClick={() => handleOpen(index)}
+                        onClick={() => handleOpenImage(index)}
                     />
                 ))}
             </Masonry>
             {imageSelected && <Modal
                 className={classes.modal}
                 open={open}
-                onClose={handleClose}
+                onClose={handleCloseImage}
                 BackdropComponent={Backdrop}
                 BackdropProps={{
                     className: classes.backdrop,
@@ -159,7 +160,7 @@ const DTImagesList: FC<ImagesListProps> = ({
                 <>
                     <div className={classes.header}>
                         <IconButton
-                            onClick={handleClose}
+                            onClick={handleCloseImage}
                         >
                             <BackIcon
                                 width={40}
