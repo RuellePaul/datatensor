@@ -132,6 +132,17 @@ const currentLabelsHoverIds = (canvas: HTMLCanvasElement, point: Point, labels: 
     return labelsHoverIds;
 };
 
+const currentLabelsTranslated = (canvas: HTMLCanvasElement, point: Point, labels: Label[]) => {
+    return labels.map(label => {
+        let delta: Point = [(point[0] - storedPoint[0]) / canvas.width, (point[1] - storedPoint[1]) / canvas.height];
+        return ({
+            ...label,
+            x: Math.min(Math.max(label.x + delta[0], 0), 1 - label.w),
+            y: Math.min(Math.max(label.y + delta[1], 0), 1 - label.h)
+        });
+    });
+}
+
 const checkLabelsEquality = (labels: Label[], newLabels: Label[]) => _.isEqual(labels, newLabels);
 
 const formatRatio = ratio => Math.abs(Math.round(ratio * 1e6) / 1e6);
@@ -215,16 +226,9 @@ const ToolMove: FC<ToolLabelProps> = ({labels, setLabels}) => {
         }
 
         if (event.nativeEvent.which === 1) { // LEFT CLICK
-            let labelsTranslated = storedLabels.map(label => {
-                let delta: Point = [(point[0] - storedPoint[0]) / canvas.width, (point[1] - storedPoint[1]) / canvas.height];
-                return ({
-                    ...label,
-                    x: Math.min(Math.max(label.x + delta[0], 0), 1 - label.w),
-                    y: Math.min(Math.max(label.y + delta[1], 0), 1 - label.h)
-                });
-            });
-            canvas.style.cursor = 'grabbing';
+            let labelsTranslated = currentLabelsTranslated(canvas, point, storedLabels);
             drawLabelsHovered(canvasRef.current, labelsTranslated);
+            canvas.style.cursor = 'grabbing';
         }
     };
 
@@ -248,19 +252,11 @@ const ToolMove: FC<ToolLabelProps> = ({labels, setLabels}) => {
         let point = currentPoint(event.nativeEvent);
 
         if (event.nativeEvent.which === 1) { // LEFT CLICK
-            if (!storedPoint) return;
+            if (!storedPoint || !storedLabels) return;
             if (storedLabels.length === 0) return;
 
-            let labelsTranslated = storedLabels.map(label => {
-                let delta: Point = [(point[0] - storedPoint[0]) / canvas.width, (point[1] - storedPoint[1]) / canvas.height];
-                return ({
-                    ...label,
-                    x: Math.min(Math.max(label.x + delta[0], 0), 1 - label.w),
-                    y: Math.min(Math.max(label.y + delta[1], 0), 1 - label.h)
-                });
-            });
+            let labelsTranslated = currentLabelsTranslated(canvas, point, storedLabels);
             setLabels([...labels, ...labelsTranslated]);
-
             storedPoint = null;
             storedLabels = [];
 
