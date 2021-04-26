@@ -110,7 +110,7 @@ const drawLabelsHovered = (canvas: HTMLCanvasElement, labels: Label[]) => {
         context.setLineDash([5]);
         context.strokeStyle = color;
         context.strokeRect(x, y, w, h);
-        context.fillStyle = `${color}55`;
+        context.fillStyle = `${color}44`;
         context.fillRect(x, y, w, h);
     }
 };
@@ -132,9 +132,9 @@ const currentLabelsHoverIds = (canvas: HTMLCanvasElement, point: Point, labels: 
     return labelsHoverIds;
 };
 
-const currentLabelsTranslated = (canvas: HTMLCanvasElement, point: Point, labels: Label[]) => {
+const currentLabelsTranslated = (canvas: HTMLCanvasElement, labels: Label[], pointA: Point, pointB: Point) => {
     return labels.map(label => {
-        let delta: Point = [(point[0] - storedPoint[0]) / canvas.width, (point[1] - storedPoint[1]) / canvas.height];
+        let delta: Point = [(pointA[0] - pointB[0]) / canvas.width, (pointA[1] - pointB[1]) / canvas.height];
         return ({
             ...label,
             x: Math.min(Math.max(label.x + delta[0], 0), 1 - label.w),
@@ -147,24 +147,25 @@ const checkLabelsEquality = (labels: Label[], newLabels: Label[]) => _.isEqual(l
 
 const formatRatio = ratio => Math.abs(Math.round(ratio * 1e6) / 1e6);
 
-let storedPoint: Point;
-let storedLabels: Label[];
-
 
 const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels}) => {
 
     const classes = useStyles();
     const canvasRef = useRef(null);
 
+    const [storedPoint, setStoredPoint] = useState<Point>(null);
+
     const handleMouseMove = (event: React.MouseEvent<HTMLElement>) => {
-        reset(canvasRef.current);
+        let canvas = canvasRef.current;
+        reset(canvas);
+
         let point = currentPoint(event.nativeEvent);
 
         if (event.nativeEvent.which === 0) // IDLE
-            drawCursorLines(canvasRef.current, point);
+            drawCursorLines(canvas, point);
 
         if (event.nativeEvent.which === 1)  // LEFT CLICK
-            drawRect(canvasRef.current, point, storedPoint)
+            drawRect(canvas, point, storedPoint)
     };
 
     const handleMouseLeave = (event: React.MouseEvent<HTMLElement>) => {
@@ -173,11 +174,13 @@ const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels}) => {
 
     const handleMouseDown = (event: React.MouseEvent<HTMLElement>) => {
         if (event.nativeEvent.which === 1)
-            storedPoint = currentPoint(event.nativeEvent);
+            setStoredPoint(currentPoint(event.nativeEvent));
     };
 
     const handleMouseUp = (event: React.MouseEvent<HTMLElement>) => {
         if (event.nativeEvent.which === 1) {
+            if (!storedPoint) return;
+
             let point = currentPoint(event.nativeEvent);
             let canvas = canvasRef.current;
             if (canvas === null) return;
@@ -208,11 +211,14 @@ const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels}) => {
 };
 
 
-const ToolMove: FC<ToolLabelProps> = ({labels, setLabels}) => {
+const ToolMove: FC<ToolMoveProps> = ({labels, setLabels}) => {
 
     const classes = useStyles();
 
     const canvasRef = useRef<HTMLCanvasElement>();
+
+    const [storedPoint, setStoredPoint] = useState<Point>(null);
+    const [movedLabels, setMovedLabels] = useState<Label[]>([]);
 
     const handleMouseMove = (event: React.MouseEvent<HTMLElement>) => {
         let canvas = canvasRef.current;
@@ -226,8 +232,8 @@ const ToolMove: FC<ToolLabelProps> = ({labels, setLabels}) => {
         }
 
         if (event.nativeEvent.which === 1) { // LEFT CLICK
-            if (!storedLabels) return;
-            let labelsTranslated = currentLabelsTranslated(canvas, point, storedLabels);
+            if (movedLabels.length === 0) return;
+            let labelsTranslated = currentLabelsTranslated(canvas, movedLabels, point, storedPoint);
             drawLabelsHovered(canvasRef.current, labelsTranslated);
             canvas.style.cursor = 'grabbing';
         }
@@ -240,9 +246,9 @@ const ToolMove: FC<ToolLabelProps> = ({labels, setLabels}) => {
         if (event.nativeEvent.which === 1) {
             let labelsHoverIds = currentLabelsHoverIds(canvasRef.current, point, labels);
             if (labelsHoverIds.length > 0) {
-                storedPoint = point;
-                storedLabels = labels.filter(label => labelsHoverIds.includes(label.id));
+                setStoredPoint(point);
                 setLabels(labels.filter(label => !labelsHoverIds.includes(label.id)));
+                setMovedLabels(labels.filter(label => labelsHoverIds.includes(label.id)));
                 canvas.style.cursor = 'grabbing';
             }
         }
@@ -253,13 +259,13 @@ const ToolMove: FC<ToolLabelProps> = ({labels, setLabels}) => {
         let point = currentPoint(event.nativeEvent);
 
         if (event.nativeEvent.which === 1) { // LEFT CLICK
-            if (!storedPoint || !storedLabels) return;
-            if (storedLabels.length === 0) return;
+            if (!storedPoint || !movedLabels) return;
+            if (movedLabels.length === 0) return;
 
-            let labelsTranslated = currentLabelsTranslated(canvas, point, storedLabels);
+            let labelsTranslated = currentLabelsTranslated(canvas, movedLabels, point, storedPoint);
             setLabels([...labels, ...labelsTranslated]);
-            storedPoint = null;
-            storedLabels = [];
+            setStoredPoint(null);
+            setMovedLabels([]);
 
             canvas.style.cursor = 'grab';
         }
@@ -287,7 +293,6 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
     const {images, saveImages} = useImages();
     const [selected, setSelected] = useState(0);
 
-    // Labels
     const [labels, setLabels] = useState<Label[]>(images[selected].labels || []);
 
     const labelsChanged: boolean = !checkLabelsEquality(labels, images[selected].labels);
@@ -295,7 +300,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
     const saveLabels = async (labels: Label[]) => {
         if (labelsChanged) {
             const response = await api.post<Image>(`/v1/images/labeling/${images[selected].id}`, {labels});
-            enqueueSnackbar('Labels saved', {variant: 'success'});
+            enqueueSnackbar('Labels updated', {variant: 'success'});
             saveImages(
                 images.map(image => image.id === response.data.id
                     ? {
@@ -308,11 +313,9 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
         }
     };
 
-    // Pagination
-    const handlePaginationChange = async (event: React.ChangeEvent<unknown>, value: number) => {
-        await saveLabels(labels);
-        setSelected(value - 1);
-    };
+    useEffect(() => {
+        setLabels(images[selected].labels);
+    }, [images, selected]);
 
     const handleKeyDown = async (event: React.KeyboardEvent<unknown>) => {
         if (event.key === 'ArrowLeft') {
@@ -326,12 +329,12 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
         }
     };
 
-    useEffect(() => {
-        setLabels(images[selected].labels);
-    }, [images, selected]);
+    const handlePaginationChange = async (event: React.ChangeEvent<unknown>, value: number) => {
+        await saveLabels(labels);
+        setSelected(value - 1);
+    };
 
 
-    // Tools
     const [tool, setTool] = useState<string>('label');
 
     const handleToolChange = (event: React.MouseEvent<HTMLElement>, newTool: string | null) => {
@@ -369,6 +372,15 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
 
                 <div className='flexGrow'/>
 
+                {images[selected].labels.length !== 0 && (
+                    <Button
+                        onClick={() => setLabels([])}
+                        disabled={labels.length === 0}
+                        size='small'
+                    >
+                        Clear
+                    </Button>
+                )}
                 <Button
                     onClick={() => setLabels(images[selected].labels)}
                     disabled={!labelsChanged}
