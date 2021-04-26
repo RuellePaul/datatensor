@@ -320,6 +320,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
         if (event.key === 'a') {
             setTool('label')
         } else if (event.key === 'z') {
+            if (labels.length === 0) return;
             setTool('move')
         } else if (event.key === 'ArrowLeft') {
             if (selected === 0) return;
