@@ -1,5 +1,6 @@
 import React, {FC, useState} from 'react';
 import {
+    Box,
     Button,
     Dialog,
     DialogContent,
@@ -14,14 +15,51 @@ import {
 import {Close as CloseIcon, Keyboard as KeyboardIcon} from '@material-ui/icons';
 import {Theme} from 'src/theme';
 
+interface ShortcutProps {
+    keyDesc: string;
+}
+
 const useStyles = makeStyles((theme: Theme) => ({
+    dialog: {
+        padding: theme.spacing(1, 2, 2)
+    },
     close: {
         position: 'absolute',
-        right: theme.spacing(1),
-        top: theme.spacing(1),
+        right: theme.spacing(2),
+        top: theme.spacing(2),
         color: theme.palette.grey[500]
     }
 }));
+
+const Section: FC = ({children}) => (
+    <Box my={2}>
+        <Typography variant='button'>
+            {children}
+        </Typography>
+    </Box>
+);
+
+const Shortcut: FC<ShortcutProps> = ({keyDesc, children}) => (
+    <Box my={2}>
+        <Grid container spacing={1}>
+            <Grid item xs={9}>
+                <Typography
+                    variant='h5'
+                    color="textSecondary"
+                >
+                    {children}
+                </Typography>
+            </Grid>
+            <Grid item xs={3}>
+                <Typography
+                    variant='h5'
+                >
+                    {keyDesc.toUpperCase()}
+                </Typography>
+            </Grid>
+        </Grid>
+    </Box>
+);
 
 const KeyboardShortcuts: FC = () => {
 
@@ -48,37 +86,59 @@ const KeyboardShortcuts: FC = () => {
             </Button>
 
             <Dialog
+                PaperProps={{
+                    className: classes.dialog
+                }}
                 fullWidth
-                maxWidth='md'
+                maxWidth='lg'
                 open={open}
                 onClose={handleClose}
             >
-                <DialogTitle disableTypography>
-                    <Typography variant='h3'>
-                        Shortcuts
-                    </Typography>
+                <DialogTitle
+                    className='flex'
+                    disableTypography
+                >
+                    <KeyboardIcon fontSize="large"/>
+
                     <IconButton
                         className={classes.close}
                         onClick={handleClose}
                     >
-                        <CloseIcon/>
+                        <CloseIcon fontSize="large"/>
                     </IconButton>
                 </DialogTitle>
                 <DialogContent>
-                    <Grid container spacing={2}>
-                        <Grid item sm={6} xs={12}>
-                            <Typography variant='button'>
-                                Navigation
-                            </Typography>
-                            <Divider/>
+                    <Box my={2}>
+                        <Grid
+                            container
+                            spacing={4}
+                        >
+                            <Grid
+                                item
+                                sm={6}
+                                xs={12}
+                            >
+                                <Section>Navigation</Section>
+                                <Divider/>
+                                <Shortcut keyDesc='a'>
+                                    Change tool (draw)
+                                </Shortcut>
+                                <Divider/>
+                                <Shortcut keyDesc='z'>
+                                    Change tool (move)
+                                </Shortcut>
+                                <Divider/>
+                            </Grid>
+                            <Grid
+                                item
+                                sm={6}
+                                xs={12}
+                            >
+                                <Section>Labeling</Section>
+                                <Divider/>
+                            </Grid>
                         </Grid>
-                        <Grid item sm={6} xs={12}>
-                            <Typography variant='button'>
-                                Labeling
-                            </Typography>
-                            <Divider/>
-                        </Grid>
-                    </Grid>
+                    </Box>
                 </DialogContent>
             </Dialog>
         </>

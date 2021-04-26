@@ -4,7 +4,7 @@ import _ from 'lodash';
 import useEventListener from 'use-typed-event-listener';
 import {useSnackbar} from 'notistack';
 import {v4 as uuid} from 'uuid';
-import {Button, makeStyles} from '@material-ui/core';
+import {Button, makeStyles, Tooltip, Typography} from '@material-ui/core';
 import {Pagination, ToggleButton, ToggleButtonGroup} from '@material-ui/lab';
 import {Maximize as LabelIcon, Move as MoveIcon} from 'react-feather';
 import {Theme} from 'src/theme';
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     pagination: {
         display: 'flex',
         justifyContent: 'center',
-        margin: theme.spacing(1, 2)
+        margin: theme.spacing(2)
     },
     actions: {
         display: 'flex',
@@ -317,7 +317,11 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
     }, [images, selected]);
 
     const handleKeyDown = async (event: KeyboardEvent) => {
-        if (event.key === 'ArrowLeft') {
+        if (event.key === 'a') {
+            setTool('label')
+        } else if (event.key === 'z') {
+            setTool('move')
+        } else if (event.key === 'ArrowLeft') {
             if (selected === 0) return;
             await saveLabels(labels);
             setSelected(selected - 1);
@@ -358,13 +362,25 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                     <ToggleButton
                         value="label"
                     >
-                        <LabelIcon/>
+                        <Tooltip
+                            title={<Typography variant='button'>
+                                Label (a)
+                            </Typography>}
+                        >
+                            <LabelIcon/>
+                        </Tooltip>
                     </ToggleButton>
                     <ToggleButton
                         value="move"
                         disabled={labels.length === 0}
                     >
-                        <MoveIcon/>
+                        <Tooltip
+                            title={<Typography variant='button'>
+                                Move (z)
+                            </Typography>}
+                        >
+                            <MoveIcon/>
+                        </Tooltip>
                     </ToggleButton>
                 </ToggleButtonGroup>
 
