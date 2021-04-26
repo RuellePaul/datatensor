@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
             }
         }
     },
-    closeButton: {
+    close: {
         position: 'absolute',
         right: theme.spacing(1),
         top: theme.spacing(1),
@@ -74,17 +74,22 @@ const SectionImage: FC = () => {
                     open={openUpload}
                     onClose={handleCloseUpload}
                 >
-                    <DialogTitle>
-                        Upload Images
+                    <DialogTitle disableTypography>
+                        <Typography variant='h4'>
+                            Upload Images
+                        </Typography>
                         <IconButton
-                            className={classes.closeButton}
+                            className={classes.close}
                             onClick={handleCloseUpload}
                         >
                             <CloseIcon/>
                         </IconButton>
                     </DialogTitle>
                     <DialogContent>
-                        <ImagesDropzone dataset_id={dataset_id}/>
+                        <ImagesDropzone
+                            dataset_id={dataset_id}
+                            callback={handleCloseUpload}
+                        />
                     </DialogContent>
                 </Dialog>
             </div>
