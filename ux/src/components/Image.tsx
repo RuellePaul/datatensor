@@ -70,7 +70,7 @@ const DTImage: FC<DTImageProps> = ({
                                    }) => {
     const classes = useStyles();
 
-    const canvasRef = useRef();
+    const canvasRef = useRef(null);
 
     const handleLoad = () => {
         if (canvasRef.current) {

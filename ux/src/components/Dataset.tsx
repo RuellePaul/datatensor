@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, useRef} from 'react';
 import {useHistory} from 'react-router';
 import clsx from 'clsx';
 import {
@@ -21,12 +21,18 @@ interface DatasetProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {},
+    root: {
+        position: 'relative',
+        transition: 'transform 1s ease',
+        transformOrigin: '50% 50%',
+        '&:hover': {
+            transition: 'all .15s ease'
+        }
+    },
     media: {
         height: 150,
     }
 }));
-
 
 const DTDataset: FC<DatasetProps> = ({
                                          className,
@@ -36,9 +42,24 @@ const DTDataset: FC<DatasetProps> = ({
     const classes = useStyles();
     const history = useHistory();
 
+    const datasetRef = useRef(null);
+
+    const handleMouseMove = (event) => {
+        let dataset = datasetRef.current;
+        dataset.style.transform = `matrix3d(1.02,0,0,${(-event.nativeEvent.offsetX + 0.5 * dataset.clientWidth) / 2e6},0,1.02,0,0,0,0,1,0,0,0,0,1)`
+    };
+
+    const handleMouseLeave = () => {
+        let dataset = datasetRef.current;
+        dataset.style.transform = `matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1)`
+    };
+
     return (
         <Card
             className={clsx(classes.root, className)}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            ref={datasetRef}
             {...rest}
         >
             <CardActionArea
@@ -47,7 +68,7 @@ const DTDataset: FC<DatasetProps> = ({
                 <CardMedia
                     className={classes.media}
                     image="/static/images/cards/contemplative-reptile.jpg"
-                    title="Contemplative Reptile"
+                    title={`Open dataset "${dataset.name}"`}
                 />
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="h2">

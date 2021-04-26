@@ -139,9 +139,11 @@ const formatRatio = ratio => Math.abs(Math.round(ratio * 1e6) / 1e6);
 let storedPoint: Point;
 let storedLabels: Label[];
 
+
 const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels}) => {
+
     const classes = useStyles();
-    const canvasRef = useRef();
+    const canvasRef = useRef(null);
 
     const handleMouseMove = (event: React.MouseEvent<HTMLElement>) => {
         reset(canvasRef.current);
@@ -166,7 +168,7 @@ const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels}) => {
     const handleMouseUp = (event: React.MouseEvent<HTMLElement>) => {
         if (event.nativeEvent.which === 1) {
             let point = currentPoint(event.nativeEvent);
-            let canvas = canvasRef.current || null;
+            let canvas = canvasRef.current;
             if (canvas === null) return;
             if (Math.abs(storedPoint[0] - point[0]) < LABEL_MIN_WIDTH) return;
             if (Math.abs(storedPoint[1] - point[1]) < LABEL_MIN_HEIGHT) return;
@@ -196,6 +198,7 @@ const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels}) => {
 
 
 const ToolMove: FC<ToolLabelProps> = ({labels, setLabels}) => {
+
     const classes = useStyles();
 
     const canvasRef = useRef<HTMLCanvasElement>();
