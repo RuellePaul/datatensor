@@ -42,7 +42,7 @@ const SectionImage: FC = () => {
         setOpenUpload(true);
     };
 
-    const handleUploadClose = () => {
+    const handleCloseUpload = () => {
         setOpenUpload(false);
     };
 
@@ -72,13 +72,13 @@ const SectionImage: FC = () => {
 
                 <Dialog
                     open={openUpload}
-                    onClose={handleUploadClose}
+                    onClose={handleCloseUpload}
                 >
                     <DialogTitle>
                         Upload Images
                         <IconButton
                             className={classes.closeButton}
-                            onClick={handleUploadClose}
+                            onClick={handleCloseUpload}
                         >
                             <CloseIcon/>
                         </IconButton>

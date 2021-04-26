@@ -1,6 +1,7 @@
 import React, {FC, useEffect, useRef, useState} from 'react';
 import clsx from 'clsx';
 import _ from 'lodash';
+import useEventListener from 'use-typed-event-listener';
 import {useSnackbar} from 'notistack';
 import {v4 as uuid} from 'uuid';
 import {Button, makeStyles} from '@material-ui/core';
@@ -30,9 +31,7 @@ interface ToolMoveProps {
 type Point = number[];
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {
-        outline: 'none'
-    },
+    root: {},
     container: {
         position: 'relative',
         margin: 'auto'
@@ -141,7 +140,7 @@ const currentLabelsTranslated = (canvas: HTMLCanvasElement, labels: Label[], poi
             y: Math.min(Math.max(label.y + delta[1], 0), 1 - label.h)
         });
     });
-}
+};
 
 const checkLabelsEquality = (labels: Label[], newLabels: Label[]) => _.isEqual(labels, newLabels);
 
@@ -317,7 +316,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
         setLabels(images[selected].labels);
     }, [images, selected]);
 
-    const handleKeyDown = async (event: React.KeyboardEvent<unknown>) => {
+    const handleKeyDown = async (event: KeyboardEvent) => {
         if (event.key === 'ArrowLeft') {
             if (selected === 0) return;
             await saveLabels(labels);
@@ -342,12 +341,11 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
             setTool(newTool);
     };
 
+    useEventListener(window, 'keydown', handleKeyDown);
 
     return (
         <div
             className={clsx(classes.root, className)}
-            onKeyDown={handleKeyDown}
-            tabIndex={1000}
             {...rest}
         >
             <div className={classes.actions}>

@@ -107,6 +107,7 @@
         "redux-form": "^8.3.6",
         "redux-thunk": "^2.3.0",
         "serve": "^11.3.0",
+        "use-typed-event-listener": "^3.0.0",
         "uuid": "^8.3.2",
         "yup": "^0.28.5"
     },

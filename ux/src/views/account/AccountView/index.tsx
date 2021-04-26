@@ -39,6 +39,7 @@ const AccountView: FC = () => {
                 <Header/>
                 <Box mt={3}>
                     <Tabs
+                        onKeyDown={() => {}}
                         onChange={handleTabsChange}
                         scrollButtons="auto"
                         value={currentTab}
