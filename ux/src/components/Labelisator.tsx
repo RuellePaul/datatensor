@@ -226,6 +226,7 @@ const ToolMove: FC<ToolLabelProps> = ({labels, setLabels}) => {
     };
 
     const handleMouseDown = (event: React.MouseEvent<HTMLElement>) => {
+        let canvas = canvasRef.current;
         let point = currentPoint(event.nativeEvent);
 
         if (event.nativeEvent.which === 1) {
@@ -234,6 +235,7 @@ const ToolMove: FC<ToolLabelProps> = ({labels, setLabels}) => {
                 storedPoint = point;
                 storedLabels = labels.filter(label => labelsHoverIds.includes(label.id));
                 setLabels(labels.filter(label => !labelsHoverIds.includes(label.id)));
+                canvas.style.cursor = 'grabbing';
             }
         }
     };
