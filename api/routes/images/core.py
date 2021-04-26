@@ -53,6 +53,7 @@ def delete_image(image_id):
         )
     except Exception as e:
         raise errors.InternalError(f'Cannot delete file from S3, {str(e)}')
+    Config.db.images.delete_one({'id': image_id})
 
 
 def upload_images(dataset_id, request_files):

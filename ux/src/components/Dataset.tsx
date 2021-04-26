@@ -92,7 +92,7 @@ const DTDataset: FC<DatasetProps> = ({
                     onClick={handleDeleteDataset}
                     size="small"
                 >
-                    Share
+                    Delete
                 </Button>
             </CardActions>
         </Card>
