@@ -123,12 +123,9 @@ const drawLabelsHovered = (canvas: HTMLCanvasElement, labels: Label[]) => {
     }
 };
 
-let direction: Direction = null;
-const renderCursor = (canvas: HTMLCanvasElement, point: Point, labels: Label[]) => {
+const renderCursor = (canvas: HTMLCanvasElement, point: Point, labels: Label[], callback: (direction: Direction) => void) => {
     if (!labels || !point)
         return;
-
-    direction = null;
 
     for (const label of labels) {
         let x = label.x * canvas.width;
@@ -137,23 +134,24 @@ const renderCursor = (canvas: HTMLCanvasElement, point: Point, labels: Label[]) 
         let h = label.h * canvas.height;
 
         if (point[0] > x && point[0] < x + RESIZE_SIZE) {
-            if (point[1] > y && point[1] < y + RESIZE_SIZE * 2) {
-                direction = 'top-left';
+            if (point[1] > y && point[1] < y + RESIZE_SIZE) {
+                callback('top-left');
+                break;
             }
             if (point[1] > y + h - RESIZE_SIZE && point[1] < y + h) {
-                direction = 'bottom-left'
+                callback('bottom-left');
+                break;
             }
-        }
-
-        if (point[0] > x + w - RESIZE_SIZE && point[0] < x + w) {
-            if (point[1] > y && point[1] < y + RESIZE_SIZE * 2) {
-                direction = 'top-right'
+        } else if (point[0] > x + w - RESIZE_SIZE && point[0] < x + w) {
+            if (point[1] > y && point[1] < y + RESIZE_SIZE) {
+                callback('top-right');
+                break;
             }
             if (point[1] > y + h - RESIZE_SIZE && point[1] < y + h) {
-                direction = 'bottom-right';
+                callback('bottom-right');
+                break;
             }
         }
-
     }
 };
 
@@ -179,8 +177,8 @@ const currentLabelsTranslated = (canvas: HTMLCanvasElement, labels: Label[], poi
         let delta: Point = [(pointA[0] - pointB[0]) / canvas.width, (pointA[1] - pointB[1]) / canvas.height];
         return ({
             ...label,
-            x: Math.min(Math.max(label.x + delta[0], 0), 1 - label.x),
-            y: Math.min(Math.max(label.y + delta[1], 0), 1 - label.y)
+            x: Math.min(Math.max(label.x + delta[0], 0), 1 - label.w),
+            y: Math.min(Math.max(label.y + delta[1], 0), 1 - label.h)
         });
     });
 };
@@ -191,38 +189,39 @@ const currentLabelsResized = (canvas: HTMLCanvasElement, labels: Label[], pointA
 
         let x, y, w, h;
 
-        if (direction === 'top-left')
-            return ({
-                ...label,
-                x: label.x + delta[0],
-                y: label.y + delta[1],
-                w: label.w - delta[0],
-                h: label.h - delta[1]
-            });
-        else if (direction === 'top-right')
-            return ({
-                ...label,
-                y: label.y + delta[1],
-                w: label.w + delta[0],
-                h: label.h - delta[1]
-            });
-        else if (direction === 'bottom-left')
-            return ({
-                ...label,
-                x: label.x + delta[0],
-                w: label.w - delta[0],
-                h: label.h + delta[1]
-            });
-        else if (direction === 'bottom-right')
-            return ({
-                ...label,
-                w: label.w + delta[0],
-                h: label.h + delta[1]
-            });
+        if (direction === 'top-left') {
+            x = label.x + delta[0];
+            y = label.y + delta[1];
+            w = label.w - delta[0];
+            h = label.h - delta[1];
+        } else if (direction === 'top-right') {
+            x = label.x;
+            y = label.y + delta[1];
+            w = label.w + delta[0];
+            h = label.h - delta[1];
+        } else if (direction === 'bottom-left') {
+            x = label.x + delta[0];
+            y = label.y;
+            w = label.w - delta[0];
+            h = label.h + delta[1];
+        } else if (direction === 'bottom-right') {
+            x = label.x;
+            y = label.y;
+            w = label.w + delta[0];
+            h = label.h + delta[1];
+        }
+        if (w < 0) {
+            w = Math.abs(w);
+            x -= w;
+        }
+        if (h < 0) {
+            h = Math.abs(h);
+            y -= h;
+        }
         return ({
             ...label,
             x, y, w, h
-        })
+        });
     });
 };
 
@@ -301,6 +300,8 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels}) => {
 
     const canvasRef = useRef<HTMLCanvasElement>();
 
+    const [direction, setDirection] = useState<Direction>(null);
+
     const [storedPoint, setStoredPoint] = useState<Point>(null);
     const [storedLabels, setStoredLabels] = useState<Label[]>([]);
 
@@ -308,12 +309,11 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels}) => {
         let canvas = canvasRef.current;
         reset(canvas);
         let point = currentPoint(event.nativeEvent);
+        renderCursor(canvas, point, labels, direction => setDirection(direction));
 
         if (event.nativeEvent.which === 0) { // IDLE
             let labelsHoverIds = currentLabelsHoverIds(canvas, point, labels);
-            canvas.style.cursor = labelsHoverIds.length > 0 ? 'grab' : 'not-allowed';
             drawLabelsHovered(canvas, labels.filter(label => labelsHoverIds.includes(label.id)));
-            renderCursor(canvas, point, labels);
         }
 
         if (event.nativeEvent.which === 1) { // START MOVE
@@ -321,21 +321,14 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels}) => {
             if (direction === null) {
                 let labelsTranslated = currentLabelsTranslated(canvas, storedLabels, point, storedPoint);
                 drawLabelsHovered(canvas, labelsTranslated);
-                canvas.style.cursor = 'grabbing';
             } else {
                 let labelsResized = currentLabelsResized(canvas, storedLabels, point, storedPoint, direction);
                 drawLabelsHovered(canvas, labelsResized);
-                if (direction === 'top-left' || 'bottom-right') {
-                    canvas.style.cursor = 'nwse-resize !important';
-                } else if (direction === 'top-right' || 'bottom-left') {
-                    canvas.style.cursor = 'nesw-resize !important';
-                }
             }
         }
     };
 
     const handleMouseDown = (event: React.MouseEvent<HTMLElement>) => {
-        let canvas = canvasRef.current;
         let point = currentPoint(event.nativeEvent);
 
         if (event.nativeEvent.which === 1) {
@@ -344,7 +337,6 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels}) => {
                 setStoredPoint(point);
                 setLabels(labels.filter(label => !labelsHoverIds.includes(label.id)));
                 setStoredLabels(labels.filter(label => labelsHoverIds.includes(label.id)));
-                canvas.style.cursor = 'grabbing';
             }
         }
     };
@@ -360,17 +352,13 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels}) => {
             if (direction === null) {
                 let labelsTranslated = currentLabelsTranslated(canvas, storedLabels, point, storedPoint);
                 setLabels([...labels, ...labelsTranslated]);
-                canvas.style.cursor = 'grab';
             } else {
                 let labelsResized = currentLabelsResized(canvas, storedLabels, point, storedPoint, direction);
                 setLabels([...labels, ...labelsResized]);
-                renderCursor(canvas, point, labels);
             }
 
             setStoredPoint(null);
             setStoredLabels([]);
-
-            direction = null;
         }
     };
 
