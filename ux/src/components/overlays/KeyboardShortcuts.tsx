@@ -136,6 +136,14 @@ const KeyboardShortcuts: FC = () => {
                             >
                                 <Section>Labeling</Section>
                                 <Divider/>
+                                <Shortcut keyDesc='←'>
+                                    Previous image
+                                </Shortcut>
+                                <Divider/>
+                                <Shortcut keyDesc='→'>
+                                    Next image
+                                </Shortcut>
+                                <Divider/>
                             </Grid>
                         </Grid>
                     </Box>
