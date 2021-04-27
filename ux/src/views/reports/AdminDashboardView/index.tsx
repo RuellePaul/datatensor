@@ -1,5 +1,6 @@
 import React, {FC, useCallback, useEffect, useState} from 'react';
 import {Button, Container, Grid, makeStyles} from '@material-ui/core';
+import {useSnackbar} from 'notistack';
 import Page from 'src/components/Page';
 import {Theme} from 'src/theme';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
@@ -44,7 +45,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 
 const AdminDashboardView: FC = () => {
+
     const classes = useStyles();
+
+    const {enqueueSnackbar} = useSnackbar();
 
     const isMountedRef = useIsMountedRef();
     const [users, setUsers] = useState<User[]>([]);
@@ -72,10 +76,10 @@ const AdminDashboardView: FC = () => {
             const response = await api.post('/v1/admin/generator/coco');
 
             if (isMountedRef.current) {
-                console.log(response.data)
+                enqueueSnackbar('Dataset COCO generated', {variant: 'info'});
             }
-        } catch (err) {
-            console.error(err);
+        } catch (error) {
+            enqueueSnackbar('Something went wrong', {variant: 'warning'});
         }
     };
 

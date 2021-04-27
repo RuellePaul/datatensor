@@ -21,7 +21,10 @@ def dataset_generation(name):
 
     images_path = os.path.join(Config.LOCAL_DATASETS_PATH, name, 'images')
 
-    image_filenames = os.listdir(images_path)
+    try:
+        image_filenames = os.listdir(images_path)
+    except FileNotFoundError:
+        raise errors.NotFound(f"{images_path} doesn't exists")
 
     images = []
     for filename in image_filenames:
