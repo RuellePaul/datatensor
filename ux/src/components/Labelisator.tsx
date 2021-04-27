@@ -136,23 +136,25 @@ const renderCursor = (canvas: HTMLCanvasElement, point: Point, labels: Label[], 
         if (point[0] > x && point[0] < x + RESIZE_SIZE) {
             if (point[1] > y && point[1] < y + RESIZE_SIZE) {
                 callback('top-left');
-                break;
+                return;
             }
             if (point[1] > y + h - RESIZE_SIZE && point[1] < y + h) {
                 callback('bottom-left');
-                break;
+                return;
             }
         } else if (point[0] > x + w - RESIZE_SIZE && point[0] < x + w) {
             if (point[1] > y && point[1] < y + RESIZE_SIZE) {
                 callback('top-right');
-                break;
+                return;
             }
             if (point[1] > y + h - RESIZE_SIZE && point[1] < y + h) {
                 callback('bottom-right');
-                break;
+                return;
             }
         }
     }
+
+    callback(null)
 };
 
 const currentLabelsHoverIds = (canvas: HTMLCanvasElement, point: Point, labels: Label[]) => {
@@ -305,15 +307,27 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels}) => {
     const [storedPoint, setStoredPoint] = useState<Point>(null);
     const [storedLabels, setStoredLabels] = useState<Label[]>([]);
 
+    useEffect(() => {
+        if (direction === "top-left" || direction === "bottom-right")
+            canvasRef.current.style.cursor = 'nwse-resize';
+        else if (direction === "top-right" || direction === "bottom-left")
+            canvasRef.current.style.cursor = 'nesw-resize';
+    }, [direction]);
+
     const handleMouseMove = (event: React.MouseEvent<HTMLElement>) => {
         let canvas = canvasRef.current;
         reset(canvas);
         let point = currentPoint(event.nativeEvent);
-        renderCursor(canvas, point, labels, direction => setDirection(direction));
 
         if (event.nativeEvent.which === 0) { // IDLE
             let labelsHoverIds = currentLabelsHoverIds(canvas, point, labels);
             drawLabelsHovered(canvas, labels.filter(label => labelsHoverIds.includes(label.id)));
+            renderCursor(canvas, point, labels, direction => setDirection(direction));
+            if (direction === null)
+                if (labelsHoverIds.length === 0)
+                    canvas.style.cursor = 'initial';
+                else
+                    canvas.style.cursor = 'move';
         }
 
         if (event.nativeEvent.which === 1) { // START MOVE
@@ -488,28 +502,32 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                         Reset (ESCAPE)
                     </Typography>}
                 >
-                    <Button
-                        onClick={() => setLabels(images[selected].labels)}
-                        disabled={!labelsChanged}
-                        size='small'
-                    >
-                        Reset
-                    </Button>
+                    <span>
+                        <Button
+                            onClick={() => setLabels(images[selected].labels)}
+                            disabled={!labelsChanged}
+                            size='small'
+                        >
+                            Reset
+                        </Button>
+                    </span>
                 </Tooltip>
                 <Tooltip
                     title={<Typography variant='overline'>
                         Save (SPACE)
                     </Typography>}
                 >
-                    <Button
-                        variant="outlined"
-                        color="secondary"
-                        onClick={() => saveLabels(labels)}
-                        disabled={!labelsChanged}
-                        size='small'
-                    >
-                        Save
-                    </Button>
+                    <span>
+                        <Button
+                            variant="outlined"
+                            color="secondary"
+                            onClick={() => saveLabels(labels)}
+                            disabled={!labelsChanged}
+                            size='small'
+                        >
+                            Save
+                        </Button>
+                    </span>
                 </Tooltip>
             </div>
 
