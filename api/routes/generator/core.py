@@ -14,7 +14,7 @@ from routes.images.core import allowed_file, compress_image, upload_image, secur
 
 
 def labels_from_annotations(annotations, filename):
-    annotations_path = os.path.join(Config.LOCAL_DATASETS_PATH, dataset_name, 'annotations', 'captions_train2014.json')
+    annotations_path = os.path.join(Config.LOCAL_DATASETS_PATH, 'coco', 'annotations', 'captions_train2014.json')
     return []
 
 
@@ -48,7 +48,7 @@ def dataset_generation(dataset_name):
                 'id': image_id,
                 'dataset_id': dataset_id,
                 'path': path,
-                'dataset_name': secure_filename(str(filename)),
+                'name': secure_filename(str(filename)),
                 'size': len(image_bytes),
                 'width': image.shape[1],
                 'height': image.shape[0],

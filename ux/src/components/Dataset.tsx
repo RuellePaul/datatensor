@@ -88,7 +88,7 @@ const DTDataset: FC<DatasetProps> = ({
                 />
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="h2">
-                        {capitalize(dataset.name)}
+                        {dataset.name && capitalize(dataset.name)}
                     </Typography>
                     <Typography
                         color="textSecondary"

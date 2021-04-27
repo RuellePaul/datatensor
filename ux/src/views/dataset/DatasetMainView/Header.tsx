@@ -52,7 +52,7 @@ const Header: FC<HeaderProps> = ({dataset, className, ...rest}) => {
                         variant="body1"
                         color="textPrimary"
                     >
-                        {capitalize(dataset.name)}
+                        {dataset.name && capitalize(dataset.name)}
                     </Typography>
                 </Breadcrumbs>
             </Grid>
