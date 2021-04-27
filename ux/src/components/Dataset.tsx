@@ -16,6 +16,7 @@ import {
 import {Theme} from 'src/theme';
 import {Dataset} from 'src/types/dataset';
 import api from 'src/utils/api';
+import useDatasets from 'src/hooks/useDatasets';
 
 interface DatasetProps {
     className?: string;
@@ -45,6 +46,8 @@ const DTDataset: FC<DatasetProps> = ({
     const history = useHistory();
     const {enqueueSnackbar} = useSnackbar();
 
+    const {saveDatasets} = useDatasets();
+
     const datasetRef = useRef(null);
 
     const handleMouseMove = (event) => {
@@ -60,6 +63,8 @@ const DTDataset: FC<DatasetProps> = ({
     const handleDeleteDataset = async () => {
         try {
             await api.post(`/v1/dataset/manage/${dataset.id}/delete`);
+            saveDatasets(datasets => datasets.filter((current: Dataset) => current.id !== dataset.id));
+            enqueueSnackbar(`Deleted dataset ${dataset.name}`, {variant: 'info'});
         } catch (error) {
             enqueueSnackbar((error.response && error.response.data) || 'Something went wrong', {variant: 'error'});
         }
