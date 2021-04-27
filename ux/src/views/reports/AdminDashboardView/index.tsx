@@ -73,7 +73,7 @@ const AdminDashboardView: FC = () => {
 
     const handleGenerateCocoDataset = async () => {
         try {
-            const response = await api.post('/v1/admin/generator/coco');
+            await api.post('/v1/admin/generator/coco');
 
             if (isMountedRef.current) {
                 enqueueSnackbar('Dataset COCO generated', {variant: 'info'});
