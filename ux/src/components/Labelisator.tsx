@@ -392,6 +392,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                 <Button
                     onClick={() => setLabels(images[selected].labels)}
                     disabled={!labelsChanged}
+                    size='small'
                 >
                     Reset
                 </Button>
@@ -400,6 +401,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                     color="secondary"
                     onClick={() => saveLabels(labels)}
                     disabled={!labelsChanged}
+                    size='small'
                 >
                     Save
                 </Button>
