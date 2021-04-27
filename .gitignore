@@ -189,3 +189,7 @@ dmypy.json
 
 # Pycharm related
 ../.idea
+
+# generator data
+api/routes/generator/images
+api/routes/generator/annotations

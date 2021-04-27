@@ -16,6 +16,7 @@ from routes.dataset.manage import dataset_manage
 from routes.images.manage import images_manage
 from routes.images.upload import images_upload
 from routes.images.labeling import images_labeling
+from routes.generator.interface import generator
 
 app = Flask(__name__)
 
@@ -27,8 +28,8 @@ app.secret_key = app.config['SECRET_KEY']
 CORS(app)
 CSRFProtect(app)
 
-require_authorization([admin_manage, dataset_manage, images_manage, images_upload, images_labeling])
-require_admin([admin_manage])
+require_authorization([admin_manage, dataset_manage, images_manage, images_upload, images_labeling, generator])
+require_admin([admin_manage, generator])
 
 app.register_blueprint(auth, url_prefix='/api/v1/auth')
 app.register_blueprint(oauth, url_prefix='/api/v1/oauth')
@@ -39,6 +40,8 @@ app.register_blueprint(admin_manage, url_prefix='/api/v1/admin/manage')
 app.register_blueprint(images_manage, url_prefix='/api/v1/images/manage')
 app.register_blueprint(images_upload, url_prefix='/api/v1/images/upload')
 app.register_blueprint(images_labeling, url_prefix='/api/v1/images/labeling')
+
+app.register_blueprint(generator, url_prefix='/api/v1/generator')
 
 
 @app.after_request
