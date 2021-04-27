@@ -41,7 +41,7 @@ app.register_blueprint(images_manage, url_prefix='/api/v1/images/manage')
 app.register_blueprint(images_upload, url_prefix='/api/v1/images/upload')
 app.register_blueprint(images_labeling, url_prefix='/api/v1/images/labeling')
 
-app.register_blueprint(generator, url_prefix='/api/v1/generator')
+app.register_blueprint(generator, url_prefix='/api/v1/admin/generator')
 
 
 @app.after_request

@@ -1,5 +1,5 @@
 import React, {FC, useCallback, useEffect, useState} from 'react';
-import {Container, Grid, makeStyles} from '@material-ui/core';
+import {Button, Container, Grid, makeStyles} from '@material-ui/core';
 import Page from 'src/components/Page';
 import {Theme} from 'src/theme';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
@@ -67,6 +67,18 @@ const AdminDashboardView: FC = () => {
 
     const [timeRange, setTimeRange] = useState<TimeRange>(timeRanges[2]);
 
+    const handleGenerateCocoDataset = async () => {
+        try {
+            const response = await api.post('/v1/admin/generator/coco');
+
+            if (isMountedRef.current) {
+                console.log(response.data)
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     return (
         <Page
             className={classes.root}
@@ -87,6 +99,12 @@ const AdminDashboardView: FC = () => {
                         lg={3}
                         xs={12}
                     >
+                        <Button
+                            variant='contained'
+                            onClick={handleGenerateCocoDataset}
+                        >
+                            Generate COCO dataset
+                        </Button>
 
                     </Grid>
                     <Grid
