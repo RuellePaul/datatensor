@@ -1,4 +1,4 @@
-import uuid
+from uuid import uuid4
 from datetime import datetime
 
 from flask import Blueprint, jsonify, request
@@ -35,7 +35,7 @@ def fetch_datasets(dataset_id=None):
 def create_dataset(args):
     user = verify_access_token(request.headers['Authorization'], verified=True)
 
-    dataset_id = str(uuid.uuid4())
+    dataset_id = str(uuid4())
     dataset = dict(id=dataset_id,
                    user_id=user['id'],
                    created_at=datetime.now().isoformat(),

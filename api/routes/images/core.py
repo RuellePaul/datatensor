@@ -1,4 +1,4 @@
-import uuid
+from uuid import uuid4
 
 import boto3
 import cv2
@@ -67,7 +67,7 @@ def upload_images(dataset_id, request_files):
     images = []
     for file in request_files.values():
         if file and allowed_file(file.filename):
-            image_id = str(uuid.uuid4())
+            image_id = str(uuid4())
             name = secure_filename(file.filename)
             image = cv2.imdecode(numpy.fromstring(file.read(), numpy.uint8), cv2.IMREAD_UNCHANGED)
             image = compress_image(image)
