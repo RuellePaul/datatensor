@@ -327,7 +327,7 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels}) => {
                 drawLabelsHovered(canvas, labelsResized);
                 if (direction === 'top-left' || 'bottom-right') {
                     canvas.style.cursor = 'nwse-resize';
-                } else if (direction === 'top-right') {
+                } else if (direction === 'top-right' || 'bottom-left') {
                     canvas.style.cursor = 'nesw-resize';
                 }
             }
