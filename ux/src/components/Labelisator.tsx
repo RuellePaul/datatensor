@@ -95,6 +95,8 @@ const drawRect = (canvas: HTMLCanvasElement, pointA: Point, pointB: Point) => {
     context.fillRect(x, y, w, h);
 };
 
+const RESIZE_SIZE = 8;
+
 const drawLabelsHovered = (canvas: HTMLCanvasElement, labels: Label[]) => {
     if (!labels)
         return;
@@ -113,8 +115,41 @@ const drawLabelsHovered = (canvas: HTMLCanvasElement, labels: Label[]) => {
         context.fillRect(x, y, w, h);
 
         context.fillStyle = '#FFFFFF';
-        context.fillRect(x, y, 3, 3);
-        context.fillRect(x + w - 3, y, 3, 3);
+        context.fillRect(x, y, RESIZE_SIZE, RESIZE_SIZE);
+        context.fillRect(x + w - RESIZE_SIZE, y, RESIZE_SIZE, RESIZE_SIZE);
+        context.fillRect(x, y + h - RESIZE_SIZE, RESIZE_SIZE, RESIZE_SIZE);
+        context.fillRect(x + w - RESIZE_SIZE, y + h - RESIZE_SIZE, RESIZE_SIZE, RESIZE_SIZE);
+    }
+};
+
+const renderCursor = (canvas: HTMLCanvasElement, point: Point, labels: Label[]) => {
+    if (!labels || !point)
+        return;
+
+    for (const label of labels) {
+        let x = label.x * canvas.width;
+        let y = label.y * canvas.height;
+        let w = label.w * canvas.width;
+        let h = label.h * canvas.height;
+
+        if (point[0] > x && point[0] < x + RESIZE_SIZE * 2) {
+            if (point[1] > y && point[1] < y + RESIZE_SIZE * 2) {
+                canvas.style.cursor = 'nwse-resize';
+            }
+            if (point[1] > y + h - RESIZE_SIZE * 2 && point[1] < y + h) {
+                canvas.style.cursor = 'nesw-resize';
+            }
+        }
+
+        if (point[0] > x + w - RESIZE_SIZE * 2 && point[0] < x + w) {
+            if (point[1] > y && point[1] < y + RESIZE_SIZE * 2) {
+                canvas.style.cursor = 'nesw-resize';
+            }
+            if (point[1] > y + h - RESIZE_SIZE * 2 && point[1] < y + h) {
+                canvas.style.cursor = 'nwse-resize';
+            }
+        }
+
     }
 };
 
@@ -167,7 +202,7 @@ const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels}) => {
         if (event.nativeEvent.which === 0) // IDLE
             drawCursorLines(canvas, point);
 
-        if (event.nativeEvent.which === 1)  // LEFT CLICK
+        if (event.nativeEvent.which === 1)  // START DRAW LABEL
             drawRect(canvas, point, storedPoint)
     };
 
@@ -231,13 +266,14 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels}) => {
         if (event.nativeEvent.which === 0) { // IDLE
             let labelsHoverIds = currentLabelsHoverIds(canvas, point, labels);
             canvas.style.cursor = labelsHoverIds.length > 0 ? 'grab' : 'not-allowed';
-            drawLabelsHovered(canvasRef.current, labels.filter(label => labelsHoverIds.includes(label.id)));
+            drawLabelsHovered(canvas, labels.filter(label => labelsHoverIds.includes(label.id)));
+            renderCursor(canvas, point, labels);
         }
 
-        if (event.nativeEvent.which === 1) { // LEFT CLICK
+        if (event.nativeEvent.which === 1) { // START MOVE
             if (movedLabels.length === 0) return;
             let labelsTranslated = currentLabelsTranslated(canvas, movedLabels, point, storedPoint);
-            drawLabelsHovered(canvasRef.current, labelsTranslated);
+            drawLabelsHovered(canvas, labelsTranslated);
             canvas.style.cursor = 'grabbing';
         }
     };
