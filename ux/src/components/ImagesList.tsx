@@ -4,12 +4,12 @@ import Masonry from 'react-masonry-css';
 import clsx from 'clsx';
 import {
     Backdrop,
+    Dialog,
     IconButton,
     LinearProgress,
     makeStyles,
     Menu,
     MenuItem,
-    Modal,
     Typography,
     useTheme
 } from '@material-ui/core';
@@ -18,7 +18,6 @@ import {ArrowLeft as BackIcon, MoreVertical as MoreIcon} from 'react-feather';
 import DTImage from 'src/components/Image';
 import useImages from 'src/hooks/useImages';
 import {Theme} from 'src/theme';
-import {Image} from 'src/types/image'
 import api from 'src/utils/api'
 import bytesToSize from 'src/utils/bytesToSize';
 
@@ -29,7 +28,7 @@ interface ImagesListProps {
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
     backdrop: {
-        background: 'rgba(0, 0, 0, 0.8)'
+        background: 'rgba(0, 0, 0, 0.7)'
     },
     modal: {
         display: 'flex',
@@ -143,7 +142,9 @@ const DTImagesList: FC<ImagesListProps> = ({
         >
             <InfiniteScroll
                 dataLength={images.length}
-                next={() => {console.log('Trigger next')}}
+                next={() => {
+                    console.log('Trigger next')
+                }}
                 height={800}
                 hasMore={false}
                 loader={<LinearProgress/>}
@@ -170,89 +171,91 @@ const DTImagesList: FC<ImagesListProps> = ({
                 </Masonry>
             </InfiniteScroll>
 
-            {imageSelected && <Modal
-                className={classes.modal}
-                open={open}
-                onClose={handleCloseImage}
-                BackdropComponent={Backdrop}
-                BackdropProps={{
-                    className: classes.backdrop,
-                }}
-            >
-                <>
-                    <div className={classes.header}>
-                        <IconButton
-                            onClick={handleCloseImage}
-                        >
-                            <BackIcon
-                                width={40}
-                                height={40}
-                                color='white'
-                            />
-                        </IconButton>
-                        <div>
-                            <Typography
-                                variant='h5'
-                                color='textPrimary'
+            {imageSelected && (
+                <Dialog
+                    className={classes.modal}
+                    open={open}
+                    onClose={handleCloseImage}
+                    BackdropComponent={Backdrop}
+                    BackdropProps={{
+                        className: classes.backdrop,
+                    }}
+                >
+                    <>
+                        <div className={classes.header}>
+                            <IconButton
+                                onClick={handleCloseImage}
                             >
-                                {imageSelected.name}
-                            </Typography>
-                            <Typography
-                                variant='h6'
-                                color='textSecondary'
+                                <BackIcon
+                                    width={40}
+                                    height={40}
+                                    color='white'
+                                />
+                            </IconButton>
+                            <div>
+                                <Typography
+                                    variant='h5'
+                                    color='textPrimary'
+                                >
+                                    {imageSelected.name}
+                                </Typography>
+                                <Typography
+                                    variant='h6'
+                                    color='textSecondary'
+                                >
+                                    {bytesToSize(imageSelected.size)}
+                                </Typography>
+                            </div>
+
+                            <div className='flexGrow'/>
+                            <IconButton
+                                onClick={handleOpenMenu}
                             >
-                                {bytesToSize(imageSelected.size)}
-                            </Typography>
+                                <MoreIcon
+                                    width={30}
+                                    height={30}
+                                    color='white'
+                                />
+                            </IconButton>
+                            <Menu
+                                anchorEl={anchorEl}
+                                keepMounted
+                                open={openMenu}
+                                onClose={handleCloseMenu}
+                                PaperProps={{
+                                    style: {
+                                        width: '20ch'
+                                    }
+                                }}
+                            >
+                                <MenuItem onClick={handleDelete}>
+                                    Delete
+                                </MenuItem>
+                            </Menu>
                         </div>
 
-                        <div className='flexGrow'/>
-                        <IconButton
-                            onClick={handleOpenMenu}
-                        >
-                            <MoreIcon
-                                width={30}
-                                height={30}
-                                color='white'
-                            />
-                        </IconButton>
-                        <Menu
-                            anchorEl={anchorEl}
-                            keepMounted
-                            open={openMenu}
-                            onClose={handleCloseMenu}
-                            PaperProps={{
-                                style: {
-                                    width: '20ch'
-                                }
-                            }}
-                        >
-                            <MenuItem onClick={handleDelete}>
-                                Delete
-                            </MenuItem>
-                        </Menu>
-                    </div>
-
-                    <div className={classes.content}>
-                        <div className={classes.resolution}>
-                            <Typography
-                                color='textSecondary'
-                            >
-                                {imageSelected.width} x {imageSelected.height}
-                            </Typography>
+                        <div className={classes.content}>
+                            <div className={classes.resolution}>
+                                <Typography
+                                    color='textSecondary'
+                                >
+                                    {imageSelected.width} x {imageSelected.height}
+                                </Typography>
+                            </div>
+                            <DTImage image={imageSelected}/>
                         </div>
-                        <DTImage image={imageSelected}/>
-                    </div>
 
-                    <div className={classes.footer}>
-                        <Pagination
-                            color='primary'
-                            count={images.length}
-                            page={selected + 1}
-                            onChange={handlePaginationChange}
-                        />
-                    </div>
-                </>
-            </Modal>}
+                        <div className={classes.footer}>
+                            <Pagination
+                                color='primary'
+                                count={images.length}
+                                page={selected + 1}
+                                onChange={handlePaginationChange}
+                            />
+                        </div>
+                    </>
+                </Dialog>
+            )}
         </div>
     );
 };
