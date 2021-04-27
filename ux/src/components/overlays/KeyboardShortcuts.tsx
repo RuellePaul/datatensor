@@ -130,6 +130,10 @@ const KeyboardShortcuts: FC = () => {
                                     Change tool (move)
                                 </Shortcut>
                                 <Divider/>
+                                <Shortcut keyDesc='ESCAPE'>
+                                    Reset canvas
+                                </Shortcut>
+                                <Divider/>
                             </Grid>
                             <Grid
                                 item

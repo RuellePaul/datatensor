@@ -185,15 +185,44 @@ const currentLabelsTranslated = (canvas: HTMLCanvasElement, labels: Label[], poi
     });
 };
 
-const currentLabelsResized = (canvas: HTMLCanvasElement, labels: Label[], pointA: Point, pointB: Point, direction: Direction) => {  // TODO
+const currentLabelsResized = (canvas: HTMLCanvasElement, labels: Label[], pointA: Point, pointB: Point, direction: Direction) => {
     return labels.map(label => {
         let delta: Point = [(pointA[0] - pointB[0]) / canvas.width, (pointA[1] - pointB[1]) / canvas.height];
 
+        let x, y, w, h;
+
+        if (direction === 'top-left')
+            return ({
+                ...label,
+                x: label.x + delta[0],
+                y: label.y + delta[1],
+                w: label.w - delta[0],
+                h: label.h - delta[1]
+            });
+        else if (direction === 'top-right')
+            return ({
+                ...label,
+                y: label.y + delta[1],
+                w: label.w + delta[0],
+                h: label.h - delta[1]
+            });
+        else if (direction === 'bottom-left')
+            return ({
+                ...label,
+                x: label.x + delta[0],
+                w: label.w - delta[0],
+                h: label.h + delta[1]
+            });
+        else if (direction === 'bottom-right')
+            return ({
+                ...label,
+                w: label.w + delta[0],
+                h: label.h + delta[1]
+            });
         return ({
             ...label,
-            w: Math.min(Math.max(label.w + delta[0], 0), 1 - label.x),
-            h: Math.min(Math.max(label.h + delta[1], 0), 1 - label.y)
-        });
+            x, y, w, h
+        })
     });
 };
 
@@ -407,6 +436,8 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
             await saveLabels(labels);
             if (selected === images.length - 1) return;
             setSelected(selected + 1);
+        } else if (event.key === 'Escape') {
+            setLabels(images[selected].labels)
         }
     };
 
@@ -464,22 +495,34 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
 
                 <div className='flexGrow'/>
 
-                <Button
-                    onClick={() => setLabels(images[selected].labels)}
-                    disabled={!labelsChanged}
-                    size='small'
+                <Tooltip
+                    title={<Typography variant='overline'>
+                        Reset (ESCAPE)
+                    </Typography>}
                 >
-                    Reset
-                </Button>
-                <Button
-                    variant="outlined"
-                    color="secondary"
-                    onClick={() => saveLabels(labels)}
-                    disabled={!labelsChanged}
-                    size='small'
+                    <Button
+                        onClick={() => setLabels(images[selected].labels)}
+                        disabled={!labelsChanged}
+                        size='small'
+                    >
+                        Reset
+                    </Button>
+                </Tooltip>
+                <Tooltip
+                    title={<Typography variant='overline'>
+                        Save (SPACE)
+                    </Typography>}
                 >
-                    Save
-                </Button>
+                    <Button
+                        variant="outlined"
+                        color="secondary"
+                        onClick={() => saveLabels(labels)}
+                        disabled={!labelsChanged}
+                        size='small'
+                    >
+                        Save
+                    </Button>
+                </Tooltip>
             </div>
 
             <div
