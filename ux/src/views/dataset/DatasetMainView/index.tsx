@@ -1,14 +1,15 @@
 import React, {FC, useCallback, useEffect, useState} from 'react';
 import {useParams} from 'react-router';
-import {Box, Container, Divider, makeStyles, Tab, Tabs} from '@material-ui/core';
+import {Box, Container, Divider, makeStyles, Tab, Tabs, Tooltip, Typography} from '@material-ui/core';
 import Header from './Header';
 import SectionImages from './sections/SectionImages';
+import SectionLabeling from './sections/SectionLabeling';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import {Dataset} from 'src/types/dataset';
 import api from 'src/utils/api';
-import {ImagesProvider} from 'src/contexts/ImagesContext';
+import {ImagesConsumer, ImagesProvider} from 'src/contexts/ImagesContext';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -19,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const SECTIONS = [<div/>, <SectionImages/>, <div/>];
+const SECTIONS = [<div/>, <SectionImages/>, <SectionLabeling/>];
 
 const DatasetMainView: FC = () => {
     const {dataset_id} = useParams();
@@ -59,30 +60,52 @@ const DatasetMainView: FC = () => {
             className={classes.root}
             title="Dataset List"
         >
-            <Container maxWidth="lg">
-                <Header dataset={dataset}/>
+            <ImagesProvider dataset_id={dataset_id}>
+                <Container maxWidth="lg">
+                    <Header dataset={dataset}/>
 
-                <Box mt={2}>
-                    <Tabs
-                        value={tab}
-                        onChange={handleTabChange}
-                        indicatorColor="primary"
-                        textColor="primary"
-                    >
-                        <Tab label="Overview"/>
-                        <Tab label="Images"/>
-                        <Tab label="Labeling"/>
-                    </Tabs>
-                </Box>
+                    <Box mt={2}>
+                        <ImagesConsumer>
+                            {value => (
+                                <Tabs
+                                    value={tab}
+                                    onChange={handleTabChange}
+                                    indicatorColor="primary"
+                                    textColor="primary"
+                                >
+                                    <Tab label="Overview"/>
+                                    <Tab label="Images"/>
+                                    <Tab
+                                        label={
+                                            value.images.length === 0
+                                                ? (
+                                                    <Tooltip title={(
+                                                        <Typography variant='h6'>
+                                                            You need to upload images first
+                                                        </Typography>
+                                                    )}>
+                                                        <span>Labeling</span>
+                                                    </Tooltip>
+                                                )
+                                                : 'Labeling'
 
-                <Box mb={3}>
-                    <Divider/>
-                </Box>
+                                        }
+                                        disabled={value.images.length === 0}
+                                        style={{pointerEvents: 'auto'}}
+                                    />
+                                </Tabs>
+                            )}
+                        </ImagesConsumer>
+                    </Box>
 
-                <ImagesProvider dataset_id={dataset_id}>
+                    <Box mb={3}>
+                        <Divider/>
+                    </Box>
+
                     {SECTIONS[tab]}
-                </ImagesProvider>
-            </Container>
+                </Container>
+            </ImagesProvider>
+
         </Page>
     );
 };

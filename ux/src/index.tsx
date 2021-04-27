@@ -16,14 +16,11 @@ import ReactDOM from 'react-dom';
 import * as serviceWorker from 'src/serviceWorker';
 
 import App from './App';
-import Providers from './providers';
 
 enableES5();
 
 ReactDOM.render(
-    <Providers>
-        <App/>
-    </Providers>,
+    <App/>,
     document.getElementById('root')
 );
 

@@ -27,6 +27,7 @@ import {Image} from 'src/types/image';
 
 interface ImagesDropzoneProps {
     dataset_id: string;
+    callback?: () => void;
     className?: string;
 }
 
@@ -75,7 +76,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const ImagesDropzone: FC<ImagesDropzoneProps> = ({dataset_id, className, ...rest}) => {
+const ImagesDropzone: FC<ImagesDropzoneProps> = ({dataset_id, callback, className, ...rest}) => {
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
 
@@ -115,6 +116,7 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({dataset_id, className, ...rest
             } finally {
                 setIsUploading(false);
                 setFiles([]);
+                callback();
             }
         }
     };

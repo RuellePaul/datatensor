@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
             }
         }
     },
-    closeButton: {
+    close: {
         position: 'absolute',
         right: theme.spacing(1),
         top: theme.spacing(1),
@@ -42,15 +42,21 @@ const SectionImage: FC = () => {
         setOpenUpload(true);
     };
 
-    const handleUploadClose = () => {
+    const handleCloseUpload = () => {
         setOpenUpload(false);
     };
+
+    const imagesCount = images.length;
+    const labelsCount = images.map(image => image.labels.length).reduce((acc, val) => acc + val, 0);
 
     return (
         <>
             <div className={classes.header}>
                 <Typography variant="h4" color="textSecondary">
-                    Showing {images.length} images
+                    {images.length > 0
+                        ? `Showing ${imagesCount} images & ${labelsCount} labels`
+                        : `No images found`
+                    }
                 </Typography>
 
                 <Box display='flex'>
@@ -66,19 +72,24 @@ const SectionImage: FC = () => {
 
                 <Dialog
                     open={openUpload}
-                    onClose={handleUploadClose}
+                    onClose={handleCloseUpload}
                 >
-                    <DialogTitle>
-                        Upload Images
+                    <DialogTitle disableTypography>
+                        <Typography variant='h4'>
+                            Upload Images
+                        </Typography>
                         <IconButton
-                            className={classes.closeButton}
-                            onClick={handleUploadClose}
+                            className={classes.close}
+                            onClick={handleCloseUpload}
                         >
                             <CloseIcon/>
                         </IconButton>
                     </DialogTitle>
                     <DialogContent>
-                        <ImagesDropzone dataset_id={dataset_id}/>
+                        <ImagesDropzone
+                            dataset_id={dataset_id}
+                            callback={handleCloseUpload}
+                        />
                     </DialogContent>
                 </Dialog>
             </div>

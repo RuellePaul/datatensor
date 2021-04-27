@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import {fade, makeStyles} from '@material-ui/core';
 import {Theme} from 'src/theme';
 
-interface LabelProps {
+interface FancyLabelProps {
     className?: string;
     color?: 'primary' | 'secondary' | 'error' | 'warning' | 'success';
     children?: ReactNode;
@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const Label: FC<LabelProps> = ({
+const FancyLabel: FC<FancyLabelProps> = ({
                                    className = '',
                                    color = 'secondary',
                                    children,
@@ -74,4 +74,4 @@ const Label: FC<LabelProps> = ({
     );
 };
 
-export default Label;
+export default FancyLabel;

@@ -31,5 +31,8 @@ export default {
     },
     overline: {
         fontWeight: 500
+    },
+    button: {
+        fontSize: 15
     }
 };

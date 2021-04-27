@@ -86,9 +86,9 @@ const PricingView: FC = () => {
                                 elevation={1}
                             >
                                 <img
-                                    alt="Dataset"
                                     className={classes.datasetImage}
                                     src="/static/images/datasets/product_standard.svg"
+                                    alt="Dataset"
                                 />
                                 <Typography
                                     component="h3"

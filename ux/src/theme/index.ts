@@ -140,7 +140,7 @@ const themesOptions: ThemeOptions[] = [
             },
             background: {
                 default: '#2a2d3d',
-                dark: '#222431',
+                dark: '#212330',
                 paper: '#2a2d3d'
             },
             primary: {
@@ -152,7 +152,8 @@ const themesOptions: ThemeOptions[] = [
             text: {
                 primary: '#f6f5f8',
                 secondary: '#9699a4'
-            }
+            },
+            divider: '#54586e'
         },
         shadows: strongShadows
     }
