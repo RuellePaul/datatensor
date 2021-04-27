@@ -7,7 +7,6 @@ from database import encrypt_init
 
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'  # to use OAuth2 without https
 
-
 if 'ENVIRONMENT' not in os.environ:
     raise errors.Forbidden('Environment variable are not set. Use init_env.sh script, or edit Pycharm configuration')
 
@@ -16,6 +15,7 @@ class Config:
     ENVIRONMENT = os.environ['ENVIRONMENT']
 
     ROOT_PATH = os.path.abspath(os.path.join(Flask(__name__).root_path, os.pardir))
+    LOCAL_DATASETS_PATH = os.path.join(ROOT_PATH, 'api', 'routes', 'generator', 'local_datasets')
 
     UI_URL = 'https://localhost:5069'
     API_URI = 'http://127.0.0.1:4069'
@@ -28,6 +28,10 @@ class Config:
         '58a802c1b350056c737ca447db48c7c645581b265e61d2ceeae5e0320adc7e6a',  # RuellePaul (github)
         '83d2218ec37d73a99944dbcd90e5753908a418b99fa79678402ba6bc97a81f83'  # ThomasRoudil (github)
     ]
+
+    LOCAL_DATASET_IDS = {
+        'coco': '5e6fb198-56ea-4557-9948-e37be7ab6f12'
+    }
 
     SESSION_COOKIE_SECURE = True
     REMEMBER_COOKIE_SECURE = True

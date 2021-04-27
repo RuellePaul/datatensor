@@ -7,5 +7,5 @@ generator = Blueprint('generator', __name__)
 
 @generator.route('/coco', methods=['POST'])
 def init_dataset():
-    core.coco_dataset_generation()
+    core.dataset_generation('coco')
     return 'OK', 200

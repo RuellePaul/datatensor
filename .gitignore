@@ -191,5 +191,4 @@ dmypy.json
 ../.idea
 
 # generator data
-api/routes/generator/images
-api/routes/generator/annotations
+api/routes/generator/local_datasets/
