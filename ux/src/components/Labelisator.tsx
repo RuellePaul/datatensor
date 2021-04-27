@@ -91,7 +91,7 @@ const drawRect = (canvas: HTMLCanvasElement, pointA: Point, pointB: Point) => {
     context.setLineDash([5]);
     context.strokeStyle = color;
     context.strokeRect(x, y, w, h);
-    context.fillStyle = `${color}33`;
+    context.fillStyle = `${color}11`;
     context.fillRect(x, y, w, h);
 };
 
@@ -109,8 +109,12 @@ const drawLabelsHovered = (canvas: HTMLCanvasElement, labels: Label[]) => {
         context.setLineDash([5]);
         context.strokeStyle = color;
         context.strokeRect(x, y, w, h);
-        context.fillStyle = `${color}44`;
+        context.fillStyle = `${color}33`;
         context.fillRect(x, y, w, h);
+
+        context.fillStyle = '#FFFFFF';
+        context.fillRect(x, y, 3, 3);
+        context.fillRect(x + w - 3, y, 3, 3);
     }
 };
 
