@@ -162,6 +162,9 @@ celerybeat.pid
 .venv
 env/
 venv/
+.venv_3.8
+env/_3.8
+venv_3.8/
 ENV/
 env.bak/
 venv.bak/

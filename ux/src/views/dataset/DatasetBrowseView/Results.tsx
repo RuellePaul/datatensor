@@ -1,16 +1,14 @@
 import React, {FC, useRef, useState} from 'react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {Box, Button, Grid, ListItemText, makeStyles, Menu, MenuItem, Typography} from '@material-ui/core';
 import {Pagination} from '@material-ui/lab';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import {Theme} from 'src/theme';
 import DTDataset from 'src/components/Dataset';
-import {Dataset} from 'src/types/dataset';
+import useDatasets from 'src/hooks/useDatasets';
 
 interface ResultsProps {
     className?: string;
-    datasets: Dataset[];
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -34,11 +32,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const Results: FC<ResultsProps> = ({className, datasets, ...rest}) => {
+const Results: FC<ResultsProps> = ({className, ...rest}) => {
+
     const classes = useStyles();
+
+    const {datasets} = useDatasets();
+
     const sortRef = useRef<HTMLButtonElement | null>(null);
     const [openSort, setOpenSort] = useState<boolean>(false);
     const [selectedSort, setSelectedSort] = useState<string>('Most recent');
+
 
     const handleSortOpen = (): void => {
         setOpenSort(true);
@@ -133,11 +136,6 @@ const Results: FC<ResultsProps> = ({className, datasets, ...rest}) => {
             </Menu>
         </div>
     );
-};
-
-Results.propTypes = {
-    className: PropTypes.string,
-    datasets: PropTypes.array.isRequired
 };
 
 export default Results;
