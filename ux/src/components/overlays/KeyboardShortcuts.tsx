@@ -52,7 +52,8 @@ const Shortcut: FC<ShortcutProps> = ({keyDesc, children}) => (
             </Grid>
             <Grid item xs={3}>
                 <Typography
-                    variant='h5'
+                    variant='button'
+                    color='textPrimary'
                 >
                     {keyDesc.toUpperCase()}
                 </Typography>
@@ -86,6 +87,7 @@ const KeyboardShortcuts: FC = () => {
             </Button>
 
             <Dialog
+                disableRestoreFocus
                 PaperProps={{
                     className: classes.dialog
                 }}
@@ -142,6 +144,10 @@ const KeyboardShortcuts: FC = () => {
                                 <Divider/>
                                 <Shortcut keyDesc='→'>
                                     Next image
+                                </Shortcut>
+                                <Divider/>
+                                <Shortcut keyDesc='SPACE'>
+                                    Save labels and go to next image
                                 </Shortcut>
                                 <Divider/>
                             </Grid>

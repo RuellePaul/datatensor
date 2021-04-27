@@ -324,11 +324,13 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
             setTool('move')
         } else if (event.key === 'ArrowLeft') {
             if (selected === 0) return;
-            await saveLabels(labels);
             setSelected(selected - 1);
         } else if (event.key === 'ArrowRight') {
             if (selected === images.length - 1) return;
+            setSelected(selected + 1);
+        } else if (event.key === ' ') {
             await saveLabels(labels);
+            if (selected === images.length - 1) return;
             setSelected(selected + 1);
         }
     };
@@ -364,8 +366,8 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                         value="label"
                     >
                         <Tooltip
-                            title={<Typography variant='button'>
-                                Label (a)
+                            title={<Typography variant='overline'>
+                                Draw tool (a)
                             </Typography>}
                         >
                             <LabelIcon/>
@@ -376,8 +378,8 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                         disabled={labels.length === 0}
                     >
                         <Tooltip
-                            title={<Typography variant='button'>
-                                Move (z)
+                            title={<Typography variant='overline'>
+                                Move tool (z)
                             </Typography>}
                         >
                             <MoveIcon/>
@@ -387,28 +389,17 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
 
                 <div className='flexGrow'/>
 
-                {images[selected].labels.length !== 0 && (
-                    <Button
-                        onClick={() => setLabels([])}
-                        disabled={labels.length === 0}
-                        size='small'
-                    >
-                        Clear
-                    </Button>
-                )}
                 <Button
                     onClick={() => setLabels(images[selected].labels)}
                     disabled={!labelsChanged}
-                    size='small'
                 >
                     Reset
                 </Button>
                 <Button
-                    variant="contained"
-                    color="primary"
+                    variant="outlined"
+                    color="secondary"
                     onClick={() => saveLabels(labels)}
                     disabled={!labelsChanged}
-                    size='small'
                 >
                     Save
                 </Button>
