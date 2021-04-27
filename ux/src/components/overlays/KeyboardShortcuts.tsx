@@ -120,7 +120,7 @@ const KeyboardShortcuts: FC = () => {
                                 sm={6}
                                 xs={12}
                             >
-                                <Section>Navigation</Section>
+                                <Section>Labeling</Section>
                                 <Divider/>
                                 <Shortcut keyDesc='a'>
                                     Change tool (draw)
@@ -136,7 +136,7 @@ const KeyboardShortcuts: FC = () => {
                                 sm={6}
                                 xs={12}
                             >
-                                <Section>Labeling</Section>
+                                <Section>Navigation</Section>
                                 <Divider/>
                                 <Shortcut keyDesc='←'>
                                     Previous image
