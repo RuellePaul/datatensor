@@ -20,5 +20,6 @@ def fetch_images(args, dataset_id):
 
 @images_manage.route('/<image_id>/delete', methods=['POST'])
 def delete_image(image_id):
-    core.delete_image(image_id)
+    core.delete_image_from_s3(image_id)
+    core.delete_image_from_database(image_id)
     return 'OK', 200

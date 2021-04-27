@@ -1,6 +1,7 @@
 import React, {FC, useRef} from 'react';
 import {useHistory} from 'react-router';
 import clsx from 'clsx';
+import {useSnackbar} from 'notistack';
 import {
     Button,
     capitalize,
@@ -14,6 +15,7 @@ import {
 } from '@material-ui/core';
 import {Theme} from 'src/theme';
 import {Dataset} from 'src/types/dataset';
+import api from 'src/utils/api';
 
 interface DatasetProps {
     className?: string;
@@ -41,6 +43,7 @@ const DTDataset: FC<DatasetProps> = ({
                                      }) => {
     const classes = useStyles();
     const history = useHistory();
+    const {enqueueSnackbar} = useSnackbar();
 
     const datasetRef = useRef(null);
 
@@ -54,8 +57,12 @@ const DTDataset: FC<DatasetProps> = ({
         dataset.style.transform = `matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1)`
     };
 
-    const handleDeleteDataset = () => {
-        console.log('Delete dataset')  // TODO : back
+    const handleDeleteDataset = async () => {
+        try {
+            await api.post(`/v1/dataset/manage/${dataset.id}/delete`);
+        } catch (error) {
+            enqueueSnackbar((error.response && error.response.data) || 'Something went wrong', {variant: 'error'});
+        }
     };
 
     return (

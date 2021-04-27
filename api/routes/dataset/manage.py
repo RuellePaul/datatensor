@@ -7,6 +7,8 @@ from webargs.flaskparser import use_args
 
 from config import Config
 from routes.authentication.core import verify_access_token
+from routes.dataset import core
+from routes.images import manage as images_manage
 
 dataset_manage = Blueprint('dataset_manage', __name__)
 
@@ -47,3 +49,9 @@ def create_dataset(args):
         pass
 
     return {}, 200
+
+
+@dataset_manage.route('/<dataset_id>/delete', methods=['POST'])
+def delete_dataset(dataset_id):
+    core.delete_dataset(dataset_id)
+    return 'OK', 200

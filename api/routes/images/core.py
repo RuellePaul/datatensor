@@ -45,7 +45,7 @@ def upload_image(image_bytes, image_id):
         raise errors.InternalError(f'Cannot upload file to S3, {str(e)}')
 
 
-def delete_image(image_id):
+def delete_image_from_s3(image_id):
     try:
         s3.delete_object(
             Bucket=Config.S3_BUCKET,
@@ -53,7 +53,14 @@ def delete_image(image_id):
         )
     except Exception as e:
         raise errors.InternalError(f'Cannot delete file from S3, {str(e)}')
+
+
+def delete_image_from_database(image_id):
     Config.db.images.delete_one({'id': image_id})
+
+
+def delete_images_from_database(image_ids):
+    Config.db.images.delete_many({'id': {'$in': image_ids}})
 
 
 def upload_images(dataset_id, request_files):
