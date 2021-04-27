@@ -1,14 +1,26 @@
 import React, {FC, useState} from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import Masonry from 'react-masonry-css';
 import clsx from 'clsx';
-import {Backdrop, IconButton, makeStyles, Menu, MenuItem, Modal, Typography, useTheme} from '@material-ui/core';
+import {
+    Backdrop,
+    IconButton,
+    LinearProgress,
+    makeStyles,
+    Menu,
+    MenuItem,
+    Modal,
+    Typography,
+    useTheme
+} from '@material-ui/core';
 import {Pagination} from '@material-ui/lab';
 import {ArrowLeft as BackIcon, MoreVertical as MoreIcon} from 'react-feather';
 import DTImage from 'src/components/Image';
 import useImages from 'src/hooks/useImages';
 import {Theme} from 'src/theme';
+import {Image} from 'src/types/image'
 import api from 'src/utils/api'
 import bytesToSize from 'src/utils/bytesToSize';
-import Masonry from 'react-masonry-css';
 
 interface ImagesListProps {
     className?: string;
@@ -129,25 +141,35 @@ const DTImagesList: FC<ImagesListProps> = ({
             onKeyDown={handleKeyDown}
             {...rest}
         >
-            <Masonry
-                breakpointCols={{
-                    default: 4,
-                    [theme.breakpoints.values.md]: 3,
-                    700: 2,
-                    500: 1
-                }}
-                className={classes.grid}
-                columnClassName={classes.column}
+            <InfiniteScroll
+                dataLength={images.length}
+                next={() => {console.log('Trigger next')}}
+                height={800}
+                hasMore={false}
+                loader={<LinearProgress/>}
+                endMessage={<Typography color='textSecondary'>This is the end</Typography>}
             >
-                {images.map((image, index) => (
-                    <DTImage
-                        key={image.id}
-                        image={image}
-                        clickable
-                        onClick={() => handleOpenImage(index)}
-                    />
-                ))}
-            </Masonry>
+                <Masonry
+                    breakpointCols={{
+                        default: 4,
+                        [theme.breakpoints.values.md]: 3,
+                        700: 2,
+                        500: 1
+                    }}
+                    className={classes.grid}
+                    columnClassName={classes.column}
+                >
+                    {images.map((image, index) => (
+                        <DTImage
+                            key={image.id}
+                            image={image}
+                            clickable
+                            onClick={() => handleOpenImage(index)}
+                        />
+                    ))}
+                </Masonry>
+            </InfiniteScroll>
+
             {imageSelected && <Modal
                 className={classes.modal}
                 open={open}
