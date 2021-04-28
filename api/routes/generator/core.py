@@ -5,6 +5,7 @@ import zipfile
 from datetime import datetime
 from uuid import uuid4
 
+import numpy
 import requests
 from flask import request
 
@@ -38,7 +39,7 @@ def _download_annotations(dataset_name):
     os.remove(zip_path)
 
 
-def dataset_generation(dataset_name):
+def dataset_generation(dataset_name, count=100):
     user = verify_access_token(request.headers['Authorization'], verified=True)
     dataset_id = Config.DEFAULT_DATASET_IDS[dataset_name]
 
@@ -60,11 +61,14 @@ def dataset_generation(dataset_name):
     annotations = json.load(json_file)
 
     images = []
-    for image_object in annotations['images']:
-        filename = image_object['filename']
+    for image_object in annotations['images'][:count]:
+        filename = image_object['file_name']
         if filename and allowed_file(filename):
             image_id = str(uuid4())
-            # TODO
+            image_url = image_object['coco_url']
+            response = requests.get(image_url)
+            image = numpy.asarray(bytearray(response.content), dtype='uint8')
+            image = cv2.imdecode(image, cv2.IMREAD_COLOR)
             image = compress_image(image)
             image_bytes = cv2.imencode('.jpg', image)[1].tostring()
             path = upload_image(image_bytes, image_id)
@@ -88,7 +92,6 @@ def dataset_generation(dataset_name):
 
     Config.db.datasets.insert_one(dataset)
     Config.db.images.insert_many(images)
-    '''
 
 
 if __name__ == '__main__':
