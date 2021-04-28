@@ -70,10 +70,11 @@ const DTImage: FC<DTImageProps> = ({
                                    }) => {
     const classes = useStyles();
 
+    const imageRef = useRef(null);
     const canvasRef = useRef(null);
 
     const handleLoad = () => {
-        if (canvasRef.current) {
+        if (canvasRef.current && imageRef.current?.complete) {
             reset(canvasRef.current);
             drawLabels(canvasRef.current, labels);
         }
@@ -87,6 +88,7 @@ const DTImage: FC<DTImageProps> = ({
                 width="100%"
                 draggable={false}
                 onLoad={handleLoad}
+                ref={imageRef}
             />
             <canvas
                 className={classes.canvas}
