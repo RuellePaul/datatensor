@@ -1,6 +1,9 @@
+import cv2
 import json
 import os
 import zipfile
+from datetime import datetime
+from uuid import uuid4
 
 import requests
 from flask import request
@@ -8,6 +11,7 @@ from flask import request
 import errors
 from config import Config
 from routes.authentication.core import verify_access_token
+from routes.images.core import allowed_file, compress_image, upload_image, secure_filename
 
 ANNOTATIONS_CONFIG = {
     'coco': {
@@ -55,11 +59,12 @@ def dataset_generation(dataset_name):
     json_file = open(os.path.join(annotations_path, ANNOTATIONS_CONFIG[dataset_name]['filename']), 'r')
     annotations = json.load(json_file)
 
-    '''
-    for filename in ...:
+    images = []
+    for image_object in annotations['images']:
+        filename = image_object['filename']
         if filename and allowed_file(filename):
             image_id = str(uuid4())
-            image = cv2.imread(os.path.join(images_path, filename))
+            # TODO
             image = compress_image(image)
             image_bytes = cv2.imencode('.jpg', image)[1].tostring()
             path = upload_image(image_bytes, image_id)
