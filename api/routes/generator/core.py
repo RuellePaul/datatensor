@@ -3,14 +3,16 @@ import os
 import zipfile
 
 import requests
+from flask import request
 
 import errors
 from config import Config
+from routes.authentication.core import verify_access_token
 
 ANNOTATIONS_CONFIG = {
     'coco': {
         'download_url': 'http://images.cocodataset.org/annotations/annotations_trainval2014.zip',
-        'filename': 'coco.zip'
+        'filename': 'instances_val2014.json'
     }
 }
 
@@ -21,7 +23,7 @@ def _download_annotations(dataset_name):
 
     dataset_path = os.path.join(Config.DEFAULT_DATASETS_PATH, dataset_name)
 
-    zip_path = os.path.join(dataset_path, ANNOTATIONS_CONFIG[dataset_name]['filename'])
+    zip_path = os.path.join(dataset_path, f'{dataset_name}.zip')
     with open(zip_path, 'wb') as fd:
         for chunk in response.iter_content(chunk_size=128):
             fd.write(chunk)
@@ -29,9 +31,12 @@ def _download_annotations(dataset_name):
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
         zip_ref.extractall(dataset_path)
 
+    os.remove(zip_path)
+
 
 def dataset_generation(dataset_name):
-    dataset_id = 'iuerghzief'
+    user = verify_access_token(request.headers['Authorization'], verified=True)
+    dataset_id = Config.DEFAULT_DATASET_IDS[dataset_name]
 
     if Config.db.datasets.find_one({'id': dataset_id}):
         raise errors.Forbidden(f'Dataset {dataset_name} is already built')
@@ -40,13 +45,14 @@ def dataset_generation(dataset_name):
     if not os.path.exists(dataset_path):
         os.mkdir(dataset_path)
 
-    zip_path = os.path.join(dataset_path, ANNOTATIONS_CONFIG[dataset_name]['filename'])
-    if not os.path.exists(zip_path):
-        _download_annotations(dataset_name)
+    try:
+        annotations_path = os.path.join(dataset_path, 'annotations')
+        if not os.path.exists(annotations_path):
+            _download_annotations(dataset_name)
+    except Exception as e:
+        raise errors.InternalError(f'download of {dataset_name} failed, {str(e)}')
 
-    # TODO : extraire le json du download (annotations)
-    annotations_path = 'instances_val2014.json'
-    json_file = open(annotations_path, 'r')
+    json_file = open(os.path.join(annotations_path, ANNOTATIONS_CONFIG[dataset_name]['filename']), 'r')
     annotations = json.load(json_file)
 
     '''
