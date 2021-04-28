@@ -39,7 +39,7 @@ def _download_annotations(dataset_name):
     os.remove(zip_path)
 
 
-def dataset_generation(dataset_name, count=100):
+def dataset_generation(dataset_name, count=2):
     user = verify_access_token(request.headers['Authorization'], verified=True)
     dataset_id = Config.DEFAULT_DATASET_IDS[dataset_name]
 
