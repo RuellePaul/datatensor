@@ -1,43 +1,56 @@
-import os
-from uuid import uuid4
-from datetime import datetime
-
-import cv2
 import json
+import os
+import zipfile
 
-from flask import request
+import requests
 
 import errors
 from config import Config
-from routes.authentication.core import verify_access_token
-from routes.images.core import allowed_file, compress_image, upload_image, secure_filename
+
+ANNOTATIONS_CONFIG = {
+    'coco': {
+        'download_url': 'http://images.cocodataset.org/annotations/annotations_trainval2014.zip',
+        'filename': 'coco.zip'
+    }
+}
 
 
-def labels_from_annotations(annotations, filename):
-    annotations_path = os.path.join(Config.LOCAL_DATASETS_PATH, 'coco', 'annotations', 'captions_train2014.json')
-    return []
+def _download_annotations(dataset_name):
+    url = ANNOTATIONS_CONFIG[dataset_name]['download_url']
+    response = requests.get(url, stream=True)
+
+    dataset_path = os.path.join(Config.DEFAULT_DATASETS_PATH, dataset_name)
+
+    zip_path = os.path.join(dataset_path, ANNOTATIONS_CONFIG[dataset_name]['filename'])
+    with open(zip_path, 'wb') as fd:
+        for chunk in response.iter_content(chunk_size=128):
+            fd.write(chunk)
+
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        zip_ref.extractall(dataset_path)
 
 
 def dataset_generation(dataset_name):
-    user = verify_access_token(request.headers['Authorization'], verified=True)
-    dataset_id = Config.LOCAL_DATASET_IDS[dataset_name]
+    dataset_id = 'iuerghzief'
 
     if Config.db.datasets.find_one({'id': dataset_id}):
         raise errors.Forbidden(f'Dataset {dataset_name} is already built')
 
-    images_path = os.path.join(Config.LOCAL_DATASETS_PATH, dataset_name, 'images')
+    dataset_path = os.path.join(Config.DEFAULT_DATASETS_PATH, dataset_name)
+    if not os.path.exists(dataset_path):
+        os.mkdir(dataset_path)
 
-    try:
-        image_filenames = os.listdir(images_path)
-    except FileNotFoundError:
-        raise errors.NotFound(f"{images_path} doesn't exists")
+    zip_path = os.path.join(dataset_path, ANNOTATIONS_CONFIG[dataset_name]['filename'])
+    if not os.path.exists(zip_path):
+        _download_annotations(dataset_name)
 
-    annotations_path = os.path.join(Config.LOCAL_DATASETS_PATH, dataset_name, 'annotations', 'instances_val2014.json')
+    # TODO : extraire le json du download (annotations)
+    annotations_path = 'instances_val2014.json'
     json_file = open(annotations_path, 'r')
     annotations = json.load(json_file)
 
-    images = []
-    for filename in image_filenames:
+    '''
+    for filename in ...:
         if filename and allowed_file(filename):
             image_id = str(uuid4())
             image = cv2.imread(os.path.join(images_path, filename))
@@ -52,7 +65,7 @@ def dataset_generation(dataset_name):
                 'size': len(image_bytes),
                 'width': image.shape[1],
                 'height': image.shape[0],
-                'labels': labels_from_annotations(annotations, filename)
+                'labels': []
             })
 
     dataset = dict(id=dataset_id,
@@ -64,3 +77,8 @@ def dataset_generation(dataset_name):
 
     Config.db.datasets.insert_one(dataset)
     Config.db.images.insert_many(images)
+    '''
+
+
+if __name__ == '__main__':
+    dataset_generation('coco')
