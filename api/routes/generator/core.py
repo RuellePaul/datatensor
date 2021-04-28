@@ -46,6 +46,9 @@ def dataset_generation(dataset_name, count=100):
     if Config.db.datasets.find_one({'id': dataset_id}):
         raise errors.Forbidden(f'Dataset {dataset_name} is already built')
 
+    if not os.path.exists(Config.DEFAULT_DATASETS_PATH):
+        os.mkdir(Config.DEFAULT_DATASETS_PATH)
+
     dataset_path = os.path.join(Config.DEFAULT_DATASETS_PATH, dataset_name)
     if not os.path.exists(dataset_path):
         os.mkdir(dataset_path)
