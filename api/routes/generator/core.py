@@ -39,6 +39,19 @@ def _download_annotations(dataset_name):
     os.remove(zip_path)
 
 
+def _labels_from_annotations(image_object, annotations):
+    object_labels = [el for el in annotations if el['image_id'] == image_object['id']]
+    bounding_boxes = [el['bbox'] for el in object_labels]
+    labels = [{
+        'id': uuid4(),
+        'x': box[0] / image_object['width'],
+        'y': box[1] / image_object['height'],
+        'w': box[2] / image_object['width'],
+        'h': box[3] / image_object['height'],
+    } for box in bounding_boxes]
+    return labels
+
+
 def dataset_generation(dataset_name, count=2):
     user = verify_access_token(request.headers['Authorization'], verified=True)
     dataset_id = Config.DEFAULT_DATASET_IDS[dataset_name]
@@ -83,7 +96,7 @@ def dataset_generation(dataset_name, count=2):
                 'size': len(image_bytes),
                 'width': image.shape[1],
                 'height': image.shape[0],
-                'labels': []
+                'labels': _labels_from_annotations(image_object, annotations['annotations'])
             })
 
     dataset = dict(id=dataset_id,

@@ -1,5 +1,5 @@
 import React, {FC, useCallback, useEffect, useState} from 'react';
-import {Button, Container, Grid, makeStyles} from '@material-ui/core';
+import {Button, Container, Grid, TextField, makeStyles} from '@material-ui/core';
 import {useSnackbar} from 'notistack';
 import Page from 'src/components/Page';
 import {Theme} from 'src/theme';
@@ -53,6 +53,8 @@ const AdminDashboardView: FC = () => {
     const isMountedRef = useIsMountedRef();
     const [users, setUsers] = useState<User[]>([]);
 
+    const [count, setCount] = useState(null);
+
     const getUsers = useCallback(async () => {
         try {
             const response = await api.get<User[]>('/v1/admin/manage/users');
@@ -73,7 +75,7 @@ const AdminDashboardView: FC = () => {
 
     const handleGenerateCocoDataset = async () => {
         try {
-            await api.post('/v1/admin/generator/coco');
+            await api.post('/v1/admin/generator/coco', {image_count: count});
 
             if (isMountedRef.current) {
                 enqueueSnackbar('Dataset COCO generated', {variant: 'info'});
@@ -103,13 +105,20 @@ const AdminDashboardView: FC = () => {
                         lg={3}
                         xs={12}
                     >
+                        <TextField
+                          label="Image count"
+                          value={count}
+                          onChange={event => setCount(event.target.value)}
+                          variant="outlined"
+                          size="small"
+                        />
+
                         <Button
                             variant='contained'
                             onClick={handleGenerateCocoDataset}
                         >
                             Generate COCO dataset
                         </Button>
-
                     </Grid>
                     <Grid
                         item
