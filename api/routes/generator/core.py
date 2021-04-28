@@ -83,8 +83,12 @@ def dataset_generation(dataset_name, count=2):
             image_id = str(uuid4())
             image_url = image_object['coco_url']
             response = requests.get(image_url)
+            if response.status_code != 200:
+                continue
             image = numpy.asarray(bytearray(response.content), dtype='uint8')
             image = cv2.imdecode(image, cv2.IMREAD_COLOR)
+            if not image:
+                continue
             image = compress_image(image)
             image_bytes = cv2.imencode('.jpg', image)[1].tostring()
             path = upload_image(image_bytes, image_id)
