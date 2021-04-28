@@ -52,7 +52,8 @@ const Shortcut: FC<ShortcutProps> = ({keyDesc, children}) => (
             </Grid>
             <Grid item xs={3}>
                 <Typography
-                    variant='h5'
+                    variant='button'
+                    color='textPrimary'
                 >
                     {keyDesc.toUpperCase()}
                 </Typography>
@@ -86,6 +87,7 @@ const KeyboardShortcuts: FC = () => {
             </Button>
 
             <Dialog
+                disableRestoreFocus
                 PaperProps={{
                     className: classes.dialog
                 }}
@@ -118,7 +120,7 @@ const KeyboardShortcuts: FC = () => {
                                 sm={6}
                                 xs={12}
                             >
-                                <Section>Navigation</Section>
+                                <Section>Labeling</Section>
                                 <Divider/>
                                 <Shortcut keyDesc='a'>
                                     Change tool (draw)
@@ -128,13 +130,17 @@ const KeyboardShortcuts: FC = () => {
                                     Change tool (move)
                                 </Shortcut>
                                 <Divider/>
+                                <Shortcut keyDesc='ESCAPE'>
+                                    Reset canvas
+                                </Shortcut>
+                                <Divider/>
                             </Grid>
                             <Grid
                                 item
                                 sm={6}
                                 xs={12}
                             >
-                                <Section>Labeling</Section>
+                                <Section>Navigation</Section>
                                 <Divider/>
                                 <Shortcut keyDesc='←'>
                                     Previous image
@@ -142,6 +148,10 @@ const KeyboardShortcuts: FC = () => {
                                 <Divider/>
                                 <Shortcut keyDesc='→'>
                                     Next image
+                                </Shortcut>
+                                <Divider/>
+                                <Shortcut keyDesc='SPACE'>
+                                    Save labels and go to next image
                                 </Shortcut>
                                 <Divider/>
                             </Grid>

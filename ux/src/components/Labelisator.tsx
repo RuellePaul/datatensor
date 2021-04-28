@@ -28,6 +28,7 @@ interface ToolMoveProps {
     setLabels: (labels: Label[]) => void;
 }
 
+type Direction = 'top-left' | 'bottom-left' | 'top-right' | 'bottom-right' | null;
 type Point = number[];
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -91,9 +92,11 @@ const drawRect = (canvas: HTMLCanvasElement, pointA: Point, pointB: Point) => {
     context.setLineDash([5]);
     context.strokeStyle = color;
     context.strokeRect(x, y, w, h);
-    context.fillStyle = `${color}33`;
+    context.fillStyle = `${color}11`;
     context.fillRect(x, y, w, h);
 };
+
+const RESIZE_SIZE = 8;
 
 const drawLabelsHovered = (canvas: HTMLCanvasElement, labels: Label[]) => {
     if (!labels)
@@ -109,9 +112,49 @@ const drawLabelsHovered = (canvas: HTMLCanvasElement, labels: Label[]) => {
         context.setLineDash([5]);
         context.strokeStyle = color;
         context.strokeRect(x, y, w, h);
-        context.fillStyle = `${color}44`;
+        context.fillStyle = `${color}33`;
         context.fillRect(x, y, w, h);
+
+        context.fillStyle = '#FFFFFF';
+        context.fillRect(x, y, RESIZE_SIZE, RESIZE_SIZE);
+        context.fillRect(x + w - RESIZE_SIZE, y, RESIZE_SIZE, RESIZE_SIZE);
+        context.fillRect(x, y + h - RESIZE_SIZE, RESIZE_SIZE, RESIZE_SIZE);
+        context.fillRect(x + w - RESIZE_SIZE, y + h - RESIZE_SIZE, RESIZE_SIZE, RESIZE_SIZE);
     }
+};
+
+const renderCursor = (canvas: HTMLCanvasElement, point: Point, labels: Label[], callback: (direction: Direction) => void) => {
+    if (!labels || !point)
+        return;
+
+    for (const label of labels) {
+        let x = label.x * canvas.width;
+        let y = label.y * canvas.height;
+        let w = label.w * canvas.width;
+        let h = label.h * canvas.height;
+
+        if (point[0] > x && point[0] < x + RESIZE_SIZE) {
+            if (point[1] > y && point[1] < y + RESIZE_SIZE) {
+                callback('top-left');
+                return;
+            }
+            if (point[1] > y + h - RESIZE_SIZE && point[1] < y + h) {
+                callback('bottom-left');
+                return;
+            }
+        } else if (point[0] > x + w - RESIZE_SIZE && point[0] < x + w) {
+            if (point[1] > y && point[1] < y + RESIZE_SIZE) {
+                callback('top-right');
+                return;
+            }
+            if (point[1] > y + h - RESIZE_SIZE && point[1] < y + h) {
+                callback('bottom-right');
+                return;
+            }
+        }
+    }
+
+    callback(null)
 };
 
 const currentLabelsHoverIds = (canvas: HTMLCanvasElement, point: Point, labels: Label[]) => {
@@ -142,6 +185,49 @@ const currentLabelsTranslated = (canvas: HTMLCanvasElement, labels: Label[], poi
     });
 };
 
+const currentLabelsResized = (canvas: HTMLCanvasElement, labels: Label[], pointA: Point, pointB: Point, direction: Direction) => {
+    return labels.map(label => {
+        let delta: Point = [(pointA[0] - pointB[0]) / canvas.width, (pointA[1] - pointB[1]) / canvas.height];
+
+        let x, y, w, h;
+
+        if (direction === 'top-left') {
+            x = label.x + delta[0];
+            y = label.y + delta[1];
+            w = label.w - delta[0];
+            h = label.h - delta[1];
+        } else if (direction === 'top-right') {
+            x = label.x;
+            y = label.y + delta[1];
+            w = label.w + delta[0];
+            h = label.h - delta[1];
+        } else if (direction === 'bottom-left') {
+            x = label.x + delta[0];
+            y = label.y;
+            w = label.w - delta[0];
+            h = label.h + delta[1];
+        } else if (direction === 'bottom-right') {
+            x = label.x;
+            y = label.y;
+            w = label.w + delta[0];
+            h = label.h + delta[1];
+        }
+        if (w < 0) {
+            w = Math.abs(w);
+            x -= w;
+        }
+        if (h < 0) {
+            h = Math.abs(h);
+            y -= h;
+        }
+        return ({
+            ...label,
+            x, y, w, h
+        });
+    });
+};
+
+
 const checkLabelsEquality = (labels: Label[], newLabels: Label[]) => _.isEqual(labels, newLabels);
 
 const formatRatio = ratio => Math.abs(Math.round(ratio * 1e6) / 1e6);
@@ -163,7 +249,7 @@ const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels}) => {
         if (event.nativeEvent.which === 0) // IDLE
             drawCursorLines(canvas, point);
 
-        if (event.nativeEvent.which === 1)  // LEFT CLICK
+        if (event.nativeEvent.which === 1)  // START DRAW LABEL
             drawRect(canvas, point, storedPoint)
     };
 
@@ -216,8 +302,17 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels}) => {
 
     const canvasRef = useRef<HTMLCanvasElement>();
 
+    const [direction, setDirection] = useState<Direction>(null);
+
     const [storedPoint, setStoredPoint] = useState<Point>(null);
-    const [movedLabels, setMovedLabels] = useState<Label[]>([]);
+    const [storedLabels, setStoredLabels] = useState<Label[]>([]);
+
+    useEffect(() => {
+        if (direction === "top-left" || direction === "bottom-right")
+            canvasRef.current.style.cursor = 'nwse-resize';
+        else if (direction === "top-right" || direction === "bottom-left")
+            canvasRef.current.style.cursor = 'nesw-resize';
+    }, [direction]);
 
     const handleMouseMove = (event: React.MouseEvent<HTMLElement>) => {
         let canvas = canvasRef.current;
@@ -226,20 +321,28 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels}) => {
 
         if (event.nativeEvent.which === 0) { // IDLE
             let labelsHoverIds = currentLabelsHoverIds(canvas, point, labels);
-            canvas.style.cursor = labelsHoverIds.length > 0 ? 'grab' : 'not-allowed';
-            drawLabelsHovered(canvasRef.current, labels.filter(label => labelsHoverIds.includes(label.id)));
+            drawLabelsHovered(canvas, labels.filter(label => labelsHoverIds.includes(label.id)));
+            renderCursor(canvas, point, labels, direction => setDirection(direction));
+            if (direction === null)
+                if (labelsHoverIds.length === 0)
+                    canvas.style.cursor = 'initial';
+                else
+                    canvas.style.cursor = 'move';
         }
 
-        if (event.nativeEvent.which === 1) { // LEFT CLICK
-            if (movedLabels.length === 0) return;
-            let labelsTranslated = currentLabelsTranslated(canvas, movedLabels, point, storedPoint);
-            drawLabelsHovered(canvasRef.current, labelsTranslated);
-            canvas.style.cursor = 'grabbing';
+        if (event.nativeEvent.which === 1) { // START MOVE
+            if (storedLabels.length === 0) return;
+            if (direction === null) {
+                let labelsTranslated = currentLabelsTranslated(canvas, storedLabels, point, storedPoint);
+                drawLabelsHovered(canvas, labelsTranslated);
+            } else {
+                let labelsResized = currentLabelsResized(canvas, storedLabels, point, storedPoint, direction);
+                drawLabelsHovered(canvas, labelsResized);
+            }
         }
     };
 
     const handleMouseDown = (event: React.MouseEvent<HTMLElement>) => {
-        let canvas = canvasRef.current;
         let point = currentPoint(event.nativeEvent);
 
         if (event.nativeEvent.which === 1) {
@@ -247,8 +350,7 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels}) => {
             if (labelsHoverIds.length > 0) {
                 setStoredPoint(point);
                 setLabels(labels.filter(label => !labelsHoverIds.includes(label.id)));
-                setMovedLabels(labels.filter(label => labelsHoverIds.includes(label.id)));
-                canvas.style.cursor = 'grabbing';
+                setStoredLabels(labels.filter(label => labelsHoverIds.includes(label.id)));
             }
         }
     };
@@ -258,15 +360,19 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels}) => {
         let point = currentPoint(event.nativeEvent);
 
         if (event.nativeEvent.which === 1) { // LEFT CLICK
-            if (!storedPoint || !movedLabels) return;
-            if (movedLabels.length === 0) return;
+            if (!storedPoint || !storedLabels) return;
+            if (storedLabels.length === 0) return;
 
-            let labelsTranslated = currentLabelsTranslated(canvas, movedLabels, point, storedPoint);
-            setLabels([...labels, ...labelsTranslated]);
+            if (direction === null) {
+                let labelsTranslated = currentLabelsTranslated(canvas, storedLabels, point, storedPoint);
+                setLabels([...labels, ...labelsTranslated]);
+            } else {
+                let labelsResized = currentLabelsResized(canvas, storedLabels, point, storedPoint, direction);
+                setLabels([...labels, ...labelsResized]);
+            }
+
             setStoredPoint(null);
-            setMovedLabels([]);
-
-            canvas.style.cursor = 'grab';
+            setStoredLabels([]);
         }
     };
 
@@ -324,12 +430,16 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
             setTool('move')
         } else if (event.key === 'ArrowLeft') {
             if (selected === 0) return;
-            await saveLabels(labels);
             setSelected(selected - 1);
         } else if (event.key === 'ArrowRight') {
             if (selected === images.length - 1) return;
-            await saveLabels(labels);
             setSelected(selected + 1);
+        } else if (event.key === ' ') {
+            await saveLabels(labels);
+            if (selected === images.length - 1) return;
+            setSelected(selected + 1);
+        } else if (event.key === 'Escape') {
+            setLabels(images[selected].labels)
         }
     };
 
@@ -364,8 +474,8 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                         value="label"
                     >
                         <Tooltip
-                            title={<Typography variant='button'>
-                                Label (a)
+                            title={<Typography variant='overline'>
+                                Draw tool (a)
                             </Typography>}
                         >
                             <LabelIcon/>
@@ -376,8 +486,8 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                         disabled={labels.length === 0}
                     >
                         <Tooltip
-                            title={<Typography variant='button'>
-                                Move (z)
+                            title={<Typography variant='overline'>
+                                Move tool (z)
                             </Typography>}
                         >
                             <MoveIcon/>
@@ -387,31 +497,38 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
 
                 <div className='flexGrow'/>
 
-                {images[selected].labels.length !== 0 && (
-                    <Button
-                        onClick={() => setLabels([])}
-                        disabled={labels.length === 0}
-                        size='small'
-                    >
-                        Clear
-                    </Button>
-                )}
-                <Button
-                    onClick={() => setLabels(images[selected].labels)}
-                    disabled={!labelsChanged}
-                    size='small'
+                <Tooltip
+                    title={<Typography variant='overline'>
+                        Reset (ESCAPE)
+                    </Typography>}
                 >
-                    Reset
-                </Button>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => saveLabels(labels)}
-                    disabled={!labelsChanged}
-                    size='small'
+                    <span>
+                        <Button
+                            onClick={() => setLabels(images[selected].labels)}
+                            disabled={!labelsChanged}
+                            size='small'
+                        >
+                            Reset
+                        </Button>
+                    </span>
+                </Tooltip>
+                <Tooltip
+                    title={<Typography variant='overline'>
+                        Save (SPACE)
+                    </Typography>}
                 >
-                    Save
-                </Button>
+                    <span>
+                        <Button
+                            variant="outlined"
+                            color="secondary"
+                            onClick={() => saveLabels(labels)}
+                            disabled={!labelsChanged}
+                            size='small'
+                        >
+                            Save
+                        </Button>
+                    </span>
+                </Tooltip>
             </div>
 
             <div
