@@ -191,4 +191,4 @@ dmypy.json
 ../.idea
 
 # generator data
-api/routes/generator/default_datasets/coco/*
+api/routes/generator/default_datasets/*

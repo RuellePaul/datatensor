@@ -1,13 +1,18 @@
+import cv2
 import json
 import os
 import zipfile
+from datetime import datetime
+from uuid import uuid4
 
+import numpy
 import requests
 from flask import request
 
 import errors
 from config import Config
 from routes.authentication.core import verify_access_token
+from routes.images.core import allowed_file, compress_image, upload_image, secure_filename
 
 ANNOTATIONS_CONFIG = {
     'coco': {
@@ -34,12 +39,28 @@ def _download_annotations(dataset_name):
     os.remove(zip_path)
 
 
-def dataset_generation(dataset_name):
+def _labels_from_annotations(image_object, annotations):
+    object_labels = [el for el in annotations if el['image_id'] == image_object['id']]
+    bounding_boxes = [el['bbox'] for el in object_labels]
+    labels = [{
+        'id': uuid4(),
+        'x': box[0] / image_object['width'],
+        'y': box[1] / image_object['height'],
+        'w': box[2] / image_object['width'],
+        'h': box[3] / image_object['height'],
+    } for box in bounding_boxes]
+    return labels
+
+
+def dataset_generation(dataset_name, count=2):
     user = verify_access_token(request.headers['Authorization'], verified=True)
     dataset_id = Config.DEFAULT_DATASET_IDS[dataset_name]
 
     if Config.db.datasets.find_one({'id': dataset_id}):
         raise errors.Forbidden(f'Dataset {dataset_name} is already built')
+
+    if not os.path.exists(Config.DEFAULT_DATASETS_PATH):
+        os.mkdir(Config.DEFAULT_DATASETS_PATH)
 
     dataset_path = os.path.join(Config.DEFAULT_DATASETS_PATH, dataset_name)
     if not os.path.exists(dataset_path):
@@ -55,11 +76,19 @@ def dataset_generation(dataset_name):
     json_file = open(os.path.join(annotations_path, ANNOTATIONS_CONFIG[dataset_name]['filename']), 'r')
     annotations = json.load(json_file)
 
-    '''
-    for filename in ...:
+    images = []
+    for image_object in annotations['images'][:count]:
+        filename = image_object['file_name']
         if filename and allowed_file(filename):
             image_id = str(uuid4())
-            image = cv2.imread(os.path.join(images_path, filename))
+            image_url = image_object['coco_url']
+            response = requests.get(image_url)
+            if response.status_code != 200:
+                continue
+            image = numpy.asarray(bytearray(response.content), dtype='uint8')
+            image = cv2.imdecode(image, cv2.IMREAD_COLOR)
+            if not image:
+                continue
             image = compress_image(image)
             image_bytes = cv2.imencode('.jpg', image)[1].tostring()
             path = upload_image(image_bytes, image_id)
@@ -71,7 +100,7 @@ def dataset_generation(dataset_name):
                 'size': len(image_bytes),
                 'width': image.shape[1],
                 'height': image.shape[0],
-                'labels': []
+                'labels': _labels_from_annotations(image_object, annotations['annotations'])
             })
 
     dataset = dict(id=dataset_id,
@@ -83,7 +112,6 @@ def dataset_generation(dataset_name):
 
     Config.db.datasets.insert_one(dataset)
     Config.db.images.insert_many(images)
-    '''
 
 
 if __name__ == '__main__':
