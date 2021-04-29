@@ -111,6 +111,9 @@ const DTImagesList: FC<ImagesListProps> = ({
 
     const imageSelected = images[selected];
 
+    const [limit, setLimit] = useState(20);
+    const hasMore = images.length > limit;
+
     const handleOpenImage = (index) => {
         setOpen(true);
         setSelected(index);
@@ -157,14 +160,13 @@ const DTImagesList: FC<ImagesListProps> = ({
         >
             <InfiniteScroll
                 className={classes.scroll}
-                dataLength={images.length}
+                dataLength={limit}
                 next={() => {
-                    console.log('Trigger next')
+                    setTimeout(() => setLimit(limit + 20), 100);
                 }}
                 height={'calc(100vh - 350px)'}
-                hasMore={false}
+                hasMore={hasMore}
                 loader={<LinearProgress/>}
-                endMessage={<Typography color='textSecondary'>This is the end</Typography>}
             >
                 <Masonry
                     breakpointCols={{
@@ -175,7 +177,7 @@ const DTImagesList: FC<ImagesListProps> = ({
                     className={classes.grid}
                     columnClassName={classes.column}
                 >
-                    {images.map((image, index) => (
+                    {images.slice(0, limit).map((image, index) => (
                         <DTImage
                             key={image.id}
                             image={image}

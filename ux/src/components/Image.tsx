@@ -1,4 +1,4 @@
-import React, {FC, useRef} from 'react';
+import React, {FC, useEffect, useRef} from 'react';
 import clsx from 'clsx';
 import {ButtonBase, makeStyles} from '@material-ui/core';
 import {Theme} from 'src/theme';
@@ -45,6 +45,7 @@ const reset = (canvas: HTMLCanvasElement) => {
 const drawLabels = (canvas: HTMLCanvasElement, labels: Label[]) => {
     if (!labels)
         return;
+
     for (const label of labels) {
         let x = label.x * canvas.width;
         let y = label.y * canvas.height;
@@ -80,8 +81,39 @@ const DTImage: FC<DTImageProps> = ({
         }
     };
 
-    const Image = () => (
-        <>
+    useEffect(() => {
+        if (canvasRef.current && imageRef.current?.complete) {
+            reset(canvasRef.current);
+            drawLabels(canvasRef.current, labels);
+        }
+    }, [labels])
+
+    if (clickable)
+        return (
+            <ButtonBase
+                className={clsx(classes.root, classes.clickable, className)}
+                {...rest}
+            >
+                <img
+                    src={image.path}
+                    alt={image.name}
+                    width="100%"
+                    draggable={false}
+                    onLoad={handleLoad}
+                    ref={imageRef}
+                />
+                <canvas
+                    className={classes.canvas}
+                    ref={canvasRef}
+                />
+            </ButtonBase>
+        );
+
+    return (
+        <div
+            className={clsx(classes.root, className)}
+            {...rest}
+        >
             <img
                 src={image.path}
                 alt={image.name}
@@ -94,25 +126,6 @@ const DTImage: FC<DTImageProps> = ({
                 className={classes.canvas}
                 ref={canvasRef}
             />
-        </>
-    );
-
-    if (clickable)
-        return (
-            <ButtonBase
-                className={clsx(classes.root, classes.clickable, className)}
-                {...rest}
-            >
-                <Image/>
-            </ButtonBase>
-        );
-
-    return (
-        <div
-            className={clsx(classes.root, className)}
-            {...rest}
-        >
-            <Image/>
         </div>
     );
 };
