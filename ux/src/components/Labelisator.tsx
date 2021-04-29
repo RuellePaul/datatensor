@@ -4,7 +4,7 @@ import _ from 'lodash';
 import useEventListener from 'use-typed-event-listener';
 import {useSnackbar} from 'notistack';
 import {v4 as uuid} from 'uuid';
-import {Button, makeStyles, Tooltip, Typography} from '@material-ui/core';
+import {Box, Button, FormControlLabel, makeStyles, Switch, Tooltip, Typography} from '@material-ui/core';
 import {Pagination, ToggleButton, ToggleButtonGroup} from '@material-ui/lab';
 import {Maximize as LabelIcon, Move as MoveIcon} from 'react-feather';
 import {Theme} from 'src/theme';
@@ -21,11 +21,15 @@ interface DTLabelisatorProps {
 interface ToolLabelProps {
     labels: Label[];
     setLabels: (labels: Label[]) => void;
+    setTool: (tool) => void;
+    autoSwitch: boolean;
 }
 
 interface ToolMoveProps {
     labels: Label[];
     setLabels: (labels: Label[]) => void;
+    setTool: (tool) => void;
+    autoSwitch: boolean;
 }
 
 type Direction = 'top-left' | 'bottom-left' | 'top-right' | 'bottom-right' | null;
@@ -267,7 +271,7 @@ const checkLabelsEquality = (labels: Label[], newLabels: Label[]) => _.isEqual(l
 const formatRatio = ratio => Math.abs(Math.round(ratio * 1e6) / 1e6);
 
 
-const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels}) => {
+const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels, setTool, autoSwitch}) => {
 
     const classes = useStyles();
     const canvasRef = useRef(null);
@@ -280,8 +284,14 @@ const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels}) => {
 
         let point = currentPoint(event.nativeEvent);
 
-        if (event.nativeEvent.which === 0) // IDLE
+        if (event.nativeEvent.which === 0) {  // IDLE
+            let labelsHoverIds = currentLabelsHoverIds(canvas, point, labels);
+            if (autoSwitch && labelsHoverIds.length > 0) {
+                setTool('move');
+                return;
+            }
             drawCursorLines(canvas, point);
+        }
 
         if (event.nativeEvent.which === 1)  // START DRAW LABEL
             drawRect(canvas, point, storedPoint)
@@ -330,7 +340,7 @@ const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels}) => {
 };
 
 
-const ToolMove: FC<ToolMoveProps> = ({labels, setLabels}) => {
+const ToolMove: FC<ToolMoveProps> = ({labels, setLabels, setTool, autoSwitch}) => {
 
     const classes = useStyles();
 
@@ -355,6 +365,10 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels}) => {
 
         if (event.nativeEvent.which === 0) { // IDLE
             let labelsHoverIds = currentLabelsHoverIds(canvas, point, labels);
+            if (autoSwitch && labelsHoverIds.length === 0) {
+                setTool('label');
+                return;
+            }
             drawLabels(canvas, labels.filter(label => labelsHoverIds.includes(label.id)));
             renderCursor(canvas, point, labels, direction => setDirection(direction));
             if (direction === null)
@@ -484,11 +498,12 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
 
 
     const [tool, setTool] = useState<string>('label');
-
     const handleToolChange = (event: React.MouseEvent<HTMLElement>, newTool: string | null) => {
         if (newTool !== null)
             setTool(newTool);
     };
+
+    const [autoSwitch, setAuthSwitch] = useState<boolean>(false);
 
     useEventListener(window, 'keydown', handleKeyDown);
 
@@ -506,6 +521,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                 >
                     <ToggleButton
                         value="label"
+                        disabled={autoSwitch}
                     >
                         <Tooltip
                             title={<Typography variant='overline'>
@@ -517,7 +533,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                     </ToggleButton>
                     <ToggleButton
                         value="move"
-                        disabled={labels.length === 0}
+                        disabled={autoSwitch || labels.length === 0}
                     >
                         <Tooltip
                             title={<Typography variant='overline'>
@@ -528,6 +544,26 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                         </Tooltip>
                     </ToggleButton>
                 </ToggleButtonGroup>
+
+                <Box ml={2}>
+                    <FormControlLabel
+                        control={(
+                            <Switch
+                                color="secondary"
+                                size='small'
+                                checked={autoSwitch}
+                                onChange={() => setAuthSwitch(!autoSwitch)}
+                            />
+                        )}
+                        label={(
+                            <Typography
+                                color='textSecondary'
+                            >
+                                Auto switch
+                            </Typography>
+                        )}
+                    />
+                </Box>
 
                 <div className='flexGrow'/>
 
@@ -573,12 +609,16 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                     <ToolLabel
                         labels={labels}
                         setLabels={setLabels}
+                        setTool={setTool}
+                        autoSwitch={autoSwitch}
                     />
                 )}
                 {tool === 'move' && (
                     <ToolMove
                         labels={labels}
                         setLabels={setLabels}
+                        setTool={setTool}
+                        autoSwitch={autoSwitch}
                     />
                 )}
                 <DTImage
