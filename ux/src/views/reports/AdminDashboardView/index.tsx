@@ -1,6 +1,5 @@
 import React, {FC, useCallback, useEffect, useState} from 'react';
 import {Container, Grid, makeStyles} from '@material-ui/core';
-import {useSnackbar} from 'notistack';
 import Page from 'src/components/Page';
 import {Theme} from 'src/theme';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
@@ -22,7 +21,7 @@ const timeRanges: TimeRange[] = [
         text: 'Last day'
     },
     {
-        value: 'last_month',
+        value: 'last_week',
         text: 'Last week'
     },
     {
