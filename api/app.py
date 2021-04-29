@@ -12,7 +12,7 @@ from routes.admin.manage import admin_manage
 from routes.authentication.auth import auth
 from routes.authentication.core import require_authorization, require_admin
 from routes.authentication.oauth import oauth
-from routes.dataset.manage import dataset_manage
+from routes.datasets.manage import dataset_manage
 from routes.images.manage import images_manage
 from routes.images.upload import images_upload
 from routes.images.labeling import images_labeling
@@ -33,7 +33,7 @@ require_admin([admin_manage, generator])
 
 app.register_blueprint(auth, url_prefix='/api/v1/auth')
 app.register_blueprint(oauth, url_prefix='/api/v1/oauth')
-app.register_blueprint(dataset_manage, url_prefix='/api/v1/dataset/manage')
+app.register_blueprint(dataset_manage, url_prefix='/api/v1/datasets')
 
 app.register_blueprint(admin_manage, url_prefix='/api/v1/admin/manage')
 

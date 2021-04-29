@@ -4,9 +4,20 @@ import _ from 'lodash';
 import useEventListener from 'use-typed-event-listener';
 import {useSnackbar} from 'notistack';
 import {v4 as uuid} from 'uuid';
-import {Box, Button, FormControlLabel, makeStyles, Switch, Tooltip, Typography} from '@material-ui/core';
+import {
+    Box,
+    Button,
+    FormControlLabel,
+    ListItemIcon,
+    makeStyles,
+    Menu,
+    MenuItem,
+    Switch,
+    Tooltip,
+    Typography
+} from '@material-ui/core';
 import {Pagination, ToggleButton, ToggleButtonGroup} from '@material-ui/lab';
-import {Maximize as LabelIcon, Move as MoveIcon} from 'react-feather';
+import {Maximize as LabelIcon, Move as MoveIcon, Trash as DeleteIcon} from 'react-feather';
 import {Theme} from 'src/theme';
 import DTImage from 'src/components/Image';
 import useImages from 'src/hooks/useImages';
@@ -16,6 +27,14 @@ import api from 'src/utils/api';
 
 interface DTLabelisatorProps {
     className?: string;
+}
+
+interface ContextMenuProps {
+    labels: Label[];
+    selectedLabels: Label[];
+    setLabels: (labels: Label[]) => void;
+    point: Point;
+    handleClose: () => void;
 }
 
 interface ToolLabelProps {
@@ -67,6 +86,14 @@ const CANVAS_OFFSET = 50;
 
 const currentPoint = (nativeEvent) => ([nativeEvent.offsetX, nativeEvent.offsetY]);
 
+const pointIsOutside = (canvas: HTMLCanvasElement, point: Point) => {
+    if (point[0] < CANVAS_OFFSET || point[0] > canvas.width - CANVAS_OFFSET)
+        return true;
+    if (point[1] < CANVAS_OFFSET || point[1] > canvas.height - CANVAS_OFFSET)
+        return true;
+    return false
+};
+
 const reset = (canvas: HTMLCanvasElement) => {
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
@@ -90,18 +117,25 @@ const convertLabel = (canvas: HTMLCanvasElement, label: Label) => {
 };
 
 const drawCursorLines = (canvas: HTMLCanvasElement, point: Point) => {
+    canvas.style.cursor = 'initial';
+    if (pointIsOutside(canvas, point))
+        return;
+
     let context = canvas.getContext('2d');
     context.beginPath();
     context.setLineDash([5]);
-    context.moveTo(point[0], 0);
-    context.lineTo(point[0], canvas.height);
-    context.moveTo(0, point[1]);
-    context.lineTo(canvas.width, point[1]);
+    context.moveTo(point[0], CANVAS_OFFSET);
+    context.lineTo(point[0], (canvas.height - CANVAS_OFFSET));
+    context.moveTo(CANVAS_OFFSET, point[1]);
+    context.lineTo((canvas.width - CANVAS_OFFSET), point[1]);
     context.stroke();
+    canvas.style.cursor = 'crosshair';
 };
 
 const drawRect = (canvas: HTMLCanvasElement, pointA: Point, pointB: Point) => {
     if (!pointA || !pointB)
+        return;
+    if (pointIsOutside(canvas, pointA) || pointIsOutside(canvas, pointB))
         return;
     let x = pointA[0];
     let y = pointA[1];
@@ -271,6 +305,36 @@ const checkLabelsEquality = (labels: Label[], newLabels: Label[]) => _.isEqual(l
 const formatRatio = ratio => Math.abs(Math.round(ratio * 1e6) / 1e6);
 
 
+const ContextMenu: FC<ContextMenuProps> = ({labels, setLabels, selectedLabels, point, handleClose}) => {
+
+    const handleDeleteLabel = async () => {
+        const newLabels = labels.filter(label => !selectedLabels.map(label => label.id).includes(label.id));
+        setLabels(newLabels);
+        handleClose();
+    };
+
+    return (
+        <Menu
+            keepMounted
+            open={point[0] !== null}
+            onClose={handleClose}
+            anchorReference="anchorPosition"
+            anchorPosition={
+                point[0] !== null
+                    ? {top: point[1], left: point[0]}
+                    : undefined
+            }
+        >
+            <MenuItem onClick={handleDeleteLabel}>
+                <ListItemIcon>
+                    <DeleteIcon/>
+                </ListItemIcon>
+                Delete
+            </MenuItem>
+        </Menu>
+    )
+};
+
 const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels, setTool, autoSwitch}) => {
 
     const classes = useStyles();
@@ -278,7 +342,7 @@ const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels, setTool, autoSwitch})
 
     const [storedPoint, setStoredPoint] = useState<Point>(null);
 
-    const handleMouseMove = (event: React.MouseEvent<HTMLElement>) => {
+    const handleMouseMove = (event: React.MouseEvent<HTMLCanvasElement>) => {
         let canvas = canvasRef.current;
         reset(canvas);
 
@@ -297,20 +361,26 @@ const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels, setTool, autoSwitch})
             drawRect(canvas, point, storedPoint)
     };
 
-    const handleMouseLeave = (event: React.MouseEvent<HTMLElement>) => {
+    const handleMouseLeave = (event: React.MouseEvent<HTMLCanvasElement>) => {
         reset(canvasRef.current);
     };
 
-    const handleMouseDown = (event: React.MouseEvent<HTMLElement>) => {
-        if (event.nativeEvent.which === 1)
-            setStoredPoint(currentPoint(event.nativeEvent));
+    const handleMouseDown = (event: React.MouseEvent<HTMLCanvasElement>) => {
+        let point = currentPoint(event.nativeEvent);
+        if (pointIsOutside(canvasRef.current, point))
+            return;
+        if (event.nativeEvent.which === 1) {
+            setStoredPoint(point);
+        }
     };
 
-    const handleMouseUp = (event: React.MouseEvent<HTMLElement>) => {
+    const handleMouseUp = (event: React.MouseEvent<HTMLCanvasElement>) => {
         if (event.nativeEvent.which === 1) {
             if (!storedPoint) return;
 
             let point = currentPoint(event.nativeEvent);
+            if (pointIsOutside(canvasRef.current, point))
+                return;
             let canvas = canvasRef.current;
             if (canvas === null) return;
             if (Math.abs(storedPoint[0] - point[0]) < LABEL_MIN_WIDTH) return;
@@ -334,7 +404,6 @@ const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels, setTool, autoSwitch})
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             ref={canvasRef}
-            style={{cursor: 'crosshair'}}
         />
     )
 };
@@ -358,7 +427,7 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels, setTool, autoSwitch}) =
             canvasRef.current.style.cursor = 'nesw-resize';
     }, [direction]);
 
-    const handleMouseMove = (event: React.MouseEvent<HTMLElement>) => {
+    const handleMouseMove = (event: React.MouseEvent<HTMLCanvasElement>) => {
         let canvas = canvasRef.current;
         reset(canvas);
         let point = currentPoint(event.nativeEvent);
@@ -390,7 +459,7 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels, setTool, autoSwitch}) =
         }
     };
 
-    const handleMouseDown = (event: React.MouseEvent<HTMLElement>) => {
+    const handleMouseDown = (event: React.MouseEvent<HTMLCanvasElement>) => {
         let point = currentPoint(event.nativeEvent);
 
         if (event.nativeEvent.which === 1) {
@@ -401,9 +470,13 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels, setTool, autoSwitch}) =
                 setStoredLabels(labels.filter(label => labelsHoverIds.includes(label.id)));
             }
         }
+        if (event.nativeEvent.which === 3) {
+            let labelsHoverIds = currentLabelsHoverIds(canvasRef.current, point, labels);
+            setStoredLabels(labels.filter(label => labelsHoverIds.includes(label.id)));
+        }
     };
 
-    const handleMouseUp = (event: React.MouseEvent<HTMLElement>) => {
+    const handleMouseUp = (event: React.MouseEvent<HTMLCanvasElement>) => {
         let canvas = canvasRef.current;
         let point = currentPoint(event.nativeEvent);
 
@@ -424,14 +497,35 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels, setTool, autoSwitch}) =
         }
     };
 
+    const [contextMenuPoint, setContextMenuPoint] = useState<Point>([null, null]);
+    const handleContextMenu = (event: React.MouseEvent<HTMLElement>) => {
+        event.preventDefault();
+        setContextMenuPoint([event.clientX - 2, event.clientY - 4]);
+    };
+
+    const handleClose = () => {
+        setContextMenuPoint([null, null]);
+    };
+
+
     return (
-        <canvas
-            className={classes.canvas}
-            onMouseDown={handleMouseDown}
-            onMouseUp={handleMouseUp}
-            onMouseMove={handleMouseMove}
-            ref={canvasRef}
-        />
+        <>
+            <canvas
+                className={classes.canvas}
+                onMouseDown={handleMouseDown}
+                onMouseUp={handleMouseUp}
+                onMouseMove={handleMouseMove}
+                onContextMenu={handleContextMenu}
+                ref={canvasRef}
+            />
+            <ContextMenu
+                labels={labels}
+                selectedLabels={storedLabels}
+                setLabels={setLabels}
+                point={contextMenuPoint}
+                handleClose={handleClose}
+            />
+        </>
     )
 };
 
@@ -491,8 +585,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
         }
     };
 
-    const handlePaginationChange = async (event: React.ChangeEvent<unknown>, value: number) => {
-        await saveLabels(labels);
+    const handlePaginationChange = (event: React.ChangeEvent<unknown>, value: number) => {
         setSelected(value - 1);
     };
 
@@ -503,7 +596,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
             setTool(newTool);
     };
 
-    const [autoSwitch, setAutoSwitch] = useState<boolean>(false);
+    const [autoSwitch, setAutoSwitch] = useState<boolean>(true);
 
     useEventListener(window, 'keydown', handleKeyDown);
 

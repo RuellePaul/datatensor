@@ -64,7 +64,7 @@ const DatasetCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
             }) => {
                 try {
                     const {submit, ...payload} = values;
-                    const response = await api.post<Dataset>('/v1/dataset/manage/create', payload);
+                    const response = await api.post<Dataset>('/v1/datasets/create', payload);
                     const dataset = response.data;
                     console.info(dataset);
 
