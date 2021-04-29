@@ -55,6 +55,21 @@ const useStyles = makeStyles((theme: Theme) => ({
         marginLeft: -10,
         width: 'auto',
     },
+    scroll: {
+        overflowY: 'auto',
+        height: '100%',
+        '&::-webkit-scrollbar': {
+            width: '0.4em'
+        },
+        '&::-webkit-scrollbar-track': {
+            boxShadow: `inset 0 0 6px ${theme.palette.primary.main}`,
+            webkitBoxShadow: `inset 0 0 6px ${theme.palette.primary.main}`
+        },
+        '&::-webkit-scrollbar-thumb': {
+            backgroundColor: `${theme.palette.primary.main}`,
+            outline: '1px solid slategrey'
+        }
+    },
     column: {
         paddingLeft: 10,
         backgroundClip: 'padding-box',
@@ -141,11 +156,12 @@ const DTImagesList: FC<ImagesListProps> = ({
             {...rest}
         >
             <InfiniteScroll
+                className={classes.scroll}
                 dataLength={images.length}
                 next={() => {
                     console.log('Trigger next')
                 }}
-                height={800}
+                height={'calc(100vh - 350px)'}
                 hasMore={false}
                 loader={<LinearProgress/>}
                 endMessage={<Typography color='textSecondary'>This is the end</Typography>}
@@ -154,8 +170,7 @@ const DTImagesList: FC<ImagesListProps> = ({
                     breakpointCols={{
                         default: 4,
                         [theme.breakpoints.values.md]: 3,
-                        700: 2,
-                        500: 1
+                        700: 2
                     }}
                     className={classes.grid}
                     columnClassName={classes.column}
