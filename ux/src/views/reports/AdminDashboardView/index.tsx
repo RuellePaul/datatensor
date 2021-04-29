@@ -1,5 +1,5 @@
 import React, {FC, useCallback, useEffect, useState} from 'react';
-import {Button, Container, Grid, TextField, makeStyles} from '@material-ui/core';
+import {Container, Grid, makeStyles} from '@material-ui/core';
 import {useSnackbar} from 'notistack';
 import Page from 'src/components/Page';
 import {Theme} from 'src/theme';
@@ -7,6 +7,7 @@ import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import {User} from 'src/types/user';
 import api from 'src/utils/api';
 import Header from './Header';
+import Generator from './Generator';
 import UsersOverTime from './UsersOverTime';
 import {TimeRange} from 'src/types/timeRange'
 
@@ -48,12 +49,8 @@ const AdminDashboardView: FC = () => {
 
     const classes = useStyles();
 
-    const {enqueueSnackbar} = useSnackbar();
-
     const isMountedRef = useIsMountedRef();
     const [users, setUsers] = useState<User[]>([]);
-
-    const [count, setCount] = useState(null);
 
     const getUsers = useCallback(async () => {
         try {
@@ -72,18 +69,6 @@ const AdminDashboardView: FC = () => {
     }, [getUsers]);
 
     const [timeRange, setTimeRange] = useState<TimeRange>(timeRanges[2]);
-
-    const handleGenerateCocoDataset = async () => {
-        try {
-            await api.post('/v1/admin/generator/coco', {image_count: count});
-
-            if (isMountedRef.current) {
-                enqueueSnackbar('Dataset COCO generated', {variant: 'info'});
-            }
-        } catch (error) {
-            enqueueSnackbar('Something went wrong', {variant: 'warning'});
-        }
-    };
 
     return (
         <Page
@@ -105,20 +90,7 @@ const AdminDashboardView: FC = () => {
                         lg={3}
                         xs={12}
                     >
-                        <TextField
-                          label="Image count"
-                          value={count}
-                          onChange={event => setCount(event.target.value)}
-                          variant="outlined"
-                          size="small"
-                        />
 
-                        <Button
-                            variant='contained'
-                            onClick={handleGenerateCocoDataset}
-                        >
-                            Generate COCO dataset
-                        </Button>
                     </Grid>
                     <Grid
                         item
@@ -129,6 +101,20 @@ const AdminDashboardView: FC = () => {
                             timeRange={timeRange}
                             users={users}
                         />
+                    </Grid>
+                    <Grid
+                        item
+                        lg={3}
+                        xs={12}
+                    >
+                        <Generator/>
+                    </Grid>
+                    <Grid
+                        item
+                        lg={9}
+                        xs={12}
+                    >
+
                     </Grid>
                 </Grid>
             </Container>

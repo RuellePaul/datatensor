@@ -87,8 +87,6 @@ def dataset_generation(dataset_name, count=2):
                 continue
             image = numpy.asarray(bytearray(response.content), dtype='uint8')
             image = cv2.imdecode(image, cv2.IMREAD_COLOR)
-            if not image:
-                continue
             image = compress_image(image)
             image_bytes = cv2.imencode('.jpg', image)[1].tostring()
             path = upload_image(image_bytes, image_id)
