@@ -83,6 +83,14 @@ const CANVAS_OFFSET = 50;
 
 const currentPoint = (nativeEvent) => ([nativeEvent.offsetX, nativeEvent.offsetY]);
 
+const pointIsOutside = (canvas: HTMLCanvasElement, point: Point) => {
+    if (point[0] < CANVAS_OFFSET || point[0] > canvas.width - CANVAS_OFFSET)
+        return true;
+    if (point[1] < CANVAS_OFFSET || point[1] > canvas.height - CANVAS_OFFSET)
+        return true;
+    return false
+};
+
 const reset = (canvas: HTMLCanvasElement) => {
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
@@ -106,18 +114,25 @@ const convertLabel = (canvas: HTMLCanvasElement, label: Label) => {
 };
 
 const drawCursorLines = (canvas: HTMLCanvasElement, point: Point) => {
+    canvas.style.cursor = 'initial';
+    if (pointIsOutside(canvas, point))
+        return;
+
     let context = canvas.getContext('2d');
     context.beginPath();
     context.setLineDash([5]);
-    context.moveTo(point[0], 0);
-    context.lineTo(point[0], canvas.height);
-    context.moveTo(0, point[1]);
-    context.lineTo(canvas.width, point[1]);
+    context.moveTo(point[0], CANVAS_OFFSET);
+    context.lineTo(point[0], (canvas.height - CANVAS_OFFSET));
+    context.moveTo(CANVAS_OFFSET, point[1]);
+    context.lineTo((canvas.width - CANVAS_OFFSET), point[1]);
     context.stroke();
+    canvas.style.cursor = 'crosshair';
 };
 
 const drawRect = (canvas: HTMLCanvasElement, pointA: Point, pointB: Point) => {
     if (!pointA || !pointB)
+        return;
+    if (pointIsOutside(canvas, pointA) || pointIsOutside(canvas, pointB))
         return;
     let x = pointA[0];
     let y = pointA[1];
@@ -342,8 +357,12 @@ const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels, setTool, autoSwitch})
     };
 
     const handleMouseDown = (event: React.MouseEvent<HTMLCanvasElement>) => {
-        if (event.nativeEvent.which === 1)
-            setStoredPoint(currentPoint(event.nativeEvent));
+        let point = currentPoint(event.nativeEvent);
+        if (pointIsOutside(canvasRef.current, point))
+            return;
+        if (event.nativeEvent.which === 1) {
+            setStoredPoint(point);
+        }
     };
 
     const handleMouseUp = (event: React.MouseEvent<HTMLCanvasElement>) => {
@@ -351,6 +370,8 @@ const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels, setTool, autoSwitch})
             if (!storedPoint) return;
 
             let point = currentPoint(event.nativeEvent);
+            if (pointIsOutside(canvasRef.current, point))
+                return;
             let canvas = canvasRef.current;
             if (canvas === null) return;
             if (Math.abs(storedPoint[0] - point[0]) < LABEL_MIN_WIDTH) return;
@@ -374,7 +395,6 @@ const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels, setTool, autoSwitch})
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             ref={canvasRef}
-            style={{cursor: 'crosshair'}}
         />
     )
 };
