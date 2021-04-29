@@ -107,13 +107,13 @@ const drawRect = (canvas: HTMLCanvasElement, pointA: Point, pointB: Point) => {
     let y = pointA[1];
     let w = pointB[0] - pointA[0];
     let h = pointB[1] - pointA[1];
-    let color = (Math.abs(w) < LABEL_MIN_WIDTH || Math.abs(h) < LABEL_MIN_HEIGHT) ? '#FF0000' : '#000000';
+    let color = (Math.abs(w) < LABEL_MIN_WIDTH || Math.abs(h) < LABEL_MIN_HEIGHT) ? '#FF0000' : '#FFFFFF';
     let context = canvas.getContext('2d');
     context.lineWidth = 2;
     context.setLineDash([5]);
     context.strokeStyle = color;
     context.strokeRect(x, y, w, h);
-    context.fillStyle = `${color}11`;
+    context.fillStyle = `${color}08`;
     context.fillRect(x, y, w, h);
 };
 
@@ -124,13 +124,13 @@ const drawLabels = (canvas: HTMLCanvasElement, labels: Label[]) => {
         return;
     for (const label of labels) {
         const {x, y, w, h} = convertLabel(canvas, label);
-        let color = (Math.abs(w) < LABEL_MIN_WIDTH || Math.abs(h) < LABEL_MIN_HEIGHT) ? '#FF0000' : '#000000';
+        let color = (Math.abs(w) < LABEL_MIN_WIDTH || Math.abs(h) < LABEL_MIN_HEIGHT) ? '#FF0000' : '#FFFFFF';
         let context = canvas.getContext('2d');
         context.lineWidth = 2;
         context.setLineDash([5]);
         context.strokeStyle = color;
         context.strokeRect(x, y, w, h);
-        context.fillStyle = `${color}33`;
+        context.fillStyle = `${color}22`;
         context.fillRect(x, y, w, h);
 
         context.fillStyle = color;
