@@ -503,7 +503,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
             setTool(newTool);
     };
 
-    const [autoSwitch, setAuthSwitch] = useState<boolean>(false);
+    const [autoSwitch, setAutoSwitch] = useState<boolean>(false);
 
     useEventListener(window, 'keydown', handleKeyDown);
 
@@ -552,7 +552,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                                 color="secondary"
                                 size='small'
                                 checked={autoSwitch}
-                                onChange={() => setAuthSwitch(!autoSwitch)}
+                                onChange={() => setAutoSwitch(!autoSwitch)}
                             />
                         )}
                         label={(
