@@ -57,9 +57,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const LABEL_MIN_WIDTH = 20;
-const LABEL_MIN_HEIGHT = 20;
-const CANVAS_OFFSET = 150;
+const LABEL_MIN_WIDTH = 25;
+const LABEL_MIN_HEIGHT = 25;
+const CANVAS_OFFSET = 50;
 
 const currentPoint = (nativeEvent) => ([nativeEvent.offsetX, nativeEvent.offsetY]);
 
@@ -115,7 +115,7 @@ const drawRect = (canvas: HTMLCanvasElement, pointA: Point, pointB: Point) => {
 
 const RESIZE_SIZE = 8;
 
-const drawLabelsHovered = (canvas: HTMLCanvasElement, labels: Label[]) => {
+const drawLabels = (canvas: HTMLCanvasElement, labels: Label[]) => {
     if (!labels)
         return;
     for (const label of labels) {
@@ -198,7 +198,7 @@ const currentLabelsTranslated = (canvas: HTMLCanvasElement, labels: Label[], poi
     });
 };
 
-const currentLabelsResized = (canvas: HTMLCanvasElement, labels: Label[], pointA: Point, pointB: Point, direction: Direction) => {
+const currentLabelsResized = (canvas: HTMLCanvasElement, labels: Label[], pointA: Point, pointB: Point, direction: Direction, exclude: Boolean = false) => {
     return labels.map(label => {
         let delta = currentDelta(canvas, pointA, pointB);
 
@@ -245,6 +245,14 @@ const currentLabelsResized = (canvas: HTMLCanvasElement, labels: Label[], pointA
             w = 1 - x;
         if (y + h > 1)
             h = 1 - y;
+
+        // Small labels corrections
+        if (exclude) {
+            if (w * (canvas.width - 2 * CANVAS_OFFSET) < LABEL_MIN_WIDTH)
+                w = (3 + LABEL_MIN_WIDTH) / (canvas.width - 2 * CANVAS_OFFSET);
+            if (h * (canvas.height - 2 * CANVAS_OFFSET) < LABEL_MIN_HEIGHT)
+                h = (3 + LABEL_MIN_HEIGHT) / (canvas.height - 2 * CANVAS_OFFSET);
+        }
 
         return ({
             ...label,
@@ -347,7 +355,7 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels}) => {
 
         if (event.nativeEvent.which === 0) { // IDLE
             let labelsHoverIds = currentLabelsHoverIds(canvas, point, labels);
-            drawLabelsHovered(canvas, labels.filter(label => labelsHoverIds.includes(label.id)));
+            drawLabels(canvas, labels.filter(label => labelsHoverIds.includes(label.id)));
             renderCursor(canvas, point, labels, direction => setDirection(direction));
             if (direction === null)
                 if (labelsHoverIds.length === 0)
@@ -360,10 +368,10 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels}) => {
             if (storedLabels.length === 0) return;
             if (direction === null) {
                 let labelsTranslated = currentLabelsTranslated(canvas, storedLabels, point, storedPoint);
-                drawLabelsHovered(canvas, labelsTranslated);
+                drawLabels(canvas, labelsTranslated);
             } else {
                 let labelsResized = currentLabelsResized(canvas, storedLabels, point, storedPoint, direction);
-                drawLabelsHovered(canvas, labelsResized);
+                drawLabels(canvas, labelsResized);
             }
         }
     };
@@ -393,7 +401,7 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels}) => {
                 let labelsTranslated = currentLabelsTranslated(canvas, storedLabels, point, storedPoint);
                 setLabels([...labels, ...labelsTranslated]);
             } else {
-                let labelsResized = currentLabelsResized(canvas, storedLabels, point, storedPoint, direction);
+                let labelsResized = currentLabelsResized(canvas, storedLabels, point, storedPoint, direction, true);
                 setLabels([...labels, ...labelsResized]);
             }
 
