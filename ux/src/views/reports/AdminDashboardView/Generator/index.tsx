@@ -2,21 +2,31 @@ import React, {FC} from 'react';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {useSnackbar} from 'notistack';
-
-import {Box, Button, Paper, TextField} from '@material-ui/core';
+import {Box, Button, makeStyles, Paper, TextField} from '@material-ui/core';
 import {Alert} from '@material-ui/lab';
 
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
+import {Theme} from 'src/theme';
 import api from 'src/utils/api';
 
+const useStyles = makeStyles((theme: Theme) => ({
+    root: {
+        padding: theme.spacing(4)
+    },
+}));
 
 const Generator: FC = () => {
+
+    const classes = useStyles();
 
     const isMountedRef = useIsMountedRef();
     const {enqueueSnackbar} = useSnackbar();
 
     return (
-        <Paper>
+        <Paper
+            className={classes.root}
+            elevation={1}
+        >
             <Formik
                 initialValues={{
                     image_count: 10
