@@ -129,7 +129,7 @@ const drawLabels = (canvas: HTMLCanvasElement, labels: Label[]) => {
         context.fillStyle = `${color}33`;
         context.fillRect(x, y, w, h);
 
-        context.fillStyle = '#FFFFFF';
+        context.fillStyle = color;
         context.fillRect(x, y, RESIZE_SIZE, RESIZE_SIZE);
         context.fillRect(x + w - RESIZE_SIZE, y, RESIZE_SIZE, RESIZE_SIZE);
         context.fillRect(x, y + h - RESIZE_SIZE, RESIZE_SIZE, RESIZE_SIZE);
@@ -307,8 +307,8 @@ const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels}) => {
             if (Math.abs(storedPoint[1] - point[1]) < LABEL_MIN_HEIGHT) return;
             let newLabel = {
                 id: uuid(),
-                x: formatRatio(Math.min(point[0], storedPoint[0]) / (canvas.width - 2 * CANVAS_OFFSET)),
-                y: formatRatio(Math.min(point[1], storedPoint[1]) / (canvas.height - 2 * CANVAS_OFFSET)),
+                x: formatRatio(Math.min(point[0] - CANVAS_OFFSET, storedPoint[0] - CANVAS_OFFSET) / (canvas.width - 2 * CANVAS_OFFSET)),
+                y: formatRatio(Math.min(point[1] - CANVAS_OFFSET, storedPoint[1] - CANVAS_OFFSET) / (canvas.height - 2 * CANVAS_OFFSET)),
                 w: formatRatio((point[0] - storedPoint[0]) / (canvas.width - 2 * CANVAS_OFFSET)),
                 h: formatRatio((point[1] - storedPoint[1]) / (canvas.height - 2 * CANVAS_OFFSET))
             };
