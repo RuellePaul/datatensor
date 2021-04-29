@@ -2,7 +2,19 @@ import React, {FC} from 'react';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {useSnackbar} from 'notistack';
-import {Box, Button, makeStyles, Paper, TextField} from '@material-ui/core';
+import {
+    Box,
+    Button,
+    FormControl,
+    Grid,
+    InputLabel,
+    makeStyles,
+    MenuItem,
+    Paper,
+    Select,
+    TextField,
+    Typography
+} from '@material-ui/core';
 import {Alert} from '@material-ui/lab';
 
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
@@ -29,6 +41,7 @@ const Generator: FC = () => {
         >
             <Formik
                 initialValues={{
+                    dataset_name: 'coco',
                     image_count: 10
                 }}
                 validationSchema={Yup.object().shape({
@@ -69,18 +82,53 @@ const Generator: FC = () => {
                         noValidate
                         onSubmit={handleSubmit}
                     >
-                        <TextField
-                            error={Boolean(touched.image_count && errors.image_count)}
-                            fullWidth
-                            label="Image count"
-                            name="image_count"
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            required
-                            value={values.image_count}
-                            variant="outlined"
-                            size="small"
-                        />
+                        <Box mb={3}>
+                            <Typography
+                                variant='h4'
+                                gutterBottom
+                            >
+                                Generate a dataset
+                            </Typography>
+                            <Typography
+                                color='textSecondary'
+                                gutterBottom
+                            >
+                                This automatically download annotations, and then inject images and labels
+                                into a new dataset.
+                            </Typography>
+                        </Box>
+                        <Grid container spacing={2} justify='space-between'>
+                            <Grid item sm={5} xs={12}>
+                                <FormControl fullWidth>
+                                    <InputLabel shrink>
+                                        Dataset name
+                                    </InputLabel>
+                                    <Select
+                                        error={Boolean(touched.dataset_name && errors.dataset_name)}
+                                        label="Dataset name"
+                                        name="dataset_name"
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        value={values.dataset_name}
+                                        variant="standard"
+                                    >
+                                        <MenuItem value='coco'>COCO 2014</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item sm={5} xs={12}>
+                                <TextField
+                                    error={Boolean(touched.image_count && errors.image_count)}
+                                    label="Image count"
+                                    fullWidth
+                                    name="image_count"
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                    value={values.image_count}
+                                    size='small'
+                                />
+                            </Grid>
+                        </Grid>
                         <Box mt={2}>
                             <Button
                                 color="secondary"

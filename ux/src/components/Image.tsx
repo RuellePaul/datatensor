@@ -51,7 +51,7 @@ const drawLabels = (canvas: HTMLCanvasElement, labels: Label[]) => {
         let y = label.y * canvas.height;
         let w = label.w * canvas.width;
         let h = label.h * canvas.height;
-        let color = '#000000';
+        let color = '#FFFFFF';
         let context = canvas.getContext('2d');
         context.lineWidth = 2;
         context.setLineDash([0]);
