@@ -38,7 +38,7 @@ const DatasetMainView: FC = () => {
 
     const getDataset = useCallback(async () => {
         try {
-            const response = await api.get<Dataset>(`/v1/dataset/manage/${dataset_id}`);
+            const response = await api.get<Dataset>(`/v1/datasets/${dataset_id}`);
 
             if (isMountedRef.current) {
                 setDataset(response.data);

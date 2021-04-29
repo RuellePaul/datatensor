@@ -7,8 +7,7 @@ from webargs.flaskparser import use_args
 
 from config import Config
 from routes.authentication.core import verify_access_token
-from routes.dataset import core
-from routes.images import manage as images_manage
+from routes.datasets import core
 
 dataset_manage = Blueprint('dataset_manage', __name__)
 
