@@ -492,7 +492,6 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
     };
 
     const handlePaginationChange = async (event: React.ChangeEvent<unknown>, value: number) => {
-        await saveLabels(labels);
         setSelected(value - 1);
     };
 
