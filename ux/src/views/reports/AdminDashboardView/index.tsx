@@ -22,7 +22,7 @@ const timeRanges: TimeRange[] = [
         text: 'Last day'
     },
     {
-        value: 'last_month',
+        value: 'last_week',
         text: 'Last week'
     },
     {
