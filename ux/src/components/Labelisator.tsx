@@ -30,11 +30,15 @@ interface DTLabelisatorProps {
 }
 
 interface ContextMenuProps {
+    image: Image,
+    labels: Label[];
+    selectedLabels: Label[];
     point: Point;
     handleClose: () => void;
 }
 
 interface ToolLabelProps {
+    image: Image,
     labels: Label[];
     setLabels: (labels: Label[]) => void;
     setTool: (tool) => void;
@@ -42,6 +46,7 @@ interface ToolLabelProps {
 }
 
 interface ToolMoveProps {
+    image: Image,
     labels: Label[];
     setLabels: (labels: Label[]) => void;
     setTool: (tool) => void;
@@ -302,7 +307,24 @@ const checkLabelsEquality = (labels: Label[], newLabels: Label[]) => _.isEqual(l
 const formatRatio = ratio => Math.abs(Math.round(ratio * 1e6) / 1e6);
 
 
-const ContextMenu: FC<ContextMenuProps> = ({point, handleClose}) => {
+const ContextMenu: FC<ContextMenuProps> = ({image, labels, selectedLabels, point, handleClose}) => {
+
+    const {saveImages} = useImages();
+
+    const handleDeleteLabel = async () => {
+        const newLabels = labels.filter(label => !selectedLabels.map(label => label.id).includes(label.id));
+        const response = await api.post(`/v1/images/labeling/${image.id}`, {labels: newLabels});
+        saveImages(
+            images => images.map(image => image.id === response.data.id
+                ? {
+                    ...image,
+                    labels: newLabels
+                }
+                : image
+            )
+        );
+        handleClose();
+    };
 
     return (
         <Menu
@@ -316,7 +338,7 @@ const ContextMenu: FC<ContextMenuProps> = ({point, handleClose}) => {
                     : undefined
             }
         >
-            <MenuItem onClick={handleClose}>
+            <MenuItem onClick={handleDeleteLabel}>
                 <ListItemIcon>
                     <DeleteIcon/>
                 </ListItemIcon>
@@ -326,7 +348,7 @@ const ContextMenu: FC<ContextMenuProps> = ({point, handleClose}) => {
     )
 };
 
-const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels, setTool, autoSwitch}) => {
+const ToolLabel: FC<ToolLabelProps> = ({image, labels, setLabels, setTool, autoSwitch}) => {
 
     const classes = useStyles();
     const canvasRef = useRef(null);
@@ -400,7 +422,7 @@ const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels, setTool, autoSwitch})
 };
 
 
-const ToolMove: FC<ToolMoveProps> = ({labels, setLabels, setTool, autoSwitch}) => {
+const ToolMove: FC<ToolMoveProps> = ({image, labels, setLabels, setTool, autoSwitch}) => {
 
     const classes = useStyles();
 
@@ -461,6 +483,10 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels, setTool, autoSwitch}) =
                 setStoredLabels(labels.filter(label => labelsHoverIds.includes(label.id)));
             }
         }
+        if (event.nativeEvent.which === 3) {
+            let labelsHoverIds = currentLabelsHoverIds(canvasRef.current, point, labels);
+            setStoredLabels(labels.filter(label => labelsHoverIds.includes(label.id)));
+        }
     };
 
     const handleMouseUp = (event: React.MouseEvent<HTMLCanvasElement>) => {
@@ -506,6 +532,9 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels, setTool, autoSwitch}) =
                 ref={canvasRef}
             />
             <ContextMenu
+                image={image}
+                labels={labels}
+                selectedLabels={storedLabels}
                 point={contextMenuPoint}
                 handleClose={handleClose}
             />
@@ -684,6 +713,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
             >
                 {tool === 'label' && (
                     <ToolLabel
+                        image={images[selected]}
                         labels={labels}
                         setLabels={setLabels}
                         setTool={setTool}
@@ -692,6 +722,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                 )}
                 {tool === 'move' && (
                     <ToolMove
+                        image={images[selected]}
                         labels={labels}
                         setLabels={setLabels}
                         setTool={setTool}
