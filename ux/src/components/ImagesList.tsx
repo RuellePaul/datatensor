@@ -94,6 +94,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
+const LAZY_LOAD_BATCH = 20;
+
 const DTImagesList: FC<ImagesListProps> = ({
                                                className,
                                                ...rest
@@ -111,7 +113,7 @@ const DTImagesList: FC<ImagesListProps> = ({
 
     const imageSelected = images[selected];
 
-    const [limit, setLimit] = useState(20);
+    const [limit, setLimit] = useState(LAZY_LOAD_BATCH);
     const hasMore = images.length > limit;
 
     const handleOpenImage = (index) => {
@@ -162,7 +164,7 @@ const DTImagesList: FC<ImagesListProps> = ({
                 className={classes.scroll}
                 dataLength={limit}
                 next={() => {
-                    setTimeout(() => setLimit(limit + 20), 100);
+                    setTimeout(() => setLimit(limit + LAZY_LOAD_BATCH), 100);
                 }}
                 height={'calc(100vh - 350px)'}
                 hasMore={hasMore}

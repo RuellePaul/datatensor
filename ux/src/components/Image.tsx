@@ -86,7 +86,7 @@ const DTImage: FC<DTImageProps> = ({
             reset(canvasRef.current);
             drawLabels(canvasRef.current, labels);
         }
-    }, [labels])
+    }, [labels]);
 
     if (clickable)
         return (
