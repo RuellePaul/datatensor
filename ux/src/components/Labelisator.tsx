@@ -4,9 +4,20 @@ import _ from 'lodash';
 import useEventListener from 'use-typed-event-listener';
 import {useSnackbar} from 'notistack';
 import {v4 as uuid} from 'uuid';
-import {Box, Button, FormControlLabel, makeStyles, Switch, Tooltip, Typography} from '@material-ui/core';
+import {
+    Box,
+    Button,
+    FormControlLabel,
+    ListItemIcon,
+    makeStyles,
+    Menu,
+    MenuItem,
+    Switch,
+    Tooltip,
+    Typography
+} from '@material-ui/core';
 import {Pagination, ToggleButton, ToggleButtonGroup} from '@material-ui/lab';
-import {Maximize as LabelIcon, Move as MoveIcon} from 'react-feather';
+import {Maximize as LabelIcon, Move as MoveIcon, Trash as DeleteIcon} from 'react-feather';
 import {Theme} from 'src/theme';
 import DTImage from 'src/components/Image';
 import useImages from 'src/hooks/useImages';
@@ -16,6 +27,11 @@ import api from 'src/utils/api';
 
 interface DTLabelisatorProps {
     className?: string;
+}
+
+interface ContextMenuProps {
+    point: Point;
+    handleClose: () => void;
 }
 
 interface ToolLabelProps {
@@ -271,6 +287,30 @@ const checkLabelsEquality = (labels: Label[], newLabels: Label[]) => _.isEqual(l
 const formatRatio = ratio => Math.abs(Math.round(ratio * 1e6) / 1e6);
 
 
+const ContextMenu: FC<ContextMenuProps> = ({point, handleClose}) => {
+
+    return (
+        <Menu
+            keepMounted
+            open={point[0] !== null}
+            onClose={handleClose}
+            anchorReference="anchorPosition"
+            anchorPosition={
+                point[0] !== null
+                    ? {top: point[1], left: point[0]}
+                    : undefined
+            }
+        >
+            <MenuItem onClick={handleClose}>
+                <ListItemIcon>
+                    <DeleteIcon/>
+                </ListItemIcon>
+                Delete
+            </MenuItem>
+        </Menu>
+    )
+};
+
 const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels, setTool, autoSwitch}) => {
 
     const classes = useStyles();
@@ -278,7 +318,7 @@ const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels, setTool, autoSwitch})
 
     const [storedPoint, setStoredPoint] = useState<Point>(null);
 
-    const handleMouseMove = (event: React.MouseEvent<HTMLElement>) => {
+    const handleMouseMove = (event: React.MouseEvent<HTMLCanvasElement>) => {
         let canvas = canvasRef.current;
         reset(canvas);
 
@@ -297,16 +337,16 @@ const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels, setTool, autoSwitch})
             drawRect(canvas, point, storedPoint)
     };
 
-    const handleMouseLeave = (event: React.MouseEvent<HTMLElement>) => {
+    const handleMouseLeave = (event: React.MouseEvent<HTMLCanvasElement>) => {
         reset(canvasRef.current);
     };
 
-    const handleMouseDown = (event: React.MouseEvent<HTMLElement>) => {
+    const handleMouseDown = (event: React.MouseEvent<HTMLCanvasElement>) => {
         if (event.nativeEvent.which === 1)
             setStoredPoint(currentPoint(event.nativeEvent));
     };
 
-    const handleMouseUp = (event: React.MouseEvent<HTMLElement>) => {
+    const handleMouseUp = (event: React.MouseEvent<HTMLCanvasElement>) => {
         if (event.nativeEvent.which === 1) {
             if (!storedPoint) return;
 
@@ -358,7 +398,7 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels, setTool, autoSwitch}) =
             canvasRef.current.style.cursor = 'nesw-resize';
     }, [direction]);
 
-    const handleMouseMove = (event: React.MouseEvent<HTMLElement>) => {
+    const handleMouseMove = (event: React.MouseEvent<HTMLCanvasElement>) => {
         let canvas = canvasRef.current;
         reset(canvas);
         let point = currentPoint(event.nativeEvent);
@@ -390,7 +430,7 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels, setTool, autoSwitch}) =
         }
     };
 
-    const handleMouseDown = (event: React.MouseEvent<HTMLElement>) => {
+    const handleMouseDown = (event: React.MouseEvent<HTMLCanvasElement>) => {
         let point = currentPoint(event.nativeEvent);
 
         if (event.nativeEvent.which === 1) {
@@ -403,7 +443,7 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels, setTool, autoSwitch}) =
         }
     };
 
-    const handleMouseUp = (event: React.MouseEvent<HTMLElement>) => {
+    const handleMouseUp = (event: React.MouseEvent<HTMLCanvasElement>) => {
         let canvas = canvasRef.current;
         let point = currentPoint(event.nativeEvent);
 
@@ -424,14 +464,32 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels, setTool, autoSwitch}) =
         }
     };
 
+    const [contextMenuPoint, setContextMenuPoint] = useState<Point>([null, null]);
+    const handleContextMenu = (event: React.MouseEvent<HTMLElement>) => {
+        event.preventDefault();
+        setContextMenuPoint([event.clientX - 2, event.clientY - 4]);
+    };
+
+    const handleClose = () => {
+        setContextMenuPoint([null, null]);
+    };
+
+
     return (
-        <canvas
-            className={classes.canvas}
-            onMouseDown={handleMouseDown}
-            onMouseUp={handleMouseUp}
-            onMouseMove={handleMouseMove}
-            ref={canvasRef}
-        />
+        <>
+            <canvas
+                className={classes.canvas}
+                onMouseDown={handleMouseDown}
+                onMouseUp={handleMouseUp}
+                onMouseMove={handleMouseMove}
+                onContextMenu={handleContextMenu}
+                ref={canvasRef}
+            />
+            <ContextMenu
+                point={contextMenuPoint}
+                handleClose={handleClose}
+            />
+        </>
     )
 };
 
@@ -502,7 +560,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
             setTool(newTool);
     };
 
-    const [autoSwitch, setAutoSwitch] = useState<boolean>(false);
+    const [autoSwitch, setAutoSwitch] = useState<boolean>(true);
 
     useEventListener(window, 'keydown', handleKeyDown);
 
