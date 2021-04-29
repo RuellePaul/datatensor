@@ -29,7 +29,7 @@ def delete_users(args):
     return 'OK', 200
 
 
-@admin_manage.route('/local_datasets/<user_id>')
+@admin_manage.route('/datasets/<user_id>')
 def fetch_datasets(user_id):
     datasets = list(Config.db.datasets.find({'user_id': user_id}, {'_id': 0}))
     return jsonify(datasets), 200
