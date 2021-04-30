@@ -60,7 +60,7 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) =
                 setSubmitting
             }) => {
                 try {
-                    await api.post(`/v1/settings/update_profile`, values);
+                    await api.post(`/v1/user/settings/update-profile`, values);
                     enqueueSnackbar(`Profile updated`, {variant: 'success'});
                     setStatus({success: true});
                     setSubmitting(false);

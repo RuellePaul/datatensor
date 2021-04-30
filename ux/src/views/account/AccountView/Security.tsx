@@ -10,12 +10,11 @@ import {
     CardContent,
     CardHeader,
     Divider,
-    FormHelperText,
     Grid,
     makeStyles,
     TextField
 } from '@material-ui/core';
-import wait from 'src/utils/wait';
+import api from 'src/utils/api';
 
 interface SecurityProps {
     className?: string;
@@ -33,16 +32,20 @@ const Security: FC<SecurityProps> = ({className, ...rest}) => {
         <Formik
             initialValues={{
                 password: '',
-                passwordConfirm: '',
-                submit: null
+                password_confirm: '',
+                new_password: ''
             }}
             validationSchema={Yup.object().shape({
                 password: Yup.string()
                     .min(7, 'Must be at least 7 characters')
                     .max(255)
                     .required('Required'),
-                passwordConfirm: Yup.string()
+                password_confirm: Yup.string()
                     .oneOf([Yup.ref('password'), null], 'Passwords must match')
+                    .required('Required'),
+                new_password: Yup.string()
+                    .min(7, 'Must be at least 7 characters')
+                    .max(255)
                     .required('Required')
             })}
             onSubmit={async (values, {
@@ -52,16 +55,14 @@ const Security: FC<SecurityProps> = ({className, ...rest}) => {
                 setSubmitting
             }) => {
                 try {
-                    // NOTE: Make API request
-                    await wait(500);
+                    await api.post(`/v1/user/settings/change-password`, values);
                     resetForm();
                     setStatus({success: true});
                     setSubmitting(false);
-                    enqueueSnackbar('Password updated', {variant: 'info'});
-                } catch (err) {
-                    console.error(err);
+                    enqueueSnackbar('Password updated', {variant: 'success'});
+                } catch (error) {
+                    enqueueSnackbar((error.message) || 'Something went wrong', {variant: 'error'});
                     setStatus({success: false});
-                    setErrors({submit: err.message});
                     setSubmitting(false);
                 }
             }}
@@ -113,26 +114,38 @@ const Security: FC<SecurityProps> = ({className, ...rest}) => {
                                     xs={12}
                                 >
                                     <TextField
-                                        error={Boolean(touched.passwordConfirm && errors.passwordConfirm)}
+                                        error={Boolean(touched.password_confirm && errors.password_confirm)}
                                         fullWidth
-                                        helperText={touched.passwordConfirm && errors.passwordConfirm}
+                                        helperText={touched.password_confirm && errors.password_confirm}
                                         label="Password Confirmation"
-                                        name="passwordConfirm"
+                                        name="password_confirm"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
                                         type="password"
-                                        value={values.passwordConfirm}
+                                        value={values.password_confirm}
+                                        variant="outlined"
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
+                                    md={4}
+                                    sm={6}
+                                    xs={12}
+                                >
+                                    <TextField
+                                        error={Boolean(touched.new_password && errors.new_password)}
+                                        fullWidth
+                                        helperText={touched.new_password && errors.new_password}
+                                        label="New Password"
+                                        name="new_password"
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        type="password"
+                                        value={values.new_password}
                                         variant="outlined"
                                     />
                                 </Grid>
                             </Grid>
-                            {errors.submit && (
-                                <Box mt={3}>
-                                    <FormHelperText error>
-                                        {errors.submit}
-                                    </FormHelperText>
-                                </Box>
-                            )}
                         </CardContent>
                         <Divider/>
                         <Box
