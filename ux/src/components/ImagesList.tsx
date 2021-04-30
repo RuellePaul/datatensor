@@ -73,8 +73,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     column: {
         paddingLeft: 10,
         backgroundClip: 'padding-box',
-        '& img': {
-            marginBottom: 10
+        '& > button': {
+            margin: theme.spacing(0, 0, 1)
         }
     },
     footer: {
