@@ -153,7 +153,7 @@ def register_user(user_id, name, email, password, activation_code):
     encrypted_password = generate_password_hash(password).decode('utf-8')
     Config.db.users.insert_one({
         **user,
-        'name': encrypt_field(user['name']),
+        'name': user['name'],
         'email': encrypt_field(user['email']),
         'password': encrypt_field(encrypted_password),
         'activation_code': activation_code

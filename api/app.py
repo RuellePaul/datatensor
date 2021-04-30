@@ -11,7 +11,7 @@ from logger import logger
 from routes.admin.manage import admin_manage
 from routes.authentication.auth import auth
 from routes.authentication.core import require_authorization, require_admin
-from routes.authentication.manage import update_profile
+from routes.settings.manage import update_profile
 from routes.authentication.oauth import oauth
 from routes.datasets.manage import dataset_manage
 from routes.images.manage import images_manage
@@ -45,7 +45,7 @@ app.register_blueprint(images_labeling, url_prefix='/api/v1/images/labeling')
 
 app.register_blueprint(generator, url_prefix='/api/v1/admin/generator')
 
-app.register_blueprint(update_profile, url_prefix='/api/v1/account')
+app.register_blueprint(update_profile, url_prefix='/api/v1/settings')
 
 
 @app.after_request

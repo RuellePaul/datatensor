@@ -10,7 +10,6 @@ import {
     CardContent,
     CardHeader,
     Divider,
-    FormHelperText,
     Grid,
     makeStyles,
     Switch,
@@ -20,7 +19,6 @@ import {
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import {User} from 'src/types/user';
 import api from 'src/utils/api';
-import wait from 'src/utils/wait';
 import countries from './countries';
 
 interface GeneralSettingsProps {
@@ -35,40 +33,26 @@ const useStyles = makeStyles(() => ({
 const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) => {
     const classes = useStyles();
 
-    const handleUpdateProfile = async () => {
-        try {
-            await api.post(`/v1/account/${user.id}/update`);
-            enqueueSnackbar(`Profile updated`);
-        } catch (error) {
-            enqueueSnackbar((error.response && error.response.data) || 'Something went wrong', {variant: 'error'});
-        }
-    };
-
     const {enqueueSnackbar} = useSnackbar();
 
     return (
         <Formik
             enableReinitialize
             initialValues={{
-                canHire: user.canHire || false,
                 city: user.city || '',
                 country: user.country || '',
                 email: user.email || '',
                 isPublic: user.isPublic || false,
                 name: user.name || '',
-                phone: user.phone || '',
-                state: user.state || '',
-                submit: null
+                phone: user.phone || ''
             }}
             validationSchema={Yup.object().shape({
-                canHire: Yup.bool(),
                 city: Yup.string().max(255),
                 country: Yup.string().max(255),
-                email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
+                email: Yup.string().email('Must be a valid email').max(255),
                 isPublic: Yup.bool(),
                 name: Yup.string().max(255).required('Name is required'),
-                phone: Yup.string(),
-                state: Yup.string()
+                phone: Yup.string()
             })}
             onSubmit={async (values, {
                 resetForm,
@@ -77,14 +61,14 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) =
                 setSubmitting
             }) => {
                 try {
-                    await wait(200);
+                    await api.post(`/v1/settings/update_profile`, values);
+                    enqueueSnackbar(`Profile updated`, {variant: 'success'});
                     resetForm();
                     setStatus({success: true});
                     setSubmitting(false);
-                } catch (err) {
-                    console.error(err);
+                } catch (error) {
+                    enqueueSnackbar((error.message) || 'Something went wrong', {variant: 'error'});
                     setStatus({success: false});
-                    setErrors({submit: err.message});
                     setSubmitting(false);
                 }
             }}
@@ -140,7 +124,6 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) =
                                         name="email"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
-                                        required
                                         type="email"
                                         value={values.email}
                                         variant="outlined"
@@ -160,6 +143,23 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) =
                                         onBlur={handleBlur}
                                         onChange={handleChange}
                                         value={values.phone}
+                                        variant="outlined"
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
+                                    md={6}
+                                    xs={12}
+                                >
+                                    <TextField
+                                        error={Boolean(touched.city && errors.city)}
+                                        fullWidth
+                                        helperText={touched.city && errors.city}
+                                        label="City"
+                                        name="city"
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        value={values.city}
                                         variant="outlined"
                                     />
                                 </Grid>
@@ -188,40 +188,6 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) =
                                     md={6}
                                     xs={12}
                                 >
-                                    <TextField
-                                        error={Boolean(touched.state && errors.state)}
-                                        fullWidth
-                                        helperText={touched.state && errors.state}
-                                        label="State/Region"
-                                        name="state"
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        value={values.state}
-                                        variant="outlined"
-                                    />
-                                </Grid>
-                                <Grid
-                                    item
-                                    md={6}
-                                    xs={12}
-                                >
-                                    <TextField
-                                        error={Boolean(touched.city && errors.city)}
-                                        fullWidth
-                                        helperText={touched.city && errors.city}
-                                        label="City"
-                                        name="city"
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        value={values.city}
-                                        variant="outlined"
-                                    />
-                                </Grid>
-                                <Grid
-                                    item
-                                    md={6}
-                                    xs={12}
-                                >
                                     <Typography
                                         variant="h6"
                                         color="textPrimary"
@@ -242,39 +208,7 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) =
                                         onChange={handleChange}
                                     />
                                 </Grid>
-                                <Grid
-                                    item
-                                    md={6}
-                                    xs={12}
-                                >
-                                    <Typography
-                                        variant="h6"
-                                        color="textPrimary"
-                                    >
-                                        Available to hire
-                                    </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        color="textSecondary"
-                                    >
-                                        Toggling this will let your teammates know that you are available
-                                        for acquiring new projects
-                                    </Typography>
-                                    <Switch
-                                        checked={values.canHire}
-                                        edge="start"
-                                        name="canHire"
-                                        onChange={handleChange}
-                                    />
-                                </Grid>
                             </Grid>
-                            {errors.submit && (
-                                <Box mt={3}>
-                                    <FormHelperText error>
-                                        {errors.submit}
-                                    </FormHelperText>
-                                </Box>
-                            )}
                         </CardContent>
                         <Divider/>
                         <Box
@@ -282,7 +216,7 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) =
                             display="flex"
                             justifyContent="flex-end"
                         >
-                            <Button onClick={handleUpdateProfile}
+                            <Button
                                 color="secondary"
                                 disabled={isSubmitting}
                                 type="submit"
