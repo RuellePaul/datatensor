@@ -55,7 +55,6 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) =
                 phone: Yup.string()
             })}
             onSubmit={async (values, {
-                resetForm,
                 setErrors,
                 setStatus,
                 setSubmitting
@@ -63,7 +62,6 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) =
                 try {
                     await api.post(`/v1/settings/update_profile`, values);
                     enqueueSnackbar(`Profile updated`, {variant: 'success'});
-                    resetForm();
                     setStatus({success: true});
                     setSubmitting(false);
                 } catch (error) {
