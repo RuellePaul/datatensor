@@ -7,6 +7,7 @@ import {v4 as uuid} from 'uuid';
 import {
     Box,
     Button,
+    Divider,
     FormControlLabel,
     ListItemIcon,
     makeStyles,
@@ -17,7 +18,8 @@ import {
     Typography
 } from '@material-ui/core';
 import {Pagination, ToggleButton, ToggleButtonGroup} from '@material-ui/lab';
-import {Maximize as LabelIcon, Move as MoveIcon, Trash as DeleteIcon} from 'react-feather';
+import {Maximize as LabelIcon, Move as MoveIcon, Tag as ObjectIcon, Trash as DeleteIcon} from 'react-feather';
+import NestedMenuItem from 'material-ui-nested-menu-item';
 import {Theme} from 'src/theme';
 import DTImage from 'src/components/Image';
 import useImages from 'src/hooks/useImages';
@@ -77,6 +79,9 @@ const useStyles = makeStyles((theme: Theme) => ({
         display: 'flex',
         alignItems: 'center',
         margin: theme.spacing(0, 0, 1)
+    },
+    menu: {
+        width: 180
     }
 }));
 
@@ -307,6 +312,8 @@ const formatRatio = ratio => Math.abs(Math.round(ratio * 1e6) / 1e6);
 
 const ContextMenu: FC<ContextMenuProps> = ({labels, setLabels, selectedLabels, point, handleClose}) => {
 
+    const classes = useStyles();
+
     const handleDeleteLabel = async () => {
         const newLabels = labels.filter(label => !selectedLabels.map(label => label.id).includes(label.id));
         setLabels(newLabels);
@@ -325,11 +332,42 @@ const ContextMenu: FC<ContextMenuProps> = ({labels, setLabels, selectedLabels, p
                     : undefined
             }
         >
-            <MenuItem onClick={handleDeleteLabel}>
+            <NestedMenuItem
+                parentMenuOpen={point[0] !== null}
+                label={(
+                    <>
+                        <ListItemIcon>
+                            <ObjectIcon/>
+                        </ListItemIcon>
+                        <Typography variant="inherit" noWrap>
+                            Object
+                        </Typography>
+                    </>
+                )}
+                dense
+            >
+                <MenuItem>
+                    <Typography variant="inherit" noWrap>
+                        Cat
+                    </Typography>
+                </MenuItem>
+                <MenuItem>
+                    <Typography variant="inherit" noWrap>
+                        Dog
+                    </Typography>
+                </MenuItem>
+            </NestedMenuItem>
+            <Divider/>
+            <MenuItem
+                onClick={handleDeleteLabel}
+                dense
+            >
                 <ListItemIcon>
                     <DeleteIcon/>
                 </ListItemIcon>
-                Delete
+                <Typography variant="inherit" noWrap>
+                    Delete
+                </Typography>
             </MenuItem>
         </Menu>
     )
