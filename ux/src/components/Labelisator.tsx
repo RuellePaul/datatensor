@@ -79,9 +79,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         display: 'flex',
         alignItems: 'center',
         margin: theme.spacing(0, 0, 1)
-    },
-    menu: {
-        width: 180
     }
 }));
 
@@ -311,8 +308,6 @@ const formatRatio = ratio => Math.abs(Math.round(ratio * 1e6) / 1e6);
 
 
 const ContextMenu: FC<ContextMenuProps> = ({labels, setLabels, selectedLabels, point, handleClose}) => {
-
-    const classes = useStyles();
 
     const handleDeleteLabel = async () => {
         const newLabels = labels.filter(label => !selectedLabels.map(label => label.id).includes(label.id));
