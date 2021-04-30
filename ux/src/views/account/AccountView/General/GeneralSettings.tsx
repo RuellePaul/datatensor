@@ -19,6 +19,7 @@ import {
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import {User} from 'src/types/user';
+import api from 'src/utils/api';
 import wait from 'src/utils/wait';
 import countries from './countries';
 
@@ -33,6 +34,16 @@ const useStyles = makeStyles(() => ({
 
 const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) => {
     const classes = useStyles();
+
+    const handleUpdateProfile = async () => {
+        try {
+            await api.post(`/v1/account/${user.id}/update`);
+            enqueueSnackbar(`Profile updated`);
+        } catch (error) {
+            enqueueSnackbar((error.response && error.response.data) || 'Something went wrong', {variant: 'error'});
+        }
+    };
+
     const {enqueueSnackbar} = useSnackbar();
 
     return (
@@ -66,12 +77,10 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) =
                 setSubmitting
             }) => {
                 try {
-                    // NOTE: Make API request
                     await wait(200);
                     resetForm();
                     setStatus({success: true});
                     setSubmitting(false);
-                    enqueueSnackbar('Profile updated');
                 } catch (err) {
                     console.error(err);
                     setStatus({success: false});
@@ -273,7 +282,7 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) =
                             display="flex"
                             justifyContent="flex-end"
                         >
-                            <Button
+                            <Button onClick={handleUpdateProfile}
                                 color="secondary"
                                 disabled={isSubmitting}
                                 type="submit"

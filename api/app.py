@@ -11,6 +11,7 @@ from logger import logger
 from routes.admin.manage import admin_manage
 from routes.authentication.auth import auth
 from routes.authentication.core import require_authorization, require_admin
+from routes.authentication.manage import update_profile
 from routes.authentication.oauth import oauth
 from routes.datasets.manage import dataset_manage
 from routes.images.manage import images_manage
@@ -28,7 +29,8 @@ app.secret_key = app.config['SECRET_KEY']
 CORS(app)
 CSRFProtect(app)
 
-require_authorization([admin_manage, dataset_manage, images_manage, images_upload, images_labeling, generator])
+require_authorization(
+    [admin_manage, dataset_manage, images_manage, images_upload, images_labeling, generator, update_profile])
 require_admin([admin_manage, generator])
 
 app.register_blueprint(auth, url_prefix='/api/v1/auth')
@@ -42,6 +44,8 @@ app.register_blueprint(images_upload, url_prefix='/api/v1/images/upload')
 app.register_blueprint(images_labeling, url_prefix='/api/v1/images/labeling')
 
 app.register_blueprint(generator, url_prefix='/api/v1/admin/generator')
+
+app.register_blueprint(update_profile, url_prefix='/api/v1/account')
 
 
 @app.after_request
