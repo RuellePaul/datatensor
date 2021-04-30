@@ -79,6 +79,9 @@ const useStyles = makeStyles((theme: Theme) => ({
         display: 'flex',
         alignItems: 'center',
         margin: theme.spacing(0, 0, 1)
+    },
+    menuItem: {
+        minWidth: 150
     }
 }));
 
@@ -309,6 +312,8 @@ const formatRatio = ratio => Math.abs(Math.round(ratio * 1e6) / 1e6);
 
 const ContextMenu: FC<ContextMenuProps> = ({labels, setLabels, selectedLabels, point, handleClose}) => {
 
+    const classes = useStyles();
+
     const handleDeleteLabel = async () => {
         const newLabels = labels.filter(label => !selectedLabels.map(label => label.id).includes(label.id));
         setLabels(newLabels);
@@ -339,23 +344,23 @@ const ContextMenu: FC<ContextMenuProps> = ({labels, setLabels, selectedLabels, p
                         </Typography>
                     </>
                 )}
-                dense
             >
-                <MenuItem>
-                    <Typography variant="inherit" noWrap>
-                        Cat
-                    </Typography>
-                </MenuItem>
-                <MenuItem>
-                    <Typography variant="inherit" noWrap>
-                        Dog
-                    </Typography>
-                </MenuItem>
+                {['dog', 'cat', 'human', 'bicycle', 'car', 'toothbrush', 'shirt'].map(object => (
+                    <MenuItem
+                        className={classes.menuItem}
+                    >
+                        <Typography variant="inherit" noWrap>
+                            {object.toUpperCase()}
+                        </Typography>
+                    </MenuItem>
+                ))}
             </NestedMenuItem>
-            <Divider/>
+            <Box my={0.5}>
+                <Divider/>
+            </Box>
             <MenuItem
+                className={classes.menuItem}
                 onClick={handleDeleteLabel}
-                dense
             >
                 <ListItemIcon>
                     <DeleteIcon/>
@@ -533,7 +538,7 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels, setTool, autoSwitch}) =
     const [contextMenuPoint, setContextMenuPoint] = useState<Point>([null, null]);
     const handleContextMenu = (event: React.MouseEvent<HTMLElement>) => {
         event.preventDefault();
-        setContextMenuPoint([event.clientX - 2, event.clientY - 4]);
+        setContextMenuPoint([event.clientX, event.clientY]);
     };
 
     const handleClose = () => {
