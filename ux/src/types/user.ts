@@ -8,6 +8,10 @@ export interface User {
     scope: 'github' | 'google' | 'stackoverflow' | null;
     avatar: string | null;
     tier: 'standard' | 'premium' | 'business';
+    phone?: string;
+    country?: string;
+    city?: string;
+    isPublic?: boolean;
 
     [key: string]: any;
 }
