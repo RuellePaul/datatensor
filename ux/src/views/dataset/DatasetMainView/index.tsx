@@ -20,7 +20,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const SECTIONS = [<div/>, <SectionImages/>, <SectionLabeling/>];
 
 const DatasetMainView: FC = () => {
     const {dataset_id} = useParams();
@@ -54,6 +53,8 @@ const DatasetMainView: FC = () => {
 
     if (!dataset)
         return null;
+
+    const SECTIONS = [<div/>, <SectionImages/>, <SectionLabeling dataset={dataset}/>];
 
     return (
         <Page

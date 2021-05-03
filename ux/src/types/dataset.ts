@@ -1,8 +1,10 @@
+import {Object} from 'src/types/object';
+
 export interface Dataset {
     id: string;
     created_at: string;
     description: string;
     name: string;
-    object_ids?: string[];  // FIXME: must be initialized []
+    objects: Object[];
     user_id: string;
 }

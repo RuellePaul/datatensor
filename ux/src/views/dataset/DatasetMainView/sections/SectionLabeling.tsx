@@ -1,17 +1,27 @@
 import React, {FC} from 'react';
 import {Box} from '@material-ui/core';
+import DTObjects from 'src/components/Objects';
 import DTLabelisator from 'src/components/Labelisator';
 import KeyboardShortcuts from 'src/components/overlays/KeyboardShortcuts';
+import {Dataset} from 'src/types/dataset';
 
 
-const SectionLabeling: FC = () => {
+interface SectionLabelingProps {
+    dataset: Dataset;
+}
+
+const SectionLabeling: FC<SectionLabelingProps> = ({dataset}) => {
 
     return (
         <>
             <KeyboardShortcuts/>
 
             <Box mt={3}>
-                <DTLabelisator/>
+                <DTObjects dataset={dataset}/>
+            </Box>
+
+            <Box mt={3}>
+                <DTLabelisator dataset={dataset}/>
             </Box>
         </>
     )
