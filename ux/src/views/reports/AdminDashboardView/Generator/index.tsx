@@ -98,7 +98,7 @@ const Generator: FC = () => {
                             </Typography>
                         </Box>
                         <Grid container spacing={2} justify='space-between'>
-                            <Grid item sm={5} xs={12}>
+                            <Grid item lg={12} sm={5} xs={12}>
                                 <FormControl fullWidth>
                                     <InputLabel shrink>
                                         Dataset name
@@ -107,6 +107,7 @@ const Generator: FC = () => {
                                         error={Boolean(touched.dataset_name && errors.dataset_name)}
                                         label="Dataset name"
                                         name="dataset_name"
+                                        fullWidth
                                         onBlur={handleBlur}
                                         onChange={handleChange}
                                         value={values.dataset_name}
@@ -116,7 +117,7 @@ const Generator: FC = () => {
                                     </Select>
                                 </FormControl>
                             </Grid>
-                            <Grid item sm={5} xs={12}>
+                            <Grid item lg={12} sm={5} xs={12}>
                                 <TextField
                                     error={Boolean(touched.image_count && errors.image_count)}
                                     label="Image count"
