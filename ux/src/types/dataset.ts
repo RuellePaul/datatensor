@@ -4,4 +4,5 @@ export interface Dataset {
     description: string;
     name: string;
     user_id: string;
+    object_ids: string[];  // Object ids
 }
