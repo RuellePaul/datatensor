@@ -14,7 +14,6 @@ import {
     DialogTitle,
     Divider,
     FormControlLabel,
-    FormHelperText,
     Grid,
     IconButton,
     ListItemIcon,
@@ -598,7 +597,7 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels, setTool, autoSwitch}) =
 };
 
 
-const Objects: FC<ObjectsProps> = ({}) => {
+const Objects: FC<ObjectsProps> = () => {
 
     const classes = useStyles();
 
@@ -672,19 +671,17 @@ const Objects: FC<ObjectsProps> = ({}) => {
                     <Box my={2}>
                         <Formik
                             initialValues={{
-                                name: '',
-                                supercategory: null
+                                name: ''
                             }}
                             validationSchema={Yup.object().shape({
-                                name: Yup.string().max(255).required('Name is required'),
-                                supercategory: Yup.string().max(255).required()
+                                name: Yup.string().max(255).required('Name is required')
                             })}
                             onSubmit={async (values, {
                                 setStatus,
                                 setSubmitting
                             }) => {
                                 try {
-                                    console.log('TODO : CREATION', values);
+                                    await api.post(`/v1/objects/`, values);
 
                                     if (isMountedRef.current) {
                                         setStatus({success: true});
