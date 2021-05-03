@@ -47,7 +47,7 @@ const SectionImage: FC = () => {
     };
 
     const imagesCount = images.length;
-    const labelsCount = images.map(image => image.labels.length).reduce((acc, val) => acc + val, 0);
+    const labelsCount = images.map(image => image.labels?.length || 0).reduce((acc, val) => acc + val, 0);
 
     return (
         <>
