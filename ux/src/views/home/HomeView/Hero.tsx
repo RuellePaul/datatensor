@@ -155,7 +155,7 @@ const Hero: FC<HeroProps> = ({className, ...rest}) => {
                             <div className={classes.image}>
                                 <img
                                     alt="Presentation"
-                                    src="https://via.placeholder.com/900x500"
+                                    src="/static/images/yolov4.gif"
                                 />
                             </div>
                         </Box>
