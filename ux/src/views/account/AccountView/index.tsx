@@ -1,11 +1,13 @@
 import React, {ChangeEvent, FC, useState} from 'react';
 import {Box, Container, Divider, makeStyles, Tab, Tabs} from '@material-ui/core';
-import Page from 'src/components/Page';
-import {Theme} from 'src/theme';
+
 import Header from './Header';
 import General from './General';
 import Notifications from './Notifications';
 import Security from './Security';
+import Page from 'src/components/Page';
+import useAuth from 'src/hooks/useAuth';
+import {Theme} from 'src/theme';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -17,13 +19,22 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const AccountView: FC = () => {
+
     const classes = useStyles();
+
+    const {user} = useAuth();
+
+    console.log(user)
+
     const [currentTab, setCurrentTab] = useState<string>('general');
 
     const tabs = [
         {value: 'general', label: 'General'},
         {value: 'notifications', label: 'Notifications'},
-        {value: 'security', label: 'Security'}
+        ...(!user.scope
+            ? [{value: 'security', label: 'Security'}]
+            : []
+        )
     ];
 
     const handleTabsChange = (event: ChangeEvent<{}>, value: string): void => {
