@@ -103,14 +103,14 @@ const AdminDashboardView: FC = () => {
                     </Grid>
                     <Grid
                         item
-                        lg={3}
+                        lg={4}
                         xs={12}
                     >
                         <Generator/>
                     </Grid>
                     <Grid
                         item
-                        lg={9}
+                        lg={8}
                         xs={12}
                     >
 
