@@ -4,5 +4,5 @@ export interface Label {
     y: number;  // ratio
     w: number;  // ratio
     h: number;  // ratio
-    object_id: string;
+    object_id?: string;
 }

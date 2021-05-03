@@ -1,5 +1,6 @@
 import React, {FC, useEffect, useRef, useState} from 'react';
 import clsx from 'clsx';
+import {Formik} from 'formik';
 import _ from 'lodash';
 import useEventListener from 'use-typed-event-listener';
 import {useSnackbar} from 'notistack';
@@ -7,13 +8,21 @@ import {v4 as uuid} from 'uuid';
 import {
     Box,
     Button,
+    Chip,
+    Dialog,
+    DialogContent,
+    DialogTitle,
     Divider,
     FormControlLabel,
+    FormHelperText,
+    Grid,
+    IconButton,
     ListItemIcon,
     makeStyles,
     Menu,
     MenuItem,
     Switch,
+    TextField,
     Tooltip,
     Typography
 } from '@material-ui/core';
@@ -26,6 +35,13 @@ import useImages from 'src/hooks/useImages';
 import {Label} from 'src/types/label';
 import {Image} from 'src/types/image';
 import api from 'src/utils/api';
+import {Close as CloseIcon} from '@material-ui/icons';
+import * as Yup from 'yup';
+import useIsMountedRef from '../hooks/useIsMountedRef';
+
+
+// FIXME : must use dataset object_ids
+const OBJECT_NAMES = ['dog', 'cat', 'human', 'bicycle', 'car', 'toothbrush', 'shirt'];
 
 interface DTLabelisatorProps {
     className?: string;
@@ -51,6 +67,10 @@ interface ToolMoveProps {
     setLabels: (labels: Label[]) => void;
     setTool: (tool) => void;
     autoSwitch: boolean;
+}
+
+interface ObjectsProps {
+
 }
 
 type Direction = 'top-left' | 'bottom-left' | 'top-right' | 'bottom-right' | null;
@@ -82,6 +102,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     menuItem: {
         minWidth: 150
+    },
+    objects: {
+        display: 'flex',
+        flexWrap: 'wrap'
+    },
+    close: {
+        position: 'absolute',
+        right: theme.spacing(2),
+        top: theme.spacing(2),
+        color: theme.palette.grey[500]
     }
 }));
 
@@ -345,7 +375,7 @@ const ContextMenu: FC<ContextMenuProps> = ({labels, setLabels, selectedLabels, p
                     </>
                 )}
             >
-                {['dog', 'cat', 'human', 'bicycle', 'car', 'toothbrush', 'shirt'].map(object => (
+                {OBJECT_NAMES.map(object => (
                     <MenuItem
                         className={classes.menuItem}
                     >
@@ -568,6 +598,155 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels, setTool, autoSwitch}) =
 };
 
 
+const Objects: FC<ObjectsProps> = ({}) => {
+
+    const classes = useStyles();
+
+    const isMountedRef = useIsMountedRef();
+
+    const [openObjectCreation, setOpenObjectCreation] = useState(false);
+
+    const handleCloseObjectCreation = () => {
+        setOpenObjectCreation(false);
+    };
+
+    const handleDeleteObject = (event) => {
+        // TODO
+    };
+
+    return (
+        <>
+            <Grid container spacing={2}>
+                <Grid item sm={9} xs={12}>
+                    <div className={classes.objects}>
+                        {OBJECT_NAMES.map(name => (
+                            <Box
+                                m={0.5}
+                                key={name}
+                            >
+                                <Chip
+                                    color="primary"
+                                    label={name}
+                                    onDelete={handleDeleteObject}
+                                    variant='outlined'
+                                />
+                            </Box>
+                        ))}
+                    </div>
+                </Grid>
+                <Divider flexItem/>
+                <Grid item sm={3} xs={12}>
+                    <Button
+                        color="primary"
+                        onClick={() => setOpenObjectCreation(true)}
+                        size="small"
+                        variant="contained"
+                    >
+                        New object
+                    </Button>
+                </Grid>
+            </Grid>
+
+            <Dialog
+                fullWidth
+                maxWidth='sm'
+                open={openObjectCreation}
+                onClose={handleCloseObjectCreation}
+            >
+                <DialogTitle
+                    className='flex'
+                    disableTypography
+                >
+                    <Typography variant='h4'>
+                        Create object
+                    </Typography>
+
+                    <IconButton
+                        className={classes.close}
+                        onClick={handleCloseObjectCreation}
+                    >
+                        <CloseIcon/>
+                    </IconButton>
+                </DialogTitle>
+                <DialogContent>
+                    <Box my={2}>
+                        <Formik
+                            initialValues={{
+                                name: '',
+                                supercategory: null
+                            }}
+                            validationSchema={Yup.object().shape({
+                                name: Yup.string().max(255).required('Name is required'),
+                                supercategory: Yup.string().max(255).required()
+                            })}
+                            onSubmit={async (values, {
+                                setStatus,
+                                setSubmitting
+                            }) => {
+                                try {
+                                    console.log('TODO : CREATION', values);
+
+                                    if (isMountedRef.current) {
+                                        setStatus({success: true});
+                                        setSubmitting(false);
+                                    }
+                                } catch (error) {
+                                    console.error(error);
+                                    if (isMountedRef.current) {
+                                        setStatus({success: false});
+                                        setSubmitting(false);
+                                    }
+                                }
+                            }}
+                        >
+                            {({
+                                  errors,
+                                  handleBlur,
+                                  handleChange,
+                                  handleSubmit,
+                                  isSubmitting,
+                                  touched,
+                                  values
+                              }) => (
+                                <form
+                                    noValidate
+                                    onSubmit={handleSubmit}
+                                >
+                                    <TextField
+                                        error={Boolean(touched.name && errors.name)}
+                                        fullWidth
+                                        helperText={touched.name && errors.name}
+                                        label="Object name"
+                                        margin="normal"
+                                        name="name"
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        value={values.name}
+                                        variant="outlined"
+                                    />
+                                    <Box mt={2}>
+                                        <Button
+                                            color="secondary"
+                                            disabled={isSubmitting}
+                                            fullWidth
+                                            size="large"
+                                            type="submit"
+                                            variant="contained"
+                                        >
+                                            Create a new label
+                                        </Button>
+                                    </Box>
+                                </form>
+                            )}
+                        </Formik>
+                    </Box>
+                </DialogContent>
+            </Dialog>
+        </>
+    )
+}
+
+
 const DTLabelisator: FC<DTLabelisatorProps> = ({
                                                    className,
                                                    ...rest
@@ -731,6 +910,8 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                     </span>
                 </Tooltip>
             </div>
+
+            <Objects/>
 
             <div
                 className={classes.container}
