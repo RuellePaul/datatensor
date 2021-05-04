@@ -112,7 +112,7 @@ const reset = (canvas: HTMLCanvasElement) => {
 
 const currentDelta = (canvas: HTMLCanvasElement, pointA: Point, pointB: Point) => {
     if (!pointA || !pointB)
-        return;
+        return [0, 0];
     let delta: Point = [
         (pointA[0] - pointB[0]) / (canvas.width - 2 * CANVAS_OFFSET),
         (pointA[1] - pointB[1]) / (canvas.height - 2 * CANVAS_OFFSET)
