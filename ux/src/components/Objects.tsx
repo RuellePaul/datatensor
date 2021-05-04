@@ -171,7 +171,7 @@ const DTObjects: FC<ObjectsProps> = ({dataset}) => {
                                             type="submit"
                                             variant="contained"
                                         >
-                                            Create a new label
+                                            Create a new object
                                         </Button>
                                     </Box>
                                 </form>

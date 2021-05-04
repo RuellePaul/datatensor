@@ -15,10 +15,7 @@ interface DTImageProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        position: 'relative',
-        '& img': {
-            userSelect: 'none'
-        },
+        position: 'relative'
     },
     clickable: {
         '&:hover img': {

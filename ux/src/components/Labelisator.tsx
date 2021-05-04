@@ -35,6 +35,7 @@ interface DTLabelisatorProps {
 }
 
 interface ContextMenuProps {
+    canvas: HTMLCanvasElement;  // ToolMove's canvas
     dataset: Dataset;
     labels: Label[];
     selectedLabels: Label[];
@@ -317,14 +318,15 @@ const checkLabelsEquality = (labels: Label[], newLabels: Label[]) => _.isEqual(l
 const formatRatio = ratio => Math.abs(Math.round(ratio * 1e6) / 1e6);
 
 
-const ContextMenu: FC<ContextMenuProps> = ({dataset, labels, setLabels, selectedLabels, point, handleClose}) => {
+const ContextMenu: FC<ContextMenuProps> = ({canvas, dataset, labels, setLabels, selectedLabels, point, handleClose}) => {
 
     const classes = useStyles();
 
-    const handleDeleteLabel = async () => {
+    const handleDeleteLabel = () => {
+        handleClose();
+        reset(canvas);
         const newLabels = labels.filter(label => !selectedLabels.map(label => label.id).includes(label.id));
         setLabels(newLabels);
-        handleClose();
     };
 
     return (
@@ -564,6 +566,7 @@ const ToolMove: FC<ToolMoveProps> = ({dataset, labels, setLabels, setTool, autoS
                 ref={canvasRef}
             />
             <ContextMenu
+                canvas={canvasRef.current}
                 dataset={dataset}
                 labels={labels}
                 selectedLabels={storedLabels}

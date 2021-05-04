@@ -156,6 +156,7 @@ const Hero: FC<HeroProps> = ({className, ...rest}) => {
                                 <img
                                     alt="Presentation"
                                     src="/static/images/yolov4.gif"
+                                    draggable={false}
                                 />
                             </div>
                         </Box>
