@@ -67,7 +67,7 @@ const AdminDashboardView: FC = () => {
         getUsers();
     }, [getUsers]);
 
-    const [timeRange, setTimeRange] = useState<TimeRange>(timeRanges[2]);
+    const [timeRange, setTimeRange] = useState<TimeRange>(timeRanges[3]);
 
     return (
         <Page
