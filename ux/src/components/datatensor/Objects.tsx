@@ -19,6 +19,7 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import api from 'src/utils/api';
 import {Theme} from 'src/theme';
+import {Object} from 'src/types/object';
 import useDataset from 'src/hooks/useDataset';
 
 interface ObjectsProps {
@@ -42,7 +43,7 @@ const DTObjects: FC<ObjectsProps> = () => {
 
     const classes = useStyles();
 
-    const {dataset} = useDataset();
+    const {dataset, saveDataset} = useDataset();
 
     const isMountedRef = useIsMountedRef();
 
@@ -52,8 +53,9 @@ const DTObjects: FC<ObjectsProps> = () => {
         setOpenObjectCreation(false);
     };
 
-    const handleDeleteObject = (event) => {
-        // TODO
+    const handleDeleteObject = async (object_id: string) => {
+        // TODO : delete object
+        console.log(dataset.id, object_id)
     };
 
     return (
@@ -69,7 +71,7 @@ const DTObjects: FC<ObjectsProps> = () => {
                                 <Chip
                                     color="primary"
                                     label={object.name}
-                                    onDelete={handleDeleteObject}
+                                    onDelete={() => handleDeleteObject(object.id)}
                                     variant='outlined'
                                 />
                             </Box>
@@ -124,7 +126,8 @@ const DTObjects: FC<ObjectsProps> = () => {
                                 setSubmitting
                             }) => {
                                 try {
-                                    await api.post(`/v1/objects/`, {dataset_id: dataset.id, ...values});
+                                    const response = await api.post<Object>(`/v1/objects/`, {dataset_id: dataset.id, ...values});
+                                    saveDataset({...dataset, objects: [...dataset.objects, response.data]});
 
                                     if (isMountedRef.current) {
                                         setStatus({success: true});

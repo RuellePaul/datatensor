@@ -9,6 +9,8 @@ def create_object(name, supercategory, dataset_id):
     if existing_object:
         Config.db.datasets.update({'id': dataset_id},
                                   {'$push': {'objects': existing_object}})
+        existing_object.pop('_id')
+        return existing_object
 
     if not existing_object:
         created_object = {
@@ -19,3 +21,5 @@ def create_object(name, supercategory, dataset_id):
         Config.db.datasets.update({'id': dataset_id},
                                   {'$push': {'objects': created_object}})
         Config.db.objects.insert_one(created_object)
+        created_object.pop('_id')
+        return created_object

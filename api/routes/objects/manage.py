@@ -14,7 +14,7 @@ object_manage = Blueprint('object_manage', __name__)
     'dataset_id': fields.Str(required=True)
 })
 def create_object(args):
-    core.create_object(name=args['name'],
-                       supercategory=args.get('supercategory'),
-                       dataset_id=args['dataset_id'])
-    return 'OK', 200
+    object = core.create_object(name=args['name'],
+                                supercategory=args.get('supercategory'),
+                                dataset_id=args['dataset_id'])
+    return object, 200
