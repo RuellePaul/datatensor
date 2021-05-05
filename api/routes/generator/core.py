@@ -39,15 +39,15 @@ def _download_annotations(dataset_name):
     os.remove(zip_path)
 
 
-def _labels_from_annotations(image_object, annotations):
-    object_labels = [el for el in annotations if el['image_id'] == image_object['id']]
+def _labels_from_annotations(current_image, annotations):
+    object_labels = [el for el in annotations if el['image_id'] == current_image['id']]
     bounding_boxes = [el['bbox'] for el in object_labels]
     labels = [{
         'id': str(uuid4()),
-        'x': box[0] / image_object['width'],
-        'y': box[1] / image_object['height'],
-        'w': box[2] / image_object['width'],
-        'h': box[3] / image_object['height'],
+        'x': box[0] / current_image['width'],
+        'y': box[1] / current_image['height'],
+        'w': box[2] / current_image['width'],
+        'h': box[3] / current_image['height'],
     } for box in bounding_boxes]
     return labels
 
@@ -77,11 +77,11 @@ def dataset_generation(dataset_name, count=2):
     annotations = json.load(json_file)
 
     images = []
-    for image_object in annotations['images'][:count]:
-        filename = image_object['file_name']
+    for current_image in annotations['images'][:count]:
+        filename = current_image['file_name']
         if filename and allowed_file(filename):
             image_id = str(uuid4())
-            image_url = image_object['coco_url']
+            image_url = current_image['coco_url']
             response = requests.get(image_url)
             if response.status_code != 200:
                 continue
@@ -98,7 +98,7 @@ def dataset_generation(dataset_name, count=2):
                 'size': len(image_bytes),
                 'width': image.shape[1],
                 'height': image.shape[0],
-                'labels': _labels_from_annotations(image_object, annotations['annotations'])
+                'labels': _labels_from_annotations(current_image, annotations['annotations'])
             })
 
     dataset = dict(id=dataset_id,
