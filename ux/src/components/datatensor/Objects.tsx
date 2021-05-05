@@ -3,6 +3,7 @@ import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import {
     Box,
     Button,
+    capitalize,
     Chip,
     Dialog,
     DialogContent,
@@ -32,6 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         display: 'flex',
         flexWrap: 'wrap'
     },
+    chip: {},
     close: {
         position: 'absolute',
         right: theme.spacing(2),
@@ -52,11 +54,16 @@ const DTObjects: FC<ObjectsProps> = () => {
     const [openObjectCreation, setOpenObjectCreation] = useState(false);
 
     const computeLabel = (object: Object) => {
-        return `${object.name} (${images.map(image => image.labels.filter(label => label.object_id === object.id).length || 0).reduce((acc, val) => acc + val, 0)})`
+        return `${capitalize(object.name)} | ${images.map(image => image.labels.filter(label => label.object_id === object.id).length || 0).reduce((acc, val) => acc + val, 0)}`
     };
 
     const handleCloseObjectCreation = () => {
         setOpenObjectCreation(false);
+    };
+
+    const handleDeleteObject = (object: Object) => {
+        // TODO
+        console.log(object)
     };
 
     return (
@@ -70,10 +77,10 @@ const DTObjects: FC<ObjectsProps> = () => {
                                 key={object.name}
                             >
                                 <Chip
-                                    color="primary"
+                                    className={classes.chip}
                                     clickable
                                     label={computeLabel(object)}
-                                    variant='outlined'
+                                    onDelete={() => handleDeleteObject(object)}
                                 />
                             </Box>
                         ))}
