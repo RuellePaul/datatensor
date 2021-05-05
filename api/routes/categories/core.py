@@ -9,7 +9,7 @@ def create_category(name, supercategory, dataset_id):
     if existing_category:
         Config.db.datasets.update({'id': dataset_id},
                                   {'$push': {'categories': existing_category}})
-        existing_category.pop('_id')
+        existing_category.pop('_id', None)
         return existing_category
 
     if not existing_category:
@@ -21,5 +21,5 @@ def create_category(name, supercategory, dataset_id):
         Config.db.datasets.update({'id': dataset_id},
                                   {'$push': {'categories': created_category}})
         Config.db.categories.insert_one(created_category)
-        created_category.pop('_id')
+        created_category.pop('_id', None)
         return created_category

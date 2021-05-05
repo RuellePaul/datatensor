@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import {Box, Divider, ListItemIcon, makeStyles, Menu, MenuItem, Typography} from '@material-ui/core';
+import {Box, capitalize, Divider, ListItemIcon, makeStyles, Menu, MenuItem, Typography} from '@material-ui/core';
 import Nesteditem from 'material-ui-nested-menu-item';
 import {Tag as CategoryIcon, Trash as DeleteIcon} from 'react-feather';
 import {Label} from 'src/types/label';
@@ -78,7 +78,7 @@ const ContextMenu: FC<ContextMenuProps> = ({canvas, labels, setLabels, selectedL
                         onClick={() => handleUpdateLabelCategory(category)}
                     >
                         <Typography variant="inherit" noWrap>
-                            {category.name.toUpperCase()}
+                            {capitalize(category.name)}
                         </Typography>
                     </MenuItem>
                 ))}

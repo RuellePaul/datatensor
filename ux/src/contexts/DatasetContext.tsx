@@ -39,7 +39,7 @@ export const DatasetProvider: FC<DatasetProviderProps> = ({dataset_id, children}
     useEffect(() => {
         fetchDataset();
     }, [fetchDataset]);
-
+;
     if (currentDataset === null)
         return (
             <Box
@@ -48,7 +48,7 @@ export const DatasetProvider: FC<DatasetProviderProps> = ({dataset_id, children}
             >
                 <CircularProgress/>
             </Box>
-        );
+        )
 
     return (
         <DatasetContext.Provider

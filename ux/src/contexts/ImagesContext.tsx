@@ -2,6 +2,7 @@ import React, {createContext, FC, ReactNode, useCallback, useEffect, useState} f
 import {Image} from 'src/types/image';
 import api from 'src/utils/api';
 import useDataset from 'src/hooks/useDataset';
+import {Box, CircularProgress} from '@material-ui/core';
 
 export interface ImagesContextValue {
     images: Image[];
@@ -15,11 +16,12 @@ interface ImagesProviderProps {
 
 export const ImagesContext = createContext<ImagesContextValue>({
     images: [],
-    saveImages: () => {}
+    saveImages: () => {
+    }
 });
 
 export const ImagesProvider: FC<ImagesProviderProps> = ({images, children}) => {
-    const [currentImages, setCurrentImages] = useState<Image[]>(images || []);
+    const [currentImages, setCurrentImages] = useState<Image[] | null>(images || null);
 
     const {dataset} = useDataset();
 
@@ -30,9 +32,9 @@ export const ImagesProvider: FC<ImagesProviderProps> = ({images, children}) => {
     const fetchImages = useCallback(async () => {
         try {
             const response = await api.get<Image[]>(`/v1/images/manage/${dataset.id}`);
-
             handleSaveImages(response.data);
         } catch (err) {
+            handleSaveImages([]);
             console.error(err);
         }
 
@@ -42,6 +44,15 @@ export const ImagesProvider: FC<ImagesProviderProps> = ({images, children}) => {
         fetchImages();
     }, [fetchImages]);
 
+    if (currentImages === null)
+        return (
+            <Box
+                display="flex"
+                justifyContent="center"
+            >
+                <CircularProgress/>
+            </Box>
+        );
 
     return (
         <ImagesContext.Provider

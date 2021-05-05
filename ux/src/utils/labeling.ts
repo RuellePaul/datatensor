@@ -3,11 +3,15 @@ import {Direction} from 'src/types/direction';
 import {Label} from 'src/types/label';
 import {Point} from 'src/types/point';
 import {Category} from 'src/types/category';
+import {COLORS} from 'src/utils/colors';
+import {capitalize} from '@material-ui/core';
 
 export const RESIZE_SIZE = 8;
 export const LABEL_MIN_WIDTH = 25;
 export const LABEL_MIN_HEIGHT = 25;
 export const CANVAS_OFFSET = 40;
+export const MIN_FONT_SIZE = 16;
+export const MAX_FONT_SIZE = 24;
 
 export const currentPoint = (nativeEvent) => ([nativeEvent.offsetX, nativeEvent.offsetY]);
 
@@ -85,16 +89,21 @@ export const drawLabels = (canvas: HTMLCanvasElement, labels: Label[], categorie
     let context = canvas.getContext('2d');
     context.lineWidth = 2;
     context.setLineDash([dash]);
-    context.font = '16px Roboto, Helvetica, Arial, sans-serif';
 
     for (const label of labels) {
+        const category = categories.find(category => label.category_id === category.id);
+
         const {x, y, w, h} = convertLabel(canvas, label, offset);
-        let color = (Math.abs(w) < LABEL_MIN_WIDTH || Math.abs(h) < LABEL_MIN_HEIGHT) ? '#FF0000' : '#FFFFFF';
+
+        let color = COLORS[categories.indexOf(category)] || '#000000';
+
         context.strokeStyle = color;
         context.strokeRect(x, y, w, h);
 
+        context.fillStyle = `${color}05`;
+        context.fillRect(x, y, w, h);
         if (filled) {
-            context.fillStyle = `${color}15`;
+            context.fillStyle = `${color}25`;
             context.fillRect(x, y, w, h);
         }
 
@@ -106,9 +115,11 @@ export const drawLabels = (canvas: HTMLCanvasElement, labels: Label[], categorie
             context.fillRect(x + w - RESIZE_SIZE, y + h - RESIZE_SIZE, RESIZE_SIZE, RESIZE_SIZE);
         }
 
-        const category = categories.find(category => label.category_id === category.id);
-        if (category) {
-            context.fillText(category.name, x + 3, y + 20);
+        if (category && w > category.name.length * 6 && h > LABEL_MIN_HEIGHT * 2) {
+            let fontSize = Math.max(Math.min(w / 10, MAX_FONT_SIZE), MIN_FONT_SIZE);
+            context.font = `${fontSize}px Roboto, Helvetica, Arial, sans-serif`;
+            context.fillStyle = color;
+            context.fillText(capitalize(category.name), x + 5, y + fontSize);
         }
     }
 };

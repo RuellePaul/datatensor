@@ -23,6 +23,7 @@ import {Theme} from 'src/theme';
 import {Category} from 'src/types/category';
 import useDataset from 'src/hooks/useDataset';
 import useImages from 'src/hooks/useImages';
+import {COLORS} from 'src/utils/colors';
 
 interface CategorysProps {
 
@@ -71,7 +72,7 @@ const DTCategorys: FC<CategorysProps> = () => {
             <Grid container spacing={2}>
                 <Grid item sm={9} xs={12}>
                     <div className={classes.categories}>
-                        {dataset.categories.map(category => (
+                        {dataset.categories.map((category, index) => (
                             <Box
                                 m={0.5}
                                 key={category.name}
@@ -81,6 +82,7 @@ const DTCategorys: FC<CategorysProps> = () => {
                                     clickable
                                     label={computeLabel(category)}
                                     onDelete={() => handleDeleteCategory(category)}
+                                    style={{color: COLORS[index]}}
                                 />
                             </Box>
                         ))}
