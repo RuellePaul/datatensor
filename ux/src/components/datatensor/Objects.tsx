@@ -21,6 +21,7 @@ import api from 'src/utils/api';
 import {Theme} from 'src/theme';
 import {Object} from 'src/types/object';
 import useDataset from 'src/hooks/useDataset';
+import useImages from 'src/hooks/useImages';
 
 interface ObjectsProps {
 
@@ -44,10 +45,15 @@ const DTObjects: FC<ObjectsProps> = () => {
     const classes = useStyles();
 
     const {dataset, saveDataset} = useDataset();
+    const {images} = useImages();
 
     const isMountedRef = useIsMountedRef();
 
     const [openObjectCreation, setOpenObjectCreation] = useState(false);
+
+    const computeLabel = (object: Object) => {
+        return `${object.name} (${images.map(image => image.labels.filter(label => label.object_id === object.id).length || 0).reduce((acc, val) => acc + val, 0)})`
+    };
 
     const handleCloseObjectCreation = () => {
         setOpenObjectCreation(false);
@@ -66,7 +72,7 @@ const DTObjects: FC<ObjectsProps> = () => {
                                 <Chip
                                     color="primary"
                                     clickable
-                                    label={object.name}
+                                    label={computeLabel(object)}
                                     variant='outlined'
                                 />
                             </Box>
