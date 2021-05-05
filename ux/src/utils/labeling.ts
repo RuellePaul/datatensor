@@ -34,11 +34,11 @@ export const currentDelta = (canvas: HTMLCanvasElement, pointA: Point, pointB: P
     return delta
 };
 
-export const convertLabel = (canvas: HTMLCanvasElement, label: Label) => {
-    let x = CANVAS_OFFSET + label.x * (canvas.width - 2 * CANVAS_OFFSET);
-    let y = CANVAS_OFFSET + label.y * (canvas.height - 2 * CANVAS_OFFSET);
-    let w = label.w * (canvas.width - 2 * CANVAS_OFFSET);
-    let h = label.h * (canvas.height - 2 * CANVAS_OFFSET);
+export const convertLabel = (canvas: HTMLCanvasElement, label: Label, offset = CANVAS_OFFSET) => {
+    let x = offset + label.x * (canvas.width - 2 * offset);
+    let y = offset + label.y * (canvas.height - 2 * offset);
+    let w = label.w * (canvas.width - 2 * offset);
+    let h = label.h * (canvas.height - 2 * offset);
     return {x, y, w, h}
 };
 
@@ -77,25 +77,30 @@ export const drawRect = (canvas: HTMLCanvasElement, pointA: Point, pointB: Point
     context.fillRect(x, y, w, h);
 };
 
-export const drawLabels = (canvas: HTMLCanvasElement, labels: Label[]) => {
+export const drawLabels = (canvas: HTMLCanvasElement, labels: Label[], offset = CANVAS_OFFSET, dash = 0, filled = false, resize = false) => {
     if (!labels)
         return;
     for (const label of labels) {
-        const {x, y, w, h} = convertLabel(canvas, label);
+        const {x, y, w, h} = convertLabel(canvas, label, offset);
         let color = (Math.abs(w) < LABEL_MIN_WIDTH || Math.abs(h) < LABEL_MIN_HEIGHT) ? '#FF0000' : '#FFFFFF';
         let context = canvas.getContext('2d');
         context.lineWidth = 2;
-        context.setLineDash([5]);
+        context.setLineDash([dash]);
         context.strokeStyle = color;
         context.strokeRect(x, y, w, h);
-        context.fillStyle = `${color}22`;
-        context.fillRect(x, y, w, h);
 
-        context.fillStyle = color;
-        context.fillRect(x, y, RESIZE_SIZE, RESIZE_SIZE);
-        context.fillRect(x + w - RESIZE_SIZE, y, RESIZE_SIZE, RESIZE_SIZE);
-        context.fillRect(x, y + h - RESIZE_SIZE, RESIZE_SIZE, RESIZE_SIZE);
-        context.fillRect(x + w - RESIZE_SIZE, y + h - RESIZE_SIZE, RESIZE_SIZE, RESIZE_SIZE);
+        if (filled) {
+            context.fillStyle = `${color}15`;
+            context.fillRect(x, y, w, h);
+        }
+
+        if (resize) {
+            context.fillStyle = color;
+            context.fillRect(x, y, RESIZE_SIZE, RESIZE_SIZE);
+            context.fillRect(x + w - RESIZE_SIZE, y, RESIZE_SIZE, RESIZE_SIZE);
+            context.fillRect(x, y + h - RESIZE_SIZE, RESIZE_SIZE, RESIZE_SIZE);
+            context.fillRect(x + w - RESIZE_SIZE, y + h - RESIZE_SIZE, RESIZE_SIZE, RESIZE_SIZE);
+        }
     }
 };
 
