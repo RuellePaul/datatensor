@@ -2,15 +2,14 @@ import React, {FC} from 'react';
 import {Box, Divider, ListItemIcon, makeStyles, Menu, MenuItem, Typography} from '@material-ui/core';
 import Nesteditem from 'material-ui-nested-menu-item';
 import {Tag as ObjectIcon, Trash as DeleteIcon} from 'react-feather';
-import {Dataset} from 'src/types/dataset';
 import {Label} from 'src/types/label';
 import {Point} from 'src/types/point';
 import {Theme} from 'src/theme';
 import {reset} from 'src/utils/labeling';
+import useDataset from 'src/hooks/useDataset';
 
 interface ContextMenuProps {
     canvas: HTMLCanvasElement;  // ToolMove's canvas
-    dataset: Dataset;
     labels: Label[];
     selectedLabels: Label[];
     setLabels: (labels: Label[]) => void;
@@ -24,9 +23,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const ContextMenu: FC<ContextMenuProps> = ({canvas, dataset, labels, setLabels, selectedLabels, point, handleClose}) => {
+const ContextMenu: FC<ContextMenuProps> = ({canvas, labels, setLabels, selectedLabels, point, handleClose}) => {
 
     const classes = useStyles();
+
+    const {dataset} = useDataset();
+
+    const handleUpdateLabelObject = (object) => {
+        handleClose();
+        reset(canvas);
+        setLabels(
+            labels.map(label => selectedLabels.map(selectedLabel => selectedLabel.id).includes(label.id)
+                ? {...label, object_id: object.id}
+                : label)
+        )
+    };
 
     const handleDeleteLabel = () => {
         handleClose();
@@ -63,6 +74,8 @@ const ContextMenu: FC<ContextMenuProps> = ({canvas, dataset, labels, setLabels, 
                 {dataset.objects.map(object => (
                     <MenuItem
                         className={classes.item}
+                        key={object.id}
+                        onClick={() => handleUpdateLabelObject(object)}
                     >
                         <Typography variant="inherit" noWrap>
                             {object.name.toUpperCase()}

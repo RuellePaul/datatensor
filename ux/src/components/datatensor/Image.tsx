@@ -5,6 +5,7 @@ import {Theme} from 'src/theme';
 import {Image} from 'src/types/image';
 import {Label} from 'src/types/label';
 import {drawLabels, reset} from 'src/utils/labeling';
+import useDataset from 'src/hooks/useDataset';
 
 interface DTImageProps {
     className?: string;
@@ -44,22 +45,24 @@ const DTImage: FC<DTImageProps> = ({
                                    }) => {
     const classes = useStyles();
 
+    const {dataset} = useDataset();
+
     const imageRef = useRef(null);
     const canvasRef = useRef(null);
 
     const handleLoad = () => {
         if (canvasRef.current && imageRef.current?.complete) {
             reset(canvasRef.current);
-            drawLabels(canvasRef.current, labels, 0);
+            drawLabels(canvasRef.current, labels, dataset.objects, 0);
         }
     };
 
     useEffect(() => {
         if (canvasRef.current && imageRef.current?.complete) {
             reset(canvasRef.current);
-            drawLabels(canvasRef.current, labels, 0);
+            drawLabels(canvasRef.current, labels, dataset.objects, 0);
         }
-    }, [labels]);
+    }, [labels, dataset.objects]);
 
     if (clickable)
         return (

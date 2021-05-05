@@ -2,11 +2,12 @@ import _ from 'lodash';
 import {Direction} from 'src/types/direction';
 import {Label} from 'src/types/label';
 import {Point} from 'src/types/point';
+import {Object} from 'src/types/object';
 
 export const RESIZE_SIZE = 8;
 export const LABEL_MIN_WIDTH = 25;
 export const LABEL_MIN_HEIGHT = 25;
-export const CANVAS_OFFSET = 50;
+export const CANVAS_OFFSET = 40;
 
 export const currentPoint = (nativeEvent) => ([nativeEvent.offsetX, nativeEvent.offsetY]);
 
@@ -77,15 +78,18 @@ export const drawRect = (canvas: HTMLCanvasElement, pointA: Point, pointB: Point
     context.fillRect(x, y, w, h);
 };
 
-export const drawLabels = (canvas: HTMLCanvasElement, labels: Label[], offset = CANVAS_OFFSET, dash = 0, filled = false, resize = false) => {
+export const drawLabels = (canvas: HTMLCanvasElement, labels: Label[], objects: Object[], offset = CANVAS_OFFSET, dash = 0, filled = false, resize = false) => {
     if (!labels)
         return;
+
+    let context = canvas.getContext('2d');
+    context.lineWidth = 2;
+    context.setLineDash([dash]);
+    context.font = '16px Roboto, Helvetica, Arial, sans-serif';
+
     for (const label of labels) {
         const {x, y, w, h} = convertLabel(canvas, label, offset);
         let color = (Math.abs(w) < LABEL_MIN_WIDTH || Math.abs(h) < LABEL_MIN_HEIGHT) ? '#FF0000' : '#FFFFFF';
-        let context = canvas.getContext('2d');
-        context.lineWidth = 2;
-        context.setLineDash([dash]);
         context.strokeStyle = color;
         context.strokeRect(x, y, w, h);
 
@@ -100,6 +104,11 @@ export const drawLabels = (canvas: HTMLCanvasElement, labels: Label[], offset = 
             context.fillRect(x + w - RESIZE_SIZE, y, RESIZE_SIZE, RESIZE_SIZE);
             context.fillRect(x, y + h - RESIZE_SIZE, RESIZE_SIZE, RESIZE_SIZE);
             context.fillRect(x + w - RESIZE_SIZE, y + h - RESIZE_SIZE, RESIZE_SIZE, RESIZE_SIZE);
+        }
+
+        const object = objects.find(object => label.object_id === object.id);
+        if (object) {
+            context.fillText(object.name, x + 3, y + 20);
         }
     }
 };

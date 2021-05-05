@@ -53,11 +53,6 @@ const DTObjects: FC<ObjectsProps> = () => {
         setOpenObjectCreation(false);
     };
 
-    const handleDeleteObject = async (object_id: string) => {
-        // TODO : delete object
-        console.log(dataset.id, object_id)
-    };
-
     return (
         <>
             <Grid container spacing={2}>
@@ -70,8 +65,8 @@ const DTObjects: FC<ObjectsProps> = () => {
                             >
                                 <Chip
                                     color="primary"
+                                    clickable
                                     label={object.name}
-                                    onDelete={() => handleDeleteObject(object.id)}
                                     variant='outlined'
                                 />
                             </Box>
