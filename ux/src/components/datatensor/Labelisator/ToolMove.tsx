@@ -1,8 +1,8 @@
 import React, {FC, useEffect, useRef, useState} from 'react';
 import {makeStyles} from '@material-ui/core';
 import ContextMenu from './ContextMenu';
+import useDataset from 'src/hooks/useDataset';
 import {Theme} from 'src/theme';
-import {Dataset} from 'src/types/dataset';
 import {Direction} from 'src/types/direction';
 import {Label} from 'src/types/label';
 import {Point} from 'src/types/point';
@@ -18,7 +18,6 @@ import {
 } from 'src/utils/labeling';
 
 interface ToolMoveProps {
-    dataset: Dataset;
     labels: Label[];
     setLabels: (labels: Label[]) => void;
     setTool: (tool) => void;
@@ -36,9 +35,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const ToolMove: FC<ToolMoveProps> = ({dataset, labels, setLabels, setTool, autoSwitch}) => {
+const ToolMove: FC<ToolMoveProps> = ({labels, setLabels, setTool, autoSwitch}) => {
 
     const classes = useStyles();
+
+    const {dataset} = useDataset();
 
     const canvasRef = useRef<HTMLCanvasElement>();
 

@@ -18,11 +18,11 @@ import {Close as CloseIcon} from '@material-ui/icons';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import api from 'src/utils/api';
-import {Dataset} from 'src/types/dataset';
 import {Theme} from 'src/theme';
+import useDataset from 'src/hooks/useDataset';
 
 interface ObjectsProps {
-    dataset: Dataset;
+
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -38,9 +38,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const DTObjects: FC<ObjectsProps> = ({dataset}) => {
+const DTObjects: FC<ObjectsProps> = () => {
 
     const classes = useStyles();
+
+    const {dataset} = useDataset();
 
     const isMountedRef = useIsMountedRef();
 

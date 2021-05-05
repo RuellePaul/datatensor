@@ -4,10 +4,9 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {Breadcrumbs, capitalize, Grid, Link, makeStyles, Typography} from '@material-ui/core';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import {Dataset} from 'src/types/dataset';
+import useDataset from 'src/hooks/useDataset';
 
 interface HeaderProps {
-    dataset: Dataset;
     className?: string;
 }
 
@@ -15,8 +14,11 @@ const useStyles = makeStyles(() => ({
     root: {}
 }));
 
-const Header: FC<HeaderProps> = ({dataset, className, ...rest}) => {
+const Header: FC<HeaderProps> = ({className, ...rest}) => {
+
     const classes = useStyles();
+
+    const {dataset} = useDataset();
 
     return (
         <Grid

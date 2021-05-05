@@ -1,6 +1,7 @@
 import React, {createContext, FC, ReactNode, useCallback, useEffect, useState} from 'react';
 import {Image} from 'src/types/image';
 import api from 'src/utils/api';
+import useDataset from 'src/hooks/useDataset';
 
 export interface ImagesContextValue {
     images: Image[];
@@ -8,7 +9,6 @@ export interface ImagesContextValue {
 }
 
 interface ImagesProviderProps {
-    dataset_id: string;
     images?: Image[];
     children?: ReactNode;
 }
@@ -18,8 +18,10 @@ export const ImagesContext = createContext<ImagesContextValue>({
     saveImages: () => {}
 });
 
-export const ImagesProvider: FC<ImagesProviderProps> = ({dataset_id, images, children}) => {
+export const ImagesProvider: FC<ImagesProviderProps> = ({images, children}) => {
     const [currentImages, setCurrentImages] = useState<Image[]>(images || []);
+
+    const {dataset} = useDataset();
 
     const handleSaveImages = (update: Image[] | ((images: Image[]) => Image[])): void => {
         setCurrentImages(update);
@@ -27,14 +29,14 @@ export const ImagesProvider: FC<ImagesProviderProps> = ({dataset_id, images, chi
 
     const fetchImages = useCallback(async () => {
         try {
-            const response = await api.get<Image[]>(`/v1/images/manage/${dataset_id}`);
+            const response = await api.get<Image[]>(`/v1/images/manage/${dataset.id}`);
 
             handleSaveImages(response.data);
         } catch (err) {
             console.error(err);
         }
 
-    }, [dataset_id]);
+    }, [dataset.id]);
 
     useEffect(() => {
         fetchImages();

@@ -9,7 +9,6 @@ import DTImage from 'src/components/datatensor/Image';
 import ToolLabel from './ToolLabel';
 import ToolMove from './ToolMove';
 import useImages from 'src/hooks/useImages';
-import {Dataset} from 'src/types/dataset';
 import {Label} from 'src/types/label';
 import {Image} from 'src/types/image';
 import api from 'src/utils/api';
@@ -17,7 +16,6 @@ import {Theme} from 'src/theme';
 import {CANVAS_OFFSET, checkLabelsEquality} from 'src/utils/labeling';
 
 interface DTLabelisatorProps {
-    dataset: Dataset;
     className?: string;
 }
 
@@ -41,7 +39,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 
 const DTLabelisator: FC<DTLabelisatorProps> = ({
-                                                   dataset,
                                                    className,
                                                    ...rest
                                                }) => {
@@ -219,7 +216,6 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                 )}
                 {tool === 'move' && (
                     <ToolMove
-                        dataset={dataset}
                         labels={labels}
                         setLabels={setLabels}
                         setTool={setTool}
