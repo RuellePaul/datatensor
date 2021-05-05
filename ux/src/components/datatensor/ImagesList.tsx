@@ -15,7 +15,7 @@ import {
 } from '@material-ui/core';
 import {Pagination} from '@material-ui/lab';
 import {ArrowLeft as BackIcon, MoreVertical as MoreIcon} from 'react-feather';
-import DTImage from 'src/components/Image';
+import DTImage from 'src/components/datatensor/Image';
 import useImages from 'src/hooks/useImages';
 import {Theme} from 'src/theme';
 import api from 'src/utils/api'

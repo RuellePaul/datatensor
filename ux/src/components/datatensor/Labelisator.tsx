@@ -21,7 +21,7 @@ import {Pagination, ToggleButton, ToggleButtonGroup} from '@material-ui/lab';
 import {Maximize as LabelIcon, Move as MoveIcon, Tag as ObjectIcon, Trash as DeleteIcon} from 'react-feather';
 import NestedMenuItem from 'material-ui-nested-menu-item';
 import {Theme} from 'src/theme';
-import DTImage from 'src/components/Image';
+import DTImage from 'src/components/datatensor/Image';
 import useImages from 'src/hooks/useImages';
 import {Dataset} from 'src/types/dataset';
 import {Label} from 'src/types/label';

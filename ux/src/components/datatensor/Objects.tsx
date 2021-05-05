@@ -1,5 +1,5 @@
 import React, {FC, useState} from 'react';
-import useIsMountedRef from '../hooks/useIsMountedRef';
+import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import {
     Box,
     Button,
