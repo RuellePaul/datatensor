@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import {Box} from '@material-ui/core';
-import DTObjects from 'src/components/datatensor/Objects';
+import DTCategories from 'src/components/datatensor/Categories';
 import DTLabelisator from 'src/components/datatensor/Labelisator';
 import KeyboardShortcuts from 'src/components/overlays/KeyboardShortcuts';
 
@@ -12,7 +12,7 @@ const SectionLabeling: FC = () => {
             <KeyboardShortcuts/>
 
             <Box mt={3}>
-                <DTObjects/>
+                <DTCategories/>
             </Box>
 
             <Box mt={3}>

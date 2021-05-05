@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import {Box, Divider, ListItemIcon, makeStyles, Menu, MenuItem, Typography} from '@material-ui/core';
 import Nesteditem from 'material-ui-nested-menu-item';
-import {Tag as ObjectIcon, Trash as DeleteIcon} from 'react-feather';
+import {Tag as CategoryIcon, Trash as DeleteIcon} from 'react-feather';
 import {Label} from 'src/types/label';
 import {Point} from 'src/types/point';
 import {Theme} from 'src/theme';
@@ -29,12 +29,12 @@ const ContextMenu: FC<ContextMenuProps> = ({canvas, labels, setLabels, selectedL
 
     const {dataset} = useDataset();
 
-    const handleUpdateLabelObject = (object) => {
+    const handleUpdateLabelCategory = (category) => {
         handleClose();
         reset(canvas);
         setLabels(
             labels.map(label => selectedLabels.map(selectedLabel => selectedLabel.id).includes(label.id)
-                ? {...label, object_id: object.id}
+                ? {...label, category_id: category.id}
                 : label)
         )
     };
@@ -63,22 +63,22 @@ const ContextMenu: FC<ContextMenuProps> = ({canvas, labels, setLabels, selectedL
                 label={(
                     <>
                         <ListItemIcon>
-                            <ObjectIcon/>
+                            <CategoryIcon/>
                         </ListItemIcon>
                         <Typography variant="inherit" noWrap>
-                            Object
+                            Category
                         </Typography>
                     </>
                 )}
             >
-                {dataset.objects.map(object => (
+                {dataset.categories.map(category => (
                     <MenuItem
                         className={classes.item}
-                        key={object.id}
-                        onClick={() => handleUpdateLabelObject(object)}
+                        key={category.id}
+                        onClick={() => handleUpdateLabelCategory(category)}
                     >
                         <Typography variant="inherit" noWrap>
-                            {object.name.toUpperCase()}
+                            {category.name.toUpperCase()}
                         </Typography>
                     </MenuItem>
                 ))}

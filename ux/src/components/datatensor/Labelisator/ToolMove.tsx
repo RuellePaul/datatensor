@@ -66,7 +66,7 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels, setTool, autoSwitch}) =
                 setTool('label');
                 return;
             }
-            drawLabels(canvas, labels.filter(label => labelsHoverIds.includes(label.id)), dataset.objects, CANVAS_OFFSET, 5, true, true);
+            drawLabels(canvas, labels.filter(label => labelsHoverIds.includes(label.id)), dataset.categories, CANVAS_OFFSET, 5, true, true);
             renderCursor(canvas, point, labels, direction => setDirection(direction));
             if (direction === null)
                 if (labelsHoverIds.length === 0)
@@ -79,10 +79,10 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels, setTool, autoSwitch}) =
             if (storedLabels.length === 0) return;
             if (direction === null) {
                 let labelsTranslated = currentLabelsTranslated(canvas, storedLabels, point, storedPoint);
-                drawLabels(canvas, labelsTranslated, dataset.objects, CANVAS_OFFSET, 5, true, true);
+                drawLabels(canvas, labelsTranslated, dataset.categories, CANVAS_OFFSET, 5, true, true);
             } else {
                 let labelsResized = currentLabelsResized(canvas, storedLabels, point, storedPoint, direction);
-                drawLabels(canvas, labelsResized, dataset.objects, CANVAS_OFFSET, 5, true, true);
+                drawLabels(canvas, labelsResized, dataset.categories, CANVAS_OFFSET, 5, true, true);
             }
         }
     };

@@ -53,16 +53,16 @@ const DTImage: FC<DTImageProps> = ({
     const handleLoad = () => {
         if (canvasRef.current && imageRef.current?.complete) {
             reset(canvasRef.current);
-            drawLabels(canvasRef.current, labels, dataset.objects, 0);
+            drawLabels(canvasRef.current, labels, dataset.categories, 0);
         }
     };
 
     useEffect(() => {
         if (canvasRef.current && imageRef.current?.complete) {
             reset(canvasRef.current);
-            drawLabels(canvasRef.current, labels, dataset.objects, 0);
+            drawLabels(canvasRef.current, labels, dataset.categories, 0);
         }
-    }, [labels, dataset.objects]);
+    }, [labels, dataset.categories]);
 
     if (clickable)
         return (

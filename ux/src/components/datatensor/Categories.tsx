@@ -20,16 +20,16 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import api from 'src/utils/api';
 import {Theme} from 'src/theme';
-import {Object} from 'src/types/object';
+import {Category} from 'src/types/category';
 import useDataset from 'src/hooks/useDataset';
 import useImages from 'src/hooks/useImages';
 
-interface ObjectsProps {
+interface CategorysProps {
 
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    objects: {
+    categories: {
         display: 'flex',
         flexWrap: 'wrap'
     },
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const DTObjects: FC<ObjectsProps> = () => {
+const DTCategorys: FC<CategorysProps> = () => {
 
     const classes = useStyles();
 
@@ -51,36 +51,36 @@ const DTObjects: FC<ObjectsProps> = () => {
 
     const isMountedRef = useIsMountedRef();
 
-    const [openObjectCreation, setOpenObjectCreation] = useState(false);
+    const [openCategoryCreation, setOpenCategoryCreation] = useState(false);
 
-    const computeLabel = (object: Object) => {
-        return `${capitalize(object.name)} | ${images.map(image => image.labels.filter(label => label.object_id === object.id).length || 0).reduce((acc, val) => acc + val, 0)}`
+    const computeLabel = (category: Category) => {
+        return `${capitalize(category.name)} | ${images.map(image => image.labels.filter(label => label.category_id === category.id).length || 0).reduce((acc, val) => acc + val, 0)}`
     };
 
-    const handleCloseObjectCreation = () => {
-        setOpenObjectCreation(false);
+    const handleCloseCategoryCreation = () => {
+        setOpenCategoryCreation(false);
     };
 
-    const handleDeleteObject = (object: Object) => {
+    const handleDeleteCategory = (category: Category) => {
         // TODO
-        console.log(object)
+        console.log(category)
     };
 
     return (
         <>
             <Grid container spacing={2}>
                 <Grid item sm={9} xs={12}>
-                    <div className={classes.objects}>
-                        {dataset.objects.map(object => (
+                    <div className={classes.categories}>
+                        {dataset.categories.map(category => (
                             <Box
                                 m={0.5}
-                                key={object.name}
+                                key={category.name}
                             >
                                 <Chip
                                     className={classes.chip}
                                     clickable
-                                    label={computeLabel(object)}
-                                    onDelete={() => handleDeleteObject(object)}
+                                    label={computeLabel(category)}
+                                    onDelete={() => handleDeleteCategory(category)}
                                 />
                             </Box>
                         ))}
@@ -90,11 +90,11 @@ const DTObjects: FC<ObjectsProps> = () => {
                 <Grid item sm={3} xs={12}>
                     <Button
                         color="primary"
-                        onClick={() => setOpenObjectCreation(true)}
+                        onClick={() => setOpenCategoryCreation(true)}
                         size="small"
                         variant="contained"
                     >
-                        New object
+                        New category
                     </Button>
                 </Grid>
             </Grid>
@@ -102,20 +102,20 @@ const DTObjects: FC<ObjectsProps> = () => {
             <Dialog
                 fullWidth
                 maxWidth='sm'
-                open={openObjectCreation}
-                onClose={handleCloseObjectCreation}
+                open={openCategoryCreation}
+                onClose={handleCloseCategoryCreation}
             >
                 <DialogTitle
                     className='flex'
                     disableTypography
                 >
                     <Typography variant='h4'>
-                        Create object
+                        Create category
                     </Typography>
 
                     <IconButton
                         className={classes.close}
-                        onClick={handleCloseObjectCreation}
+                        onClick={handleCloseCategoryCreation}
                     >
                         <CloseIcon/>
                     </IconButton>
@@ -134,8 +134,8 @@ const DTObjects: FC<ObjectsProps> = () => {
                                 setSubmitting
                             }) => {
                                 try {
-                                    const response = await api.post<Object>(`/v1/objects/`, {dataset_id: dataset.id, ...values});
-                                    saveDataset({...dataset, objects: [...dataset.objects, response.data]});
+                                    const response = await api.post<Category>(`/v1/categories/`, {dataset_id: dataset.id, ...values});
+                                    saveDataset({...dataset, categories: [...dataset.categories, response.data]});
 
                                     if (isMountedRef.current) {
                                         setStatus({success: true});
@@ -167,7 +167,7 @@ const DTObjects: FC<ObjectsProps> = () => {
                                         error={Boolean(touched.name && errors.name)}
                                         fullWidth
                                         helperText={touched.name && errors.name}
-                                        label="Object name"
+                                        label="Category name"
                                         margin="normal"
                                         name="name"
                                         onBlur={handleBlur}
@@ -184,7 +184,7 @@ const DTObjects: FC<ObjectsProps> = () => {
                                             type="submit"
                                             variant="contained"
                                         >
-                                            Create a new object
+                                            Create a new category
                                         </Button>
                                     </Box>
                                 </form>
@@ -197,4 +197,4 @@ const DTObjects: FC<ObjectsProps> = () => {
     )
 };
 
-export default DTObjects;
+export default DTCategorys;

@@ -12,7 +12,7 @@ interface FilterProps {
 
 const selectOptions = [
     {
-        label: 'Object class',
+        label: 'Category class',
         options: [
             'Cat',
             'Dog',

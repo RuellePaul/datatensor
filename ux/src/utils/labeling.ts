@@ -2,7 +2,7 @@ import _ from 'lodash';
 import {Direction} from 'src/types/direction';
 import {Label} from 'src/types/label';
 import {Point} from 'src/types/point';
-import {Object} from 'src/types/object';
+import {Category} from 'src/types/category';
 
 export const RESIZE_SIZE = 8;
 export const LABEL_MIN_WIDTH = 25;
@@ -78,7 +78,7 @@ export const drawRect = (canvas: HTMLCanvasElement, pointA: Point, pointB: Point
     context.fillRect(x, y, w, h);
 };
 
-export const drawLabels = (canvas: HTMLCanvasElement, labels: Label[], objects: Object[], offset = CANVAS_OFFSET, dash = 0, filled = false, resize = false) => {
+export const drawLabels = (canvas: HTMLCanvasElement, labels: Label[], categories: Category[], offset = CANVAS_OFFSET, dash = 0, filled = false, resize = false) => {
     if (!labels)
         return;
 
@@ -106,9 +106,9 @@ export const drawLabels = (canvas: HTMLCanvasElement, labels: Label[], objects: 
             context.fillRect(x + w - RESIZE_SIZE, y + h - RESIZE_SIZE, RESIZE_SIZE, RESIZE_SIZE);
         }
 
-        const object = objects.find(object => label.object_id === object.id);
-        if (object) {
-            context.fillText(object.name, x + 3, y + 20);
+        const category = categories.find(category => label.category_id === category.id);
+        if (category) {
+            context.fillText(category.name, x + 3, y + 20);
         }
     }
 };

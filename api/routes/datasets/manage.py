@@ -41,7 +41,7 @@ def create_dataset(args):
                    description=args['description'],
                    is_public=args['is_public'],
                    name=args['name'],
-                   objects=[])  # TODO : Add objects in create form
+                   categories=[])  # TODO : Add categories in create form
     Config.db.datasets.insert_one(dataset)
 
     images = args['images']

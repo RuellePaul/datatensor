@@ -55,7 +55,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
     const saveLabels = async (labels: Label[]) => {
         if (labelsChanged) {
             const response = await api.post<Image>(`/v1/images/labeling/${images[selected].id}`, {labels});
-            enqueueSnackbar('Labels updated', {variant: 'success'});
+            enqueueSnackbar('Labels updated', {variant: 'info'});
             saveImages(
                 images.map(image => image.id === response.data.id
                     ? {
