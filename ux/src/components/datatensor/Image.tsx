@@ -4,6 +4,7 @@ import {ButtonBase, makeStyles} from '@material-ui/core';
 import {Theme} from 'src/theme';
 import {Image} from 'src/types/image';
 import {Label} from 'src/types/label';
+import {reset} from 'src/utils/labeling';
 
 interface DTImageProps {
     className?: string;
@@ -33,11 +34,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 }));
 
-const reset = (canvas: HTMLCanvasElement) => {
-    canvas.width = canvas.clientWidth;
-    canvas.height = canvas.clientHeight;
-    canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
-};
 
 const drawLabels = (canvas: HTMLCanvasElement, labels: Label[]) => {
     if (!labels)
