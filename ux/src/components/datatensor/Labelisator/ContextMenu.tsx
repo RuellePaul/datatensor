@@ -34,7 +34,7 @@ const ContextMenu: FC<ContextMenuProps> = ({canvas, labels, setLabels, selectedL
         reset(canvas);
         setLabels(
             labels.map(label => selectedLabels.map(selectedLabel => selectedLabel.id).includes(label.id)
-                ? {...label, category_id: category.id}
+                ? {...label, category_name: category.name}
                 : label)
         )
     };
@@ -74,7 +74,7 @@ const ContextMenu: FC<ContextMenuProps> = ({canvas, labels, setLabels, selectedL
                 {dataset.categories.map(category => (
                     <MenuItem
                         className={classes.item}
-                        key={category.id}
+                        key={category.name}
                         onClick={() => handleUpdateLabelCategory(category)}
                     >
                         <Typography variant="inherit" noWrap>

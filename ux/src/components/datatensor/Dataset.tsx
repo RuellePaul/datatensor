@@ -66,7 +66,7 @@ const DTDataset: FC<DatasetProps> = ({
             saveDatasets(datasets => datasets.filter((current: Dataset) => current.id !== dataset.id));
             enqueueSnackbar(`Deleted dataset ${dataset.name}`, {variant: 'info'});
         } catch (error) {
-            enqueueSnackbar((error.response && error.response.data) || 'Something went wrong', {variant: 'error'});
+            enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
         }
     };
 

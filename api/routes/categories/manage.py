@@ -15,6 +15,6 @@ category_manage = Blueprint('category_manage', __name__)
 })
 def create_category(args):
     category = core.create_category(name=args['name'],
-                                supercategory=args.get('supercategory'),
-                                dataset_id=args['dataset_id'])
+                                    supercategory=args.get('supercategory'),
+                                    dataset_id=args['dataset_id'])
     return category, 200

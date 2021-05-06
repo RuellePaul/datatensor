@@ -82,7 +82,7 @@ const OAuthLoginButton: FC<OAuthLoginButtonProps> = ({scope}) => {
                     const {authorization_url} = response.data;
                     window.location.href = authorization_url;
                 } catch (error) {
-                    enqueueSnackbar((error.response && error.response.data) || 'Something went wrong', {variant: 'error'});
+                    enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
                 }
             }}
             size='large'

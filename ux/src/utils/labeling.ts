@@ -91,7 +91,7 @@ export const drawLabels = (canvas: HTMLCanvasElement, labels: Label[], categorie
     context.setLineDash([dash]);
 
     for (const label of labels) {
-        const category = categories.find(category => label.category_id === category.id);
+        const category = categories.find(category => label.category_name === category.name);
 
         const {x, y, w, h} = convertLabel(canvas, label, offset);
 
@@ -115,7 +115,7 @@ export const drawLabels = (canvas: HTMLCanvasElement, labels: Label[], categorie
             context.fillRect(x + w - RESIZE_SIZE, y + h - RESIZE_SIZE, RESIZE_SIZE, RESIZE_SIZE);
         }
 
-        if (category && w > category.name.length * 5 && h > LABEL_MIN_HEIGHT * 2) {
+        if (category && w > category.name.length * 8 && h > LABEL_MIN_HEIGHT * 2) {
             let fontSize = Math.max(Math.min(w / 10, MAX_FONT_SIZE), MIN_FONT_SIZE);
             context.font = `${fontSize}px Roboto, Helvetica, Arial, sans-serif`;
             context.fillStyle = color;

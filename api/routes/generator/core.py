@@ -42,7 +42,6 @@ def _download_annotations(dataset_name):
 def _labels_from_annotations(current_image, annotations):
     category_labels = [el for el in annotations if el['image_id'] == current_image['id']]
     labels = [{
-        'id': str(uuid4()),
         'x': category_label['bbox'][0] / current_image['width'],
         'y': category_label['bbox'][1] / current_image['height'],
         'w': category_label['bbox'][2] / current_image['width'],
@@ -114,12 +113,19 @@ def dataset_generation(dataset_name, count=2):
         for label in image['labels']:
             category = [category for category in categories
                         if category['internal_category_id'] == label['category_id']][0]
-            labels.append({**label, 'category_id': category['id']})
-            if category['id'] not in [category['id'] for category in saved_categories]:
+            labels.append({
+                'id': str(uuid4()),
+                'x': label['x'],
+                'y': label['y'],
+                'w': label['w'],
+                'h': label['h'],
+                'category_name': category['name']})
+            if category['name'] not in [category['name'] for category in saved_categories]:
                 saved_categories.append(category)
         image['labels'] = labels
 
     for category in saved_categories:
+        category.pop('id', None)
         category.pop('internal_category_id', None)
 
     dataset = dict(id=dataset_id,
@@ -132,7 +138,6 @@ def dataset_generation(dataset_name, count=2):
                    categories=saved_categories)
 
     Config.db.datasets.insert_one(dataset)
-    Config.db.categories.insert_many(saved_categories)
     Config.db.images.insert_many(images)
 
 

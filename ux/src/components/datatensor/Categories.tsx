@@ -24,6 +24,7 @@ import {Category} from 'src/types/category';
 import useDataset from 'src/hooks/useDataset';
 import useImages from 'src/hooks/useImages';
 import {COLORS} from 'src/utils/colors';
+import {useSnackbar} from 'notistack';
 
 interface CategorysProps {
 
@@ -47,6 +48,8 @@ const DTCategorys: FC<CategorysProps> = () => {
 
     const classes = useStyles();
 
+    const {enqueueSnackbar} = useSnackbar();
+
     const {dataset, saveDataset} = useDataset();
     const {images} = useImages();
 
@@ -55,7 +58,7 @@ const DTCategorys: FC<CategorysProps> = () => {
     const [openCategoryCreation, setOpenCategoryCreation] = useState(false);
 
     const computeLabel = (category: Category) => {
-        return `${capitalize(category.name)} | ${images.map(image => image.labels.filter(label => label.category_id === category.id).length || 0).reduce((acc, val) => acc + val, 0)}`
+        return `${capitalize(category.name)} | ${images.map(image => image.labels.filter(label => label.category_name === category.name).length || 0).reduce((acc, val) => acc + val, 0)}`
     };
 
     const handleCloseCategoryCreation = () => {
@@ -138,13 +141,15 @@ const DTCategorys: FC<CategorysProps> = () => {
                                 try {
                                     const response = await api.post<Category>(`/v1/categories/`, {dataset_id: dataset.id, ...values});
                                     saveDataset({...dataset, categories: [...dataset.categories, response.data]});
+                                    setOpenCategoryCreation(false);
 
                                     if (isMountedRef.current) {
                                         setStatus({success: true});
                                         setSubmitting(false);
                                     }
                                 } catch (error) {
-                                    console.error(error);
+                                    enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
+
                                     if (isMountedRef.current) {
                                         setStatus({success: false});
                                         setSubmitting(false);
