@@ -65,7 +65,7 @@ const DTCategories: FC<CategoriesProps> = () => {
 
     const computeLabel = (category: Category) => {
         return (
-            <Typography>
+            <Typography variant='body2'>
                 <Typography component='span' style={{fontWeight: 'bold'}}>
                     {capitalize(category.name)}
                     {' '}
