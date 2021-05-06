@@ -11,7 +11,10 @@ import {
     Divider,
     Grid,
     IconButton,
+    InputLabel,
     makeStyles,
+    MenuItem,
+    Select,
     TextField,
     Typography
 } from '@material-ui/core';
@@ -24,9 +27,10 @@ import {Category} from 'src/types/category';
 import useDataset from 'src/hooks/useDataset';
 import useImages from 'src/hooks/useImages';
 import {COLORS} from 'src/utils/colors';
+import {SUPERCATEGORIES} from 'src/constants';
 import {useSnackbar} from 'notistack';
 
-interface CategorysProps {
+interface CategoriesProps {
 
 }
 
@@ -38,13 +42,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     chip: {},
     close: {
         position: 'absolute',
-        right: theme.spacing(2),
-        top: theme.spacing(2),
+        right: theme.spacing(1),
+        top: theme.spacing(1),
         color: theme.palette.grey[500]
     }
 }));
 
-const DTCategorys: FC<CategorysProps> = () => {
+const DTCategories: FC<CategoriesProps> = () => {
 
     const classes = useStyles();
 
@@ -115,7 +119,7 @@ const DTCategorys: FC<CategorysProps> = () => {
                     disableTypography
                 >
                     <Typography variant='h4'>
-                        Create category
+                        Add a new category
                     </Typography>
 
                     <IconButton
@@ -129,10 +133,12 @@ const DTCategorys: FC<CategorysProps> = () => {
                     <Box my={2}>
                         <Formik
                             initialValues={{
-                                name: ''
+                                name: '',
+                                supercategory: null
                             }}
                             validationSchema={Yup.object().shape({
-                                name: Yup.string().max(255).required('Name is required')
+                                name: Yup.string().max(255).required('Name is required'),
+                                supercategory: Yup.string().max(255)
                             })}
                             onSubmit={async (values, {
                                 setStatus,
@@ -170,18 +176,50 @@ const DTCategorys: FC<CategorysProps> = () => {
                                     noValidate
                                     onSubmit={handleSubmit}
                                 >
-                                    <TextField
-                                        error={Boolean(touched.name && errors.name)}
-                                        fullWidth
-                                        helperText={touched.name && errors.name}
-                                        label="Category name"
-                                        margin="normal"
-                                        name="name"
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        value={values.name}
-                                        variant="outlined"
-                                    />
+                                    <Grid container spacing={2}>
+                                        <Grid item sm={6} xs={12}>
+                                            <TextField
+                                                autoFocus
+                                                error={Boolean(touched.name && errors.name)}
+                                                fullWidth
+                                                helperText={touched.name && errors.name}
+                                                label="Name *"
+                                                margin="normal"
+                                                name="name"
+                                                onBlur={handleBlur}
+                                                onChange={handleChange}
+                                                value={values.name}
+                                                variant="outlined"
+                                                size="small"
+                                            />
+                                        </Grid>
+                                        <Grid item sm={6} xs={12}>
+                                            <InputLabel>Supercategory</InputLabel>
+                                            <Select
+                                                error={Boolean(touched.supercategory && errors.supercategory)}
+                                                fullWidth
+                                                label="Supercategory"
+                                                name="supercategory"
+                                                onBlur={handleBlur}
+                                                onChange={handleChange}
+                                                value={values.supercategory}
+                                                displayEmpty
+                                            >
+                                                <MenuItem value={null}>
+                                                    <em>Pick one</em>
+                                                </MenuItem>
+                                                {SUPERCATEGORIES.map(supercategory => (
+                                                    <MenuItem
+                                                        key={supercategory}
+                                                        value={supercategory}
+                                                    >
+                                                        {capitalize(supercategory)}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </Grid>
+                                    </Grid>
+
                                     <Box mt={2}>
                                         <Button
                                             color="secondary"
@@ -204,4 +242,4 @@ const DTCategorys: FC<CategorysProps> = () => {
     )
 };
 
-export default DTCategorys;
+export default DTCategories;

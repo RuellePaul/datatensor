@@ -7,3 +7,5 @@ export const THEMES = {
     ONE_DARK: 'ONE_DARK',
     UNICORN: 'UNICORN'
 };
+
+export const SUPERCATEGORIES = ['person', 'vehicle', 'electronic', 'indoor', 'outdoor', 'sports', 'furniture', 'accessory', 'kitchen', 'animal', 'appliance', 'food'];
