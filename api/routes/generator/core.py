@@ -76,7 +76,8 @@ def dataset_generation(dataset_name, count=2):
     annotations = json.load(json_file)
 
     images = []
-    for current_image in annotations['images'][:count]:
+    for index, current_image in enumerate(annotations['images'][:count]):
+        print(f'Processing {index + 1}/{count}...')
         filename = current_image['file_name']
         if filename and allowed_file(filename):
             image_id = str(uuid4())
