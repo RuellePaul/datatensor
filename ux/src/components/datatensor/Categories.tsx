@@ -8,7 +8,6 @@ import {
     Dialog,
     DialogContent,
     DialogTitle,
-    Divider,
     Grid,
     IconButton,
     InputLabel,
@@ -82,38 +81,31 @@ const DTCategories: FC<CategoriesProps> = () => {
 
     return (
         <>
-            <Grid container spacing={2}>
-                <Grid item sm={9} xs={12}>
-                    <div className={classes.categories}>
-                        {dataset.categories.map((currentCategory, index) => (
-                            <Box
-                                m={0.5}
-                                key={currentCategory.name}
-                            >
-                                <Chip
-                                    className={classes.chip}
-                                    clickable
-                                    label={computeLabel(currentCategory)}
-                                    onClick={() => saveCategory(currentCategory)}
-                                    style={{color: COLORS[index]}}
-                                    variant={category?.name === currentCategory.name ? 'outlined' : 'default'}
-                                />
-                            </Box>
-                        ))}
-                    </div>
-                </Grid>
-                <Divider flexItem/>
-                <Grid item sm={3} xs={12}>
-                    <Button
-                        color="primary"
-                        onClick={() => setOpenCategoryCreation(true)}
-                        size="small"
-                        variant="contained"
+            <div className={classes.categories}>
+                {dataset.categories.map((currentCategory, index) => (
+                    <Box
+                        m={0.5}
+                        key={currentCategory.name}
                     >
-                        New category
-                    </Button>
-                </Grid>
-            </Grid>
+                        <Chip
+                            className={classes.chip}
+                            clickable
+                            label={computeLabel(currentCategory)}
+                            onClick={() => saveCategory(currentCategory)}
+                            style={{color: COLORS[index]}}
+                            variant={category?.name === currentCategory.name ? 'outlined' : 'default'}
+                        />
+                    </Box>
+                ))}
+            </div>
+            <Button
+                color="primary"
+                onClick={() => setOpenCategoryCreation(true)}
+                size="small"
+                variant="contained"
+            >
+                New category
+            </Button>
 
             <Dialog
                 fullWidth

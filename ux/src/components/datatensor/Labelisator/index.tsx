@@ -2,10 +2,12 @@ import React, {FC, useEffect, useState} from 'react';
 import clsx from 'clsx';
 import {useSnackbar} from 'notistack';
 import useEventListener from 'use-typed-event-listener';
-import {Box, Button, FormControlLabel, makeStyles, Switch, Tooltip, Typography} from '@material-ui/core';
+import {Box, Button, FormControlLabel, Grid, makeStyles, Switch, Tooltip, Typography} from '@material-ui/core';
 import {Pagination, ToggleButton, ToggleButtonGroup} from '@material-ui/lab';
 import {Maximize as LabelIcon, Move as MoveIcon} from 'react-feather';
+import DTCategories from 'src/components/datatensor/Categories';
 import DTImage from 'src/components/datatensor/Image';
+import KeyboardShortcuts from 'src/components/overlays/KeyboardShortcuts';
 import ToolLabel from './ToolLabel';
 import ToolMove from './ToolMove';
 import useImages from 'src/hooks/useImages';
@@ -34,6 +36,9 @@ const useStyles = makeStyles((theme: Theme) => ({
         display: 'flex',
         alignItems: 'center',
         margin: theme.spacing(0, 0, 1)
+    },
+    divider: {
+        borderLeft: `1px solid ${theme.palette.divider}`
     }
 }));
 
@@ -109,70 +114,74 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
     useEventListener(window, 'keydown', handleKeyDown);
 
     return (
-        <div
+        <Grid
             className={clsx(classes.root, className)}
+            container
+            spacing={4}
             {...rest}
         >
-            <div className={classes.actions}>
-                <ToggleButtonGroup
-                    value={tool}
-                    exclusive
-                    onChange={handleToolChange}
-                    size="small"
-                >
-                    <ToggleButton
-                        value="label"
-                        disabled={autoSwitch}
-                    >
-                        <Tooltip
-                            title={<Typography variant='overline'>
-                                Draw tool (a)
-                            </Typography>}
-                        >
-                            <LabelIcon/>
-                        </Tooltip>
-                    </ToggleButton>
-                    <ToggleButton
-                        value="move"
-                        disabled={autoSwitch || labels.length === 0}
-                    >
-                        <Tooltip
-                            title={<Typography variant='overline'>
-                                Move tool (z)
-                            </Typography>}
-                        >
-                            <MoveIcon/>
-                        </Tooltip>
-                    </ToggleButton>
-                </ToggleButtonGroup>
 
-                <Box ml={2}>
-                    <FormControlLabel
-                        control={(
-                            <Switch
-                                color="secondary"
-                                size='small'
-                                checked={autoSwitch}
-                                onChange={() => setAutoSwitch(!autoSwitch)}
-                            />
-                        )}
-                        label={(
-                            <Typography
-                                color='textSecondary'
+            <Grid item md={8} xs={12}>
+                <div className={classes.actions}>
+                    <ToggleButtonGroup
+                        value={tool}
+                        exclusive
+                        onChange={handleToolChange}
+                        size="small"
+                    >
+                        <ToggleButton
+                            value="label"
+                            disabled={autoSwitch}
+                        >
+                            <Tooltip
+                                title={<Typography variant='overline'>
+                                    Draw tool (a)
+                                </Typography>}
                             >
-                                Auto switch
-                            </Typography>
-                        )}
-                    />
-                </Box>
+                                <LabelIcon/>
+                            </Tooltip>
+                        </ToggleButton>
+                        <ToggleButton
+                            value="move"
+                            disabled={autoSwitch || labels.length === 0}
+                        >
+                            <Tooltip
+                                title={<Typography variant='overline'>
+                                    Move tool (z)
+                                </Typography>}
+                            >
+                                <MoveIcon/>
+                            </Tooltip>
+                        </ToggleButton>
+                    </ToggleButtonGroup>
 
-                <div className='flexGrow'/>
+                    <Box ml={2}>
+                        <FormControlLabel
+                            control={(
+                                <Switch
+                                    color="secondary"
+                                    size='small'
+                                    checked={autoSwitch}
+                                    onChange={() => setAutoSwitch(!autoSwitch)}
+                                />
+                            )}
+                            label={(
+                                <Typography
+                                    color='textSecondary'
+                                >
+                                    Auto switch
+                                </Typography>
+                            )}
+                        />
+                    </Box>
 
-                <Tooltip
-                    title={<Typography variant='overline'>
-                        Reset (ESCAPE)
-                    </Typography>}
-                >
+                    <div className='flexGrow'/>
+
+                    <Tooltip
+                        title={<Typography variant='overline'>
+                            Reset (ESCAPE)
+                        </Typography>}
+                    >
                     <span>
                         <Button
                             onClick={() => setLabels(images[selected].labels)}
@@ -182,12 +191,12 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                             Reset
                         </Button>
                     </span>
-                </Tooltip>
-                <Tooltip
-                    title={<Typography variant='overline'>
-                        Save (SPACE)
-                    </Typography>}
-                >
+                    </Tooltip>
+                    <Tooltip
+                        title={<Typography variant='overline'>
+                            Save (SPACE)
+                        </Typography>}
+                    >
                     <span>
                         <Button
                             variant="outlined"
@@ -199,43 +208,58 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                             Save
                         </Button>
                     </span>
-                </Tooltip>
-            </div>
+                    </Tooltip>
+                </div>
 
-            <div
-                className={classes.container}
-                style={{maxWidth: 700 * images[selected].width / images[selected].height}}
-            >
-                {tool === 'label' && (
-                    <ToolLabel
+                <div
+                    className={classes.container}
+                    style={{maxWidth: 700 * images[selected].width / images[selected].height}}
+                >
+                    {tool === 'label' && (
+                        <ToolLabel
+                            labels={labels}
+                            setLabels={setLabels}
+                            setTool={setTool}
+                            autoSwitch={autoSwitch}
+                        />
+                    )}
+                    {tool === 'move' && (
+                        <ToolMove
+                            labels={labels}
+                            setLabels={setLabels}
+                            setTool={setTool}
+                            autoSwitch={autoSwitch}
+                        />
+                    )}
+                    <DTImage
+                        image={images[selected]}
                         labels={labels}
-                        setLabels={setLabels}
-                        setTool={setTool}
-                        autoSwitch={autoSwitch}
                     />
-                )}
-                {tool === 'move' && (
-                    <ToolMove
-                        labels={labels}
-                        setLabels={setLabels}
-                        setTool={setTool}
-                        autoSwitch={autoSwitch}
-                    />
-                )}
-                <DTImage
-                    image={images[selected]}
-                    labels={labels}
+                </div>
+
+                <Pagination
+                    className={classes.pagination}
+                    color='primary'
+                    count={images.length}
+                    page={selected + 1}
+                    onChange={handlePaginationChange}
                 />
-            </div>
+            </Grid>
 
-            <Pagination
-                className={classes.pagination}
-                color='primary'
-                count={images.length}
-                page={selected + 1}
-                onChange={handlePaginationChange}
-            />
-        </div>
+            <Grid
+                className={classes.divider}
+                item
+                md={4}
+                xs={12}
+            >
+                <KeyboardShortcuts/>
+
+                <Box mt={2}>
+                    <DTCategories/>
+                </Box>
+            </Grid>
+
+        </Grid>
     );
 };
 
