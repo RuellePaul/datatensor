@@ -112,7 +112,7 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({dataset_id, callback, classNam
                 saveImages((images: Image[]) => [...images, ...response.data]);
                 enqueueSnackbar(`${files.length} images uploaded`, {variant: 'success'});
             } catch (error) {
-                enqueueSnackbar((error.response && error.response.data) || 'Something went wrong', {variant: 'error'});
+                enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
             } finally {
                 setIsUploading(false);
                 setFiles([]);

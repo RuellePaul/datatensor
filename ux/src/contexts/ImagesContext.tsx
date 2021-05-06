@@ -1,6 +1,8 @@
 import React, {createContext, FC, ReactNode, useCallback, useEffect, useState} from 'react';
 import {Image} from 'src/types/image';
 import api from 'src/utils/api';
+import useDataset from 'src/hooks/useDataset';
+import {Box, CircularProgress} from '@material-ui/core';
 
 export interface ImagesContextValue {
     images: Image[];
@@ -8,18 +10,20 @@ export interface ImagesContextValue {
 }
 
 interface ImagesProviderProps {
-    dataset_id: string;
     images?: Image[];
     children?: ReactNode;
 }
 
 export const ImagesContext = createContext<ImagesContextValue>({
     images: [],
-    saveImages: () => {}
+    saveImages: () => {
+    }
 });
 
-export const ImagesProvider: FC<ImagesProviderProps> = ({dataset_id, images, children}) => {
-    const [currentImages, setCurrentImages] = useState<Image[]>(images || []);
+export const ImagesProvider: FC<ImagesProviderProps> = ({images, children}) => {
+    const [currentImages, setCurrentImages] = useState<Image[] | null>(images || null);
+
+    const {dataset} = useDataset();
 
     const handleSaveImages = (update: Image[] | ((images: Image[]) => Image[])): void => {
         setCurrentImages(update);
@@ -27,19 +31,28 @@ export const ImagesProvider: FC<ImagesProviderProps> = ({dataset_id, images, chi
 
     const fetchImages = useCallback(async () => {
         try {
-            const response = await api.get<Image[]>(`/v1/images/manage/${dataset_id}`);
-
+            const response = await api.get<Image[]>(`/v1/images/manage/${dataset.id}`);
             handleSaveImages(response.data);
         } catch (err) {
+            handleSaveImages([]);
             console.error(err);
         }
 
-    }, [dataset_id]);
+    }, [dataset.id]);
 
     useEffect(() => {
         fetchImages();
     }, [fetchImages]);
 
+    if (currentImages === null)
+        return (
+            <Box
+                display="flex"
+                justifyContent="center"
+            >
+                <CircularProgress/>
+            </Box>
+        );
 
     return (
         <ImagesContext.Provider

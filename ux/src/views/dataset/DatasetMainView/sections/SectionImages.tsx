@@ -2,7 +2,7 @@ import React, {FC, useState} from 'react';
 import {useParams} from 'react-router';
 import {Box, Button, Dialog, DialogContent, DialogTitle, IconButton, makeStyles, Typography} from '@material-ui/core';
 import {Close as CloseIcon} from '@material-ui/icons';
-import DTImagesList from 'src/components/ImagesList';
+import DTImagesList from 'src/components/datatensor/ImagesList';
 import ImagesDropzone from 'src/components/ImagesDropzone';
 import useImages from 'src/hooks/useImages';
 import {Theme} from 'src/theme';
@@ -47,7 +47,7 @@ const SectionImage: FC = () => {
     };
 
     const imagesCount = images.length;
-    const labelsCount = images.map(image => image.labels.length).reduce((acc, val) => acc + val, 0);
+    const labelsCount = images.map(image => image.labels?.length || 0).reduce((acc, val) => acc + val, 0);
 
     return (
         <>

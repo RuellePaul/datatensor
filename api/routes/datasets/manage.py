@@ -40,7 +40,8 @@ def create_dataset(args):
                    created_at=datetime.now().isoformat(),
                    description=args['description'],
                    is_public=args['is_public'],
-                   name=args['name'])
+                   name=args['name'],
+                   categories=[])  # TODO : Add categories in create form
     Config.db.datasets.insert_one(dataset)
 
     images = args['images']
