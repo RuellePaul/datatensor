@@ -26,6 +26,7 @@ import {Theme} from 'src/theme';
 import {Category} from 'src/types/category';
 import useDataset from 'src/hooks/useDataset';
 import useImages from 'src/hooks/useImages';
+import useCategory from 'src/hooks/useCategory';
 import {COLORS} from 'src/utils/colors';
 import {SUPERCATEGORIES} from 'src/constants';
 import {useSnackbar} from 'notistack';
@@ -51,13 +52,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 const DTCategories: FC<CategoriesProps> = () => {
 
     const classes = useStyles();
+    const isMountedRef = useIsMountedRef();
 
     const {enqueueSnackbar} = useSnackbar();
 
     const {dataset, saveDataset} = useDataset();
     const {images} = useImages();
 
-    const isMountedRef = useIsMountedRef();
+    const {category, saveCategory} = useCategory();
 
     const [openCategoryCreation, setOpenCategoryCreation] = useState(false);
 
@@ -69,27 +71,23 @@ const DTCategories: FC<CategoriesProps> = () => {
         setOpenCategoryCreation(false);
     };
 
-    const handleDeleteCategory = (category: Category) => {
-        // TODO
-        console.log(category)
-    };
-
     return (
         <>
             <Grid container spacing={2}>
                 <Grid item sm={9} xs={12}>
                     <div className={classes.categories}>
-                        {dataset.categories.map((category, index) => (
+                        {dataset.categories.map((currentCategory, index) => (
                             <Box
                                 m={0.5}
-                                key={category.name}
+                                key={currentCategory.name}
                             >
                                 <Chip
                                     className={classes.chip}
                                     clickable
-                                    label={computeLabel(category)}
-                                    onDelete={() => handleDeleteCategory(category)}
+                                    label={computeLabel(currentCategory)}
+                                    onClick={() => saveCategory(currentCategory)}
                                     style={{color: COLORS[index]}}
+                                    variant={category?.name === currentCategory.name ? 'outlined' : 'default'}
                                 />
                             </Box>
                         ))}

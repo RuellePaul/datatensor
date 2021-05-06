@@ -16,6 +16,7 @@ import {
     pointIsOutside,
     reset
 } from 'src/utils/labeling';
+import useCategory from '../../../hooks/useCategory';
 
 interface ToolLabelProps {
     labels: Label[];
@@ -39,6 +40,8 @@ const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels, setTool, autoSwitch})
 
     const classes = useStyles();
     const canvasRef = useRef(null);
+
+    const {category} = useCategory();
 
     const [storedPoint, setStoredPoint] = useState<Point>(null);
 
@@ -90,7 +93,8 @@ const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels, setTool, autoSwitch})
                 x: formatRatio(Math.min(point[0] - CANVAS_OFFSET, storedPoint[0] - CANVAS_OFFSET) / (canvas.width - 2 * CANVAS_OFFSET)),
                 y: formatRatio(Math.min(point[1] - CANVAS_OFFSET, storedPoint[1] - CANVAS_OFFSET) / (canvas.height - 2 * CANVAS_OFFSET)),
                 w: formatRatio((point[0] - storedPoint[0]) / (canvas.width - 2 * CANVAS_OFFSET)),
-                h: formatRatio((point[1] - storedPoint[1]) / (canvas.height - 2 * CANVAS_OFFSET))
+                h: formatRatio((point[1] - storedPoint[1]) / (canvas.height - 2 * CANVAS_OFFSET)),
+                category_name: category?.name || null
             };
             setLabels([...labels, newLabel]);
         }
