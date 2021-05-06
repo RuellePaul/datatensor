@@ -64,7 +64,16 @@ const DTCategories: FC<CategoriesProps> = () => {
     const [openCategoryCreation, setOpenCategoryCreation] = useState(false);
 
     const computeLabel = (category: Category) => {
-        return `${capitalize(category.name)} | ${images.map(image => image.labels.filter(label => label.category_name === category.name).length || 0).reduce((acc, val) => acc + val, 0)}`
+        return (
+            <Typography>
+                <Typography component='span' style={{fontWeight: 'bold'}}>
+                    {capitalize(category.name)}
+                    {' '}
+                </Typography>
+                ({images.map(image => image.labels.filter(label => label.category_name === category.name).length || 0).reduce((acc, val) => acc + val, 0)})
+            </Typography>
+        )
+
     };
 
     const handleCloseCategoryCreation = () => {
