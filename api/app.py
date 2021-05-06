@@ -18,6 +18,7 @@ from routes.images.labeling import images_labeling
 from routes.images.manage import images_manage
 from routes.images.upload import images_upload
 from routes.categories.manage import category_manage
+from routes.user.settings import settings
 
 app = Flask(__name__)
 
@@ -30,7 +31,7 @@ CORS(app)
 CSRFProtect(app)
 
 require_authorization(
-    [admin_manage, dataset_manage, images_manage, images_upload, images_labeling, generator, category_manage])
+    [admin_manage, dataset_manage, images_manage, images_upload, images_labeling, generator, settings, category_manage])
 require_admin([admin_manage, generator])
 
 app.register_blueprint(auth, url_prefix='/api/v1/auth')
@@ -46,6 +47,7 @@ app.register_blueprint(images_labeling, url_prefix='/api/v1/images/labeling')
 app.register_blueprint(generator, url_prefix='/api/v1/admin/generator')
 
 app.register_blueprint(category_manage, url_prefix='/api/v1/categories')
+app.register_blueprint(settings, url_prefix='/api/v1/user/settings')
 
 
 @app.after_request
