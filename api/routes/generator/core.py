@@ -77,7 +77,6 @@ def dataset_generation(dataset_name, count=2):
 
     images = []
     for index, current_image in enumerate(annotations['images'][:count]):
-        print(f'Processing {index + 1}/{count}...')
         filename = current_image['file_name']
         if filename and allowed_file(filename):
             image_id = str(uuid4())

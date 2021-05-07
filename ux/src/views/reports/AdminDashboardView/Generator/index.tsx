@@ -45,7 +45,7 @@ const Generator: FC = () => {
                     image_count: 10
                 }}
                 validationSchema={Yup.object().shape({
-                    image_count: Yup.number().max(1000).required(),
+                    image_count: Yup.number().max(10000).required(),
                 })}
                 onSubmit={async (values, {
                     setStatus,
