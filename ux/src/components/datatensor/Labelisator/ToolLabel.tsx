@@ -89,7 +89,7 @@ const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels, setTool, autoSwitch})
             if (Math.abs(storedPoint[0] - point[0]) < LABEL_MIN_WIDTH) return;
             if (Math.abs(storedPoint[1] - point[1]) < LABEL_MIN_HEIGHT) return;
             let newLabel = {
-                id: uuid(),
+                _id: uuid(),
                 x: formatRatio(Math.min(point[0] - CANVAS_OFFSET, storedPoint[0] - CANVAS_OFFSET) / (canvas.width - 2 * CANVAS_OFFSET)),
                 y: formatRatio(Math.min(point[1] - CANVAS_OFFSET, storedPoint[1] - CANVAS_OFFSET) / (canvas.height - 2 * CANVAS_OFFSET)),
                 w: formatRatio((point[0] - storedPoint[0]) / (canvas.width - 2 * CANVAS_OFFSET)),

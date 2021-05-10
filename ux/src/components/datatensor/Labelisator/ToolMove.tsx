@@ -66,7 +66,7 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels, setTool, autoSwitch}) =
                 setTool('label');
                 return;
             }
-            drawLabels(canvas, labels.filter(label => labelsHoverIds.includes(label.id)), dataset.categories, CANVAS_OFFSET, 5, true, true);
+            drawLabels(canvas, labels.filter(label => labelsHoverIds.includes(label._id)), dataset.categories, CANVAS_OFFSET, 5, true, true);
             renderCursor(canvas, point, labels, direction => setDirection(direction));
             if (direction === null)
                 if (labelsHoverIds.length === 0)
@@ -94,13 +94,13 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels, setTool, autoSwitch}) =
             let labelsHoverIds = currentLabelsHoverIds(canvasRef.current, point, labels);
             if (labelsHoverIds.length > 0) {
                 setStoredPoint(point);
-                setLabels(labels.filter(label => !labelsHoverIds.includes(label.id)));
-                setStoredLabels(labels.filter(label => labelsHoverIds.includes(label.id)));
+                setLabels(labels.filter(label => !labelsHoverIds.includes(label._id)));
+                setStoredLabels(labels.filter(label => labelsHoverIds.includes(label._id)));
             }
         }
         if (event.nativeEvent.which === 3) {
             let labelsHoverIds = currentLabelsHoverIds(canvasRef.current, point, labels);
-            setStoredLabels(labels.filter(label => labelsHoverIds.includes(label.id)));
+            setStoredLabels(labels.filter(label => labelsHoverIds.includes(label._id)));
         }
     };
 

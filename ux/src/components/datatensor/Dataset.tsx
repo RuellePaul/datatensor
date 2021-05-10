@@ -62,8 +62,8 @@ const DTDataset: FC<DatasetProps> = ({
 
     const handleDeleteDataset = async () => {
         try {
-            await api.post(`/v1/datasets/${dataset.id}/delete`);
-            saveDatasets(datasets => datasets.filter((current: Dataset) => current.id !== dataset.id));
+            await api.post(`/v1/datasets/${dataset._id}/delete`);
+            saveDatasets(datasets => datasets.filter((current: Dataset) => current._id !== dataset._id));
             enqueueSnackbar(`Deleted dataset ${dataset.name}`, {variant: 'info'});
         } catch (error) {
             enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
@@ -79,7 +79,7 @@ const DTDataset: FC<DatasetProps> = ({
             {...rest}
         >
             <CardActionArea
-                onClick={() => history.push(`/app/manage/datasets/${dataset.id}`)}
+                onClick={() => history.push(`/app/manage/datasets/${dataset._id}`)}
             >
                 <CardMedia
                     className={classes.media}

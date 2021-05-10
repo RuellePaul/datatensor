@@ -33,7 +33,7 @@ const ContextMenu: FC<ContextMenuProps> = ({canvas, labels, setLabels, selectedL
         handleClose();
         reset(canvas);
         setLabels(
-            labels.map(label => selectedLabels.map(selectedLabel => selectedLabel.id).includes(label.id)
+            labels.map(label => selectedLabels.map(selectedLabel => selectedLabel._id).includes(label._id)
                 ? {...label, category_name: category.name}
                 : label)
         )
@@ -42,7 +42,7 @@ const ContextMenu: FC<ContextMenuProps> = ({canvas, labels, setLabels, selectedL
     const handleDeleteLabel = () => {
         handleClose();
         reset(canvas);
-        const newLabels = labels.filter(label => !selectedLabels.map(label => label.id).includes(label.id));
+        const newLabels = labels.filter(label => !selectedLabels.map(label => label._id).includes(label._id));
         setLabels(newLabels);
     };
 

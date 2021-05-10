@@ -144,7 +144,7 @@ const DTCategories: FC<CategoriesProps> = () => {
                                 setSubmitting
                             }) => {
                                 try {
-                                    const response = await api.post<Category>(`/v1/categories/`, {dataset_id: dataset.id, ...values});
+                                    const response = await api.post<Category>(`/v1/categories/`, {dataset_id: dataset._id, ...values});
                                     saveDataset({...dataset, categories: [...dataset.categories, response.data]});
                                     setOpenCategoryCreation(false);
 

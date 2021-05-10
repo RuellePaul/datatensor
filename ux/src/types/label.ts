@@ -1,5 +1,5 @@
 export interface Label {
-    id: string;
+    _id: string;
     x: number;  // ratio
     y: number;  // ratio
     w: number;  // ratio

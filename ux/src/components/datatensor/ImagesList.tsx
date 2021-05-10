@@ -136,9 +136,9 @@ const DTImagesList: FC<ImagesListProps> = ({
     const handleDelete = async event => {
         event.stopPropagation();
 
-        await api.post(`/v1/images/manage/${imageSelected.id}/delete`);
+        await api.post(`/v1/images/manage/${imageSelected._id}/delete`);
         setSelected(Math.max(0, selected - 1));
-        saveImages(images.filter(image => image.id !== imageSelected.id));
+        saveImages(images.filter(image => image._id !== imageSelected._id));
         handleCloseMenu();
         images.length <= 1 && handleCloseImage();
     };
@@ -181,7 +181,7 @@ const DTImagesList: FC<ImagesListProps> = ({
                 >
                     {images.slice(0, limit).map((image, index) => (
                         <DTImage
-                            key={image.id}
+                            key={image._id}
                             image={image}
                             clickable
                             onClick={() => handleOpenImage(index)}

@@ -1,7 +1,7 @@
 import {Label} from 'src/types/label'
 
 export interface Image {
-    id: string;
+    _id: string;
     dataset_id: string;
     path: string;
     name: string;
