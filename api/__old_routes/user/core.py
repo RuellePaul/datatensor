@@ -3,7 +3,7 @@ from flask_bcrypt import check_password_hash, generate_password_hash
 
 import errors
 from config import Config
-from routes.authentication.core import verify_access_token
+from authentication.core import verify_access_token
 from utils import encrypt_field
 
 

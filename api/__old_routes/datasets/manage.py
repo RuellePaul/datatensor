@@ -6,8 +6,8 @@ from webargs import fields
 from webargs.flaskparser import use_args
 
 from config import Config
-from routes.authentication.core import verify_access_token
-from routes.datasets import core
+from authentication.core import verify_access_token
+from __old_routes.datasets import core
 
 dataset_manage = Blueprint('dataset_manage', __name__)
 

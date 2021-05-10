@@ -1,7 +1,7 @@
 import boto3
 
 from config import Config
-from routes.images.core import delete_image_from_s3, delete_images_from_database
+from __old_routes.images.core import delete_image_from_s3, delete_images_from_database
 
 s3 = boto3.client(
     "s3",

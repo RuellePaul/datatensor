@@ -3,7 +3,7 @@ from webargs import fields
 from webargs.flaskparser import use_args
 
 import errors
-from routes.user import core
+from __old_routes.user import core
 
 settings = Blueprint('settings', __name__)
 

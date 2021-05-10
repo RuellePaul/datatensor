@@ -3,7 +3,7 @@ from webargs import fields
 from webargs.flaskparser import use_args
 
 from config import Config
-from routes.images import core
+from __old_routes.images import core
 
 images_manage = Blueprint('images_manage', __name__)
 

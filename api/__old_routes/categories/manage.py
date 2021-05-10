@@ -2,7 +2,7 @@ from flask import Blueprint
 from webargs import fields
 from webargs.flaskparser import use_args
 
-from routes.categories import core
+from __old_routes.categories import core
 
 category_manage = Blueprint('category_manage', __name__)
 

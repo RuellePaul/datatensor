@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 
 from logger import logger
-from routes.images import core
+from __old_routes.images import core
 
 images_upload = Blueprint('images_upload', __name__)
 

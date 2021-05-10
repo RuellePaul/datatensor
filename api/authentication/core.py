@@ -67,19 +67,7 @@ def admin_guard(func):
     return wrapper
 
 
-def require_admin(blueprints):
-    def admin_authorized():
-        if request.method in ['GET', 'POST', 'PUT', 'DELETE']:
-            user = verify_access_token(request.headers.get('Authorization'))
-            if user['id'] not in Config.ADMIN_USER_IDS:
-                raise errors.Forbidden('Not an admin user')
-
-    for blueprint in blueprints:
-        blueprint.before_request(admin_authorized)
-
-
 # User related
-
 def authorization_url_from_scope(scope):
     client = WebApplicationClient(Config.OAUTH[scope]['CLIENT_ID'])
     authorization_url = client.prepare_request_uri(

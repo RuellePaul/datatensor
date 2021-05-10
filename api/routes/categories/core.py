@@ -1,25 +1,37 @@
-from uuid import uuid4
+from bson.objectid import ObjectId
+from marshmallow import Schema
+from webargs import fields
 
 import errors
 from config import Config
 
+db = Config.db
 
-def create_category(name, supercategory, dataset_id):
-    name = name.lower()
 
-    created_category = {
-        'name': name,
-        'supercategory': supercategory
-    }
-    categories = Config.db.datasets.find_one({'id': dataset_id}).get('categories')
+class Category(Schema):
+    _id = fields.Str(dump_only=True)
+    dataset_id = fields.Str(dump_only=True)
+    name = fields.Str(required=True)
+    supercategory = fields.Str()
 
-    if categories is None:
-        raise errors.InternalError(f'Categories not fond for dataset {dataset_id}')
 
-    if name in [category['name'] for category in categories]:
-        raise errors.Forbidden(f'Category {name} already exists')
+def find_categories(dataset_id, offset, limit):
+    return list(db.categories.find({'dataset_id': ObjectId(dataset_id)}).skip(offset).limit(limit))
 
-    Config.db.datasets.update({'id': dataset_id},
-                              {'$addToSet': {'categories': created_category}})
-    created_category.pop('_id', None)
-    return created_category
+
+def find_category(dataset_id, category_id):
+    return db.categories.find_one({'_id': ObjectId(category_id),
+                                   'dataset_id': ObjectId(dataset_id)})
+
+
+def insert_category(dataset_id, category):
+    db.categories.insert_one({'dataset_id': ObjectId(dataset_id), **category})
+
+
+def remove_categories(dataset_id):
+    db.categories.delete_many({'dataset_id': ObjectId(dataset_id)})
+
+
+def remove_category(dataset_id, category_id):
+    db.categories.delete_one({'_id': ObjectId(category_id),
+                              'dataset_id': ObjectId(dataset_id)})

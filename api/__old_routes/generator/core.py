@@ -11,8 +11,8 @@ from flask import request
 
 import errors
 from config import Config
-from routes.authentication.core import verify_access_token
-from routes.images.core import allowed_file, compress_image, upload_image, secure_filename
+from authentication.core import verify_access_token
+from __old_routes.images.core import allowed_file, compress_image, upload_image, secure_filename
 
 ANNOTATIONS_CONFIG = {
     'coco': {

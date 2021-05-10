@@ -3,7 +3,7 @@ from webargs import fields
 from webargs.flaskparser import use_args
 
 from config import Config
-from routes.admin import core
+from __old_routes.admin import core
 
 admin_manage = Blueprint('admin_manage', __name__)
 
