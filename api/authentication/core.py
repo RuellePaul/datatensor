@@ -131,7 +131,7 @@ def generate_activation_code():
 
 def register_user(user_id, name, email, password, activation_code):
     user = dict(_id=user_id,
-                created_at=datetime.now().isoformat(),
+                created_at=datetime.now(),
                 email=email,
                 name=name,
                 is_admin=user_id in Config.ADMIN_USER_IDS,
@@ -154,7 +154,7 @@ def register_user_from_profile(profile, scope):
 
     if scope == 'github':
         user = dict(_id=user_id,
-                    created_at=datetime.now().isoformat(),
+                    created_at=datetime.now(),
                     email=None,
                     name=profile.get('name'),
                     is_admin=user_id in Config.ADMIN_USER_IDS,
@@ -165,7 +165,7 @@ def register_user_from_profile(profile, scope):
 
     elif scope == 'google':
         user = dict(_id=user_id,
-                    created_at=datetime.now().isoformat(),
+                    created_at=datetime.now(),
                     email=profile.get('email'),
                     name=profile.get('name'),
                     is_admin=user_id in Config.ADMIN_USER_IDS,
@@ -176,7 +176,7 @@ def register_user_from_profile(profile, scope):
 
     elif scope == 'stackoverflow':
         user = dict(_id=user_id,
-                    created_at=datetime.now().isoformat(),
+                    created_at=datetime.now(),
                     email=None,
                     name=profile['items'][0]['display_name'],
                     is_admin=user_id in Config.ADMIN_USER_IDS,

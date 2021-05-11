@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS
 from flask_wtf.csrf import CSRFProtect, CSRFError, generate_csrf
 
@@ -48,6 +48,13 @@ app.register_blueprint(images, url_prefix=f'{PREFIX}/datasets/<dataset_id>/image
 def inject_csrf_token_cookie(response):
     response.headers['Access-Control-Allow-Credentials'] = 'true'
     response.set_cookie('csrf_token', generate_csrf(), samesite='Lax', secure=True)
+    return response
+
+
+@app.after_request
+def response_logger(response):
+    if request.method != 'OPTIONS':
+        logger.info(f'{request.method} {request.url.split(PREFIX)[1]} | {response.status}')
     return response
 
 

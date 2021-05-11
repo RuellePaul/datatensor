@@ -62,7 +62,7 @@ const DTDataset: FC<DatasetProps> = ({
 
     const handleDeleteDataset = async () => {
         try {
-            await api.post(`/v1/datasets/${dataset._id}/delete`);
+            await api.delete(`/datasets/${dataset._id}`);
             saveDatasets(datasets => datasets.filter((current: Dataset) => current._id !== dataset._id));
             enqueueSnackbar(`Deleted dataset ${dataset.name}`, {variant: 'info'});
         } catch (error) {
