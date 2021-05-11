@@ -20,6 +20,7 @@ import useImages from 'src/hooks/useImages';
 import {Theme} from 'src/theme';
 import api from 'src/utils/api'
 import bytesToSize from 'src/utils/bytesToSize';
+import useDataset from '../../hooks/useDataset';
 
 interface ImagesListProps {
     className?: string;
@@ -103,6 +104,7 @@ const DTImagesList: FC<ImagesListProps> = ({
     const classes = useStyles();
     const theme = useTheme();
 
+    const {dataset} = useDataset();
     const {images, saveImages} = useImages();
 
     const [open, setOpen] = useState(false);
@@ -136,7 +138,7 @@ const DTImagesList: FC<ImagesListProps> = ({
     const handleDelete = async event => {
         event.stopPropagation();
 
-        await api.post(`/v1/images/manage/${imageSelected._id}/delete`);
+        await api.delete(`/datasets/${dataset._id}/images/${imageSelected._id}`);
         setSelected(Math.max(0, selected - 1));
         saveImages(images.filter(image => image._id !== imageSelected._id));
         handleCloseMenu();

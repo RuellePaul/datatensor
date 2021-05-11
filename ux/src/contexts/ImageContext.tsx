@@ -28,8 +28,8 @@ export const ImageProvider: FC<ImageProviderProps> = ({image_id, children}) => {
 
     const fetchImage = useCallback(async () => {
         try {
-            const response = await api.get<Image>(`/v1/images/${image_id}`);
-            handleSaveImage(response.data);
+            const response = await api.get<{image: Image}>(`/v1/images/${image_id}`);
+            handleSaveImage(response.data.image);
         } catch (err) {
             console.error(err);
         }

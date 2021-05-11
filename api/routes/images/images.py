@@ -1,9 +1,9 @@
-from flask import Blueprint
+from flask import Blueprint, request
 from webargs import fields
 from webargs.flaskparser import use_args
 
 from utils import build_schema, parse
-from .core import Image, find_images, find_image, remove_images, remove_image, insert_image
+from .core import Image, find_images, find_image, remove_images, remove_image, insert_images
 
 images = Blueprint('images', __name__)
 Image = build_schema(Image)
@@ -26,10 +26,9 @@ def get_image(dataset_id, image_id):
 
 
 @images.route('/', methods=['POST'])
-@use_args(Image)
-def post_image(args, dataset_id):
-    insert_image(dataset_id, args)
-    return 'OK', 201
+def post_images(dataset_id):
+    result = insert_images(dataset_id, request.files)
+    return {'images': parse(result)}, 201
 
 
 @images.route('/', methods=['DELETE'])
