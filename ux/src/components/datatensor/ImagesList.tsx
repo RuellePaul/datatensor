@@ -169,7 +169,7 @@ const DTImagesList: FC<ImagesListProps> = ({
                 next={() => {
                     setTimeout(() => setLimit(limit + LAZY_LOAD_BATCH), 100);
                 }}
-                height={'calc(100vh - 350px)'}
+                height={'calc(100vh - 300px)'}
                 hasMore={hasMore}
                 loader={<LinearProgress/>}
             >

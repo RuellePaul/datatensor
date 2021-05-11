@@ -15,7 +15,7 @@ class Config:
     ENVIRONMENT = os.environ['ENVIRONMENT']
 
     ROOT_PATH = os.path.abspath(os.path.join(Flask(__name__).root_path, os.pardir))
-    DEFAULT_DATASETS_PATH = os.path.join(ROOT_PATH, 'api', 'routes', 'generator', 'default_datasets')
+    DEFAULT_DATASETS_PATH = os.path.join(ROOT_PATH, 'api', 'generator', 'default_datasets')
 
     UI_URL = 'https://localhost:5069'
     API_URI = 'http://127.0.0.1:4069'
@@ -30,7 +30,7 @@ class Config:
     ]
 
     DEFAULT_DATASET_IDS = {
-        'coco': '5e6fb198-56ea-4557-9948-e37be7ab6f12'
+        'coco': '507f191e810c19729de860ea'
     }
 
     SESSION_COOKIE_SECURE = True
