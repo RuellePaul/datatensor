@@ -15,22 +15,22 @@ class Category(Schema):
 
 
 def find_categories(dataset_id, offset, limit):
-    return list(db.categories.find({'dataset_id': ObjectId(dataset_id)}).skip(offset).limit(limit))
+    return list(db.categories.find({'dataset_id': dataset_id}).skip(offset).limit(limit))
 
 
 def find_category(dataset_id, category_id):
     return db.categories.find_one({'_id': ObjectId(category_id),
-                                   'dataset_id': ObjectId(dataset_id)})
+                                   'dataset_id': dataset_id})
 
 
 def insert_category(dataset_id, category):
-    db.categories.insert_one({'dataset_id': ObjectId(dataset_id), **category})
+    db.categories.insert_one({'dataset_id': dataset_id, **category})
 
 
 def remove_categories(dataset_id):
-    db.categories.delete_many({'dataset_id': ObjectId(dataset_id)})
+    db.categories.delete_many({'dataset_id': dataset_id})
 
 
 def remove_category(dataset_id, category_id):
     db.categories.delete_one({'_id': ObjectId(category_id),
-                              'dataset_id': ObjectId(dataset_id)})
+                              'dataset_id': dataset_id})

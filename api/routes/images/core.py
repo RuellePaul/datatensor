@@ -102,7 +102,7 @@ def insert_images(dataset_id, request_files):
 
 
 def remove_images(dataset_id):
-    db.images.delete_many({'dataset_id': ObjectId(dataset_id)})
+    db.images.delete_many({'dataset_id': dataset_id})
 
 
 def remove_image(dataset_id, image_id):
