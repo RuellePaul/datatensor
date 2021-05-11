@@ -2,6 +2,7 @@ from bson.objectid import ObjectId
 from marshmallow import Schema
 from webargs import fields
 
+import errors
 from config import Config
 
 db = Config.db
@@ -24,7 +25,11 @@ def find_category(dataset_id, category_id):
 
 
 def insert_category(dataset_id, category):
-    db.categories.insert_one({'dataset_id': dataset_id, **category})
+    name = category['name']
+    if db.categories.find_one({'dataset_id': dataset_id, 'name': name}):
+        raise errors.Forbidden(f'Category {name} already exists')
+    inserted_id = db.categories.insert_one({'dataset_id': dataset_id, **category}).inserted_id
+    return inserted_id
 
 
 def remove_categories(dataset_id):

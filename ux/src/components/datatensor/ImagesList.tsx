@@ -20,7 +20,8 @@ import useImages from 'src/hooks/useImages';
 import {Theme} from 'src/theme';
 import api from 'src/utils/api'
 import bytesToSize from 'src/utils/bytesToSize';
-import useDataset from '../../hooks/useDataset';
+import useDataset from 'src/hooks/useDataset';
+import {ImageProvider} from 'src/contexts/ImageContext';
 
 interface ImagesListProps {
     className?: string;
@@ -182,12 +183,15 @@ const DTImagesList: FC<ImagesListProps> = ({
                     columnClassName={classes.column}
                 >
                     {images.slice(0, limit).map((image, index) => (
-                        <DTImage
+                        <ImageProvider
                             key={image._id}
                             image={image}
-                            clickable
-                            onClick={() => handleOpenImage(index)}
-                        />
+                        >
+                            <DTImage
+                                clickable
+                                onClick={() => handleOpenImage(index)}
+                            />
+                        </ImageProvider>
                     ))}
                 </Masonry>
             </InfiniteScroll>
@@ -263,7 +267,12 @@ const DTImagesList: FC<ImagesListProps> = ({
                                     {imageSelected.width} x {imageSelected.height}
                                 </Typography>
                             </div>
-                            <DTImage image={imageSelected}/>
+                            <ImageProvider
+                                key={imageSelected._id}
+                                image={imageSelected}
+                            >
+                                <DTImage/>
+                            </ImageProvider>
                         </div>
 
                         <div className={classes.footer}>

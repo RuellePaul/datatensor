@@ -2,15 +2,12 @@ import React, {FC, useEffect, useRef} from 'react';
 import clsx from 'clsx';
 import {ButtonBase, makeStyles} from '@material-ui/core';
 import {Theme} from 'src/theme';
-import {Image} from 'src/types/image';
-import {Label} from 'src/types/label';
 import {drawLabels, reset} from 'src/utils/labeling';
 import useDataset from 'src/hooks/useDataset';
+import useImage from 'src/hooks/useImage';
 
 interface DTImageProps {
     className?: string;
-    image: Image;
-    labels?: Label[];
     clickable?: boolean;
     onClick?: () => void;
 }
@@ -38,14 +35,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const DTImage: FC<DTImageProps> = ({
                                        className,
-                                       image,
-                                       labels = image.labels,
                                        clickable = false,
                                        ...rest
                                    }) => {
     const classes = useStyles();
 
-    const {dataset} = useDataset();
+    const {categories} = useDataset();
+    const {image, labels} = useImage();
 
     const imageRef = useRef(null);
     const canvasRef = useRef(null);
@@ -53,16 +49,16 @@ const DTImage: FC<DTImageProps> = ({
     const handleLoad = () => {
         if (canvasRef.current && imageRef.current?.complete) {
             reset(canvasRef.current);
-            drawLabels(canvasRef.current, labels, dataset.categories, 0);
+            drawLabels(canvasRef.current, labels, categories, 0);
         }
     };
 
     useEffect(() => {
         if (canvasRef.current && imageRef.current?.complete) {
             reset(canvasRef.current);
-            drawLabels(canvasRef.current, labels, dataset.categories, 0);
+            drawLabels(canvasRef.current, labels, categories, 0);
         }
-    }, [labels, dataset.categories]);
+    }, [labels, categories]);
 
     if (clickable)
         return (

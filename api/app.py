@@ -14,7 +14,7 @@ from logger import logger
 from routes.categories.categories import categories
 from routes.datasets.datasets import datasets
 from routes.images.images import images
-# from routes.tasks.tasks import tasks
+from routes.labels.labels import labels
 from routes.users.users import users
 
 app = Flask(__name__)
@@ -32,15 +32,15 @@ PREFIX = '/api/v2'
 app.register_blueprint(auth, url_prefix=f'{PREFIX}/auth')
 app.register_blueprint(oauth, url_prefix=f'{PREFIX}/oauth')
 
-require_authorization([datasets, categories, images])
+require_authorization([datasets, categories, images, labels])
 
 app.register_blueprint(users, url_prefix=f'{PREFIX}/users')
 app.register_blueprint(datasets, url_prefix=f'{PREFIX}/datasets')
 app.register_blueprint(categories, url_prefix=f'{PREFIX}/datasets/<dataset_id>/categories')
 app.register_blueprint(images, url_prefix=f'{PREFIX}/datasets/<dataset_id>/images')
 
+app.register_blueprint(labels, url_prefix=f'{PREFIX}/images/<image_id>/labels')
 
-# app.register_blueprint(labels, url_prefix=f'{PREFIX}/labels')
 # app.register_blueprint(tasks, url_prefix=f'{PREFIX}/tasks')
 
 

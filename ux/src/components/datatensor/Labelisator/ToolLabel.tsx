@@ -1,6 +1,5 @@
 import React, {FC, useRef, useState} from 'react';
 import {v4 as uuid} from 'uuid';
-import {Label} from 'src/types/label';
 import {Point} from 'src/types/point';
 import {makeStyles} from '@material-ui/core';
 import {Theme} from 'src/theme';
@@ -16,11 +15,10 @@ import {
     pointIsOutside,
     reset
 } from 'src/utils/labeling';
-import useCategory from '../../../hooks/useCategory';
+import useCategory from 'src/hooks/useCategory';
+import useImage from 'src/hooks/useImage';
 
 interface ToolLabelProps {
-    labels: Label[];
-    setLabels: (labels: Label[]) => void;
     setTool: (tool) => void;
     autoSwitch: boolean;
 }
@@ -36,11 +34,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels, setTool, autoSwitch}) => {
+const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
 
     const classes = useStyles();
     const canvasRef = useRef(null);
 
+    const {labels, saveLabels} = useImage();
     const {category} = useCategory();
 
     const [storedPoint, setStoredPoint] = useState<Point>(null);
@@ -96,7 +95,7 @@ const ToolLabel: FC<ToolLabelProps> = ({labels, setLabels, setTool, autoSwitch})
                 h: formatRatio((point[1] - storedPoint[1]) / (canvas.height - 2 * CANVAS_OFFSET)),
                 category_name: category?.name || null
             };
-            setLabels([...labels, newLabel]);
+            saveLabels([...labels, newLabel]);
         }
     };
 

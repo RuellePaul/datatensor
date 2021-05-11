@@ -8,5 +8,4 @@ export interface Image {
     size: number;
     width: number;
     height: number;
-    labels: Label[];
 }

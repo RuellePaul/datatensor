@@ -28,8 +28,9 @@ def get_category(dataset_id, category_id):
 @categories.route('/', methods=['POST'])
 @use_args(Category)
 def post_category(args, dataset_id):
-    insert_category(dataset_id, args)
-    return 'OK', 201
+    inserted_id = insert_category(dataset_id, args)
+    result = {'_id': inserted_id, **args}
+    return {'category': parse(result)}, 201
 
 
 @categories.route('/', methods=['DELETE'])
