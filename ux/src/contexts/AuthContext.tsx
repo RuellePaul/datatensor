@@ -138,7 +138,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
     const [state, dispatch] = useReducer(reducer, initialAuthState);
 
     const login = async (email: string, password: string) => {
-        const response = await api.post<{ accessToken: string; user: User }>('/v1/auth/login', {email, password});
+        const response = await api.post<{ accessToken: string; user: User }>('/auth/login', {email, password});
         const {accessToken, user} = response.data;
 
         setSession(accessToken);
@@ -151,7 +151,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
     };
 
     const loginOAuth = async (code: string, scope: string) => {
-        const response = await api.post<{ accessToken: string; user: User }>(`/v1/oauth/callback`, {code, scope});
+        const response = await api.post<{ accessToken: string; user: User }>(`/oauth/callback`, {code, scope});
         const {accessToken, user} = response.data;
 
         setSession(accessToken);
@@ -169,7 +169,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
     };
 
     const register = async (email: string, name: string, password: string, recaptcha: string) => {
-        const response = await api.post<{ accessToken: string; user: User }>('/v1/auth/register', {
+        const response = await api.post<{ accessToken: string; user: User }>('/auth/register', {
             email,
             name,
             password,
@@ -188,7 +188,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
     };
 
     const confirmEmail = async (activation_code: string) => {
-        const response = await api.post<{ accessToken: string; user: User }>('/v1/auth/email-confirmation', {
+        const response = await api.post<{ accessToken: string; user: User }>('/auth/email-confirmation', {
             activation_code
         });
         const {accessToken, user} = response.data;
@@ -211,7 +211,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
                 if (accessToken && isValidToken(accessToken)) {
                     setSession(accessToken);
 
-                    const response = await api.get<{ user: User; }>('/v1/auth/me');
+                    const response = await api.get<{ user: User; }>('/auth/me');
                     const {user} = response.data;
 
                     dispatch({

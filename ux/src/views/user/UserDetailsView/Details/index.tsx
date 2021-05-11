@@ -1,14 +1,12 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
 import {Grid, makeStyles} from '@material-ui/core';
-import {Dataset} from 'src/types/dataset';
 import {User} from 'src/types/user';
 import UserInfo from './UserInfo';
 import OtherActions from './OtherActions';
 
 interface DetailsProps {
     user: User;
-    datasets: Dataset[];
     className?: string;
 }
 
@@ -18,7 +16,6 @@ const useStyles = makeStyles(() => ({
 
 const Details: FC<DetailsProps> = ({
                                        user,
-                                       datasets,
                                        className,
                                        ...rest
                                    }) => {
@@ -40,7 +37,6 @@ const Details: FC<DetailsProps> = ({
             >
                 <UserInfo
                     user={user}
-                    datasets={datasets}
                 />
             </Grid>
             <Grid

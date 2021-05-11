@@ -1,24 +1,10 @@
 from bson.objectid import ObjectId
 from flask import request
-from marshmallow import Schema
-from webargs import fields
 
 from authentication.core import verify_access_token
 from config import Config
 
 db = Config.db
-
-
-class User(Schema):
-    _id = fields.Str(dump_only=True)
-    email = fields.Str()
-    name = fields.Str()
-    created_at = fields.Str()
-    is_verified = fields.Bool()
-    is_admin = fields.Bool()
-    scope = fields.Str()
-    avatar = fields.Str(allow_none=True)
-    tier = fields.Str()
 
 
 def find_users(offset, limit):

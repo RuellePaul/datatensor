@@ -3,11 +3,10 @@ from webargs import fields
 from webargs.flaskparser import use_args
 
 from authentication.core import admin_guard
-from utils import build_schema, parse
-from .core import User, find_users, find_user, remove_users, remove_user
+from utils import parse
+from .core import find_users, find_user, remove_users, remove_user
 
 users = Blueprint('users', __name__)
-User = build_schema(User)
 
 
 @users.route('/')

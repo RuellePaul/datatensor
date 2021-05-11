@@ -1,9 +1,11 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
+const PREFIX = '/api/v2';
+
 const API_URI = process.env.REACT_APP_ENVIRONMENT === 'development'
-    ? `https://${window.location.hostname}:7069/api`
-    : `https://${window.location.hostname}/api`;
+    ? `https://${window.location.hostname}:7069${PREFIX}`
+    : `https://${window.location.hostname}${PREFIX}`;
 
 const api = axios.create({
     withCredentials: true,
