@@ -33,12 +33,12 @@ const UserDetailsView: FC = () => {
         setCurrentTab(value);
     };
 
-    const getDatasets = useCallback(async () => {
+    const getUser = useCallback(async () => {
         try {
-            const responseUser = await api.get<User>(`users/${user_id}`);
+            const response = await api.get<{user: User}>(`/users/${user_id}`);
 
             if (isMountedRef.current) {
-                setUser(responseUser.data);
+                setUser(response.data.user);
             }
         } catch (err) {
             console.error(err);
@@ -46,8 +46,8 @@ const UserDetailsView: FC = () => {
     }, [user_id, isMountedRef]);
 
     useEffect(() => {
-        getDatasets();
-    }, [getDatasets]);
+        getUser();
+    }, [getUser]);
 
     if (!user) {
         return null;

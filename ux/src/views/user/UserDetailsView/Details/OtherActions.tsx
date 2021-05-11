@@ -1,10 +1,13 @@
 import React, {FC} from 'react';
+import {useParams} from 'react-router';
+import {useHistory} from 'react-router-dom';
 import clsx from 'clsx';
 import {Box, Button, Card, CardContent, CardHeader, Divider, makeStyles, Typography} from '@material-ui/core';
 import NotInterestedIcon from '@material-ui/icons/NotInterested';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import DeleteIcon from '@material-ui/icons/DeleteOutline';
 import {Theme} from 'src/theme';
+import api from 'src/utils/api';
 
 interface OtherActionsProps {
     className?: string;
@@ -23,6 +26,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const OtherActions: FC<OtherActionsProps> = ({className, ...rest}) => {
     const classes = useStyles();
+
+    const history = useHistory();
+    const {user_id} = useParams();
+
+    const handleDeleteUser = async () => {
+        await api.delete(`/users/${user_id}`);
+        history.push('/app/admin/manage/users')
+    };
 
     return (
         <Card
@@ -59,6 +70,7 @@ const OtherActions: FC<OtherActionsProps> = ({className, ...rest}) => {
                 <Button
                     className={classes.deleteAction}
                     startIcon={<DeleteIcon/>}
+                    onClick={handleDeleteUser}
                 >
                     Delete Account
                 </Button>

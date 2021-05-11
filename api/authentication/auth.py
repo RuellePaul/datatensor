@@ -89,7 +89,7 @@ def do_register(args):
 def do_email_confirmation(args):
     user = core.verify_access_token(request.headers.get('Authorization'))
     core.verify_user_email(user, args['activation_code'])
-    access_token = core.encode_access_token(user['id'])
+    access_token = core.encode_access_token(user['_id'])
 
     logger.info(f"Verified email `{user['email']}`")
 

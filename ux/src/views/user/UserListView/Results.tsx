@@ -240,7 +240,7 @@ const Results: FC<ResultsProps> = ({
     };
 
     const handleDeleteSelectedUsers = async () => {
-        await api.post('/v1/admin/manage/delete-users', {user_ids: selectedUsers});
+        await api.delete('/users/', {data: {user_ids: selectedUsers}});
         setUsers(users => users.filter(user => !selectedUsers.includes(user._id)));
         setSelectedUsers([]);
     };

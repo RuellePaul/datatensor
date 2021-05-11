@@ -35,7 +35,7 @@ def verify_access_token(access_token, verified=False):
     except jwt.exceptions.ExpiredSignatureError:
         raise errors.ExpiredAuthentication
 
-    user = Config.db.users.find_one({'id': user_id}, {'_id': 0, 'password': 0})
+    user = Config.db.users.find_one({'_id': user_id}, {'password': 0})
     if not user:
         raise errors.InvalidAuthentication("User doesn't exists")
 
@@ -59,7 +59,7 @@ def admin_guard(func):
     def wrapper(*args, **kwargs):
         if request.method in ['GET', 'POST', 'PUT', 'DELETE']:
             user = verify_access_token(request.headers.get('Authorization'))
-            if user['id'] not in Config.ADMIN_USER_IDS:
+            if user['_id'] not in Config.ADMIN_USER_IDS:
                 raise errors.Forbidden('Not an admin user')
         result = func(*args, **kwargs)
         return result
@@ -122,7 +122,7 @@ def user_id_hash(identifier):
 
 
 def user_from_user_id(user_id):
-    return Config.db.users.find_one({'id': user_id}, {'_id': 0})
+    return Config.db.users.find_one({'_id': user_id})
 
 
 def generate_activation_code():
@@ -130,7 +130,7 @@ def generate_activation_code():
 
 
 def register_user(user_id, name, email, password, activation_code):
-    user = dict(id=user_id,
+    user = dict(_id=user_id,
                 created_at=datetime.now().isoformat(),
                 email=email,
                 name=name,
@@ -153,7 +153,7 @@ def register_user_from_profile(profile, scope):
     user_id = user_id_from_profile(profile, scope)
 
     if scope == 'github':
-        user = dict(id=user_id,
+        user = dict(_id=user_id,
                     created_at=datetime.now().isoformat(),
                     email=None,
                     name=profile.get('name'),
@@ -164,7 +164,7 @@ def register_user_from_profile(profile, scope):
                     is_verified=True)
 
     elif scope == 'google':
-        user = dict(id=user_id,
+        user = dict(_id=user_id,
                     created_at=datetime.now().isoformat(),
                     email=profile.get('email'),
                     name=profile.get('name'),
@@ -175,7 +175,7 @@ def register_user_from_profile(profile, scope):
                     is_verified=True)
 
     elif scope == 'stackoverflow':
-        user = dict(id=user_id,
+        user = dict(_id=user_id,
                     created_at=datetime.now().isoformat(),
                     email=None,
                     name=profile['items'][0]['display_name'],
@@ -189,7 +189,7 @@ def register_user_from_profile(profile, scope):
 
     Config.db.users.insert_one({
         **user,
-        'id': user['id'],
+        '_id': user['_id'],
         'name': encrypt_field(user['name']),
         'email': encrypt_field(user['email']) if user.get('email') else None,
     })
@@ -243,5 +243,5 @@ def verify_user_email(user, activation_code):
     if user.get('activation_code') != activation_code:
         raise errors.Forbidden('Invalid code provided')
 
-    Config.db.users.find_one_and_update({'id': user['id']},
+    Config.db.users.find_one_and_update({'_id': user['_id']},
                                         {'$set': {'is_verified': True, 'activation_code': None}})
