@@ -191,4 +191,4 @@ dmypy.json
 ../.idea
 
 # generator data
-api/__old_routes/generator/default_datasets/*
+api/__old_routes
