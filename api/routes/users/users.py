@@ -3,8 +3,8 @@ from webargs import fields
 from webargs.flaskparser import use_args
 
 from authentication.core import admin_guard
-from utils import parse
-from .core import find_users, find_user, remove_users, remove_user
+from utils import parse, build_schema
+from .core import User, find_users, find_user, remove_users, remove_user, update_user, update_user_password
 
 users = Blueprint('users', __name__)
 
@@ -28,6 +28,24 @@ def get_user(user_id):
 
 
 # ⚠️ User POST is authentication role
+
+
+@users.route('/<user_id>', methods=['PATCH'])
+@use_args(build_schema(User))
+def patch_user(args, user_id):
+    update_user(user_id, args)
+    return 'OK', 200
+
+
+@users.route('/<user_id>/password', methods=['PATCH'])
+@use_args({
+    'password': fields.Str(required=True),
+    'password_confirm': fields.Str(required=True),
+    'new_password': fields.Str(required=True),
+})
+def patch_user_password(args, user_id):
+    update_user_password(user_id, args['password'], args['new_password'])
+    return 'OK', 200
 
 
 @users.route('/', methods=['DELETE'])

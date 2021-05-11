@@ -3,6 +3,7 @@ import jwtDecode from 'jwt-decode';
 import {User} from 'src/types/user';
 import SplashScreen from 'src/components/screens/SplashScreen';
 import api from 'src/utils/api';
+import {useHistory} from 'react-router-dom';
 
 interface AuthState {
     isInitialised: boolean;
@@ -135,6 +136,7 @@ const AuthContext = createContext<AuthContextValue>({
 });
 
 export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
+    const history = useHistory();
     const [state, dispatch] = useReducer(reducer, initialAuthState);
 
     const login = async (email: string, password: string) => {
@@ -201,6 +203,8 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
                 user
             }
         });
+
+        history.push('/app');
     };
 
     useEffect(() => {

@@ -1,6 +1,7 @@
 import functools
 import hashlib
 import random
+import ssl
 import string
 from datetime import datetime, timedelta
 
@@ -15,6 +16,9 @@ from sendgrid.helpers.mail import Mail
 import errors
 from config import Config
 from utils import encrypt_field
+
+if Config.ENVIRONMENT == 'development':  # allow sendgrid email on development environment
+    ssl._create_default_https_context = ssl._create_unverified_context
 
 
 # Token
@@ -212,9 +216,6 @@ def check_captcha(captcha):
 
 
 def send_activation_code(email, activation_code):
-    if Config.ENVIRONMENT == 'development':
-        raise errors.Forbidden('Not available in dev environment')
-
     subject = "Welcome to Datatensor ! Confirm your email"
     html_content = f"""
         <h5>You're on your way!</h2>

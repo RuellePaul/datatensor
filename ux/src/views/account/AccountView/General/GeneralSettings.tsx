@@ -41,26 +41,23 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) =
             initialValues={{
                 city: user.city || '',
                 country: user.country || '',
-                email: user.email || '',
-                isPublic: user.isPublic || false,
+                is_public: user.is_public || false,
                 name: user.name || '',
                 phone: user.phone || ''
             }}
             validationSchema={Yup.object().shape({
                 city: Yup.string().max(255),
                 country: Yup.string().max(255),
-                email: Yup.string().email('Must be a valid email').max(255),
-                isPublic: Yup.bool(),
+                is_public: Yup.bool(),
                 name: Yup.string().max(255).required('Name is required'),
                 phone: Yup.string()
             })}
             onSubmit={async (values, {
-                setErrors,
                 setStatus,
                 setSubmitting
             }) => {
                 try {
-                    await api.post(`/v1/user/settings/update-profile`, values);
+                    await api.patch(`/users/${user._id}`, values);
                     enqueueSnackbar(`Profile updated`, {variant: 'success'});
                     setStatus({success: true});
                     setSubmitting(false);
@@ -79,7 +76,7 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) =
                   isSubmitting,
                   touched,
                   values
-            }) => (
+              }) => (
                 <form onSubmit={handleSubmit}>
                     <Card
                         className={clsx(classes.root, className)}
@@ -115,16 +112,13 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) =
                                     xs={12}
                                 >
                                     <TextField
-                                        error={Boolean(touched.email && errors.email)}
                                         fullWidth
-                                        helperText={touched.email && errors.email ? errors.email : 'We will use this email to contact you'}
+                                        helperText='We will use this email to contact you'
                                         label="Email Address"
-                                        name="email"
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
                                         type="email"
-                                        value={values.email}
+                                        value={user.email}
                                         variant="outlined"
+                                        disabled
                                     />
                                 </Grid>
                                 <Grid
@@ -200,9 +194,9 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) =
                                         contacts details
                                     </Typography>
                                     <Switch
-                                        checked={values.isPublic}
+                                        checked={values.is_public}
                                         edge="start"
-                                        name="isPublic"
+                                        name="is_public"
                                         onChange={handleChange}
                                     />
                                 </Grid>

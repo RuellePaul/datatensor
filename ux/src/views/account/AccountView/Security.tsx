@@ -3,18 +3,9 @@ import clsx from 'clsx';
 import * as Yup from 'yup';
 import {Formik} from 'formik';
 import {useSnackbar} from 'notistack';
-import {
-    Box,
-    Button,
-    Card,
-    CardContent,
-    CardHeader,
-    Divider,
-    Grid,
-    makeStyles,
-    TextField
-} from '@material-ui/core';
+import {Box, Button, Card, CardContent, CardHeader, Divider, Grid, makeStyles, TextField} from '@material-ui/core';
 import api from 'src/utils/api';
+import useAuth from 'src/hooks/useAuth';
 
 interface SecurityProps {
     className?: string;
@@ -25,8 +16,11 @@ const useStyles = makeStyles(() => ({
 }));
 
 const Security: FC<SecurityProps> = ({className, ...rest}) => {
+
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
+
+    const {user} = useAuth();
 
     return (
         <Formik
@@ -40,13 +34,14 @@ const Security: FC<SecurityProps> = ({className, ...rest}) => {
                     .min(7, 'Must be at least 7 characters')
                     .max(255)
                     .required('Required'),
-                password_confirm: Yup.string()
-                    .oneOf([Yup.ref('password'), null], 'Passwords must match')
-                    .required('Required'),
                 new_password: Yup.string()
                     .min(7, 'Must be at least 7 characters')
                     .max(255)
-                    .required('Required')
+                    .required('Required'),
+                password_confirm: Yup.string()
+                    .oneOf([Yup.ref('new_password'), null], 'Passwords must match')
+                    .required('Required'),
+
             })}
             onSubmit={async (values, {
                 resetForm,
@@ -55,7 +50,7 @@ const Security: FC<SecurityProps> = ({className, ...rest}) => {
                 setSubmitting
             }) => {
                 try {
-                    await api.post(`/v1/user/settings/change-password`, values);
+                    await api.patch(`/users/${user._id}/password`, values);
                     resetForm();
                     setStatus({success: true});
                     setSubmitting(false);
@@ -75,7 +70,7 @@ const Security: FC<SecurityProps> = ({className, ...rest}) => {
                   isSubmitting,
                   touched,
                   values
-            }) => (
+              }) => (
                 <form onSubmit={handleSubmit}>
                     <Card
                         className={clsx(classes.root, className)}
@@ -114,15 +109,15 @@ const Security: FC<SecurityProps> = ({className, ...rest}) => {
                                     xs={12}
                                 >
                                     <TextField
-                                        error={Boolean(touched.password_confirm && errors.password_confirm)}
+                                        error={Boolean(touched.new_password && errors.new_password)}
                                         fullWidth
-                                        helperText={touched.password_confirm && errors.password_confirm}
-                                        label="Password Confirmation"
-                                        name="password_confirm"
+                                        helperText={touched.new_password && errors.new_password}
+                                        label="New Password"
+                                        name="new_password"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
                                         type="password"
-                                        value={values.password_confirm}
+                                        value={values.new_password}
                                         variant="outlined"
                                     />
                                 </Grid>
@@ -133,15 +128,15 @@ const Security: FC<SecurityProps> = ({className, ...rest}) => {
                                     xs={12}
                                 >
                                     <TextField
-                                        error={Boolean(touched.new_password && errors.new_password)}
+                                        error={Boolean(touched.password_confirm && errors.password_confirm)}
                                         fullWidth
-                                        helperText={touched.new_password && errors.new_password}
-                                        label="New Password"
-                                        name="new_password"
+                                        helperText={touched.password_confirm && errors.password_confirm}
+                                        label="Password Confirmation"
+                                        name="password_confirm"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
                                         type="password"
-                                        value={values.new_password}
+                                        value={values.password_confirm}
                                         variant="outlined"
                                     />
                                 </Grid>

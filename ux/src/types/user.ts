@@ -11,7 +11,7 @@ export interface User {
     phone?: string;
     country?: string;
     city?: string;
-    isPublic?: boolean;
+    is_public?: boolean;
 
     [key: string]: any;
 }

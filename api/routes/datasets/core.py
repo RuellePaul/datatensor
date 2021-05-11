@@ -1,5 +1,6 @@
-from bson.objectid import ObjectId
 from datetime import datetime
+
+from bson.objectid import ObjectId
 from flask import request
 from marshmallow import Schema
 from webargs import fields
@@ -28,7 +29,7 @@ def find_dataset(dataset_id):
 
 
 def insert_dataset(dataset):
-    user_id = verify_access_token(request.headers['Authorization']).get('_id')
+    user_id = verify_access_token(request.headers['Authorization'], verified=True).get('_id')
     db.datasets.insert_one({'user_id': user_id,
                             'created_at': datetime.now(),
                             **dataset})

@@ -2,7 +2,6 @@ from bson.objectid import ObjectId
 from marshmallow import Schema
 from webargs import fields
 
-import errors
 from config import Config
 
 db = Config.db
