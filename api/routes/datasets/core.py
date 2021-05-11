@@ -6,6 +6,7 @@ from marshmallow import Schema
 from webargs import fields
 
 from authentication.core import verify_access_token
+from routes.images.core import delete_image_from_s3
 from config import Config
 
 db = Config.db
@@ -42,5 +43,12 @@ def remove_datasets():
 
 def remove_dataset(dataset_id):
     user_id = verify_access_token(request.headers['Authorization']).get('_id')
-    db.datasets.delete_one({'_id': ObjectId(dataset_id),
-                            'user_id': user_id})
+    images = list(Config.db.images.find({'dataset_id': dataset_id}))
+    if images:
+        for image in images:
+            Config.db.labels.delete_many({'image_id': image['_id']})
+            delete_image_from_s3(image['_id'])
+        Config.db.images.delete_many({'dataset_id': dataset_id})
+
+    Config.db.categories.delete_many({'dataset_id': dataset_id})
+    db.datasets.delete_one({'_id': ObjectId(dataset_id), 'user_id': user_id})

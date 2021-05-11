@@ -19,15 +19,17 @@ interface ImageProviderProps {
 export const ImageContext = createContext<ImageContextValue>({
     image: null,
     labels: [],
-    saveLabels: () => {},
-    validateLabels: () => {}
+    saveLabels: () => {
+    },
+    validateLabels: () => {
+    }
 });
 
 export const ImageProvider: FC<ImageProviderProps> = ({image, children}) => {
 
     const {enqueueSnackbar} = useSnackbar();
 
-    const [currentLabels, setCurrentLabels] = useState<Label[]>([]);
+    const [currentLabels, setCurrentLabels] = useState<Label[]>(null);
 
     const handleSaveLabels = (update: Label[] | ((labels: Label[]) => Label[])): void => {
         setCurrentLabels(update);
@@ -35,7 +37,7 @@ export const ImageProvider: FC<ImageProviderProps> = ({image, children}) => {
 
     const fetchLabels = useCallback(async () => {
         try {
-            const response = await api.get<{labels: Label[]}>(`/images/${image._id}/labels/`);
+            const response = await api.get<{ labels: Label[] }>(`/images/${image._id}/labels/`);
             handleSaveLabels(response.data.labels);
         } catch (err) {
             console.error(err);

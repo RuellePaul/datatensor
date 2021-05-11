@@ -79,6 +79,9 @@ const DTCategories: FC<CategoriesProps> = () => {
         setOpenCategoryCreation(false);
     };
 
+    if (!labels)
+        return null;
+
     return (
         <>
             <div className={classes.categories}>
