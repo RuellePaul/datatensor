@@ -43,7 +43,7 @@ const UserListView: FC = () => {
             className={classes.root}
             title="Users | Admin"
         >
-            <Container maxWidth={false}>
+            <Container maxWidth="lg">
                 <Header/>
                 <Box mt={3}>
                     <Results
