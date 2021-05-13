@@ -27,16 +27,16 @@ const ContextMenu: FC<ContextMenuProps> = ({canvas, selectedLabels, point, handl
     const classes = useStyles();
 
     const {categories} = useDataset();
-    const {labels, saveLabels} = useImage();
+    const {labels, saveLabels, storePosition} = useImage();
 
     const handleUpdateLabelCategory = (category) => {
         handleClose();
         reset(canvas);
-        saveLabels(
-            labels.map(label => selectedLabels.map(selectedLabel => selectedLabel._id).includes(label._id)
-                ? {...label, category_name: category.name}
-                : label)
-        )
+        let newLabels = labels.map(label => selectedLabels.map(selectedLabel => selectedLabel._id).includes(label._id)
+            ? {...label, category_name: category.name}
+            : label);
+        saveLabels(newLabels);
+        storePosition(newLabels);
     };
 
     const handleDeleteLabel = () => {

@@ -35,12 +35,12 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
     const classes = useStyles();
 
     const {images} = useImages();
-    const {image, validateLabels} = useImage();
+    const {image, validateLabels, previousPosition} = useImage();
 
     const handleKeyDown = async (event: KeyboardEvent) => {
         if (event.key === 'a') {
             setTool('label')
-        } else if (event.key === 'z') {
+        } else if (!event.ctrlKey && event.key === 'z') {
             setTool('move')
         } else if (event.key === 'ArrowLeft') {
             if (selected === 0) return;
@@ -52,6 +52,8 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
             validateLabels();
             if (selected === images.length - 1) return;
             setSelected(selected + 1);
+        } else if (event.ctrlKey && event.key === 'z') {
+            previousPosition()
         }
     };
 

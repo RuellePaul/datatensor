@@ -39,7 +39,7 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
     const classes = useStyles();
 
     const {categories} = useDataset();
-    const {labels, saveLabels} = useImage();
+    const {labels, saveLabels, storePosition} = useImage();
 
     const canvasRef = useRef<HTMLCanvasElement>();
 
@@ -129,9 +129,11 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
             if (direction === null) {
                 let labelsTranslated = currentLabelsTranslated(canvas, storedLabels, point, storedPoint);
                 saveLabels([...labels, ...labelsTranslated]);
+                storePosition([...labels, ...labelsTranslated]);
             } else {
                 let labelsResized = currentLabelsResized(canvas, storedLabels, point, storedPoint, direction, true);
                 saveLabels([...labels, ...labelsResized]);
+                storePosition([...labels, ...labelsResized]);
             }
 
             setStoredPoint(null);

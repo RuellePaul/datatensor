@@ -39,7 +39,7 @@ const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
     const classes = useStyles();
     const canvasRef = useRef(null);
 
-    const {labels, saveLabels} = useImage();
+    const {labels, saveLabels, storePosition} = useImage();
     const {currentCategory} = useCategory();
 
     const [storedPoint, setStoredPoint] = useState<Point>(null);
@@ -95,7 +95,9 @@ const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
                 h: formatRatio((point[1] - storedPoint[1]) / (canvas.height - 2 * CANVAS_OFFSET)),
                 category_name: currentCategory?.name || null
             };
-            saveLabels([...labels, newLabel]);
+            let newLabels = [...labels, newLabel];
+            saveLabels(newLabels);
+            storePosition(newLabels);
         }
     };
 

@@ -1,5 +1,16 @@
 import React, {FC, useState} from 'react';
-import {Box, Button, FormControlLabel, Grid, makeStyles, Switch, Tooltip, Typography} from '@material-ui/core';
+import {
+    Box,
+    Button,
+    FormControlLabel,
+    Grid,
+    IconButton,
+    makeStyles,
+    Switch,
+    Tooltip,
+    Typography
+} from '@material-ui/core';
+import {Restore as RestoreIcon} from '@material-ui/icons';
 import {Pagination, ToggleButton, ToggleButtonGroup} from '@material-ui/lab';
 import {Maximize as LabelIcon, Move as MoveIcon} from 'react-feather';
 import DTLabelisator from 'src/components/datatensor/Labelisator';
@@ -115,19 +126,19 @@ const SectionLabeling: FC = () => {
 
                                 <div className='flexGrow'/>
 
-                                <Tooltip
-                                    title={<Typography variant='overline'>
-                                        Reset (ESCAPE)
-                                    </Typography>}
-                                >
-                                    <span>
-                                        <Button
-                                            size='small'
-                                        >
-                                            Reset
-                                        </Button>
-                                    </span>
-                                </Tooltip>
+                                <ImageConsumer>
+                                    {
+                                        value => (
+                                            <IconButton
+                                                disabled={value.positions.length <= 1}
+                                                onClick={value.previousPosition}
+                                            >
+                                                <RestoreIcon/>
+                                            </IconButton>
+                                        )
+                                    }
+                                </ImageConsumer>
+
                                 <Tooltip
                                     title={
                                         <Typography variant='overline'>

@@ -24,8 +24,6 @@ const AccountView: FC = () => {
 
     const {user} = useAuth();
 
-    console.log(user)
-
     const [currentTab, setCurrentTab] = useState<string>('general');
 
     const tabs = [
