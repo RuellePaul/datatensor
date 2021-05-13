@@ -15,9 +15,10 @@ import {
     MenuItem,
     Select,
     TextField,
-    Typography
+    Typography,
+    useTheme
 } from '@material-ui/core';
-import {Close as CloseIcon} from '@material-ui/icons';
+import {Add as AddIcon, Close as CloseIcon} from '@material-ui/icons';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import api from 'src/utils/api';
@@ -27,6 +28,7 @@ import useDataset from 'src/hooks/useDataset';
 import useImage from 'src/hooks/useImage';
 import useCategory from 'src/hooks/useCategory';
 import {COLORS} from 'src/utils/colors';
+import {currentCategoryCount} from 'src/utils/labeling';
 import {SUPERCATEGORIES} from 'src/constants';
 import {useSnackbar} from 'notistack';
 
@@ -34,12 +36,20 @@ interface CategoriesProps {
 
 }
 
+interface CategoryProps {
+    category: Category;
+    index: number;
+}
+
+interface ChipsProps {
+    categories: Category[];
+}
+
 const useStyles = makeStyles((theme: Theme) => ({
     categories: {
         display: 'flex',
         flexWrap: 'wrap'
     },
-    chip: {},
     close: {
         position: 'absolute',
         right: theme.spacing(1),
@@ -47,6 +57,102 @@ const useStyles = makeStyles((theme: Theme) => ({
         color: theme.palette.grey[500]
     }
 }));
+
+const DTCategory: FC<CategoryProps> = ({category, index}) => {
+
+
+    const theme = useTheme();
+    const {currentCategory, saveCurrentCategory} = useCategory();
+    const {labels} = useImage();
+
+    const count = currentCategoryCount(labels, category);
+    const isSelected = currentCategory?.name === category.name;
+
+    return (
+        <Chip
+            clickable
+            label={(
+                <Typography variant='body2'>
+                    {count > 0
+                        ? <>
+                            <Typography
+                                component='span'
+                                style={{fontWeight: count > 0 ? 'bold' : 'initial'}}
+                            >
+                                {capitalize(category.name)}
+                                {' '}
+                            </Typography>
+                            ({count})
+                        </>
+                        : capitalize(category.name)
+                    }
+                </Typography>
+            )}
+            onClick={() => saveCurrentCategory(category)}
+            style={isSelected
+                ? {color: theme.palette.getContrastText(COLORS[index]), background: COLORS[index]}
+                : {color: COLORS[index]}
+            }
+            title={`${category.name} | ${category.supercategory}`}
+            size={count > 0 ? 'medium' : 'small'}
+            variant={count > 0 ? 'outlined' : 'default'}
+        />
+    )
+};
+
+const Chips: FC<ChipsProps> = ({categories, children}) => {
+
+    const classes = useStyles();
+    const {labels} = useImage();
+
+    const labeledCategories = categories.filter(category => currentCategoryCount(labels, category) > 0);
+    const unlabeledCategories = categories.filter(category => currentCategoryCount(labels, category) === 0);
+
+    return (
+        <>
+            <Box my={2}>
+                <div className={classes.categories}>
+                    {
+                        labeledCategories.map(category => (
+                            <Box
+                                m={0.6}
+                                key={category._id}
+                            >
+                                <DTCategory
+                                    category={category}
+                                    index={categories.indexOf(category)}
+                                />
+                            </Box>
+                        ))
+                    }
+                </div>
+
+            </Box>
+            <div className={classes.categories}>
+                {
+                    unlabeledCategories.map(category => (
+                        <Box
+                            m={0.4}
+                            key={category._id}
+                        >
+                            <DTCategory
+                                category={category}
+                                index={categories.indexOf(category)}
+                            />
+                        </Box>
+                    ))
+                }
+            </div>
+            <Box
+                display='flex'
+                justifyContent='flex-end'
+                my={2}
+            >
+                {children}
+            </Box>
+        </>
+    )
+};
 
 const DTCategories: FC<CategoriesProps> = () => {
 
@@ -58,22 +164,7 @@ const DTCategories: FC<CategoriesProps> = () => {
     const {dataset, categories, saveCategories} = useDataset();
     const {labels} = useImage();
 
-    const {category, saveCategory} = useCategory();
-
     const [openCategoryCreation, setOpenCategoryCreation] = useState(false);
-
-    const computeLabel = (category: Category) => {
-        return (
-            <Typography variant='body2'>
-                <Typography component='span' style={{fontWeight: 'bold'}}>
-                    {capitalize(category.name)}
-                    {' '}
-                </Typography>
-                ({labels.filter(label => label.category_name === category.name)?.length || 0})
-            </Typography>
-        )
-
-    };
 
     const handleCloseCategoryCreation = () => {
         setOpenCategoryCreation(false);
@@ -84,31 +175,16 @@ const DTCategories: FC<CategoriesProps> = () => {
 
     return (
         <>
-            <div className={classes.categories}>
-                {categories.map((currentCategory, index) => (
-                    <Box
-                        m={0.5}
-                        key={currentCategory.name}
-                    >
-                        <Chip
-                            className={classes.chip}
-                            clickable
-                            label={computeLabel(currentCategory)}
-                            onClick={() => saveCategory(currentCategory)}
-                            style={{color: COLORS[index]}}
-                            variant={category?.name === currentCategory.name ? 'outlined' : 'default'}
-                        />
-                    </Box>
-                ))}
-            </div>
-            <Button
-                color="primary"
-                onClick={() => setOpenCategoryCreation(true)}
-                size="small"
-                variant="contained"
+            <Chips
+                categories={categories}
             >
-                New category
-            </Button>
+                <Chip
+                    label='New category'
+                    icon={<AddIcon/>}
+                    onClick={() => setOpenCategoryCreation(true)}
+                    variant='outlined'
+                />
+            </Chips>
 
             <Dialog
                 fullWidth
@@ -139,8 +215,7 @@ const DTCategories: FC<CategoriesProps> = () => {
                                 supercategory: null
                             }}
                             validationSchema={Yup.object().shape({
-                                name: Yup.string().max(255).required('Name is required'),
-                                supercategory: Yup.string().max(255)
+                                name: Yup.string().max(255).required('Name is required')
                             })}
                             onSubmit={async (values, {
                                 setStatus,

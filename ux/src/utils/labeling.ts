@@ -124,7 +124,7 @@ export const drawLabels = (canvas: HTMLCanvasElement, labels: Label[], categorie
     }
 };
 
-export const renderCursor = (canvas: HTMLCanvasElement, point: Point, labels: Label[], callback: (direction: Direction) => void) => {
+export const renderCursor = (canvas: HTMLCanvasElement, point: Point, labels: Label[], callback: (label: Label, direction: Direction) => void) => {
     if (!labels || !point)
         return;
 
@@ -133,29 +133,31 @@ export const renderCursor = (canvas: HTMLCanvasElement, point: Point, labels: La
 
         if (point[0] > x && point[0] < x + RESIZE_SIZE) {
             if (point[1] > y && point[1] < y + RESIZE_SIZE) {
-                callback('top-left');
+                callback(label, 'top-left');
                 return;
             }
             if (point[1] > y + h - RESIZE_SIZE && point[1] < y + h) {
-                callback('bottom-left');
+                callback(label, 'bottom-left');
                 return;
             }
         } else if (point[0] > x + w - RESIZE_SIZE && point[0] < x + w) {
             if (point[1] > y && point[1] < y + RESIZE_SIZE) {
-                callback('top-right');
+                callback(label, 'top-right');
                 return;
             }
             if (point[1] > y + h - RESIZE_SIZE && point[1] < y + h) {
-                callback('bottom-right');
+                callback(label, 'bottom-right');
                 return;
             }
         }
     }
 
-    callback(null)
+    callback(null, null);
 };
 
 export const currentLabelsHoverIds = (canvas: HTMLCanvasElement, point: Point, labels: Label[]) => {
+    if (!point || !labels) return [];
+
     let labelsHoverIds = [];
     for (const label of labels) {
         const {x, y, w, h} = convertLabel(canvas, label);
@@ -251,3 +253,5 @@ export const currentLabelsResized = (canvas: HTMLCanvasElement, labels: Label[],
 export const checkLabelsEquality = (labels: Label[], newLabels: Label[]) => _.isEqual(labels, newLabels);
 
 export const formatRatio = ratio => Math.abs(Math.round(ratio * 1e6) / 1e6);
+
+export const currentCategoryCount = (labels: Label[], category: Category) => labels.filter(label => label.category_name === category.name)?.length || 0;

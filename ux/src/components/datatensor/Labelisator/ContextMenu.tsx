@@ -7,7 +7,7 @@ import {Point} from 'src/types/point';
 import {Theme} from 'src/theme';
 import {reset} from 'src/utils/labeling';
 import useDataset from 'src/hooks/useDataset';
-import useImage from '../../../hooks/useImage';
+import useImage from 'src/hooks/useImage';
 
 interface ContextMenuProps {
     canvas: HTMLCanvasElement;  // ToolMove's canvas
@@ -27,16 +27,16 @@ const ContextMenu: FC<ContextMenuProps> = ({canvas, selectedLabels, point, handl
     const classes = useStyles();
 
     const {categories} = useDataset();
-    const {labels, saveLabels} = useImage();
+    const {labels, saveLabels, storePosition} = useImage();
 
     const handleUpdateLabelCategory = (category) => {
         handleClose();
         reset(canvas);
-        saveLabels(
-            labels.map(label => selectedLabels.map(selectedLabel => selectedLabel._id).includes(label._id)
-                ? {...label, category_name: category.name}
-                : label)
-        )
+        let newLabels = labels.map(label => selectedLabels.map(selectedLabel => selectedLabel._id).includes(label._id)
+            ? {...label, category_name: category.name}
+            : label);
+        saveLabels(newLabels);
+        storePosition(newLabels);
     };
 
     const handleDeleteLabel = () => {
@@ -44,6 +44,7 @@ const ContextMenu: FC<ContextMenuProps> = ({canvas, selectedLabels, point, handl
         reset(canvas);
         const newLabels = labels.filter(label => !selectedLabels.map(label => label._id).includes(label._id));
         saveLabels(newLabels);
+        storePosition(newLabels);
     };
 
     return (

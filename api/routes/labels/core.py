@@ -22,10 +22,9 @@ def find_label(image_id, label_id):
 
 
 def insert_labels(image_id, labels):
-    for label in labels:
-        db.labels.update({'_id': label['_id']},
-                         {'$set': {'image_id': image_id, **label}},
-                         upsert=True)
+    db.labels.delete_many({'image_id': image_id})
+    if labels:
+        db.labels.insert_many([{**label, 'image_id': image_id} for label in labels])
 
 
 def remove_labels(image_id):

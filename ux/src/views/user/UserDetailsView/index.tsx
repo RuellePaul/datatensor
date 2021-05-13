@@ -1,8 +1,9 @@
 import React, {ChangeEvent, FC, useCallback, useEffect, useState} from 'react';
 import {useParams} from 'react-router';
-import {Box, Container, Divider, makeStyles, Tab, Tabs} from '@material-ui/core';
+import {Box, Container, Divider, makeStyles, Tab, Tabs, Typography} from '@material-ui/core';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
+import UserAvatar from 'src/components/UserAvatar';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import {User} from 'src/types/user';
 import api from 'src/utils/api';
@@ -35,7 +36,7 @@ const UserDetailsView: FC = () => {
 
     const getUser = useCallback(async () => {
         try {
-            const response = await api.get<{user: User}>(`/users/${user_id}`);
+            const response = await api.get<{ user: User }>(`/users/${user_id}`);
 
             if (isMountedRef.current) {
                 setUser(response.data.user);
@@ -56,10 +57,21 @@ const UserDetailsView: FC = () => {
     return (
         <Page
             className={classes.root}
-            title="User Details"
+            title={user.name}
         >
-            <Container maxWidth={false}>
+            <Container maxWidth='lg'>
                 <Header user={user}/>
+
+                <Box display='flex' alignItems='center' mt={2}>
+                    <UserAvatar user={user}/>
+                    <Box ml={2}>
+
+                        <Typography variant='h6' color='textPrimary'>
+                            {user.name}
+                        </Typography>
+                    </Box>
+                </Box>
+
                 <Box mt={3}>
                     <Tabs
                         onChange={handleTabsChange}

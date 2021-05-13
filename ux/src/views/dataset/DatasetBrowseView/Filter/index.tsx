@@ -4,37 +4,18 @@ import clsx from 'clsx';
 import {Box, Card, Checkbox, Chip, Divider, FormControlLabel, Input, makeStyles} from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import {Theme} from 'src/theme';
-import MultiSelect from './MultiSelect';
 
 interface FilterProps {
     className?: string;
 }
 
-const selectOptions = [
-    {
-        label: 'Category class',
-        options: [
-            'Cat',
-            'Dog',
-            'Human',
-            'Bicycle'
-        ]
-    },
-    {
-        label: 'Features',
-        options: [
-            'Labeled',
-            'Augmented',
-            'Weighted',
-            'Tested'
-        ]
-    }
-];
-
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
     searchInput: {
         marginLeft: theme.spacing(2)
+    },
+    toggle: {
+        whiteSpace: 'nowrap'
     },
     chip: {
         margin: theme.spacing(1)
@@ -71,10 +52,6 @@ const Filter: FC<FilterProps> = ({className, ...rest}) => {
         setChips((prevChips) => prevChips.filter((prevChip) => chip !== prevChip));
     };
 
-    const handleMultiSelectChange = (value: string[]): void => {
-        setChips(value);
-    };
-
     return (
         <Card
             className={clsx(classes.root, className)}
@@ -95,6 +72,14 @@ const Filter: FC<FilterProps> = ({className, ...rest}) => {
                     placeholder="Enter a keyword"
                     value={inputValue}
                 />
+                <Box flexGrow={1}/>
+                <FormControlLabel
+                    className={classes.toggle}
+                    control={(
+                        <Checkbox defaultChecked/>
+                    )}
+                    label="Show public datasets"
+                />
             </Box>
             <Divider/>
             <Box
@@ -111,30 +96,6 @@ const Filter: FC<FilterProps> = ({className, ...rest}) => {
                         onDelete={() => handleChipDelete(chip)}
                     />
                 ))}
-            </Box>
-            <Divider/>
-            <Box
-                display="flex"
-                alignItems="center"
-                flexWrap="wrap"
-                p={1}
-            >
-                {selectOptions.map((option) => (
-                    <MultiSelect
-                        key={option.label}
-                        label={option.label}
-                        onChange={handleMultiSelectChange}
-                        options={option.options}
-                        value={chips}
-                    />
-                ))}
-                <Box flexGrow={1}/>
-                <FormControlLabel
-                    control={(
-                        <Checkbox defaultChecked/>
-                    )}
-                    label="Show public datasets"
-                />
             </Box>
         </Card>
     );

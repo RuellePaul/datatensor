@@ -7,7 +7,7 @@ import SectionLabeling from './sections/SectionLabeling';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
 import {ImagesConsumer, ImagesProvider} from 'src/contexts/ImagesContext';
-import {DatasetProvider} from 'src/contexts/DatasetContext';
+import {DatasetConsumer, DatasetProvider} from 'src/contexts/DatasetContext';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -36,58 +36,62 @@ const DatasetMainView: FC = () => {
         return null;
 
     return (
-        <Page
-            className={classes.root}
-            title="Dataset List"
-        >
-            <DatasetProvider dataset_id={dataset_id}>
-                <ImagesProvider>
-                    <Container maxWidth="lg">
-                        <Header/>
+        <DatasetProvider dataset_id={dataset_id}>
+            <DatasetConsumer>
+                {value => (
+                    <Page
+                        className={classes.root}
+                        title={`Dataset ${value.dataset.name}`}
+                    >
+                        <ImagesProvider>
+                            <Container maxWidth="lg">
+                                <Header/>
 
-                        <Box mt={2}>
-                            <ImagesConsumer>
-                                {value => (
-                                    <Tabs
-                                        value={tab}
-                                        onChange={handleTabChange}
-                                        indicatorColor="primary"
-                                        textColor="primary"
-                                    >
-                                        <Tab label="Overview"/>
-                                        <Tab label="Images"/>
-                                        <Tab
-                                            label={
-                                                value.images.length === 0
-                                                    ? (
-                                                        <Tooltip title={(
-                                                            <Typography variant='h6'>
-                                                                You need to upload images first
-                                                            </Typography>
-                                                        )}>
-                                                            <span>Labeling</span>
-                                                        </Tooltip>
-                                                    )
-                                                    : 'Labeling'
+                                <Box mt={2}>
+                                    <ImagesConsumer>
+                                        {value => (
+                                            <Tabs
+                                                value={tab}
+                                                onChange={handleTabChange}
+                                                indicatorColor="primary"
+                                                textColor="primary"
+                                            >
+                                                <Tab label="Overview"/>
+                                                <Tab label="Images"/>
+                                                <Tab
+                                                    label={
+                                                        value.images.length === 0
+                                                            ? (
+                                                                <Tooltip title={(
+                                                                    <Typography variant='h6'>
+                                                                        You need to upload images first
+                                                                    </Typography>
+                                                                )}>
+                                                                    <span>Labeling</span>
+                                                                </Tooltip>
+                                                            )
+                                                            : 'Labeling'
 
-                                            }
-                                            disabled={value.images.length === 0}
-                                            style={{pointerEvents: 'auto'}}
-                                        />
-                                    </Tabs>
-                                )}
-                            </ImagesConsumer>
-                        </Box>
+                                                    }
+                                                    disabled={value.images.length === 0}
+                                                    style={{pointerEvents: 'auto'}}
+                                                />
+                                            </Tabs>
+                                        )}
+                                    </ImagesConsumer>
+                                </Box>
 
-                        <Box mb={3}>
-                            <Divider/>
-                        </Box>
+                                <Box mb={3}>
+                                    <Divider/>
+                                </Box>
 
-                        {SECTIONS[tab]}
-                    </Container>
-                </ImagesProvider>
-            </DatasetProvider>
-        </Page>
+                                {SECTIONS[tab]}
+                            </Container>
+                        </ImagesProvider>
+                    </Page>
+                )}
+            </DatasetConsumer>
+        </DatasetProvider>
     );
 };
 

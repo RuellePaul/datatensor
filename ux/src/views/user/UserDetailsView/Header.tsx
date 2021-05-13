@@ -1,9 +1,8 @@
 import React, {FC} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
-import {Breadcrumbs, Button, Grid, Link, makeStyles, SvgIcon, Typography} from '@material-ui/core';
+import {Breadcrumbs, Grid, Link, makeStyles, Typography} from '@material-ui/core';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import {Edit as EditIcon} from 'react-feather';
 
 interface HeaderProps {
     className?: string;
@@ -53,27 +52,6 @@ const Header: FC<HeaderProps> = ({className, user, ...rest}) => {
                         Users
                     </Typography>
                 </Breadcrumbs>
-                <Typography
-                    variant="h3"
-                    color="textPrimary"
-                >
-                    User details
-                </Typography>
-            </Grid>
-            <Grid item>
-                <Button
-                    color="secondary"
-                    variant="contained"
-                    component={RouterLink}
-                    to="/app/admin/manage/users/edit"
-                    startIcon={
-                        <SvgIcon fontSize="small">
-                            <EditIcon/>
-                        </SvgIcon>
-                    }
-                >
-                    Edit
-                </Button>
             </Grid>
         </Grid>
     );

@@ -19,7 +19,7 @@ import useCategory from 'src/hooks/useCategory';
 import useImage from 'src/hooks/useImage';
 
 interface ToolLabelProps {
-    setTool: (tool) => void;
+    setTool: any;
     autoSwitch: boolean;
 }
 
@@ -39,8 +39,8 @@ const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
     const classes = useStyles();
     const canvasRef = useRef(null);
 
-    const {labels, saveLabels} = useImage();
-    const {category} = useCategory();
+    const {labels, saveLabels, storePosition} = useImage();
+    const {currentCategory} = useCategory();
 
     const [storedPoint, setStoredPoint] = useState<Point>(null);
 
@@ -93,9 +93,11 @@ const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
                 y: formatRatio(Math.min(point[1] - CANVAS_OFFSET, storedPoint[1] - CANVAS_OFFSET) / (canvas.height - 2 * CANVAS_OFFSET)),
                 w: formatRatio((point[0] - storedPoint[0]) / (canvas.width - 2 * CANVAS_OFFSET)),
                 h: formatRatio((point[1] - storedPoint[1]) / (canvas.height - 2 * CANVAS_OFFSET)),
-                category_name: category?.name || null
+                category_name: currentCategory?.name || null
             };
-            saveLabels([...labels, newLabel]);
+            let newLabels = [...labels, newLabel];
+            saveLabels(newLabels);
+            storePosition(newLabels);
         }
     };
 
