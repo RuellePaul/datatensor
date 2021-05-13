@@ -2,8 +2,8 @@ import React, {createContext, FC, ReactNode, useState} from 'react';
 import {Category} from 'src/types/category';
 
 export interface CategoryContextValue {
-    category: Category;
-    saveCategory: (update: Category | ((category: Category) => Category)) => void;
+    currentCategory: Category;
+    saveCurrentCategory: (update: Category | ((category: Category) => Category)) => void;
 }
 
 interface CategoryProviderProps {
@@ -11,8 +11,8 @@ interface CategoryProviderProps {
 }
 
 export const CategoryContext = createContext<CategoryContextValue>({
-    category: null,
-    saveCategory: () => {
+    currentCategory: null,
+    saveCurrentCategory: () => {
     }
 });
 
@@ -26,8 +26,8 @@ export const CategoryProvider: FC<CategoryProviderProps> = ({children}) => {
     return (
         <CategoryContext.Provider
             value={{
-                category: currentCategory,
-                saveCategory: handleSaveCategory
+                currentCategory: currentCategory,
+                saveCurrentCategory: handleSaveCategory
             }}
         >
             {children}

@@ -156,6 +156,8 @@ export const renderCursor = (canvas: HTMLCanvasElement, point: Point, labels: La
 };
 
 export const currentLabelsHoverIds = (canvas: HTMLCanvasElement, point: Point, labels: Label[]) => {
+    if (!point || !labels) return [];
+
     let labelsHoverIds = [];
     for (const label of labels) {
         const {x, y, w, h} = convertLabel(canvas, label);
@@ -251,3 +253,5 @@ export const currentLabelsResized = (canvas: HTMLCanvasElement, labels: Label[],
 export const checkLabelsEquality = (labels: Label[], newLabels: Label[]) => _.isEqual(labels, newLabels);
 
 export const formatRatio = ratio => Math.abs(Math.round(ratio * 1e6) / 1e6);
+
+export const currentCategoryCount = (labels: Label[], category: Category) => labels.filter(label => label.category_name === category.name)?.length || 0;

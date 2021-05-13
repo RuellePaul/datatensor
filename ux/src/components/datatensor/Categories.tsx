@@ -8,6 +8,7 @@ import {
     Dialog,
     DialogContent,
     DialogTitle,
+    Divider,
     Grid,
     IconButton,
     InputLabel,
@@ -27,6 +28,7 @@ import useDataset from 'src/hooks/useDataset';
 import useImage from 'src/hooks/useImage';
 import useCategory from 'src/hooks/useCategory';
 import {COLORS} from 'src/utils/colors';
+import {currentCategoryCount} from 'src/utils/labeling';
 import {SUPERCATEGORIES} from 'src/constants';
 import {useSnackbar} from 'notistack';
 
@@ -34,12 +36,20 @@ interface CategoriesProps {
 
 }
 
+interface CategoryProps {
+    category: Category;
+    index: number;
+}
+
+interface ChipsProps {
+    categories: Category[];
+}
+
 const useStyles = makeStyles((theme: Theme) => ({
     categories: {
         display: 'flex',
         flexWrap: 'wrap'
     },
-    chip: {},
     close: {
         position: 'absolute',
         right: theme.spacing(1),
@@ -47,6 +57,90 @@ const useStyles = makeStyles((theme: Theme) => ({
         color: theme.palette.grey[500]
     }
 }));
+
+const DTCategory: FC<CategoryProps> = ({category, index}) => {
+
+    const {currentCategory, saveCurrentCategory} = useCategory();
+    const {labels} = useImage();
+
+    const count = currentCategoryCount(labels, category);
+
+    return (
+        <Chip
+            clickable
+            label={(
+                <Typography variant='body2'>
+                    {count > 0
+                        ? <>
+                            <Typography
+                                component='span'
+                                style={{fontWeight: count > 0 ? 'bold' : 'initial'}}
+                            >
+                                {capitalize(category.name)}
+                                {' '}
+                            </Typography>
+                            ({count})
+                        </>
+                        : capitalize(category.name)
+                    }
+                </Typography>
+            )}
+            onClick={() => saveCurrentCategory(category)}
+            style={{color: COLORS[index]}}
+            variant={currentCategory?.name === category.name ? 'outlined' : 'default'}
+            title={`${category.name} | ${category.supercategory}`}
+        />
+    )
+};
+
+const Chips: FC<ChipsProps> = ({categories}) => {
+
+    const classes = useStyles();
+    const {labels} = useImage();
+
+    const labeledCategories = categories.filter(category => currentCategoryCount(labels, category) > 0);
+    const unlabeledCategories = categories.filter(category => currentCategoryCount(labels, category) === 0);
+
+    return (
+        <>
+            <div className={classes.categories}>
+                {
+                    labeledCategories.map((category, index) => (
+                        <Box
+                            m={0.5}
+                            key={category._id}
+                        >
+                            <DTCategory
+                                category={category}
+                                index={categories.indexOf(category)}
+                            />
+                        </Box>
+                    ))
+                }
+            </div>
+            <Box
+                my={1}
+            >
+                <Divider/>
+            </Box>
+            <div className={classes.categories}>
+                {
+                    unlabeledCategories.map((category, index) => (
+                        <Box
+                            m={0.5}
+                            key={category._id}
+                        >
+                            <DTCategory
+                                category={category}
+                                index={categories.indexOf(category)}
+                            />
+                        </Box>
+                    ))
+                }
+            </div>
+        </>
+    )
+};
 
 const DTCategories: FC<CategoriesProps> = () => {
 
@@ -58,22 +152,7 @@ const DTCategories: FC<CategoriesProps> = () => {
     const {dataset, categories, saveCategories} = useDataset();
     const {labels} = useImage();
 
-    const {category, saveCategory} = useCategory();
-
     const [openCategoryCreation, setOpenCategoryCreation] = useState(false);
-
-    const computeLabel = (category: Category) => {
-        return (
-            <Typography variant='body2'>
-                <Typography component='span' style={{fontWeight: 'bold'}}>
-                    {capitalize(category.name)}
-                    {' '}
-                </Typography>
-                ({labels.filter(label => label.category_name === category.name)?.length || 0})
-            </Typography>
-        )
-
-    };
 
     const handleCloseCategoryCreation = () => {
         setOpenCategoryCreation(false);
@@ -84,23 +163,9 @@ const DTCategories: FC<CategoriesProps> = () => {
 
     return (
         <>
-            <div className={classes.categories}>
-                {categories.map((currentCategory, index) => (
-                    <Box
-                        m={0.5}
-                        key={currentCategory.name}
-                    >
-                        <Chip
-                            className={classes.chip}
-                            clickable
-                            label={computeLabel(currentCategory)}
-                            onClick={() => saveCategory(currentCategory)}
-                            style={{color: COLORS[index]}}
-                            variant={category?.name === currentCategory.name ? 'outlined' : 'default'}
-                        />
-                    </Box>
-                ))}
-            </div>
+            <Chips
+                categories={categories}
+            />
             <Button
                 color="primary"
                 onClick={() => setOpenCategoryCreation(true)}
