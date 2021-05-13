@@ -199,6 +199,7 @@ const DTImagesList: FC<ImagesListProps> = ({
             {imageSelected && (
                 <Dialog
                     className={classes.modal}
+                    maxWidth="lg"
                     open={open}
                     onClose={handleCloseImage}
                     BackdropComponent={Backdrop}
