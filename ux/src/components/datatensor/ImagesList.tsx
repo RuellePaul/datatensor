@@ -38,6 +38,9 @@ const useStyles = makeStyles((theme: Theme) => ({
         justifyContent: 'center',
         padding: theme.spacing(1)
     },
+    paper: {
+        overflow: 'visible'
+    },
     header: {
         position: 'fixed',
         top: 0,
@@ -205,6 +208,9 @@ const DTImagesList: FC<ImagesListProps> = ({
                     BackdropComponent={Backdrop}
                     BackdropProps={{
                         className: classes.backdrop,
+                    }}
+                    PaperProps={{
+                        className: classes.paper
                     }}
                 >
                     <>
