@@ -52,7 +52,7 @@ const Generator: FC = () => {
                     setSubmitting
                 }) => {
                     try {
-                        await api.post('/v1/admin/generator/coco', values);
+                        await api.post('/generator/', values);
 
                         if (isMountedRef.current) {
                             setStatus({success: true});

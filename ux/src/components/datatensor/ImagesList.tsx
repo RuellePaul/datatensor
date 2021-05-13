@@ -20,6 +20,8 @@ import useImages from 'src/hooks/useImages';
 import {Theme} from 'src/theme';
 import api from 'src/utils/api'
 import bytesToSize from 'src/utils/bytesToSize';
+import useDataset from 'src/hooks/useDataset';
+import {ImageProvider} from 'src/contexts/ImageContext';
 
 interface ImagesListProps {
     className?: string;
@@ -103,6 +105,7 @@ const DTImagesList: FC<ImagesListProps> = ({
     const classes = useStyles();
     const theme = useTheme();
 
+    const {dataset} = useDataset();
     const {images, saveImages} = useImages();
 
     const [open, setOpen] = useState(false);
@@ -136,9 +139,9 @@ const DTImagesList: FC<ImagesListProps> = ({
     const handleDelete = async event => {
         event.stopPropagation();
 
-        await api.post(`/v1/images/manage/${imageSelected.id}/delete`);
+        await api.delete(`/datasets/${dataset._id}/images/${imageSelected._id}`);
         setSelected(Math.max(0, selected - 1));
-        saveImages(images.filter(image => image.id !== imageSelected.id));
+        saveImages(images.filter(image => image._id !== imageSelected._id));
         handleCloseMenu();
         images.length <= 1 && handleCloseImage();
     };
@@ -166,7 +169,7 @@ const DTImagesList: FC<ImagesListProps> = ({
                 next={() => {
                     setTimeout(() => setLimit(limit + LAZY_LOAD_BATCH), 100);
                 }}
-                height={'calc(100vh - 350px)'}
+                height={'calc(100vh - 300px)'}
                 hasMore={hasMore}
                 loader={<LinearProgress/>}
             >
@@ -180,12 +183,15 @@ const DTImagesList: FC<ImagesListProps> = ({
                     columnClassName={classes.column}
                 >
                     {images.slice(0, limit).map((image, index) => (
-                        <DTImage
-                            key={image.id}
+                        <ImageProvider
+                            key={image._id}
                             image={image}
-                            clickable
-                            onClick={() => handleOpenImage(index)}
-                        />
+                        >
+                            <DTImage
+                                clickable
+                                onClick={() => handleOpenImage(index)}
+                            />
+                        </ImageProvider>
                     ))}
                 </Masonry>
             </InfiniteScroll>
@@ -261,7 +267,12 @@ const DTImagesList: FC<ImagesListProps> = ({
                                     {imageSelected.width} x {imageSelected.height}
                                 </Typography>
                             </div>
-                            <DTImage image={imageSelected}/>
+                            <ImageProvider
+                                key={imageSelected._id}
+                                image={imageSelected}
+                            >
+                                <DTImage/>
+                            </ImageProvider>
                         </div>
 
                         <div className={classes.footer}>

@@ -1,7 +1,7 @@
 import {Category} from 'src/types/category';
 
 export interface Dataset {
-    id: string;
+    _id: string;
     created_at: string;
     description: string;
     name: string;

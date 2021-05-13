@@ -24,7 +24,7 @@ import api from 'src/utils/api';
 import {Theme} from 'src/theme';
 import {Category} from 'src/types/category';
 import useDataset from 'src/hooks/useDataset';
-import useImages from 'src/hooks/useImages';
+import useImage from 'src/hooks/useImage';
 import useCategory from 'src/hooks/useCategory';
 import {COLORS} from 'src/utils/colors';
 import {SUPERCATEGORIES} from 'src/constants';
@@ -55,8 +55,8 @@ const DTCategories: FC<CategoriesProps> = () => {
 
     const {enqueueSnackbar} = useSnackbar();
 
-    const {dataset, saveDataset} = useDataset();
-    const {images} = useImages();
+    const {dataset, categories, saveCategories} = useDataset();
+    const {labels} = useImage();
 
     const {category, saveCategory} = useCategory();
 
@@ -69,7 +69,7 @@ const DTCategories: FC<CategoriesProps> = () => {
                     {capitalize(category.name)}
                     {' '}
                 </Typography>
-                ({images.map(image => image.labels.filter(label => label.category_name === category.name).length || 0).reduce((acc, val) => acc + val, 0)})
+                ({labels.filter(label => label.category_name === category.name)?.length || 0})
             </Typography>
         )
 
@@ -79,10 +79,13 @@ const DTCategories: FC<CategoriesProps> = () => {
         setOpenCategoryCreation(false);
     };
 
+    if (!labels)
+        return null;
+
     return (
         <>
             <div className={classes.categories}>
-                {dataset.categories.map((currentCategory, index) => (
+                {categories.map((currentCategory, index) => (
                     <Box
                         m={0.5}
                         key={currentCategory.name}
@@ -144,8 +147,8 @@ const DTCategories: FC<CategoriesProps> = () => {
                                 setSubmitting
                             }) => {
                                 try {
-                                    const response = await api.post<Category>(`/v1/categories/`, {dataset_id: dataset.id, ...values});
-                                    saveDataset({...dataset, categories: [...dataset.categories, response.data]});
+                                    const response = await api.post<{ category: Category }>(`/datasets/${dataset._id}/categories/`, values);
+                                    saveCategories([...categories, response.data.category]);
                                     setOpenCategoryCreation(false);
 
                                     if (isMountedRef.current) {

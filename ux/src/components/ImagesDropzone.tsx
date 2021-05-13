@@ -106,10 +106,10 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({dataset_id, callback, classNam
             let formData = new FormData();
             files.map(image => formData.append(image.name, image));
             try {
-                const response = await api.post<Image[]>(`/v1/images/upload/${dataset_id}`, formData, {
+                const response = await api.post<{images: Image[]}>(`/datasets/${dataset_id}/images/`, formData, {
                     headers: {'Content-Type': 'multipart/form-data'}
                 });
-                saveImages((images: Image[]) => [...images, ...response.data]);
+                saveImages((images: Image[]) => [...images, ...response.data.images]);
                 enqueueSnackbar(`${files.length} images uploaded`, {variant: 'success'});
             } catch (error) {
                 enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});

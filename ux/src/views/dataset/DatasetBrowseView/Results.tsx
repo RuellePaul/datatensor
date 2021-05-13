@@ -101,7 +101,7 @@ const Results: FC<ResultsProps> = ({className, ...rest}) => {
                 {datasets.map((dataset) => (
                     <Grid
                         item
-                        key={dataset.id}
+                        key={dataset._id}
                         md={4}
                         sm={6}
                         xs={12}

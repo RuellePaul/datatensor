@@ -21,8 +21,6 @@ services:
       dockerfile: Dockerfile-api
     volumes:
       - './${ENVIRONMENT}/config.py:/api/config.py'
-      - './${ENVIRONMENT}/cert.pem:/api/cert.pem'
-      - './${ENVIRONMENT}/key.pem:/api/key.pem'
     network_mode: host
   db:
     image: mongo

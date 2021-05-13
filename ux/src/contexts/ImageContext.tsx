@@ -1,60 +1,66 @@
 import React, {createContext, FC, ReactNode, useCallback, useEffect, useState} from 'react';
+import {Label} from 'src/types/label';
 import {Image} from 'src/types/image';
 import api from 'src/utils/api';
-import {Box, CircularProgress} from '@material-ui/core';
+import {useSnackbar} from 'notistack';
 
 export interface ImageContextValue {
     image: Image;
-    saveImage: (update: Image | ((image: Image) => Image)) => void;
+    labels: Label[];
+    saveLabels: (update: Label[] | ((labels: Label[]) => Label[])) => void;
+    validateLabels: () => void;
 }
 
 interface ImageProviderProps {
-    image_id: string;
+    image: Image;
     children?: ReactNode;
 }
 
 export const ImageContext = createContext<ImageContextValue>({
     image: null,
-    saveImage: () => {
+    labels: [],
+    saveLabels: () => {
+    },
+    validateLabels: () => {
     }
 });
 
-export const ImageProvider: FC<ImageProviderProps> = ({image_id, children}) => {
-    const [currentImage, setCurrentImage] = useState<Image>(null);
+export const ImageProvider: FC<ImageProviderProps> = ({image, children}) => {
 
-    const handleSaveImage = (update: Image | ((image: Image) => Image)): void => {
-        setCurrentImage(update);
+    const {enqueueSnackbar} = useSnackbar();
+
+    const [currentLabels, setCurrentLabels] = useState<Label[]>(null);
+
+    const handleSaveLabels = (update: Label[] | ((labels: Label[]) => Label[])): void => {
+        setCurrentLabels(update);
     };
 
-    const fetchImage = useCallback(async () => {
+    const fetchLabels = useCallback(async () => {
         try {
-            const response = await api.get<Image>(`/v1/images/${image_id}`);
-            handleSaveImage(response.data);
+            const response = await api.get<{ labels: Label[] }>(`/images/${image._id}/labels/`);
+            handleSaveLabels(response.data.labels);
         } catch (err) {
             console.error(err);
         }
 
-    }, [image_id]);
+    }, [image._id]);
 
     useEffect(() => {
-        fetchImage();
-    }, [fetchImage]);
+        fetchLabels();
+    }, [fetchLabels]);
 
-    if (currentImage === null)
-        return (
-            <Box
-                display="flex"
-                justifyContent="center"
-            >
-                <CircularProgress/>
-            </Box>
-        );
+    const validateLabels = async () => {
+        await api.post(`/images/${image._id}/labels/`, {labels: currentLabels});
+        enqueueSnackbar('Labels updated', {variant: 'info'});
+    };
 
     return (
         <ImageContext.Provider
             value={{
-                image: currentImage,
-                saveImage: handleSaveImage
+                image: image,
+                labels: currentLabels,
+                saveLabels: handleSaveLabels,
+                validateLabels: validateLabels
             }}
         >
             {children}

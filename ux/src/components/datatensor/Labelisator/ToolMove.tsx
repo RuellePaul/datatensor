@@ -16,10 +16,9 @@ import {
     renderCursor,
     reset
 } from 'src/utils/labeling';
+import useImage from '../../../hooks/useImage';
 
 interface ToolMoveProps {
-    labels: Label[];
-    setLabels: (labels: Label[]) => void;
     setTool: (tool) => void;
     autoSwitch: boolean;
 }
@@ -35,11 +34,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const ToolMove: FC<ToolMoveProps> = ({labels, setLabels, setTool, autoSwitch}) => {
+const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
 
     const classes = useStyles();
 
-    const {dataset} = useDataset();
+    const {categories} = useDataset();
+    const {labels, saveLabels} = useImage();
 
     const canvasRef = useRef<HTMLCanvasElement>();
 
@@ -66,7 +66,7 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels, setTool, autoSwitch}) =
                 setTool('label');
                 return;
             }
-            drawLabels(canvas, labels.filter(label => labelsHoverIds.includes(label.id)), dataset.categories, CANVAS_OFFSET, 5, true, true);
+            drawLabels(canvas, labels.filter(label => labelsHoverIds.includes(label._id)), categories, CANVAS_OFFSET, 5, true, true);
             renderCursor(canvas, point, labels, direction => setDirection(direction));
             if (direction === null)
                 if (labelsHoverIds.length === 0)
@@ -79,10 +79,10 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels, setTool, autoSwitch}) =
             if (storedLabels.length === 0) return;
             if (direction === null) {
                 let labelsTranslated = currentLabelsTranslated(canvas, storedLabels, point, storedPoint);
-                drawLabels(canvas, labelsTranslated, dataset.categories, CANVAS_OFFSET, 5, true, true);
+                drawLabels(canvas, labelsTranslated, categories, CANVAS_OFFSET, 5, true, true);
             } else {
                 let labelsResized = currentLabelsResized(canvas, storedLabels, point, storedPoint, direction);
-                drawLabels(canvas, labelsResized, dataset.categories, CANVAS_OFFSET, 5, true, true);
+                drawLabels(canvas, labelsResized, categories, CANVAS_OFFSET, 5, true, true);
             }
         }
     };
@@ -94,13 +94,13 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels, setTool, autoSwitch}) =
             let labelsHoverIds = currentLabelsHoverIds(canvasRef.current, point, labels);
             if (labelsHoverIds.length > 0) {
                 setStoredPoint(point);
-                setLabels(labels.filter(label => !labelsHoverIds.includes(label.id)));
-                setStoredLabels(labels.filter(label => labelsHoverIds.includes(label.id)));
+                saveLabels(labels.filter(label => !labelsHoverIds.includes(label._id)));
+                setStoredLabels(labels.filter(label => labelsHoverIds.includes(label._id)));
             }
         }
         if (event.nativeEvent.which === 3) {
             let labelsHoverIds = currentLabelsHoverIds(canvasRef.current, point, labels);
-            setStoredLabels(labels.filter(label => labelsHoverIds.includes(label.id)));
+            setStoredLabels(labels.filter(label => labelsHoverIds.includes(label._id)));
         }
     };
 
@@ -114,10 +114,10 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels, setTool, autoSwitch}) =
 
             if (direction === null) {
                 let labelsTranslated = currentLabelsTranslated(canvas, storedLabels, point, storedPoint);
-                setLabels([...labels, ...labelsTranslated]);
+                saveLabels([...labels, ...labelsTranslated]);
             } else {
                 let labelsResized = currentLabelsResized(canvas, storedLabels, point, storedPoint, direction, true);
-                setLabels([...labels, ...labelsResized]);
+                saveLabels([...labels, ...labelsResized]);
             }
 
             setStoredPoint(null);
@@ -148,9 +148,7 @@ const ToolMove: FC<ToolMoveProps> = ({labels, setLabels, setTool, autoSwitch}) =
             />
             <ContextMenu
                 canvas={canvasRef.current}
-                labels={labels}
                 selectedLabels={storedLabels}
-                setLabels={setLabels}
                 point={contextMenuPoint}
                 handleClose={handleClose}
             />

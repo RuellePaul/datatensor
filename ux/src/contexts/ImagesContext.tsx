@@ -31,14 +31,14 @@ export const ImagesProvider: FC<ImagesProviderProps> = ({images, children}) => {
 
     const fetchImages = useCallback(async () => {
         try {
-            const response = await api.get<Image[]>(`/v1/images/manage/${dataset.id}`);
-            handleSaveImages(response.data);
+            const response = await api.get<{images: Image[]}>(`/datasets/${dataset._id}/images/`);
+            handleSaveImages(response.data.images);
         } catch (err) {
             handleSaveImages([]);
             console.error(err);
         }
 
-    }, [dataset.id]);
+    }, [dataset._id]);
 
     useEffect(() => {
         fetchImages();

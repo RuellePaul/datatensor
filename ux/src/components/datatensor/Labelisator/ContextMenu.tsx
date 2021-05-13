@@ -7,12 +7,11 @@ import {Point} from 'src/types/point';
 import {Theme} from 'src/theme';
 import {reset} from 'src/utils/labeling';
 import useDataset from 'src/hooks/useDataset';
+import useImage from '../../../hooks/useImage';
 
 interface ContextMenuProps {
     canvas: HTMLCanvasElement;  // ToolMove's canvas
-    labels: Label[];
     selectedLabels: Label[];
-    setLabels: (labels: Label[]) => void;
     point: Point;
     handleClose: () => void;
 }
@@ -23,17 +22,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const ContextMenu: FC<ContextMenuProps> = ({canvas, labels, setLabels, selectedLabels, point, handleClose}) => {
+const ContextMenu: FC<ContextMenuProps> = ({canvas, selectedLabels, point, handleClose}) => {
 
     const classes = useStyles();
 
-    const {dataset} = useDataset();
+    const {categories} = useDataset();
+    const {labels, saveLabels} = useImage();
 
     const handleUpdateLabelCategory = (category) => {
         handleClose();
         reset(canvas);
-        setLabels(
-            labels.map(label => selectedLabels.map(selectedLabel => selectedLabel.id).includes(label.id)
+        saveLabels(
+            labels.map(label => selectedLabels.map(selectedLabel => selectedLabel._id).includes(label._id)
                 ? {...label, category_name: category.name}
                 : label)
         )
@@ -42,8 +42,8 @@ const ContextMenu: FC<ContextMenuProps> = ({canvas, labels, setLabels, selectedL
     const handleDeleteLabel = () => {
         handleClose();
         reset(canvas);
-        const newLabels = labels.filter(label => !selectedLabels.map(label => label.id).includes(label.id));
-        setLabels(newLabels);
+        const newLabels = labels.filter(label => !selectedLabels.map(label => label._id).includes(label._id));
+        saveLabels(newLabels);
     };
 
     return (
@@ -71,7 +71,7 @@ const ContextMenu: FC<ContextMenuProps> = ({canvas, labels, setLabels, selectedL
                     </>
                 )}
             >
-                {dataset.categories.map(category => (
+                {categories.map(category => (
                     <MenuItem
                         className={classes.item}
                         key={category.name}

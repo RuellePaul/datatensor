@@ -3,21 +3,24 @@ from uuid import uuid4
 import boto3
 import cv2
 import numpy
+from bson.objectid import ObjectId
+from marshmallow import Schema
+from webargs import fields
 from werkzeug.utils import secure_filename
 
 import errors
 from config import Config
 
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+
+db = Config.db
 s3 = boto3.client(
     "s3",
     aws_access_key_id=Config.S3_KEY,
     aws_secret_access_key=Config.S3_SECRET
 )
 
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
-
-# S3 related
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -55,15 +58,26 @@ def delete_image_from_s3(image_id):
         raise errors.InternalError(f'Cannot delete file from S3, {str(e)}')
 
 
-def delete_image_from_database(image_id):
-    Config.db.images.delete_one({'id': image_id})
+class Image(Schema):
+    _id = fields.Str(dump_only=True)
+    dataset_id = fields.Str(dump_only=True)
+    name = fields.Str(required=True)
+    path = fields.Str(required=True)
+    width = fields.Int(required=True)
+    height = fields.Int(required=True)
+    size = fields.Int(required=True)
 
 
-def delete_images_from_database(image_ids):
-    Config.db.images.delete_many({'id': {'$in': image_ids}})
+def find_images(dataset_id, offset, limit):
+    return list(db.images.find({'dataset_id': dataset_id}).skip(offset).limit(limit))
 
 
-def upload_images(dataset_id, request_files):
+def find_image(dataset_id, image_id):
+    return db.images.find_one({'_id': image_id,
+                               'dataset_id': dataset_id})
+
+
+def insert_images(dataset_id, request_files):
     images = []
     for file in request_files.values():
         if file and allowed_file(file.filename):
@@ -74,19 +88,24 @@ def upload_images(dataset_id, request_files):
             image_bytes = cv2.imencode('.jpg', image)[1].tostring()
             path = upload_image(image_bytes, image_id)
             images.append({
-                'id': image_id,
+                '_id': image_id,
                 'dataset_id': dataset_id,
                 'path': path,
                 'name': name,
                 'size': len(image_bytes),
                 'width': image.shape[1],
-                'height': image.shape[0],
-                'labels': []
+                'height': image.shape[0]
             })
 
     Config.db.images.insert_many(images)
-
-    for image in images:
-        image.pop('_id', None)
-
     return images
+
+
+def remove_images(dataset_id):
+    db.images.delete_many({'dataset_id': dataset_id})
+
+
+def remove_image(dataset_id, image_id):
+    delete_image_from_s3(image_id)
+    db.images.delete_one({'_id': image_id,
+                          'dataset_id': dataset_id})

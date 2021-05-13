@@ -24,10 +24,10 @@ const UserListView: FC = () => {
 
     const getUsers = useCallback(async () => {
         try {
-            const response = await api.get<User[]>('/v1/admin/manage/users');
+            const response = await api.get<{users: User[]}>('/users');
 
             if (isMountedRef.current) {
-                setUsers(response.data);
+                setUsers(response.data.users);
             }
         } catch (err) {
             console.error(err);

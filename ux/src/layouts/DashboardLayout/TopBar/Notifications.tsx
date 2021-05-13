@@ -110,7 +110,7 @@ const Notifications: FC = () => {
                                     <ListItem
                                         component={RouterLink}
                                         divider
-                                        key={notification.id}
+                                        key={notification._id}
                                         to="#"
                                     >
                                         <ListItemAvatar>

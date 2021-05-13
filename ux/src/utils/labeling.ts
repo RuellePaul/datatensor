@@ -164,7 +164,7 @@ export const currentLabelsHoverIds = (canvas: HTMLCanvasElement, point: Point, l
             if (y < point[1]) {
                 if ((x + w) > point[0]) {
                     if ((y + h) > point[1]) {
-                        labelsHoverIds.push(label.id);
+                        labelsHoverIds.push(label._id);
                     }
                 }
             }

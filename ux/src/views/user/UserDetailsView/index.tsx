@@ -4,7 +4,6 @@ import {Box, Container, Divider, makeStyles, Tab, Tabs} from '@material-ui/core'
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
-import {Dataset} from 'src/types/dataset';
 import {User} from 'src/types/user';
 import api from 'src/utils/api';
 import Header from './Header';
@@ -22,7 +21,6 @@ const UserDetailsView: FC = () => {
     const classes = useStyles();
     const isMountedRef = useIsMountedRef();
     const [user, setUser] = useState<User>();
-    const [datasets, setDatasets] = useState<Dataset[]>([]);
     const [currentTab, setCurrentTab] = useState<string>('details');
 
     const {user_id} = useParams();
@@ -35,14 +33,12 @@ const UserDetailsView: FC = () => {
         setCurrentTab(value);
     };
 
-    const getDatasets = useCallback(async () => {
+    const getUser = useCallback(async () => {
         try {
-            const responseUser = await api.get<User>(`/v1/admin/manage/users/${user_id}`);
-            const responseDatasets = await api.get<Dataset[]>(`/v1/admin/manage/datasets/${user_id}`);
+            const response = await api.get<{user: User}>(`/users/${user_id}`);
 
             if (isMountedRef.current) {
-                setUser(responseUser.data);
-                setDatasets(responseDatasets.data);
+                setUser(response.data.user);
             }
         } catch (err) {
             console.error(err);
@@ -50,8 +46,8 @@ const UserDetailsView: FC = () => {
     }, [user_id, isMountedRef]);
 
     useEffect(() => {
-        getDatasets();
-    }, [getDatasets]);
+        getUser();
+    }, [getUser]);
 
     if (!user) {
         return null;
@@ -85,7 +81,6 @@ const UserDetailsView: FC = () => {
                 <Box mt={3}>
                     {currentTab === 'details' && (
                         <Details
-                            datasets={datasets}
                             user={user}
                         />
                     )}

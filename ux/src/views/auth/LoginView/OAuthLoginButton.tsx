@@ -78,7 +78,7 @@ const OAuthLoginButton: FC<OAuthLoginButtonProps> = ({scope}) => {
             className={classes.root}
             onClick={async () => {
                 try {
-                    const response = await api.get<{ authorization_url: string; }>(`/v1/oauth/${scope}`);
+                    const response = await api.get<{ authorization_url: string; }>(`/oauth/${scope}`);
                     const {authorization_url} = response.data;
                     window.location.href = authorization_url;
                 } catch (error) {

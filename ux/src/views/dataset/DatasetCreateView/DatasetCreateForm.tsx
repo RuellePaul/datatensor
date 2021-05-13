@@ -46,14 +46,12 @@ const DatasetCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
         <Formik
             initialValues={{
                 description: '',
-                images: [],
                 name: '',
                 submit: null,
                 is_public: true
             }}
             validationSchema={Yup.object().shape({
                 description: Yup.string().max(5000),
-                images: Yup.array(),
                 name: Yup.string().max(255).required(),
                 is_public: Yup.boolean().required(),
             })}
@@ -64,13 +62,13 @@ const DatasetCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
             }) => {
                 try {
                     const {submit, ...payload} = values;
-                    const response = await api.post<Dataset>('/v1/datasets/create', payload);
+                    const response = await api.post<Dataset>('/datasets/', payload);
                     const dataset = response.data;
                     console.info(dataset);
 
                     setStatus({success: true});
                     setSubmitting(false);
-                    enqueueSnackbar('Dataset Created');
+                    enqueueSnackbar('Dataset Created', {variant: 'info'});
                     history.push('/app/manage/datasets');
                 } catch (err) {
                     console.error(err);

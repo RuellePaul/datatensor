@@ -15,13 +15,11 @@ import {
 } from '@material-ui/core';
 import {LockOutlined} from '@material-ui/icons';
 import {Theme} from 'src/theme';
-import {Dataset} from 'src/types/dataset';
 import {User} from 'src/types/user';
 import FancyLabel from 'src/components/FancyLabel';
 
 interface UserInfoProps {
     user: User;
-    datasets: Dataset[];
     className?: string;
 }
 
@@ -34,7 +32,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const UserInfo: FC<UserInfoProps> = ({
                                          user,
-                                         datasets,
                                          className,
                                          ...rest
                                      }) => {
