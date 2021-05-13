@@ -71,9 +71,11 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
                     if (resizeLabel === null && direction === null) {
                         saveLabels(labels.filter(label => !labelsHoverIds.includes(label._id)));
                         setStoredLabels(labels.filter(label => labelsHoverIds.includes(label._id)));
+                        drawLabels(canvas, labels.filter(label => labelsHoverIds.includes(label._id)), categories, CANVAS_OFFSET, 5, true, true);
                     } else {
                         saveLabels(labels.filter(label => label._id !== resizeLabel._id));
                         setStoredLabels(labels.filter(label => label._id === resizeLabel._id));
+                        drawLabels(canvas, labels.filter(label => label._id === resizeLabel._id), categories, CANVAS_OFFSET, 5, true, true);
                     }
                 });
             }
