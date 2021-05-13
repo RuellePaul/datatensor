@@ -44,6 +44,7 @@ const ContextMenu: FC<ContextMenuProps> = ({canvas, selectedLabels, point, handl
         reset(canvas);
         const newLabels = labels.filter(label => !selectedLabels.map(label => label._id).includes(label._id));
         saveLabels(newLabels);
+        storePosition(newLabels);
     };
 
     return (

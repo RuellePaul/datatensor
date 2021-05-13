@@ -62,6 +62,7 @@ export const ImageProvider: FC<ImageProviderProps> = ({image, children}) => {
     const validateLabels = async () => {
         await api.post(`/images/${image._id}/labels/`, {labels: currentLabels});
         enqueueSnackbar('Labels updated', {variant: 'info'});
+        setPositions([currentLabels]);
     };
 
     const [positions, setPositions] = useState<Label[][]>([]);
