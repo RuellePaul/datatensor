@@ -144,7 +144,7 @@ const DTDataset: FC<DatasetProps> = ({
                 <DialogContent>
                     <Box my={1}>
                         <Typography color='textPrimary' gutterBottom>
-                            Are you sure you want to delete dataset :
+                            Are you sure you want to delete dataset
                             {' '}
                             <Typography component='span' style={{fontWeight: 'bold'}}>
                                 {dataset.name}
