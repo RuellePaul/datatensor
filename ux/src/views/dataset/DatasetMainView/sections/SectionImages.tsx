@@ -2,6 +2,7 @@ import React, {FC, useState} from 'react';
 import {useParams} from 'react-router';
 import {Box, Button, Dialog, DialogContent, DialogTitle, IconButton, makeStyles, Typography} from '@material-ui/core';
 import {Close as CloseIcon} from '@material-ui/icons';
+import DTExplore from 'src/components/datatensor/Explore';
 import DTImagesList from 'src/components/datatensor/ImagesList';
 import ImagesDropzone from 'src/components/ImagesDropzone';
 import useImages from 'src/hooks/useImages';
@@ -32,11 +33,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 const SectionImage: FC = () => {
 
     const classes = useStyles();
+
     const {dataset_id} = useParams();
 
     const {images} = useImages();
 
     const [openUpload, setOpenUpload] = useState(false);
+    const [openExplore, setOpenExplore] = useState(false);
 
     const handleUploadOpen = () => {
         setOpenUpload(true);
@@ -44,6 +47,14 @@ const SectionImage: FC = () => {
 
     const handleCloseUpload = () => {
         setOpenUpload(false);
+    };
+
+    const handleExploreOpen = () => {
+        setOpenExplore(true);
+    };
+
+    const handleCloseExplore = () => {
+        setOpenExplore(false);
     };
 
     const imagesCount = images.length;
@@ -63,8 +74,8 @@ const SectionImage: FC = () => {
                         Upload images
                     </Button>
                     <Box ml={1}>
-                        <Button variant="contained" color="primary" size="small">
-                            Crawl images from the web
+                        <Button variant="contained" color="primary" onClick={handleExploreOpen} size="small">
+                            Explore images
                         </Button>
                     </Box>
                 </Box>
@@ -85,10 +96,37 @@ const SectionImage: FC = () => {
                         </IconButton>
                     </DialogTitle>
                     <DialogContent>
+                        <Typography color='textSecondary' gutterBottom>
+                            Upload images of objects that you want to detect
+                        </Typography>
                         <ImagesDropzone
                             dataset_id={dataset_id}
                             callback={handleCloseUpload}
                         />
+                    </DialogContent>
+                </Dialog>
+
+                <Dialog
+                    open={openExplore}
+                    onClose={handleCloseExplore}
+                    maxWidth='lg'
+                >
+                    <DialogTitle disableTypography>
+                        <Typography variant='h4'>
+                            Explore Images
+                        </Typography>
+                        <IconButton
+                            className={classes.close}
+                            onClick={handleCloseUpload}
+                        >
+                            <CloseIcon/>
+                        </IconButton>
+                    </DialogTitle>
+                    <DialogContent>
+                        <Typography color='textSecondary' gutterBottom>
+                            Browse datatensor public datasets to find images
+                        </Typography>
+                        <DTExplore/>
                     </DialogContent>
                 </Dialog>
             </div>

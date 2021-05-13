@@ -14,7 +14,7 @@ Image = build_schema(Image)
     'offset': fields.Int(required=False, missing=0),
     'limit': fields.Int(required=False, missing=0)
 }, location='query')
-def get_images(args, dataset_id):
+def get_images(args, dataset_id=None):
     result = find_images(dataset_id, args['offset'], args['limit'])
     return {'images': parse(result)}, 200
 
