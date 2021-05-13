@@ -7,7 +7,7 @@ import {Point} from 'src/types/point';
 import {Theme} from 'src/theme';
 import {reset} from 'src/utils/labeling';
 import useDataset from 'src/hooks/useDataset';
-import useImage from '../../../hooks/useImage';
+import useImage from 'src/hooks/useImage';
 
 interface ContextMenuProps {
     canvas: HTMLCanvasElement;  // ToolMove's canvas
