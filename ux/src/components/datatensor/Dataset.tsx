@@ -1,4 +1,4 @@
-import React, {FC, useRef, useState} from 'react';
+import React, {FC, useCallback, useEffect, useRef, useState} from 'react';
 import {useHistory} from 'react-router';
 import clsx from 'clsx';
 import {useSnackbar} from 'notistack';
@@ -24,6 +24,7 @@ import {Dataset} from 'src/types/dataset';
 import api from 'src/utils/api';
 import useDatasets from 'src/hooks/useDatasets';
 import {Close as CloseIcon} from '@material-ui/icons';
+import {Image} from 'src/types/image';
 
 interface DatasetProps {
     className?: string;
@@ -34,8 +35,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     root: {
         position: 'relative'
     },
+    area: {
+        overflow: 'hidden',
+    },
     media: {
-        height: 150,
+        height: 170
     },
     close: {
         position: 'absolute',
@@ -61,6 +65,27 @@ const DTDataset: FC<DatasetProps> = ({
     const {saveDatasets} = useDatasets();
 
     const datasetRef = useRef(null);
+
+    const [imagePreview, setImagePreview] = useState<Image>(null);
+
+    const fetchImages = useCallback(async () => {
+        try {
+            const response = await api.get<{ images: Image[] }>(`/datasets/${dataset._id}/images/`, {
+                params: {
+                    limit: 1
+                }
+            });
+            setImagePreview(response.data.images[0]);
+        } catch (err) {
+            console.error(err);
+        }
+
+    }, [dataset._id]);
+
+    useEffect(() => {
+        fetchImages();
+    }, [fetchImages]);
+
 
     const [openDeleteDataset, setOpenDeleteDataset] = useState(false);
     const handleOpenDeleteDataset = () => {
@@ -91,25 +116,26 @@ const DTDataset: FC<DatasetProps> = ({
             {...rest}
         >
             <CardActionArea
+                className={classes.area}
                 onClick={() => history.push(`/app/manage/datasets/${dataset._id}`)}
             >
                 <CardMedia
                     className={classes.media}
-                    image="/static/images/cards/contemplative-reptile.jpg"
+                    image={imagePreview && imagePreview.path}
                     title={`Open dataset "${dataset.name}"`}
                 />
-                <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">
-                        {dataset.name && capitalize(dataset.name)}
-                    </Typography>
-                    <Typography
-                        color="textSecondary"
-                        variant="body2"
-                        component="p"
-                        dangerouslySetInnerHTML={{__html: dataset.description}}
-                    />
-                </CardContent>
             </CardActionArea>
+            <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                    {dataset.name && capitalize(dataset.name)}
+                </Typography>
+                <Typography
+                    color="textSecondary"
+                    variant="body2"
+                    component="p"
+                    dangerouslySetInnerHTML={{__html: dataset.description}}
+                />
+            </CardContent>
             <CardActions>
                 <Button
                     color="primary"

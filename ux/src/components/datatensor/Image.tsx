@@ -10,6 +10,7 @@ interface DTImageProps {
     className?: string;
     clickable?: boolean;
     onClick?: () => void;
+    style?: object;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
