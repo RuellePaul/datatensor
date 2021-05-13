@@ -16,7 +16,7 @@ import {
     renderCursor,
     reset
 } from 'src/utils/labeling';
-import useImage from '../../../hooks/useImage';
+import useImage from 'src/hooks/useImage';
 
 interface ToolMoveProps {
     setTool: (tool) => void;
@@ -55,6 +55,35 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
             canvasRef.current.style.cursor = 'nesw-resize';
     }, [direction]);
 
+
+    const handleMouseDown = (event: React.MouseEvent<HTMLCanvasElement>) => {
+        let point = currentPoint(event.nativeEvent);
+
+        let canvas = canvasRef.current;
+        reset(canvas);
+
+        if (event.nativeEvent.which === 1) {
+            let labelsHoverIds = currentLabelsHoverIds(canvasRef.current, point, labels);
+            if (labelsHoverIds.length > 0) {
+                setStoredPoint(point);
+                renderCursor(canvas, point, labels, (resizeLabel, direction) => {
+                    setDirection(direction);
+                    if (resizeLabel === null && direction === null) {
+                        saveLabels(labels.filter(label => !labelsHoverIds.includes(label._id)));
+                        setStoredLabels(labels.filter(label => labelsHoverIds.includes(label._id)));
+                    } else {
+                        saveLabels(labels.filter(label => label._id !== resizeLabel._id));
+                        setStoredLabels(labels.filter(label => label._id === resizeLabel._id));
+                    }
+                });
+            }
+        }
+        if (event.nativeEvent.which === 3) {
+            let labelsHoverIds = currentLabelsHoverIds(canvasRef.current, point, labels);
+            setStoredLabels(labels.filter(label => labelsHoverIds.includes(label._id)));
+        }
+    };
+
     const handleMouseMove = (event: React.MouseEvent<HTMLCanvasElement>) => {
         let canvas = canvasRef.current;
         reset(canvas);
@@ -67,7 +96,7 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
                 return;
             }
             drawLabels(canvas, labels.filter(label => labelsHoverIds.includes(label._id)), categories, CANVAS_OFFSET, 5, true, true);
-            renderCursor(canvas, point, labels, direction => setDirection(direction));
+            renderCursor(canvas, point, labels, (label, direction) => setDirection(direction));
             if (direction === null)
                 if (labelsHoverIds.length === 0)
                     canvas.style.cursor = 'initial';
@@ -84,23 +113,6 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
                 let labelsResized = currentLabelsResized(canvas, storedLabels, point, storedPoint, direction);
                 drawLabels(canvas, labelsResized, categories, CANVAS_OFFSET, 5, true, true);
             }
-        }
-    };
-
-    const handleMouseDown = (event: React.MouseEvent<HTMLCanvasElement>) => {
-        let point = currentPoint(event.nativeEvent);
-
-        if (event.nativeEvent.which === 1) {
-            let labelsHoverIds = currentLabelsHoverIds(canvasRef.current, point, labels);
-            if (labelsHoverIds.length > 0) {
-                setStoredPoint(point);
-                saveLabels(labels.filter(label => !labelsHoverIds.includes(label._id)));
-                setStoredLabels(labels.filter(label => labelsHoverIds.includes(label._id)));
-            }
-        }
-        if (event.nativeEvent.which === 3) {
-            let labelsHoverIds = currentLabelsHoverIds(canvasRef.current, point, labels);
-            setStoredLabels(labels.filter(label => labelsHoverIds.includes(label._id)));
         }
     };
 

@@ -124,7 +124,7 @@ export const drawLabels = (canvas: HTMLCanvasElement, labels: Label[], categorie
     }
 };
 
-export const renderCursor = (canvas: HTMLCanvasElement, point: Point, labels: Label[], callback: (direction: Direction) => void) => {
+export const renderCursor = (canvas: HTMLCanvasElement, point: Point, labels: Label[], callback: (label: Label, direction: Direction) => void) => {
     if (!labels || !point)
         return;
 
@@ -133,26 +133,26 @@ export const renderCursor = (canvas: HTMLCanvasElement, point: Point, labels: La
 
         if (point[0] > x && point[0] < x + RESIZE_SIZE) {
             if (point[1] > y && point[1] < y + RESIZE_SIZE) {
-                callback('top-left');
+                callback(label, 'top-left');
                 return;
             }
             if (point[1] > y + h - RESIZE_SIZE && point[1] < y + h) {
-                callback('bottom-left');
+                callback(label, 'bottom-left');
                 return;
             }
         } else if (point[0] > x + w - RESIZE_SIZE && point[0] < x + w) {
             if (point[1] > y && point[1] < y + RESIZE_SIZE) {
-                callback('top-right');
+                callback(label, 'top-right');
                 return;
             }
             if (point[1] > y + h - RESIZE_SIZE && point[1] < y + h) {
-                callback('bottom-right');
+                callback(label, 'bottom-right');
                 return;
             }
         }
     }
 
-    callback(null)
+    callback(null, null);
 };
 
 export const currentLabelsHoverIds = (canvas: HTMLCanvasElement, point: Point, labels: Label[]) => {
