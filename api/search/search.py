@@ -2,16 +2,16 @@ from flask import Blueprint
 from webargs import fields
 from webargs.flaskparser import use_args
 
-from .core import search_images_by_category_name
+from .core import search_datasets_by_category_name
 from utils import parse
 
 search = Blueprint('search', __name__)
 
 
-@search.route('/images', methods=['GET'])
+@search.route('/', methods=['GET'])
 @use_args({
-    'category_name': fields.Str(required=True)
+    'query': fields.Str(required=True)
 }, location='query')
-def search_images(args):
-    result = search_images_by_category_name(args['category_name'])
-    return {'images': parse(result)}, 200
+def search_datatensor(args):
+    result = search_datasets_by_category_name(args['category_name'])
+    return {'datasets': parse(result)}, 200
