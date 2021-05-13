@@ -29,8 +29,8 @@ def get_label(image_id, label_id):
     'labels': fields.List(fields.Dict(), required=True)
 })
 def post_labels(args, image_id):
-    result = insert_labels(image_id, args['labels'])
-    return {'labels': parse(result)}, 201
+    insert_labels(image_id, args['labels'])
+    return 'OK', 200
 
 
 @labels.route('/', methods=['DELETE'])

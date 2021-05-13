@@ -18,7 +18,7 @@ import {
     TextField,
     Typography
 } from '@material-ui/core';
-import {Close as CloseIcon} from '@material-ui/icons';
+import {Add as AddIcon, Close as CloseIcon} from '@material-ui/icons';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import api from 'src/utils/api';
@@ -89,11 +89,12 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
             style={{color: COLORS[index]}}
             variant={currentCategory?.name === category.name ? 'outlined' : 'default'}
             title={`${category.name} | ${category.supercategory}`}
+            size={count > 0 ? 'medium' : 'small'}
         />
     )
 };
 
-const Chips: FC<ChipsProps> = ({categories}) => {
+const Chips: FC<ChipsProps> = ({categories, children}) => {
 
     const classes = useStyles();
     const {labels} = useImage();
@@ -105,7 +106,7 @@ const Chips: FC<ChipsProps> = ({categories}) => {
         <>
             <div className={classes.categories}>
                 {
-                    labeledCategories.map((category, index) => (
+                    labeledCategories.map(category => (
                         <Box
                             m={0.5}
                             key={category._id}
@@ -124,8 +125,13 @@ const Chips: FC<ChipsProps> = ({categories}) => {
                 <Divider/>
             </Box>
             <div className={classes.categories}>
+                <Box
+                    m={0.5}
+                >
+                    {children}
+                </Box>
                 {
-                    unlabeledCategories.map((category, index) => (
+                    unlabeledCategories.map(category => (
                         <Box
                             m={0.5}
                             key={category._id}
@@ -165,15 +171,15 @@ const DTCategories: FC<CategoriesProps> = () => {
         <>
             <Chips
                 categories={categories}
-            />
-            <Button
-                color="primary"
-                onClick={() => setOpenCategoryCreation(true)}
-                size="small"
-                variant="contained"
             >
-                New category
-            </Button>
+                <Chip
+                    label='New category'
+                    icon={<AddIcon/>}
+                    onClick={() => setOpenCategoryCreation(true)}
+                    variant='outlined'
+                    size='small'
+                />
+            </Chips>
 
             <Dialog
                 fullWidth
