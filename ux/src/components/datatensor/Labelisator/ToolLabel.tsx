@@ -19,7 +19,7 @@ import useCategory from 'src/hooks/useCategory';
 import useImage from 'src/hooks/useImage';
 
 interface ToolLabelProps {
-    setTool: (tool) => void;
+    setTool: any;
     autoSwitch: boolean;
 }
 

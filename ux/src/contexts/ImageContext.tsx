@@ -36,6 +36,7 @@ export const ImageProvider: FC<ImageProviderProps> = ({image, children}) => {
     };
 
     const fetchLabels = useCallback(async () => {
+        setCurrentLabels(null);
         try {
             const response = await api.get<{ labels: Label[] }>(`/images/${image._id}/labels/`);
             handleSaveLabels(response.data.labels);

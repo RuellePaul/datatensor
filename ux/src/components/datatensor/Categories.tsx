@@ -8,7 +8,6 @@ import {
     Dialog,
     DialogContent,
     DialogTitle,
-    Divider,
     Grid,
     IconButton,
     InputLabel,
@@ -16,7 +15,8 @@ import {
     MenuItem,
     Select,
     TextField,
-    Typography
+    Typography,
+    useTheme
 } from '@material-ui/core';
 import {Add as AddIcon, Close as CloseIcon} from '@material-ui/icons';
 import {Formik} from 'formik';
@@ -60,10 +60,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const DTCategory: FC<CategoryProps> = ({category, index}) => {
 
+
+    const theme = useTheme();
     const {currentCategory, saveCurrentCategory} = useCategory();
     const {labels} = useImage();
 
     const count = currentCategoryCount(labels, category);
+    const isSelected = currentCategory?.name === category.name;
 
     return (
         <Chip
@@ -86,10 +89,13 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
                 </Typography>
             )}
             onClick={() => saveCurrentCategory(category)}
-            style={{color: COLORS[index]}}
-            variant={currentCategory?.name === category.name ? 'outlined' : 'default'}
+            style={isSelected
+                ? {color: theme.palette.getContrastText(COLORS[index]), background: COLORS[index]}
+                : {color: COLORS[index]}
+            }
             title={`${category.name} | ${category.supercategory}`}
             size={count > 0 ? 'medium' : 'small'}
+            variant={count > 0 ? 'outlined' : 'default'}
         />
     )
 };
@@ -104,11 +110,29 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
 
     return (
         <>
+            <Box my={2}>
+                <div className={classes.categories}>
+                    {
+                        labeledCategories.map(category => (
+                            <Box
+                                m={0.6}
+                                key={category._id}
+                            >
+                                <DTCategory
+                                    category={category}
+                                    index={categories.indexOf(category)}
+                                />
+                            </Box>
+                        ))
+                    }
+                </div>
+
+            </Box>
             <div className={classes.categories}>
                 {
-                    labeledCategories.map(category => (
+                    unlabeledCategories.map(category => (
                         <Box
-                            m={0.5}
+                            m={0.4}
                             key={category._id}
                         >
                             <DTCategory
@@ -120,30 +144,12 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
                 }
             </div>
             <Box
-                my={1}
+                display='flex'
+                justifyContent='flex-end'
+                my={2}
             >
-                <Divider/>
+                {children}
             </Box>
-            <div className={classes.categories}>
-                <Box
-                    m={0.5}
-                >
-                    {children}
-                </Box>
-                {
-                    unlabeledCategories.map(category => (
-                        <Box
-                            m={0.5}
-                            key={category._id}
-                        >
-                            <DTCategory
-                                category={category}
-                                index={categories.indexOf(category)}
-                            />
-                        </Box>
-                    ))
-                }
-            </div>
         </>
     )
 };
@@ -177,7 +183,6 @@ const DTCategories: FC<CategoriesProps> = () => {
                     icon={<AddIcon/>}
                     onClick={() => setOpenCategoryCreation(true)}
                     variant='outlined'
-                    size='small'
                 />
             </Chips>
 
@@ -210,8 +215,7 @@ const DTCategories: FC<CategoriesProps> = () => {
                                 supercategory: null
                             }}
                             validationSchema={Yup.object().shape({
-                                name: Yup.string().max(255).required('Name is required'),
-                                supercategory: Yup.string().max(255)
+                                name: Yup.string().max(255).required('Name is required')
                             })}
                             onSubmit={async (values, {
                                 setStatus,

@@ -12,7 +12,7 @@ class Category(Schema):
     _id = fields.Str(dump_only=True)
     dataset_id = fields.Str(dump_only=True)
     name = fields.Str(required=True)
-    supercategory = fields.Str()
+    supercategory = fields.Str(allow_none=True)
 
 
 def find_categories(dataset_id, offset, limit):

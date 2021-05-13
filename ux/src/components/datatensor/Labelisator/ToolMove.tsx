@@ -19,7 +19,7 @@ import {
 import useImage from 'src/hooks/useImage';
 
 interface ToolMoveProps {
-    setTool: (tool) => void;
+    setTool: any;
     autoSwitch: boolean;
 }
 
