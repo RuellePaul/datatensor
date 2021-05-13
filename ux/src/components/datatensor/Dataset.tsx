@@ -24,7 +24,6 @@ import {Dataset} from 'src/types/dataset';
 import api from 'src/utils/api';
 import useDatasets from 'src/hooks/useDatasets';
 import {Close as CloseIcon} from '@material-ui/icons';
-import useImages from 'src/hooks/useImages';
 
 interface DatasetProps {
     className?: string;
@@ -60,7 +59,6 @@ const DTDataset: FC<DatasetProps> = ({
     const {enqueueSnackbar} = useSnackbar();
 
     const {saveDatasets} = useDatasets();
-    const {images} = useImages();
 
     const datasetRef = useRef(null);
 
@@ -154,17 +152,6 @@ const DTDataset: FC<DatasetProps> = ({
                             {' '}
                             ?
                         </Typography>
-                        {images.length > 0 && (
-                            <Typography color='textSecondary' gutterBottom>
-                                This operation will delete
-                                {' '}
-                                <Typography component='span' style={{fontWeight: 'bold'}}>
-                                    {images.length} images
-                                </Typography>
-                                {' '}
-                                and their labels
-                            </Typography>
-                        )}
                     </Box>
 
                     <Box display='flex' justifyContent='flex-end'>

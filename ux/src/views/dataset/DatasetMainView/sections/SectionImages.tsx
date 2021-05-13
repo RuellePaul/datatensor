@@ -60,7 +60,7 @@ const SectionImage: FC = () => {
                 </Typography>
 
                 <Box display='flex'>
-                    <Button color="primary" onClick={handleUploadOpen} size="small">
+                    <Button variant='contained' color="primary" onClick={handleUploadOpen} size="small">
                         Upload images
                     </Button>
                 </Box>
