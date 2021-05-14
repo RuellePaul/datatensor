@@ -19,12 +19,12 @@ class Dataset(Schema):
 
 
 def find_datasets(offset, limit):
-    user_id = verify_access_token(request.headers['Authorization']).get('_id')
+    user_id = verify_access_token().get('_id')
     return list(db.datasets.find({'user_id': user_id}).skip(offset).limit(limit))
 
 
 def find_dataset(dataset_id):
-    user_id = verify_access_token(request.headers['Authorization']).get('_id')
+    user_id = verify_access_token().get('_id')
     return db.datasets.find_one({'_id': ObjectId(dataset_id),
                                  'user_id': user_id})
 
@@ -37,12 +37,12 @@ def insert_dataset(dataset):
 
 
 def remove_datasets():
-    user_id = verify_access_token(request.headers['Authorization']).get('_id')
+    user_id = verify_access_token().get('_id')
     db.datasets.delete_many({'user_id': user_id})
 
 
 def remove_dataset(dataset_id):
-    user_id = verify_access_token(request.headers['Authorization']).get('_id')
+    user_id = verify_access_token().get('_id')
     images = list(Config.db.images.find({'dataset_id': dataset_id}))
     if images:
         for image in images:

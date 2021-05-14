@@ -1,9 +1,11 @@
-import React, {FC} from 'react';
+import React, {FC, useCallback, useEffect, useState} from 'react';
 import moment from 'moment';
 import {LinearProgress, Typography} from '@material-ui/core';
 import {DataGrid, GridCellParams, GridColDef, GridSortDirection} from '@material-ui/data-grid';
 import FancyLabel from 'src/components/FancyLabel';
 import {Task} from 'src/types/task';
+import api from 'src/utils/api';
+import useIsMountedRef from 'src/hooks/useIsMountedRef';
 
 function reducer(status) {
     switch (status) {
@@ -88,45 +90,6 @@ const columns: GridColDef[] = [
     }
 ];
 
-const rows: Task[] = [
-    {
-        _id: '0',
-        user_id: '58a802c1b350056c737ca447db48c7c645581b265e61d2ceeae5e0320adc7e6a',
-        dataset_id: '507f191e810c19729de860ea',
-        type: 'generator',
-        created_at: '2021-05-14T17:09:24.007531',
-        status: 'active',
-        progress: 0.53
-    },
-    {
-        _id: '1',
-        user_id: '58a802c1b350056c737ca447db48c7c645581b265e61d2ceeae5e0320adc7e6a',
-        dataset_id: '507f191e810c19729de860ea',
-        type: 'generator',
-        created_at: '2021-05-14T17:09:24.007531',
-        status: 'success',
-        progress: 0
-    },
-    {
-        _id: '2',
-        user_id: '58a802c1b350056c737ca447db48c7c645581b265e61d2ceeae5e0320adc7e6a',
-        dataset_id: '507f191e810c19729de860ea',
-        type: 'generator',
-        created_at: '2021-05-14T17:12:48.007531',
-        status: 'pending',
-        progress: 0
-    },
-    {
-        _id: '3',
-        user_id: '58a802c1b350056c737ca447db48c7c645581b265e61d2ceeae5e0320adc7e6a',
-        dataset_id: '507f191e810c19729de860ea',
-        type: 'generator',
-        created_at: '2021-05-14T17:12:48.007531',
-        status: 'failed',
-        progress: 0,
-        error: "You're missing out of memory. Consider upgrade to premium"
-    },
-];
 
 interface TaskProps {
 
@@ -135,10 +98,30 @@ interface TaskProps {
 
 const DTTasks: FC<TaskProps> = () => {
 
+    const isMountedRef = useIsMountedRef();
+
+    const [currentTasks, setCurrentTasks] = useState<Task[] | null>(null);
+
+    const getTasks = useCallback(async () => {
+        try {
+            const response = await api.get<{ tasks: Task[] }>('/tasks/');
+
+            if (isMountedRef.current) {
+                setCurrentTasks(response.data.tasks);
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }, [isMountedRef]);
+
+    useEffect(() => {
+        getTasks();
+    }, [getTasks]);
+
     return (
         <DataGrid
             autoHeight
-            rows={rows}
+            rows={currentTasks || []}
             columns={columns}
             pageSize={5}
             getRowId={row => row._id}
@@ -151,6 +134,7 @@ const DTTasks: FC<TaskProps> = () => {
                     sort: 'desc' as GridSortDirection,
                 },
             ]}
+            loading={currentTasks === null}
         />
     );
 };
