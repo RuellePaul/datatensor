@@ -136,14 +136,16 @@ interface TaskProps {
 const DTTasks: FC<TaskProps> = () => {
 
     return (
-        <div style={{height: 400, width: '100%'}}>
             <DataGrid
+                autoHeight
                 rows={rows}
                 columns={columns}
                 pageSize={5}
                 getRowId={row => row._id}
+                disableColumnMenu
+                disableColumnSelector
+                disableSelectionOnClick
             />
-        </div>
     );
 };
 
