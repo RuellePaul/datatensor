@@ -23,6 +23,7 @@ export const TasksContext = createContext<TasksContextValue>({
 export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
 
     const [loading, setLoading] = useState(true);
+    const [delayed, setDelayed] = useState(false);
     const [currentTasks, setCurrentTasks] = useState<Task[]>([]);
 
     const handleSaveTasks = (update: Task[] | ((tasks: Task[]) => Task[])): void => {
@@ -37,6 +38,7 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
             console.error(err);
         } finally {
             setLoading(false);
+            setDelayed(false);
         }
 
     }, []);
@@ -48,8 +50,10 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
     useEffect(() => {
         let hasPendingOrActiveTasks = currentTasks.filter(task => ['pending', 'active'].includes(task.status)).length > 0;
 
-        if (hasPendingOrActiveTasks)
-            setTimeout(() => fetchTasks(), POLLING_DELAY * 1000);
+        if (hasPendingOrActiveTasks && !delayed) {
+            setDelayed(true);
+            setTimeout(fetchTasks, POLLING_DELAY * 1000);
+        }
     }, [fetchTasks, currentTasks])
 
     return (
