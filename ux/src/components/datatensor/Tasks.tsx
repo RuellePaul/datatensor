@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import moment from 'moment';
 import {LinearProgress, Typography} from '@material-ui/core';
-import {DataGrid, GridCellParams, GridColDef} from '@material-ui/data-grid';
+import {DataGrid, GridCellParams, GridColDef, GridSortDirection} from '@material-ui/data-grid';
 import FancyLabel from 'src/components/FancyLabel';
 import {Task} from 'src/types/task';
 
@@ -145,6 +145,12 @@ const DTTasks: FC<TaskProps> = () => {
             disableColumnMenu
             disableColumnSelector
             disableSelectionOnClick
+            sortModel={[
+                {
+                    field: 'created_at',
+                    sort: 'desc' as GridSortDirection,
+                },
+            ]}
         />
     );
 };
