@@ -29,7 +29,11 @@ interface PerformanceOverTimeProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {},
+    root: {
+        background: 'transparent',
+        boxShadow: 'none',
+        border: `solid 1px ${theme.palette.divider}`
+    },
     shrink: {
         paddingBottom: 0,
         [theme.breakpoints.down('xs')]: {

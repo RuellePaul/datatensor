@@ -1,9 +1,19 @@
 import React, {FC} from 'react';
 import moment from 'moment';
-import {LinearProgress, Typography} from '@material-ui/core';
+import {LinearProgress, makeStyles, Typography} from '@material-ui/core';
 import {DataGrid, GridCellParams, GridColDef, GridOverlay, GridSortDirection} from '@material-ui/data-grid';
 import FancyLabel from 'src/components/FancyLabel';
 import useTasks from 'src/hooks/useTasks';
+import {Theme} from 'src/theme';
+
+const useStyles = makeStyles((theme: Theme) => ({
+    root: {
+        borderColor: `${theme.palette.divider} !important`,
+        '& *': {
+            borderColor: `${theme.palette.divider} !important`
+        }
+    }
+}));
 
 function reducer(status) {
     switch (status) {
@@ -103,11 +113,14 @@ const LoadingOverlay: FC = () => (
 
 const DTTasks: FC<TaskProps> = () => {
 
+    const classes = useStyles();
+
     const {tasks, loading} = useTasks();
 
 
     return (
         <DataGrid
+            className={classes.root}
             autoHeight
             rows={tasks || []}
             columns={columns}
