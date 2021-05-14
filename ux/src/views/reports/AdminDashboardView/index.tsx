@@ -104,7 +104,14 @@ const AdminDashboardView: FC = () => {
                     </Grid>
                     <Grid
                         item
-                        lg={8}
+                        lg={3}
+                        xs={12}
+                    >
+
+                    </Grid>
+                    <Grid
+                        item
+                        lg={9}
                         xs={12}
                     >
                         <DTTasks/>

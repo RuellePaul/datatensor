@@ -1,51 +1,118 @@
 import React, {FC} from 'react';
-import {makeStyles} from '@material-ui/core';
-import {Theme} from 'src/theme';
-import {DataGrid, GridColDef, GridValueGetterParams} from '@material-ui/data-grid';
+import {LinearProgress, Typography} from '@material-ui/core';
+import {DataGrid, GridCellParams, GridColDef} from '@material-ui/data-grid';
+import FancyLabel from 'src/components/FancyLabel';
+
+function reducer(status) {
+    switch (status) {
+        case 'pending':
+            return 'default'
+        case 'success':
+            return 'success'
+        case 'active':
+            return 'info'
+        case 'failed':
+            return 'error'
+        default:
+            throw new Error('Invalid status')
+    }
+}
 
 const columns: GridColDef[] = [
-    {field: 'id', headerName: 'ID', width: 70},
-    {field: 'firstName', headerName: 'First name', width: 130},
-    {field: 'lastName', headerName: 'Last name', width: 130},
     {
-        field: 'age',
-        headerName: 'Age',
-        type: 'number',
-        width: 90,
+        field: 'user_id',
+        headerName: 'User',
+        width: 200,
+        renderCell: (params: GridCellParams) => (
+            <div>
+                {params.value}
+            </div>
+        ),
     },
     {
-        field: 'fullName',
-        headerName: 'Full name',
-        description: 'This column has a value getter and is not sortable.',
-        sortable: false,
-        width: 160,
-        valueGetter: (params: GridValueGetterParams) =>
-            `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
+        field: 'status',
+        headerName: 'Status',
+        width: 110,
+        renderCell: (params: GridCellParams) => (
+            <FancyLabel color={reducer(params.value)}>
+                {params.value}
+            </FancyLabel>
+        ),
     },
+    {
+        field: 'progress',
+        headerName: 'Progress',
+        width: 240,
+        renderCell: (params: GridCellParams) => {
+            if (params.row.status === 'failed')
+                return (
+                    <Typography variant='body2' color='error' noWrap>
+                        {params.row.error}
+                    </Typography>
+                );
+            if (params.row.status === 'pending')
+                return (
+                    <LinearProgress
+                        variant='query'
+                        style={{width: '100%'}}
+                    />
+                );
+            return (
+                <LinearProgress
+                    variant={params.row.progress >= 1 ? 'query' : 'determinate'}
+                    value={params.row.status === 'success' ? 100 : 100 * (params.value as number)}
+                    style={{width: '100%'}}
+                />)
+        },
+    }
 ];
 
 const rows = [
-    {id: 1, lastName: 'Snow', firstName: 'Jon', age: 35},
-    {id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42},
-    {id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45},
-    {id: 4, lastName: 'Stark', firstName: 'Arya', age: 16},
-    {id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null},
-    {id: 6, lastName: 'Melisandre', firstName: null, age: 150},
-    {id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44},
-    {id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36},
-    {id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65},
+    {
+        id: 0,
+        user_id: '58a802c1b350056c737ca447db48c7c645581b265e61d2ceeae5e0320adc7e6a',
+        dataset_id: '507f191e810c19729de860ea',
+        name: 'Generator',
+        created_at: '2021-05-14T17:09:24.007531',
+        status: 'active',
+        progress: 0.53
+    },
+    {
+        id: 1,
+        user_id: '58a802c1b350056c737ca447db48c7c645581b265e61d2ceeae5e0320adc7e6a',
+        dataset_id: '507f191e810c19729de860ea',
+        name: 'Generator',
+        created_at: '2021-05-14T17:09:24.007531',
+        status: 'success',
+        progress: 0
+    },
+    {
+        id: 2,
+        user_id: '58a802c1b350056c737ca447db48c7c645581b265e61d2ceeae5e0320adc7e6a',
+        dataset_id: '507f191e810c19729de860ea',
+        name: 'Generator',
+        created_at: '2021-05-14T17:12:48.007531',
+        status: 'pending',
+        progress: 0
+    },
+    {
+        id: 3,
+        user_id: '58a802c1b350056c737ca447db48c7c645581b265e61d2ceeae5e0320adc7e6a',
+        dataset_id: '507f191e810c19729de860ea',
+        name: 'Generator',
+        created_at: '2021-05-14T17:12:48.007531',
+        status: 'failed',
+        progress: 0,
+        error: "You're missing out of memory. Consider upgrade to premium"
+    },
 ];
 
 interface TaskProps {
 
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-    root: {},
-}));
 
 const DTTasks: FC<TaskProps> = () => {
-    const classes = useStyles();
 
     return (
         <div style={{height: 400, width: '100%'}}>
