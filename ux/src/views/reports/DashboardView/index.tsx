@@ -20,7 +20,7 @@ const DashboardView: FC = () => {
             className={classes.root}
             title="Dashboard"
         >
-            <Container maxWidth={false}>
+            <Container maxWidth="lg">
                 ...
             </Container>
         </Page>

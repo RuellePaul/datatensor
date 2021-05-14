@@ -1,8 +1,7 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import {Bar} from 'react-chartjs-2';
-import {fade, makeStyles, useTheme, useMediaQuery} from '@material-ui/core';
+import {fade, makeStyles, useMediaQuery, useTheme} from '@material-ui/core';
 import {Theme} from 'src/theme';
 
 interface ChartProps {
@@ -57,8 +56,8 @@ const ComposedChart: FC<ChartProps> = ({
                     backgroundColor: gradientLine,
                     borderColor: theme.palette.secondary.main,
                     pointBorderColor: theme.palette.background.default,
-                    pointBorderWidth: 3,
-                    pointRadius: 6,
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
                     pointBackgroundColor: theme.palette.secondary.main,
                     yAxisID: 'y-axis-total',
                     label: 'users-total'
@@ -153,7 +152,8 @@ const ComposedChart: FC<ChartProps> = ({
             bodyFontColor: theme.palette.text.secondary,
             footerFontColor: theme.palette.text.secondary,
             callbacks: {
-                title: () => {
+                title: (els: any) => {
+                    return els[0].label
                 },
                 label: (tooltipItem: any) => {
                     if (tooltipItem.datasetIndex === 0) {
@@ -181,10 +181,5 @@ const ComposedChart: FC<ChartProps> = ({
     );
 };
 
-ComposedChart.propTypes = {
-    className: PropTypes.string,
-    data: PropTypes.array.isRequired,
-    labels: PropTypes.array.isRequired
-};
 
 export default ComposedChart;

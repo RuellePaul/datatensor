@@ -23,7 +23,10 @@ import api from 'src/utils/api';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        padding: theme.spacing(4)
+        padding: theme.spacing(4),
+        [theme.breakpoints.down('sm')]: {
+            padding: theme.spacing(4, 2)
+        }
     },
 }));
 
@@ -152,7 +155,6 @@ const Generator: FC = () => {
                                 </div>
                             </Alert>
                         </Box>
-
                     </form>
                 )}
             </Formik>
