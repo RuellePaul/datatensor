@@ -82,7 +82,7 @@ const columns: GridColDef[] = [
         width: 180,
         renderCell: (params: GridCellParams) => (
             <div>
-                 {typeof params.value === 'string' && moment(params.value).format('DD MMM | H:mm')}
+                {typeof params.value === 'string' && moment(params.value).format('DD MMM | H:mm')}
             </div>
         )
     }
@@ -136,16 +136,16 @@ interface TaskProps {
 const DTTasks: FC<TaskProps> = () => {
 
     return (
-            <DataGrid
-                autoHeight
-                rows={rows}
-                columns={columns}
-                pageSize={5}
-                getRowId={row => row._id}
-                disableColumnMenu
-                disableColumnSelector
-                disableSelectionOnClick
-            />
+        <DataGrid
+            autoHeight
+            rows={rows}
+            columns={columns}
+            pageSize={5}
+            getRowId={row => row._id}
+            disableColumnMenu
+            disableColumnSelector
+            disableSelectionOnClick
+        />
     );
 };
 
