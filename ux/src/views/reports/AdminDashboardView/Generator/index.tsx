@@ -20,6 +20,7 @@ import {Alert} from '@material-ui/lab';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import {Theme} from 'src/theme';
 import api from 'src/utils/api';
+import {Task} from 'src/types/task';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -55,7 +56,8 @@ const Generator: FC = () => {
                     setSubmitting
                 }) => {
                     try {
-                        await api.post('/generator/', values);
+                        const response = await api.post<{ task: Task }>('/tasks/', {type: 'generator', properties: values});
+                        console.log(response.data.task)
 
                         if (isMountedRef.current) {
                             setStatus({success: true});

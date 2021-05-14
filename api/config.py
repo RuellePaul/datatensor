@@ -15,7 +15,7 @@ class Config:
     ENVIRONMENT = os.environ['ENVIRONMENT']
 
     ROOT_PATH = os.path.abspath(os.path.join(Flask(__name__).root_path, os.pardir))
-    DEFAULT_DATASETS_PATH = os.path.join(ROOT_PATH, 'api', 'generator', 'default_datasets')
+    DEFAULT_DATASETS_PATH = os.path.join(ROOT_PATH, 'api', 'manager', 'generator', 'default_datasets')
 
     UI_URL = 'https://localhost:5069'
     API_URI = 'http://127.0.0.1:4069'

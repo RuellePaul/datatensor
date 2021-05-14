@@ -22,7 +22,7 @@ def get_tasks(args, user_id=None, dataset_id=None):
 @use_args({
     'type': fields.Str(required=True),
     'properties': fields.Dict(required=True)
-}, location='query')
-def post_task(args, dataset_id):
+})
+def post_task(args, dataset_id=None):
     result = insert_task(dataset_id, args['type'], args['properties'])
-    return {'tasks': parse(result)}, 200
+    return {'task': parse(result)}, 200
