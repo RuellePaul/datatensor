@@ -35,7 +35,7 @@ def find_tasks(user_id, dataset_id, offset, limit):
         return list(db.tasks.find().skip(offset).limit(limit))
 
 
-def insert_task(dataset_id, task_type):
+def insert_task(dataset_id, task_type, properties):
     user = verify_access_token(verified=True)
 
     _check_user_allowed_to_create_task(user, dataset_id, task_type)
@@ -46,6 +46,7 @@ def insert_task(dataset_id, task_type):
         type=task_type,
         created_at=datetime.now(),
         status='pending',
-        progress=0
+        progress=0,
+        properties=properties
     )
     db.tasks.insert_one(task)
