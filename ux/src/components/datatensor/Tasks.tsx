@@ -1,7 +1,9 @@
 import React, {FC} from 'react';
+import moment from 'moment';
 import {LinearProgress, Typography} from '@material-ui/core';
 import {DataGrid, GridCellParams, GridColDef} from '@material-ui/data-grid';
 import FancyLabel from 'src/components/FancyLabel';
+import {Task} from 'src/types/task';
 
 function reducer(status) {
     switch (status) {
@@ -18,15 +20,24 @@ function reducer(status) {
     }
 }
 
+function translateType(type) {
+    switch (type) {
+        case 'generator':
+            return 'Dataset generation'
+        case 'augmentor':
+            return 'Images augmentation'
+    }
+}
+
 const columns: GridColDef[] = [
     {
-        field: 'user_id',
-        headerName: 'User',
+        field: 'type',
+        headerName: 'Name',
         width: 200,
         renderCell: (params: GridCellParams) => (
-            <div>
-                {params.value}
-            </div>
+            <strong>
+                {translateType(params.value)}
+            </strong>
         ),
     },
     {
@@ -64,42 +75,52 @@ const columns: GridColDef[] = [
                     style={{width: '100%'}}
                 />)
         },
+    },
+    {
+        field: 'created_at',
+        headerName: 'Created at',
+        width: 180,
+        renderCell: (params: GridCellParams) => (
+            <div>
+                 {typeof params.value === 'string' && moment(params.value).format('DD MMM | H:mm')}
+            </div>
+        )
     }
 ];
 
-const rows = [
+const rows: Task[] = [
     {
-        id: 0,
+        _id: '0',
         user_id: '58a802c1b350056c737ca447db48c7c645581b265e61d2ceeae5e0320adc7e6a',
         dataset_id: '507f191e810c19729de860ea',
-        name: 'Generator',
+        type: 'generator',
         created_at: '2021-05-14T17:09:24.007531',
         status: 'active',
         progress: 0.53
     },
     {
-        id: 1,
+        _id: '1',
         user_id: '58a802c1b350056c737ca447db48c7c645581b265e61d2ceeae5e0320adc7e6a',
         dataset_id: '507f191e810c19729de860ea',
-        name: 'Generator',
+        type: 'generator',
         created_at: '2021-05-14T17:09:24.007531',
         status: 'success',
         progress: 0
     },
     {
-        id: 2,
+        _id: '2',
         user_id: '58a802c1b350056c737ca447db48c7c645581b265e61d2ceeae5e0320adc7e6a',
         dataset_id: '507f191e810c19729de860ea',
-        name: 'Generator',
+        type: 'generator',
         created_at: '2021-05-14T17:12:48.007531',
         status: 'pending',
         progress: 0
     },
     {
-        id: 3,
+        _id: '3',
         user_id: '58a802c1b350056c737ca447db48c7c645581b265e61d2ceeae5e0320adc7e6a',
         dataset_id: '507f191e810c19729de860ea',
-        name: 'Generator',
+        type: 'generator',
         created_at: '2021-05-14T17:12:48.007531',
         status: 'failed',
         progress: 0,
@@ -116,7 +137,12 @@ const DTTasks: FC<TaskProps> = () => {
 
     return (
         <div style={{height: 400, width: '100%'}}>
-            <DataGrid rows={rows} columns={columns} pageSize={5}/>
+            <DataGrid
+                rows={rows}
+                columns={columns}
+                pageSize={5}
+                getRowId={row => row._id}
+            />
         </div>
     );
 };
