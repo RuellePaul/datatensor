@@ -20,6 +20,7 @@ import {Alert} from '@material-ui/lab';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import {Theme} from 'src/theme';
 import api from 'src/utils/api';
+import useTasks from 'src/hooks/useTasks';
 import {Task} from 'src/types/task';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -34,6 +35,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Generator: FC = () => {
 
     const classes = useStyles();
+
+    const {saveTasks} = useTasks();
 
     const isMountedRef = useIsMountedRef();
     const {enqueueSnackbar} = useSnackbar();
@@ -56,8 +59,11 @@ const Generator: FC = () => {
                     setSubmitting
                 }) => {
                     try {
-                        const response = await api.post<{ task: Task }>('/tasks/', {type: 'generator', properties: values});
-                        console.log(response.data.task)
+                        const response = await api.post<{ task: Task }>('/tasks/', {
+                            type: 'generator',
+                            properties: values
+                        });
+                        saveTasks(tasks => [...tasks, response.data.task]);
 
                         if (isMountedRef.current) {
                             setStatus({success: true});

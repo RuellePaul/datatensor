@@ -1,11 +1,9 @@
-import React, {FC, useCallback, useEffect, useState} from 'react';
+import React, {FC} from 'react';
 import moment from 'moment';
 import {LinearProgress, Typography} from '@material-ui/core';
-import {DataGrid, GridCellParams, GridColDef, GridSortDirection} from '@material-ui/data-grid';
+import {DataGrid, GridCellParams, GridColDef, GridOverlay, GridSortDirection} from '@material-ui/data-grid';
 import FancyLabel from 'src/components/FancyLabel';
-import {Task} from 'src/types/task';
-import api from 'src/utils/api';
-import useIsMountedRef from 'src/hooks/useIsMountedRef';
+import useTasks from 'src/hooks/useTasks';
 
 function reducer(status) {
     switch (status) {
@@ -95,33 +93,23 @@ interface TaskProps {
 
 }
 
+const LoadingOverlay: FC = () => (
+    <GridOverlay>
+        <div style={{position: 'absolute', top: 0, width: '100%'}}>
+            <LinearProgress/>
+        </div>
+    </GridOverlay>
+);
 
 const DTTasks: FC<TaskProps> = () => {
 
-    const isMountedRef = useIsMountedRef();
+    const {tasks, loading} = useTasks();
 
-    const [currentTasks, setCurrentTasks] = useState<Task[] | null>(null);
-
-    const getTasks = useCallback(async () => {
-        try {
-            const response = await api.get<{ tasks: Task[] }>('/tasks/');
-
-            if (isMountedRef.current) {
-                setCurrentTasks(response.data.tasks);
-            }
-        } catch (err) {
-            console.error(err);
-        }
-    }, [isMountedRef]);
-
-    useEffect(() => {
-        getTasks();
-    }, [getTasks]);
 
     return (
         <DataGrid
             autoHeight
-            rows={currentTasks || []}
+            rows={tasks || []}
             columns={columns}
             pageSize={5}
             getRowId={row => row._id}
@@ -134,7 +122,10 @@ const DTTasks: FC<TaskProps> = () => {
                     sort: 'desc' as GridSortDirection,
                 },
             ]}
-            loading={currentTasks === null}
+            loading={loading}
+            components={{
+                LoadingOverlay
+            }}
         />
     );
 };
