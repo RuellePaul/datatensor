@@ -62,13 +62,6 @@ def inject_csrf_token_cookie(response):
     return response
 
 
-@app.after_request
-def response_logger(response):
-    if request.method != 'OPTIONS':
-        logger.info(f'{request.method} {request.url.split(PREFIX)[1]} | {response.status}')
-    return response
-
-
 @app.errorhandler(CSRFError)
 def handle_csrf_error(error):
     return errors.CSRF(error.description).flask_response()
@@ -83,4 +76,4 @@ def handle_api_error(error):
 
 if __name__ == '__main__':
     encrypt_init(Config.DB_HOST, key=Config.DB_ENCRYPTION_KEY, setup=True)
-    app.run(debug=Config.ENVIRONMENT != 'production', threaded=True, host='0.0.0.0', port=4069)
+    app.run(debug=Config.ENVIRONMENT != 'production', threaded=True, host='127.0.0.1', port=4069)
