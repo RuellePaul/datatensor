@@ -102,10 +102,12 @@ def insert_images(dataset_id, request_files):
 
 
 def remove_images(dataset_id):
-    db.images.delete_many({'dataset_id': dataset_id})
+    # TODO
+    pass
 
 
 def remove_image(dataset_id, image_id):
     delete_image_from_s3(image_id)
+    db.labels.delete_many({'image_id': image_id})
     db.images.delete_one({'_id': image_id,
                           'dataset_id': dataset_id})
