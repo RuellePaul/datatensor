@@ -39,7 +39,7 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
     const classes = useStyles();
 
     const {categories} = useDataset();
-    const {labels, saveLabels, storePosition} = useImage();
+    const {image, labels, saveLabels, storePosition} = useImage();
 
     const canvasRef = useRef<HTMLCanvasElement>();
 
@@ -54,6 +54,10 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
         else if (direction === "top-right" || direction === "bottom-left")
             canvasRef.current.style.cursor = 'nesw-resize';
     }, [direction]);
+
+    useEffect(() => {
+        reset(canvasRef.current);
+    }, [image._id])
 
 
     const handleMouseDown = (event: React.MouseEvent<HTMLCanvasElement>) => {

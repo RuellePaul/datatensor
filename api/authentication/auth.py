@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint
 from flask_bcrypt import check_password_hash
 from webargs import fields
 from webargs.flaskparser import use_args
@@ -12,7 +12,7 @@ auth = Blueprint('auth', __name__)
 
 @auth.route('/me')
 def me():
-    user = core.verify_access_token(request.headers.get('Authorization'))
+    user = core.verify_access_token()
     if not user:
         raise errors.ExpiredAuthentication
     user.pop('password', None)
@@ -87,7 +87,7 @@ def do_register(args):
     'activation_code': fields.Str(required=True)
 })
 def do_email_confirmation(args):
-    user = core.verify_access_token(request.headers.get('Authorization'))
+    user = core.verify_access_token()
     core.verify_user_email(user, args['activation_code'])
     access_token = core.encode_access_token(user['_id'])
 

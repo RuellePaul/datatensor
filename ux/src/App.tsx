@@ -7,6 +7,7 @@ import CookiesNotification from 'src/components/overlays/CookiesNotification';
 import GoogleAnalytics from 'src/components/utils/GoogleAnalytics';
 import SettingsNotification from 'src/components/overlays/SettingsNotification';
 import {AuthProvider} from 'src/contexts/AuthContext';
+import {TasksProvider} from 'src/contexts/TasksContext';
 import routes, {renderRoutes} from 'src/routes';
 import Providers from './providers';
 
@@ -18,12 +19,14 @@ const App: FC = () => {
         <Providers>
             <Router history={history}>
                 <AuthProvider>
-                    <GlobalStyles/>
-                    <ScrollReset/>
-                    <GoogleAnalytics/>
-                    <CookiesNotification/>
-                    <SettingsNotification/>
-                    {renderRoutes(routes)}
+                    <TasksProvider>
+                        <GlobalStyles/>
+                        <ScrollReset/>
+                        <GoogleAnalytics/>
+                        <CookiesNotification/>
+                        <SettingsNotification/>
+                        {renderRoutes(routes)}
+                    </TasksProvider>
                 </AuthProvider>
             </Router>
         </Providers>

@@ -153,7 +153,7 @@ const themesOptions: ThemeOptions[] = [
                 primary: '#f6f5f8',
                 secondary: '#9699a4'
             },
-            divider: '#54586e'
+            divider: '#4a4c5b'
         },
         shadows: strongShadows
     }

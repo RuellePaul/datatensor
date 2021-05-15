@@ -1,4 +1,3 @@
-from flask import request
 from flask_bcrypt import check_password_hash, generate_password_hash
 from marshmallow import Schema
 from webargs import fields
@@ -28,7 +27,7 @@ def find_user(user_id):
 
 
 def update_user(user_id, payload):
-    user = verify_access_token(request.headers.get('Authorization'))
+    user = verify_access_token()
     if user_id != user['_id']:
         raise errors.Forbidden()
     Config.db.users.find_one_and_update({'_id': user_id},
@@ -37,7 +36,7 @@ def update_user(user_id, payload):
 
 
 def update_user_password(user_id, password, new_password):
-    user = verify_access_token(request.headers.get('Authorization'))
+    user = verify_access_token()
     if user_id != user['_id']:
         raise errors.Forbidden()
 
@@ -59,7 +58,7 @@ def update_user_password(user_id, password, new_password):
 
 
 def remove_users(user_ids):
-    user = verify_access_token(request.headers['Authorization'])
+    user = verify_access_token()
     if user['_id'] in user_ids:
         user_ids.remove(user['_id'])
     Config.db.users.delete_many({'_id': {'$in': user_ids}, 'is_admin': False})

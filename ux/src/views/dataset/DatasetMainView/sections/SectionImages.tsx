@@ -32,6 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const SectionImage: FC = () => {
 
     const classes = useStyles();
+
     const {dataset_id} = useParams();
 
     const {images} = useImages();
@@ -59,14 +60,9 @@ const SectionImage: FC = () => {
                 </Typography>
 
                 <Box display='flex'>
-                    <Button variant="outlined" color="primary" onClick={handleUploadOpen} size="small">
+                    <Button variant='contained' color="primary" onClick={handleUploadOpen} size="small">
                         Upload images
                     </Button>
-                    <Box ml={1}>
-                        <Button variant="contained" color="primary" size="small">
-                            Crawl images from the web
-                        </Button>
-                    </Box>
                 </Box>
 
                 <Dialog
@@ -85,6 +81,9 @@ const SectionImage: FC = () => {
                         </IconButton>
                     </DialogTitle>
                     <DialogContent>
+                        <Typography color='textSecondary' gutterBottom>
+                            Upload images of objects that you want to detect
+                        </Typography>
                         <ImagesDropzone
                             dataset_id={dataset_id}
                             callback={handleCloseUpload}

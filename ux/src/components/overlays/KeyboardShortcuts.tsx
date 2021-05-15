@@ -130,8 +130,8 @@ const KeyboardShortcuts: FC = () => {
                                     Change tool (move)
                                 </Shortcut>
                                 <Divider/>
-                                <Shortcut keyDesc='ESCAPE'>
-                                    Reset canvas
+                                <Shortcut keyDesc='CTRL + Z'>
+                                    Restore previous state
                                 </Shortcut>
                                 <Divider/>
                             </Grid>
@@ -148,6 +148,10 @@ const KeyboardShortcuts: FC = () => {
                                 <Divider/>
                                 <Shortcut keyDesc='→'>
                                     Next image
+                                </Shortcut>
+                                <Divider/>
+                                <Shortcut keyDesc='s'>
+                                    Save labels
                                 </Shortcut>
                                 <Divider/>
                                 <Shortcut keyDesc='SPACE'>

@@ -5,7 +5,7 @@ import {Theme} from 'src/theme';
 
 interface FancyLabelProps {
     className?: string;
-    color?: 'primary' | 'secondary' | 'error' | 'warning' | 'success';
+    color?: 'primary' | 'secondary' | 'error' | 'warning' | 'success' | 'info' | 'default';
     children?: ReactNode;
     style?: {};
 }
@@ -48,7 +48,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     warning: {
         color: theme.palette.warning.main,
         backgroundColor: fade(theme.palette.warning.main, 0.08)
-    }
+    },
+    info: {
+        color: theme.palette.info.main,
+        backgroundColor: fade(theme.palette.info.main, 0.08)
+    },
+    default: {
+        color: theme.palette.text.primary,
+        backgroundColor: fade(theme.palette.text.primary, 0.08)
+    },
 }));
 
 const FancyLabel: FC<FancyLabelProps> = ({

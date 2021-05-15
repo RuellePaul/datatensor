@@ -20,16 +20,23 @@ import {Alert} from '@material-ui/lab';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import {Theme} from 'src/theme';
 import api from 'src/utils/api';
+import useTasks from 'src/hooks/useTasks';
+import {Task} from 'src/types/task';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        padding: theme.spacing(4)
+        padding: theme.spacing(4),
+        [theme.breakpoints.down('sm')]: {
+            padding: theme.spacing(4, 2)
+        }
     },
 }));
 
 const Generator: FC = () => {
 
     const classes = useStyles();
+
+    const {saveTasks} = useTasks();
 
     const isMountedRef = useIsMountedRef();
     const {enqueueSnackbar} = useSnackbar();
@@ -45,19 +52,23 @@ const Generator: FC = () => {
                     image_count: 10
                 }}
                 validationSchema={Yup.object().shape({
-                    image_count: Yup.number().max(10000).required(),
+                    image_count: Yup.number().max(40000).required(),
                 })}
                 onSubmit={async (values, {
                     setStatus,
                     setSubmitting
                 }) => {
                     try {
-                        await api.post('/generator/', values);
+                        const response = await api.post<{ task: Task }>('/tasks/', {
+                            type: 'generator',
+                            properties: values
+                        });
+                        saveTasks(tasks => [...tasks, response.data.task]);
 
                         if (isMountedRef.current) {
                             setStatus({success: true});
                             setSubmitting(false);
-                            enqueueSnackbar(`Dataset generated (${values.image_count} images)`, {variant: 'info'});
+                            enqueueSnackbar(`Task added`, {variant: 'info'});
                         }
                     } catch (error) {
                         console.error(error);
@@ -152,7 +163,6 @@ const Generator: FC = () => {
                                 </div>
                             </Alert>
                         </Box>
-
                     </form>
                 )}
             </Formik>

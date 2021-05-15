@@ -3,6 +3,8 @@ FROM python:3.8-slim AS release
 
 COPY api /api
 WORKDIR /api
+RUN apt-get update
+RUN apt-get install ffmpeg libsm6 libxext6  -y
 RUN pip install --user -r requirements.txt --no-warn-script-location
 
 ENV PATH /root/.local/bin:$PATH

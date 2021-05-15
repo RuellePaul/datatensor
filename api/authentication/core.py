@@ -28,16 +28,21 @@ def encode_access_token(user_id):
     return access_token
 
 
-def verify_access_token(access_token, verified=False):
+def verify_access_token(access_token=None, verified=False):
     if not access_token:
-        raise errors.InvalidAuthentication
+        try:
+            access_token = request.headers.get('Authorization')
+            if not access_token:
+                raise errors.InvalidAuthentication()
+        except RuntimeError:
+            raise errors.InvalidAuthentication()
 
     try:
         user_id = jwt.decode(access_token, Config.ACCESS_TOKEN_KEY, algorithms='HS256').get('user_id')
         if not user_id:
-            raise errors.InvalidAuthentication
+            raise errors.InvalidAuthentication()
     except jwt.exceptions.ExpiredSignatureError:
-        raise errors.ExpiredAuthentication
+        raise errors.ExpiredAuthentication()
 
     user = Config.db.users.find_one({'_id': user_id}, {'password': 0})
     if not user:
@@ -52,7 +57,7 @@ def verify_access_token(access_token, verified=False):
 def require_authorization(blueprints):
     def authorized():
         if request.method in ['GET', 'POST', 'PUT', 'DELETE']:
-            verify_access_token(request.headers.get('Authorization'))
+            verify_access_token()
 
     for blueprint in blueprints:
         blueprint.before_request(authorized)
@@ -62,7 +67,7 @@ def admin_guard(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         if request.method in ['GET', 'POST', 'PUT', 'DELETE']:
-            user = verify_access_token(request.headers.get('Authorization'))
+            user = verify_access_token()
             if user['_id'] not in Config.ADMIN_USER_IDS:
                 raise errors.Forbidden('Not an admin user')
         result = func(*args, **kwargs)

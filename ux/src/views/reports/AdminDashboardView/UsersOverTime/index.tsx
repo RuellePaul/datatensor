@@ -22,14 +22,18 @@ import {User} from 'src/types/user';
 import moment from 'moment';
 import {TimeRange} from 'src/types/timeRange';
 
-interface PerformanceOverTimeProps {
+interface UsersOverTimeProps {
     className?: string;
     users: User[];
     timeRange: TimeRange;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {},
+    root: {
+        background: 'transparent',
+        boxShadow: 'none',
+        border: `solid 1px ${theme.palette.divider}`
+    },
     shrink: {
         paddingBottom: 0,
         [theme.breakpoints.down('xs')]: {
@@ -44,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const buildArray = (size: number) => Array.apply(null, Array(size)).map((_, i) => i).reverse();
 
-const UsersOverTime: FC<PerformanceOverTimeProps> = ({className, users, timeRange, ...rest}) => {
+const UsersOverTime: FC<UsersOverTimeProps> = ({className, users, timeRange, ...rest}) => {
 
     const classes = useStyles();
     const history = useHistory();

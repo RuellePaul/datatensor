@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint
 from webargs import fields
 from webargs.flaskparser import use_args
 
