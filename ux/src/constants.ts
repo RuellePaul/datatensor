@@ -2,7 +2,7 @@ export const APP_VERSION = '0.4.0';
 
 export const ENABLE_REDUX_DEV_TOOLS = true;
 
-export const POLLING_DELAY = 1;
+export const POLLING_DELAY = 5;
 
 export const THEMES = {
     LIGHT: 'LIGHT',

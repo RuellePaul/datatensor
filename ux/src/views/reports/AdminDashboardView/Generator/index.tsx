@@ -52,7 +52,7 @@ const Generator: FC = () => {
                     image_count: 10
                 }}
                 validationSchema={Yup.object().shape({
-                    image_count: Yup.number().max(100000).required(),
+                    image_count: Yup.number().max(40000).required(),
                 })}
                 onSubmit={async (values, {
                     setStatus,
@@ -68,7 +68,7 @@ const Generator: FC = () => {
                         if (isMountedRef.current) {
                             setStatus({success: true});
                             setSubmitting(false);
-                            enqueueSnackbar(`Dataset generated (${values.image_count} images)`, {variant: 'info'});
+                            enqueueSnackbar(`Task added`, {variant: 'info'});
                         }
                     } catch (error) {
                         console.error(error);
