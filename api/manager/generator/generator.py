@@ -114,6 +114,7 @@ def main(user_id, task_id, properties):
                 'height': image.shape[0]
             })
             labels.extend(_labels_from_annotations(image_id, current_image, annotations['annotations']))
+    update_task(task_id, progress=1)
 
     saved_categories = []
     saved_labels = []

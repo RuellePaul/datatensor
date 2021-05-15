@@ -54,7 +54,7 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
             setDelayed(true);
             setTimeout(fetchTasks, POLLING_DELAY * 1000);
         }
-    }, [fetchTasks, currentTasks])
+    }, [fetchTasks, currentTasks, delayed])
 
     return (
         <TasksContext.Provider

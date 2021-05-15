@@ -84,7 +84,7 @@ const columns: GridColDef[] = [
                 <>
                     <Box width="100%" mr={1}>
                         <LinearProgress
-                            variant={params.row.progress >= 1 ? 'query' : 'determinate'}
+                            variant={(params.row.progress <= 0 || params.row.progress) >= 1 ? 'query' : 'determinate'}
                             value={params.row.status === 'success' ? 100 : 100 * (params.value as number)}
                         />
                     </Box>
