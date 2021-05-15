@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import moment from 'moment';
-import {LinearProgress, makeStyles, Typography} from '@material-ui/core';
+import {Box, LinearProgress, makeStyles, Typography} from '@material-ui/core';
 import {DataGrid, GridCellParams, GridColDef, GridOverlay, GridSortDirection} from '@material-ui/data-grid';
 import FancyLabel from 'src/components/FancyLabel';
 import useTasks from 'src/hooks/useTasks';
@@ -78,12 +78,25 @@ const columns: GridColDef[] = [
                         style={{width: '100%'}}
                     />
                 );
+            if (params.row.status === 'success')
+                return <div/>
             return (
-                <LinearProgress
-                    variant={params.row.progress >= 1 ? 'query' : 'determinate'}
-                    value={params.row.status === 'success' ? 100 : 100 * (params.value as number)}
-                    style={{width: '100%'}}
-                />)
+                <>
+                    <Box width="100%" mr={1}>
+                        <LinearProgress
+                            variant={params.row.progress >= 1 ? 'query' : 'determinate'}
+                            value={params.row.status === 'success' ? 100 : 100 * (params.value as number)}
+                        />
+                    </Box>
+                    <Box minWidth={35}>
+                        <Typography
+                            variant="body2"
+                            color="textSecondary">{`${(100 * params.row.progress).toFixed(2)}%`}
+                        </Typography>
+                    </Box>
+                </>
+
+            )
         },
     },
     {
