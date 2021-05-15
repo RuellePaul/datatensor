@@ -1,9 +1,9 @@
+import concurrent.futures
 from uuid import uuid4
 
 import boto3
 import cv2
 import numpy
-from bson.objectid import ObjectId
 from marshmallow import Schema
 from webargs import fields
 from werkzeug.utils import secure_filename
@@ -48,6 +48,27 @@ def upload_image(image_bytes, image_id):
         raise errors.InternalError(f'Cannot upload file to S3, {str(e)}')
 
 
+def upload_file(args):
+    file = args['file']
+    dataset_id = args['dataset_id']
+    if file and allowed_file(file.filename):
+        image_id = str(uuid4())
+        name = secure_filename(file.filename)
+        image = cv2.imdecode(numpy.fromstring(file.read(), numpy.uint8), cv2.IMREAD_UNCHANGED)
+        image = compress_image(image)
+        image_bytes = cv2.imencode('.jpg', image)[1].tostring()
+        path = upload_image(image_bytes, image_id)
+        return {
+            '_id': image_id,
+            'dataset_id': dataset_id,
+            'path': path,
+            'name': name,
+            'size': len(image_bytes),
+            'width': image.shape[1],
+            'height': image.shape[0]
+        }
+
+
 def delete_image_from_s3(image_id):
     try:
         s3.delete_object(
@@ -78,27 +99,12 @@ def find_image(dataset_id, image_id):
 
 
 def insert_images(dataset_id, request_files):
-    images = []
-    for file in request_files.values():
-        if file and allowed_file(file.filename):
-            image_id = str(uuid4())
-            name = secure_filename(file.filename)
-            image = cv2.imdecode(numpy.fromstring(file.read(), numpy.uint8), cv2.IMREAD_UNCHANGED)
-            image = compress_image(image)
-            image_bytes = cv2.imencode('.jpg', image)[1].tostring()
-            path = upload_image(image_bytes, image_id)
-            images.append({
-                '_id': image_id,
-                'dataset_id': dataset_id,
-                'path': path,
-                'name': name,
-                'size': len(image_bytes),
-                'width': image.shape[1],
-                'height': image.shape[0]
-            })
-
-    Config.db.images.insert_many(images)
-    return images
+    with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+        results = executor.map(upload_file, [{'file': file, 'dataset_id': dataset_id}
+                                             for file in request_files.values()])
+        images = list(filter(None.__ne__, results))
+        Config.db.images.insert_many(images)
+        return images
 
 
 def remove_images(dataset_id):
