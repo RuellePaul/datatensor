@@ -62,11 +62,17 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
 
 
     const theme = useTheme();
+
+    const {dataset} = useDataset();
     const {currentCategory, saveCurrentCategory} = useCategory();
     const {labels} = useImage();
 
     const count = currentCategoryCount(labels, category);
     const isSelected = currentCategory?.name === category.name;
+
+    const handleDeleteCategory = async (category: Category) => {
+        await api.delete(`/datasets/${dataset._id}/categories/${category._id}`, {params: {name: category.name}});
+    };
 
     return (
         <Chip
@@ -96,6 +102,7 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
             title={`${category.name} | ${category.supercategory}`}
             size={count > 0 ? 'medium' : 'small'}
             variant={count > 0 ? 'outlined' : 'default'}
+            onDelete={() => handleDeleteCategory(category)}
         />
     )
 };
