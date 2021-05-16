@@ -79,7 +79,10 @@ const ContextMenu: FC<ContextMenuProps> = ({canvas, selectedLabels, point, handl
                         onClick={() => handleUpdateLabelCategory(category)}
                     >
                         <Typography variant="inherit" noWrap>
-                            {capitalize(category.name)}
+                            {selectedLabels.map(selectedLabel => selectedLabel.category_id).includes(category._id)
+                                ? <strong>{capitalize(category.name)}</strong>
+                                : capitalize(category.name)
+                            }
                         </Typography>
                     </MenuItem>
                 ))}
