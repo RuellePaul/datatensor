@@ -1,4 +1,4 @@
-import React, {FC, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Masonry from 'react-masonry-css';
 import clsx from 'clsx';
@@ -156,6 +156,13 @@ const DTImagesList: FC<ImagesListProps> = ({
     const handlePaginationChange = (event: React.ChangeEvent<unknown>, value: number) => {
         setSelected(value - 1);
     };
+
+    useEffect(() => {
+        if (selected === images.length - 1)
+            saveOffset(offset => offset + LAZY_LOAD_BATCH);
+
+        // eslint-disable-next-line
+    }, [selected])
 
     return (
         <div

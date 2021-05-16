@@ -20,6 +20,8 @@ export const TasksContext = createContext<TasksContextValue>({
     loading: true
 });
 
+let timeoutId;
+
 export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
 
     const [loading, setLoading] = useState(true);
@@ -52,7 +54,10 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
 
         if (hasPendingOrActiveTasks && !delayed) {
             setDelayed(true);
-            setTimeout(fetchTasks, POLLING_DELAY * 1000);
+
+            if (timeoutId)
+                clearTimeout(timeoutId);
+            timeoutId = setTimeout(fetchTasks, POLLING_DELAY * 1000);
         }
     }, [fetchTasks, currentTasks, delayed])
 

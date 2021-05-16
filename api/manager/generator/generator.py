@@ -110,7 +110,7 @@ def main(user_id, task_id, properties):
     del json_remote_dataset
 
     categories = [{
-        '_id': category['id'],
+        '_id': category['id'],  # FIXME : must be an ObjectId (ex: delete category is broken on generated dataset)
         'dataset_id': dataset_id,
         'name': category['name'],
         'supercategory': category['supercategory']
@@ -125,6 +125,7 @@ def main(user_id, task_id, properties):
                                 for image in images_remote_dataset))
         images = list(filter(None.__ne__, results))
 
+        update_task(task_id, progress=1)
         labels = []
         for image_remote_dataset in images_remote_dataset:
             category_labels = [el for el in labels_remote_dataset if el['image_id'] == image_remote_dataset['id']]
