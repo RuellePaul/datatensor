@@ -1,11 +1,11 @@
 import React, {FC, useState} from 'react';
-import {useParams} from 'react-router';
 import {Box, Button, Dialog, DialogContent, DialogTitle, IconButton, makeStyles, Typography} from '@material-ui/core';
 import {Close as CloseIcon} from '@material-ui/icons';
 import DTImagesList from 'src/components/datatensor/ImagesList';
 import ImagesDropzone from 'src/components/ImagesDropzone';
 import useImages from 'src/hooks/useImages';
 import {Theme} from 'src/theme';
+import useDataset from 'src/hooks/useDataset';
 
 const useStyles = makeStyles((theme: Theme) => ({
     header: {
@@ -29,11 +29,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 
-const SectionImage: FC = () => {
+const SectionImages: FC = () => {
 
     const classes = useStyles();
 
-    const {dataset_id} = useParams();
+    const {dataset} = useDataset();
 
     const {images} = useImages();
 
@@ -54,7 +54,7 @@ const SectionImage: FC = () => {
             <div className={classes.header}>
                 <Typography variant="h4" color="textSecondary">
                     {images.length > 0
-                        ? `Showing ${imagesCount} images`
+                        ? `Showing ${imagesCount} / ${dataset.image_count} images`
                         : `No images found`
                     }
                 </Typography>
@@ -81,11 +81,13 @@ const SectionImage: FC = () => {
                         </IconButton>
                     </DialogTitle>
                     <DialogContent>
-                        <Typography color='textSecondary' gutterBottom>
+                        <Typography
+                            color='textSecondary'
+                            gutterBottom
+                        >
                             Upload images of objects that you want to detect
                         </Typography>
                         <ImagesDropzone
-                            dataset_id={dataset_id}
                             callback={handleCloseUpload}
                         />
                     </DialogContent>
@@ -99,4 +101,4 @@ const SectionImage: FC = () => {
     )
 };
 
-export default SectionImage;
+export default SectionImages;

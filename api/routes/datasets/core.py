@@ -34,6 +34,7 @@ def insert_dataset(dataset):
     user_id = verify_access_token(request.headers['Authorization'], verified=True).get('_id')
     db.datasets.insert_one({'user_id': user_id,
                             'created_at': datetime.now(),
+                            'image_count': 0,
                             **dataset})
 
 

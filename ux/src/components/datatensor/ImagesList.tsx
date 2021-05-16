@@ -22,6 +22,7 @@ import api from 'src/utils/api'
 import bytesToSize from 'src/utils/bytesToSize';
 import useDataset from 'src/hooks/useDataset';
 import {ImageProvider} from 'src/contexts/ImageContext';
+import {LAZY_LOAD_BATCH} from 'src/constants';
 
 interface ImagesListProps {
     className?: string;
@@ -99,8 +100,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const LAZY_LOAD_BATCH = 20;
-
 const DTImagesList: FC<ImagesListProps> = ({
                                                className,
                                                ...rest
@@ -108,8 +107,8 @@ const DTImagesList: FC<ImagesListProps> = ({
     const classes = useStyles();
     const theme = useTheme();
 
-    const {dataset} = useDataset();
-    const {images, saveImages} = useImages();
+    const {dataset, saveDataset} = useDataset();
+    const {images, saveImages, saveOffset} = useImages();
 
     const [open, setOpen] = useState(false);
     const [selected, setSelected] = useState(0);
@@ -118,9 +117,6 @@ const DTImagesList: FC<ImagesListProps> = ({
     const openMenu = Boolean(anchorEl);
 
     const imageSelected = images[selected];
-
-    const [limit, setLimit] = useState(LAZY_LOAD_BATCH);
-    const hasMore = images.length > limit;
 
     const handleOpenImage = (index) => {
         setOpen(true);
@@ -139,12 +135,13 @@ const DTImagesList: FC<ImagesListProps> = ({
         setAnchorEl(null);
     };
 
-    const handleDelete = async event => {
+    const handleDeleteImage = async event => {
         event.stopPropagation();
 
         await api.delete(`/datasets/${dataset._id}/images/${imageSelected._id}`);
         setSelected(Math.max(0, selected - 1));
         saveImages(images.filter(image => image._id !== imageSelected._id));
+        saveDataset({...dataset, image_count: dataset.image_count - 1})
         handleCloseMenu();
         images.length <= 1 && handleCloseImage();
     };
@@ -168,12 +165,10 @@ const DTImagesList: FC<ImagesListProps> = ({
         >
             <InfiniteScroll
                 className={classes.scroll}
-                dataLength={limit}
-                next={() => {
-                    setTimeout(() => setLimit(limit + LAZY_LOAD_BATCH), 100);
-                }}
+                dataLength={images.length}
+                next={() => setTimeout(() => saveOffset(offset => offset + LAZY_LOAD_BATCH), 100)}
                 height={'calc(100vh - 300px)'}
-                hasMore={hasMore}
+                hasMore={dataset.image_count > images.length}
                 loader={<LinearProgress/>}
             >
                 <Masonry
@@ -185,7 +180,7 @@ const DTImagesList: FC<ImagesListProps> = ({
                     className={classes.grid}
                     columnClassName={classes.column}
                 >
-                    {images.slice(0, limit).map((image, index) => (
+                    {images.map((image, index) => (
                         <ImageProvider
                             key={image._id}
                             image={image}
@@ -260,7 +255,7 @@ const DTImagesList: FC<ImagesListProps> = ({
                                     }
                                 }}
                             >
-                                <MenuItem onClick={handleDelete}>
+                                <MenuItem onClick={handleDeleteImage}>
                                     Delete
                                 </MenuItem>
                             </Menu>

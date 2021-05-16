@@ -2,11 +2,14 @@ import React, {createContext, FC, ReactNode, useCallback, useEffect, useState} f
 import {Image} from 'src/types/image';
 import api from 'src/utils/api';
 import useDataset from 'src/hooks/useDataset';
-import {Box, CircularProgress} from '@material-ui/core';
+import SplashScreen from 'src/components/screens/SplashScreen';
+import {LAZY_LOAD_BATCH} from '../constants';
 
 export interface ImagesContextValue {
     images: Image[];
     saveImages: (update: Image[] | ((images: Image[]) => Image[])) => void;
+    offset: number;
+    saveOffset: (update: number | ((offset: number) => number)) => void;
 }
 
 interface ImagesProviderProps {
@@ -17,11 +20,15 @@ interface ImagesProviderProps {
 export const ImagesContext = createContext<ImagesContextValue>({
     images: [],
     saveImages: () => {
+    },
+    offset: LAZY_LOAD_BATCH,
+    saveOffset: () => {
     }
 });
 
 export const ImagesProvider: FC<ImagesProviderProps> = ({images, children}) => {
-    const [currentImages, setCurrentImages] = useState<Image[] | null>(images || null);
+    const [currentImages, setCurrentImages] = useState<Image[] | []>(images || []);
+    const [currentOffset, setCurrentOffset] = useState<number>(0);
 
     const {dataset} = useDataset();
 
@@ -31,14 +38,19 @@ export const ImagesProvider: FC<ImagesProviderProps> = ({images, children}) => {
 
     const fetchImages = useCallback(async () => {
         try {
-            const response = await api.get<{images: Image[]}>(`/datasets/${dataset._id}/images/`);
-            handleSaveImages(response.data.images);
+            const response = await api.get<{ images: Image[] }>(`/datasets/${dataset._id}/images/`, {
+                params: {
+                    offset: currentOffset,
+                    limit: LAZY_LOAD_BATCH
+                }
+            });
+            handleSaveImages(images => [...images, ...response.data.images]);
         } catch (err) {
             handleSaveImages([]);
             console.error(err);
         }
 
-    }, [dataset._id]);
+    }, [dataset._id, currentOffset]);
 
     useEffect(() => {
         fetchImages();
@@ -46,19 +58,16 @@ export const ImagesProvider: FC<ImagesProviderProps> = ({images, children}) => {
 
     if (currentImages === null)
         return (
-            <Box
-                display="flex"
-                justifyContent="center"
-            >
-                <CircularProgress/>
-            </Box>
+            <SplashScreen/>
         );
 
     return (
         <ImagesContext.Provider
             value={{
                 images: currentImages,
-                saveImages: handleSaveImages
+                saveImages: handleSaveImages,
+                offset: currentOffset,
+                saveOffset: setCurrentOffset
             }}
         >
             {children}
