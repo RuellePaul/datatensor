@@ -20,13 +20,13 @@ import {
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import {Theme} from 'src/theme';
+import useDataset from 'src/hooks/useDataset';
 import useImages from 'src/hooks/useImages';
 import api from 'src/utils/api';
 import bytesToSize from 'src/utils/bytesToSize';
 import {Image} from 'src/types/image';
 
 interface ImagesDropzoneProps {
-    dataset_id: string;
     callback?: () => void;
     className?: string;
 }
@@ -76,10 +76,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const ImagesDropzone: FC<ImagesDropzoneProps> = ({dataset_id, callback, className, ...rest}) => {
+const ImagesDropzone: FC<ImagesDropzoneProps> = ({callback, className, ...rest}) => {
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
 
+    const {dataset, saveDataset} = useDataset();
     const {saveImages} = useImages();
 
     const [isUploading, setIsUploading] = useState<boolean>(false);
@@ -106,10 +107,11 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({dataset_id, callback, classNam
             let formData = new FormData();
             files.map(image => formData.append(image.name, image));
             try {
-                const response = await api.post<{images: Image[]}>(`/datasets/${dataset_id}/images/`, formData, {
+                const response = await api.post<{ images: Image[] }>(`/datasets/${dataset._id}/images/`, formData, {
                     headers: {'Content-Type': 'multipart/form-data'}
                 });
                 saveImages((images: Image[]) => [...images, ...response.data.images]);
+                saveDataset({...dataset, image_count: dataset.image_count + response.data.images.length})
                 enqueueSnackbar(`${files.length} images uploaded`, {variant: 'success'});
             } catch (error) {
                 enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});

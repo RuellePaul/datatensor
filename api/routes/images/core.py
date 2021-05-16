@@ -4,6 +4,7 @@ from uuid import uuid4
 import boto3
 import cv2
 import numpy
+from bson.objectid import ObjectId
 from marshmallow import Schema
 from webargs import fields
 from werkzeug.utils import secure_filename
@@ -103,7 +104,16 @@ def insert_images(dataset_id, request_files):
         results = executor.map(upload_file, [{'file': file, 'dataset_id': dataset_id}
                                              for file in request_files.values()])
         images = list(filter(None.__ne__, results))
-        Config.db.images.insert_many(images)
+        db.images.insert_many(images)
+        db.datasets.update_one(
+            {
+                '_id': ObjectId(dataset_id)
+            },
+            {
+                '$inc': {
+                    'image_count': len(images)
+                }
+            }, upsert=False)
         return images
 
 
@@ -117,3 +127,12 @@ def remove_image(dataset_id, image_id):
     db.labels.delete_many({'image_id': image_id})
     db.images.delete_one({'_id': image_id,
                           'dataset_id': dataset_id})
+    db.datasets.update_one(
+        {
+            '_id': ObjectId(dataset_id)
+        },
+        {
+            '$inc': {
+                'image_count': -1
+            }
+        }, upsert=False)

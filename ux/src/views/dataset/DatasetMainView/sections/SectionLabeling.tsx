@@ -1,4 +1,4 @@
-import React, {FC, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {
     Box,
     Button,
@@ -21,6 +21,7 @@ import DTCategories from 'src/components/datatensor/Categories';
 import {Theme} from 'src/theme';
 import {CANVAS_OFFSET} from 'src/utils/labeling';
 import useImages from 'src/hooks/useImages';
+import {LAZY_LOAD_BATCH} from 'src/constants';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -46,13 +47,9 @@ const SectionLabeling: FC = () => {
 
     const classes = useStyles();
 
-    const {images} = useImages();
+    const {images, saveOffset} = useImages();
 
     const [selected, setSelected] = useState(0);
-
-    const handlePaginationChange = (event: React.ChangeEvent<unknown>, value: number) => {
-        setSelected(value - 1);
-    };
 
     const [tool, setTool] = useState<'label' | 'move'>('label');
     const handleToolChange = (event: React.MouseEvent<HTMLElement>, newTool: 'label' | 'move' | null) => {
@@ -60,6 +57,17 @@ const SectionLabeling: FC = () => {
             setTool(newTool);
     };
     const [autoSwitch, setAutoSwitch] = useState<boolean>(true);
+
+    const handlePaginationChange = (event: React.ChangeEvent<unknown>, value: number) => {
+        setSelected(value - 1);
+    };
+
+    useEffect(() => {
+        if (selected === images.length - 1)
+            saveOffset(offset => offset + LAZY_LOAD_BATCH);
+
+        // eslint-disable-next-line
+    }, [selected])
 
     return (
         <Box mt={3}>

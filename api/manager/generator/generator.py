@@ -110,7 +110,7 @@ def main(user_id, task_id, properties):
     del json_remote_dataset
 
     categories = [{
-        'internal_category_id': category['id'],
+        '_id': category['id'],  # FIXME : must be an ObjectId (ex: delete category is broken on generated dataset)
         'dataset_id': dataset_id,
         'name': category['name'],
         'supercategory': category['supercategory']
@@ -125,6 +125,7 @@ def main(user_id, task_id, properties):
                                 for image in images_remote_dataset))
         images = list(filter(None.__ne__, results))
 
+        update_task(task_id, progress=1)
         labels = []
         for image_remote_dataset in images_remote_dataset:
             category_labels = [el for el in labels_remote_dataset if el['image_id'] == image_remote_dataset['id']]
@@ -139,34 +140,22 @@ def main(user_id, task_id, properties):
             } for category_label in category_labels])
 
         saved_categories = []
-        saved_labels = []
         for label in labels:
             category = [category for category in categories
-                        if category['internal_category_id'] == label['category_id']][0]
-            saved_labels.append({
-                'image_id': label['image_id'],
-                'x': label['x'],
-                'y': label['y'],
-                'w': label['w'],
-                'h': label['h'],
-                'category_name': category['name']})
-
+                        if category['_id'] == label['category_id']][0]
             if category['name'] not in [saved_category['name'] for saved_category in saved_categories]:
                 saved_categories.append(category)
-
-        for category in saved_categories:
-            category.pop('internal_category_id', None)
 
         dataset = dict(_id=ObjectId(dataset_id),
                        user_id=user_id,
                        created_at=datetime.now().isoformat(),
                        name='COCO 2014',
                        description=f"Official COCO dataset, with {len(saved_categories)} categories.",
-                       is_public=True,
-                       dataset_name=dataset_name)
+                       image_count=len(images),
+                       is_public=True)
 
         Config.db.categories.insert_many(saved_categories)
-        Config.db.labels.insert_many(saved_labels)
+        Config.db.labels.insert_many(labels)
         Config.db.images.insert_many(images)
         Config.db.datasets.insert_one(dataset)
 
