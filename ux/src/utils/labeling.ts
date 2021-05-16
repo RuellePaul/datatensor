@@ -91,7 +91,7 @@ export const drawLabels = (canvas: HTMLCanvasElement, labels: Label[], categorie
     context.setLineDash([dash]);
 
     for (const label of labels) {
-        const category = categories.find(category => label.category_name === category.name);
+        const category = categories.find(category => label.category_id === category._id);
 
         const {x, y, w, h} = convertLabel(canvas, label, offset);
 
@@ -254,4 +254,4 @@ export const checkLabelsEquality = (labels: Label[], newLabels: Label[]) => _.is
 
 export const formatRatio = ratio => Math.abs(Math.round(ratio * 1e6) / 1e6);
 
-export const currentCategoryCount = (labels: Label[], category: Category) => labels.filter(label => label.category_name === category.name)?.length || 0;
+export const currentCategoryCount = (labels: Label[], category: Category) => labels.filter(label => label.category_id === category._id)?.length || 0;

@@ -33,7 +33,7 @@ const ContextMenu: FC<ContextMenuProps> = ({canvas, selectedLabels, point, handl
         handleClose();
         reset(canvas);
         let newLabels = labels.map(label => selectedLabels.map(selectedLabel => selectedLabel._id).includes(label._id)
-            ? {...label, category_name: category.name}
+            ? {...label, category_id: category._id}
             : label);
         saveLabels(newLabels);
         storePosition(newLabels);
@@ -79,7 +79,10 @@ const ContextMenu: FC<ContextMenuProps> = ({canvas, selectedLabels, point, handl
                         onClick={() => handleUpdateLabelCategory(category)}
                     >
                         <Typography variant="inherit" noWrap>
-                            {capitalize(category.name)}
+                            {selectedLabels.map(selectedLabel => selectedLabel.category_id).includes(category._id)
+                                ? <strong>{capitalize(category.name)}</strong>
+                                : capitalize(category.name)
+                            }
                         </Typography>
                     </MenuItem>
                 ))}
