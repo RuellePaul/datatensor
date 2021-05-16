@@ -61,7 +61,7 @@
         "@types/uuid": "^7.0.4",
         "@types/yup": "^0.28.3",
         "apexcharts": "^3.19.3",
-        "axios": "^0.19.2",
+        "axios": "^0.21.1",
         "axios-mock-adapter": "^1.18.2",
         "change-case": "^4.1.1",
         "chart.js": "^2.9.3",
