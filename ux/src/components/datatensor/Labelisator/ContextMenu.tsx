@@ -33,7 +33,7 @@ const ContextMenu: FC<ContextMenuProps> = ({canvas, selectedLabels, point, handl
         handleClose();
         reset(canvas);
         let newLabels = labels.map(label => selectedLabels.map(selectedLabel => selectedLabel._id).includes(label._id)
-            ? {...label, category_name: category.name}
+            ? {...label, category_id: category._id}
             : label);
         saveLabels(newLabels);
         storePosition(newLabels);

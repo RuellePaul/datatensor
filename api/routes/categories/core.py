@@ -37,9 +37,6 @@ def remove_categories(dataset_id):
 
 
 def remove_category(dataset_id, category_id):
-    category = Config.db.categories.find_one({'_id': category_id})
-    category_name = category.get('name')
-    db.labels.delete_many({'category_name': category_name})
-
+    db.labels.delete_many({'category_id': category_id})
     db.categories.delete_one({'_id': ObjectId(category_id),
                               'dataset_id': dataset_id})

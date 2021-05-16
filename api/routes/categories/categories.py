@@ -40,13 +40,6 @@ def delete_categories(dataset_id):
 
 
 @categories.route('/<category_id>', methods=['DELETE'])
-@use_args({
-    'name': fields.Str(allow_none=True),
-}, location='query')
-def delete_category(args, dataset_id, category_id):
-    category_name = args.get('name')
-    if category_name:
-        remove_category_by_name(dataset_id, category_name)
-    else:
-        remove_category(dataset_id, category_id)
+def delete_category(dataset_id, category_id):
+    remove_category(dataset_id, category_id)
     return 'OK', 200

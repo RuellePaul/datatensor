@@ -93,7 +93,7 @@ const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
                 y: formatRatio(Math.min(point[1] - CANVAS_OFFSET, storedPoint[1] - CANVAS_OFFSET) / (canvas.height - 2 * CANVAS_OFFSET)),
                 w: formatRatio((point[0] - storedPoint[0]) / (canvas.width - 2 * CANVAS_OFFSET)),
                 h: formatRatio((point[1] - storedPoint[1]) / (canvas.height - 2 * CANVAS_OFFSET)),
-                category_name: currentCategory?.name || null
+                category_id: currentCategory?._id || null
             };
             let newLabels = [...labels, newLabel];
             saveLabels(newLabels);
