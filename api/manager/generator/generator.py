@@ -10,7 +10,7 @@ from bson.objectid import ObjectId
 
 import errors
 from config import Config
-from manager.task_manager import update_task, increment_task_progress
+from manager.task_utils import update_task, increment_task_progress
 from routes.images.core import allowed_file, upload_image, secure_filename
 
 ANNOTATIONS_CONFIG = {
@@ -110,7 +110,8 @@ def main(user_id, task_id, properties):
     del json_remote_dataset
 
     categories = [{
-        '_id': category['id'],  # FIXME : must be an ObjectId (ex: delete category is broken on generated dataset)
+        '_id': str(uuid4()),
+        '_internal_id': category['id'],
         'dataset_id': dataset_id,
         'name': category['name'],
         'supercategory': category['supercategory']
@@ -142,9 +143,13 @@ def main(user_id, task_id, properties):
         saved_categories = []
         for label in labels:
             category = [category for category in categories
-                        if category['_id'] == label['category_id']][0]
+                        if category['_internal_id'] == label['category_id']][0]
+            label['category_id'] = category['_id']
             if category['name'] not in [saved_category['name'] for saved_category in saved_categories]:
                 saved_categories.append(category)
+
+        for category in saved_categories:
+            category.pop('_internal_id', None)
 
         dataset = dict(_id=ObjectId(dataset_id),
                        user_id=user_id,
@@ -158,6 +163,4 @@ def main(user_id, task_id, properties):
         Config.db.labels.insert_many(labels)
         Config.db.images.insert_many(images)
         Config.db.datasets.insert_one(dataset)
-
-    update_task(task_id, status='success')
     return
