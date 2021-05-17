@@ -17,5 +17,5 @@ async def run_task(task):
     except Exception as e:
         message = f"An error occured {str(e) if Config.ENVIRONMENT == 'development' else ''}"
         update_task(task_id, status='failed', error=message)
-    finally:
+    else:
         update_task(task_id, status='success')
