@@ -8,8 +8,10 @@ import api from 'src/utils/api';
 import Header from './Header';
 import Generator from './Generator';
 import UsersOverTime from 'src/components/charts/UsersOverTime';
+import TasksOverTime from 'src/components/charts/TasksOverTime';
 import DTTasks from 'src/components/datatensor/Tasks';
 import {TimeRange} from 'src/types/timeRange'
+import useTasks from 'src/hooks/useTasks';
 
 
 const timeRanges: TimeRange[] = [
@@ -52,6 +54,8 @@ const AdminDashboardView: FC = () => {
     const isMountedRef = useIsMountedRef();
     const [users, setUsers] = useState<User[]>([]);
 
+    const {tasks} = useTasks();
+
     const getUsers = useCallback(async () => {
         try {
             const response = await api.get<{ users: User[] }>('/users');
@@ -91,8 +95,8 @@ const AdminDashboardView: FC = () => {
                         xs={12}
                     >
                         <UsersOverTime
-                            timeRange={timeRange}
                             users={users}
+                            timeRange={timeRange}
                         />
                     </Grid>
                     <Grid
@@ -115,6 +119,16 @@ const AdminDashboardView: FC = () => {
                         xs={12}
                     >
                         <DTTasks/>
+                    </Grid>
+                    <Grid
+                        item
+                        lg={8}
+                        xs={12}
+                    >
+                        <TasksOverTime
+                            tasks={tasks}
+                            timeRange={timeRange}
+                        />
                     </Grid>
                 </Grid>
             </Container>
