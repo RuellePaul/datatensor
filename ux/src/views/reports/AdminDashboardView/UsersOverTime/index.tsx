@@ -1,10 +1,9 @@
 import React, {FC} from 'react';
 import {useHistory} from 'react-router';
+import Chart from 'react-apexcharts';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
-    Box,
     Card,
     CardContent,
     CardHeader,
@@ -13,11 +12,11 @@ import {
     ListItemText,
     makeStyles,
     MenuItem,
-    Theme
+    Theme,
+    useTheme
 } from '@material-ui/core';
 import {Users as UsersIcon} from 'react-feather';
 import GenericMoreButton from 'src/components/utils/GenericMoreButton';
-import ComposedChart from './ComposedChart';
 import {User} from 'src/types/user';
 import moment from 'moment';
 import {TimeRange} from 'src/types/timeRange';
@@ -40,9 +39,6 @@ const useStyles = makeStyles((theme: Theme) => ({
             paddingLeft: 0,
             paddingRight: 0
         }
-    },
-    chart: {
-        height: '100%'
     }
 }));
 
@@ -51,6 +47,8 @@ const buildArray = (size: number) => Array.apply(null, Array(size)).map((_, i) =
 const UsersOverTime: FC<UsersOverTimeProps> = ({className, users, timeRange, ...rest}) => {
 
     const classes = useStyles();
+    const theme = useTheme();
+
     const history = useHistory();
 
     const generateChartData = (size: number, interval: string, format: string) => (
@@ -96,18 +94,36 @@ const UsersOverTime: FC<UsersOverTimeProps> = ({className, users, timeRange, ...
             />
             <Divider/>
             <CardContent className={classes.shrink}>
-                <PerfectScrollbar>
-                    <Box
-                        height={375}
-                        minWidth={500}
-                    >
-                        <ComposedChart
-                            className={classes.chart}
-                            data={usersOverTime[timeRange.value].data}
-                            labels={usersOverTime[timeRange.value].labels}
-                        />
-                    </Box>
-                </PerfectScrollbar>
+                <Chart
+                    options={{
+                        colors: [theme.palette.primary.main],
+                        chart: {
+                            toolbar: {
+                                show: false
+                            }
+                        },
+                        stroke: {
+                            show: true,
+                            curve: 'smooth',
+                            lineCap: 'butt',
+                            colors: undefined,
+                            width: 2,
+                            dashArray: 0,
+                        },
+                        tooltip: {
+                            enabled: false
+                        },
+                        xaxis: {
+                            categories: usersOverTime[timeRange.value].labels
+                        }
+                    }}
+                    series={[{
+                        name: 'series-1',
+                        data: usersOverTime[timeRange.value].data
+                    }]}
+                    type='line'
+                    height={350}
+                />
             </CardContent>
         </Card>
     );
