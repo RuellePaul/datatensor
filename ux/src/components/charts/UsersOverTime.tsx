@@ -2,7 +2,6 @@ import React, {FC} from 'react';
 import {useHistory} from 'react-router';
 import Chart from 'react-apexcharts';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import {
     Card,
     CardContent,
@@ -102,6 +101,12 @@ const UsersOverTime: FC<UsersOverTimeProps> = ({className, users, timeRange, ...
                                 show: false
                             }
                         },
+                        dataLabels: {
+                            enabled: false
+                        },
+                        grid: {
+                            borderColor: theme.palette.divider
+                        },
                         stroke: {
                             show: true,
                             curve: 'smooth',
@@ -115,22 +120,25 @@ const UsersOverTime: FC<UsersOverTimeProps> = ({className, users, timeRange, ...
                         },
                         xaxis: {
                             categories: usersOverTime[timeRange.value].labels
-                        }
+                        },
+                        yaxis: [
+                            {
+                                labels: {
+                                    formatter: value => value.toFixed(0)
+                                }
+                            }
+                        ]
                     }}
                     series={[{
-                        name: 'series-1',
-                        data: usersOverTime[timeRange.value].data
+                        name: 'Users',
+                        data: usersOverTime[timeRange.value].data.reduce((a, x, i) => [...a, x + (a[i - 1] || 0)], [])
                     }]}
-                    type='line'
+                    type='area'
                     height={350}
                 />
             </CardContent>
         </Card>
     );
-};
-
-UsersOverTime.propTypes = {
-    className: PropTypes.string
 };
 
 export default UsersOverTime;

@@ -7,9 +7,9 @@ import {User} from 'src/types/user';
 import api from 'src/utils/api';
 import Header from './Header';
 import Generator from './Generator';
-import UsersOverTime from './UsersOverTime';
-import {TimeRange} from 'src/types/timeRange'
+import UsersOverTime from 'src/components/charts/UsersOverTime';
 import DTTasks from 'src/components/datatensor/Tasks';
+import {TimeRange} from 'src/types/timeRange'
 
 
 const timeRanges: TimeRange[] = [
@@ -68,7 +68,7 @@ const AdminDashboardView: FC = () => {
         getUsers();
     }, [getUsers]);
 
-    const [timeRange, setTimeRange] = useState<TimeRange>(timeRanges[3]);
+    const [timeRange, setTimeRange] = useState<TimeRange>(timeRanges[2]);
 
     return (
         <Page
