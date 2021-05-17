@@ -7,8 +7,8 @@ import {User} from 'src/types/user';
 import api from 'src/utils/api';
 import Header from './Header';
 import Generator from './Generator';
-import UsersOverTime from 'src/components/charts/UsersOverTime';
 import TasksOverTime from 'src/components/charts/TasksOverTime';
+import UsersOverTime from 'src/components/charts/UsersOverTime';
 import DTTasks from 'src/components/datatensor/Tasks';
 import {TimeRange} from 'src/types/timeRange'
 import useTasks from 'src/hooks/useTasks';
@@ -94,8 +94,8 @@ const AdminDashboardView: FC = () => {
                         lg={8}
                         xs={12}
                     >
-                        <UsersOverTime
-                            users={users}
+                        <TasksOverTime
+                            tasks={tasks}
                             timeRange={timeRange}
                         />
                     </Grid>
@@ -125,8 +125,8 @@ const AdminDashboardView: FC = () => {
                         lg={8}
                         xs={12}
                     >
-                        <TasksOverTime
-                            tasks={tasks}
+                        <UsersOverTime
+                            users={users}
                             timeRange={timeRange}
                         />
                     </Grid>

@@ -115,7 +115,14 @@ const TasksOverTime: FC<TasksOverTimeProps> = ({className, tasks, timeRange, ...
                             borderColor: theme.palette.divider
                         },
                         tooltip: {
-                            enabled: false
+                            enabled: true,
+                            enabledOnSeries: undefined,
+                            theme: theme.palette.type,
+                            shared: true,
+                            intersect: false,
+                            onDatasetHover: {
+                                highlightDataSeries: true,
+                            }
                         },
                         xaxis: {
                             categories: tasksOverTime[timeRange.value].success.labels
