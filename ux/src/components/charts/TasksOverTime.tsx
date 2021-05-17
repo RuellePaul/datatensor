@@ -99,9 +99,9 @@ const TasksOverTime: FC<TasksOverTimeProps> = ({className, tasks, timeRange, ...
                     options={{
                         colors: [
                             theme.palette.divider,
-                            theme.palette.info.light,
-                            theme.palette.success.light,
-                            theme.palette.error.light
+                            theme.palette.info.main,
+                            theme.palette.success.main,
+                            theme.palette.error.main
                         ],
                         chart: {
                             toolbar: {
