@@ -1,17 +1,47 @@
-import React, {FC} from 'react';
+import React, {FC, useState} from 'react';
 import moment from 'moment';
-import {Box, LinearProgress, makeStyles, Typography} from '@material-ui/core';
-import {DataGrid, GridCellParams, GridColDef, GridOverlay, GridSortDirection} from '@material-ui/data-grid';
+import {
+    Box,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    Grid,
+    IconButton,
+    LinearProgress,
+    makeStyles,
+    Typography
+} from '@material-ui/core';
+import {
+    DataGrid,
+    GridCellParams,
+    GridColDef,
+    GridOverlay,
+    GridRowParams,
+    GridSortDirection
+} from '@material-ui/data-grid';
 import FancyLabel from 'src/components/FancyLabel';
 import useTasks from 'src/hooks/useTasks';
 import {Theme} from 'src/theme';
+import {Close as CloseIcon} from '@material-ui/icons';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         borderColor: `${theme.palette.divider} !important`,
         '& *': {
             borderColor: `${theme.palette.divider} !important`
+        },
+        '& .MuiDataGrid-iconSeparator': {
+            color: theme.palette.text.secondary
         }
+    },
+    dialog: {
+        padding: theme.spacing(1, 2, 2)
+    },
+    close: {
+        position: 'absolute',
+        right: theme.spacing(1),
+        top: theme.spacing(1),
+        color: theme.palette.grey[500]
     }
 }));
 
@@ -130,29 +160,90 @@ const DTTasks: FC<TaskProps> = () => {
 
     const {tasks, loading} = useTasks();
 
+    const [selectedTask, setSelectedTask] = useState(null);
+
+    const handleRowClick = (params: GridRowParams) => {
+        setSelectedTask(params.row);
+    }
+
+    const handleClose = () => {
+        setSelectedTask(null);
+    }
 
     return (
-        <DataGrid
-            className={classes.root}
-            autoHeight
-            rows={tasks || []}
-            columns={columns}
-            pageSize={5}
-            getRowId={row => row._id}
-            disableColumnMenu
-            disableColumnSelector
-            disableSelectionOnClick
-            sortModel={[
-                {
-                    field: 'created_at',
-                    sort: 'desc' as GridSortDirection,
-                },
-            ]}
-            loading={loading}
-            components={{
-                LoadingOverlay
-            }}
-        />
+        <>
+            <DataGrid
+                className={classes.root}
+                autoHeight
+                rows={tasks || []}
+                columns={columns}
+                pageSize={5}
+                getRowId={row => row._id}
+                disableColumnMenu
+                disableColumnSelector
+                disableSelectionOnClick
+                sortModel={[
+                    {
+                        field: 'created_at',
+                        sort: 'desc' as GridSortDirection,
+                    },
+                ]}
+                loading={loading}
+                components={{
+                    LoadingOverlay
+                }}
+                onRowClick={handleRowClick}
+            />
+
+            <Dialog
+                disableRestoreFocus
+                PaperProps={{
+                    className: classes.dialog
+                }}
+                fullWidth
+                maxWidth='lg'
+                open={selectedTask !== null}
+                onClose={handleClose}
+            >
+                <DialogTitle
+                    className='flex'
+                    disableTypography
+                >
+                    <IconButton
+                        className={classes.close}
+                        onClick={handleClose}
+                    >
+                        <CloseIcon fontSize="large"/>
+                    </IconButton>
+                </DialogTitle>
+                <DialogContent>
+                    <Box my={2}>
+                        <pre>
+                            {JSON.stringify(selectedTask, null, 4)}
+                        </pre>
+                        <Grid
+                            container
+                            spacing={4}
+                        >
+                            <Grid
+                                item
+                                sm={6}
+                                xs={12}
+                            >
+
+                            </Grid>
+                            <Grid
+                                item
+                                sm={6}
+                                xs={12}
+                            >
+
+                            </Grid>
+                        </Grid>
+                    </Box>
+                </DialogContent>
+            </Dialog>
+        </>
     );
 };
 
