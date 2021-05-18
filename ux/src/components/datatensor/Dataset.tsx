@@ -10,7 +10,6 @@ import {
     CardActionArea,
     CardActions,
     CardContent,
-    CardMedia,
     CircularProgress,
     Dialog,
     DialogContent,
@@ -25,6 +24,9 @@ import api from 'src/utils/api';
 import useDatasets from 'src/hooks/useDatasets';
 import {Close as CloseIcon} from '@material-ui/icons';
 import {Image} from 'src/types/image';
+import {DatasetProvider} from 'src/contexts/DatasetContext';
+import {ImageProvider} from 'src/contexts/ImageContext';
+import DTImage from './Image';
 
 interface DatasetProps {
     className?: string;
@@ -33,13 +35,25 @@ interface DatasetProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        position: 'relative'
+        position: 'relative',
+        maxWidth: 460
     },
     area: {
         overflow: 'hidden',
+        height: 170,
+        '&:hover > div': {
+            transform: 'translate(0px, 0px) !important'
+        }
     },
-    media: {
-        height: 170
+    stacked: {
+        overflow: 'hidden',
+        height: 120,
+        position: 'absolute',
+        top: 25,
+        width: 200,
+        border: `solid 2px ${theme.palette.divider}`,
+        boxShadow: theme.shadows[2],
+        transition: 'all 1s ease'
     },
     close: {
         position: 'absolute',
@@ -66,16 +80,16 @@ const DTDataset: FC<DatasetProps> = ({
 
     const datasetRef = useRef(null);
 
-    const [imagePreview, setImagePreview] = useState<Image>(null);
+    const [imagesPreview, setImagesPreview] = useState<Image[]>([]);
 
     const fetchImages = useCallback(async () => {
         try {
             const response = await api.get<{ images: Image[] }>(`/datasets/${dataset._id}/images/`, {
                 params: {
-                    limit: 1
+                    limit: 8
                 }
             });
-            setImagePreview(response.data.images[0]);
+            setImagesPreview(response.data.images);
         } catch (err) {
             console.error(err);
         }
@@ -119,11 +133,21 @@ const DTDataset: FC<DatasetProps> = ({
                 className={classes.area}
                 onClick={() => history.push(`/app/manage/datasets/${dataset._id}`)}
             >
-                <CardMedia
-                    className={classes.media}
-                    image={imagePreview && imagePreview.path}
-                    title={`Open dataset "${dataset.name}"`}
-                />
+                {imagesPreview.map((image: Image, index) => (
+                    <div
+                        className={classes.stacked}
+                        style={{
+                            transform: `translateX(${index * 12}px) rotateX(15deg) rotateY(55deg)`,
+                            zIndex: 10 - index
+                        }}
+                    >
+                        <DatasetProvider dataset_id={dataset._id}>
+                            <ImageProvider image={image}>
+                                <DTImage/>
+                            </ImageProvider>
+                        </DatasetProvider>
+                    </div>
+                ))}
             </CardActionArea>
             <CardContent>
                 <Typography gutterBottom variant="h5" component="h2">

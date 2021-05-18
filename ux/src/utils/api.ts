@@ -36,6 +36,10 @@ api.interceptors.response.use(
                 window.location.replace('/email-confirmation')
         }
 
+        if (error.response?.data?.code === 'expired_authentication') {
+            window.location.href = '/login';
+        }
+
         return Promise.reject((error.response && error.response.data) || 'Something went wrong')
     }
 );
