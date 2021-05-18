@@ -23,6 +23,10 @@ import FancyLabel from 'src/components/FancyLabel';
 import useTasks from 'src/hooks/useTasks';
 import {Theme} from 'src/theme';
 import {Close as CloseIcon} from '@material-ui/icons';
+import UserAvatar from 'src/components/UserAvatar';
+import useAuth from 'src/hooks/useAuth';
+import {DatasetConsumer, DatasetProvider} from 'src/contexts/DatasetContext';
+import DTDataset from './Dataset';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -157,6 +161,7 @@ const LoadingOverlay: FC = () => (
 const DTTasks: FC<TaskProps> = () => {
 
     const classes = useStyles();
+    const {user} = useAuth();
 
     const {tasks, loading} = useTasks();
 
@@ -209,35 +214,63 @@ const DTTasks: FC<TaskProps> = () => {
                     className='flex'
                     disableTypography
                 >
+                    <div>
+                        <Typography variant='h4'>
+                            Task details
+                        </Typography>
+                        <Typography color='textSecondary'>
+                            ID : {selectedTask?._id}
+                        </Typography>
+                    </div>
+
                     <IconButton
                         className={classes.close}
                         onClick={handleClose}
                     >
-                        <CloseIcon fontSize="large"/>
+                        <CloseIcon/>
                     </IconButton>
                 </DialogTitle>
                 <DialogContent>
                     <Box my={2}>
-                        <pre>
-                            {JSON.stringify(selectedTask, null, 4)}
-                        </pre>
                         <Grid
                             container
                             spacing={4}
                         >
                             <Grid
                                 item
-                                sm={6}
+                                sm={8}
                                 xs={12}
                             >
+                                <Box display='flex' alignItems='center'>
+                                    <Box mr={2}>
+                                        <UserAvatar user={user}/>
+                                    </Box>
+                                    <Typography>
+                                        User <strong>{user.name}</strong> launched <strong>{translateType(selectedTask?.type)}</strong> the {moment(user.created_at).format('DD/MM/YYYY')},
+                                        at {moment(user.created_at).format('HH:mm:ss')}
+                                    </Typography>
+                                </Box>
 
+
+                                {selectedTask && (
+                                    <DatasetProvider dataset_id={selectedTask?.dataset_id}>
+                                        <DatasetConsumer>
+                                            {value => <DTDataset dataset={value.dataset}/>}
+                                        </DatasetConsumer>
+                                    </DatasetProvider>
+                                )}
                             </Grid>
                             <Grid
                                 item
-                                sm={6}
+                                sm={4}
                                 xs={12}
                             >
-
+                                <Typography gutterBottom>
+                                    Properties :
+                                </Typography>
+                                <pre>
+                                    {JSON.stringify(selectedTask?.properties, null, 4)}
+                                </pre>
                             </Grid>
                         </Grid>
                     </Box>
