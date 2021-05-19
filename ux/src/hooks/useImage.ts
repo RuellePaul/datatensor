@@ -1,5 +1,5 @@
 import {useContext} from 'react';
-import ImageContext, {ImageContextValue} from 'src/contexts/ImageContext';
+import ImageContext, {ImageContextValue} from 'src/store/ImageContext';
 
 const useImage = (): ImageContextValue => useContext(ImageContext);
 

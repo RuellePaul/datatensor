@@ -5,10 +5,11 @@ import {User} from 'src/types/user';
 import getInitials from 'src/utils/getInitials';
 import {Theme} from 'src/theme';
 import {GithubIcon, GoogleIcon, StackoverflowIcon} from 'src/views/auth/LoginView/OAuthLoginButton';
+import useAuth from 'src/hooks/useAuth';
 
 interface UserAvatarProps {
     className?: string;
-    user: User;
+    user?: User;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -43,15 +44,18 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 
 const UserAvatar: FC<UserAvatarProps> = ({
+                                             user = null,
                                              className,
-                                             user,
                                              ...rest
                                          }) => {
 
     const classes = useStyles();
+    const {user: loggedUser} = useAuth();
+
+    const displayedUser = user !== null ? user : loggedUser;
 
     return (
-        user.scope
+        displayedUser.scope
             ? (
                 <Badge
                     className={classes.badge}
@@ -62,33 +66,33 @@ const UserAvatar: FC<UserAvatarProps> = ({
                     }}
                     badgeContent={(
                         <Avatar
-                            className={clsx(classes.smallAvatar, user.scope === 'github' && classes.border)}
-                            alt={user.scope}
-                            title={`Logged with ${user.scope}`}
+                            className={clsx(classes.smallAvatar, displayedUser.scope === 'github' && classes.border)}
+                            alt={displayedUser.scope}
+                            title={`Logged with ${displayedUser.scope}`}
                         >
-                            {user.scope === 'github' && <GithubIcon/>}
-                            {user.scope === 'google' && <GoogleIcon/>}
-                            {user.scope === 'stackoverflow' && <StackoverflowIcon/>}
+                            {displayedUser.scope === 'github' && <GithubIcon/>}
+                            {displayedUser.scope === 'google' && <GoogleIcon/>}
+                            {displayedUser.scope === 'stackoverflow' && <StackoverflowIcon/>}
                         </Avatar>
                     )}
                 >
                     <Avatar
                         className={clsx(className)}
-                        src={user.avatar}
+                        src={displayedUser.avatar}
                         alt="User"
                         {...rest}
                     >
-                        {getInitials(user.name)}
+                        {getInitials(displayedUser.name)}
                     </Avatar>
                 </Badge>
             ) : (
                 <Avatar
                     className={clsx(className)}
-                    src={user.avatar}
+                    src={displayedUser.avatar}
                     alt="User"
                     {...rest}
                 >
-                    {getInitials(user.name)}
+                    {getInitials(displayedUser.name)}
                 </Avatar>
             )
     );

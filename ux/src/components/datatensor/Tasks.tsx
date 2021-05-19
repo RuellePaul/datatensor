@@ -8,6 +8,7 @@ import {
     Grid,
     IconButton,
     LinearProgress,
+    Link,
     makeStyles,
     Typography
 } from '@material-ui/core';
@@ -24,9 +25,10 @@ import useTasks from 'src/hooks/useTasks';
 import {Theme} from 'src/theme';
 import {Close as CloseIcon} from '@material-ui/icons';
 import UserAvatar from 'src/components/UserAvatar';
-import useAuth from 'src/hooks/useAuth';
-import {DatasetConsumer, DatasetProvider} from 'src/contexts/DatasetContext';
+import {DatasetConsumer, DatasetProvider} from 'src/store/DatasetContext';
 import DTDataset from './Dataset';
+import {UserConsumer, UserProvider} from 'src/store/UserContext';
+import {Link as RouterLink} from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -67,7 +69,9 @@ function reducer(status) {
 function translateType(type) {
     switch (type) {
         case 'generator':
-            return 'Dataset generation'
+            return '🏗️ Generator'
+        case 'delete':
+            return '🗑️ Delete'
         case 'augmentor':
             return 'Images augmentation'
     }
@@ -75,9 +79,41 @@ function translateType(type) {
 
 const columns: GridColDef[] = [
     {
+        field: 'user_id',
+        headerName: 'User',
+        width: 200,
+        renderCell: (params: GridCellParams) => (
+            <UserProvider user_id={params.value.toString()}>
+                <UserConsumer>
+                    {
+                        value => (
+                            <>
+                                <Box mr={1}>
+                                    <UserAvatar
+                                        user={value.user}
+                                    />
+
+                                </Box>
+
+                                <Link
+                                    color="inherit"
+                                    component={RouterLink}
+                                    to={`/app/admin/manage/users/${params.value.toString()}/details`}
+                                    variant="h6"
+                                >
+                                    {value.user.name}
+                                </Link>
+                            </>
+                        )
+                    }
+                </UserConsumer>
+            </UserProvider>
+        ),
+    },
+    {
         field: 'type',
         headerName: 'Name',
-        width: 200,
+        width: 160,
         renderCell: (params: GridCellParams) => (
             <strong>
                 {translateType(params.value)}
@@ -161,7 +197,6 @@ const LoadingOverlay: FC = () => (
 const DTTasks: FC<TaskProps> = () => {
 
     const classes = useStyles();
-    const {user} = useAuth();
 
     const {tasks, loading} = useTasks();
 
@@ -200,82 +235,107 @@ const DTTasks: FC<TaskProps> = () => {
                 onRowClick={handleRowClick}
             />
 
-            <Dialog
-                disableRestoreFocus
-                PaperProps={{
-                    className: classes.dialog
-                }}
-                fullWidth
-                maxWidth='lg'
-                open={selectedTask !== null}
-                onClose={handleClose}
-            >
-                <DialogTitle
-                    className='flex'
-                    disableTypography
+            <UserProvider user_id={selectedTask?.user_id}>
+                <Dialog
+                    disableRestoreFocus
+                    PaperProps={{
+                        className: classes.dialog
+                    }}
+                    fullWidth
+                    maxWidth='lg'
+                    open={selectedTask !== null}
+                    onClose={handleClose}
                 >
-                    <div>
-                        <Typography variant='h4'>
-                            Task details
-                        </Typography>
-                        <Typography color='textSecondary'>
-                            ID : {selectedTask?._id}
-                        </Typography>
-                    </div>
-
-                    <IconButton
-                        className={classes.close}
-                        onClick={handleClose}
-                    >
-                        <CloseIcon/>
-                    </IconButton>
-                </DialogTitle>
-                <DialogContent>
-                    <Box my={2}>
-                        <Grid
-                            container
-                            spacing={4}
-                        >
-                            <Grid
-                                item
-                                sm={8}
-                                xs={12}
+                    {selectedTask && (
+                        <>
+                            <DialogTitle
+                                className='flex'
+                                disableTypography
                             >
-                                <Box display='flex' alignItems='center'>
-                                    <Box mr={2}>
-                                        <UserAvatar user={user}/>
-                                    </Box>
-                                    <Typography>
-                                        User <strong>{user.name}</strong> launched <strong>{translateType(selectedTask?.type)}</strong> the {moment(user.created_at).format('DD/MM/YYYY')},
-                                        at {moment(user.created_at).format('HH:mm:ss')}
+                                <div>
+                                    <Typography variant='h4'>
+                                        Task details
                                     </Typography>
-                                </Box>
+                                    <Typography color='textSecondary'>
+                                        ID : {selectedTask?._id}
+                                    </Typography>
+                                </div>
+
+                                <IconButton
+                                    className={classes.close}
+                                    onClick={handleClose}
+                                >
+                                    <CloseIcon/>
+                                </IconButton>
+                            </DialogTitle>
+                            <DialogContent>
+                                <Box my={2}>
+                                    <Grid
+                                        container
+                                        spacing={4}
+                                    >
+                                        <Grid
+                                            item
+                                            sm={8}
+                                            xs={12}
+                                        >
+                                            <>
+                                                <UserConsumer>
+                                                    {
+                                                        value => (
+                                                            <Box display='flex' alignItems='center'>
+                                                                <Box mr={2}>
+                                                                    <UserAvatar user={value.user}/>
+                                                                </Box>
+                                                                <Typography>
+                                                                    <Link
+                                                                        color="inherit"
+                                                                        component={RouterLink}
+                                                                        to={`/app/admin/manage/users/${value.user.toString()}/details`}
+                                                                        variant="h6"
+                                                                    >
+                                                                        {value.user.name}
+                                                                    </Link>
+                                                                    {` `}
+                                                                    : <strong>{translateType(selectedTask?.type)}</strong>,
+                                                                    the
+                                                                    {` `}
+                                                                    {moment(value.user.created_at).format('DD/MM')},
+                                                                    at {moment(value.user.created_at).format('HH:mm:ss')}
+                                                                </Typography>
+                                                            </Box>
+                                                        )
+                                                    }
+                                                </UserConsumer>
 
 
-                                {selectedTask && (
-                                    <DatasetProvider dataset_id={selectedTask?.dataset_id}>
-                                        <DatasetConsumer>
-                                            {value => <DTDataset dataset={value.dataset}/>}
-                                        </DatasetConsumer>
-                                    </DatasetProvider>
-                                )}
-                            </Grid>
-                            <Grid
-                                item
-                                sm={4}
-                                xs={12}
-                            >
-                                <Typography gutterBottom>
-                                    Properties :
-                                </Typography>
-                                <pre>
+                                                <DatasetProvider dataset_id={selectedTask?.dataset_id}>
+                                                    <DatasetConsumer>
+                                                        {value => <DTDataset dataset={value.dataset}/>}
+                                                    </DatasetConsumer>
+                                                </DatasetProvider>
+                                            </>
+                                        </Grid>
+                                        <Grid
+                                            item
+                                            sm={4}
+                                            xs={12}
+                                        >
+                                            <Typography gutterBottom>
+                                                Properties :
+                                            </Typography>
+                                            <pre>
                                     {JSON.stringify(selectedTask?.properties, null, 4)}
                                 </pre>
-                            </Grid>
-                        </Grid>
-                    </Box>
-                </DialogContent>
-            </Dialog>
+                                        </Grid>
+                                    </Grid>
+                                </Box>
+                            </DialogContent>
+                        </>
+                    )
+                    }
+                </Dialog>
+            </UserProvider>
         </>
     );
 };

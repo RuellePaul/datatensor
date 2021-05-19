@@ -21,7 +21,6 @@ def get_users(args):
 
 
 @users.route('/<user_id>')
-@admin_guard
 def get_user(user_id):
     result = find_user(user_id)
     return {'user': parse(result)}, 200

@@ -25,9 +25,7 @@ def find_datasets(offset, limit):
 
 
 def find_dataset(dataset_id):
-    user_id = verify_access_token().get('_id')
-    return db.datasets.find_one({'_id': ObjectId(dataset_id),
-                                 'user_id': user_id})
+    return db.datasets.find_one({'_id': ObjectId(dataset_id)})
 
 
 def insert_dataset(dataset):

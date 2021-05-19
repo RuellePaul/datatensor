@@ -6,8 +6,8 @@ import SectionImages from './sections/SectionImages';
 import SectionLabeling from './sections/SectionLabeling';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
-import {ImagesConsumer, ImagesProvider} from 'src/contexts/ImagesContext';
-import {DatasetConsumer, DatasetProvider} from 'src/contexts/DatasetContext';
+import {ImagesConsumer, ImagesProvider} from 'src/store/ImagesContext';
+import {DatasetConsumer, DatasetProvider} from 'src/store/DatasetContext';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -85,6 +85,7 @@ const DatasetMainView: FC = () => {
                                     <Divider/>
                                 </Box>
 
+                                {/* TODO : MAYBE THERE IS JUSTE HERE A HUGE IMPROVE TO MAKE */}
                                 {SECTIONS[tab]}
                             </Container>
                         </ImagesProvider>

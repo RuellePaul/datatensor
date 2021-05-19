@@ -21,7 +21,7 @@ import {Theme} from 'src/theme';
 import api from 'src/utils/api'
 import bytesToSize from 'src/utils/bytesToSize';
 import useDataset from 'src/hooks/useDataset';
-import {ImageProvider} from 'src/contexts/ImageContext';
+import {ImageProvider} from 'src/store/ImageContext';
 import {LAZY_LOAD_BATCH} from 'src/constants';
 
 interface ImagesListProps {

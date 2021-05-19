@@ -1,5 +1,5 @@
 import {useContext} from 'react';
-import DatasetsContext, {DatasetsContextValue} from 'src/contexts/DatasetsContext';
+import DatasetsContext, {DatasetsContextValue} from 'src/store/DatasetsContext';
 
 const useDatasets = (): DatasetsContextValue => useContext(DatasetsContext);
 

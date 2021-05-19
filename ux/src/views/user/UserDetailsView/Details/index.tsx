@@ -1,12 +1,11 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
 import {Grid, makeStyles} from '@material-ui/core';
-import {User} from 'src/types/user';
 import UserInfo from './UserInfo';
 import OtherActions from './OtherActions';
+import useUser from 'src/hooks/useUser';
 
 interface DetailsProps {
-    user: User;
     className?: string;
 }
 
@@ -15,11 +14,11 @@ const useStyles = makeStyles(() => ({
 }));
 
 const Details: FC<DetailsProps> = ({
-                                       user,
                                        className,
                                        ...rest
                                    }) => {
     const classes = useStyles();
+    const {user} = useUser();
 
     return (
         <Grid

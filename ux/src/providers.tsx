@@ -1,7 +1,7 @@
 import React, {createRef, FC} from 'react';
 import {Provider} from 'react-redux';
 import store from 'src/store';
-import {SettingsProvider} from 'src/contexts/SettingsContext';
+import {SettingsProvider} from 'src/store/SettingsContext';
 import {IconButton, jssPreset, StylesProvider, ThemeProvider} from '@material-ui/core';
 import {MuiPickersUtilsProvider} from '@material-ui/pickers';
 import {Close as CloseIcon} from '@material-ui/icons';

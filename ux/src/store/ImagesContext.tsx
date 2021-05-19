@@ -52,6 +52,7 @@ export const ImagesProvider: FC<ImagesProviderProps> = ({images, children}) => {
             console.error(err);
         }
 
+        // eslint-disable-next-line
     }, [dataset._id, currentOffset]);
 
     useEffect(() => {

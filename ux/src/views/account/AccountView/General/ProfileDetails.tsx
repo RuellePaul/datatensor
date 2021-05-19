@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const ProfileDetails: FC<ProfileDetailsProps> = ({className, user, ...rest}) => {
+
     const classes = useStyles();
 
     return (
@@ -39,7 +40,6 @@ const ProfileDetails: FC<ProfileDetailsProps> = ({className, user, ...rest}) => 
                 >
                     <UserAvatar
                         className={classes.avatar}
-                        user={user}
                     />
                     <Typography
                         className={classes.name}
