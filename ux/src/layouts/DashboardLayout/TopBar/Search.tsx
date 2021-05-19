@@ -51,7 +51,7 @@ const Search: FC = () => {
         try {
             setLoading(true);
 
-            const response = await api.get<{ results: Result[]; }>('/api/search');
+            const response = await api.get<{ results: Result[]; }>('/api/search', {params: {query: value}});
 
             setResults(response.data.results);
         } catch (err) {
