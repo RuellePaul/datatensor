@@ -116,7 +116,15 @@ const UsersOverTime: FC<UsersOverTimeProps> = ({className, users, timeRange, ...
                             dashArray: 0,
                         },
                         tooltip: {
-                            enabled: false
+                            enabled: true,
+                            enabledOnSeries: undefined,
+                            theme: theme.palette.type,
+                            shared: true,
+                            intersect: false,
+                            followCursor: true,
+                            onDatasetHover: {
+                                highlightDataSeries: true,
+                            }
                         },
                         xaxis: {
                             categories: usersOverTime[timeRange.value].labels
