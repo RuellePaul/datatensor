@@ -19,11 +19,11 @@ import {
     makeStyles,
     Typography
 } from '@material-ui/core';
+import {Close as CloseIcon, Lock, PhotoLibrary, Public} from '@material-ui/icons';
 import {Theme} from 'src/theme';
 import {Dataset} from 'src/types/dataset';
 import api from 'src/utils/api';
 import useDatasets from 'src/hooks/useDatasets';
-import {Close as CloseIcon} from '@material-ui/icons';
 import {Image} from 'src/types/image';
 
 interface DatasetProps {
@@ -121,11 +121,30 @@ const DTDataset: FC<DatasetProps> = ({
                     image={imagePreview?.path}
                 />
                 <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">
-                        {dataset.name && capitalize(dataset.name)}
-                    </Typography>
+                    <Box display='flex' alignItems='center' mb={1}>
+                        <Typography variant='h5'>
+                            {dataset.name && capitalize(dataset.name)}
+                        </Typography>
+
+                        <div className='flexGrow'/>
+
+                        <PhotoLibrary/>
+                        <Box width={2}/>
+                        <Typography variant='overline'>
+                            {dataset.image_count} (+0)
+                        </Typography>
+                        <Box width={10}/>
+                        {dataset.is_public
+                            ? <Public fontSize='small'/>
+                            : <Lock fontSize='small'/>
+                        }
+                        <Box width={2}/>
+                        <Typography variant='overline'>
+                            {dataset.is_public ? 'Public' : 'Private'}
+                        </Typography>
+                    </Box>
                     <Typography
-                        color="textSecondary"
+                        color='textSecondary'
                         variant="body2"
                         component="p"
                         dangerouslySetInnerHTML={{__html: dataset.description}}
