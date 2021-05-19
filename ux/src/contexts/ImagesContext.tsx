@@ -38,6 +38,8 @@ export const ImagesProvider: FC<ImagesProviderProps> = ({images, children}) => {
 
     const fetchImages = useCallback(async () => {
         try {
+            if (currentImages.length === dataset.image_count) return;
+
             const response = await api.get<{ images: Image[] }>(`/datasets/${dataset._id}/images/`, {
                 params: {
                     offset: currentOffset,
