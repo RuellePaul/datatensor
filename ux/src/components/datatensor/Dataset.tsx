@@ -1,6 +1,7 @@
 import React, {FC, useCallback, useEffect, useRef, useState} from 'react';
 import {useHistory} from 'react-router';
 import clsx from 'clsx';
+import moment from 'moment';
 import {useSnackbar} from 'notistack';
 import {
     Box,
@@ -10,6 +11,7 @@ import {
     CardActionArea,
     CardActions,
     CardContent,
+    CardHeader,
     CardMedia,
     CircularProgress,
     Dialog,
@@ -25,6 +27,8 @@ import {Dataset} from 'src/types/dataset';
 import api from 'src/utils/api';
 import useDatasets from 'src/hooks/useDatasets';
 import {Image} from 'src/types/image';
+import UserAvatar from 'src/components/UserAvatar';
+import {UserConsumer, UserProvider} from 'src/store/UserContext';
 
 interface DatasetProps {
     className?: string;
@@ -113,11 +117,28 @@ const DTDataset: FC<DatasetProps> = ({
             ref={datasetRef}
             {...rest}
         >
+            <CardHeader
+                avatar={
+                    <UserProvider user_id={dataset.user_id}>
+                        <UserConsumer>
+                            {value =>
+                                <UserAvatar
+                                    user={value.user}
+                                />
+                            }
+                        </UserConsumer>
+                    </UserProvider>
+                }
+                title={dataset.name}
+                subheader={moment(dataset.created_at).format('DD MMMM, YYYY')}
+            />
+
             <CardActionArea
                 onClick={() => history.push(`/app/manage/datasets/${dataset._id}`)}
             >
                 <CardMedia
                     className={classes.media}
+                    component='span'
                     image={imagePreview?.path}
                 />
                 <CardContent>

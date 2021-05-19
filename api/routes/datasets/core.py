@@ -21,7 +21,7 @@ class Dataset(Schema):
 
 def find_datasets(offset, limit):
     user_id = verify_access_token().get('_id')
-    return list(db.datasets.find({'user_id': user_id}).skip(offset).limit(limit))
+    return list(db.datasets.find({'$or': [{'user_id': user_id}, {'is_public': True}]}).skip(offset).limit(limit))
 
 
 def find_dataset(dataset_id):
