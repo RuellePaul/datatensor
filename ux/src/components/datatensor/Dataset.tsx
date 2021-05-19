@@ -42,7 +42,31 @@ const useStyles = makeStyles((theme: Theme) => ({
         overflow: 'hidden',
         height: 170,
         '&:hover > div': {
-            transform: 'translate(0px, 0px) !important'
+            transform: `rotateX(15deg) rotateY(55deg) !important`,
+            '&:nth-child(1)': {
+                left: '-15px !important'
+            },
+            '&:nth-child(2)': {
+                left: '0px !important'
+            },
+            '&:nth-child(3)': {
+                left: '15px !important'
+            },
+            '&:nth-child(4)': {
+                left: '30px !important'
+            },
+            '&:nth-child(5)': {
+                left: '45px !important'
+            },
+            '&:nth-child(6)': {
+                left: '60px !important'
+            },
+            '&:nth-child(7)': {
+                left: '75px !important'
+            },
+            '&:nth-child(8)': {
+                left: '90px !important'
+            },
         }
     },
     stacked: {
@@ -50,10 +74,20 @@ const useStyles = makeStyles((theme: Theme) => ({
         height: 120,
         position: 'absolute',
         top: 25,
+        left: theme.spacing(2),
         width: 200,
         border: `solid 2px ${theme.palette.divider}`,
         boxShadow: theme.shadows[2],
-        transition: 'all 1s ease'
+        transition: 'all 800ms ease',
+        transform: 'translate(0px, 0px) !important',
+        '& > div': {
+            width: 'inherit',
+            height: 'inherit',
+            '& > img': {
+                width: 'inherit',
+                height: 'inherit'
+            }
+        }
     },
     close: {
         position: 'absolute',
@@ -124,105 +158,103 @@ const DTDataset: FC<DatasetProps> = ({
     };
 
     return (
-        <Card
-            className={clsx(classes.root, className)}
-            ref={datasetRef}
-            {...rest}
-        >
-            <CardActionArea
-                className={classes.area}
-                onClick={() => history.push(`/app/manage/datasets/${dataset._id}`)}
+        <DatasetProvider dataset_id={dataset._id}>
+            <Card
+                className={clsx(classes.root, className)}
+                ref={datasetRef}
+                {...rest}
             >
-                {imagesPreview.map((image: Image, index) => (
-                    <div
-                        className={classes.stacked}
-                        style={{
-                            transform: `translateX(${index * 12}px) rotateX(15deg) rotateY(55deg)`,
-                            zIndex: 10 - index
-                        }}
-                    >
-                        <DatasetProvider dataset_id={dataset._id}>
+                <CardActionArea
+                    className={classes.area}
+                    onClick={() => history.push(`/app/manage/datasets/${dataset._id}`)}
+                >
+                    {imagesPreview.map((image: Image, index) => (
+                        <div
+                            className={classes.stacked}
+                            key={image._id}
+                            style={{zIndex: imagesPreview.length - index}}
+                        >
                             <ImageProvider image={image}>
                                 <DTImage/>
                             </ImageProvider>
-                        </DatasetProvider>
-                    </div>
-                ))}
-            </CardActionArea>
-            <CardContent>
-                <Typography gutterBottom variant="h5" component="h2">
-                    {dataset.name && capitalize(dataset.name)}
-                </Typography>
-                <Typography
-                    color="textSecondary"
-                    variant="body2"
-                    component="p"
-                    dangerouslySetInnerHTML={{__html: dataset.description}}
-                />
-            </CardContent>
-            <CardActions>
-                <Button
-                    color="primary"
-                    onClick={handleOpenDeleteDataset}
-                    size="small"
-                >
-                    Delete
-                </Button>
-            </CardActions>
-
-            <Dialog
-                disableRestoreFocus
-                fullWidth
-                open={openDeleteDataset}
-                onClose={handleCloseDeleteDataset}
-            >
-                <DialogTitle
-                    className='flex'
-                    disableTypography
-                >
-                    <Typography variant='h4'>
-                        Confirmation
+                        </div>
+                    ))}
+                </CardActionArea>
+                <CardContent>
+                    <Typography gutterBottom variant="h5" component="h2">
+                        {dataset.name && capitalize(dataset.name)}
                     </Typography>
-
-                    <IconButton
-                        className={classes.close}
-                        onClick={handleCloseDeleteDataset}
+                    <Typography
+                        color="textSecondary"
+                        variant="body2"
+                        component="p"
+                        dangerouslySetInnerHTML={{__html: dataset.description}}
+                    />
+                </CardContent>
+                <CardActions>
+                    <Button
+                        color="primary"
+                        onClick={handleOpenDeleteDataset}
+                        size="small"
                     >
-                        <CloseIcon/>
-                    </IconButton>
-                </DialogTitle>
-                <DialogContent>
-                    <Box my={1}>
-                        <Typography color='textPrimary' gutterBottom>
-                            Are you sure you want to delete dataset
-                            {' '}
-                            <Typography component='span' style={{fontWeight: 'bold'}}>
-                                {dataset.name}
-                            </Typography>
-                            {' '}
-                            ?
-                        </Typography>
-                    </Box>
+                        Delete
+                    </Button>
+                </CardActions>
 
-                    <Box display='flex' justifyContent='flex-end'>
-                        <Button
-                            color="secondary"
-                            variant="contained"
-                            onClick={handleDeleteDataset}
-                            endIcon={isDeleting && (
-                                <CircularProgress
-                                    className={classes.loader}
-                                    color="inherit"
-                                />
-                            )}
-                            disabled={isDeleting}
+                <Dialog
+                    disableRestoreFocus
+                    fullWidth
+                    open={openDeleteDataset}
+                    onClose={handleCloseDeleteDataset}
+                >
+                    <DialogTitle
+                        className='flex'
+                        disableTypography
+                    >
+                        <Typography variant='h4'>
+                            Confirmation
+                        </Typography>
+
+                        <IconButton
+                            className={classes.close}
+                            onClick={handleCloseDeleteDataset}
                         >
-                            Delete dataset
-                        </Button>
-                    </Box>
-                </DialogContent>
-            </Dialog>
-        </Card>
+                            <CloseIcon/>
+                        </IconButton>
+                    </DialogTitle>
+                    <DialogContent>
+                        <Box my={1}>
+                            <Typography color='textPrimary' gutterBottom>
+                                Are you sure you want to delete dataset
+                                {' '}
+                                <Typography component='span' style={{fontWeight: 'bold'}}>
+                                    {dataset.name}
+                                </Typography>
+                                {' '}
+                                ?
+                            </Typography>
+                        </Box>
+
+                        <Box display='flex' justifyContent='flex-end'>
+                            <Button
+                                color="secondary"
+                                variant="contained"
+                                onClick={handleDeleteDataset}
+                                endIcon={isDeleting && (
+                                    <CircularProgress
+                                        className={classes.loader}
+                                        color="inherit"
+                                    />
+                                )}
+                                disabled={isDeleting}
+                            >
+                                Delete dataset
+                            </Button>
+                        </Box>
+                    </DialogContent>
+                </Dialog>
+            </Card>
+        </DatasetProvider>
     );
 };
 
