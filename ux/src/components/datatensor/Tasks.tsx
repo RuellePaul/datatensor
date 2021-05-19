@@ -91,6 +91,7 @@ const columns: GridColDef[] = [
                                 <Box mr={1}>
                                     <UserAvatar
                                         user={value.user}
+                                        style={{width: 30, height: 30}}
                                     />
 
                                 </Box>
@@ -123,7 +124,7 @@ const columns: GridColDef[] = [
     {
         field: 'status',
         headerName: 'Status',
-        width: 110,
+        width: 120,
         renderCell: (params: GridCellParams) => (
             <FancyLabel color={reducer(params.value)}>
                 {params.value}
@@ -242,7 +243,7 @@ const DTTasks: FC<TaskProps> = () => {
                         className: classes.dialog
                     }}
                     fullWidth
-                    maxWidth='lg'
+                    maxWidth='md'
                     open={selectedTask !== null}
                     onClose={handleClose}
                 >
@@ -276,7 +277,7 @@ const DTTasks: FC<TaskProps> = () => {
                                     >
                                         <Grid
                                             item
-                                            sm={8}
+                                            md={7}
                                             xs={12}
                                         >
                                             <>
@@ -284,7 +285,7 @@ const DTTasks: FC<TaskProps> = () => {
                                                     {
                                                         value => (
                                                             <Box display='flex' alignItems='center'>
-                                                                <Box mr={2}>
+                                                                <Box mr={2} maxWidth={30}>
                                                                     <UserAvatar user={value.user}/>
                                                                 </Box>
                                                                 <Typography>
@@ -318,7 +319,7 @@ const DTTasks: FC<TaskProps> = () => {
                                         </Grid>
                                         <Grid
                                             item
-                                            sm={4}
+                                            md={5}
                                             xs={12}
                                         >
                                             <Typography gutterBottom>

@@ -9,6 +9,7 @@ import useAuth from 'src/hooks/useAuth';
 
 interface UserAvatarProps {
     className?: string;
+    style?: object;
     user?: User;
 }
 
