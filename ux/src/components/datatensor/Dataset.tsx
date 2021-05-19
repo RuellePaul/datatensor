@@ -133,15 +133,11 @@ const DTDataset: FC<DatasetProps> = ({
                         <Typography variant='overline'>
                             {dataset.image_count} (+0)
                         </Typography>
-                        <Box width={10}/>
+                        <Box width={12}/>
                         {dataset.is_public
                             ? <Public fontSize='small'/>
                             : <Lock fontSize='small'/>
                         }
-                        <Box width={2}/>
-                        <Typography variant='overline'>
-                            {dataset.is_public ? 'Public' : 'Private'}
-                        </Typography>
                     </Box>
                     <Typography
                         color='textSecondary'
