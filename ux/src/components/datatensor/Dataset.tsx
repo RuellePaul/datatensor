@@ -143,7 +143,7 @@ const DTDataset: FC<DatasetProps> = ({
                         color='textSecondary'
                         variant="body2"
                         component="p"
-                        dangerouslySetInnerHTML={{__html: dataset.description}}
+                        dangerouslySetInnerHTML={{__html: dataset.description || '<i>No description provided</i>'}}
                     />
                 </CardContent>
             </CardActionArea>
