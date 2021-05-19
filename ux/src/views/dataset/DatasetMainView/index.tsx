@@ -1,6 +1,8 @@
 import React, {FC, useState} from 'react';
 import {useParams} from 'react-router';
+import clsx from 'clsx';
 import {Box, Container, Divider, makeStyles, Tab, Tabs, Tooltip, Typography} from '@material-ui/core';
+import {TabContext} from '@material-ui/lab';
 import Header from './Header';
 import SectionImages from './sections/SectionImages';
 import SectionLabeling from './sections/SectionLabeling';
@@ -17,8 +19,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         padding: theme.spacing(3, 0)
     }
 }));
-
-const SECTIONS = [<div/>, <SectionImages/>, <SectionLabeling/>];
 
 const DatasetMainView: FC = () => {
 
@@ -44,50 +44,56 @@ const DatasetMainView: FC = () => {
                         title={`Dataset ${value.dataset.name}`}
                     >
                         <ImagesProvider>
-                            <Container maxWidth="lg">
-                                <Header/>
+                            <TabContext value={tab.toString()}>
+                                <Container maxWidth="lg">
+                                    <Header/>
 
-                                <Box mt={2}>
-                                    <ImagesConsumer>
-                                        {value => (
-                                            <Tabs
-                                                value={tab}
-                                                onChange={handleTabChange}
-                                                indicatorColor="primary"
-                                                textColor="primary"
-                                            >
-                                                <Tab label="Overview"/>
-                                                <Tab label="Images"/>
-                                                <Tab
-                                                    label={
-                                                        value.images.length === 0
-                                                            ? (
-                                                                <Tooltip title={(
-                                                                    <Typography variant='h6'>
-                                                                        You need to upload images first
-                                                                    </Typography>
-                                                                )}>
-                                                                    <span>Labeling</span>
-                                                                </Tooltip>
-                                                            )
-                                                            : 'Labeling'
+                                    <Box mt={2}>
+                                        <ImagesConsumer>
+                                            {value => (
+                                                <Tabs
+                                                    value={tab}
+                                                    onChange={handleTabChange}
+                                                    indicatorColor="primary"
+                                                    textColor="primary"
+                                                >
+                                                    <Tab label="Overview"/>
+                                                    <Tab label="Images"/>
+                                                    <Tab
+                                                        label={
+                                                            value.images.length === 0
+                                                                ? (
+                                                                    <Tooltip title={(
+                                                                        <Typography variant='h6'>
+                                                                            You need to upload images first
+                                                                        </Typography>
+                                                                    )}>
+                                                                        <span>Labeling</span>
+                                                                    </Tooltip>
+                                                                )
+                                                                : 'Labeling'
 
-                                                    }
-                                                    disabled={value.images.length === 0}
-                                                    style={{pointerEvents: 'auto'}}
-                                                />
-                                            </Tabs>
-                                        )}
-                                    </ImagesConsumer>
-                                </Box>
+                                                        }
+                                                        disabled={value.images.length === 0}
+                                                        style={{pointerEvents: 'auto'}}
+                                                    />
+                                                </Tabs>
+                                            )}
+                                        </ImagesConsumer>
+                                    </Box>
 
-                                <Box mb={3}>
-                                    <Divider/>
-                                </Box>
+                                    <Box mb={3}>
+                                        <Divider/>
+                                    </Box>
 
-                                {/* TODO : MAYBE THERE IS JUSTE HERE A HUGE IMPROVE TO MAKE */}
-                                {SECTIONS[tab]}
-                            </Container>
+                                    <SectionImages
+                                        className={clsx(tab !== 1 && 'hidden')}
+                                    />
+                                    <SectionLabeling
+                                        className={clsx(tab !== 2 && 'hidden')}
+                                    />
+                                </Container>
+                            </TabContext>
                         </ImagesProvider>
                     </Page>
                 )}

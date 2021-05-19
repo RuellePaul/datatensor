@@ -6,8 +6,11 @@ import ImagesDropzone from 'src/components/ImagesDropzone';
 import useImages from 'src/hooks/useImages';
 import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
+import {SectionProps} from './SectionProps';
+import clsx from 'clsx';
 
 const useStyles = makeStyles((theme: Theme) => ({
+    root: {},
     header: {
         display: 'flex',
         alignItems: 'center',
@@ -29,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 
-const SectionImages: FC = () => {
+const SectionImages: FC<SectionProps> = ({className}) => {
 
     const classes = useStyles();
 
@@ -50,7 +53,7 @@ const SectionImages: FC = () => {
     const imagesCount = images.length;
 
     return (
-        <>
+        <div className={clsx(classes.root, className)}>
             <div className={classes.header}>
                 <Typography variant="h4" color="textSecondary">
                     {images.length > 0
@@ -97,7 +100,7 @@ const SectionImages: FC = () => {
             <Box mt={3}>
                 <DTImagesList/>
             </Box>
-        </>
+        </div>
     )
 };
 

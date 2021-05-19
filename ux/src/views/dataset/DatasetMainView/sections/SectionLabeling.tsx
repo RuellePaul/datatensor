@@ -19,14 +19,14 @@ import {ImageConsumer, ImageProvider} from 'src/store/ImageContext';
 import KeyboardShortcuts from 'src/components/overlays/KeyboardShortcuts';
 import DTCategories from 'src/components/datatensor/Categories';
 import {Theme} from 'src/theme';
-import {CANVAS_OFFSET} from 'src/utils/labeling';
 import useImages from 'src/hooks/useImages';
 import {LAZY_LOAD_BATCH} from 'src/constants';
+import clsx from 'clsx';
+import {SectionProps} from './SectionProps';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        position: 'relative',
-        margin: `${CANVAS_OFFSET}px auto`
+        marginTop: theme.spacing(3)
     },
     pagination: {
         display: 'flex',
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const SectionLabeling: FC = () => {
+const SectionLabeling: FC<SectionProps> = ({className}) => {
 
     const classes = useStyles();
 
@@ -69,8 +69,11 @@ const SectionLabeling: FC = () => {
         // eslint-disable-next-line
     }, [selected])
 
+    if (!images[selected])
+        return null;
+
     return (
-        <Box mt={3}>
+        <div className={clsx(classes.root, className)}>
             <ImageProvider image={images[selected]}>
                 <CategoryProvider>
                     <Grid
@@ -206,7 +209,7 @@ const SectionLabeling: FC = () => {
                     </Grid>
                 </CategoryProvider>
             </ImageProvider>
-        </Box>
+        </div>
     )
 };
 
