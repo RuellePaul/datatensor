@@ -1,7 +1,7 @@
 import React, {FC, useState} from 'react';
 import {useParams} from 'react-router';
 import clsx from 'clsx';
-import {Box, Container, Divider, makeStyles, Tab, Tabs, Tooltip, Typography} from '@material-ui/core';
+import {Box, Container, Divider, makeStyles, Tab, Tabs, Tooltip, Typography, withStyles} from '@material-ui/core';
 import {TabContext} from '@material-ui/lab';
 import Header from './Header';
 import SectionImages from './sections/SectionImages';
@@ -19,6 +19,15 @@ const useStyles = makeStyles((theme: Theme) => ({
         padding: theme.spacing(3, 0)
     }
 }));
+
+const DTTab = withStyles(theme => ({
+    root: {
+        color: 'white',
+        '&:hover, &$selected': {
+            color: 'white'
+        }
+    }
+}))(Tab);
 
 const DatasetMainView: FC = () => {
 
@@ -54,12 +63,10 @@ const DatasetMainView: FC = () => {
                                                 <Tabs
                                                     value={tab}
                                                     onChange={handleTabChange}
-                                                    indicatorColor="primary"
-                                                    textColor="primary"
                                                 >
-                                                    <Tab label="Overview"/>
-                                                    <Tab label="Images"/>
-                                                    <Tab
+                                                    <DTTab label="Overview"/>
+                                                    <DTTab label="Images"/>
+                                                    <DTTab
                                                         label={
                                                             value.images.length === 0
                                                                 ? (
