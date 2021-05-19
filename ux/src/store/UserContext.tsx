@@ -1,7 +1,6 @@
 import React, {createContext, FC, ReactNode, useCallback, useEffect, useState} from 'react';
 import api from 'src/utils/api';
 import {User} from 'src/types/user';
-import {CircularProgress} from '@material-ui/core';
 
 export interface UserContextValue {
     user: User,
@@ -15,7 +14,8 @@ interface UserProviderProps {
 
 export const UserContext = createContext<UserContextValue>({
     user: null,
-    saveUser: () => {}
+    saveUser: () => {
+    }
 });
 
 export const UserProvider: FC<UserProviderProps> = ({user_id = null, children}) => {
