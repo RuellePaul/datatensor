@@ -20,7 +20,7 @@ def find_categories(dataset_id, offset, limit):
 
 
 def find_category(dataset_id, category_id):
-    return db.categories.find_one({'_id': ObjectId(category_id),
+    return db.categories.find_one({'_id': category_id,
                                    'dataset_id': dataset_id})
 
 
@@ -38,5 +38,5 @@ def remove_categories(dataset_id):
 
 def remove_category(dataset_id, category_id):
     db.labels.delete_many({'category_id': category_id})
-    db.categories.delete_one({'_id': ObjectId(category_id),
+    db.categories.delete_one({'_id': category_id,
                               'dataset_id': dataset_id})

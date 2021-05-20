@@ -6,14 +6,14 @@ import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
 interface HeaderProps {
     className?: string;
-    user: object;
 }
 
 const useStyles = makeStyles(() => ({
     root: {}
 }));
 
-const Header: FC<HeaderProps> = ({className, user, ...rest}) => {
+const Header: FC<HeaderProps> = ({className, ...rest}) => {
+
     const classes = useStyles();
 
     return (

@@ -5,6 +5,8 @@ import {Theme} from 'src/theme';
 import {drawLabels, reset} from 'src/utils/labeling';
 import useDataset from 'src/hooks/useDataset';
 import useImage from 'src/hooks/useImage';
+import { useTabContext } from '@material-ui/lab';
+
 
 interface DTImageProps {
     className?: string;
@@ -47,6 +49,8 @@ const DTImage: FC<DTImageProps> = ({
     const imageRef = useRef(null);
     const canvasRef = useRef(null);
 
+    const {value} = useTabContext();
+
     const handleLoad = () => {
         if (canvasRef.current && imageRef.current?.complete) {
             reset(canvasRef.current);
@@ -59,7 +63,7 @@ const DTImage: FC<DTImageProps> = ({
             reset(canvasRef.current);
             drawLabels(canvasRef.current, labels, categories, 0);
         }
-    }, [labels, categories]);
+    }, [labels, categories, value]);
 
     if (clickable)
         return (

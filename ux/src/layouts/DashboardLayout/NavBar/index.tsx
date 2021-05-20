@@ -235,7 +235,6 @@ const NavBar: FC<NavBarProps> = ({onMobileClose, openMobile}) => {
                         <RouterLink to="/app/account">
                             <UserAvatar
                                 className={classes.avatar}
-                                user={user}
                             />
                         </RouterLink>
                     </Box>

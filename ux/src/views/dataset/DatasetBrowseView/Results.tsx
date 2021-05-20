@@ -6,6 +6,7 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import {Theme} from 'src/theme';
 import DTDataset from 'src/components/datatensor/Dataset';
 import useDatasets from 'src/hooks/useDatasets';
+import useTasks from 'src/hooks/useTasks';
 
 interface ResultsProps {
     className?: string;
@@ -36,6 +37,7 @@ const Results: FC<ResultsProps> = ({className, ...rest}) => {
 
     const classes = useStyles();
 
+    const {tasks} = useTasks();
     const {datasets} = useDatasets();
 
     const sortRef = useRef<HTMLButtonElement | null>(null);
@@ -106,7 +108,10 @@ const Results: FC<ResultsProps> = ({className, ...rest}) => {
                         sm={6}
                         xs={12}
                     >
-                        <DTDataset dataset={dataset}/>
+                        <DTDataset
+                            dataset={dataset}
+                            isWorking={tasks.filter(task => task.status === 'active' && task.dataset_id === dataset._id).length > 0}
+                        />
                     </Grid>
                 ))}
             </Grid>

@@ -21,13 +21,11 @@ class Dataset(Schema):
 
 def find_datasets(offset, limit):
     user_id = verify_access_token().get('_id')
-    return list(db.datasets.find({'user_id': user_id}).skip(offset).limit(limit))
+    return list(db.datasets.find({'$or': [{'user_id': user_id}, {'is_public': True}]}).skip(offset).limit(limit))
 
 
 def find_dataset(dataset_id):
-    user_id = verify_access_token().get('_id')
-    return db.datasets.find_one({'_id': ObjectId(dataset_id),
-                                 'user_id': user_id})
+    return db.datasets.find_one({'_id': ObjectId(dataset_id)})
 
 
 def insert_dataset(dataset):
@@ -36,11 +34,6 @@ def insert_dataset(dataset):
                             'created_at': datetime.now(),
                             'image_count': 0,
                             **dataset})
-
-
-def remove_datasets():
-    user_id = verify_access_token().get('_id')
-    db.datasets.delete_many({'user_id': user_id})
 
 
 def remove_dataset(dataset_id):

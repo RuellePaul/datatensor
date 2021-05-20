@@ -404,8 +404,8 @@ const Results: FC<ResultsProps> = ({
                                                 alignItems="center"
                                             >
                                                 <UserAvatar
-                                                    className={classes.avatar}
                                                     user={user}
+                                                    className={classes.avatar}
                                                 />
                                                 <Box ml={1}>
                                                     <Link

@@ -2,6 +2,7 @@ import React, {createContext, FC, ReactNode, useCallback, useEffect, useState} f
 import {Task} from 'src/types/task';
 import api from 'src/utils/api';
 import {POLLING_DELAY} from 'src/constants';
+import useAuth from 'src/hooks/useAuth';
 
 export interface TasksContextValue {
     tasks: Task[];
@@ -24,6 +25,7 @@ let timeoutId;
 
 export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
 
+    const {user} = useAuth();
     const [loading, setLoading] = useState(true);
     const [delayed, setDelayed] = useState(false);
     const [currentTasks, setCurrentTasks] = useState<Task[]>([]);
@@ -33,17 +35,23 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
     };
 
     const fetchTasks = useCallback(async () => {
-        try {
-            const response = await api.get<{ tasks: Task[] }>(`/tasks/`);
-            handleSaveTasks(response.data.tasks);
-        } catch (err) {
-            console.error(err);
-        } finally {
-            setLoading(false);
-            setDelayed(false);
-        }
+        if (user)
+            try {
+                if (user.is_admin) {
+                    const response = await api.get<{ tasks: Task[] }>(`/tasks/`);
+                    handleSaveTasks(response.data.tasks);
+                } else {
+                    const response = await api.get<{ tasks: Task[] }>(`users/${user._id}/tasks/`);
+                    handleSaveTasks(response.data.tasks);
+                }
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoading(false);
+                setDelayed(false);
+            }
 
-    }, []);
+    }, [user]);
 
     useEffect(() => {
         fetchTasks();

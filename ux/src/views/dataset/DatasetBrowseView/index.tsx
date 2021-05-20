@@ -5,7 +5,7 @@ import Page from 'src/components/Page';
 import Header from './Header';
 import Filter from './Filter';
 import Results from './Results';
-import {DatasetsProvider} from 'src/contexts/DatasetsContext';
+import {DatasetsProvider} from 'src/store/DatasetsContext';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {

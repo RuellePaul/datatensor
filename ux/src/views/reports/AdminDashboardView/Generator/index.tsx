@@ -104,7 +104,7 @@ const Generator: FC = () => {
                                 color='textSecondary'
                                 gutterBottom
                             >
-                                This automatically download annotations, and then inject images and labels
+                                This automatically download annotations, and then inject images, categories and labels
                                 into a new dataset.
                             </Typography>
                         </Box>

@@ -7,9 +7,11 @@ import {User} from 'src/types/user';
 import api from 'src/utils/api';
 import Header from './Header';
 import Generator from './Generator';
-import UsersOverTime from './UsersOverTime';
-import {TimeRange} from 'src/types/timeRange'
+import TasksOverTime from 'src/components/charts/TasksOverTime';
+import UsersOverTime from 'src/components/charts/UsersOverTime';
 import DTTasks from 'src/components/datatensor/Tasks';
+import {TimeRange} from 'src/types/timeRange'
+import useTasks from 'src/hooks/useTasks';
 
 
 const timeRanges: TimeRange[] = [
@@ -52,6 +54,8 @@ const AdminDashboardView: FC = () => {
     const isMountedRef = useIsMountedRef();
     const [users, setUsers] = useState<User[]>([]);
 
+    const {tasks} = useTasks();
+
     const getUsers = useCallback(async () => {
         try {
             const response = await api.get<{ users: User[] }>('/users');
@@ -68,7 +72,7 @@ const AdminDashboardView: FC = () => {
         getUsers();
     }, [getUsers]);
 
-    const [timeRange, setTimeRange] = useState<TimeRange>(timeRanges[3]);
+    const [timeRange, setTimeRange] = useState<TimeRange>(timeRanges[2]);
 
     return (
         <Page
@@ -90,9 +94,9 @@ const AdminDashboardView: FC = () => {
                         lg={8}
                         xs={12}
                     >
-                        <UsersOverTime
+                        <TasksOverTime
+                            tasks={tasks}
                             timeRange={timeRange}
-                            users={users}
                         />
                     </Grid>
                     <Grid
@@ -115,6 +119,16 @@ const AdminDashboardView: FC = () => {
                         xs={12}
                     >
                         <DTTasks/>
+                    </Grid>
+                    <Grid
+                        item
+                        lg={8}
+                        xs={12}
+                    >
+                        <UsersOverTime
+                            users={users}
+                            timeRange={timeRange}
+                        />
                     </Grid>
                 </Grid>
             </Container>

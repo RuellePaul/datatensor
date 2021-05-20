@@ -62,7 +62,6 @@ const Account: FC = () => {
             >
                 <UserAvatar
                     className={classes.avatar}
-                    user={user}
                 />
                 <Hidden smDown>
                     <Typography
