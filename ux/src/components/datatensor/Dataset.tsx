@@ -2,30 +2,21 @@ import React, {FC, useCallback, useEffect, useRef, useState} from 'react';
 import {useHistory} from 'react-router';
 import clsx from 'clsx';
 import moment from 'moment';
-import {useSnackbar} from 'notistack';
 import {
     Box,
-    Button,
     capitalize,
     Card,
     CardActionArea,
-    CardActions,
     CardContent,
     CardHeader,
     CardMedia,
-    CircularProgress,
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    IconButton,
     makeStyles,
     Typography
 } from '@material-ui/core';
-import {Close as CloseIcon, Lock, PhotoLibrary, Public} from '@material-ui/icons';
+import {Lock, PhotoLibrary, Public} from '@material-ui/icons';
 import {Theme} from 'src/theme';
 import {Dataset} from 'src/types/dataset';
 import api from 'src/utils/api';
-import useDatasets from 'src/hooks/useDatasets';
 import {Image} from 'src/types/image';
 import UserAvatar from 'src/components/UserAvatar';
 import {UserConsumer, UserProvider} from 'src/store/UserContext';
@@ -42,16 +33,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     media: {
         height: 200
-    },
-    close: {
-        position: 'absolute',
-        right: theme.spacing(1),
-        top: theme.spacing(1),
-        color: theme.palette.grey[500]
-    },
-    loader: {
-        width: '20px !important',
-        height: '20px !important'
     }
 }));
 
@@ -62,9 +43,6 @@ const DTDataset: FC<DatasetProps> = ({
                                      }) => {
     const classes = useStyles();
     const history = useHistory();
-    const {enqueueSnackbar} = useSnackbar();
-
-    const {saveDatasets} = useDatasets();
 
     const datasetRef = useRef(null);
 
@@ -87,29 +65,6 @@ const DTDataset: FC<DatasetProps> = ({
     useEffect(() => {
         fetchImage();
     }, [fetchImage]);
-
-
-    const [openDeleteDataset, setOpenDeleteDataset] = useState(false);
-    const handleOpenDeleteDataset = () => {
-        setOpenDeleteDataset(true);
-    };
-    const handleCloseDeleteDataset = () => {
-        setOpenDeleteDataset(false);
-    };
-
-    const [isDeleting, setIsDeleting] = useState(false);
-    const handleDeleteDataset = async () => {
-        setIsDeleting(true);
-        try {
-            await api.delete(`/datasets/${dataset._id}`);
-            saveDatasets(datasets => datasets.filter((current: Dataset) => current._id !== dataset._id));
-            enqueueSnackbar(`Deleted dataset ${dataset.name}`, {variant: 'info'});
-            setIsDeleting(false);
-            handleCloseDeleteDataset();
-        } catch (error) {
-            enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
-        }
-    };
 
     return (
         <Card
@@ -169,68 +124,6 @@ const DTDataset: FC<DatasetProps> = ({
                     />
                 </CardContent>
             </CardActionArea>
-            <CardActions>
-                <Button
-                    color="primary"
-                    onClick={handleOpenDeleteDataset}
-                    size="small"
-                >
-                    Delete
-                </Button>
-            </CardActions>
-
-            <Dialog
-                disableRestoreFocus
-                fullWidth
-                open={openDeleteDataset}
-                onClose={handleCloseDeleteDataset}
-            >
-                <DialogTitle
-                    className='flex'
-                    disableTypography
-                >
-                    <Typography variant='h4'>
-                        Confirmation
-                    </Typography>
-
-                    <IconButton
-                        className={classes.close}
-                        onClick={handleCloseDeleteDataset}
-                    >
-                        <CloseIcon/>
-                    </IconButton>
-                </DialogTitle>
-                <DialogContent>
-                    <Box my={1}>
-                        <Typography color='textPrimary' gutterBottom>
-                            Are you sure you want to delete dataset
-                            {' '}
-                            <Typography component='span' style={{fontWeight: 'bold'}}>
-                                {dataset.name}
-                            </Typography>
-                            {' '}
-                            ?
-                        </Typography>
-                    </Box>
-
-                    <Box display='flex' justifyContent='flex-end'>
-                        <Button
-                            color="secondary"
-                            variant="contained"
-                            onClick={handleDeleteDataset}
-                            endIcon={isDeleting && (
-                                <CircularProgress
-                                    className={classes.loader}
-                                    color="inherit"
-                                />
-                            )}
-                            disabled={isDeleting}
-                        >
-                            Delete dataset
-                        </Button>
-                    </Box>
-                </DialogContent>
-            </Dialog>
         </Card>
     );
 };

@@ -6,7 +6,8 @@ import {TabContext} from '@material-ui/lab';
 import Header from './Header';
 import SectionImages from './sections/SectionImages';
 import SectionLabeling from './sections/SectionLabeling';
-import {DashboardOutlined, PhotoLibraryOutlined, PhotoSizeSelectActualOutlined} from '@material-ui/icons';
+import SectionSettings from './sections/SectionSettings';
+import {DashboardOutlined, PhotoLibraryOutlined, PhotoSizeSelectActualOutlined, SettingsOutlined} from '@material-ui/icons';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
 import {ImagesConsumer, ImagesProvider} from 'src/store/ImagesContext';
@@ -103,6 +104,7 @@ const DatasetMainView: FC = () => {
                                                         style={{pointerEvents: 'auto'}}
                                                         icon={PhotoSizeSelectActualOutlined}
                                                     />
+                                                    <DTTab label="Settings" icon={SettingsOutlined}/>
                                                 </Tabs>
                                             )}
                                         </ImagesConsumer>
@@ -117,6 +119,9 @@ const DatasetMainView: FC = () => {
                                     />
                                     <SectionLabeling
                                         className={clsx(tab !== 2 && 'hidden')}
+                                    />
+                                    <SectionSettings
+                                        className={clsx(tab !== 3 && 'hidden')}
                                     />
                                 </Container>
                             </TabContext>
