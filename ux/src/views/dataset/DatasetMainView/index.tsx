@@ -1,11 +1,12 @@
 import React, {FC, useState} from 'react';
 import {useParams} from 'react-router';
 import clsx from 'clsx';
-import {Box, Container, Divider, makeStyles, Tab, Tabs, Tooltip, Typography, withStyles} from '@material-ui/core';
+import {Box, Container, Divider, makeStyles, Tab, Tabs, Tooltip, Typography} from '@material-ui/core';
 import {TabContext} from '@material-ui/lab';
 import Header from './Header';
 import SectionImages from './sections/SectionImages';
 import SectionLabeling from './sections/SectionLabeling';
+import {DashboardOutlined, PhotoLibraryOutlined, PhotoSizeSelectActualOutlined} from '@material-ui/icons';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
 import {ImagesConsumer, ImagesProvider} from 'src/store/ImagesContext';
@@ -17,17 +18,34 @@ const useStyles = makeStyles((theme: Theme) => ({
         backgroundColor: theme.palette.background.dark,
         minHeight: '100%',
         padding: theme.spacing(3, 0)
-    }
-}));
-
-const DTTab = withStyles(theme => ({
-    root: {
-        color: 'white',
+    },
+    tab: {
+        color: theme.palette.text.primary,
         '&:hover, &$selected': {
-            color: 'white'
+            color: theme.palette.text.primary
         }
     }
-}))(Tab);
+
+}));
+
+const DTTab = ({label, icon: Icon, ...rest}) => {
+
+    const classes = useStyles();
+
+    const TabLabel = (
+        <Box display='flex' alignItems='center'>
+            <Icon fontSize='small'/>
+
+            <Box ml={1}>
+                {label}
+            </Box>
+        </Box>
+    )
+
+    return (
+        <Tab {...rest} label={TabLabel} className={classes.tab}/>
+    )
+}
 
 const DatasetMainView: FC = () => {
 
@@ -54,7 +72,7 @@ const DatasetMainView: FC = () => {
                     >
                         <ImagesProvider>
                             <TabContext value={tab.toString()}>
-                                <Container maxWidth="lg">
+                                <Container maxWidth='lg'>
                                     <Header/>
 
                                     <Box mt={2}>
@@ -64,8 +82,8 @@ const DatasetMainView: FC = () => {
                                                     value={tab}
                                                     onChange={handleTabChange}
                                                 >
-                                                    <DTTab label="Overview"/>
-                                                    <DTTab label="Images"/>
+                                                    <DTTab label="Overview" icon={DashboardOutlined}/>
+                                                    <DTTab label="Images" icon={PhotoLibraryOutlined}/>
                                                     <DTTab
                                                         label={
                                                             value.images.length === 0
@@ -83,6 +101,7 @@ const DatasetMainView: FC = () => {
                                                         }
                                                         disabled={value.images.length === 0}
                                                         style={{pointerEvents: 'auto'}}
+                                                        icon={PhotoSizeSelectActualOutlined}
                                                     />
                                                 </Tabs>
                                             )}
