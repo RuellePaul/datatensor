@@ -32,12 +32,16 @@ import {Link as RouterLink} from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
+        background: theme.palette.background.paper,
         borderColor: `${theme.palette.divider} !important`,
         '& *': {
             borderColor: `${theme.palette.divider} !important`
         },
         '& .MuiDataGrid-iconSeparator': {
             color: theme.palette.text.secondary
+        },
+        '& .Mui-even': {
+        background: theme.palette.background.dark,
         }
     },
     dialog: {
