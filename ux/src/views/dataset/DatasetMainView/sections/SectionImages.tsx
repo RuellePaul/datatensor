@@ -23,6 +23,18 @@ const useStyles = makeStyles((theme: Theme) => ({
             }
         }
     },
+    title: {
+        position: 'relative',
+        '&:after': {
+            position: 'absolute',
+            bottom: -8,
+            left: 0,
+            content: '" "',
+            height: 3,
+            width: 48,
+            backgroundColor: theme.palette.primary.main
+        }
+    },
     close: {
         position: 'absolute',
         right: theme.spacing(1),
@@ -55,9 +67,13 @@ const SectionImages: FC<SectionProps> = ({className}) => {
     return (
         <div className={clsx(classes.root, className)}>
             <div className={classes.header}>
-                <Typography variant="h4" color="textSecondary">
+                <Typography
+                    className={classes.title}
+                    variant="h5"
+                    color="textPrimary"
+                >
                     {images.length > 0
-                        ? `Showing ${imagesCount} / ${dataset.image_count} images`
+                        ? `Showing ${imagesCount} / ${dataset.image_count} image${imagesCount > 1 ? 's' : ''}`
                         : `No images found`
                     }
                 </Typography>

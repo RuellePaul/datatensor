@@ -1,4 +1,5 @@
 import React, {FC, useState} from 'react';
+import {Link as RouterLink} from 'react-router-dom';
 import moment from 'moment';
 import {
     Box,
@@ -28,7 +29,8 @@ import UserAvatar from 'src/components/UserAvatar';
 import {DatasetConsumer, DatasetProvider} from 'src/store/DatasetContext';
 import DTDataset from './Dataset';
 import {UserConsumer, UserProvider} from 'src/store/UserContext';
-import {Link as RouterLink} from 'react-router-dom';
+import getDateDiff from 'src/utils/getDateDiff';
+
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -154,7 +156,12 @@ const columns: GridColDef[] = [
                     />
                 );
             if (params.row.status === 'success')
-                return <div/>
+                return (
+                    <Typography variant='body2' color='textSecondary' noWrap>
+                        Done in {' '}
+                        {getDateDiff(params.row.created_at, params.row.ended_at)}
+                    </Typography>
+                );
             return (
                 <>
                     <Box width="100%" mr={1}>
