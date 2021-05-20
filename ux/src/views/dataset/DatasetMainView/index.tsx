@@ -6,12 +6,14 @@ import {Alert, TabContext} from '@material-ui/lab';
 import Header from './Header';
 import SectionImages from './sections/SectionImages';
 import SectionLabeling from './sections/SectionLabeling';
+import SectionAugmentation from './sections/SectionAugmentation';
 import SectionSettings from './sections/SectionSettings';
 import {
     DashboardOutlined,
     PhotoLibraryOutlined,
     PhotoSizeSelectActualOutlined,
-    SettingsOutlined
+    SettingsOutlined,
+    DynamicFeedOutlined
 } from '@material-ui/icons';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
@@ -118,6 +120,26 @@ const DatasetMainView: FC = () => {
                                                         style={{pointerEvents: 'auto'}}
                                                         icon={PhotoSizeSelectActualOutlined}
                                                     />
+                                                    <DTTab
+                                                        label={
+                                                            value.images.length === 0
+                                                                ? (
+                                                                    <Tooltip title={(
+                                                                        <Typography variant='h6'>
+                                                                            You need to upload images first
+                                                                        </Typography>
+                                                                    )}>
+                                                                        <span>Augmentation</span>
+                                                                    </Tooltip>
+                                                                )
+                                                                : 'Augmentation'
+
+                                                        }
+                                                        disabled={value.images.length === 0}
+                                                        style={{pointerEvents: 'auto'}}
+                                                        icon={DynamicFeedOutlined}
+                                                    />
+
                                                     <DTTab label="Settings" icon={SettingsOutlined}/>
                                                 </Tabs>
                                             )}
@@ -134,8 +156,11 @@ const DatasetMainView: FC = () => {
                                     <SectionLabeling
                                         className={clsx(tab !== 2 && 'hidden')}
                                     />
-                                    <SectionSettings
+                                    <SectionAugmentation
                                         className={clsx(tab !== 3 && 'hidden')}
+                                    />
+                                    <SectionSettings
+                                        className={clsx(tab !== 4 && 'hidden')}
                                     />
                                 </Container>
                             </TabContext>
