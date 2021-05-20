@@ -60,6 +60,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         display: 'flex',
         marginLeft: -10,
         width: 'auto',
+        marginRight: 10
     },
     scroll: {
         overflowY: 'auto',
