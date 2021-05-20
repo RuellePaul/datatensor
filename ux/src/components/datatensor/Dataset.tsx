@@ -117,21 +117,22 @@ const DTDataset: FC<DatasetProps> = ({
             ref={datasetRef}
             {...rest}
         >
-            <CardHeader
-                avatar={
-                    <UserProvider user_id={dataset.user_id}>
-                        <UserConsumer>
-                            {value =>
+            <UserProvider user_id={dataset.user_id}>
+                <UserConsumer>
+                    {value =>
+                        <CardHeader
+                            avatar={
                                 <UserAvatar
                                     user={value.user}
                                 />
                             }
-                        </UserConsumer>
-                    </UserProvider>
-                }
-                title={dataset.name}
-                subheader={moment(dataset.created_at).format('DD MMMM, YYYY')}
-            />
+                            title={dataset.name}
+                            subheader={`${value.user.name} | ${moment(dataset.created_at).format('DD MMMM, YYYY')}`}
+                        />
+                    }
+                </UserConsumer>
+            </UserProvider>
+
 
             <CardActionArea
                 onClick={() => history.push(`/app/manage/datasets/${dataset._id}`)}
