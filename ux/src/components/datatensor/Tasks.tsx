@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
             color: theme.palette.text.secondary
         },
         '& .Mui-even': {
-        background: theme.palette.background.dark,
+            background: theme.palette.background.dark,
         }
     },
     dialog: {
@@ -284,54 +284,31 @@ const DTTasks: FC<TaskProps> = () => {
                                             md={7}
                                             xs={12}
                                         >
-                                            <>
-                                                <UserConsumer>
-                                                    {
-                                                        value => (
-                                                            <Box display='flex' alignItems='center'>
-                                                                <Box mr={2} maxWidth={30}>
-                                                                    <UserAvatar user={value.user}/>
-                                                                </Box>
-                                                                <Typography>
-                                                                    <Link
-                                                                        color="inherit"
-                                                                        component={RouterLink}
-                                                                        to={`/app/admin/manage/users/${value.user.toString()}/details`}
-                                                                        variant="h6"
-                                                                    >
-                                                                        {value.user.name}
-                                                                    </Link>
-                                                                    {` `}
-                                                                    : <strong>{translateType(selectedTask?.type)}</strong>,
-                                                                    the
-                                                                    {` `}
-                                                                    {moment(value.user.created_at).format('DD/MM')},
-                                                                    at {moment(value.user.created_at).format('HH:mm:ss')}
-                                                                </Typography>
-                                                            </Box>
-                                                        )
-                                                    }
-                                                </UserConsumer>
+                                            <Typography gutterBottom>
+                                                <strong>{translateType(selectedTask?.type)}</strong>,
+                                                the
+                                                {` `}
+                                                {moment(selectedTask?.created_at).format('DD/MM')},
+                                                at {moment(selectedTask?.created_at).format('HH:mm:ss')}
+                                            </Typography>
 
-
-                                                <DatasetProvider dataset_id={selectedTask?.dataset_id}>
-                                                    <DatasetConsumer>
-                                                        {value => <DTDataset dataset={value.dataset}/>}
-                                                    </DatasetConsumer>
-                                                </DatasetProvider>
-                                            </>
+                                            <Typography gutterBottom>
+                                                Properties :
+                                            </Typography>
+                                            <pre>
+                                                {JSON.stringify(selectedTask?.properties, null, 4)}
+                                            </pre>
                                         </Grid>
                                         <Grid
                                             item
                                             md={5}
                                             xs={12}
                                         >
-                                            <Typography gutterBottom>
-                                                Properties :
-                                            </Typography>
-                                            <pre>
-                                    {JSON.stringify(selectedTask?.properties, null, 4)}
-                                </pre>
+                                            <DatasetProvider dataset_id={selectedTask?.dataset_id}>
+                                                <DatasetConsumer>
+                                                    {value => <DTDataset dataset={value.dataset}/>}
+                                                </DatasetConsumer>
+                                            </DatasetProvider>
                                         </Grid>
                                     </Grid>
                                 </Box>
