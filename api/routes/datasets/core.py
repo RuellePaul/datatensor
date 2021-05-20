@@ -36,11 +36,6 @@ def insert_dataset(dataset):
                             **dataset})
 
 
-def remove_datasets():
-    user_id = verify_access_token().get('_id')
-    db.datasets.delete_many({'user_id': user_id})
-
-
 def remove_dataset(dataset_id):
     user_id = verify_access_token().get('_id')
     images = list(Config.db.images.find({'dataset_id': dataset_id}))

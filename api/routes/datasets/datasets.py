@@ -3,7 +3,7 @@ from webargs import fields
 from webargs.flaskparser import use_args
 
 from utils import build_schema, parse
-from .core import Dataset, find_datasets, find_dataset, remove_datasets, remove_dataset, insert_dataset
+from .core import Dataset, find_datasets, find_dataset, remove_dataset, insert_dataset
 
 datasets = Blueprint('datasets', __name__)
 Dataset = build_schema(Dataset)
@@ -30,12 +30,6 @@ def get_dataset(dataset_id):
 def post_dataset(args):
     insert_dataset(args)
     return 'OK', 201
-
-
-@datasets.route('/', methods=['DELETE'])
-def delete_datasets():
-    remove_datasets()
-    return 'OK', 200
 
 
 @datasets.route('/<dataset_id>', methods=['DELETE'])
