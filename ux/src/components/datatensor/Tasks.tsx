@@ -311,7 +311,7 @@ const DTTasks: FC<TaskProps> = () => {
                                         >
                                             <DatasetProvider dataset_id={selectedTask?.dataset_id}>
                                                 <DatasetConsumer>
-                                                    {value => <DTDataset dataset={value.dataset}/>}
+                                                    {value => <DTDataset dataset={value.dataset} isWorking={value.isWorking}/>}
                                                 </DatasetConsumer>
                                             </DatasetProvider>
                                         </Grid>
