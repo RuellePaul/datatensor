@@ -298,6 +298,11 @@ const DTTasks: FC<TaskProps> = () => {
                                             <pre>
                                                 {JSON.stringify(selectedTask?.properties, null, 4)}
                                             </pre>
+                                            {selectedTask.error && (
+                                                <Typography color="error" gutterBottom>
+                                                    Error : {selectedTask.error}
+                                                </Typography>
+                                            )}
                                         </Grid>
                                         <Grid
                                             item
