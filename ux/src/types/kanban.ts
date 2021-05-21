@@ -15,18 +15,10 @@ export interface Checklist {
     checkItems: CheckItem[];
 }
 
-export interface Comment {
-    id: string;
-    cardId: string;
-    createdAt: number;
-    message: string;
-}
-
 export interface Card {
     id: string;
     attachments: Attachment[];
     checklists: Checklist[];
-    comments: Comment[];
     cover: string | null;
     description: string | null;
     due: number | null;

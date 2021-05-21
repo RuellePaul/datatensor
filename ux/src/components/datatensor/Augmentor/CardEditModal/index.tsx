@@ -21,8 +21,6 @@ import {addChecklist, deleteCard, updateCard} from 'src/slices/kanban';
 import type {Card, List} from 'src/types/kanban';
 import Details from './Details';
 import Checklist from './Checklist';
-import Comment from './Comment';
-import CommentAdd from './CommentAdd';
 import ActionButton from './ActionButton';
 
 interface CardEditModalProps {
@@ -176,19 +174,6 @@ const CardEditModal: FC<CardEditModalProps> = ({
                             >
                                 Activity
                             </Typography>
-                            <Box mt={2}>
-                                <CommentAdd cardId={card.id}/>
-                                {card.comments.length > 0 && (
-                                    <Box mt={3}>
-                                        {card.comments.map((comment) => (
-                                            <Comment
-                                                key={comment.id}
-                                                comment={comment}
-                                            />
-                                        ))}
-                                    </Box>
-                                )}
-                            </Box>
                         </Box>
                     </Grid>
                     <Grid

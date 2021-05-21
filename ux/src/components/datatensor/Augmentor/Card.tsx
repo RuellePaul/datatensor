@@ -2,9 +2,8 @@ import type {FC} from 'react';
 import React, {forwardRef, useState} from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import {Avatar, Box, Card as MuiCard, CardContent, CardMedia, makeStyles, SvgIcon, Typography} from '@material-ui/core';
-import {AvatarGroup} from '@material-ui/lab';
-import {CheckSquare as CheckIcon, Eye as EyeIcon, File as FileIcon, MessageCircle as MessageIcon} from 'react-feather';
+import {Box, Card as MuiCard, CardContent, CardMedia, makeStyles, SvgIcon, Typography} from '@material-ui/core';
+import {CheckSquare as CheckIcon, Eye as EyeIcon, File as FileIcon} from 'react-feather';
 import type {Theme} from 'src/theme';
 import type {RootState} from 'src/store';
 import {useSelector} from 'src/store';
@@ -135,15 +134,6 @@ const Card: FC<CardProps> = forwardRef(({
                                 fontSize="small"
                             >
                                 <CheckIcon/>
-                            </SvgIcon>
-                        )}
-                        {card.comments.length > 0 && (
-                            <SvgIcon
-                                className={classes.badge}
-                                color="action"
-                                fontSize="small"
-                            >
-                                <MessageIcon/>
                             </SvgIcon>
                         )}
                     </Box>

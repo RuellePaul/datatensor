@@ -4,7 +4,7 @@ import _ from 'lodash';
 import type {AppThunk} from 'src/store'
 import api from 'src/utils/api';
 import objFromArray from 'src/utils/objFromArray';
-import type {Board, Card, CheckItem, Checklist, Comment, List} from 'src/types/kanban';
+import type {Board, Card, CheckItem, Checklist, List} from 'src/types/kanban';
 import moment from 'moment';
 
 const board: Board = {
@@ -45,17 +45,6 @@ const board: Board = {
                     ]
                 }
             ],
-            comments: [
-                {
-                    id: '15e849c5a35d4dff4f88ebff6',
-                    cardId: '5e849c8708bd72683b454747',
-                    createdAt: moment()
-                        .subtract(5, 'days')
-                        .toDate()
-                        .getTime(),
-                    message: 'This is a comment'
-                }
-            ],
             cover: '/static/images/projects/project_3.png',
             description: 'Duis condimentum lacus finibus felis pellentesque, ac auctor nibh fermentum. Duis sed dui ante. Phasellus id eros tincidunt, dictum lorem vitae, pellentesque sem. Aenean eu enim sit amet mauris rhoncus mollis. Sed enim turpis, porta a felis et, luctus faucibus nisi. Phasellus et metus fermentum, ultrices arcu aliquam, facilisis justo. Cras nunc nunc, elementum sed euismod ut, maximus eget nibh. Phasellus condimentum lorem neque. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce sagittis pharetra eleifend. Suspendisse potenti.',
             due: moment()
@@ -70,7 +59,6 @@ const board: Board = {
             id: '5e849c90fabe1f1f4b3557f6',
             attachments: [],
             checklists: [],
-            comments: [],
             cover: null,
             description: 'We are looking for vue experience and of course node js strong knowledge',
             due: moment()
@@ -85,7 +73,6 @@ const board: Board = {
             id: '5e849c977ef6265938bfd90b',
             attachments: [],
             checklists: [],
-            comments: [],
             cover: null,
             description: 'We nede to make it aggresive with pricing because it’s in their interest to acquire us',
             due: null,
@@ -97,7 +84,6 @@ const board: Board = {
             id: '5e849c9e34ee93bc7255c599',
             attachments: [],
             checklists: [],
-            comments: [],
             cover: null,
             description: 'We nede to make it aggresive with pricing because it’s in their interest to acquire us',
             due: null,
@@ -109,7 +95,6 @@ const board: Board = {
             id: '5e849ca7d063dc3830d4b49c',
             attachments: [],
             checklists: [],
-            comments: [],
             cover: null,
             description: 'We need to make it aggresive with pricing because it’s in their interest to acquire us',
             due: null,
@@ -121,7 +106,6 @@ const board: Board = {
             id: '5e849cb5d0c6e8894451fdfa',
             attachments: [],
             checklists: [],
-            comments: [],
             cover: null,
             description: 'We need to make it aggresive with pricing because it’s in their interest to acquire us',
             due: null,
@@ -229,12 +213,6 @@ const slice = createSlice({
             state.cards.byId = _.omit(state.cards.byId, cardId);
             _.pull(state.cards.allIds, cardId);
             _.pull(state.lists.byId[listId].cardIds, cardId);
-        },
-        addComment(state: KanbanState, action: PayloadAction<{ comment: Comment; }>) {
-            const {comment} = action.payload;
-            const card = state.cards.byId[comment.cardId];
-
-            card.comments.push(comment);
         },
         addChecklist(state: KanbanState, action: PayloadAction<{ cardId: string; checklist: Checklist; }>) {
             const {cardId, checklist} = action.payload;
@@ -396,15 +374,6 @@ export const deleteCard = (cardId: string): AppThunk => async (dispatch) => {
     });
 
     dispatch(slice.actions.deleteCard({cardId}));
-};
-
-export const addComment = (cardId: string, message: string): AppThunk => async (dispatch) => {
-    const response = await api.post<{ comment: Comment; }>('/api/kanban/comments/new', {
-        cardId,
-        message
-    });
-
-    dispatch(slice.actions.addComment(response.data));
 };
 
 export const addChecklist = (cardId: string, name: string): AppThunk => async (dispatch) => {
