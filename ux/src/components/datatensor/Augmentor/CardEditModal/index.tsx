@@ -50,34 +50,6 @@ const CardEditModal: FC<CardEditModalProps> = ({
     const dispatch = useDispatch();
     const {enqueueSnackbar} = useSnackbar();
 
-    const handleSubscribe = async (): Promise<void> => {
-        try {
-            await dispatch(updateCard(card.id, {isSubscribed: true}));
-            enqueueSnackbar('Unsubscribed', {
-                variant: 'success'
-            });
-        } catch (err) {
-            console.error(err);
-            enqueueSnackbar('Something went wrong', {
-                variant: 'error'
-            });
-        }
-    };
-
-    const handleUnsubscribe = async (): Promise<void> => {
-        try {
-            await dispatch(updateCard(card.id, {isSubscribed: false}));
-            enqueueSnackbar('Subscribed', {
-                variant: 'success'
-            });
-        } catch (err) {
-            console.error(err);
-            enqueueSnackbar('Something went wrong', {
-                variant: 'error'
-            });
-        }
-    };
-
     const handleDelete = async (): Promise<void> => {
         try {
             await dispatch(deleteCard(card.id));
@@ -160,12 +132,6 @@ const CardEditModal: FC<CardEditModalProps> = ({
                         >
                             Labels
                         </ActionButton>
-                        <ActionButton
-                            icon={<FileIcon/>}
-                            disabled
-                        >
-                            Attachments
-                        </ActionButton>
                         <Box mt={3}>
                             <Typography
                                 variant="overline"
@@ -191,21 +157,6 @@ const CardEditModal: FC<CardEditModalProps> = ({
                             >
                                 Make Template
                             </ActionButton>
-                            {card.isSubscribed ? (
-                                <ActionButton
-                                    icon={<EyeOffIcon/>}
-                                    onClick={handleUnsubscribe}
-                                >
-                                    Unwatch
-                                </ActionButton>
-                            ) : (
-                                <ActionButton
-                                    icon={<EyeIcon/>}
-                                    onClick={handleSubscribe}
-                                >
-                                    Watch
-                                </ActionButton>
-                            )}
                             <Divider/>
                             <ActionButton
                                 icon={<ArchiveIcon/>}

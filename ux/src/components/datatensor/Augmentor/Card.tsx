@@ -104,30 +104,6 @@ const Card: FC<CardProps> = forwardRef(({
                     >
                         {card.name}
                     </Typography>
-                    <Box
-                        mt={2}
-                        display="flex"
-                        alignItems="center"
-                    >
-                        {card.isSubscribed && (
-                            <SvgIcon
-                                className={classes.badge}
-                                color="action"
-                                fontSize="small"
-                            >
-                                <EyeIcon/>
-                            </SvgIcon>
-                        )}
-                        {card.attachments.length > 0 && (
-                            <SvgIcon
-                                className={classes.badge}
-                                color="action"
-                                fontSize="small"
-                            >
-                                <FileIcon/>
-                            </SvgIcon>
-                        )}
-                    </Box>
                 </CardContent>
             </MuiCard>
             <CardEditModal

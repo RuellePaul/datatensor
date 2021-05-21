@@ -6,9 +6,7 @@ import {SectionProps} from './SectionProps';
 import clsx from 'clsx';
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {
-        padding: theme.spacing(2, 0)
-    }
+    root: {}
 }));
 
 

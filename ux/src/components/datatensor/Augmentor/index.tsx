@@ -8,7 +8,6 @@ import type {Theme} from 'src/theme';
 import {useDispatch, useSelector} from 'src/store';
 import {getBoard, moveCard} from 'src/slices/kanban';
 import List from './List';
-import ListAdd from './ListAdd';
 
 const useStyles = makeStyles((theme: Theme) => ({
     content: {
@@ -81,7 +80,6 @@ const KanbanView: FC = () => {
                             listId={listId}
                         />
                     ))}
-                    <ListAdd/>
                 </div>
             </div>
         </DragDropContext>

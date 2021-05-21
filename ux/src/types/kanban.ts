@@ -17,12 +17,8 @@ export interface Checklist {
 
 export interface Card {
     id: string;
-    attachments: Attachment[];
-    checklists: Checklist[];
     cover: string | null;
     description: string | null;
-    due: number | null;
-    isSubscribed: boolean;
     listId: string;
     name: string;
 }

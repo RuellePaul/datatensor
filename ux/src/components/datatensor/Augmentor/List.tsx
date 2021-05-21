@@ -1,27 +1,12 @@
-import type {ChangeEvent, FC} from 'react';
-import React, {useRef, useState} from 'react';
+import type {FC} from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import {useSnackbar} from 'notistack';
 import {Draggable, Droppable} from 'react-beautiful-dnd';
-import {
-    Box,
-    ClickAwayListener,
-    Divider,
-    IconButton,
-    makeStyles,
-    Menu,
-    MenuItem,
-    Paper,
-    SvgIcon,
-    TextField,
-    Typography
-} from '@material-ui/core';
-import {MoreVertical as MoreIcon} from 'react-feather';
+import {Box, Divider, makeStyles, Paper, Typography} from '@material-ui/core';
 import type {Theme} from 'src/theme';
 import type {RootState} from 'src/store';
-import {useDispatch, useSelector} from 'src/store';
-import {clearList, deleteList, updateList} from 'src/slices/kanban';
+import {useSelector} from 'src/store';
 import type {List as ListType} from 'src/types/kanban';
 import Card from './Card';
 import CardAdd from './CardAdd';
@@ -71,85 +56,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const List: FC<ListProps> = ({className, listId, ...rest}) => {
     const classes = useStyles();
-    const [isMenuOpen, setMenuOpen] = useState<boolean>(false);
     const list = useSelector((state) => listSelector(state, listId));
-    const dispatch = useDispatch();
-    const moreRef = useRef<HTMLButtonElement | null>(null);
-    const {enqueueSnackbar} = useSnackbar();
-    const [name, setName] = useState<string>(list.name);
-    const [isRenaming, setRenaming] = useState<boolean>(false);
-
-    const handleMenuOpen = (): void => {
-        setMenuOpen(true);
-    };
-
-    const handleMenuClose = (): void => {
-        setMenuOpen(false);
-    };
-
-    const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
-        event.persist();
-        setName(event.target.value);
-    };
-
-    const handleRenameInit = (): void => {
-        setRenaming(true);
-        setMenuOpen(false);
-    };
-
-    const handleRename = async (): Promise<void> => {
-        try {
-            if (!name) {
-                setName(list.name);
-                setRenaming(false);
-                return;
-            }
-
-            const update = {name};
-
-            setRenaming(false);
-            await dispatch(updateList(list.id, update));
-            enqueueSnackbar('List updated', {
-                variant: 'success'
-            });
-        } catch (err) {
-            console.error(err);
-            enqueueSnackbar('Something went wrong', {
-                variant: 'error'
-            });
-        }
-    };
-
-    const handleDelete = async (): Promise<void> => {
-        try {
-            setMenuOpen(false);
-            await dispatch(deleteList(list.id));
-            enqueueSnackbar('List deleted', {
-                variant: 'success'
-            });
-        } catch (err) {
-            console.error(err);
-            enqueueSnackbar('Something went wrong', {
-                variant: 'error'
-            });
-        }
-    };
-
-    const handleClear = async (): Promise<void> => {
-        try {
-            setMenuOpen(false);
-            await dispatch(clearList(list.id));
-            enqueueSnackbar('List cleared', {
-                variant: 'success'
-            });
-        } catch (err) {
-            console.error(err);
-            enqueueSnackbar('Something went wrong', {
-                variant: 'error'
-            });
-        }
-    };
-
     return (
         <div
             className={clsx(classes.root, className)}
@@ -157,41 +64,16 @@ const List: FC<ListProps> = ({className, listId, ...rest}) => {
         >
             <Paper className={classes.inner}>
                 <Box
-                    py={1}
-                    px={2}
+                    p={2}
                     display="flex"
                     alignItems="center"
                 >
-                    {isRenaming ? (
-                        <ClickAwayListener onClickAway={handleRename}>
-                            <TextField
-                                value={name}
-                                onBlur={handleRename}
-                                onChange={handleChange}
-                                variant="outlined"
-                                margin="dense"
-                            />
-                        </ClickAwayListener>
-                    ) : (
-                        <Typography
-                            color="inherit"
-                            variant="h5"
-                            onClick={handleRenameInit}
-                        >
-                            {list.name}
-                        </Typography>
-                    )}
-                    <Box flexGrow={1}/>
-                    <IconButton
+                    <Typography
                         color="inherit"
-                        edge="end"
-                        onClick={handleMenuOpen}
-                        ref={moreRef}
+                        variant="h5"
                     >
-                        <SvgIcon fontSize="small">
-                            <MoreIcon/>
-                        </SvgIcon>
-                    </IconButton>
+                        {list.name}
+                    </Typography>
                 </Box>
                 <Divider/>
                 <Droppable
@@ -233,28 +115,6 @@ const List: FC<ListProps> = ({className, listId, ...rest}) => {
                 <Box p={2}>
                     <CardAdd listId={list.id}/>
                 </Box>
-                <Menu
-                    keepMounted
-                    anchorEl={moreRef.current}
-                    open={isMenuOpen}
-                    onClose={handleMenuClose}
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'center'
-                    }}
-                    PaperProps={{className: classes.menu}}
-                    getContentAnchorEl={null}
-                >
-                    <MenuItem onClick={handleRenameInit}>
-                        Rename
-                    </MenuItem>
-                    <MenuItem onClick={handleClear}>
-                        Clear
-                    </MenuItem>
-                    <MenuItem onClick={handleDelete}>
-                        Delete
-                    </MenuItem>
-                </Menu>
             </Paper>
         </div>
     );
