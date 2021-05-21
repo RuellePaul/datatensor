@@ -6,7 +6,6 @@ import {Box, Dialog, Divider, Grid, IconButton, makeStyles, SvgIcon, Typography}
 import {
     Archive as ArchiveIcon,
     ArrowRight as ArrowRightIcon,
-    CheckSquare as CheckIcon,
     Copy as CopyIcon,
     Eye as EyeIcon,
     EyeOff as EyeOffIcon,
@@ -17,10 +16,9 @@ import {
 } from 'react-feather';
 import type {Theme} from 'src/theme';
 import {useDispatch} from 'src/store';
-import {addChecklist, deleteCard, updateCard} from 'src/slices/kanban';
+import {deleteCard, updateCard} from 'src/slices/kanban';
 import type {Card, List} from 'src/types/kanban';
 import Details from './Details';
-import Checklist from './Checklist';
 import ActionButton from './ActionButton';
 
 interface CardEditModalProps {
@@ -37,11 +35,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     listName: {
         fontWeight: theme.typography.fontWeightMedium
-    },
-    checklist: {
-        '& + &': {
-            marginTop: theme.spacing(3)
-        }
     }
 }));
 
@@ -99,20 +92,6 @@ const CardEditModal: FC<CardEditModalProps> = ({
         }
     };
 
-    const handleAddChecklist = async (): Promise<void> => {
-        try {
-            await dispatch(addChecklist(card.id, 'Untitled Checklist'));
-            enqueueSnackbar('Checklist added', {
-                variant: 'success'
-            });
-        } catch (err) {
-            console.error(err);
-            enqueueSnackbar('Something went wrong', {
-                variant: 'error'
-            });
-        }
-    };
-
     return (
         <Dialog
             onClose={onClose}
@@ -155,18 +134,6 @@ const CardEditModal: FC<CardEditModalProps> = ({
                             card={card}
                             list={list}
                         />
-                        {card.checklists.length > 0 && (
-                            <Box mt={5}>
-                                {card.checklists.map((checklist) => (
-                                    <Checklist
-                                        key={checklist.id}
-                                        card={card}
-                                        checklist={checklist}
-                                        className={classes.checklist}
-                                    />
-                                ))}
-                            </Box>
-                        )}
                         <Box mt={3}>
                             <Typography
                                 variant="h4"
@@ -187,12 +154,6 @@ const CardEditModal: FC<CardEditModalProps> = ({
                         >
                             Add to card
                         </Typography>
-                        <ActionButton
-                            icon={<CheckIcon/>}
-                            onClick={handleAddChecklist}
-                        >
-                            Checklist
-                        </ActionButton>
                         <ActionButton
                             icon={<UsersIcon/>}
                             disabled
