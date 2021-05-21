@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
 import {makeStyles} from '@material-ui/core';
 import {Theme} from 'src/theme';
+import Augmentor from 'src/components/datatensor/Augmentor';
 import {SectionProps} from './SectionProps';
 import clsx from 'clsx';
 
@@ -17,7 +18,9 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
 
     return (
         <div className={clsx(classes.root, className)}>
-            ...
+
+            <Augmentor/>
+
         </div>
     )
 };
