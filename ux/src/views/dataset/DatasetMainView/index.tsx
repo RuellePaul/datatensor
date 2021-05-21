@@ -10,10 +10,10 @@ import SectionAugmentation from './sections/SectionAugmentation';
 import SectionSettings from './sections/SectionSettings';
 import {
     DashboardOutlined,
+    DynamicFeedOutlined,
     PhotoLibraryOutlined,
     PhotoSizeSelectActualOutlined,
-    SettingsOutlined,
-    DynamicFeedOutlined
+    SettingsOutlined
 } from '@material-ui/icons';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';

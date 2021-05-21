@@ -4,8 +4,7 @@ import _ from 'lodash';
 import type {AppThunk} from 'src/store'
 import api from 'src/utils/api';
 import objFromArray from 'src/utils/objFromArray';
-import type {Board, Card, CheckItem, Checklist, List} from 'src/types/kanban';
-import moment from 'moment';
+import type {Board, Card, List} from 'src/types/pipeline';
 
 const board: Board = {
     lists: [
@@ -52,7 +51,7 @@ const board: Board = {
     ]
 };
 
-interface KanbanState {
+interface PipelineState {
     isLoaded: boolean;
     lists: {
         byId: Record<string, List>;
@@ -62,9 +61,9 @@ interface KanbanState {
         byId: Record<string, Card>;
         allIds: string[];
     };
-};
+}
 
-const initialState: KanbanState = {
+const initialState: PipelineState = {
     isLoaded: false,
     lists: {
         byId: {},
@@ -77,10 +76,10 @@ const initialState: KanbanState = {
 };
 
 const slice = createSlice({
-    name: 'kanban',
+    name: 'pipeline',
     initialState,
     reducers: {
-        getBoard(state: KanbanState, action: PayloadAction<{ board: Board; }>) {
+        getBoard(state: PipelineState, action: PayloadAction<{ board: Board; }>) {
             const {board} = action.payload;
 
             state.lists.byId = objFromArray(board.lists);
@@ -89,19 +88,19 @@ const slice = createSlice({
             state.cards.allIds = Object.keys(state.cards.byId);
             state.isLoaded = true;
         },
-        createCard(state: KanbanState, action: PayloadAction<{ card: Card; }>) {
+        createCard(state: PipelineState, action: PayloadAction<{ card: Card; }>) {
             const {card} = action.payload;
 
             state.cards.byId[card.id] = card;
             state.cards.allIds.push(card.id);
             state.lists.byId[card.listId].cardIds.push(card.id);
         },
-        updateCard(state: KanbanState, action: PayloadAction<{ card: Card; }>) {
+        updateCard(state: PipelineState, action: PayloadAction<{ card: Card; }>) {
             const {card} = action.payload;
 
             _.merge(state.cards.byId[card.id], card);
         },
-        moveCard(state: KanbanState, action: PayloadAction<{ cardId: string; position: number; listId?: string; }>) {
+        moveCard(state: PipelineState, action: PayloadAction<{ cardId: string; position: number; listId?: string; }>) {
             const {cardId, position, listId} = action.payload;
             const {listId: sourceListId} = state.cards.byId[cardId];
 
@@ -117,7 +116,7 @@ const slice = createSlice({
                 state.lists.byId[sourceListId].cardIds.splice(position, 0, cardId);
             }
         },
-        deleteCard(state: KanbanState, action: PayloadAction<{ cardId: string; }>) {
+        deleteCard(state: PipelineState, action: PayloadAction<{ cardId: string; }>) {
             const {cardId} = action.payload;
             const {listId} = state.cards.byId[cardId];
 
@@ -137,7 +136,7 @@ export const getBoard = (): AppThunk => async (dispatch) => {
 };
 
 export const createCard = (listId: string, name: string): AppThunk => async (dispatch) => {
-    const response = await api.post<{ card: Card; }>('/api/kanban/cards/new', {
+    const response = await api.post<{ card: Card; }>('/api/pipeline/cards/new', {
         listId,
         name
     });
@@ -146,7 +145,7 @@ export const createCard = (listId: string, name: string): AppThunk => async (dis
 };
 
 export const updateCard = (cardId: string, update: any): AppThunk => async (dispatch) => {
-    const response = await api.post<{ card: Card; }>('/api/kanban/cards/update', {
+    const response = await api.post<{ card: Card; }>('/api/pipeline/cards/update', {
         cardId,
         update
     });
@@ -155,7 +154,7 @@ export const updateCard = (cardId: string, update: any): AppThunk => async (disp
 };
 
 export const moveCard = (cardId: string, position: number, listId?: string): AppThunk => async (dispatch) => {
-    await api.post('/api/kanban/cards/move', {
+    await api.post('/api/pipeline/cards/move', {
         cardId,
         position,
         listId
@@ -169,7 +168,7 @@ export const moveCard = (cardId: string, position: number, listId?: string): App
 };
 
 export const deleteCard = (cardId: string): AppThunk => async (dispatch) => {
-    await api.post('/api/kanban/cards/remove', {
+    await api.post('/api/pipeline/cards/remove', {
         cardId
     });
 

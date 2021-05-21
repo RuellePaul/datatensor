@@ -6,8 +6,8 @@ import _ from 'lodash';
 import {useSnackbar} from 'notistack';
 import {Box, makeStyles, TextField, Typography} from '@material-ui/core';
 import {useDispatch} from 'src/store';
-import {updateCard} from 'src/slices/kanban';
-import type {Card, List} from 'src/types/kanban';
+import {updateCard} from 'src/slices/pipeline';
+import type {Card, List} from 'src/types/pipeline';
 
 interface DetailsProps {
     className?: string;

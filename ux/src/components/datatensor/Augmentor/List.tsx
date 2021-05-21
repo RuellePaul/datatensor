@@ -7,7 +7,7 @@ import {Box, Divider, makeStyles, Paper, Typography} from '@material-ui/core';
 import type {Theme} from 'src/theme';
 import type {RootState} from 'src/store';
 import {useSelector} from 'src/store';
-import type {List as ListType} from 'src/types/kanban';
+import type {List as ListType} from 'src/types/pipeline';
 import Card from './Card';
 import CardAdd from './CardAdd';
 
@@ -17,7 +17,7 @@ interface ListProps {
 }
 
 const listSelector = (state: RootState, listId: string): ListType => {
-    const {lists} = state.kanban;
+    const {lists} = state.pipeline;
 
     return lists.byId[listId];
 };

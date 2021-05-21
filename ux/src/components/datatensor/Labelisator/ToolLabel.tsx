@@ -5,13 +5,13 @@ import {makeStyles} from '@material-ui/core';
 import {Theme} from 'src/theme';
 import {
     CANVAS_OFFSET,
-    LABEL_MIN_WIDTH,
-    LABEL_MIN_HEIGHT,
     currentLabelsHoverIds,
     currentPoint,
     drawCursorLines,
     drawRect,
     formatRatio,
+    LABEL_MIN_HEIGHT,
+    LABEL_MIN_WIDTH,
     pointIsOutside,
     reset
 } from 'src/utils/labeling';

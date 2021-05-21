@@ -6,7 +6,7 @@ import {useSnackbar} from 'notistack';
 import {makeStyles} from '@material-ui/core';
 import type {Theme} from 'src/theme';
 import {useDispatch, useSelector} from 'src/store';
-import {getBoard, moveCard} from 'src/slices/kanban';
+import {getBoard, moveCard} from 'src/slices/pipeline';
 import List from './List';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -26,10 +26,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const KanbanView: FC = () => {
+const PipelineView: FC = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const {lists} = useSelector((state) => state.kanban);
+    const {lists} = useSelector((state) => state.pipeline);
     const {enqueueSnackbar} = useSnackbar();
 
     const handleDragEnd = async ({source, destination, draggableId}: DropResult): Promise<void> => {
@@ -86,4 +86,4 @@ const KanbanView: FC = () => {
     );
 };
 
-export default KanbanView;
+export default PipelineView;

@@ -7,17 +7,14 @@ import {
     Archive as ArchiveIcon,
     ArrowRight as ArrowRightIcon,
     Copy as CopyIcon,
-    Eye as EyeIcon,
-    EyeOff as EyeOffIcon,
-    File as FileIcon,
     Layout as LayoutIcon,
     Users as UsersIcon,
     XCircle as CloseIcon
 } from 'react-feather';
 import type {Theme} from 'src/theme';
 import {useDispatch} from 'src/store';
-import {deleteCard, updateCard} from 'src/slices/kanban';
-import type {Card, List} from 'src/types/kanban';
+import {deleteCard} from 'src/slices/pipeline';
+import type {Card, List} from 'src/types/pipeline';
 import Details from './Details';
 import ActionButton from './ActionButton';
 
@@ -106,14 +103,6 @@ const CardEditModal: FC<CardEditModalProps> = ({
                             card={card}
                             list={list}
                         />
-                        <Box mt={3}>
-                            <Typography
-                                variant="h4"
-                                color="textPrimary"
-                            >
-                                Activity
-                            </Typography>
-                        </Box>
                     </Grid>
                     <Grid
                         item

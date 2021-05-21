@@ -2,12 +2,11 @@ import type {FC} from 'react';
 import React, {forwardRef, useState} from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import {Box, Card as MuiCard, CardContent, CardMedia, makeStyles, SvgIcon, Typography} from '@material-ui/core';
-import {Eye as EyeIcon, File as FileIcon} from 'react-feather';
+import {Card as MuiCard, CardContent, CardMedia, makeStyles, Typography} from '@material-ui/core';
 import type {Theme} from 'src/theme';
 import type {RootState} from 'src/store';
 import {useSelector} from 'src/store';
-import type {Card as CardType, List} from 'src/types/kanban';
+import type {Card as CardType, List} from 'src/types/pipeline';
 import CardEditModal from './CardEditModal';
 
 interface CardProps {
@@ -24,7 +23,7 @@ interface PopulatedCard extends CardType {
 }
 
 const cardSelector = (state: RootState, cardId: string): PopulatedCard => {
-    const {cards,} = state.kanban;
+    const {cards,} = state.pipeline;
     return cards.byId[cardId]
 };
 

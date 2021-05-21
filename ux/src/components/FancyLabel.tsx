@@ -60,12 +60,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const FancyLabel: FC<FancyLabelProps> = ({
-                                   className = '',
-                                   color = 'secondary',
-                                   children,
-                                   style,
-                                   ...rest
-                               }) => {
+                                             className = '',
+                                             color = 'secondary',
+                                             children,
+                                             style,
+                                             ...rest
+                                         }) => {
     const classes = useStyles();
 
     return (

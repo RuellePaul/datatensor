@@ -1,5 +1,3 @@
-import {Label} from 'src/types/label'
-
 export interface Image {
     _id: string;
     dataset_id: string;

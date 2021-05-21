@@ -19,7 +19,6 @@ const DatasetBrowseView: FC = () => {
     const classes = useStyles();
 
 
-
     return (
         <Page
             className={classes.root}

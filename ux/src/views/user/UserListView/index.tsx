@@ -24,7 +24,7 @@ const UserListView: FC = () => {
 
     const getUsers = useCallback(async () => {
         try {
-            const response = await api.get<{users: User[]}>('/users');
+            const response = await api.get<{ users: User[] }>('/users');
 
             if (isMountedRef.current) {
                 setUsers(response.data.users);

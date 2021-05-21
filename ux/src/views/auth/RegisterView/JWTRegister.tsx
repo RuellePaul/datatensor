@@ -69,7 +69,7 @@ const JWTRegister: FC<JWTRegisterProps> = ({className, ...rest}) => {
                   touched,
                   values,
                   setFieldValue
-            }) => (
+              }) => (
                 <form
                     noValidate
                     className={clsx(classes.root, className)}

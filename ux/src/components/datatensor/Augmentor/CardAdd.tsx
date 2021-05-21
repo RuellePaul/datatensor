@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import {useSnackbar} from 'notistack';
 import {Box, Button, makeStyles, TextField} from '@material-ui/core';
 import {useDispatch} from 'src/store';
-import {createCard} from 'src/slices/kanban';
+import {createCard} from 'src/slices/pipeline';
 
 interface CardAddProps {
     className?: string;

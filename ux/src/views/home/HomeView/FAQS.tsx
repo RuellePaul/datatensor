@@ -67,7 +67,8 @@ const FAQS: FC<FAQSProps> = ({className, ...rest}) => {
                                     color="textSecondary"
                                 >
                                     Use Datatensor tools for creating and labeling images database (called `dataset`).
-                                    These datasets can be used for training AI models, such as YOLOv3, to perform complex
+                                    These datasets can be used for training AI models, such as YOLOv3, to perform
+                                    complex
                                     object detection tasks.
                                 </Typography>
                             </dd>
@@ -127,7 +128,7 @@ const FAQS: FC<FAQSProps> = ({className, ...rest}) => {
                                     variant="h4"
                                     color="textPrimary"
                                 >
-                                     Can I use Datatensor API to perform object detection on cats ?
+                                    Can I use Datatensor API to perform object detection on cats ?
                                 </Typography>
                             </dt>
                             <dd>
@@ -147,7 +148,7 @@ const FAQS: FC<FAQSProps> = ({className, ...rest}) => {
                                     variant="h4"
                                     color="textPrimary"
                                 >
-                                     Can I use Datatensor API to perform object detection on custom objects ?
+                                    Can I use Datatensor API to perform object detection on custom objects ?
                                 </Typography>
                             </dt>
                             <dd>

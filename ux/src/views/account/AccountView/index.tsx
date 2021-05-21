@@ -30,8 +30,8 @@ const AccountView: FC = () => {
         {value: 'general', label: 'General'},
         {value: 'notifications', label: 'Notifications'},
         ...(!user.scope
-            ? [{value: 'security', label: 'Security'}]
-            : []
+                ? [{value: 'security', label: 'Security'}]
+                : []
         )
     ];
 
@@ -48,7 +48,8 @@ const AccountView: FC = () => {
                 <Header/>
                 <Box mt={3}>
                     <Tabs
-                        onKeyDown={() => {}}
+                        onKeyDown={() => {
+                        }}
                         onChange={handleTabsChange}
                         scrollButtons="auto"
                         value={currentTab}

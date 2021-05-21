@@ -10,6 +10,7 @@
 .flex {
     display: flex;
 }
+
 .flexGrow {
     flex-grow: 700;
 }
