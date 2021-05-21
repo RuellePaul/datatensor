@@ -4,7 +4,6 @@ import type {DropResult} from 'react-beautiful-dnd';
 import {DragDropContext} from 'react-beautiful-dnd';
 import {useSnackbar} from 'notistack';
 import {makeStyles} from '@material-ui/core';
-import Page from 'src/components/Page';
 import type {Theme} from 'src/theme';
 import {useDispatch, useSelector} from 'src/store';
 import {getBoard, moveCard} from 'src/slices/kanban';
@@ -12,13 +11,6 @@ import List from './List';
 import ListAdd from './ListAdd';
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {
-        backgroundColor: theme.palette.background.dark,
-        height: '100%',
-        display: 'flex',
-        overflow: 'hidden',
-        flexDirection: 'column'
-    },
     content: {
         flexGrow: 1,
         flexShrink: 1,
@@ -57,7 +49,7 @@ const KanbanView: FC = () => {
             }
 
             if (source.droppableId === destination.droppableId) {
-                // Moved to the same list on diferent position
+                // Moved to the same list on different position
                 await dispatch(moveCard(draggableId, destination.index));
             } else {
                 // Moved to another list
@@ -80,24 +72,19 @@ const KanbanView: FC = () => {
     }, [dispatch]);
 
     return (
-        <Page
-            className={classes.root}
-            title="Kanban Board"
-        >
-            <DragDropContext onDragEnd={handleDragEnd}>
-                <div className={classes.content}>
-                    <div className={classes.inner}>
-                        {lists.allIds.map((listId: string) => (
-                            <List
-                                key={listId}
-                                listId={listId}
-                            />
-                        ))}
-                        <ListAdd/>
-                    </div>
+        <DragDropContext onDragEnd={handleDragEnd}>
+            <div className={classes.content}>
+                <div className={classes.inner}>
+                    {lists.allIds.map((listId: string) => (
+                        <List
+                            key={listId}
+                            listId={listId}
+                        />
+                    ))}
+                    <ListAdd/>
                 </div>
-            </DragDropContext>
-        </Page>
+            </div>
+        </DragDropContext>
     );
 };
 
