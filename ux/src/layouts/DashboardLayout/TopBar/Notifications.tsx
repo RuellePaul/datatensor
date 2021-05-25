@@ -1,5 +1,7 @@
 import React, {FC, useEffect, useRef, useState} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
+import moment from 'moment';
+import clsx from 'clsx';
 import {
     Avatar,
     Box,
@@ -36,9 +38,16 @@ const useStyles = makeStyles((theme: Theme) => ({
         width: 320
     },
     icon: {
-        backgroundColor: theme.palette.secondary.main,
-        color: theme.palette.secondary.contrastText
-    }
+        color: theme.palette.text.primary
+    },
+    success: {
+        background: theme.palette.success.light,
+        color: theme.palette.getContrastText(theme.palette.success.light)
+    },
+    error: {
+        background: theme.palette.error.main,
+        color: theme.palette.getContrastText(theme.palette.error.main)
+    },
 }));
 
 const Notifications: FC = () => {
@@ -115,7 +124,11 @@ const Notifications: FC = () => {
                                     >
                                         <ListItemAvatar>
                                             <Avatar
-                                                className={classes.icon}
+                                                className={clsx({
+                                                    [classes.icon]: true,
+                                                    [classes.success]: notification.type === 'TASK_SUCCEED',
+                                                    [classes.error]: notification.type === 'TASK_FAILED',
+                                                })}
                                             >
                                                 <SvgIcon fontSize="small">
                                                     <Icon/>
@@ -123,7 +136,15 @@ const Notifications: FC = () => {
                                             </Avatar>
                                         </ListItemAvatar>
                                         <ListItemText
-                                            primary={titlesMap[notification.type]}
+                                            primary={(
+                                                <Box display='flex' justifyContent='space-between' alignItems='baseline'>
+                                                    {titlesMap[notification.type]}
+
+                                                    <Typography variant='overline' color='textSecondary'>
+                                                        {moment(notification.created_at).format('HH:mm:ss')}
+                                                    </Typography>
+                                                </Box>
+                                            )}
                                             primaryTypographyProps={{variant: 'subtitle2', color: 'textPrimary'}}
                                             secondary={notification.description}
                                         />
