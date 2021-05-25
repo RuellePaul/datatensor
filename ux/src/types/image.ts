@@ -6,4 +6,5 @@ export interface Image {
     size: number;
     width: number;
     height: number;
+    pipeline_id?: string;
 }

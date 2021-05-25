@@ -16,3 +16,11 @@ export interface Board {
     cards: Card[];
     lists: List[];
 }
+
+import {Operation} from './operation';
+
+export interface Pipeline {
+    _id: string;
+    dataset_id: string;
+    operations: Operation[]
+}
