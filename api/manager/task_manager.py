@@ -14,8 +14,11 @@ async def run_task(task):
             generator.main(task['user_id'], task_id, properties=task['properties'])
     except errors.APIError as error:
         update_task(task_id, status='failed', error=error.message)
+        # TODO : POST NOTIFICATION
     except Exception as e:
         message = f"An error occured {str(e) if Config.ENVIRONMENT == 'development' else ''}"
         update_task(task_id, status='failed', error=message)
+        # TODO : POST NOTIFICATION
     else:
         update_task(task_id, status='success')
+        # TODO : POST NOTIFICATION

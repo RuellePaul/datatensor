@@ -1,13 +1,11 @@
 import React, {FC, useEffect, useRef, useState} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import {
-    Avatar,
     Box,
     Button,
     IconButton,
     List,
     ListItem,
-    ListItemAvatar,
     ListItemText,
     makeStyles,
     Popover,
@@ -15,21 +13,11 @@ import {
     Tooltip,
     Typography
 } from '@material-ui/core';
-import {
-    Bell as BellIcon,
-    MessageCircle as MessageIcon,
-    Package as PackageIcon,
-    Truck as TruckIcon
-} from 'react-feather';
+import {Bell as BellIcon} from 'react-feather';
 import {Theme} from 'src/theme';
 import {useDispatch, useSelector} from 'src/store';
 import {getNotifications} from 'src/slices/notification';
 
-const iconsMap = {
-    order_placed: PackageIcon,
-    new_message: MessageIcon,
-    item_shipped: TruckIcon
-};
 
 const useStyles = makeStyles((theme: Theme) => ({
     popover: {
@@ -104,7 +92,6 @@ const Notifications: FC = () => {
                     <>
                         <List disablePadding>
                             {notifications.map((notification) => {
-                                const Icon = iconsMap[notification.type];
 
                                 return (
                                     <ListItem
@@ -113,15 +100,6 @@ const Notifications: FC = () => {
                                         key={notification._id}
                                         to="#"
                                     >
-                                        <ListItemAvatar>
-                                            <Avatar
-                                                className={classes.icon}
-                                            >
-                                                <SvgIcon fontSize="small">
-                                                    <Icon/>
-                                                </SvgIcon>
-                                            </Avatar>
-                                        </ListItemAvatar>
                                         <ListItemText
                                             primary={notification.title}
                                             primaryTypographyProps={{variant: 'subtitle2', color: 'textPrimary'}}
