@@ -15,4 +15,4 @@ def find_pipelines(dataset_id, offset, limit):
 
 
 def find_pipeline(dataset_id, pipeline_id):
-    return db.categories.find_one({'dataset_id': dataset_id, '_id': pipeline_id})
+    return db.pipelines.find_one({'dataset_id': dataset_id, '_id': pipeline_id})
