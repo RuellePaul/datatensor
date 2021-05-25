@@ -17,6 +17,7 @@ from routes.categories.categories import categories
 from routes.datasets.datasets import datasets
 from routes.images.images import images
 from routes.labels.labels import labels
+from routes.notifications.notifications import notifications
 from routes.users.users import users
 from routes.tasks.tasks import tasks
 
@@ -41,6 +42,8 @@ app.register_blueprint(oauth, url_prefix=f'{PREFIX}/oauth')
 require_authorization([datasets, categories, images, labels])
 
 app.register_blueprint(users, url_prefix=f'{PREFIX}/users')
+
+app.register_blueprint(notifications, url_prefix=f'{PREFIX}/notifications')
 
 app.register_blueprint(datasets, url_prefix=f'{PREFIX}/datasets')
 

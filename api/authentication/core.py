@@ -236,6 +236,7 @@ def send_activation_code(email, activation_code):
         html_content=html_content
     )
     try:
+        # FIXME : key empty ?
         sg = SendGridAPIClient(Config.SENDGRID_API_KEY)
         sg.send(message)
     except Exception as e:

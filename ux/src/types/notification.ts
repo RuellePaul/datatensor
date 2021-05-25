@@ -1,5 +1,7 @@
 export interface Notification {
     _id: string;
-    title: string;
-    description: string;
+    user_id: string;
+    type: 'TASK_SUCCEED' | 'TASK_FAILED';
+    description?: string;
+    created_at: string;
 }

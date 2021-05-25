@@ -1,11 +1,13 @@
 import React, {FC, useEffect, useRef, useState} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import {
+    Avatar,
     Box,
     Button,
     IconButton,
     List,
     ListItem,
+    ListItemAvatar,
     ListItemText,
     makeStyles,
     Popover,
@@ -13,11 +15,21 @@ import {
     Tooltip,
     Typography
 } from '@material-ui/core';
+import {Done, Warning} from '@material-ui/icons';
 import {Bell as BellIcon} from 'react-feather';
 import {Theme} from 'src/theme';
 import {useDispatch, useSelector} from 'src/store';
 import {getNotifications} from 'src/slices/notification';
 
+const titlesMap = {
+    TASK_SUCCEED: 'Generator succeeded',
+    TASK_FAILED: 'Generator failed'
+};
+
+const iconsMap = {
+    TASK_SUCCEED: Done,
+    TASK_FAILED: Warning
+};
 
 const useStyles = makeStyles((theme: Theme) => ({
     popover: {
@@ -92,6 +104,7 @@ const Notifications: FC = () => {
                     <>
                         <List disablePadding>
                             {notifications.map((notification) => {
+                                const Icon = iconsMap[notification.type];
 
                                 return (
                                     <ListItem
@@ -100,8 +113,17 @@ const Notifications: FC = () => {
                                         key={notification._id}
                                         to="#"
                                     >
+                                        <ListItemAvatar>
+                                            <Avatar
+                                                className={classes.icon}
+                                            >
+                                                <SvgIcon fontSize="small">
+                                                    <Icon/>
+                                                </SvgIcon>
+                                            </Avatar>
+                                        </ListItemAvatar>
                                         <ListItemText
-                                            primary={notification.title}
+                                            primary={titlesMap[notification.type]}
                                             primaryTypographyProps={{variant: 'subtitle2', color: 'textPrimary'}}
                                             secondary={notification.description}
                                         />
