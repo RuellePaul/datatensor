@@ -22,7 +22,7 @@ const board: Board = {
     cards: [
         {
             id: '5e849c8708bd72683b454747',
-            cover: '/static/images/projects/project_3.png',
+            cover: '/static/images/examples/lenna.jpg',
             description: 'Duis condimentum lacus finibus felis pellentesque, ac auctor nibh fermentum. Duis sed dui ante. Phasellus id eros tincidunt, dictum lorem vitae, pellentesque sem. Aenean eu enim sit amet mauris rhoncus mollis. Sed enim turpis, porta a felis et, luctus faucibus nisi. Phasellus et metus fermentum, ultrices arcu aliquam, facilisis justo. Cras nunc nunc, elementum sed euismod ut, maximus eget nibh. Phasellus condimentum lorem neque. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce sagittis pharetra eleifend. Suspendisse potenti.',
             listId: '5e849c39325dc5ef58e5a5db',
             name: 'Call with sales of HubSpot'
