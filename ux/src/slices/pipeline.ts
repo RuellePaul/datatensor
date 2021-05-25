@@ -23,30 +23,30 @@ const board: Board = {
         {
             id: '5e849c8708bd72683b454747',
             cover: '/static/images/examples/lenna.jpg',
-            description: 'Duis condimentum lacus finibus felis pellentesque, ac auctor nibh fermentum. Duis sed dui ante. Phasellus id eros tincidunt, dictum lorem vitae, pellentesque sem. Aenean eu enim sit amet mauris rhoncus mollis. Sed enim turpis, porta a felis et, luctus faucibus nisi. Phasellus et metus fermentum, ultrices arcu aliquam, facilisis justo. Cras nunc nunc, elementum sed euismod ut, maximus eget nibh. Phasellus condimentum lorem neque. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce sagittis pharetra eleifend. Suspendisse potenti.',
+            description: 'This performs rotation on image.',
             listId: '5e849c39325dc5ef58e5a5db',
-            name: 'Call with sales of HubSpot'
+            name: 'Rotation'
         },
         {
             id: '5e849c90fabe1f1f4b3557f6',
             cover: null,
-            description: 'We are looking for vue experience and of course node js strong knowledge',
+            description: 'This performs gaussian distortion on image.',
             listId: '5e849c39325dc5ef58e5a5db',
-            name: 'Interview for the Asis. Sales Manager'
+            name: 'Gaussian Distortion'
         },
         {
             id: '5e849c977ef6265938bfd90b',
             cover: null,
-            description: 'We nede to make it aggresive with pricing because it’s in their interest to acquire us',
+            description: 'This performs rotation on image.',
             listId: '5e849c39325dc5ef58e5a5db',
-            name: 'Change the height of the top bar because it looks too chunky',
+            name: 'Rotation',
         },
         {
             id: '5e849c9e34ee93bc7255c599',
             cover: null,
-            description: 'We nede to make it aggresive with pricing because it’s in their interest to acquire us',
+            description: 'This performs elastic distortion on image.',
             listId: '5e849c39325dc5ef58e5a5db',
-            name: 'Integrate Stripe API'
+            name: 'Elastic Distortion'
         }
     ]
 };

@@ -98,7 +98,7 @@ const CardAdd: FC<CardAddProps> = ({
                     justifyContent="center"
                 >
                     <Button onClick={handleAddInit}>
-                        Add another card
+                        Add another operation
                     </Button>
                 </Box>
             )}
