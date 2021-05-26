@@ -20,6 +20,7 @@ from routes.labels.labels import labels
 from routes.notifications.notifications import notifications
 from routes.users.users import users
 from routes.tasks.tasks import tasks
+from search.search import search
 
 app = Flask(__name__)
 
@@ -44,6 +45,8 @@ require_authorization([datasets, categories, images, labels])
 app.register_blueprint(users, url_prefix=f'{PREFIX}/users')
 
 app.register_blueprint(notifications, url_prefix=f'{PREFIX}/notifications')
+
+app.register_blueprint(search, url_prefix=f'{PREFIX}/search')
 
 app.register_blueprint(datasets, url_prefix=f'{PREFIX}/datasets')
 
