@@ -1,15 +1,15 @@
-from flask import Blueprint
+from fastapi import APIRouter
 from webargs import fields
 from webargs.flaskparser import use_args
 
 from utils import build_schema, parse
 from .core import Category, find_categories, find_category, remove_categories, remove_category, insert_category
 
-categories = Blueprint('categories', __name__)
+categories = APIRouter()
 Category = build_schema(Category)
 
 
-@categories.route('/')
+@categories.get('/')
 @use_args({
     'offset': fields.Int(required=False, missing=0),
     'limit': fields.Int(required=False, missing=0)
@@ -19,13 +19,13 @@ def get_categories(args, dataset_id):
     return {'categories': parse(result)}, 200
 
 
-@categories.route('/<category_id>')
+@categories.get('/<category_id>')
 def get_category(dataset_id, category_id):
     result = find_category(dataset_id, category_id)
     return {'category': parse(result)}, 200
 
 
-@categories.route('/', methods=['POST'])
+@categories.post('/')
 @use_args(Category)
 def post_category(args, dataset_id):
     inserted_id = insert_category(dataset_id, args)
@@ -33,13 +33,13 @@ def post_category(args, dataset_id):
     return {'category': parse(result)}, 201
 
 
-@categories.route('/', methods=['DELETE'])
+@categories.delete('/')
 def delete_categories(dataset_id):
     remove_categories(dataset_id)
     return 'OK', 200
 
 
-@categories.route('/<category_id>', methods=['DELETE'])
+@categories.delete('/<category_id>')
 def delete_category(dataset_id, category_id):
     remove_category(dataset_id, category_id)
     return 'OK', 200

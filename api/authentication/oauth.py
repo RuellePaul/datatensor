@@ -1,15 +1,14 @@
-from flask import Blueprint
-from webargs import fields
-from webargs.flaskparser import use_args
+from fastapi import APIRouter
 
-from logger import logger
 from authentication import core
+from authentication.models import AuthResponse, OAuthAuthorizationResponse, OAuthCallbackPayload
+from logger import logger
 
-oauth = Blueprint('oauth', __name__)
+oauth = APIRouter()
 
 
-@oauth.route('/<scope>', methods=['GET'])
-def oauth_authorization(scope):
+@oauth.get('/authorization/{scope}', response_model=OAuthAuthorizationResponse)
+def oauth_authorization(scope: str):
     """
     This function returns OAuth authorization url, depending on requested scope.
     :return: authorization_url
@@ -19,24 +18,19 @@ def oauth_authorization(scope):
     logger.info(f'Fetch OAuth authorization url for `{scope}`')
 
     response = {'authorization_url': authorization_url}
-    return response, 200
+    return response
 
 
-@oauth.route('/callback', methods=['POST'])
-@use_args({
-    'code': fields.Str(required=True),
-    'scope': fields.Str(required=True)
-})
-def oauth_callback(args):
+@oauth.post('/callback', response_model=AuthResponse)
+def oauth_callback(payload: OAuthCallbackPayload):
     """
     Using code provided by OAuth workflow, fetch profile depending on requested scope; register user if doesn't exists
     :return: user
     """
 
-    code = args['code']
-    scope = args['scope']
+    scope = payload.scope
 
-    profile = core.profile_from_code(code, scope)
+    profile = core.profile_from_code(payload.code, scope)
     user_id = core.user_id_from_profile(profile, scope)
 
     user = core.user_from_user_id(user_id)
@@ -53,4 +47,4 @@ def oauth_callback(args):
         'user': user
     }
 
-    return response, 200
+    return response

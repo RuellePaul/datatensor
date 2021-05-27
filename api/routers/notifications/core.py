@@ -29,7 +29,7 @@ def find_notification(notification_id):
 
 def insert_notification(notification, user_id=None):
     if user_id is None:
-        user_id = verify_access_token(request.headers['Authorization'], verified=True).get('_id')
+        user_id = verify_access_token(verified=True).get('_id')
     db.notifications.insert_one({'user_id': user_id,
                                  'created_at': datetime.now(),
                                  **notification})

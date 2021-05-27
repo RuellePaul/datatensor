@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask
+from fastapi import FastAPI
 
 import errors
 from database import encrypt_init
@@ -14,7 +14,7 @@ if 'ENVIRONMENT' not in os.environ:
 class Config:
     ENVIRONMENT = os.environ['ENVIRONMENT']
 
-    ROOT_PATH = os.path.abspath(os.path.join(Flask(__name__).root_path, os.pardir))
+    ROOT_PATH = os.path.abspath(os.path.join(FastAPI().root_path, os.pardir))
     DEFAULT_DATASETS_PATH = os.path.join(ROOT_PATH, 'api', 'manager', 'generator', 'default_datasets')
 
     UI_URL = 'https://localhost:5069'

@@ -1,14 +1,14 @@
-from flask import Blueprint
+from fastapi import APIRouter
 from webargs import fields
 from webargs.flaskparser import use_args
 
 from utils import parse
 from .core import find_tasks, insert_task
 
-tasks = Blueprint('tasks', __name__)
+tasks = APIRouter()
 
 
-@tasks.route('/')
+@tasks.get('/')
 @use_args({
     'offset': fields.Int(required=False, missing=0),
     'limit': fields.Int(required=False, missing=0)
@@ -18,7 +18,7 @@ def get_tasks(args, user_id=None, dataset_id=None):
     return {'tasks': parse(result)}, 200
 
 
-@tasks.route('/', methods=['POST'])
+@tasks.post('/')
 @use_args({
     'type': fields.Str(required=True),
     'properties': fields.Dict(required=True)

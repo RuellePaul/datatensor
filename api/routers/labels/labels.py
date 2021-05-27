@@ -1,14 +1,14 @@
-from flask import Blueprint
+from fastapi import APIRouter
 from webargs import fields
 from webargs.flaskparser import use_args
 
 from utils import parse
 from .core import find_labels, find_label, remove_labels, remove_label, insert_labels
 
-labels = Blueprint('labels', __name__)
+labels = APIRouter()
 
 
-@labels.route('/')
+@labels.get('/')
 @use_args({
     'offset': fields.Int(required=False, missing=0),
     'limit': fields.Int(required=False, missing=0)
@@ -18,13 +18,13 @@ def get_labels(args, image_id):
     return {'labels': parse(result)}, 200
 
 
-@labels.route('/<label_id>')
+@labels.get('/<label_id>')
 def get_label(image_id, label_id):
     result = find_label(image_id, label_id)
     return {'label': parse(result)}, 200
 
 
-@labels.route('/', methods=['POST'])
+@labels.post('/')
 @use_args({
     'labels': fields.List(fields.Dict(), required=True)
 })
@@ -33,13 +33,13 @@ def post_labels(args, image_id):
     return 'OK', 200
 
 
-@labels.route('/', methods=['DELETE'])
+@labels.delete('/')
 def delete_labels(image_id):
     remove_labels(image_id)
     return 'OK', 200
 
 
-@labels.route('/<label_id>', methods=['DELETE'])
+@labels.delete('/<label_id>')
 def delete_label(image_id, label_id):
     remove_label(image_id, label_id)
     return 'OK', 200

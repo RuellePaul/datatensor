@@ -1,15 +1,15 @@
-from flask import Blueprint
+from fastapi import APIRouter
 from webargs import fields
 from webargs.flaskparser import use_args
 
 from utils import build_schema, parse
 from .core import Notification, find_notifications, find_notification, remove_notification, insert_notification
 
-notifications = Blueprint('notifications', __name__)
+notifications = APIRouter()
 Notification = build_schema(Notification)
 
 
-@notifications.route('/')
+@notifications.get('/')
 @use_args({
     'offset': fields.Int(required=False, missing=0),
     'limit': fields.Int(required=False, missing=0)
@@ -19,20 +19,20 @@ def get_notifications(args):
     return {'notifications': parse(result)}, 200
 
 
-@notifications.route('/<notification_id>')
+@notifications.get('/<notification_id>')
 def get_notification(notification_id):
     result = find_notification(notification_id)
     return {'notification': parse(result)}, 200
 
 
-@notifications.route('/', methods=['POST'])
+@notifications.post('/')
 @use_args(Notification)
 def post_notification(args):
     insert_notification(args)
     return 'OK', 201
 
 
-@notifications.route('/<notification_id>', methods=['DELETE'])
+@notifications.delete('/<notification_id>')
 def delete_notification(notification_id):
     remove_notification(notification_id)
     return 'OK', 200

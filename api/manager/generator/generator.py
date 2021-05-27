@@ -12,7 +12,7 @@ from bson.objectid import ObjectId
 import errors
 from config import Config
 from manager.task_utils import update_task, increment_task_progress
-from routes.images.core import allowed_file, upload_image, secure_filename
+from routers.images.core import allowed_file, upload_image, secure_filename
 
 ANNOTATIONS_CONFIG = {
     'coco': {

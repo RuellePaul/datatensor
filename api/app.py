@@ -1,85 +1,75 @@
 import os
 
+import uvicorn
 from apscheduler.schedulers.background import BackgroundScheduler
-from flask import Flask, request
-from flask_cors import CORS
-from flask_wtf.csrf import CSRFProtect, CSRFError, generate_csrf
+from fastapi import FastAPI, Depends, Request
+from starlette.middleware.cors import CORSMiddleware
 
 import errors
+from authentication.auth import auth
+from authentication.oauth import oauth
 from config import Config
 from database import encrypt_init
+from dependencies import logged_user
 from logger import logger
+from routers.categories.categories import categories
+from routers.datasets.datasets import datasets
+from routers.images.images import images
+from routers.labels.labels import labels
+from routers.notifications.notifications import notifications
+from routers.pipelines.pipelines import pipelines
+from routers.tasks.tasks import tasks
+from routers.users.users import users
 
-from authentication.auth import auth
-from authentication.core import require_authorization
-from authentication.oauth import oauth
-from routes.categories.categories import categories
-from routes.datasets.datasets import datasets
-from routes.pipelines.pipelines import pipelines
-from routes.images.images import images
-from routes.labels.labels import labels
-from routes.notifications.notifications import notifications
-from routes.users.users import users
-from routes.tasks.tasks import tasks
-
-app = Flask(__name__)
+app = FastAPI()
 
 scheduler = BackgroundScheduler()
 scheduler.start()
 
 config_name = os.getenv('FLASK_UI_CONFIGURATION', 'development')
-app.config.from_object(Config)
-
-app.secret_key = app.config['SECRET_KEY']
-
-CORS(app)
-CSRFProtect(app)
 
 PREFIX = '/api/v2'
 
-app.register_blueprint(auth, url_prefix=f'{PREFIX}/auth')
-app.register_blueprint(oauth, url_prefix=f'{PREFIX}/oauth')
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[Config.UI_URL],
+    allow_credentials=True,
+    allow_methods=['*'],
+    allow_headers=['*'],
+)
 
-require_authorization([datasets, categories, images, labels])
+app.include_router(auth, prefix=f'{PREFIX}/auth')
+app.include_router(oauth, prefix=f'{PREFIX}/oauth')
 
-app.register_blueprint(users, url_prefix=f'{PREFIX}/users')
+app.include_router(users, prefix=f'{PREFIX}/users', dependencies=[Depends(logged_user)])
 
-app.register_blueprint(notifications, url_prefix=f'{PREFIX}/notifications')
+app.include_router(notifications, prefix=f'{PREFIX}/notifications', dependencies=[Depends(logged_user)])
 
-app.register_blueprint(datasets, url_prefix=f'{PREFIX}/datasets')
+app.include_router(datasets, prefix=f'{PREFIX}/datasets', dependencies=[Depends(logged_user)])
 
-app.register_blueprint(categories, url_prefix=f'{PREFIX}/datasets/<dataset_id>/categories')
+app.include_router(categories, prefix=f'{PREFIX}/datasets/<dataset_id>/categories', dependencies=[Depends(logged_user)])
 
-app.register_blueprint(images, url_prefix=f'{PREFIX}/datasets/<dataset_id>/images')
+app.include_router(images, prefix=f'{PREFIX}/datasets/<dataset_id>/images', dependencies=[Depends(logged_user)])
 
-app.register_blueprint(pipelines, url_prefix=f'{PREFIX}/datasets/<dataset_id>/pipelines')
+app.include_router(pipelines, prefix=f'{PREFIX}/datasets/<dataset_id>/pipelines', dependencies=[Depends(logged_user)])
 
-app.register_blueprint(labels, url_prefix=f'{PREFIX}/images/<image_id>/labels')
+app.include_router(labels, prefix=f'{PREFIX}/images/<image_id>/labels', dependencies=[Depends(logged_user)])
 
-app.register_blueprint(tasks, url_prefix=f'{PREFIX}/tasks')
-app.register_blueprint(tasks, url_prefix=f'{PREFIX}/users/<user_id>/tasks')
-app.register_blueprint(tasks, url_prefix=f'{PREFIX}/datasets/<dataset_id>/tasks')
-
-
-@app.after_request
-def inject_csrf_token_cookie(response):
-    response.headers['Access-Control-Allow-Credentials'] = 'true'
-    response.set_cookie('csrf_token', generate_csrf(), samesite='Lax', secure=True)
-    return response
-
-
-@app.errorhandler(CSRFError)
-def handle_csrf_error(error):
-    return errors.CSRF(error.description).flask_response()
+app.include_router(tasks, prefix=f'{PREFIX}/tasks', dependencies=[Depends(logged_user)])
+app.include_router(tasks, prefix=f'{PREFIX}/users/<user_id>/tasks', dependencies=[Depends(logged_user)])
+app.include_router(tasks, prefix=f'{PREFIX}/datasets/<dataset_id>/tasks', dependencies=[Depends(logged_user)])
 
 
-@app.errorhandler(errors.APIError)
-def handle_api_error(error):
-    if error.http_status != 404:
-        logger.error(f'{error.http_status} {error.message}')
-    return error.flask_response()
+@app.exception_handler(errors.APIError)
+def handle_api_error(request: Request, error: errors.APIError):
+    logger.error(error)
+    return error.json_response()
 
 
 if __name__ == '__main__':
     encrypt_init(Config.DB_HOST, key=Config.DB_ENCRYPTION_KEY, setup=True)
-    app.run(debug=Config.ENVIRONMENT != 'production', threaded=True, host='127.0.0.1', port=4069)
+    uvicorn.run('app:app',
+                host='127.0.0.1',
+                port=4069,
+                debug=Config.ENVIRONMENT != 'production',
+                reload=Config.ENVIRONMENT == 'development')

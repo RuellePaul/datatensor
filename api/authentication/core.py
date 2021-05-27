@@ -7,7 +7,6 @@ from datetime import datetime, timedelta
 
 import jwt
 import requests
-from flask import request
 from flask_bcrypt import generate_password_hash
 from oauthlib.oauth2 import WebApplicationClient
 from sendgrid import SendGridAPIClient
@@ -28,14 +27,9 @@ def encode_access_token(user_id):
     return access_token
 
 
-def verify_access_token(access_token=None, verified=False):
+def verify_access_token(access_token, verified=False):
     if not access_token:
-        try:
-            access_token = request.headers.get('Authorization')
-            if not access_token:
-                raise errors.InvalidAuthentication()
-        except RuntimeError:
-            raise errors.InvalidAuthentication()
+        raise errors.InvalidAuthentication()
 
     try:
         user_id = jwt.decode(access_token, Config.ACCESS_TOKEN_KEY, algorithms='HS256').get('user_id')
@@ -52,15 +46,6 @@ def verify_access_token(access_token=None, verified=False):
         raise errors.InvalidAuthentication("User email is not verified", data='ERR_VERIFY')
 
     return user
-
-
-def require_authorization(blueprints):
-    def authorized():
-        if request.method in ['GET', 'POST', 'PUT', 'DELETE']:
-            verify_access_token()
-
-    for blueprint in blueprints:
-        blueprint.before_request(authorized)
 
 
 def admin_guard(func):
@@ -132,6 +117,10 @@ def user_id_hash(identifier):
 
 def user_from_user_id(user_id):
     return Config.db.users.find_one({'_id': user_id})
+
+
+def user_from_activation_code(activation_code):
+    return Config.db.users.find_one({'activation_code': activation_code})
 
 
 def generate_activation_code():
@@ -243,12 +232,16 @@ def send_activation_code(email, activation_code):
         raise errors.InternalError(f'Unable to send email with SendGrid | {str(e)}')
 
 
-def verify_user_email(user, activation_code):
+def verify_user_email(activation_code):
+    user = user_from_activation_code(activation_code)
+    
+    if not user:
+        raise errors.Forbidden('Invalid code provided')
+
     if user.get('is_verified'):
         raise errors.BadRequest(f"User already verified")
 
-    if user.get('activation_code') != activation_code:
-        raise errors.Forbidden('Invalid code provided')
-
     Config.db.users.find_one_and_update({'_id': user['_id']},
                                         {'$set': {'is_verified': True, 'activation_code': None}})
+
+    return user

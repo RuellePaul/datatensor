@@ -1,43 +1,26 @@
-from flask import Blueprint
+from fastapi import APIRouter, Header
 from flask_bcrypt import check_password_hash
-from webargs import fields
-from webargs.flaskparser import use_args
 
 import errors
-from logger import logger
 from authentication import core
+from authentication.models import AuthLoginBody, AuthRegisterBody, AuthEmailConfirmBody, AuthResponse
+from logger import logger
 
-auth = Blueprint('auth', __name__)
-
-
-@auth.route('/me')
-def me():
-    user = core.verify_access_token()
-    if not user:
-        raise errors.ExpiredAuthentication
-    user.pop('password', None)
-    response = {'user': user}
-    return response, 200
+auth = APIRouter()
 
 
-@auth.route('/login', methods=['POST'])
-@use_args({
-    'email': fields.Str(required=True),
-    'password': fields.Str(required=True)
-})
-def do_login(args):
-    email = args['email']
-
-    user_id = core.user_id_hash(email)
+@auth.post('/login', response_model=AuthResponse)
+def do_login(payload: AuthLoginBody):
+    user_id = core.user_id_hash(payload.email)
     user = core.user_from_user_id(user_id)
     if not user:
         raise errors.InvalidAuthentication('Invalid email or password')
 
     user_password = bytes(user['password'], 'utf-8')
-    if not check_password_hash(user_password, args['password']):
+    if not check_password_hash(user_password, payload.password):
         raise errors.InvalidAuthentication('Invalid email or password')
 
-    logger.info(f'Logged in as `{email}`')
+    logger.info(f'Logged in as `{payload.email}`')
 
     access_token = core.encode_access_token(user_id)
     response = {
@@ -45,21 +28,14 @@ def do_login(args):
         'user': user
     }
 
-    return response, 200
+    return response
 
 
-@auth.route('/register', methods=['POST'])
-@use_args({
-    'email': fields.Str(required=True),
-    'password': fields.Str(required=True),
-    'name': fields.Str(required=True),
-    'recaptcha': fields.Str(required=True)
-})
-def do_register(args):
-    captcha = args['recaptcha']
-    core.check_captcha(captcha)
+@auth.post('/register', response_model=AuthResponse)
+def do_register(payload: AuthRegisterBody):
+    core.check_captcha(payload.recaptcha)
 
-    email = args['email']
+    email = payload.email
 
     user_id = core.user_id_hash(email)
     user = core.user_from_user_id(user_id)
@@ -69,7 +45,7 @@ def do_register(args):
 
     activation_code = core.generate_activation_code()
     core.send_activation_code(email, activation_code)
-    user = core.register_user(user_id, args['name'], args['email'], args['password'], activation_code)
+    user = core.register_user(user_id, payload.name, email, payload.password, activation_code)
 
     logger.info(f'Registered user `{email}`')
 
@@ -79,16 +55,22 @@ def do_register(args):
         'user': user
     }
 
-    return response, 201
+    return response
 
 
-@auth.route('/email-confirmation', methods=['POST'])
-@use_args({
-    'activation_code': fields.Str(required=True)
-})
-def do_email_confirmation(args):
-    user = core.verify_access_token()
-    core.verify_user_email(user, args['activation_code'])
+@auth.get('/me')
+def me(authorization: str = Header(...)):
+    user = core.verify_access_token(authorization)
+    if not user:
+        raise errors.ExpiredAuthentication
+    user.pop('password', None)
+    response = {'user': user}
+    return response
+
+
+@auth.post('/email-confirmation', response_model=AuthResponse)
+def do_email_confirmation(payload: AuthEmailConfirmBody):
+    user = core.verify_user_email(payload.activation_code)
     access_token = core.encode_access_token(user['_id'])
 
     logger.info(f"Verified email `{user['email']}`")
@@ -100,4 +82,4 @@ def do_email_confirmation(args):
             'is_verified': True
         }
     }
-    return response, 200
+    return response
