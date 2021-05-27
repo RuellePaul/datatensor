@@ -35,6 +35,6 @@ def insert_notification(notification, user_id=None):
                                  **notification})
 
 
-def remove_notification(notification_id):
+def remove_notifications():
     user_id = verify_access_token().get('_id')
-    db.notifications.delete_one({'_id': ObjectId(notification_id), 'user_id': user_id})
+    db.notifications.delete_many({'user_id': user_id})

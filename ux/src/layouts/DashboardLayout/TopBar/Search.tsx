@@ -1,5 +1,4 @@
 import React, {FC, useState} from 'react';
-import {Link as RouterLink} from 'react-router-dom';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {useSnackbar} from 'notistack';
 import {
@@ -9,7 +8,6 @@ import {
     Drawer,
     IconButton,
     InputAdornment,
-    Link,
     makeStyles,
     SvgIcon,
     TextField,
@@ -54,11 +52,9 @@ const Search: FC = () => {
             setLoading(true);
 
             const response = await api.get<{ result: SearchResult; }>('/search/', {params: {query: value}});
-            console.log(response.data)
             setResult(response.data.result);
-        } catch (err) {
-            console.error(err);
-            enqueueSnackbar('Something went wrong', {
+        } catch (error) {
+            enqueueSnackbar(error?.message || 'Something went wrong', {
                 variant: 'error'
             });
         } finally {

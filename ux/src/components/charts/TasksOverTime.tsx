@@ -83,8 +83,6 @@ const TasksOverTime: FC<TasksOverTimeProps> = ({className, tasks, timeRange, ...
         }
     };
 
-    console.log(tasksOverTime)
-
     return (
         <Card
             className={clsx(classes.root, className)}

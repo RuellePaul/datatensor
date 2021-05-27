@@ -1,24 +1,22 @@
 from config import Config
+from bson.objectid import ObjectId
 
 db = Config.db
 
 
 def search_datasets_by_query(query):
-    datasets_matched_by_features = list(db.datasets.find(
+    categories = list(db.categories.find({'$or': [{'name': {'$regex': query, '$options': 'i'}},
+                                                  {'supercategory': {'$regex': query, '$options': 'i'}}]}))
+    matched_datasets_ids = [ObjectId(category['dataset_id']) for category in categories]
+
+    datasets_matched = list(db.datasets.find(
         {'$or': [{'user_id': query},
                  {'name': {'$regex': query, '$options': 'i'}},
-                 {'description': {'$regex': query, '$options': 'i'}}]},
-        {'user_id': 1, 'name': 1, 'description': 1}))
+                 {'description': {'$regex': query, '$options': 'i'}},
+                 {'_id': {'$in': matched_datasets_ids}}]}
+    ))
 
-    categories = list(db.categories.find(
-        {'$or': [{'name': {'$regex': query, '$options': 'i'}},
-                 {'supercategory': {'$regex': query, '$options': 'i'}}]}))
-    if categories:
-        datatsets_matched_by_categories = list(set([category['dataset_id'] for category in categories]))
-        datasets = datatsets_matched_by_categories + datasets_matched_by_features
-        return datasets
-
-    return datasets_matched_by_features
+    return datasets_matched
 
 
 def search_images_by_query(query):

@@ -3,7 +3,7 @@ from webargs import fields
 from webargs.flaskparser import use_args
 
 from utils import build_schema, parse
-from .core import Notification, find_notifications, find_notification, remove_notification, insert_notification
+from .core import Notification, find_notifications, find_notification, remove_notifications, insert_notification
 
 notifications = Blueprint('notifications', __name__)
 Notification = build_schema(Notification)
@@ -32,7 +32,7 @@ def post_notification(args):
     return 'OK', 201
 
 
-@notifications.route('/<notification_id>', methods=['DELETE'])
-def delete_notification(notification_id):
-    remove_notification(notification_id)
+@notifications.route('/', methods=['DELETE'])
+def delete_notification():
+    remove_notifications()
     return 'OK', 200

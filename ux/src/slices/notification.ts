@@ -19,7 +19,10 @@ const slice = createSlice({
             const {notifications} = action.payload;
 
             state.notifications = notifications;
-        }
+        },
+        deleteNotifications(state: NotificationsState) {
+            state.notifications = [];
+        },
     }
 });
 
@@ -30,5 +33,12 @@ export const getNotifications = (): AppThunk => async (dispatch) => {
 
     dispatch(slice.actions.getNotifications(response.data));
 };
+
+export const deleteNotifications = (): AppThunk => async (dispatch) => {
+    await api.delete('/notifications/');
+
+    dispatch(slice.actions.deleteNotifications());
+};
+
 
 export default slice;
