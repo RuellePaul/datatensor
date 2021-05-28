@@ -13,7 +13,7 @@ class Config:
     ENVIRONMENT = os.environ['ENVIRONMENT']
 
     ROOT_PATH = os.path.abspath(os.path.join(Flask(__name__).root_path, os.pardir))
-    DEFAULT_DATASETS_PATH = os.path.join(ROOT_PATH, 'api', 'manager', 'generator', 'default_datasets')
+    DATASOURCES_PATH = os.path.join(ROOT_PATH, 'api', 'manager', 'generator', 'datasources')
 
     UI_URL = 'https://test.datatensor.io'
     API_URI = 'https://test.datatensor.io/api'
@@ -29,7 +29,7 @@ class Config:
     ]
 
     DEFAULT_DATASET_IDS = {
-        'coco': '507f191e810c19729de860ea'
+        'coco2014': '507f191e810c19729de860ea'
     }
 
     SESSION_COOKIE_SECURE = True

@@ -15,7 +15,7 @@ from manager.task_utils import update_task, increment_task_progress
 from routes.images.core import allowed_file, upload_image, secure_filename
 
 ANNOTATIONS_CONFIG = {
-    'coco': {
+    'coco2014': {
         'download_url': 'http://images.cocodataset.org/annotations/annotations_trainval2014.zip',
         'filename': 'instances_val2014.json'
     }
@@ -26,7 +26,7 @@ def _download_annotations(dataset_name):
     url = ANNOTATIONS_CONFIG[dataset_name]['download_url']
     response = requests.get(url, stream=True)
 
-    dataset_path = os.path.join(Config.DEFAULT_DATASETS_PATH, dataset_name)
+    dataset_path = os.path.join(Config.DATASOURCES_PATH, dataset_name)
 
     zip_path = os.path.join(dataset_path, f'{dataset_name}.zip')
     with open(zip_path, 'wb') as fd:
@@ -108,10 +108,10 @@ def main(user_id, task_id, properties):
     if Config.db.datasets.find_one({'_id': ObjectId(dataset_id)}):
         raise errors.Forbidden(f'Dataset {dataset_name} is already built')
 
-    if not os.path.exists(Config.DEFAULT_DATASETS_PATH):
-        os.mkdir(Config.DEFAULT_DATASETS_PATH)
+    if not os.path.exists(Config.DATASOURCES_PATH):
+        os.mkdir(Config.DATASOURCES_PATH)
 
-    dataset_path = os.path.join(Config.DEFAULT_DATASETS_PATH, dataset_name)
+    dataset_path = os.path.join(Config.DATASOURCES_PATH, dataset_name)
     if not os.path.exists(dataset_path):
         os.mkdir(dataset_path)
 

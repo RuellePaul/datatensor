@@ -23,6 +23,7 @@ import api from 'src/utils/api';
 import useTasks from 'src/hooks/useTasks';
 import {Task} from 'src/types/task';
 import {DataSource} from 'src/types/datasource';
+import {Category} from 'src/types/category';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -43,6 +44,7 @@ const Generator: FC = () => {
     const {enqueueSnackbar} = useSnackbar();
 
     const [datasources, setDatasources] = useState<DataSource[]>([]);
+    const [eligibleCategories, setEligibleCategories] = useState<Category[]>([]);
 
     const fetchDatasources = useCallback(async () => {
         try {
@@ -53,6 +55,13 @@ const Generator: FC = () => {
         }
 
     }, [setDatasources]);
+
+    const handleDatasourceChange = async (datasource_key) => {
+        const response = await api.get<{ categories: Category[] }>(`/datasources/categories`, {params: {datasource_key}});
+        setEligibleCategories(response.data.categories)
+
+
+    };
 
     useEffect(() => {
         fetchDatasources()
@@ -66,10 +75,11 @@ const Generator: FC = () => {
         >
             <Formik
                 initialValues={{
-                    dataset_name: 'coco',
+                    datasource_key: '',
                     image_count: 10
                 }}
                 validationSchema={Yup.object().shape({
+                    datasource_key: Yup.string().required(),
                     image_count: Yup.number().max(40000).required(),
                 })}
                 onSubmit={async (values, {
@@ -103,6 +113,7 @@ const Generator: FC = () => {
                       handleBlur,
                       handleChange,
                       handleSubmit,
+                      setFieldValue,
                       isSubmitting,
                       touched,
                       values
@@ -133,21 +144,29 @@ const Generator: FC = () => {
                                         Datasource
                                     </InputLabel>
                                     <Select
-                                        error={Boolean(touched.dataset_name && errors.dataset_name)}
-                                        label="Dataset name"
-                                        name="dataset_name"
+                                        error={Boolean(touched.datasource_key && errors.datasource_key)}
+                                        label="Datasource"
+                                        name="datasource_key"
                                         fullWidth
                                         onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        value={values.dataset_name}
+                                        onChange={event => {
+                                            handleDatasourceChange(event.target.value)
+                                            setFieldValue('datasource_key', event.target.value)
+                                        }}
+                                        value={values.datasource_key}
                                         variant="standard"
+                                        displayEmpty
                                     >
+                                        <MenuItem value='' disabled>Pickup a datasource</MenuItem>
                                         {datasources.map(datasource => (
                                             <MenuItem value={datasource.value}>{datasource.name}</MenuItem>
                                         ))}
                                     </Select>
                                 </FormControl>
                             </Grid>
+                            <pre>
+                                {JSON.stringify(eligibleCategories, null, 4)}
+                            </pre>
                             <Grid item lg={12} sm={5} xs={12}>
                                 <TextField
                                     error={Boolean(touched.image_count && errors.image_count)}

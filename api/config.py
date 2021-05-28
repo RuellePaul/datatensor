@@ -15,7 +15,7 @@ class Config:
     ENVIRONMENT = os.environ['ENVIRONMENT']
 
     ROOT_PATH = os.path.abspath(os.path.join(Flask(__name__).root_path, os.pardir))
-    DEFAULT_DATASETS_PATH = os.path.join(ROOT_PATH, 'api', 'manager', 'generator', 'default_datasets')
+    DATASOURCES_PATH = os.path.join(ROOT_PATH, 'api', 'manager', 'generator', 'datasources')
 
     UI_URL = 'https://localhost:5069'
     API_URI = 'http://127.0.0.1:4069'
@@ -32,11 +32,17 @@ class Config:
 
     DATASOURCES = [
         {
-            'value': 'coco_2014_test',
-            'name': 'COCO 2014 test',
+            'value': 'coco2014',
+            'name': 'COCO 2014',
             'download_url': 'http://images.cocodataset.org/annotations/annotations_trainval2014.zip',
-            'filename': 'instances_val2014.json'
-        }
+            'filenames': ['instances_train2014.json', 'instances_val2014.json']
+        },
+        {
+            'value': 'coco2015',
+            'name': 'COCO 2015',
+            'download_url': None,
+            'filename': []
+        },
     ]
 
     SESSION_COOKIE_SECURE = True
