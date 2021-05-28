@@ -1,64 +1,61 @@
-from fastapi import APIRouter
-from webargs import fields
-from webargs.flaskparser import use_args
+from fastapi import APIRouter, Depends
 
-from authentication.core import admin_guard
-from utils import parse, build_schema
-from .core import User, find_users, find_user, remove_users, remove_user, update_user, update_user_password
+from dependencies import logged_admin, logged_user
+from routers.users.core import find_users, find_user, remove_users, remove_user, update_user, update_user_password
+from routers.users.models import *
+from utils import parse
 
 users = APIRouter()
 
 
-@users.get('/')
-@admin_guard
-@use_args({
-    'offset': fields.Int(required=False, missing=0),
-    'limit': fields.Int(required=False, missing=0)
-}, location='query')
-def get_users(args):
-    result = find_users(args['offset'], args['limit'])
-    return {'users': parse(result)}, 200
+@users.get('/', response_model=UsersResponse, dependencies=[Depends(logged_admin)])
+def get_users(offset: int = 0, limit: int = 0):
+    """
+    Fetch paginated datatensor users list.
+    🔒️ Admin only
+    """
+    result = find_users(offset, limit)
+    return {'users': [User.from_mongo(user) for user in result]}
 
 
-@users.get('/<user_id>')
+@users.get('/{user_id}', response_model=UserResponse)
 def get_user(user_id):
+    """
+    Fetch user, given `user_id`
+    """
     result = find_user(user_id)
-    return {'user': parse(result)}, 200
+    return {'user': User.from_mongo(result)}
 
 
-# ⚠️ User POST is authentication role
+@users.patch('/me')
+def patch_user(update: UserUpdateProfileBody, user: User = Depends(logged_user)):
+    """
+    Update logged user profile
+    """
+    update_user(user, update)
 
 
-@users.patch('/<user_id>')
-@use_args(build_schema(User))
-def patch_user(args, user_id):
-    update_user(user_id, args)
-    return 'OK', 200
+@users.patch('/me/password')
+def patch_user_password(payload: UserUpdatePasswordBody, user: User = Depends(logged_user)):
+    """
+    Update logged user password
+    """
+    update_user_password(user, payload.password, payload.new_password)
 
 
-@users.patch('/<user_id>/password')
-@use_args({
-    'password': fields.Str(required=True),
-    'password_confirm': fields.Str(required=True),
-    'new_password': fields.Str(required=True),
-})
-def patch_user_password(args, user_id):
-    update_user_password(user_id, args['password'], args['new_password'])
-    return 'OK', 200
+@users.delete('/', dependencies=[Depends(logged_admin)])
+def delete_users(payload: UserDeleteBody):
+    """
+    Delete selected users, if they aren't admin.
+    🔒️ Admin only
+    """
+    remove_users(payload.user_ids)
 
 
-@users.delete('/')
-@admin_guard
-@use_args({
-    'user_ids': fields.List(fields.Str(required=True), required=True)
-})
-def delete_users(args):
-    remove_users(args['user_ids'])
-    return 'OK', 200
-
-
-@users.delete('/<user_id>')
-@admin_guard
+@users.delete('/{user_id}', dependencies=[Depends(logged_admin)])
 def delete_user(user_id):
+    """
+    Delete given user, if he is not an admin.
+    🔒️ Admin only
+    """
     remove_user(user_id)
-    return 'OK', 200

@@ -1,16 +1,22 @@
-from fastapi import APIRouter, Header
+from fastapi import APIRouter, Depends
 from flask_bcrypt import check_password_hash
 
 import errors
-from authentication import core
-from authentication.models import AuthLoginBody, AuthRegisterBody, AuthEmailConfirmBody, AuthResponse
+from dependencies import logged_user
 from logger import logger
+
+from authentication import core
+from authentication.models import *
+from routers.users.models import User
 
 auth = APIRouter()
 
 
 @auth.post('/login', response_model=AuthResponse)
 def do_login(payload: AuthLoginBody):
+    """
+    Login workflow (email + password)
+    """
     user_id = core.user_id_hash(payload.email)
     user = core.user_from_user_id(user_id)
     if not user:
@@ -33,6 +39,9 @@ def do_login(payload: AuthLoginBody):
 
 @auth.post('/register', response_model=AuthResponse)
 def do_register(payload: AuthRegisterBody):
+    """
+    Register workflow (email + password)
+    """
     core.check_captcha(payload.recaptcha)
 
     email = payload.email
@@ -59,17 +68,23 @@ def do_register(payload: AuthRegisterBody):
 
 
 @auth.get('/me')
-def me(authorization: str = Header(...)):
-    user = core.verify_access_token(authorization)
+def me(user: User = Depends(logged_user)):
+    """
+    Return user from access token
+    """
+
     if not user:
         raise errors.ExpiredAuthentication
-    user.pop('password', None)
     response = {'user': user}
     return response
 
 
 @auth.post('/email-confirmation', response_model=AuthResponse)
 def do_email_confirmation(payload: AuthEmailConfirmBody):
+    """
+    Validates the code in the link provided in email body
+    """
+
     user = core.verify_user_email(payload.activation_code)
     access_token = core.encode_access_token(user['_id'])
 

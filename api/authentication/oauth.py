@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 from authentication import core
-from authentication.models import AuthResponse, OAuthAuthorizationResponse, OAuthCallbackPayload
+from authentication.models import *
 from logger import logger
 
 oauth = APIRouter()
@@ -10,8 +10,7 @@ oauth = APIRouter()
 @oauth.get('/authorization/{scope}', response_model=OAuthAuthorizationResponse)
 def oauth_authorization(scope: str):
     """
-    This function returns OAuth authorization url, depending on requested scope.
-    :return: authorization_url
+    Fetch and return OAuth authorization url, depending on requested scope.
     """
 
     authorization_url = core.authorization_url_from_scope(scope)
@@ -22,10 +21,9 @@ def oauth_authorization(scope: str):
 
 
 @oauth.post('/callback', response_model=AuthResponse)
-def oauth_callback(payload: OAuthCallbackPayload):
+def oauth_callback(payload: OAuthCallbackBody):
     """
     Using code provided by OAuth workflow, fetch profile depending on requested scope; register user if doesn't exists
-    :return: user
     """
 
     scope = payload.scope

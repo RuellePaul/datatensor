@@ -48,19 +48,6 @@ def verify_access_token(access_token, verified=False):
     return user
 
 
-def admin_guard(func):
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        if request.method in ['GET', 'POST', 'PUT', 'DELETE']:
-            user = verify_access_token()
-            if user['_id'] not in Config.ADMIN_USER_IDS:
-                raise errors.Forbidden('Not an admin user')
-        result = func(*args, **kwargs)
-        return result
-
-    return wrapper
-
-
 # User related
 def authorization_url_from_scope(scope):
     client = WebApplicationClient(Config.OAUTH[scope]['CLIENT_ID'])
@@ -234,7 +221,7 @@ def send_activation_code(email, activation_code):
 
 def verify_user_email(activation_code):
     user = user_from_activation_code(activation_code)
-    
+
     if not user:
         raise errors.Forbidden('Invalid code provided')
 

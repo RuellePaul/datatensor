@@ -3,6 +3,7 @@ import json
 
 from bson import json_util
 from bson.objectid import ObjectId
+from pydantic import BaseModel, BaseConfig
 from pymongo.encryption import Algorithm
 
 from config import Config
@@ -37,3 +38,30 @@ def build_schema(schema):
         return schema(only=only, partial=partial, context={'request': request})
 
     return handler
+
+
+class OID(str):
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate
+
+    @classmethod
+    def validate(cls, v):
+        return ObjectId(str(v))
+
+
+class MongoModel(BaseModel):
+
+    class Config(BaseConfig):
+        allow_population_by_field_name = True
+        json_encoders = {
+            datetime: lambda dt: dt.isoformat(),
+            ObjectId: lambda oid: str(oid),
+        }
+
+    @classmethod
+    def from_mongo(cls, data: dict):
+        if not data:
+            return data
+        id = data.pop('_id', None)
+        return cls(**dict(data, id=id))

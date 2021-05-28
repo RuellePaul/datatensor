@@ -1,4 +1,11 @@
+from enum import Enum
 from pydantic import BaseModel
+
+
+class Scope(str, Enum):
+    github = 'github'
+    google = 'google'
+    stackoverflow = 'stackoverflow'
 
 
 class AuthLoginBody(BaseModel):
@@ -26,8 +33,8 @@ class OAuthAuthorizationResponse(BaseModel):
     authorization_url: str
 
 
-class OAuthCallbackPayload(BaseModel):
+class OAuthCallbackBody(BaseModel):
     code: str
-    scope: str
+    scope: Scope
 
 
