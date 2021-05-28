@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, useCallback, useEffect, useState} from 'react';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {useSnackbar} from 'notistack';
@@ -22,6 +22,7 @@ import {Theme} from 'src/theme';
 import api from 'src/utils/api';
 import useTasks from 'src/hooks/useTasks';
 import {Task} from 'src/types/task';
+import {DataSource} from 'src/types/datasource';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -40,6 +41,23 @@ const Generator: FC = () => {
 
     const isMountedRef = useIsMountedRef();
     const {enqueueSnackbar} = useSnackbar();
+
+    const [datasources, setDatasources] = useState<DataSource[]>([]);
+
+    const fetchDatasources = useCallback(async () => {
+        try {
+            const response = await api.get<{ datasources: DataSource[] }>(`/datasources/`);
+            setDatasources(response.data.datasources);
+        } catch (err) {
+            console.error(err);
+        }
+
+    }, [setDatasources]);
+
+    useEffect(() => {
+        fetchDatasources()
+    }, [fetchDatasources]);
+
 
     return (
         <Paper
@@ -112,7 +130,7 @@ const Generator: FC = () => {
                             <Grid item lg={12} sm={5} xs={12}>
                                 <FormControl fullWidth>
                                     <InputLabel shrink>
-                                        Dataset name
+                                        Datasource
                                     </InputLabel>
                                     <Select
                                         error={Boolean(touched.dataset_name && errors.dataset_name)}
@@ -124,7 +142,9 @@ const Generator: FC = () => {
                                         value={values.dataset_name}
                                         variant="standard"
                                     >
-                                        <MenuItem value='coco'>COCO 2014</MenuItem>
+                                        {datasources.map(datasource => (
+                                            <MenuItem value={datasource.value}>{datasource.name}</MenuItem>
+                                        ))}
                                     </Select>
                                 </FormControl>
                             </Grid>

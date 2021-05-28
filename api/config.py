@@ -30,9 +30,14 @@ class Config:
         '83d2218ec37d73a99944dbcd90e5753908a418b99fa79678402ba6bc97a81f83'  # ThomasRoudil (github)
     ]
 
-    DEFAULT_DATASET_IDS = {
-        'coco': '507f191e810c19729de860ea'
-    }
+    DATASOURCES = [
+        {
+            'value': 'coco_2014_test',
+            'name': 'COCO 2014 test',
+            'download_url': 'http://images.cocodataset.org/annotations/annotations_trainval2014.zip',
+            'filename': 'instances_val2014.json'
+        }
+    ]
 
     SESSION_COOKIE_SECURE = True
     REMEMBER_COOKIE_SECURE = True
