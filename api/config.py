@@ -32,13 +32,13 @@ class Config:
 
     DATASOURCES = [
         {
-            'value': 'coco2014',
+            'key': 'coco2014',
             'name': 'COCO 2014',
             'download_url': 'http://images.cocodataset.org/annotations/annotations_trainval2014.zip',
             'filenames': ['instances_train2014.json', 'instances_val2014.json']
         },
         {
-            'value': 'coco2015',
+            'key': 'coco2015',
             'name': 'COCO 2015',
             'download_url': None,
             'filename': []

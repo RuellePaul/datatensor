@@ -159,7 +159,7 @@ const Generator: FC = () => {
                                     >
                                         <MenuItem value='' disabled>Pickup a datasource</MenuItem>
                                         {datasources.map(datasource => (
-                                            <MenuItem value={datasource.value}>{datasource.name}</MenuItem>
+                                            <MenuItem value={datasource.key}>{datasource.name}</MenuItem>
                                         ))}
                                     </Select>
                                 </FormControl>

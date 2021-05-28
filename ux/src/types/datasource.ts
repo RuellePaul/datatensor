@@ -1,5 +1,5 @@
 export interface DataSource {
-    value: string;
+    key: string;
     name: string;
     download_url: '';
 }

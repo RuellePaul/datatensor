@@ -17,7 +17,7 @@ def get_datasources():
 @datasources.route('/categories/')
 @use_args({
     'datasource_key': fields.Str(required=True),
-})
-def get_categories(datasource_key):
-    result = find_categories(datasource_key)
+}, location='query')
+def get_categories(args):
+    result = find_categories(args['datasource_key'])
     return {'categories': parse(result)}, 200
