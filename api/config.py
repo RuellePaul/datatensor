@@ -35,13 +35,13 @@ class Config:
             'key': 'coco2014',
             'name': 'COCO 2014',
             'download_url': 'http://images.cocodataset.org/annotations/annotations_trainval2014.zip',
-            'filenames': ['instances_train2014.json', 'instances_val2014.json']
+            'filenames': ['instances_val2014.json', 'instances_train2014.json']
         },
         {
-            'key': 'coco2015',
-            'name': 'COCO 2015',
-            'download_url': None,
-            'filename': []
+            'key': 'coco2017',
+            'name': 'COCO 2017',
+            'download_url': 'http://images.cocodataset.org/annotations/annotations_trainval2017.zip',
+            'filenames': ['instances_val2017.json', 'instances_train2017.json']
         },
     ]
 

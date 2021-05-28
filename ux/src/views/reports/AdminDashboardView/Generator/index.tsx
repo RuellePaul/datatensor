@@ -57,10 +57,9 @@ const Generator: FC = () => {
     }, [setDatasources]);
 
     const handleDatasourceChange = async (datasource_key) => {
+        setEligibleCategories([]);
         const response = await api.get<{ categories: Category[] }>(`/datasources/categories`, {params: {datasource_key}});
         setEligibleCategories(response.data.categories)
-
-
     };
 
     useEffect(() => {

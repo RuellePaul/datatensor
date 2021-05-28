@@ -3,40 +3,37 @@ import json
 import zipfile
 
 import requests
+from uuid import uuid4
 
 import errors
 from config import Config
+from logger import logger
 
 
 db = Config.db
 
 
-ANNOTATIONS_CONFIG = {
-    'coco2014': {
-        'download_url': 'http://images.cocodataset.org/annotations/annotations_trainval2014.zip',
-        'filename': 'instances_val2014.json'
-    },
-    'coco2015': {
-        'download_url': 'http://images.cocodataset.org/annotations/annotations_trainval2015.zip',
-        'filename': 'instances_val2015.json'
-    }
-}
-
-
-def find_datasources():
-    return Config.DATASOURCES
-
-
-def find_categories(datasource_categories):
-    pass
-
-
 def _download_annotations(datasource_key):
-    url = ANNOTATIONS_CONFIG[datasource_key]['download_url']
-    response = requests.get(url, stream=True)
+    if not os.path.exists(Config.DATASOURCES_PATH):
+        os.mkdir(Config.DATASOURCES_PATH)
 
     datasource_path = os.path.join(Config.DATASOURCES_PATH, datasource_key)
+    if not os.path.exists(datasource_path):
+        os.mkdir(datasource_path)
 
+    annotations_path = os.path.join(datasource_path, 'annotations')
+    datasource = [datasource for datasource in Config.DATASOURCES if datasource['key'] == datasource_key][0]
+
+    if os.path.exists(annotations_path):
+        return annotations_path, datasource
+
+    logger.info(f"Downloading {datasource['name']}...")
+
+    response = requests.get(datasource['download_url'], stream=True)
+    if response.status_code != 200:
+        raise errors.APIError(503, f"Datasource {datasource['name']} unreachable")
+
+    datasource_path = os.path.join(Config.DATASOURCES_PATH, datasource_key)
     zip_path = os.path.join(datasource_path, f'{datasource_key}.zip')
     with open(zip_path, 'wb') as fd:
         for chunk in response.iter_content(chunk_size=128):
@@ -46,70 +43,29 @@ def _download_annotations(datasource_key):
         zip_ref.extractall(datasource_path)
 
     os.remove(zip_path)
+    return annotations_path, datasource
 
 
-def main(datasource_key):
-    if not os.path.exists(Config.DATASOURCES_PATH):
-        os.mkdir(Config.DATASOURCES_PATH)
+def find_datasources():
+    return Config.DATASOURCES
 
-    datasource_path = os.path.join(Config.DATASOURCES_PATH, datasource_key)
-    if not os.path.exists(datasource_path):
-        os.mkdir(datasource_path)
 
+def find_categories(datasource_key):
     try:
-        annotations_path = os.path.join(datasource_path, 'annotations')
-        if not os.path.exists(annotations_path):
-            _download_annotations(datasource_key)
+        annotations_path, datasource = _download_annotations(datasource_key)
     except Exception as e:
-        raise errors.InternalError(f'download of {datasource_key} failed, {str(e)}')
+        raise errors.InternalError(f'Download of {datasource_key} failed, {str(e)}')
 
-    json_file = open(os.path.join(annotations_path, ANNOTATIONS_CONFIG[datasource_key]['filename']), 'r')
-    json_remote_dataset = json.load(json_file)
+    filename = datasource['filenames'][0]
+    try:
+        json_file = open(os.path.join(annotations_path, filename), 'r')
+        categories = json.load(json_file)['categories']
+        json_file.close()
+    except FileNotFoundError:
+        raise errors.NotFound(f'Filename {filename} not found for datasource {datasource_key}')
 
-    json_file.close()
+    for category in categories:
+        category['_id'] = str(uuid4())
+        category.pop('id', None)
 
-    images_remote_dataset = json_remote_dataset['images'][:image_count]
-    categories_remote_dataset = json_remote_dataset['categories']
-    labels_remote_dataset = json_remote_dataset['annotations']
-    del json_remote_dataset
-
-    categories = [{
-        '_id': str(uuid4()),
-        '_internal_id': category['id'],
-        'dataset_id': dataset_id,
-        'name': category['name'],
-        'supercategory': category['supercategory']
-    } for category in categories_remote_dataset]
-
-    dataset = dict(_id=ObjectId(dataset_id),
-                   user_id=user_id,
-                   created_at=datetime.now().isoformat(),
-                   name='COCO 2014',
-                   description=f"Official COCO dataset, with {len(categories)} categories.",
-                   image_count=image_count,
-                   is_public=True)
-
-    Config.db.datasets.insert_one(dataset)
-    Config.db.categories.insert_many([{
-        '_id': category['_id'],
-        'dataset_id': category['dataset_id'],
-        'name': category['name'],
-        'supercategory': category['supercategory']
-    } for category in categories])
-
-    with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
-        executor.map(process_image,
-                     ({'task_id': task_id,
-                       'dataset_id': dataset_id,
-                       'image_remote_dataset': image,
-                       'image_count': image_count,
-                       'category_labels': [el for el in labels_remote_dataset if
-                                           el['image_id'] == image['id']],
-                       'categories': categories}
-                      for image in images_remote_dataset))
-
-        update_task(task_id, progress=1)
-        sleep(2)
-        image_count = len(list(Config.db.images.find({'dataset_id': dataset_id})))
-        Config.db.datasets.find_one_and_update({'_id': ObjectId(dataset_id)}, {'$set': {'image_count': image_count}})
-    return
+    return categories

@@ -1,7 +1,6 @@
 import concurrent.futures
 import json
 import os
-import zipfile
 from datetime import datetime
 from uuid import uuid4
 from time import sleep
@@ -13,30 +12,6 @@ import errors
 from config import Config
 from manager.task_utils import update_task, increment_task_progress
 from routes.images.core import allowed_file, upload_image, secure_filename
-
-ANNOTATIONS_CONFIG = {
-    'coco2014': {
-        'download_url': 'http://images.cocodataset.org/annotations/annotations_trainval2014.zip',
-        'filename': 'instances_val2014.json'
-    }
-}
-
-
-def _download_annotations(dataset_name):
-    url = ANNOTATIONS_CONFIG[dataset_name]['download_url']
-    response = requests.get(url, stream=True)
-
-    dataset_path = os.path.join(Config.DATASOURCES_PATH, dataset_name)
-
-    zip_path = os.path.join(dataset_path, f'{dataset_name}.zip')
-    with open(zip_path, 'wb') as fd:
-        for chunk in response.iter_content(chunk_size=128):
-            fd.write(chunk)
-
-    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        zip_ref.extractall(dataset_path)
-
-    os.remove(zip_path)
 
 
 def _download_image(image_url):
@@ -107,20 +82,6 @@ def main(user_id, task_id, properties):
 
     if Config.db.datasets.find_one({'_id': ObjectId(dataset_id)}):
         raise errors.Forbidden(f'Dataset {dataset_name} is already built')
-
-    if not os.path.exists(Config.DATASOURCES_PATH):
-        os.mkdir(Config.DATASOURCES_PATH)
-
-    dataset_path = os.path.join(Config.DATASOURCES_PATH, dataset_name)
-    if not os.path.exists(dataset_path):
-        os.mkdir(dataset_path)
-
-    try:
-        annotations_path = os.path.join(dataset_path, 'annotations')
-        if not os.path.exists(annotations_path):
-            _download_annotations(dataset_name)
-    except Exception as e:
-        raise errors.InternalError(f'download of {dataset_name} failed, {str(e)}')
 
     json_file = open(os.path.join(annotations_path, ANNOTATIONS_CONFIG[dataset_name]['filename']), 'r')
     json_remote_dataset = json.load(json_file)
