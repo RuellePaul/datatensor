@@ -59,10 +59,20 @@ def find_categories(datasource_key):
     filename = datasource['filenames'][0]
     try:
         json_file = open(os.path.join(annotations_path, filename), 'r')
-        categories = json.load(json_file)['categories']
+        datasource_content = json.load(json_file)
+        categories = datasource_content['categories']
+        datasource_annotations = datasource_content['annotations']
         json_file.close()
     except FileNotFoundError:
         raise errors.NotFound(f'Filename {filename} not found for datasource {datasource_key}')
+
+    for category in categories:
+        category['labels_count'] = 0
+
+    for datasource_label in datasource_annotations:
+        category_id = datasource_label['category_id']
+        category_to_update = next(category for category in categories if category['id'] == category_id)
+        category_to_update['labels_count'] += 1
 
     for category in categories:
         category['_id'] = str(uuid4())

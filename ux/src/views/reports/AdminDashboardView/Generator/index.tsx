@@ -9,11 +9,14 @@ import {
     Grid,
     InputLabel,
     makeStyles,
+    LinearProgress,
+    ListSubheader,
     MenuItem,
     Paper,
     Select,
     TextField,
-    Typography
+    Typography,
+    capitalize
 } from '@material-ui/core';
 import {Alert} from '@material-ui/lab';
 
@@ -44,7 +47,12 @@ const Generator: FC = () => {
     const {enqueueSnackbar} = useSnackbar();
 
     const [datasources, setDatasources] = useState<DataSource[]>([]);
-    const [eligibleCategories, setEligibleCategories] = useState<Category[]>([]);
+    const [eligibleCategories, setEligibleCategories] = useState<Category[] | null>([]);
+    const eligibleSuperCategories = eligibleCategories
+        ? eligibleCategories
+            .map(category => category.supercategory)
+            .filter((value, index, self) => self.indexOf(value) === index)
+        : null
 
     const fetchDatasources = useCallback(async () => {
         try {
@@ -57,7 +65,7 @@ const Generator: FC = () => {
     }, [setDatasources]);
 
     const handleDatasourceChange = async (datasource_key) => {
-        setEligibleCategories([]);
+        setEligibleCategories(null);
         const response = await api.get<{ categories: Category[] }>(`/datasources/categories`, {params: {datasource_key}});
         setEligibleCategories(response.data.categories)
     };
@@ -156,16 +164,51 @@ const Generator: FC = () => {
                                         variant="standard"
                                         displayEmpty
                                     >
-                                        <MenuItem value='' disabled>Pickup a datasource</MenuItem>
+                                        <MenuItem value='' disabled>
+                                            <em>Pickup a datasource</em>
+                                        </MenuItem>
                                         {datasources.map(datasource => (
-                                            <MenuItem value={datasource.key}>{datasource.name}</MenuItem>
+                                            <MenuItem
+                                                key={datasource.key}
+                                                value={datasource.key}
+                                            >
+                                                {datasource.name}
+                                            </MenuItem>
                                         ))}
                                     </Select>
                                 </FormControl>
+                                {eligibleCategories === null
+                                    ? <LinearProgress/>
+                                    : (
+                                        eligibleCategories.length > 0 && (
+                                            <>
+                                                <FormControl fullWidth>
+                                                    <InputLabel htmlFor='select-categories'>Categories</InputLabel>
+                                                    <Select defaultValue="" id='select-categories'>
+                                                        {eligibleSuperCategories.map(supercategory => (
+                                                            <div key={supercategory}>
+                                                                <ListSubheader>{capitalize(supercategory)}</ListSubheader>
+                                                                {eligibleCategories
+                                                                    .filter(category => category.supercategory === supercategory)
+                                                                    .map(category => (
+                                                                        <MenuItem
+                                                                            key={category.name}
+                                                                            value={category.name}
+                                                                        >
+                                                                            {capitalize(category.name)} ({category.labels_count})
+                                                                        </MenuItem>
+                                                                    ))
+                                                                }
+                                                            </div>
+                                                        ))}
+                                                    </Select>
+                                                </FormControl>
+                                            </>
+                                        )
+                                    )
+                                }
+
                             </Grid>
-                            <pre>
-                                {JSON.stringify(eligibleCategories, null, 4)}
-                            </pre>
                             <Grid item lg={12} sm={5} xs={12}>
                                 <TextField
                                     error={Boolean(touched.image_count && errors.image_count)}
