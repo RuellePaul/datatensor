@@ -47,12 +47,14 @@ const Generator: FC = () => {
     const {enqueueSnackbar} = useSnackbar();
 
     const [datasources, setDatasources] = useState<DataSource[]>([]);
+
     const [eligibleCategories, setEligibleCategories] = useState<Category[] | null>([]);
-    const eligibleSuperCategories = eligibleCategories
-        ? eligibleCategories
-            .map(category => category.supercategory)
-            .filter((value, index, self) => self.indexOf(value) === index)
-        : null
+
+    const [selectedCategoryNames, setSelectedCategoryNames] = useState<string[]>([]);
+    const handleChangeSelect = (event) => {
+        setSelectedCategoryNames(event.target.value as string[]);
+    };
+
 
     const fetchDatasources = useCallback(async () => {
         try {
@@ -181,29 +183,21 @@ const Generator: FC = () => {
                                     ? <LinearProgress/>
                                     : (
                                         eligibleCategories.length > 0 && (
-                                            <>
-                                                <FormControl fullWidth>
-                                                    <InputLabel htmlFor='select-categories'>Categories</InputLabel>
-                                                    <Select defaultValue="" id='select-categories'>
-                                                        {eligibleSuperCategories.map(supercategory => (
-                                                            <div key={supercategory}>
-                                                                <ListSubheader>{capitalize(supercategory)}</ListSubheader>
-                                                                {eligibleCategories
-                                                                    .filter(category => category.supercategory === supercategory)
-                                                                    .map(category => (
-                                                                        <MenuItem
-                                                                            key={category.name}
-                                                                            value={category.name}
-                                                                        >
-                                                                            {capitalize(category.name)} ({category.labels_count})
-                                                                        </MenuItem>
-                                                                    ))
-                                                                }
-                                                            </div>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
-                                            </>
+                                            <FormControl fullWidth>
+                                                <InputLabel htmlFor='select-categories'>Categories</InputLabel>
+                                                <Select
+                                                    multiple
+                                                    id='select-categories'
+                                                    value={selectedCategoryNames}
+                                                    onChange={handleChangeSelect}
+                                                >
+                                                    {eligibleCategories.map(category => (
+                                                        <MenuItem value={category.name} key={category.name}>
+                                                            {capitalize(category.name)} ({category.labels_count})
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
                                         )
                                     )
                                 }
