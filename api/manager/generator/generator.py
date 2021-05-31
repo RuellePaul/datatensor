@@ -7,7 +7,6 @@ from uuid import uuid4
 from time import sleep
 
 import requests
-from bson.objectid import ObjectId
 
 import errors
 from config import Config
@@ -105,7 +104,7 @@ def main(user_id, task_id, properties):
     dataset_id = Config.DEFAULT_DATASET_IDS[dataset_name]
     update_task(task_id, dataset_id=dataset_id, status='active')
 
-    if Config.db.datasets.find_one({'_id': ObjectId(dataset_id)}):
+    if Config.db.datasets.find_one({'_id': dataset_id}):
         raise errors.Forbidden(f'Dataset {dataset_name} is already built')
 
     if not os.path.exists(Config.DEFAULT_DATASETS_PATH):
@@ -140,7 +139,7 @@ def main(user_id, task_id, properties):
         'supercategory': category['supercategory']
     } for category in categories_remote_dataset]
 
-    dataset = dict(_id=ObjectId(dataset_id),
+    dataset = dict(_id=dataset_id,
                    user_id=user_id,
                    created_at=datetime.now().isoformat(),
                    name='COCO 2014',
@@ -170,5 +169,5 @@ def main(user_id, task_id, properties):
         update_task(task_id, progress=1)
         sleep(2)
         image_count = len(list(Config.db.images.find({'dataset_id': dataset_id})))
-        Config.db.datasets.find_one_and_update({'_id': ObjectId(dataset_id)}, {'$set': {'image_count': image_count}})
+        Config.db.datasets.find_one_and_update({'_id': dataset_id}, {'$set': {'image_count': image_count}})
     return

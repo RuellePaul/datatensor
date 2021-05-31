@@ -38,26 +38,59 @@ app.add_middleware(
     allow_headers=['*'],
 )
 
-app.include_router(auth, prefix=f'{PREFIX}/auth')
-app.include_router(oauth, prefix=f'{PREFIX}/oauth')
+app.include_router(auth,
+                   prefix=f'{PREFIX}/auth',
+                   tags=['auth'])
+app.include_router(oauth,
+                   prefix=f'{PREFIX}/oauth',
+                   tags=['oauth'])
 
-app.include_router(users, prefix=f'{PREFIX}/users', dependencies=[Depends(logged_user)])
+app.include_router(users,
+                   prefix=f'{PREFIX}/users',
+                   dependencies=[Depends(logged_user)],
+                   tags=['users'])
 
-app.include_router(notifications, prefix=f'{PREFIX}/notifications', dependencies=[Depends(logged_user)])
+app.include_router(notifications, prefix=f'{PREFIX}/notifications',
+                   dependencies=[Depends(logged_user)],
+                   tags=['notifications'])
 
-app.include_router(datasets, prefix=f'{PREFIX}/datasets', dependencies=[Depends(logged_user)])
+app.include_router(datasets,
+                   prefix=f'{PREFIX}/datasets',
+                   dependencies=[Depends(logged_user)],
+                   tags=['datasets'])
 
-app.include_router(categories, prefix=f'{PREFIX}/datasets/<dataset_id>/categories', dependencies=[Depends(logged_user)])
+app.include_router(categories,
+                   prefix=f'{PREFIX}/datasets/<dataset_id>/categories',
+                   dependencies=[Depends(logged_user)],
+                   tags=['categories'])
 
-app.include_router(images, prefix=f'{PREFIX}/datasets/<dataset_id>/images', dependencies=[Depends(logged_user)])
+app.include_router(images,
+                   prefix=f'{PREFIX}/datasets/<dataset_id>/images',
+                   dependencies=[Depends(logged_user)],
+                   tags=['images'])
 
-app.include_router(pipelines, prefix=f'{PREFIX}/datasets/<dataset_id>/pipelines', dependencies=[Depends(logged_user)])
+app.include_router(pipelines,
+                   prefix=f'{PREFIX}/datasets/<dataset_id>/pipelines',
+                   dependencies=[Depends(logged_user)],
+                   tags=['pipelines'])
 
-app.include_router(labels, prefix=f'{PREFIX}/images/<image_id>/labels', dependencies=[Depends(logged_user)])
+app.include_router(labels,
+                   prefix=f'{PREFIX}/images/<image_id>/labels',
+                   dependencies=[Depends(logged_user)],
+                   tags=['labels'])
 
-app.include_router(tasks, prefix=f'{PREFIX}/tasks', dependencies=[Depends(logged_user)])
-app.include_router(tasks, prefix=f'{PREFIX}/users/<user_id>/tasks', dependencies=[Depends(logged_user)])
-app.include_router(tasks, prefix=f'{PREFIX}/datasets/<dataset_id>/tasks', dependencies=[Depends(logged_user)])
+app.include_router(tasks,
+                   prefix=f'{PREFIX}/tasks',
+                   dependencies=[Depends(logged_user)],
+                   tags=['tasks'])
+app.include_router(tasks,
+                   prefix=f'{PREFIX}/users/<user_id>/tasks',
+                   dependencies=[Depends(logged_user)],
+                   tags=['tasks'])
+app.include_router(tasks,
+                   prefix=f'{PREFIX}/datasets/<dataset_id>/tasks',
+                   dependencies=[Depends(logged_user)],
+                   tags=['tasks'])
 
 
 @app.exception_handler(errors.APIError)

@@ -8,7 +8,7 @@ users = APIRouter()
 
 
 @users.get('/', response_model=UsersResponse, dependencies=[Depends(logged_admin)])
-def get_users(offset: int = 0, limit: int = 0):
+async def get_users(offset: int = 0, limit: int = 0):
     """
     Fetch paginated datatensor users list.
     🔒️ Admin only
@@ -18,7 +18,7 @@ def get_users(offset: int = 0, limit: int = 0):
 
 
 @users.get('/{user_id}', response_model=UserResponse)
-def get_user(user_id):
+async def get_user(user_id):
     """
     Fetch user, given `user_id`
     """
@@ -27,7 +27,7 @@ def get_user(user_id):
 
 
 @users.patch('/me')
-def patch_user(update: UserUpdateProfileBody, user: User = Depends(logged_user)):
+async def patch_user(update: UserUpdateProfileBody, user: User = Depends(logged_user)):
     """
     Update logged user profile
     """
@@ -35,7 +35,7 @@ def patch_user(update: UserUpdateProfileBody, user: User = Depends(logged_user))
 
 
 @users.patch('/me/password')
-def patch_user_password(payload: UserUpdatePasswordBody, user: User = Depends(logged_user)):
+async def patch_user_password(payload: UserUpdatePasswordBody, user: User = Depends(logged_user)):
     """
     Update logged user password
     """
@@ -43,7 +43,7 @@ def patch_user_password(payload: UserUpdatePasswordBody, user: User = Depends(lo
 
 
 @users.delete('/', dependencies=[Depends(logged_admin)])
-def delete_users(payload: UserDeleteBody):
+async def delete_users(payload: UserDeleteBody):
     """
     Delete selected users, if they aren't admin.
     🔒️ Admin only
@@ -52,7 +52,7 @@ def delete_users(payload: UserDeleteBody):
 
 
 @users.delete('/{user_id}', dependencies=[Depends(logged_admin)])
-def delete_user(user_id):
+async def delete_user(user_id):
     """
     Delete given user, if he is not an admin.
     🔒️ Admin only

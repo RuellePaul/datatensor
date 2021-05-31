@@ -3,8 +3,10 @@ import json
 
 from bson import json_util
 from bson.objectid import ObjectId
+from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel, BaseConfig
 from pymongo.encryption import Algorithm
+from uuid import UUID
 
 from config import Config
 
@@ -22,12 +24,14 @@ def default(value):
         return value.isoformat()
     elif isinstance(value, ObjectId):
         return str(value)
+    elif isinstance(value, UUID):
+        return str(value)
     else:
         return json_util.default(value)
 
 
 def parse(data):
-    return json.loads(json.dumps(data, default=default))
+    return json.loads(json.dumps(jsonable_encoder(data), default=default))
 
 
 def build_schema(schema):

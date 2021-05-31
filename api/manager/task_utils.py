@@ -1,12 +1,10 @@
-from bson.objectid import ObjectId
-
 from config import Config
 
 db = Config.db
 
 
 def update_task(task_id, **args):
-    db.tasks.find_one_and_update({'_id': ObjectId(task_id)}, {'$set': args})
+    db.tasks.find_one_and_update({'_id': task_id}, {'$set': args})
 
 
 def increment_task_progress(task_id, delta):

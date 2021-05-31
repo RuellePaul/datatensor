@@ -1,33 +1,42 @@
-from fastapi import APIRouter
-from webargs.flaskparser import use_args
+from fastapi import APIRouter, Depends
 
-from utils import build_schema, parse
-from .core import Dataset, find_datasets, find_dataset, remove_dataset, insert_dataset
+from dependencies import logged_user
+from routers.datasets.core import find_datasets, find_dataset, remove_dataset, insert_dataset
+from routers.datasets.models import *
+from routers.users.models import User
 
 datasets = APIRouter()
-Dataset = build_schema(Dataset)
 
 
-@datasets.get('/')
-def get_datasets(offset: int = 0, limit: int = 0):
-    result = find_datasets(offset, limit)
-    return {'datasets': parse(result)}, 200
+@datasets.get('/', response_model=DatasetsResponse)
+async def get_datasets(user: User = Depends(logged_user), offset: int = 0, limit: int = 0):
+    """
+    Fetch paginated datasets list of logged user.
+    """
+    result = find_datasets(user['_id'], offset, limit)
+    return {'datasets': [Dataset.from_mongo(dataset) for dataset in result]}
 
 
-@datasets.get('/<dataset_id>')
-def get_dataset(dataset_id):
+@datasets.get('/{dataset_id}', response_model=DatasetResponse)
+async def get_dataset(dataset_id):
+    """
+    Fetch dataset.
+    """
     result = find_dataset(dataset_id)
-    return {'dataset': parse(result)}, 200
+    return {'dataset': Dataset.from_mongo(result)}
 
 
 @datasets.post('/')
-@use_args(Dataset)
-def post_dataset(args):
-    insert_dataset(args)
-    return 'OK', 201
+async def post_dataset(dataset: DatasetPostBody, user: User = Depends(logged_user)):
+    """
+    Create a new dataset.
+    """
+    insert_dataset(user['_id'], dataset)
 
 
-@datasets.delete('/<dataset_id>')
-def delete_dataset(dataset_id):
-    remove_dataset(dataset_id)
-    return 'OK', 200
+@datasets.delete('/{dataset_id}')
+async def delete_dataset(dataset_id, user: User = Depends(logged_user)):
+    """
+    Delete a dataset.
+    """
+    remove_dataset(user['_id'], dataset_id)

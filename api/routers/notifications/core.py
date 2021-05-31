@@ -1,7 +1,5 @@
 from datetime import datetime
 
-from bson.objectid import ObjectId
-from flask import request
 from marshmallow import Schema
 from webargs import fields
 
@@ -24,7 +22,7 @@ def find_notifications(offset, limit):
 
 
 def find_notification(notification_id):
-    return db.notifications.find_one({'_id': ObjectId(notification_id)})
+    return db.notifications.find_one({'_id': notification_id})
 
 
 def insert_notification(notification, user_id=None):
@@ -37,4 +35,4 @@ def insert_notification(notification, user_id=None):
 
 def remove_notification(notification_id):
     user_id = verify_access_token().get('_id')
-    db.notifications.delete_one({'_id': ObjectId(notification_id), 'user_id': user_id})
+    db.notifications.delete_one({'_id': notification_id, 'user_id': user_id})
