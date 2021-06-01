@@ -1,7 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {AppThunk} from 'src/store'
 import {Notification} from 'src/types/notification';
-import api from 'src/utils/api';
 
 interface NotificationsState {
     notifications: Notification[];

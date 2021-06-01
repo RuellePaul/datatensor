@@ -136,7 +136,6 @@ def register_user(user_id, name, email, password, activation_code):
     encrypted_password = generate_password_hash(password).decode('utf-8')
     db.users.insert_one({
         **user.mongo(),
-        'name': user.name,
         'email': encrypt_field(user.email),
         'password': encrypt_field(encrypted_password),
         'activation_code': activation_code
@@ -182,8 +181,7 @@ def register_user_from_profile(profile, scope):
 
     db.users.insert_one({
         **user.mongo(),
-        '_id': user.id,
-        'name': encrypt_field(user.name),
+        'name': user.name,
         'email': encrypt_field(user.email) if user.email else None,
     })
     return user
