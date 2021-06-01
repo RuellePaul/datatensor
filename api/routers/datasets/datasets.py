@@ -13,7 +13,7 @@ async def get_datasets(user: User = Depends(logged_user), offset: int = 0, limit
     """
     Fetch paginated datasets list of logged user.
     """
-    result = find_datasets(user['_id'], offset, limit)
+    result = find_datasets(user.id, offset, limit)
     return {'datasets': [Dataset.from_mongo(dataset) for dataset in result]}
 
 
@@ -31,7 +31,7 @@ async def post_dataset(dataset: DatasetPostBody, user: User = Depends(logged_use
     """
     Create a new dataset.
     """
-    insert_dataset(user['_id'], dataset)
+    insert_dataset(user.id, dataset)
 
 
 @datasets.delete('/{dataset_id}')
@@ -39,4 +39,4 @@ async def delete_dataset(dataset_id, user: User = Depends(logged_user)):
     """
     Delete a dataset.
     """
-    remove_dataset(user['_id'], dataset_id)
+    remove_dataset(user.id, dataset_id)

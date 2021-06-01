@@ -16,13 +16,13 @@ def find_user(user_id):
 
 
 def update_user(user, update):
-    db.users.find_one_and_update({'_id': user['_id']},
+    db.users.find_one_and_update({'_id': user.id},
                                  {'$set': dict(update)},
                                  projection={'_id': 0})
 
 
 def update_user_password(user, password, new_password):
-    user = db.users.find_one({'_id': user['_id']})
+    user = db.users.find_one({'_id': user.id})
     user_password_encrypted = user.get('password')
     user_scope = user.get('scope')
 
@@ -35,7 +35,7 @@ def update_user_password(user, password, new_password):
         raise errors.Forbidden("Passwords don't match")
 
     encrypted_password = generate_password_hash(new_password).decode('utf-8')
-    db.users.find_one_and_update({'_id': user['_id']},
+    db.users.find_one_and_update({'_id': user.id},
                                  {'$set': {'password': encrypt_field(encrypted_password)}})
 
 

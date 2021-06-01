@@ -8,9 +8,9 @@ from routers.users.models import User
 
 async def logged_user(authorization: str = Header(...)):
     user = verify_access_token(access_token=authorization)
-    return user
+    return User.from_mongo(user)
 
 
 async def logged_admin(user: User = Depends(logged_user)):
-    if user['_id'] not in Config.ADMIN_USER_IDS:
+    if user.id not in Config.ADMIN_USER_IDS:
         raise errors.Forbidden('Admin only.')

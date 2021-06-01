@@ -1,12 +1,11 @@
 import datetime
 import json
+from uuid import UUID
 
 from bson import json_util
 from bson.objectid import ObjectId
-from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel, BaseConfig
 from pymongo.encryption import Algorithm
-from uuid import UUID
 
 from config import Config
 
@@ -26,12 +25,16 @@ def default(value):
         return str(value)
     elif isinstance(value, UUID):
         return str(value)
+    elif isinstance(value, BaseModel):
+        return value.dict()
+    elif isinstance(value, MongoModel):
+        return value.from_mongo(value.dict())
     else:
         return json_util.default(value)
 
 
 def parse(data):
-    return json.loads(json.dumps(jsonable_encoder(data), default=default))
+    return json.loads(json.dumps(data, default=default))
 
 
 def build_schema(schema):
@@ -55,13 +58,29 @@ class OID(str):
 
 
 class MongoModel(BaseModel):
-
     class Config(BaseConfig):
         allow_population_by_field_name = True
         json_encoders = {
             datetime: lambda dt: dt.isoformat(),
             ObjectId: lambda oid: str(oid),
+            UUID: lambda: str(UUID)
         }
+
+    def mongo(self, **kwargs):
+        exclude_unset = kwargs.pop('exclude_unset', True)
+        by_alias = kwargs.pop('by_alias', True)
+
+        parsed = self.dict(
+            exclude_unset=exclude_unset,
+            by_alias=by_alias,
+            **kwargs,
+        )
+
+        # Mongo uses `_id` as default key. We should stick to that as well.
+        if '_id' not in parsed and 'id' in parsed:
+            parsed['_id'] = parsed.pop('id')
+
+        return parsed
 
     @classmethod
     def from_mongo(cls, data: dict):

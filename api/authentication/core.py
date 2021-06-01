@@ -1,4 +1,3 @@
-import functools
 import hashlib
 import random
 import ssl
@@ -6,6 +5,7 @@ import string
 from datetime import datetime, timedelta
 
 import jwt
+import oauthlib.oauth2.rfc6749.errors
 import requests
 from flask_bcrypt import generate_password_hash
 from oauthlib.oauth2 import WebApplicationClient
@@ -14,10 +14,13 @@ from sendgrid.helpers.mail import Mail
 
 import errors
 from config import Config
+from routers.users.models import User, UserWithPassword
 from utils import encrypt_field
 
 if Config.ENVIRONMENT == 'development':  # allow sendgrid email on development environment
     ssl._create_default_https_context = ssl._create_unverified_context
+
+db = Config.db
 
 
 # Token
@@ -38,7 +41,7 @@ def verify_access_token(access_token, verified=False):
     except jwt.exceptions.ExpiredSignatureError:
         raise errors.ExpiredAuthentication()
 
-    user = Config.db.users.find_one({'_id': user_id}, {'password': 0})
+    user = db.users.find_one({'_id': user_id}, {'password': 0})
     if not user:
         raise errors.InvalidAuthentication("User doesn't exists")
 
@@ -74,7 +77,10 @@ def profile_from_code(code, scope):
         auth=((Config.OAUTH[scope]['CLIENT_ID'], Config.OAUTH[scope]['CLIENT_SECRET'])
               if scope != 'stackoverflow' else None),
     )
-    client.parse_request_body_response(response.text)
+    try:
+        client.parse_request_body_response(response.text)
+    except oauthlib.oauth2.rfc6749.errors.OAuth2Error as e:
+        raise errors.InvalidAuthentication(f'Cannot fetch OAuth2 profile : {str(e)}')
     uri, headers, body = client.add_token(Config.OAUTH[scope]['USER_URL'])
     profile = requests.get(uri, headers=headers, data=body, params={
         'access_token': response.json()['access_token'],
@@ -103,11 +109,15 @@ def user_id_hash(identifier):
 
 
 def user_from_user_id(user_id):
-    return Config.db.users.find_one({'_id': user_id})
+    return User.from_mongo(db.users.find_one({'_id': user_id}))
+
+
+def user_with_password_from_user_id(user_id):
+    return UserWithPassword.from_mongo(db.users.find_one({'_id': user_id}))
 
 
 def user_from_activation_code(activation_code):
-    return Config.db.users.find_one({'activation_code': activation_code})
+    return User.from_mongo(db.users.find_one({'activation_code': activation_code}))
 
 
 def generate_activation_code():
@@ -115,7 +125,7 @@ def generate_activation_code():
 
 
 def register_user(user_id, name, email, password, activation_code):
-    user = dict(_id=user_id,
+    user = User(id=user_id,
                 created_at=datetime.now(),
                 email=email,
                 name=name,
@@ -124,10 +134,10 @@ def register_user(user_id, name, email, password, activation_code):
                 tier='premium',
                 is_verified=False)
     encrypted_password = generate_password_hash(password).decode('utf-8')
-    Config.db.users.insert_one({
-        **user,
-        'name': user['name'],
-        'email': encrypt_field(user['email']),
+    db.users.insert_one({
+        **user.mongo(),
+        'name': user.name,
+        'email': encrypt_field(user.email),
         'password': encrypt_field(encrypted_password),
         'activation_code': activation_code
     })
@@ -138,9 +148,8 @@ def register_user_from_profile(profile, scope):
     user_id = user_id_from_profile(profile, scope)
 
     if scope == 'github':
-        user = dict(_id=user_id,
+        user = User(id=user_id,
                     created_at=datetime.now(),
-                    email=None,
                     name=profile.get('name'),
                     is_admin=user_id in Config.ADMIN_USER_IDS,
                     avatar=profile.get('avatar_url'),
@@ -149,7 +158,7 @@ def register_user_from_profile(profile, scope):
                     is_verified=True)
 
     elif scope == 'google':
-        user = dict(_id=user_id,
+        user = User(id=user_id,
                     created_at=datetime.now(),
                     email=profile.get('email'),
                     name=profile.get('name'),
@@ -160,9 +169,8 @@ def register_user_from_profile(profile, scope):
                     is_verified=True)
 
     elif scope == 'stackoverflow':
-        user = dict(_id=user_id,
+        user = User(id=user_id,
                     created_at=datetime.now(),
-                    email=None,
                     name=profile['items'][0]['display_name'],
                     is_admin=user_id in Config.ADMIN_USER_IDS,
                     avatar=profile['items'][0]['profile_image'],
@@ -172,11 +180,11 @@ def register_user_from_profile(profile, scope):
     else:
         raise ValueError('Invalid scope')
 
-    Config.db.users.insert_one({
-        **user,
-        '_id': user['_id'],
-        'name': encrypt_field(user['name']),
-        'email': encrypt_field(user['email']) if user.get('email') else None,
+    db.users.insert_one({
+        **user.mongo(),
+        '_id': user.id,
+        'name': encrypt_field(user.name),
+        'email': encrypt_field(user.email) if user.email else None,
     })
     return user
 
@@ -212,7 +220,6 @@ def send_activation_code(email, activation_code):
         html_content=html_content
     )
     try:
-        # FIXME : key empty ?
         sg = SendGridAPIClient(Config.SENDGRID_API_KEY)
         sg.send(message)
     except Exception as e:
@@ -225,10 +232,10 @@ def verify_user_email(activation_code):
     if not user:
         raise errors.Forbidden('Invalid code provided')
 
-    if user.get('is_verified'):
+    if user.is_verified:
         raise errors.BadRequest(f"User already verified")
 
-    Config.db.users.find_one_and_update({'_id': user['_id']},
-                                        {'$set': {'is_verified': True, 'activation_code': None}})
+    db.users.find_one_and_update({'_id': user.id},
+                                 {'$set': {'is_verified': True, 'activation_code': None}})
 
     return user

@@ -215,8 +215,8 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
                 if (accessToken && isValidToken(accessToken)) {
                     setSession(accessToken);
 
-                    const response = await api.get<{ user: User; }>('/auth/me');
-                    const {user} = response.data;
+                    const response = await api.get<User>('/auth/me');
+                    const user = response.data;
 
                     dispatch({
                         type: 'INITIALISE',

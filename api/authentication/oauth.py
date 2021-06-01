@@ -35,9 +35,9 @@ async def oauth_callback(payload: OAuthCallbackBody):
 
     if not user:
         user = core.register_user_from_profile(profile, scope)
-        logger.info(f"Registered `{user['name']}` from `{scope}`")
+        logger.info(f'Registered `{user.name}` from `{scope}`')
 
-    logger.info(f"Logged in as `{user['name']}` from `{scope}`")
+    logger.info(f'Logged in as `{user.name}` from `{scope}`')
 
     access_token = core.encode_access_token(user_id)
     response = {

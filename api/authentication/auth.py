@@ -8,6 +8,7 @@ from logger import logger
 from authentication import core
 from authentication.models import *
 from routers.users.models import User
+from utils import parse
 
 auth = APIRouter()
 
@@ -18,11 +19,11 @@ async def do_login(payload: AuthLoginBody):
     Login workflow (email + password)
     """
     user_id = core.user_id_hash(payload.email)
-    user = core.user_from_user_id(user_id)
+    user = core.user_with_password_from_user_id(user_id)
     if not user:
         raise errors.InvalidAuthentication('Invalid email or password')
 
-    user_password = bytes(user['password'], 'utf-8')
+    user_password = bytes(user.password, 'utf-8')
     if not check_password_hash(user_password, payload.password):
         raise errors.InvalidAuthentication('Invalid email or password')
 
@@ -34,7 +35,7 @@ async def do_login(payload: AuthLoginBody):
         'user': user
     }
 
-    return response
+    return parse(response)
 
 
 @auth.post('/register', response_model=AuthResponse)
@@ -64,7 +65,7 @@ async def do_register(payload: AuthRegisterBody):
         'user': user
     }
 
-    return response
+    return parse(response)
 
 
 @auth.get('/me')
@@ -72,11 +73,7 @@ async def me(user: User = Depends(logged_user)):
     """
     Return user from access token
     """
-
-    if not user:
-        raise errors.ExpiredAuthentication
-    response = {'user': user}
-    return response
+    return parse(user)
 
 
 @auth.post('/email-confirmation', response_model=AuthResponse)
@@ -86,15 +83,15 @@ async def do_email_confirmation(payload: AuthEmailConfirmBody):
     """
 
     user = core.verify_user_email(payload.activation_code)
-    access_token = core.encode_access_token(user['_id'])
+    access_token = core.encode_access_token(user.id)
 
     logger.info(f"Verified email `{user['email']}`")
 
     response = {
         'accessToken': access_token,
         'user': {
-            **user,
+            **user.mongo(),
             'is_verified': True
         }
     }
-    return response
+    return parse(response)

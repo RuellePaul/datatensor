@@ -1,5 +1,6 @@
+import typing
 from datetime import datetime
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from pydantic import BaseModel, Field
 from utils import MongoModel
@@ -9,7 +10,7 @@ from authentication.models import Scope
 
 class User(MongoModel):
     id: str = Field(alias='_id')
-    email: str = None
+    email: Optional[str] = None  # github oauth users doesn't have an email
     name: str
     created_at: datetime
     is_verified: bool
@@ -21,6 +22,10 @@ class User(MongoModel):
     country: Optional[str] = None
     city: Optional[str] = None
     is_public: Optional[bool] = True
+
+
+class UserWithPassword(User):
+    password: Any
 
 
 class UsersResponse(BaseModel):
