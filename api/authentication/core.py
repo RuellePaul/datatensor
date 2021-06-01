@@ -188,8 +188,11 @@ def register_user_from_profile(profile, scope):
 
 
 def check_captcha(captcha):
+    if captcha == 'test' and Config.ENVIRONMENT == 'development':
+        return
+
     if not captcha:
-        raise errors.Forbidden('Invalid captcha')
+        raise errors.Forbidden('Missing catpcha')
     url = 'https://www.google.com/recaptcha/api/siteverify'
     data = {
         'secret': Config.GOOGLE_CAPTCHA_SECRET_KEY,
@@ -237,3 +240,7 @@ def verify_user_email(activation_code):
                                  {'$set': {'is_verified': True, 'activation_code': None}})
 
     return user
+
+
+def unregister_user(user_id):
+    db.users.delete_one({'_id': user_id})

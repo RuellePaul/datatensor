@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends
 from dependencies import logged_admin, logged_user
 from routers.users.core import find_users, find_user, remove_users, remove_user, update_user, update_user_password
 from routers.users.models import *
+from utils import parse
 
 users = APIRouter()
 
@@ -14,7 +15,8 @@ async def get_users(offset: int = 0, limit: int = 0):
     🔒️ Admin only
     """
     result = find_users(offset, limit)
-    return {'users': [User.from_mongo(user) for user in result]}
+    response = {'users': [User.from_mongo(user) for user in result]}
+    return parse(response)
 
 
 @users.get('/{user_id}', response_model=UserResponse)
@@ -23,7 +25,8 @@ async def get_user(user_id):
     Fetch user, given `user_id`
     """
     result = find_user(user_id)
-    return {'user': User.from_mongo(result)}
+    response = {'user': User.from_mongo(result)}
+    return parse(response)
 
 
 @users.patch('/me')

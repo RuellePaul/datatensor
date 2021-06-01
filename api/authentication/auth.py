@@ -7,6 +7,7 @@ from logger import logger
 
 from authentication import core
 from authentication.models import *
+from config import Config
 from routers.users.models import User
 from utils import parse
 
@@ -53,7 +54,10 @@ async def do_register(payload: AuthRegisterBody):
     if user:
         raise errors.Forbidden(f'User `{email}` already exists')
 
-    activation_code = core.generate_activation_code()
+    if Config.ENVIRONMENT == 'development' and payload.email == 'test@datatensor.io':
+        activation_code = 'test_activation_code'
+    else:
+        activation_code = core.generate_activation_code()
     core.send_activation_code(email, activation_code)
     user = core.register_user(user_id, payload.name, email, payload.password, activation_code)
 
@@ -66,6 +70,15 @@ async def do_register(payload: AuthRegisterBody):
     }
 
     return parse(response)
+
+
+@auth.post('/unregister')
+async def do_unregister(user: User = Depends(logged_user)):
+    """
+    Unregister logged user
+    """
+    core.unregister_user(user.id)
+    logger.info(f'Unregister user `{user.email}`')
 
 
 @auth.get('/me')
@@ -85,7 +98,7 @@ async def do_email_confirmation(payload: AuthEmailConfirmBody):
     user = core.verify_user_email(payload.activation_code)
     access_token = core.encode_access_token(user.id)
 
-    logger.info(f"Verified email `{user['email']}`")
+    logger.info(f"Verified email `{user.email}`")
 
     response = {
         'accessToken': access_token,
