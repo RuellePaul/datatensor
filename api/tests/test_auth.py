@@ -8,7 +8,7 @@ from authentication.models import AuthLoginBody, AuthRegisterBody, AuthEmailConf
 client = TestClient(app)
 
 
-class TestStringMethods(unittest.TestCase):
+class TestAuth(unittest.TestCase):
 
     def test_oauth_authorization_github(self):
         response = client.get(f'{PREFIX}/oauth/authorization/github')
