@@ -27,8 +27,6 @@ def default(value):
         return str(value)
     elif isinstance(value, BaseModel):
         return value.dict()
-    elif isinstance(value, MongoModel):
-        return value.from_mongo(value.dict())
     else:
         return json_util.default(value)
 
