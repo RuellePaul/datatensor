@@ -58,21 +58,9 @@ app.include_router(datasets,
                    prefix=f'{PREFIX}/datasets',
                    dependencies=[Depends(logged_user)],
                    tags=['datasets'])
-
-app.include_router(categories,
-                   prefix=f'{PREFIX}/datasets/<dataset_id>/categories',
-                   dependencies=[Depends(logged_user)],
-                   tags=['categories'])
-
-app.include_router(images,
-                   prefix=f'{PREFIX}/datasets/<dataset_id>/images',
-                   dependencies=[Depends(logged_user)],
-                   tags=['images'])
-
-app.include_router(pipelines,
-                   prefix=f'{PREFIX}/datasets/<dataset_id>/pipelines',
-                   dependencies=[Depends(logged_user)],
-                   tags=['pipelines'])
+datasets.include_router(categories, prefix='/{dataset_id}/categories', tags=['categories'])
+datasets.include_router(images, prefix='/{dataset_id}/images', tags=['images'])
+datasets.include_router(pipelines, prefix='/{dataset_id}/pipelines', tags=['pipelines'])
 
 app.include_router(labels,
                    prefix=f'{PREFIX}/images/<image_id>/labels',

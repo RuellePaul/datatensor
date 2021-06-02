@@ -1,41 +1,45 @@
-from fastapi import APIRouter
-from webargs import fields
-from webargs.flaskparser import use_args
+from fastapi import APIRouter, File, UploadFile
 
-from utils import build_schema, parse
-from routers.images.core import Image, find_images, find_image, remove_images, remove_image, insert_images
+from utils import parse
+from routers.images.core import find_images, find_image, remove_image, insert_images
+from routers.images.models import *
 
 images = APIRouter()
-Image = build_schema(Image)
 
 
-@images.get('/')
-@use_args({
-    'offset': fields.Int(required=False, missing=0),
-    'limit': fields.Int(required=False, missing=0)
-}, location='query')
-async def get_images(args, dataset_id=None):
-    result = find_images(dataset_id, args['offset'], args['limit'])
-    return {'images': parse(result)}
+@images.get('/', response_model=ImagesResponse)
+async def get_images(dataset_id: str, offset: int = 0, limit: int = 0):
+    """
+    Fetch paginated images list of given dataset.
+    """
+    result = find_images(dataset_id, offset, limit)
+    response = {'images': [Image.from_mongo(image) for image in result]}
+    return parse(response)
 
 
-@images.get('/{image_id}')
+@images.get('/{image_id}', response_model=ImageResponse)
 async def get_image(dataset_id, image_id):
+    """
+    Fetch given image of given dataset.
+    """
     result = find_image(dataset_id, image_id)
-    return {'image': parse(result)}
+    response = {'image': parse(result)}
+    return parse(response)
 
 
 @images.post('/')
-async def post_images(dataset_id):
-    result = insert_images(dataset_id, request.files)
-    return {'images': parse(result)}
-
-
-@images.delete('/')
-async def delete_images(dataset_id):
-    remove_images(dataset_id)
+async def post_images(dataset_id, files: List[UploadFile] = File(...)):
+    """
+    Upload a list of images.
+    """
+    result = insert_images(dataset_id, files)
+    response = {'images': [Image.from_mongo(image) for image in result]}
+    return parse(response)
 
 
 @images.delete('/{image_id}')
 async def delete_image(dataset_id, image_id):
+    """
+    Delete given image of given dataset.
+    """
     remove_image(dataset_id, image_id)
