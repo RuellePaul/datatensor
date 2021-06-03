@@ -3,7 +3,7 @@ from config import Config
 db = Config.db
 
 
-def search_datasets_by_query(query):
+def search_datasets(query):
     categories = list(db.categories.find({'$or': [{'name': {'$regex': query, '$options': 'i'}},
                                                   {'supercategory': {'$regex': query, '$options': 'i'}}]}))
     matched_datasets_ids = [category['dataset_id'] for category in categories]
@@ -14,17 +14,16 @@ def search_datasets_by_query(query):
                  {'description': {'$regex': query, '$options': 'i'}},
                  {'_id': {'$in': matched_datasets_ids}}]}
     ))
-
     return datasets_matched
 
 
-def search_images_by_query(query):
+def search_images(query):
     images = list(db.images.find({'name': {'$regex': query, '$options': 'i'}},
                                  {'name': 1}))
     return images
 
 
-def search_users_by_query(query):
+def search_users(query):
     users = list(db.users.find(
         {'$or': [{'email': {'$regex': query, '$options': 'i'}},
                  {'name': {'$regex': query, '$options': 'i'}}]},
@@ -32,7 +31,7 @@ def search_users_by_query(query):
     return users
 
 
-def search_categories_by_query(query):
+def search_categories(query):
     categories = list(db.categories.find(
         {'$or': [{'name': {'$regex': query, '$options': 'i'}},
                  {'supercategory': {'$regex': query, '$options': 'i'}}]},

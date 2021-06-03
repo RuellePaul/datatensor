@@ -20,6 +20,7 @@ from routers.labels.labels import labels
 from routers.notifications.notifications import notifications
 from routers.tasks.tasks import tasks
 from routers.users.users import users
+from search.search import search
 
 app = FastAPI()
 
@@ -53,6 +54,10 @@ app.include_router(datasources, prefix=f'{PREFIX}/datasources',
 # Notifications
 app.include_router(notifications, prefix=f'{PREFIX}/notifications',
                    dependencies=[Depends(logged_user)], tags=['notifications'])
+
+# Search
+app.include_router(search, prefix=f'{PREFIX}/search',
+                   dependencies=[Depends(logged_user)], tags=['search'])
 
 # Datasets
 app.include_router(datasets, prefix=f'{PREFIX}/datasets',
