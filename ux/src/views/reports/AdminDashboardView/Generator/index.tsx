@@ -97,7 +97,8 @@ const Generator: FC = () => {
                 onSubmit={async (values, {
                     setErrors,
                     setStatus,
-                    setSubmitting
+                    setSubmitting,
+                    resetForm
                 }) => {
                     try {
                         const response = await api.post<{ task: Task }>('/tasks/', {
@@ -105,6 +106,7 @@ const Generator: FC = () => {
                             properties: values
                         });
                         saveTasks(tasks => [...tasks, response.data.task]);
+                        resetForm();
 
                         if (isMountedRef.current) {
                             setStatus({success: true});
@@ -164,6 +166,7 @@ const Generator: FC = () => {
                                 onChange={event => {
                                     handleDatasourceChange(event.target.value);
                                     setFieldValue('datasource_key', event.target.value);
+                                    setFieldValue('selected_categories', []);
                                 }}
                                 value={values.datasource_key}
                                 variant="standard"
@@ -202,6 +205,7 @@ const Generator: FC = () => {
                                         <Box display='flex' alignItems='center' mt={1} mb={2}>
                                             <FormControl fullWidth>
                                                 <Select
+                                                    error={Boolean(errors.selected_categories)}
                                                     multiple
                                                     value={values.selected_categories}
                                                     onChange={event => setFieldValue('selected_categories', event.target.value as string[])}
@@ -209,11 +213,13 @@ const Generator: FC = () => {
                                                     variant='filled'
                                                     SelectDisplayProps={{style: {padding: 10}}}
                                                 >
-                                                    {eligibleCategories.map(category => (
-                                                        <MenuItem value={category.name} key={category.name}>
-                                                            {capitalize(category.name)} ({category.labels_count})
-                                                        </MenuItem>
-                                                    ))}
+                                                    {eligibleCategories
+                                                        .sort((a, b) => a.labels_count > b.labels_count ? -1 : 1)
+                                                        .map(category => (
+                                                            <MenuItem value={category.name} key={category.name}>
+                                                                {capitalize(category.name)} ({category.labels_count})
+                                                            </MenuItem>
+                                                        ))}
                                                 </Select>
                                             </FormControl>
                                             <Button
