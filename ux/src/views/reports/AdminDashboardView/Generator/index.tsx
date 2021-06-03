@@ -83,8 +83,7 @@ const Generator: FC = () => {
                 initialValues={{
                     datasource_key: '',
                     selected_categories: [],
-                    image_count: 100,
-                    submit: null
+                    image_count: 100
                 }}
                 validationSchema={Yup.object().shape({
                     datasource_key: Yup.string().required(),
@@ -95,7 +94,6 @@ const Generator: FC = () => {
                     })
                 })}
                 onSubmit={async (values, {
-                    setErrors,
                     setStatus,
                     setSubmitting,
                     resetForm
@@ -117,7 +115,6 @@ const Generator: FC = () => {
                         console.error(error);
                         if (isMountedRef.current) {
                             setStatus({success: false});
-                            setErrors({submit: error.message});
                             setSubmitting(false);
                             enqueueSnackbar(error.message, {variant: 'error'});
                         }
@@ -247,7 +244,7 @@ const Generator: FC = () => {
                                                         {eligibleCategories
                                                             .filter(category => values.selected_categories.includes(category.name))
                                                             .map(category => category.labels_count)
-                                                            .reduce((acc, val) => acc + val, 0)} images available.
+                                                            .reduce((acc, val) => acc + val, 0)} labels available.
                                                     </Typography>
                                                 </Box>
                                             </>

@@ -21,3 +21,6 @@ def get_datasources():
 def get_categories(args):
     result = find_categories(args['datasource_key'])
     return {'categories': parse(result)}, 200
+
+
+# TODO : image count query
