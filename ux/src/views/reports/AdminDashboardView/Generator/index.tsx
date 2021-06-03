@@ -53,7 +53,7 @@ const Generator: FC = () => {
 
     const [eligibleCategories, setEligibleCategories] = useState<Category[] | null>([]);
 
-    const [maxImageCount, setMaxImageCount] = useState<number>(0);
+    const [maxImageCount, setMaxImageCount] = useState<number>(null);
 
     const fetchDatasources = useCallback(async () => {
         try {
@@ -72,6 +72,7 @@ const Generator: FC = () => {
     };
 
     const handleSelectedCategoriesChange = async (datasource_key, selected_categories) => {
+        setMaxImageCount(null);
         const response = await api.post<{ max_image_count: number }>(`/datasources/max-image-count`, {
             datasource_key,
             selected_categories: selected_categories
@@ -216,8 +217,10 @@ const Generator: FC = () => {
                                                     multiple
                                                     value={values.selected_categories}
                                                     onChange={event => {
-                                                        handleSelectedCategoriesChange(values.datasource_key, event.target.value as string[]);
                                                         setFieldValue('selected_categories', event.target.value as string[])
+                                                    }}
+                                                    MenuProps={{
+                                                        onExited: () => handleSelectedCategoriesChange(values.datasource_key, values.selected_categories)
                                                     }}
                                                     renderValue={(selected: string[]) => selected.map((value) => capitalize(value)).join(', ')}
                                                     variant='filled'
@@ -255,16 +258,26 @@ const Generator: FC = () => {
                                                     value={values.image_count}
                                                     size='small'
                                                 />
-                                                <Box mt={1}>
-                                                    <Typography color='textSecondary' gutterBottom>
-                                                        {maxImageCount} images available (
+                                                {maxImageCount === null
+                                                    ? (
+                                                        <Box mt={1}>
+                                                            <Typography color='textSecondary' gutterBottom>
+                                                                Searching available images...
+                                                            </Typography>
+                                                            <LinearProgress variant='query'/>
+                                                        </Box>
+                                                    ) : (
+                                                        <Box mt={1}>
+                                                            <Typography color='textSecondary' gutterBottom>
+                                                                {maxImageCount} images available (
 
-                                                        {eligibleCategories
-                                                            .filter(category => values.selected_categories.includes(category.name))
-                                                            .map(category => category.labels_count)
-                                                            .reduce((acc, val) => acc + val, 0)} labels).
-                                                    </Typography>
-                                                </Box>
+                                                                {eligibleCategories
+                                                                    .filter(category => values.selected_categories.includes(category.name))
+                                                                    .map(category => category.labels_count)
+                                                                    .reduce((acc, val) => acc + val, 0)} labels).
+                                                            </Typography>
+                                                        </Box>
+                                                    )}
                                             </>
                                         )}
                                     </>

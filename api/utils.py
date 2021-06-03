@@ -37,3 +37,18 @@ def build_schema(schema):
         return schema(only=only, partial=partial, context={'request': request})
 
     return handler
+
+
+def filter_annotations(json_remote_dataset, selected_categories, image_count=None):
+    categories_remote = [category for category in json_remote_dataset['categories']
+                         if category['name'] in selected_categories]
+    category_ids = [category['id'] for category in categories_remote]
+
+    labels_remote = [label for label in json_remote_dataset['annotations']
+                     if label['category_id'] in category_ids]
+    label_ids = [label['image_id'] for label in labels_remote]
+
+    images_remote = [image for image in json_remote_dataset['images'] if image['id'] in label_ids]
+    if image_count:
+        images_remote = images_remote[:image_count]
+    return images_remote, categories_remote, labels_remote

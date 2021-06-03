@@ -166,7 +166,7 @@ const columns: GridColDef[] = [
                     <Box minWidth={35}>
                         <Typography
                             variant="body2"
-                            color="textSecondary">{`${(100 * params.row.progress).toFixed(2)}%`}
+                            color="textSecondary">{`${(100 * params.row.progress).toFixed()}%`}
                         </Typography>
                     </Box>
                 </>
