@@ -1,17 +1,7 @@
-from marshmallow import Schema
-from webargs import fields
-
 import errors
 from config import Config
 
 db = Config.db
-
-
-class Category(Schema):
-    _id = fields.Str(dump_only=True)
-    dataset_id = fields.Str(dump_only=True)
-    name = fields.Str(required=True)
-    supercategory = fields.Str(allow_none=True)
 
 
 def find_categories(dataset_id, offset, limit):
@@ -24,15 +14,10 @@ def find_category(dataset_id, category_id):
 
 
 def insert_category(dataset_id, category):
-    name = category['name']
-    if db.categories.find_one({'dataset_id': dataset_id, 'name': name}):
-        raise errors.Forbidden(f'Category {name} already exists')
-    inserted_id = db.categories.insert_one({'dataset_id': dataset_id, **category}).inserted_id
+    if db.categories.find_one({'dataset_id': dataset_id, 'name': category.name}):
+        raise errors.Forbidden(f'Category {category.name} already exists')
+    inserted_id = db.categories.insert_one({'dataset_id': dataset_id, **category.dict()}).inserted_id
     return inserted_id
-
-
-def remove_categories(dataset_id):
-    db.categories.delete_many({'dataset_id': dataset_id})
 
 
 def remove_category(dataset_id, category_id):

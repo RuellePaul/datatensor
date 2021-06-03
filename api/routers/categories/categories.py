@@ -1,43 +1,45 @@
 from fastapi import APIRouter
-from webargs import fields
-from webargs.flaskparser import use_args
 
-from utils import build_schema, parse
-from routers.categories.core import Category, find_categories, find_category, remove_categories, remove_category, insert_category
+from routers.categories.core import find_categories, find_category, remove_category, insert_category
+from routers.categories.models import *
+from utils import parse
 
 categories = APIRouter()
-Category = build_schema(Category)
 
 
-@categories.get('/')
-@use_args({
-    'offset': fields.Int(required=False, missing=0),
-    'limit': fields.Int(required=False, missing=0)
-}, location='query')
-async def get_categories(args, dataset_id):
-    result = find_categories(dataset_id, args['offset'], args['limit'])
-    return {'categories': parse(result)}
+@categories.get('/', response_model=CategoriesResponse)
+async def get_categories(dataset_id, offset: int = 0, limit: int = 0):
+    """
+    Fetch paginated categories list of given dataset.
+    """
+    result = find_categories(dataset_id, offset, limit)
+    response = {'categories': parse(result)}
+    return parse(response)
 
 
-@categories.get('/{category_id}')
+@categories.get('/{category_id}', response_model=CategoryResponse)
 async def get_category(dataset_id, category_id):
+    """
+    Fetch given category of given dataset.
+    """
     result = find_category(dataset_id, category_id)
-    return {'category': parse(result)}
+    response = {'category': parse(result)}
+    return parse(response)
 
 
 @categories.post('/')
-@use_args(Category)
-async def post_category(args, dataset_id):
-    inserted_id = insert_category(dataset_id, args)
-    result = {'_id': inserted_id, **args}
+async def post_category(category: CategoryPostBody, dataset_id):
+    """
+    Create a new category on given dataset.
+    """
+    inserted_id = insert_category(dataset_id, category)
+    result = {'_id': inserted_id, **category.dict()}
     return {'category': parse(result)}
-
-
-@categories.delete('/')
-async def delete_categories(dataset_id):
-    remove_categories(dataset_id)
 
 
 @categories.delete('/{category_id}')
 async def delete_category(dataset_id, category_id):
+    """
+    Delete given category of given dataset.
+    """
     remove_category(dataset_id, category_id)
