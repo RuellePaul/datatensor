@@ -4,7 +4,6 @@ from uuid import uuid4
 import boto3
 import cv2
 import numpy
-from bson.objectid import ObjectId
 from marshmallow import Schema
 from webargs import fields
 from werkzeug.utils import secure_filename
@@ -107,7 +106,7 @@ def insert_images(dataset_id, request_files):
         db.images.insert_many(images)
         db.datasets.update_one(
             {
-                '_id': ObjectId(dataset_id)
+                '_id': dataset_id
             },
             {
                 '$inc': {
@@ -129,7 +128,7 @@ def remove_image(dataset_id, image_id):
                           'dataset_id': dataset_id})
     db.datasets.update_one(
         {
-            '_id': ObjectId(dataset_id)
+            '_id': dataset_id
         },
         {
             '$inc': {

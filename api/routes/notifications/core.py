@@ -1,6 +1,6 @@
 from datetime import datetime
+from uuid import uuid4
 
-from bson.objectid import ObjectId
 from flask import request
 from marshmallow import Schema
 from webargs import fields
@@ -24,13 +24,14 @@ def find_notifications(offset, limit):
 
 
 def find_notification(notification_id):
-    return db.notifications.find_one({'_id': ObjectId(notification_id)})
+    return db.notifications.find_one({'_id': notification_id})
 
 
 def insert_notification(notification, user_id=None):
     if user_id is None:
         user_id = verify_access_token(request.headers['Authorization'], verified=True).get('_id')
-    db.notifications.insert_one({'user_id': user_id,
+    db.notifications.insert_one({'_id': str(uuid4()),
+                                 'user_id': user_id,
                                  'created_at': datetime.now(),
                                  **notification})
 

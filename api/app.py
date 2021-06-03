@@ -15,6 +15,7 @@ from authentication.core import require_authorization
 from authentication.oauth import oauth
 from routes.categories.categories import categories
 from routes.datasets.datasets import datasets
+from routes.datasources.datasources import datasources
 from routes.images.images import images
 from routes.labels.labels import labels
 from routes.notifications.notifications import notifications
@@ -49,6 +50,8 @@ app.register_blueprint(notifications, url_prefix=f'{PREFIX}/notifications')
 app.register_blueprint(search, url_prefix=f'{PREFIX}/search')
 
 app.register_blueprint(datasets, url_prefix=f'{PREFIX}/datasets')
+
+app.register_blueprint(datasources, url_prefix=f'{PREFIX}/datasources')
 
 app.register_blueprint(categories, url_prefix=f'{PREFIX}/datasets/<dataset_id>/categories')
 

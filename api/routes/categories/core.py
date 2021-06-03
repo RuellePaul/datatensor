@@ -1,4 +1,3 @@
-from bson.objectid import ObjectId
 from marshmallow import Schema
 from webargs import fields
 

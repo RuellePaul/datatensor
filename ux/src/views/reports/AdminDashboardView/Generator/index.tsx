@@ -1,13 +1,14 @@
-import React, {FC} from 'react';
+import React, {FC, useCallback, useEffect, useState} from 'react';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {useSnackbar} from 'notistack';
 import {
     Box,
     Button,
+    capitalize,
     FormControl,
-    Grid,
     InputLabel,
+    LinearProgress,
     makeStyles,
     MenuItem,
     Paper,
@@ -22,6 +23,8 @@ import {Theme} from 'src/theme';
 import api from 'src/utils/api';
 import useTasks from 'src/hooks/useTasks';
 import {Task} from 'src/types/task';
+import {DataSource} from 'src/types/datasource';
+import {Category} from 'src/types/category';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -30,6 +33,11 @@ const useStyles = makeStyles((theme: Theme) => ({
             padding: theme.spacing(4, 2)
         }
     },
+    button: {
+        width: 120,
+        maxHeight: 40,
+        marginLeft: theme.spacing(1)
+    }
 }));
 
 const Generator: FC = () => {
@@ -41,6 +49,42 @@ const Generator: FC = () => {
     const isMountedRef = useIsMountedRef();
     const {enqueueSnackbar} = useSnackbar();
 
+    const [datasources, setDatasources] = useState<DataSource[]>([]);
+
+    const [eligibleCategories, setEligibleCategories] = useState<Category[] | null>([]);
+
+    const [maxImageCount, setMaxImageCount] = useState<number>(null);
+
+    const fetchDatasources = useCallback(async () => {
+        try {
+            const response = await api.get<{ datasources: DataSource[] }>(`/datasources/`);
+            setDatasources(response.data.datasources);
+        } catch (err) {
+            console.error(err);
+        }
+
+    }, [setDatasources]);
+
+    const handleDatasourceChange = async (datasource_key) => {
+        setEligibleCategories(null);
+        const response = await api.get<{ categories: Category[] }>(`/datasources/categories`, {params: {datasource_key}});
+        setEligibleCategories(response.data.categories)
+    };
+
+    const handleSelectedCategoriesChange = async (datasource_key, selected_categories) => {
+        setMaxImageCount(null);
+        const response = await api.post<{ max_image_count: number }>(`/datasources/max-image-count`, {
+            datasource_key,
+            selected_categories: selected_categories
+        });
+        setMaxImageCount(response.data.max_image_count)
+    };
+
+    useEffect(() => {
+        fetchDatasources()
+    }, [fetchDatasources]);
+
+
     return (
         <Paper
             className={classes.root}
@@ -48,15 +92,22 @@ const Generator: FC = () => {
         >
             <Formik
                 initialValues={{
-                    dataset_name: 'coco',
-                    image_count: 10
+                    datasource_key: '',
+                    selected_categories: [],
+                    image_count: 100
                 }}
                 validationSchema={Yup.object().shape({
-                    image_count: Yup.number().max(40000).required(),
+                    datasource_key: Yup.string().required(),
+                    image_count: Yup.number().max(maxImageCount).required(),
+                    selected_categories: Yup.array().test({
+                        message: 'You must select at least one category',
+                        test: arr => arr.length > 0,
+                    })
                 })}
                 onSubmit={async (values, {
                     setStatus,
-                    setSubmitting
+                    setSubmitting,
+                    resetForm
                 }) => {
                     try {
                         const response = await api.post<{ task: Task }>('/tasks/', {
@@ -64,6 +115,7 @@ const Generator: FC = () => {
                             properties: values
                         });
                         saveTasks(tasks => [...tasks, response.data.task]);
+                        resetForm();
 
                         if (isMountedRef.current) {
                             setStatus({success: true});
@@ -85,6 +137,7 @@ const Generator: FC = () => {
                       handleBlur,
                       handleChange,
                       handleSubmit,
+                      setFieldValue,
                       isSubmitting,
                       touched,
                       values
@@ -108,39 +161,129 @@ const Generator: FC = () => {
                                 into a new dataset.
                             </Typography>
                         </Box>
-                        <Grid container spacing={2} justify='space-between'>
-                            <Grid item lg={12} sm={5} xs={12}>
-                                <FormControl fullWidth>
-                                    <InputLabel shrink>
-                                        Dataset name
-                                    </InputLabel>
-                                    <Select
-                                        error={Boolean(touched.dataset_name && errors.dataset_name)}
-                                        label="Dataset name"
-                                        name="dataset_name"
-                                        fullWidth
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        value={values.dataset_name}
-                                        variant="standard"
+                        <FormControl fullWidth>
+                            <InputLabel shrink>
+                                Datasource
+                            </InputLabel>
+                            <Select
+                                error={Boolean(touched.datasource_key && errors.datasource_key)}
+                                label="Datasource"
+                                name="datasource_key"
+                                fullWidth
+                                onBlur={handleBlur}
+                                onChange={event => {
+                                    handleDatasourceChange(event.target.value);
+                                    setFieldValue('datasource_key', event.target.value);
+                                    setFieldValue('selected_categories', []);
+                                }}
+                                value={values.datasource_key}
+                                variant="standard"
+                                displayEmpty
+                            >
+                                <MenuItem value='' disabled>
+                                    <em>Pickup a datasource</em>
+                                </MenuItem>
+                                {datasources.map(datasource => (
+                                    <MenuItem
+                                        key={datasource.key}
+                                        value={datasource.key}
                                     >
-                                        <MenuItem value='coco'>COCO 2014</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                            <Grid item lg={12} sm={5} xs={12}>
-                                <TextField
-                                    error={Boolean(touched.image_count && errors.image_count)}
-                                    label="Image count"
-                                    fullWidth
-                                    name="image_count"
-                                    onBlur={handleBlur}
-                                    onChange={handleChange}
-                                    value={values.image_count}
-                                    size='small'
-                                />
-                            </Grid>
-                        </Grid>
+                                        {datasource.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+
+                        {eligibleCategories === null
+                            ? (
+                                <Box mt={2}>
+                                    <Typography color='textSecondary' gutterBottom>
+                                        Searching available categories...
+                                    </Typography>
+                                    <LinearProgress variant='query'/>
+                                </Box>
+                            ) : (
+                                eligibleCategories.length > 0 && (
+                                    <>
+                                        <Box mt={2}>
+                                            <Typography color='textSecondary'>
+                                                Selected {values.selected_categories.length} / {eligibleCategories.length} categories
+                                            </Typography>
+                                        </Box>
+                                        <Box display='flex' alignItems='center' mt={1} mb={2}>
+                                            <FormControl fullWidth>
+                                                <Select
+                                                    error={Boolean(errors.selected_categories)}
+                                                    multiple
+                                                    value={values.selected_categories}
+                                                    onChange={event => {
+                                                        setFieldValue('selected_categories', event.target.value as string[])
+                                                    }}
+                                                    MenuProps={{
+                                                        onExited: () => handleSelectedCategoriesChange(values.datasource_key, values.selected_categories)
+                                                    }}
+                                                    renderValue={(selected: string[]) => selected.map((value) => capitalize(value)).join(', ')}
+                                                    variant='filled'
+                                                    SelectDisplayProps={{style: {padding: 10}}}
+                                                >
+                                                    {eligibleCategories
+                                                        .sort((a, b) => a.labels_count > b.labels_count ? -1 : 1)
+                                                        .map(category => (
+                                                            <MenuItem value={category.name} key={category.name}>
+                                                                {capitalize(category.name)} ({category.labels_count})
+                                                            </MenuItem>
+                                                        ))}
+                                                </Select>
+                                            </FormControl>
+                                            <Button
+                                                className={classes.button}
+                                                onClick={() => {
+                                                    handleSelectedCategoriesChange(values.datasource_key, eligibleCategories.map(category => category.name));
+                                                    setFieldValue('selected_categories', eligibleCategories.map(category => category.name))
+                                                }}
+                                                size='small'
+                                            >
+                                                Select all
+                                            </Button>
+                                        </Box>
+                                        {values.selected_categories?.length > 0 && (
+                                            <>
+                                                <TextField
+                                                    error={Boolean(touched.image_count && errors.image_count)}
+                                                    label="Image count"
+                                                    fullWidth
+                                                    name="image_count"
+                                                    onBlur={handleBlur}
+                                                    onChange={handleChange}
+                                                    value={values.image_count}
+                                                    size='small'
+                                                />
+                                                {maxImageCount === null
+                                                    ? (
+                                                        <Box mt={1}>
+                                                            <Typography color='textSecondary' gutterBottom>
+                                                                Searching available images...
+                                                            </Typography>
+                                                            <LinearProgress variant='query'/>
+                                                        </Box>
+                                                    ) : (
+                                                        <Box mt={1}>
+                                                            <Typography color='textSecondary' gutterBottom>
+                                                                {maxImageCount} images available (
+
+                                                                {eligibleCategories
+                                                                    .filter(category => values.selected_categories.includes(category.name))
+                                                                    .map(category => category.labels_count)
+                                                                    .reduce((acc, val) => acc + val, 0)} labels).
+                                                            </Typography>
+                                                        </Box>
+                                                    )}
+                                            </>
+                                        )}
+                                    </>
+                                )
+                            )
+                        }
                         <Box mt={2}>
                             <Button
                                 color="secondary"

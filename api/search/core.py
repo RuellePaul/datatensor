@@ -1,5 +1,4 @@
 from config import Config
-from bson.objectid import ObjectId
 
 db = Config.db
 
@@ -7,7 +6,7 @@ db = Config.db
 def search_datasets_by_query(query):
     categories = list(db.categories.find({'$or': [{'name': {'$regex': query, '$options': 'i'}},
                                                   {'supercategory': {'$regex': query, '$options': 'i'}}]}))
-    matched_datasets_ids = [ObjectId(category['dataset_id']) for category in categories]
+    matched_datasets_ids = [category['dataset_id'] for category in categories]
 
     datasets_matched = list(db.datasets.find(
         {'$or': [{'user_id': query},

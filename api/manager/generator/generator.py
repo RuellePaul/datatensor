@@ -1,42 +1,17 @@
 import concurrent.futures
 import json
 import os
-import zipfile
 from datetime import datetime
-from uuid import uuid4
 from time import sleep
+from uuid import uuid4
 
 import requests
-from bson.objectid import ObjectId
 
 import errors
 from config import Config
 from manager.task_utils import update_task, increment_task_progress
 from routes.images.core import allowed_file, upload_image, secure_filename
-
-ANNOTATIONS_CONFIG = {
-    'coco': {
-        'download_url': 'http://images.cocodataset.org/annotations/annotations_trainval2014.zip',
-        'filename': 'instances_val2014.json'
-    }
-}
-
-
-def _download_annotations(dataset_name):
-    url = ANNOTATIONS_CONFIG[dataset_name]['download_url']
-    response = requests.get(url, stream=True)
-
-    dataset_path = os.path.join(Config.DEFAULT_DATASETS_PATH, dataset_name)
-
-    zip_path = os.path.join(dataset_path, f'{dataset_name}.zip')
-    with open(zip_path, 'wb') as fd:
-        for chunk in response.iter_content(chunk_size=128):
-            fd.write(chunk)
-
-    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        zip_ref.extractall(dataset_path)
-
-    os.remove(zip_path)
+from utils import filter_annotations
 
 
 def _download_image(image_url):
@@ -49,7 +24,7 @@ def _download_image(image_url):
         return
 
 
-def process_image(args):
+def _process_image(args):
     task_id = args['task_id']
     dataset_id = args['dataset_id']
     image_remote_dataset = args['image_remote_dataset']
@@ -98,38 +73,35 @@ def process_image(args):
         Config.db.labels.insert_many(labels)
 
 
+def _generate_dataset_name(categories):
+    supercategories = list(set(category['supercategory'] for category in categories))[:4]
+    dataset_name = f"{', '.join(supercategories)}"
+    return dataset_name.title()
+
+
 def main(user_id, task_id, properties):
-    dataset_name = properties['dataset_name']
+    datasource_key = properties['datasource_key']
+    selected_categories = properties['selected_categories']
     image_count = int(properties['image_count'])
 
-    dataset_id = Config.DEFAULT_DATASET_IDS[dataset_name]
+    dataset_id = str(uuid4())
     update_task(task_id, dataset_id=dataset_id, status='active')
 
-    if Config.db.datasets.find_one({'_id': ObjectId(dataset_id)}):
-        raise errors.Forbidden(f'Dataset {dataset_name} is already built')
+    if Config.db.datasets.find_one({'_id': dataset_id}):
+        raise errors.Forbidden(f'Dataset {dataset_id} is already built')
 
-    if not os.path.exists(Config.DEFAULT_DATASETS_PATH):
-        os.mkdir(Config.DEFAULT_DATASETS_PATH)
+    datasource = [datasource for datasource in Config.DATASOURCES if datasource['key'] == datasource_key][0]
+    # TODO : use multiple filenames
+    filename = datasource['filenames'][0]
 
-    dataset_path = os.path.join(Config.DEFAULT_DATASETS_PATH, dataset_name)
-    if not os.path.exists(dataset_path):
-        os.mkdir(dataset_path)
-
-    try:
-        annotations_path = os.path.join(dataset_path, 'annotations')
-        if not os.path.exists(annotations_path):
-            _download_annotations(dataset_name)
-    except Exception as e:
-        raise errors.InternalError(f'download of {dataset_name} failed, {str(e)}')
-
-    json_file = open(os.path.join(annotations_path, ANNOTATIONS_CONFIG[dataset_name]['filename']), 'r')
+    annotations_path = os.path.join(Config.DATASOURCES_PATH, datasource_key, 'annotations')
+    json_file = open(os.path.join(annotations_path, filename), 'r')
     json_remote_dataset = json.load(json_file)
-
     json_file.close()
 
-    images_remote_dataset = json_remote_dataset['images'][:image_count]
-    categories_remote_dataset = json_remote_dataset['categories']
-    labels_remote_dataset = json_remote_dataset['annotations']
+    images_remote_dataset, categories_remote_dataset, labels_remote_dataset = filter_annotations(json_remote_dataset,
+                                                                                                  selected_categories,
+                                                                                                  image_count)
     del json_remote_dataset
 
     categories = [{
@@ -140,11 +112,11 @@ def main(user_id, task_id, properties):
         'supercategory': category['supercategory']
     } for category in categories_remote_dataset]
 
-    dataset = dict(_id=ObjectId(dataset_id),
+    dataset = dict(_id=dataset_id,
                    user_id=user_id,
                    created_at=datetime.now().isoformat(),
-                   name='COCO 2014',
-                   description=f"Official COCO dataset, with {len(categories)} categories.",
+                   name=_generate_dataset_name(categories),
+                   description=f"Generated with {len(categories)} categories, from {datasource['name']}",
                    image_count=image_count,
                    is_public=True)
 
@@ -157,7 +129,7 @@ def main(user_id, task_id, properties):
     } for category in categories])
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
-        executor.map(process_image,
+        executor.map(_process_image,
                      ({'task_id': task_id,
                        'dataset_id': dataset_id,
                        'image_remote_dataset': image,
@@ -167,8 +139,8 @@ def main(user_id, task_id, properties):
                        'categories': categories}
                       for image in images_remote_dataset))
 
-        update_task(task_id, progress=1)
-        sleep(2)
-        image_count = len(list(Config.db.images.find({'dataset_id': dataset_id})))
-        Config.db.datasets.find_one_and_update({'_id': ObjectId(dataset_id)}, {'$set': {'image_count': image_count}})
+    update_task(task_id, progress=1)
+    sleep(2)
+    image_count = len(list(Config.db.images.find({'dataset_id': dataset_id})))
+    Config.db.datasets.find_one_and_update({'_id': dataset_id}, {'$set': {'image_count': image_count}})
     return

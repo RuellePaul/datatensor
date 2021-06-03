@@ -1,7 +1,7 @@
 import concurrent.futures
 from datetime import datetime
+from uuid import uuid4
 
-from bson.objectid import ObjectId
 from flask import request
 from marshmallow import Schema
 from webargs import fields
@@ -25,12 +25,13 @@ def find_datasets(offset, limit):
 
 
 def find_dataset(dataset_id):
-    return db.datasets.find_one({'_id': ObjectId(dataset_id)})
+    return db.datasets.find_one({'_id': dataset_id})
 
 
 def insert_dataset(dataset):
     user_id = verify_access_token(request.headers['Authorization'], verified=True).get('_id')
-    db.datasets.insert_one({'user_id': user_id,
+    db.datasets.insert_one({'_id': str(uuid4()),
+                            'user_id': user_id,
                             'created_at': datetime.now(),
                             'image_count': 0,
                             **dataset})
@@ -49,4 +50,4 @@ def remove_dataset(dataset_id):
         Config.db.images.delete_many({'dataset_id': dataset_id})
 
     Config.db.categories.delete_many({'dataset_id': dataset_id})
-    db.datasets.delete_one({'_id': ObjectId(dataset_id), 'user_id': user_id})
+    db.datasets.delete_one({'_id': dataset_id, 'user_id': user_id})

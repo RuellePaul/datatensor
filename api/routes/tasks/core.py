@@ -49,6 +49,7 @@ def insert_task(dataset_id, task_type, properties):
     _check_user_allowed_to_create_task(user, dataset_id, task_type)
 
     task = dict(
+        _id=str(uuid4()),
         user_id=user['_id'],
         dataset_id=dataset_id,
         type=task_type,
