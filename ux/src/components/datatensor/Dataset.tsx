@@ -111,7 +111,7 @@ const DTDataset: FC<DatasetProps> = ({
 
                         <PhotoLibrary/>
                         <Box width={2}/>
-                        <Typography variant='overline'>
+                        <Typography variant='overline' noWrap>
                             {dataset.image_count} (+0)
                         </Typography>
                         <Box width={12}/>

@@ -1,5 +1,4 @@
 import React, {FC, useState} from 'react';
-import {Link as RouterLink} from 'react-router-dom';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {useSnackbar} from 'notistack';
 import {
@@ -9,7 +8,6 @@ import {
     Drawer,
     IconButton,
     InputAdornment,
-    Link,
     makeStyles,
     SvgIcon,
     TextField,
@@ -19,9 +17,11 @@ import {
 import {Search as SearchIcon, XCircle as XIcon} from 'react-feather';
 import api from 'src/utils/api';
 
-interface Result {
-    description: string;
-    title: string;
+interface SearchResult {
+    datasets: object;
+    images: object;
+    users: object;
+    categories: object;
 }
 
 const useStyles = makeStyles(() => ({
@@ -37,7 +37,7 @@ const Search: FC = () => {
     const [value, setValue] = useState<string>('');
     const [isOpen, setOpen] = useState<boolean>(false);
     const [isLoading, setLoading] = useState<boolean>(false);
-    const [results, setResults] = useState<Result[]>([]);
+    const [result, setResult] = useState<SearchResult | null>(null);
 
     const handleOpen = (): void => {
         setOpen(true);
@@ -51,12 +51,10 @@ const Search: FC = () => {
         try {
             setLoading(true);
 
-            const response = await api.get<{ results: Result[]; }>('/api/search', {params: {query: value}});
-
-            setResults(response.data.results);
-        } catch (err) {
-            console.error(err);
-            enqueueSnackbar('Something went wrong', {
+            const response = await api.get<{ result: SearchResult; }>('/search/', {params: {query: value}});
+            setResult(response.data.result);
+        } catch (error) {
+            enqueueSnackbar(error?.message || 'Something went wrong', {
                 variant: 'error'
             });
         } finally {
@@ -146,29 +144,9 @@ const Search: FC = () => {
                                     <CircularProgress/>
                                 </Box>
                             ) : (
-                                <>
-                                    {results.map((result, i) => (
-                                        <Box
-                                            key={i}
-                                            mb={2}
-                                        >
-                                            <Link
-                                                variant="h4"
-                                                color="textPrimary"
-                                                component={RouterLink}
-                                                to="/app"
-                                            >
-                                                {result.title}
-                                            </Link>
-                                            <Typography
-                                                variant="body2"
-                                                color="textPrimary"
-                                            >
-                                                {result.description}
-                                            </Typography>
-                                        </Box>
-                                    ))}
-                                </>
+                                <pre>
+                                    {JSON.stringify(result, null, 4)}
+                                </pre>
                             )}
                         </Box>
                     </Box>

@@ -1,5 +1,5 @@
 from datetime import datetime
-
+from uuid import uuid4
 from marshmallow import Schema
 from webargs import fields
 
@@ -25,14 +25,13 @@ def find_notification(notification_id):
     return db.notifications.find_one({'_id': notification_id})
 
 
-def insert_notification(notification, user_id=None):
-    if user_id is None:
-        user_id = verify_access_token(verified=True).get('_id')
-    db.notifications.insert_one({'user_id': user_id,
+def insert_notification(notification, user_id):
+    db.notifications.insert_one({'_id': str(uuid4()),
+                                 'user_id': user_id,
                                  'created_at': datetime.now(),
                                  **notification})
 
 
-def remove_notification(notification_id):
+def remove_notifications():
     user_id = verify_access_token().get('_id')
-    db.notifications.delete_one({'_id': notification_id, 'user_id': user_id})
+    db.notifications.delete_many({'user_id': user_id})

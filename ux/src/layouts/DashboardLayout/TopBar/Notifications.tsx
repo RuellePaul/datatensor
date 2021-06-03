@@ -1,5 +1,6 @@
 import React, {FC, useEffect, useRef, useState} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
+import {useSnackbar} from 'notistack';
 import moment from 'moment';
 import clsx from 'clsx';
 import {
@@ -21,7 +22,7 @@ import {Done, Warning} from '@material-ui/icons';
 import {Bell as BellIcon} from 'react-feather';
 import {Theme} from 'src/theme';
 import {useDispatch, useSelector} from 'src/store';
-import {getNotifications} from 'src/slices/notification';
+import {getNotifications, deleteNotifications} from 'src/slices/notification';
 
 const titlesMap = {
     TASK_SUCCEED: 'Generator succeeded',
@@ -56,6 +57,7 @@ const Notifications: FC = () => {
     const ref = useRef<any>(null);
     const dispatch = useDispatch();
     const [isOpen, setOpen] = useState<boolean>(false);
+    const {enqueueSnackbar} = useSnackbar();
 
     const handleOpen = (): void => {
         setOpen(true);
@@ -63,6 +65,14 @@ const Notifications: FC = () => {
 
     const handleClose = (): void => {
         setOpen(false);
+    };
+
+    const handleDeleteNotifications = async () => {
+        try {
+            dispatch(deleteNotifications());
+        } catch (error) {
+            enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
+        }
     };
 
     useEffect(() => {
@@ -158,9 +168,8 @@ const Notifications: FC = () => {
                             justifyContent="center"
                         >
                             <Button
-                                component={RouterLink}
                                 size="small"
-                                to="#"
+                                onClick={handleDeleteNotifications}
                             >
                                 Mark all as read
                             </Button>
