@@ -63,7 +63,7 @@ datasets.include_router(images, prefix='/{dataset_id}/images', tags=['images'])
 datasets.include_router(pipelines, prefix='/{dataset_id}/pipelines', tags=['pipelines'])
 
 app.include_router(labels,
-                   prefix=f'{PREFIX}/images/<image_id>/labels',
+                   prefix=f'{PREFIX}/images/{{image_id}}/labels',
                    dependencies=[Depends(logged_user)],
                    tags=['labels'])
 

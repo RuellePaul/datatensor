@@ -21,16 +21,7 @@ def find_label(image_id, label_id):
                                'image_id': image_id})
 
 
-def insert_labels(image_id, labels):
+def replace_labels(image_id, labels):
     db.labels.delete_many({'image_id': image_id})
     if labels:
-        db.labels.insert_many([{**label, 'image_id': image_id} for label in labels])
-
-
-def remove_labels(image_id):
-    db.labels.delete_many({'image_id': image_id})
-
-
-def remove_label(image_id, label_id):
-    db.labels.delete_one({'_id': label_id,
-                          'image_id': image_id})
+        db.labels.insert_many([{**label.dict(), 'image_id': image_id} for label in labels])

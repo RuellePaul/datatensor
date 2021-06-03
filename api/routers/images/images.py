@@ -1,8 +1,8 @@
 from fastapi import APIRouter, File, UploadFile
 
-from utils import parse
 from routers.images.core import find_images, find_image, remove_image, insert_images
 from routers.images.models import *
+from utils import parse
 
 images = APIRouter()
 

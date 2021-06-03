@@ -1,41 +1,35 @@
 from fastapi import APIRouter
-from webargs import fields
-from webargs.flaskparser import use_args
 
-from routers.labels.core import find_labels, find_label, remove_labels, remove_label, insert_labels
+from routers.labels.core import find_labels, find_label, replace_labels
+from routers.labels.models import *
+from utils import parse
 
 labels = APIRouter()
 
 
-@labels.get('/')
-@use_args({
-    'offset': fields.Int(required=False, missing=0),
-    'limit': fields.Int(required=False, missing=0)
-}, location='query')
-async def get_labels(args, image_id):
-    result = find_labels(image_id, args['offset'], args['limit'])
-    return {'labels': parse(result)}
+@labels.get('/', response_model=LabelsResponse)
+async def get_labels(image_id, offset: int = 0, limit: int = 0):
+    """
+    Fetch paginated labels list of given image.
+    """
+    result = find_labels(image_id, offset, limit)
+    response = {'labels': parse(result)}
+    return parse(response)
 
 
-@labels.get('/{label_id}')
+@labels.get('/{label_id}', response_model=LabelResponse)
 async def get_label(image_id, label_id):
+    """
+    Fetch given label of given image.
+    """
     result = find_label(image_id, label_id)
-    return {'label': parse(result)}
+    response = {'label': parse(result)}
+    return parse(response)
 
 
 @labels.post('/')
-@use_args({
-    'labels': fields.List(fields.Dict(), required=True)
-})
-async def post_labels(args, image_id):
-    insert_labels(image_id, args['labels'])
-
-
-@labels.delete('/')
-async def delete_labels(image_id):
-    remove_labels(image_id)
-
-
-@labels.delete('/{label_id}')
-async def delete_label(image_id, label_id):
-    remove_label(image_id, label_id)
+async def post_labels(image_id, payload: LabelPostBody):
+    """
+    Replace labels to a given image.
+    """
+    replace_labels(image_id, payload.labels)
