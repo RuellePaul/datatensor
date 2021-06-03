@@ -53,6 +53,8 @@ const Generator: FC = () => {
 
     const [eligibleCategories, setEligibleCategories] = useState<Category[] | null>([]);
 
+    const [maxImageCount, setMaxImageCount] = useState<number>(0);
+
     const fetchDatasources = useCallback(async () => {
         try {
             const response = await api.get<{ datasources: DataSource[] }>(`/datasources/`);
@@ -67,6 +69,14 @@ const Generator: FC = () => {
         setEligibleCategories(null);
         const response = await api.get<{ categories: Category[] }>(`/datasources/categories`, {params: {datasource_key}});
         setEligibleCategories(response.data.categories)
+    };
+
+    const handleSelectedCategoriesChange = async (datasource_key, selected_categories) => {
+        const response = await api.post<{ max_image_count: number }>(`/datasources/max-image-count`, {
+            datasource_key,
+            selected_categories: selected_categories
+        });
+        setMaxImageCount(response.data.max_image_count)
     };
 
     useEffect(() => {
@@ -87,7 +97,7 @@ const Generator: FC = () => {
                 }}
                 validationSchema={Yup.object().shape({
                     datasource_key: Yup.string().required(),
-                    image_count: Yup.number().max(100000).required(),
+                    image_count: Yup.number().max(maxImageCount).required(),
                     selected_categories: Yup.array().test({
                         message: 'You must select at least one category',
                         test: arr => arr.length > 0,
@@ -205,7 +215,10 @@ const Generator: FC = () => {
                                                     error={Boolean(errors.selected_categories)}
                                                     multiple
                                                     value={values.selected_categories}
-                                                    onChange={event => setFieldValue('selected_categories', event.target.value as string[])}
+                                                    onChange={event => {
+                                                        handleSelectedCategoriesChange(values.datasource_key, event.target.value as string[]);
+                                                        setFieldValue('selected_categories', event.target.value as string[])
+                                                    }}
                                                     renderValue={(selected: string[]) => selected.map((value) => capitalize(value)).join(', ')}
                                                     variant='filled'
                                                     SelectDisplayProps={{style: {padding: 10}}}
@@ -221,7 +234,10 @@ const Generator: FC = () => {
                                             </FormControl>
                                             <Button
                                                 className={classes.button}
-                                                onClick={() => setFieldValue('selected_categories', eligibleCategories.map(category => category.name))}
+                                                onClick={() => {
+                                                    handleSelectedCategoriesChange(values.datasource_key, eligibleCategories.map(category => category.name));
+                                                    setFieldValue('selected_categories', eligibleCategories.map(category => category.name))
+                                                }}
                                                 size='small'
                                             >
                                                 Select all
@@ -241,10 +257,12 @@ const Generator: FC = () => {
                                                 />
                                                 <Box mt={1}>
                                                     <Typography color='textSecondary' gutterBottom>
+                                                        {maxImageCount} images available (
+
                                                         {eligibleCategories
                                                             .filter(category => values.selected_categories.includes(category.name))
                                                             .map(category => category.labels_count)
-                                                            .reduce((acc, val) => acc + val, 0)} labels available.
+                                                            .reduce((acc, val) => acc + val, 0)} labels).
                                                     </Typography>
                                                 </Box>
                                             </>

@@ -23,11 +23,11 @@ def get_categories(args):
     return {'categories': parse(result)}, 200
 
 
-@datasources.route('/max-image-count')
+@datasources.route('/max-image-count', methods=['POST'])
 @use_args({
     'datasource_key': fields.Str(required=True),
     'selected_categories': fields.List(fields.Str(), required=True)
-}, location='query')
-def get_image_count(args):
+})
+def post_image_count(args):
     result = find_max_image_count(args['datasource_key'], args['selected_categories'])
     return {'max_image_count': parse(result)}, 200
