@@ -29,9 +29,9 @@ const slice = createSlice({
 export const reducer = slice.reducer;
 
 export const getNotifications = (): AppThunk => async (dispatch) => {
-    // const response = await api.get<{ notifications: Notification[]; }>('/notifications/');
+    const response = await api.get<{ notifications: Notification[]; }>('/notifications/');
 
-    // dispatch(slice.actions.getNotifications(response.data));
+    dispatch(slice.actions.getNotifications(response.data));
 };
 
 export const deleteNotifications = (): AppThunk => async (dispatch) => {

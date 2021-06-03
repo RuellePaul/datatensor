@@ -1,36 +1,27 @@
-from fastapi import APIRouter
-from webargs import fields
-from webargs.flaskparser import use_args
+from fastapi import APIRouter, Depends
 
-from utils import build_schema, parse
-from routers.notifications.core import Notification, find_notifications, find_notification, insert_notification
+from dependencies import logged_user
+from routers.notifications.core import find_notifications, remove_notifications
+from routers.notifications.models import *
+from routers.users.models import User
+from utils import parse
 
 notifications = APIRouter()
-Notification = build_schema(Notification)
 
 
-@notifications.get('/')
-@use_args({
-    'offset': fields.Int(required=False, missing=0),
-    'limit': fields.Int(required=False, missing=0)
-}, location='query')
-async def get_notifications(args):
-    result = find_notifications(args['offset'], args['limit'])
-    return {'notifications': parse(result)}
+@notifications.get('/', response_model=NotificationsResponse)
+async def get_notifications(user: User = Depends(logged_user), count: int = 0, limit: int = 0):
+    """
+    Fetch paginated notifications list of logged user
+    """
+    result = find_notifications(user.id, count, limit)
+    response = {'notifications': parse(result)}
+    return parse(response)
 
 
-@notifications.get('/{notification_id}')
-async def get_notification(notification_id):
-    result = find_notification(notification_id)
-    return {'notification': parse(result)}
-
-
-@notifications.post('/')
-@use_args(Notification)
-async def post_notification(args):
-    insert_notification(args)
-
-
-# @notifications.delete('/{notification_id}')
-# async def delete_notification(notification_id):
-#     remove_notification(notification_id)
+@notifications.delete('/')
+async def delete_notifications(user: User = Depends(logged_user)):
+    """
+    Fetch notifications of logged user
+    """
+    remove_notifications(user.id)

@@ -35,16 +35,6 @@ def parse(data):
     return json.loads(json.dumps(data, default=default))
 
 
-def build_schema(schema):
-    def handler(request):
-        fields = request.args.get('fields', None)
-        only = fields.split(',') if fields else None
-        partial = request.method == 'PATCH'
-        return schema(only=only, partial=partial, context={'request': request})
-
-    return handler
-
-
 class OID(str):
     @classmethod
     def __get_validators__(cls):
