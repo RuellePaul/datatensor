@@ -1,33 +1,40 @@
-from flask import Blueprint
-from webargs import fields
-from webargs.flaskparser import use_args
+from fastapi import APIRouter
 
-from utils import parse
 from routers.datasources.core import find_datasources, find_categories, find_max_image_count
+from routers.datasources.models import *
+from utils import parse
 
-datasources = Blueprint('datasources', __name__)
+datasources = APIRouter()
 
 
-@datasources.route('/')
+@datasources.get('/', response_model=DatasourcesResponse)
 def get_datasources():
+    """
+    Fetch list of datasources.
+    🔒️ Admin only
+    """
     result = find_datasources()
-    return {'datasources': parse(result)}, 200
+    response = {'datasources': parse(result)}
+    return parse(response)
 
 
-@datasources.route('/categories')
-@use_args({
-    'datasource_key': fields.Str(required=True),
-}, location='query')
-def get_categories(args):
-    result = find_categories(args['datasource_key'])
-    return {'categories': parse(result)}, 200
+@datasources.get('/categories', response_model=DatasourceCategoriesResponse)
+def get_categories(datasource_key: DatasourceKey):
+    """
+    Fetch available categories for given datasource.
+    🔒️ Admin only
+    """
+    result = find_categories(datasource_key)
+    response = {'categories': parse(result)}
+    return parse(response)
 
 
-@datasources.route('/max-image-count', methods=['POST'])
-@use_args({
-    'datasource_key': fields.Str(required=True),
-    'selected_categories': fields.List(fields.Str(), required=True)
-})
-def post_image_count(args):
-    result = find_max_image_count(args['datasource_key'], args['selected_categories'])
-    return {'max_image_count': parse(result)}, 200
+@datasources.post('/max-image-count', response_model=DatasourceMaxImageCountResponse)
+def post_image_count(payload: DatasourceMaxImageCountBody):
+    """
+    Fetch max image count for given datasource and selected categories.
+    🔒️ Admin only
+    """
+    result = find_max_image_count(payload.datasource_key, payload.selected_categories)
+    response = {'max_image_count': parse(result)}
+    return parse(response)

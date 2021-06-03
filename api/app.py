@@ -14,6 +14,7 @@ from dependencies import logged_user, logged_admin
 from logger import logger
 from routers.categories.categories import categories
 from routers.datasets.datasets import datasets
+from routers.datasources.datasources import datasources
 from routers.images.images import images
 from routers.labels.labels import labels
 from routers.notifications.notifications import notifications
@@ -44,6 +45,10 @@ app.include_router(oauth, prefix=f'{PREFIX}/oauth', tags=['oauth'])
 # Users | 🔒️ Admin partially
 app.include_router(users, prefix=f'{PREFIX}/users',
                    dependencies=[Depends(logged_user)], tags=['users'])
+
+# Datasources | 🔒️ Admin only
+app.include_router(datasources, prefix=f'{PREFIX}/datasources',
+                   dependencies=[Depends(logged_admin)], tags=['datasources'])
 
 # Notifications
 app.include_router(notifications, prefix=f'{PREFIX}/notifications',
