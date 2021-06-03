@@ -74,11 +74,12 @@ const SectionSettings: FC<SectionProps> = ({className}) => {
             await api.delete(`/datasets/${dataset._id}`);
             saveDatasets(datasets => datasets.filter((current: Dataset) => current._id !== dataset._id));
             enqueueSnackbar(`Deleted dataset ${dataset.name}`, {variant: 'info'});
-            setIsDeleting(false);
             handleCloseDeleteDataset();
             history.push('/app/manage/datasets')
         } catch (error) {
             enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
+        } finally {
+            setIsDeleting(false);
         }
     }
 

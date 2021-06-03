@@ -3,7 +3,7 @@ from datetime import datetime
 import errors
 from config import Config
 from manager.task_utils import update_task
-from routes.notifications.core import insert_notification
+from routers.notifications.core import insert_notification
 
 db = Config.db
 

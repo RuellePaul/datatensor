@@ -4,7 +4,6 @@ from uuid import uuid4
 import boto3
 import cv2
 import numpy
-from bson.objectid import ObjectId
 from marshmallow import Schema
 from webargs import fields
 from werkzeug.utils import secure_filename
@@ -49,12 +48,13 @@ def upload_image(image_bytes, image_id):
         raise errors.InternalError(f'Cannot upload file to S3, {str(e)}')
 
 
-def upload_file(args):
-    file = args['file']
-    dataset_id = args['dataset_id']
-    if file and allowed_file(file.filename):
+def upload_file(payload):
+    file = payload['file']
+    filename = payload['filename']
+    dataset_id = payload['dataset_id']
+    if file and allowed_file(filename):
         image_id = str(uuid4())
-        name = secure_filename(file.filename)
+        name = secure_filename(filename)
         image = cv2.imdecode(numpy.fromstring(file.read(), numpy.uint8), cv2.IMREAD_UNCHANGED)
         image = compress_image(image)
         image_bytes = cv2.imencode('.jpg', image)[1].tostring()
@@ -101,25 +101,16 @@ def find_image(dataset_id, image_id):
 
 def insert_images(dataset_id, request_files):
     with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
-        results = executor.map(upload_file, [{'file': file, 'dataset_id': dataset_id}
-                                             for file in request_files.values()])
+        results = executor.map(upload_file, [{'filename': file.filename, 'file': file.file, 'dataset_id': dataset_id}
+                                             for file in request_files])
         images = list(filter(None.__ne__, results))
         db.images.insert_many(images)
-        db.datasets.update_one(
-            {
-                '_id': ObjectId(dataset_id)
-            },
-            {
-                '$inc': {
-                    'image_count': len(images)
-                }
-            }, upsert=False)
+        db.datasets.update_one({'_id': dataset_id},
+                               {'$inc': {
+                                   'image_count': len(images)
+                               }},
+                               upsert=False)
         return images
-
-
-def remove_images(dataset_id):
-    # TODO
-    pass
 
 
 def remove_image(dataset_id, image_id):
@@ -129,7 +120,7 @@ def remove_image(dataset_id, image_id):
                           'dataset_id': dataset_id})
     db.datasets.update_one(
         {
-            '_id': ObjectId(dataset_id)
+            '_id': dataset_id
         },
         {
             '$inc': {

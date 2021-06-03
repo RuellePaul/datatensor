@@ -1,17 +1,16 @@
-from flask import Blueprint
+from fastapi import APIRouter
 from webargs import fields
 from webargs.flaskparser import use_args
 
-from .core import search_datasets_by_category_name
-from utils import parse
+from api.search.core import search_datasets_by_category_name
 
-search = Blueprint('search', __name__)
+search = APIRouter()
 
 
-@search.route('/', methods=['GET'])
+@search.get('/')
 @use_args({
     'query': fields.Str(required=True)
 }, location='query')
-def search_datatensor(args):
+async def search_datatensor(args):
     result = search_datasets_by_category_name(args['category_name'])
-    return {'datasets': parse(result)}, 200
+    return {'datasets': parse(result)}

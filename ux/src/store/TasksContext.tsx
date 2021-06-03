@@ -1,6 +1,5 @@
 import React, {createContext, FC, ReactNode, useCallback, useEffect, useState} from 'react';
 import {Task} from 'src/types/task';
-import api from 'src/utils/api';
 import {POLLING_DELAY} from 'src/constants';
 import useAuth from 'src/hooks/useAuth';
 
@@ -38,11 +37,11 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
         if (user)
             try {
                 if (user.is_admin) {
-                    const response = await api.get<{ tasks: Task[] }>(`/tasks/`);
-                    handleSaveTasks(response.data.tasks);
+                    // const response = await api.get<{ tasks: Task[] }>(`/tasks/`);
+                    // handleSaveTasks(response.data.tasks);
                 } else {
-                    const response = await api.get<{ tasks: Task[] }>(`users/${user._id}/tasks/`);
-                    handleSaveTasks(response.data.tasks);
+                    // const response = await api.get<{ tasks: Task[] }>(`users/${user._id}/tasks/`);
+                    // handleSaveTasks(response.data.tasks);
                 }
             } catch (err) {
                 console.error(err);
