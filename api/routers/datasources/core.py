@@ -9,8 +9,6 @@ import errors
 from config import Config
 from logger import logger
 
-from utils import filter_annotations
-
 
 db = Config.db
 
@@ -92,10 +90,16 @@ def find_max_image_count(datasource_key, selected_categories):
     try:
         json_file = open(os.path.join(annotations_path, filename), 'r')
         json_remote_dataset = json.load(json_file)
-        available_images = filter_annotations(json_remote_dataset, selected_categories)[0]
-        del json_remote_dataset
         json_file.close()
+        categories_remote = [category for category in json_remote_dataset['categories']
+                             if category['name'] in selected_categories]
+        category_ids = [category['id'] for category in categories_remote]
+
+        labels_remote = [label for label in json_remote_dataset['annotations'] if label['category_id'] in category_ids]
+        del json_remote_dataset
+
+        image_remote_ids = [label['image_id'] for label in labels_remote]
     except FileNotFoundError:
         raise errors.NotFound(f'Filename {filename} not found for datasource {datasource_key}')
 
-    return len(available_images)
+    return len(set(image_remote_ids))

@@ -10,8 +10,7 @@ import requests
 import errors
 from config import Config
 from manager.task_utils import update_task, increment_task_progress
-from routes.images.core import allowed_file, upload_image, secure_filename
-from utils import filter_annotations
+from routers.images.core import allowed_file, upload_image, secure_filename
 
 
 def _download_image(image_url):
@@ -73,6 +72,21 @@ def _process_image(args):
         Config.db.labels.insert_many(labels)
 
 
+def _filter_annotations(json_remote_dataset, selected_categories, image_count=None):
+    categories_remote = [category for category in json_remote_dataset['categories']
+                         if category['name'] in selected_categories]
+    category_ids = [category['id'] for category in categories_remote]
+
+    labels_remote = [label for label in json_remote_dataset['annotations']
+                     if label['category_id'] in category_ids]
+    label_ids = [label['image_id'] for label in labels_remote]
+
+    images_remote = [image for image in json_remote_dataset['images'] if image['id'] in label_ids]
+    if image_count:
+        images_remote = images_remote[:image_count]
+    return images_remote, categories_remote, labels_remote
+
+
 def _generate_dataset_name(categories):
     supercategories = list(set(category['supercategory'] for category in categories))[:4]
     dataset_name = f"{', '.join(supercategories)}"
@@ -99,7 +113,7 @@ def main(user_id, task_id, properties):
     json_remote_dataset = json.load(json_file)
     json_file.close()
 
-    images_remote_dataset, categories_remote_dataset, labels_remote_dataset = filter_annotations(json_remote_dataset,
+    images_remote_dataset, categories_remote_dataset, labels_remote_dataset = _filter_annotations(json_remote_dataset,
                                                                                                   selected_categories,
                                                                                                   image_count)
     del json_remote_dataset
