@@ -3,7 +3,7 @@ from webargs import fields
 from webargs.flaskparser import use_args
 
 from utils import build_schema, parse
-from routers.notifications.core import Notification, find_notifications, find_notification, remove_notification, insert_notification
+from routers.notifications.core import Notification, find_notifications, find_notification, insert_notification
 
 notifications = APIRouter()
 Notification = build_schema(Notification)
@@ -31,6 +31,6 @@ async def post_notification(args):
     insert_notification(args)
 
 
-@notifications.delete('/{notification_id}')
-async def delete_notification(notification_id):
-    remove_notification(notification_id)
+# @notifications.delete('/{notification_id}')
+# async def delete_notification(notification_id):
+#     remove_notification(notification_id)
