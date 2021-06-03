@@ -1,9 +1,9 @@
 from datetime import datetime
 from typing import List
 
-from pydantic import Field
+from pydantic import Field, BaseModel
 
-from utils import BaseModel, MongoModel
+from utils import  MongoModel
 
 
 class Dataset(MongoModel):
