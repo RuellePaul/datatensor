@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends
-from flask_bcrypt import check_password_hash
 
 import errors
 from dependencies import logged_user
@@ -9,7 +8,7 @@ from authentication import core
 from authentication.models import *
 from config import Config
 from routers.users.models import User
-from utils import parse
+from utils import parse, password_context
 
 auth = APIRouter()
 
@@ -25,7 +24,7 @@ async def do_login(payload: AuthLoginBody):
         raise errors.InvalidAuthentication('Invalid email or password')
 
     user_password = bytes(user.password, 'utf-8')
-    if not check_password_hash(user_password, payload.password):
+    if not password_context.verify(payload.password, user_password):
         raise errors.InvalidAuthentication('Invalid email or password')
 
     logger.info(f'Logged in as `{payload.email}`')

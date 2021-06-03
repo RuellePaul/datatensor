@@ -7,7 +7,6 @@ from datetime import datetime, timedelta
 import jwt
 import oauthlib.oauth2.rfc6749.errors
 import requests
-from flask_bcrypt import generate_password_hash
 from oauthlib.oauth2 import WebApplicationClient
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
@@ -15,7 +14,7 @@ from sendgrid.helpers.mail import Mail
 import errors
 from config import Config
 from routers.users.models import User, UserWithPassword
-from utils import encrypt_field
+from utils import encrypt_field, password_context
 
 if Config.ENVIRONMENT == 'development':  # allow sendgrid email on development environment
     ssl._create_default_https_context = ssl._create_unverified_context
@@ -133,7 +132,7 @@ def register_user(user_id, name, email, password, activation_code):
                 avatar=None,
                 tier='premium',
                 is_verified=False)
-    encrypted_password = generate_password_hash(password).decode('utf-8')
+    encrypted_password = password_context.hash(password)
     db.users.insert_one({
         **user.mongo(),
         'email': encrypt_field(user.email),

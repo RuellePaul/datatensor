@@ -1,8 +1,6 @@
-from flask_bcrypt import check_password_hash, generate_password_hash
-
 import errors
 from config import Config
-from utils import encrypt_field
+from utils import encrypt_field, password_context
 
 db = Config.db
 
@@ -22,19 +20,18 @@ def update_user(user, update):
 
 
 def update_user_password(user, password, new_password):
-    user = db.users.find_one({'_id': user.id})
-    user_password_encrypted = user.get('password')
-    user_scope = user.get('scope')
+    user_full = db.users.find_one({'_id': user.id})
+    user_password_encrypted = user_full.get('password')
 
-    if user_scope or not user_password_encrypted:
-        raise errors.BadRequest(f'Your account is linked with {str(user_scope)}, you cannot modify your password')
+    if user.scope or not user_password_encrypted:
+        raise errors.BadRequest(f'Your account is linked with {str(user.scope)}, you cannot modify your password')
 
     user_password = bytes(user_password_encrypted, 'utf-8')
 
-    if not check_password_hash(user_password, password):
+    if not password_context.verify(password, user_password):
         raise errors.Forbidden("Passwords don't match")
 
-    encrypted_password = generate_password_hash(new_password).decode('utf-8')
+    encrypted_password = password_context.hash(new_password)
     db.users.find_one_and_update({'_id': user.id},
                                  {'$set': {'password': encrypt_field(encrypted_password)}})
 

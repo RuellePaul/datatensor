@@ -4,10 +4,14 @@ from uuid import UUID
 
 from bson import json_util
 from bson.objectid import ObjectId
+from passlib.context import CryptContext
 from pydantic import BaseModel, BaseConfig
 from pymongo.encryption import Algorithm
 
 from config import Config
+
+
+password_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
 
 def encrypt_field(data):
