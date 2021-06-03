@@ -91,7 +91,7 @@ const AdminDashboardView: FC = () => {
                 >
                     <Grid
                         item
-                        lg={8}
+                        lg={7}
                         xs={12}
                     >
                         <TasksOverTime
@@ -101,7 +101,7 @@ const AdminDashboardView: FC = () => {
                     </Grid>
                     <Grid
                         item
-                        lg={4}
+                        lg={5}
                         xs={12}
                     >
                         <Generator/>
@@ -115,14 +115,14 @@ const AdminDashboardView: FC = () => {
                     </Grid>
                     <Grid
                         item
-                        lg={9}
+                        lg={8}
                         xs={12}
                     >
                         <DTTasks/>
                     </Grid>
                     <Grid
                         item
-                        lg={8}
+                        lg={7}
                         xs={12}
                     >
                         <UsersOverTime

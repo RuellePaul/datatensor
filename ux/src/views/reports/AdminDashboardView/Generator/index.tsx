@@ -5,18 +5,16 @@ import {useSnackbar} from 'notistack';
 import {
     Box,
     Button,
+    capitalize,
     FormControl,
-    Grid,
     InputLabel,
-    makeStyles,
     LinearProgress,
-    ListSubheader,
+    makeStyles,
     MenuItem,
     Paper,
     Select,
     TextField,
-    Typography,
-    capitalize
+    Typography
 } from '@material-ui/core';
 import {Alert} from '@material-ui/lab';
 
@@ -35,6 +33,11 @@ const useStyles = makeStyles((theme: Theme) => ({
             padding: theme.spacing(4, 2)
         }
     },
+    button: {
+        width: 120,
+        maxHeight: 40,
+        marginLeft: theme.spacing(1)
+    }
 }));
 
 const Generator: FC = () => {
@@ -49,12 +52,6 @@ const Generator: FC = () => {
     const [datasources, setDatasources] = useState<DataSource[]>([]);
 
     const [eligibleCategories, setEligibleCategories] = useState<Category[] | null>([]);
-
-    const [selectedCategoryNames, setSelectedCategoryNames] = useState<string[]>([]);
-    const handleChangeSelect = (event) => {
-        setSelectedCategoryNames(event.target.value as string[]);
-    };
-
 
     const fetchDatasources = useCallback(async () => {
         try {
@@ -85,13 +82,20 @@ const Generator: FC = () => {
             <Formik
                 initialValues={{
                     datasource_key: '',
-                    image_count: 10
+                    selected_categories: [],
+                    image_count: 100,
+                    submit: null
                 }}
                 validationSchema={Yup.object().shape({
                     datasource_key: Yup.string().required(),
-                    image_count: Yup.number().max(40000).required(),
+                    image_count: Yup.number().max(100000).required(),
+                    selected_categories: Yup.array().test({
+                        message: 'You must select at least one category',
+                        test: arr => arr.length > 0,
+                    })
                 })}
                 onSubmit={async (values, {
+                    setErrors,
                     setStatus,
                     setSubmitting
                 }) => {
@@ -111,6 +115,7 @@ const Generator: FC = () => {
                         console.error(error);
                         if (isMountedRef.current) {
                             setStatus({success: false});
+                            setErrors({submit: error.message});
                             setSubmitting(false);
                             enqueueSnackbar(error.message, {variant: 'error'});
                         }
@@ -146,50 +151,63 @@ const Generator: FC = () => {
                                 into a new dataset.
                             </Typography>
                         </Box>
-                        <Grid container spacing={2} justify='space-between'>
-                            <Grid item lg={12} sm={5} xs={12}>
-                                <FormControl fullWidth>
-                                    <InputLabel shrink>
-                                        Datasource
-                                    </InputLabel>
-                                    <Select
-                                        error={Boolean(touched.datasource_key && errors.datasource_key)}
-                                        label="Datasource"
-                                        name="datasource_key"
-                                        fullWidth
-                                        onBlur={handleBlur}
-                                        onChange={event => {
-                                            handleDatasourceChange(event.target.value)
-                                            setFieldValue('datasource_key', event.target.value)
-                                        }}
-                                        value={values.datasource_key}
-                                        variant="standard"
-                                        displayEmpty
+                        <FormControl fullWidth>
+                            <InputLabel shrink>
+                                Datasource
+                            </InputLabel>
+                            <Select
+                                error={Boolean(touched.datasource_key && errors.datasource_key)}
+                                label="Datasource"
+                                name="datasource_key"
+                                fullWidth
+                                onBlur={handleBlur}
+                                onChange={event => {
+                                    handleDatasourceChange(event.target.value);
+                                    setFieldValue('datasource_key', event.target.value);
+                                }}
+                                value={values.datasource_key}
+                                variant="standard"
+                                displayEmpty
+                            >
+                                <MenuItem value='' disabled>
+                                    <em>Pickup a datasource</em>
+                                </MenuItem>
+                                {datasources.map(datasource => (
+                                    <MenuItem
+                                        key={datasource.key}
+                                        value={datasource.key}
                                     >
-                                        <MenuItem value='' disabled>
-                                            <em>Pickup a datasource</em>
-                                        </MenuItem>
-                                        {datasources.map(datasource => (
-                                            <MenuItem
-                                                key={datasource.key}
-                                                value={datasource.key}
-                                            >
-                                                {datasource.name}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                                {eligibleCategories === null
-                                    ? <LinearProgress/>
-                                    : (
-                                        eligibleCategories.length > 0 && (
+                                        {datasource.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+
+                        {eligibleCategories === null
+                            ? (
+                                <Box mt={2}>
+                                    <Typography color='textSecondary' gutterBottom>
+                                        Searching available categories...
+                                    </Typography>
+                                    <LinearProgress variant='query'/>
+                                </Box>
+                            ) : (
+                                eligibleCategories.length > 0 && (
+                                    <>
+                                        <Box mt={2}>
+                                            <Typography color='textSecondary'>
+                                                Selected {values.selected_categories.length} / {eligibleCategories.length} categories
+                                            </Typography>
+                                        </Box>
+                                        <Box display='flex' alignItems='center' mt={1} mb={2}>
                                             <FormControl fullWidth>
-                                                <InputLabel htmlFor='select-categories'>Categories</InputLabel>
                                                 <Select
                                                     multiple
-                                                    id='select-categories'
-                                                    value={selectedCategoryNames}
-                                                    onChange={handleChangeSelect}
+                                                    value={values.selected_categories}
+                                                    onChange={event => setFieldValue('selected_categories', event.target.value as string[])}
+                                                    renderValue={(selected: string[]) => selected.map((value) => capitalize(value)).join(', ')}
+                                                    variant='filled'
+                                                    SelectDisplayProps={{style: {padding: 10}}}
                                                 >
                                                     {eligibleCategories.map(category => (
                                                         <MenuItem value={category.name} key={category.name}>
@@ -198,24 +216,40 @@ const Generator: FC = () => {
                                                     ))}
                                                 </Select>
                                             </FormControl>
-                                        )
-                                    )
-                                }
-
-                            </Grid>
-                            <Grid item lg={12} sm={5} xs={12}>
-                                <TextField
-                                    error={Boolean(touched.image_count && errors.image_count)}
-                                    label="Image count"
-                                    fullWidth
-                                    name="image_count"
-                                    onBlur={handleBlur}
-                                    onChange={handleChange}
-                                    value={values.image_count}
-                                    size='small'
-                                />
-                            </Grid>
-                        </Grid>
+                                            <Button
+                                                className={classes.button}
+                                                onClick={() => setFieldValue('selected_categories', eligibleCategories.map(category => category.name))}
+                                                size='small'
+                                            >
+                                                Select all
+                                            </Button>
+                                        </Box>
+                                        {values.selected_categories?.length > 0 && (
+                                            <>
+                                                <TextField
+                                                    error={Boolean(touched.image_count && errors.image_count)}
+                                                    label="Image count"
+                                                    fullWidth
+                                                    name="image_count"
+                                                    onBlur={handleBlur}
+                                                    onChange={handleChange}
+                                                    value={values.image_count}
+                                                    size='small'
+                                                />
+                                                <Box mt={1}>
+                                                    <Typography color='textSecondary' gutterBottom>
+                                                        {eligibleCategories
+                                                            .filter(category => values.selected_categories.includes(category.name))
+                                                            .map(category => category.labels_count)
+                                                            .reduce((acc, val) => acc + val, 0)} images available.
+                                                    </Typography>
+                                                </Box>
+                                            </>
+                                        )}
+                                    </>
+                                )
+                            )
+                        }
                         <Box mt={2}>
                             <Button
                                 color="secondary"
