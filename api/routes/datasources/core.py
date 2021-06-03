@@ -79,3 +79,7 @@ def find_categories(datasource_key):
         category.pop('id', None)
 
     return categories
+
+
+def find_max_image_count(datasource_key, selected_categories):
+    pass
