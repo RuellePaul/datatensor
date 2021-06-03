@@ -17,7 +17,6 @@ from routers.datasets.datasets import datasets
 from routers.images.images import images
 from routers.labels.labels import labels
 from routers.notifications.notifications import notifications
-from routers.pipelines.pipelines import pipelines
 from routers.tasks.tasks import tasks
 from routers.users.users import users
 
@@ -60,7 +59,6 @@ app.include_router(datasets,
                    tags=['datasets'])
 datasets.include_router(categories, prefix='/{dataset_id}/categories', tags=['categories'])
 datasets.include_router(images, prefix='/{dataset_id}/images', tags=['images'])
-datasets.include_router(pipelines, prefix='/{dataset_id}/pipelines', tags=['pipelines'])
 
 app.include_router(labels,
                    prefix=f'{PREFIX}/images/{{image_id}}/labels',
