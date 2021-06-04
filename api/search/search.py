@@ -9,7 +9,7 @@ search = APIRouter()
 
 
 @search.get('/', response_model=SearchResponse)
-def search_datatensor(query: str):
+async def search_datatensor(query: str):
     if len(query) <= 2:
         raise errors.BadRequest('Query must be >3 chars')
     result = {
@@ -18,5 +18,5 @@ def search_datatensor(query: str):
         'users': search_users(query),
         'categories': search_categories(query)
     }
-    response = {'result': parse(result)}
+    response = {'result': result}
     return parse(response)

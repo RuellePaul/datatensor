@@ -1,27 +1,29 @@
-from fastapi import APIRouter
-from webargs import fields
-from webargs.flaskparser import use_args
+from fastapi import APIRouter, Depends
 
+from dependencies import logged_user
 from routers.tasks.core import find_tasks, insert_task
+from routers.tasks.models import *
+from routers.users.models import User
+from utils import parse
 
 tasks = APIRouter()
 
 
-@tasks.get('/')
-@use_args({
-    'offset': fields.Int(required=False, missing=0),
-    'limit': fields.Int(required=False, missing=0)
-}, location='query')
-async def get_tasks(args, user_id=None, dataset_id=None):
-    result = find_tasks(user_id, dataset_id, args['offset'], args['limit'])
-    return {'tasks': parse(result)}
+@tasks.get('/', response_model=TasksResponse)
+async def get_tasks(dataset_id=None, user: User = Depends(logged_user), offset: int = 0, limit: int = 0):
+    """
+    Fetch paginated labels list of tasks.
+    """
+    result = find_tasks(user, dataset_id, offset, limit)
+    response = {'tasks': result}
+    return parse(response)
 
 
-@tasks.post('/')
-@use_args({
-    'type': fields.Str(required=True),
-    'properties': fields.Dict(required=True)
-})
-async def post_task(args, dataset_id=None):
-    result = insert_task(dataset_id, args['type'], args['properties'])
-    return {'task': parse(result)}
+@tasks.post('/', response_model=TaskResponse)
+async def post_task(payload: TaskPostBody, dataset_id=None, user: User = Depends(logged_user)):
+    """
+    Create a new pending task
+    """
+    result = insert_task(user, dataset_id, payload.type, payload.properties)
+    response = {'task': result}
+    return parse(response)

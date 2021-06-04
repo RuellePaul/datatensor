@@ -15,7 +15,7 @@ async def get_notifications(user: User = Depends(logged_user), count: int = 0, l
     Fetch paginated notifications list of logged user
     """
     result = find_notifications(user.id, count, limit)
-    response = {'notifications': parse(result)}
+    response = {'notifications': result}
     return parse(response)
 
 

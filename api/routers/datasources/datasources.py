@@ -14,7 +14,7 @@ def get_datasources():
     🔒️ Admin only
     """
     result = find_datasources()
-    response = {'datasources': parse(result)}
+    response = {'datasources': result}
     return parse(response)
 
 
@@ -25,7 +25,7 @@ def get_categories(datasource_key: DatasourceKey):
     🔒️ Admin only
     """
     result = find_categories(datasource_key)
-    response = {'categories': parse(result)}
+    response = {'categories': result}
     return parse(response)
 
 
@@ -36,5 +36,5 @@ def post_image_count(payload: DatasourceMaxImageCountBody):
     🔒️ Admin only
     """
     result = find_max_image_count(payload.datasource_key, payload.selected_categories)
-    response = {'max_image_count': parse(result)}
+    response = {'max_image_count': result}
     return parse(response)

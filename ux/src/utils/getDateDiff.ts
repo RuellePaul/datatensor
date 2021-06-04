@@ -1,5 +1,4 @@
 const getDateDiff = (date1, date2) => {
-    console.log(date1, date2)
     let diff = (new Date(date2).getTime()) - (new Date(date1).getTime());
 
     const sec = Math.floor(diff / 1000) % 60;

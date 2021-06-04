@@ -23,7 +23,7 @@ async def get_image(dataset_id, image_id):
     Fetch given image of given dataset.
     """
     result = find_image(dataset_id, image_id)
-    response = {'image': parse(result)}
+    response = {'image': result}
     return parse(response)
 
 

@@ -3,9 +3,10 @@ from datetime import datetime
 from uuid import uuid4
 
 import errors
-from authentication.core import verify_access_token
 from config import Config
 from manager import task_manager
+from routers.tasks.models import Task, TaskStatus
+from utils import parse
 
 db = Config.db
 
@@ -23,45 +24,39 @@ def _check_user_allowed_to_create_task(user, dataset_id, task_type):
         raise errors.Forbidden(f"Dataset {dataset_id} does not belong to user {user.id}")
 
 
-def find_tasks(user_id, dataset_id, offset, limit):
-    user = verify_access_token()
+def find_tasks(user, dataset_id, offset, limit):
     if dataset_id:
-        if not user.is_admin:
-            return list(db.tasks.find({'user_id': user.id, 'dataset_id': dataset_id}).skip(offset).limit(limit))
-        return list(db.tasks.find({'dataset_id': dataset_id}).skip(offset).limit(limit))
+        if user.is_admin:
+            return list(db.tasks.find({'dataset_id': dataset_id}).skip(offset).limit(limit))
+        return list(db.tasks.find({'user_id': user.id, 'dataset_id': dataset_id}).skip(offset).limit(limit))
 
-    if user_id:
-        if not user.is_admin:
-            return list(db.tasks.find({'user_id': user.id}).skip(offset).limit(limit))
-        return list(db.tasks.find({'user_id': user_id}).skip(offset).limit(limit))
+    if user.id:
+        return list(db.tasks.find({'user_id': user.id}).skip(offset).limit(limit))
 
-    else:
-        if not user.is_admin:
-            raise errors.Forbidden()
-        return list(db.tasks.find().skip(offset).limit(limit))
+    if not user.is_admin:
+        raise errors.Forbidden()
+    return list(db.tasks.find().skip(offset).limit(limit))
 
 
-def insert_task(dataset_id, task_type, properties):
+def insert_task(user, dataset_id, task_type, properties):
     from app import scheduler
-
-    user = verify_access_token(verified=True)
 
     _check_user_allowed_to_create_task(user, dataset_id, task_type)
 
-    task = dict(
-        _id=str(uuid4()),
+    task = Task(
+        id=str(uuid4()),
         user_id=user.id,
         dataset_id=dataset_id,
         type=task_type,
         created_at=datetime.now(),
-        status='pending',
+        status=TaskStatus('pending'),
         progress=0,
         properties=properties
     )
-    db.tasks.insert_one(task)
+    db.tasks.insert_one(parse(task.mongo()))
 
     @scheduler.scheduled_job('date',
-                             id=f"{task['_id']}",
+                             id=task.id,
                              run_date=datetime.now(),
                              max_instances=1)
     def scheduled_task():
