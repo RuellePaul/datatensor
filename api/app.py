@@ -2,7 +2,7 @@ import os
 
 import uvicorn
 from apscheduler.schedulers.background import BackgroundScheduler
-from fastapi import FastAPI, Depends, Request
+from fastapi import FastAPI, Depends, Request, WebSocket
 from starlette.middleware.cors import CORSMiddleware
 
 import errors
@@ -86,6 +86,14 @@ datasets.include_router(tasks, prefix='/{dataset_id}/tasks', tags=['tasks'])
 def handle_api_error(request: Request, error: errors.APIError):
     logger.error(error)
     return error.json_response()
+
+
+@app.websocket('/message')
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    while True:
+        data = await websocket.receive_text()
+        await websocket.send_text(f"Message text was: {data}")
 
 
 if __name__ == '__main__':
