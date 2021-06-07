@@ -1,11 +1,17 @@
 import datetime
 import json
+from uuid import UUID
 
 from bson import json_util
 from bson.objectid import ObjectId
+from passlib.context import CryptContext
+from pydantic import BaseModel, BaseConfig
 from pymongo.encryption import Algorithm
 
 from config import Config
+
+
+password_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
 
 def encrypt_field(data):
@@ -21,6 +27,10 @@ def default(value):
         return value.isoformat()
     elif isinstance(value, ObjectId):
         return str(value)
+    elif isinstance(value, UUID):
+        return str(value)
+    elif isinstance(value, BaseModel):
+        return value.dict()
     else:
         return json_util.default(value)
 
@@ -29,26 +39,44 @@ def parse(data):
     return json.loads(json.dumps(data, default=default))
 
 
-def build_schema(schema):
-    def handler(request):
-        fields = request.args.get('fields', None)
-        only = fields.split(',') if fields else None
-        partial = request.method == 'PATCH'
-        return schema(only=only, partial=partial, context={'request': request})
+class OID(str):
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate
 
-    return handler
+    @classmethod
+    def validate(cls, v):
+        return ObjectId(str(v))
 
 
-def filter_annotations(json_remote_dataset, selected_categories, image_count=None):
-    categories_remote = [category for category in json_remote_dataset['categories']
-                         if category['name'] in selected_categories]
-    category_ids = [category['id'] for category in categories_remote]
+class MongoModel(BaseModel):
+    class Config(BaseConfig):
+        allow_population_by_field_name = True
+        json_encoders = {
+            datetime: lambda dt: dt.isoformat(),
+            ObjectId: lambda oid: str(oid),
+            UUID: lambda: str(UUID)
+        }
 
-    labels_remote = [label for label in json_remote_dataset['annotations']
-                     if label['category_id'] in category_ids]
-    label_ids = [label['image_id'] for label in labels_remote]
+    def mongo(self, **kwargs):
+        exclude_unset = kwargs.pop('exclude_unset', True)
+        by_alias = kwargs.pop('by_alias', True)
 
-    images_remote = [image for image in json_remote_dataset['images'] if image['id'] in label_ids]
-    if image_count:
-        images_remote = images_remote[:image_count]
-    return images_remote, categories_remote, labels_remote
+        parsed = self.dict(
+            exclude_unset=exclude_unset,
+            by_alias=by_alias,
+            **kwargs,
+        )
+
+        # Mongo uses `_id` as default key. We should stick to that as well.
+        if '_id' not in parsed and 'id' in parsed:
+            parsed['_id'] = parsed.pop('id')
+
+        return parsed
+
+    @classmethod
+    def from_mongo(cls, data: dict):
+        if not data:
+            return data
+        id = data.pop('_id', None)
+        return cls(**dict(data, id=id))

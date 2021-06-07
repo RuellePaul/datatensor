@@ -5,7 +5,7 @@ import {Theme} from 'src/theme';
 import {drawLabels, reset} from 'src/utils/labeling';
 import useDataset from 'src/hooks/useDataset';
 import useImage from 'src/hooks/useImage';
-import { useTabContext } from '@material-ui/lab';
+import {useTabContext} from '@material-ui/lab';
 
 
 interface DTImageProps {

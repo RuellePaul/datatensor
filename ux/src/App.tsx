@@ -4,7 +4,6 @@ import {createBrowserHistory} from 'history';
 import GlobalStyles from 'src/components/utils/GlobalStyles';
 import ScrollReset from 'src/components/utils/ScrollReset';
 import CookiesNotification from 'src/components/overlays/CookiesNotification';
-import GoogleAnalytics from 'src/components/utils/GoogleAnalytics';
 import SettingsNotification from 'src/components/overlays/SettingsNotification';
 import {AuthProvider} from 'src/store/AuthContext';
 import {TasksProvider} from 'src/store/TasksContext';
@@ -22,7 +21,6 @@ const App: FC = () => {
                     <TasksProvider>
                         <GlobalStyles/>
                         <ScrollReset/>
-                        <GoogleAnalytics/>
                         <CookiesNotification/>
                         <SettingsNotification/>
                         {renderRoutes(routes)}

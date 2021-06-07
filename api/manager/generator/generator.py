@@ -10,8 +10,9 @@ import requests
 import errors
 from config import Config
 from manager.task_utils import update_task, increment_task_progress
-from routes.images.core import allowed_file, upload_image, secure_filename
-from utils import filter_annotations
+from routers.datasets.models import Dataset
+from routers.images.core import allowed_file, upload_image, secure_filename
+from routers.tasks.models import TaskGeneratorProperties
 
 
 def _download_image(image_url):
@@ -33,7 +34,7 @@ def _process_image(args):
     categories = args['categories']
     filename = image_remote_dataset['file_name']
     if filename and allowed_file(filename):
-        image_id = str(image_remote_dataset['id'])
+        image_id = str(uuid4())
         response = _download_image(image_remote_dataset['flickr_url'])
         if not response:
             response = _download_image(image_remote_dataset['coco_url'])
@@ -53,7 +54,7 @@ def _process_image(args):
         }
         labels = [{
             '_id': str(uuid4()),
-            'image_id': str(image_remote_dataset['id']),
+            'image_id': image_id,
             'x': category_label['bbox'][0] / image_remote_dataset['width'],
             'y': category_label['bbox'][1] / image_remote_dataset['height'],
             'w': category_label['bbox'][2] / image_remote_dataset['width'],
@@ -73,16 +74,31 @@ def _process_image(args):
         Config.db.labels.insert_many(labels)
 
 
+def _filter_annotations(json_remote_dataset, selected_categories, image_count=None):
+    categories_remote = [category for category in json_remote_dataset['categories']
+                         if category['name'] in selected_categories]
+    category_ids = [category['id'] for category in categories_remote]
+
+    labels_remote = [label for label in json_remote_dataset['annotations']
+                     if label['category_id'] in category_ids]
+    label_ids = [label['image_id'] for label in labels_remote]
+
+    images_remote = [image for image in json_remote_dataset['images'] if image['id'] in label_ids]
+    if image_count:
+        images_remote = images_remote[:image_count]
+    return images_remote, categories_remote, labels_remote
+
+
 def _generate_dataset_name(categories):
     supercategories = list(set(category['supercategory'] for category in categories))[:4]
     dataset_name = f"{', '.join(supercategories)}"
     return dataset_name.title()
 
 
-def main(user_id, task_id, properties):
-    datasource_key = properties['datasource_key']
-    selected_categories = properties['selected_categories']
-    image_count = int(properties['image_count'])
+def main(user_id, task_id, properties: TaskGeneratorProperties):
+    datasource_key = properties.datasource_key
+    selected_categories = properties.selected_categories
+    image_count = properties.image_count
 
     dataset_id = str(uuid4())
     update_task(task_id, dataset_id=dataset_id, status='active')
@@ -91,6 +107,7 @@ def main(user_id, task_id, properties):
         raise errors.Forbidden(f'Dataset {dataset_id} is already built')
 
     datasource = [datasource for datasource in Config.DATASOURCES if datasource['key'] == datasource_key][0]
+
     # TODO : use multiple filenames
     filename = datasource['filenames'][0]
 
@@ -99,9 +116,9 @@ def main(user_id, task_id, properties):
     json_remote_dataset = json.load(json_file)
     json_file.close()
 
-    images_remote_dataset, categories_remote_dataset, labels_remote_dataset = filter_annotations(json_remote_dataset,
-                                                                                                  selected_categories,
-                                                                                                  image_count)
+    images_remote, categories_remote, labels_remote = _filter_annotations(json_remote_dataset,
+                                                                          selected_categories,
+                                                                          image_count)
     del json_remote_dataset
 
     categories = [{
@@ -110,17 +127,16 @@ def main(user_id, task_id, properties):
         'dataset_id': dataset_id,
         'name': category['name'],
         'supercategory': category['supercategory']
-    } for category in categories_remote_dataset]
+    } for category in categories_remote]
 
-    dataset = dict(_id=dataset_id,
-                   user_id=user_id,
-                   created_at=datetime.now().isoformat(),
-                   name=_generate_dataset_name(categories),
-                   description=f"Generated with {len(categories)} categories, from {datasource['name']}",
-                   image_count=image_count,
-                   is_public=True)
-
-    Config.db.datasets.insert_one(dataset)
+    dataset = Dataset(id=dataset_id,
+                      user_id=user_id,
+                      created_at=datetime.now(),
+                      name=_generate_dataset_name(categories),
+                      description=f"Generated with {len(categories)} categories, from {datasource['name']}",
+                      image_count=image_count,
+                      is_public=True)
+    Config.db.datasets.insert_one(dataset.mongo())
     Config.db.categories.insert_many([{
         '_id': category['_id'],
         'dataset_id': category['dataset_id'],
@@ -134,10 +150,9 @@ def main(user_id, task_id, properties):
                        'dataset_id': dataset_id,
                        'image_remote_dataset': image,
                        'image_count': image_count,
-                       'category_labels': [el for el in labels_remote_dataset if
-                                           el['image_id'] == image['id']],
+                       'category_labels': [el for el in labels_remote if el['image_id'] == image['id']],
                        'categories': categories}
-                      for image in images_remote_dataset))
+                      for image in images_remote))
 
     update_task(task_id, progress=1)
     sleep(2)

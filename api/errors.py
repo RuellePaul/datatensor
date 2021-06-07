@@ -1,6 +1,6 @@
 import json
 
-import flask
+from fastapi.responses import JSONResponse
 
 
 class APIError(Exception):
@@ -19,18 +19,11 @@ class APIError(Exception):
                 'message': self.message,
                 'errorData': self.data}
 
-    def flask_response(self):
-        return flask.Response(response=json.dumps(self.as_dict()),
-                              status=self.http_status,
-                              mimetype='application/json')
-
-
-class CSRF(APIError):
-    def __init__(self, message=None):
-        super().__init__(302,
-                         code='csrf_error',
-                         message=message or 'CSRF Error',
-                         data='ERR_CSRF')
+    def json_response(self):
+        return JSONResponse(
+            status_code=self.http_status,
+            content=self.as_dict(),
+        )
 
 
 class BadRequest(APIError):

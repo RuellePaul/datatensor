@@ -7,5 +7,6 @@ export interface Task {
     created_at: string;
     status: 'pending' | 'active' | 'success' | 'failed',
     progress: number,
+    ended_at?: string;
     error?: string
 }

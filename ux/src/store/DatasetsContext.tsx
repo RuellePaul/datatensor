@@ -13,7 +13,8 @@ interface DatasetsProviderProps {
 
 export const DatasetsContext = createContext<DatasetsContextValue>({
     datasets: [],
-    saveDatasets: () => {}
+    saveDatasets: () => {
+    }
 });
 
 export const DatasetsProvider: FC<DatasetsProviderProps> = ({children}) => {
@@ -25,7 +26,7 @@ export const DatasetsProvider: FC<DatasetsProviderProps> = ({children}) => {
 
     const fetchDatasets = useCallback(async () => {
         try {
-            const response = await api.get<{datasets: Dataset[]}>(`/datasets/`);
+            const response = await api.get<{ datasets: Dataset[] }>(`/datasets/`);
             handleSaveDatasets(response.data.datasets);
         } catch (err) {
             console.error(err);

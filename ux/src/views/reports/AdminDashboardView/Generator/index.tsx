@@ -7,6 +7,7 @@ import {
     Button,
     capitalize,
     FormControl,
+    InputAdornment,
     InputLabel,
     LinearProgress,
     makeStyles,
@@ -17,6 +18,7 @@ import {
     Typography
 } from '@material-ui/core';
 import {Alert} from '@material-ui/lab';
+import {BurstMode} from '@material-ui/icons';
 
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import {Theme} from 'src/theme';
@@ -71,13 +73,14 @@ const Generator: FC = () => {
         setEligibleCategories(response.data.categories)
     };
 
-    const handleSelectedCategoriesChange = async (datasource_key, selected_categories) => {
+    const handleSelectedCategoriesChange = async (datasource_key, selected_categories, callback) => {
         setMaxImageCount(null);
         const response = await api.post<{ max_image_count: number }>(`/datasources/max-image-count`, {
             datasource_key,
             selected_categories: selected_categories
         });
-        setMaxImageCount(response.data.max_image_count)
+        setMaxImageCount(response.data.max_image_count);
+        callback(response.data.max_image_count);
     };
 
     useEffect(() => {
@@ -94,7 +97,7 @@ const Generator: FC = () => {
                 initialValues={{
                     datasource_key: '',
                     selected_categories: [],
-                    image_count: 100
+                    image_count: null
                 }}
                 validationSchema={Yup.object().shape({
                     datasource_key: Yup.string().required(),
@@ -166,9 +169,12 @@ const Generator: FC = () => {
                                 Datasource
                             </InputLabel>
                             <Select
-                                error={Boolean(touched.datasource_key && errors.datasource_key)}
                                 label="Datasource"
                                 name="datasource_key"
+                                value={values.datasource_key}
+                                disabled={eligibleCategories === null}
+                                displayEmpty
+                                error={Boolean(touched.datasource_key && errors.datasource_key)}
                                 fullWidth
                                 onBlur={handleBlur}
                                 onChange={event => {
@@ -176,9 +182,6 @@ const Generator: FC = () => {
                                     setFieldValue('datasource_key', event.target.value);
                                     setFieldValue('selected_categories', []);
                                 }}
-                                value={values.datasource_key}
-                                variant="standard"
-                                displayEmpty
                             >
                                 <MenuItem value='' disabled>
                                     <em>Pickup a datasource</em>
@@ -218,9 +221,12 @@ const Generator: FC = () => {
                                                     value={values.selected_categories}
                                                     onChange={event => {
                                                         setFieldValue('selected_categories', event.target.value as string[])
+                                                        setFieldValue('image_count', null)
                                                     }}
                                                     MenuProps={{
-                                                        onExited: () => handleSelectedCategoriesChange(values.datasource_key, values.selected_categories)
+                                                        onExited: () => {
+                                                            handleSelectedCategoriesChange(values.datasource_key, values.selected_categories, maxImageCount => setFieldValue('image_count', maxImageCount))
+                                                        }
                                                     }}
                                                     renderValue={(selected: string[]) => selected.map((value) => capitalize(value)).join(', ')}
                                                     variant='filled'
@@ -238,8 +244,9 @@ const Generator: FC = () => {
                                             <Button
                                                 className={classes.button}
                                                 onClick={() => {
-                                                    handleSelectedCategoriesChange(values.datasource_key, eligibleCategories.map(category => category.name));
+                                                    handleSelectedCategoriesChange(values.datasource_key, eligibleCategories.map(category => category.name), maxImageCount => setFieldValue('image_count', maxImageCount));
                                                     setFieldValue('selected_categories', eligibleCategories.map(category => category.name))
+                                                    setFieldValue('image_count', null)
                                                 }}
                                                 size='small'
                                             >
@@ -257,6 +264,13 @@ const Generator: FC = () => {
                                                     onChange={handleChange}
                                                     value={values.image_count}
                                                     size='small'
+                                                    InputProps={{
+                                                        startAdornment: (
+                                                            <InputAdornment position='start'>
+                                                                <BurstMode/>
+                                                            </InputAdornment>
+                                                        ),
+                                                    }}
                                                 />
                                                 {maxImageCount === null
                                                     ? (
@@ -287,7 +301,7 @@ const Generator: FC = () => {
                         <Box mt={2}>
                             <Button
                                 color="secondary"
-                                disabled={isSubmitting}
+                                disabled={isSubmitting || values.image_count === null}
                                 fullWidth
                                 type="submit"
                                 variant="contained"

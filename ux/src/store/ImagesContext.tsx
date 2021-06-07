@@ -3,7 +3,7 @@ import {Image} from 'src/types/image';
 import api from 'src/utils/api';
 import useDataset from 'src/hooks/useDataset';
 import SplashScreen from 'src/components/screens/SplashScreen';
-import {LAZY_LOAD_BATCH} from '../constants';
+import {LAZY_LOAD_BATCH} from 'src/constants';
 
 export interface ImagesContextValue {
     images: Image[];

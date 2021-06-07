@@ -1,43 +1,33 @@
-from flask import Blueprint
-from flask_bcrypt import check_password_hash
-from webargs import fields
-from webargs.flaskparser import use_args
+from fastapi import APIRouter, Depends
 
 import errors
+from dependencies import logged_user
 from logger import logger
+
 from authentication import core
+from authentication.models import *
+from config import Config
+from routers.users.models import User
+from utils import parse, password_context
 
-auth = Blueprint('auth', __name__)
-
-
-@auth.route('/me')
-def me():
-    user = core.verify_access_token()
-    if not user:
-        raise errors.ExpiredAuthentication
-    user.pop('password', None)
-    response = {'user': user}
-    return response, 200
+auth = APIRouter()
 
 
-@auth.route('/login', methods=['POST'])
-@use_args({
-    'email': fields.Str(required=True),
-    'password': fields.Str(required=True)
-})
-def do_login(args):
-    email = args['email']
-
-    user_id = core.user_id_hash(email)
-    user = core.user_from_user_id(user_id)
+@auth.post('/login', response_model=AuthResponse)
+async def do_login(payload: AuthLoginBody):
+    """
+    Login workflow (email + password)
+    """
+    user_id = core.user_id_hash(payload.email)
+    user = core.user_with_password_from_user_id(user_id)
     if not user:
         raise errors.InvalidAuthentication('Invalid email or password')
 
-    user_password = bytes(user['password'], 'utf-8')
-    if not check_password_hash(user_password, args['password']):
+    user_password = bytes(user.password, 'utf-8')
+    if not password_context.verify(payload.password, user_password):
         raise errors.InvalidAuthentication('Invalid email or password')
 
-    logger.info(f'Logged in as `{email}`')
+    logger.info(f'Logged in as `{payload.email}`')
 
     access_token = core.encode_access_token(user_id)
     response = {
@@ -45,21 +35,17 @@ def do_login(args):
         'user': user
     }
 
-    return response, 200
+    return parse(response)
 
 
-@auth.route('/register', methods=['POST'])
-@use_args({
-    'email': fields.Str(required=True),
-    'password': fields.Str(required=True),
-    'name': fields.Str(required=True),
-    'recaptcha': fields.Str(required=True)
-})
-def do_register(args):
-    captcha = args['recaptcha']
-    core.check_captcha(captcha)
+@auth.post('/register', response_model=AuthResponse)
+async def do_register(payload: AuthRegisterBody):
+    """
+    Register workflow (email + password)
+    """
+    core.check_captcha(payload.recaptcha)
 
-    email = args['email']
+    email = payload.email
 
     user_id = core.user_id_hash(email)
     user = core.user_from_user_id(user_id)
@@ -67,9 +53,12 @@ def do_register(args):
     if user:
         raise errors.Forbidden(f'User `{email}` already exists')
 
-    activation_code = core.generate_activation_code()
+    if Config.ENVIRONMENT == 'development' and payload.email == 'test@datatensor.io':
+        activation_code = 'test_activation_code'
+    else:
+        activation_code = core.generate_activation_code()
     core.send_activation_code(email, activation_code)
-    user = core.register_user(user_id, args['name'], args['email'], args['password'], activation_code)
+    user = core.register_user(user_id, payload.name, email, payload.password, activation_code)
 
     logger.info(f'Registered user `{email}`')
 
@@ -79,25 +68,42 @@ def do_register(args):
         'user': user
     }
 
-    return response, 201
+    return parse(response)
 
 
-@auth.route('/email-confirmation', methods=['POST'])
-@use_args({
-    'activation_code': fields.Str(required=True)
-})
-def do_email_confirmation(args):
-    user = core.verify_access_token()
-    core.verify_user_email(user, args['activation_code'])
-    access_token = core.encode_access_token(user['_id'])
+@auth.post('/unregister')
+async def do_unregister(user: User = Depends(logged_user)):
+    """
+    Unregister logged user
+    """
+    core.unregister_user(user.id)
+    logger.info(f'Unregister user `{user.email}`')
 
-    logger.info(f"Verified email `{user['email']}`")
+
+@auth.get('/me')
+async def me(user: User = Depends(logged_user)):
+    """
+    Return user from access token
+    """
+    return parse(user)
+
+
+@auth.post('/email-confirmation', response_model=AuthResponse)
+async def do_email_confirmation(payload: AuthEmailConfirmBody):
+    """
+    Validates the code in the link provided in email body
+    """
+
+    user = core.verify_user_email(payload.activation_code)
+    access_token = core.encode_access_token(user.id)
+
+    logger.info(f"Verified email `{user.email}`")
 
     response = {
         'accessToken': access_token,
         'user': {
-            **user,
+            **user.mongo(),
             'is_verified': True
         }
     }
-    return response, 200
+    return parse(response)

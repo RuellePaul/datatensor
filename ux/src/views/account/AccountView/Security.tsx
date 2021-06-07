@@ -5,7 +5,6 @@ import {Formik} from 'formik';
 import {useSnackbar} from 'notistack';
 import {Box, Button, Card, CardContent, CardHeader, Divider, Grid, makeStyles, TextField} from '@material-ui/core';
 import api from 'src/utils/api';
-import useAuth from 'src/hooks/useAuth';
 
 interface SecurityProps {
     className?: string;
@@ -19,8 +18,6 @@ const Security: FC<SecurityProps> = ({className, ...rest}) => {
 
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
-
-    const {user} = useAuth();
 
     return (
         <Formik
@@ -45,12 +42,11 @@ const Security: FC<SecurityProps> = ({className, ...rest}) => {
             })}
             onSubmit={async (values, {
                 resetForm,
-                setErrors,
                 setStatus,
                 setSubmitting
             }) => {
                 try {
-                    await api.patch(`/users/${user._id}/password`, values);
+                    await api.patch(`/users/me/password`, values);
                     resetForm();
                     setStatus({success: true});
                     setSubmitting(false);

@@ -1,4 +1,3 @@
-import functools
 import hashlib
 import random
 import ssl
@@ -6,19 +5,21 @@ import string
 from datetime import datetime, timedelta
 
 import jwt
+import oauthlib.oauth2.rfc6749.errors
 import requests
-from flask import request
-from flask_bcrypt import generate_password_hash
 from oauthlib.oauth2 import WebApplicationClient
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
 import errors
 from config import Config
-from utils import encrypt_field
+from routers.users.models import User, UserWithPassword
+from utils import encrypt_field, password_context
 
 if Config.ENVIRONMENT == 'development':  # allow sendgrid email on development environment
     ssl._create_default_https_context = ssl._create_unverified_context
+
+db = Config.db
 
 
 # Token
@@ -28,14 +29,9 @@ def encode_access_token(user_id):
     return access_token
 
 
-def verify_access_token(access_token=None, verified=False):
+def verify_access_token(access_token, verified=False):
     if not access_token:
-        try:
-            access_token = request.headers.get('Authorization')
-            if not access_token:
-                raise errors.InvalidAuthentication()
-        except RuntimeError:
-            raise errors.InvalidAuthentication()
+        raise errors.InvalidAuthentication()
 
     try:
         user_id = jwt.decode(access_token, Config.ACCESS_TOKEN_KEY, algorithms='HS256').get('user_id')
@@ -44,7 +40,7 @@ def verify_access_token(access_token=None, verified=False):
     except jwt.exceptions.ExpiredSignatureError:
         raise errors.ExpiredAuthentication()
 
-    user = Config.db.users.find_one({'_id': user_id}, {'password': 0})
+    user = db.users.find_one({'_id': user_id}, {'password': 0})
     if not user:
         raise errors.InvalidAuthentication("User doesn't exists")
 
@@ -52,28 +48,6 @@ def verify_access_token(access_token=None, verified=False):
         raise errors.InvalidAuthentication("User email is not verified", data='ERR_VERIFY')
 
     return user
-
-
-def require_authorization(blueprints):
-    def authorized():
-        if request.method in ['GET', 'POST', 'PUT', 'DELETE']:
-            verify_access_token()
-
-    for blueprint in blueprints:
-        blueprint.before_request(authorized)
-
-
-def admin_guard(func):
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        if request.method in ['GET', 'POST', 'PUT', 'DELETE']:
-            user = verify_access_token()
-            if user['_id'] not in Config.ADMIN_USER_IDS:
-                raise errors.Forbidden('Not an admin user')
-        result = func(*args, **kwargs)
-        return result
-
-    return wrapper
 
 
 # User related
@@ -102,7 +76,10 @@ def profile_from_code(code, scope):
         auth=((Config.OAUTH[scope]['CLIENT_ID'], Config.OAUTH[scope]['CLIENT_SECRET'])
               if scope != 'stackoverflow' else None),
     )
-    client.parse_request_body_response(response.text)
+    try:
+        client.parse_request_body_response(response.text)
+    except oauthlib.oauth2.rfc6749.errors.OAuth2Error as e:
+        raise errors.InvalidAuthentication(f'Cannot fetch OAuth2 profile : {str(e)}')
     uri, headers, body = client.add_token(Config.OAUTH[scope]['USER_URL'])
     profile = requests.get(uri, headers=headers, data=body, params={
         'access_token': response.json()['access_token'],
@@ -131,7 +108,15 @@ def user_id_hash(identifier):
 
 
 def user_from_user_id(user_id):
-    return Config.db.users.find_one({'_id': user_id})
+    return User.from_mongo(db.users.find_one({'_id': user_id}))
+
+
+def user_with_password_from_user_id(user_id):
+    return UserWithPassword.from_mongo(db.users.find_one({'_id': user_id}))
+
+
+def user_from_activation_code(activation_code):
+    return User.from_mongo(db.users.find_one({'activation_code': activation_code}))
 
 
 def generate_activation_code():
@@ -139,7 +124,7 @@ def generate_activation_code():
 
 
 def register_user(user_id, name, email, password, activation_code):
-    user = dict(_id=user_id,
+    user = User(id=user_id,
                 created_at=datetime.now(),
                 email=email,
                 name=name,
@@ -147,11 +132,10 @@ def register_user(user_id, name, email, password, activation_code):
                 avatar=None,
                 tier='premium',
                 is_verified=False)
-    encrypted_password = generate_password_hash(password).decode('utf-8')
-    Config.db.users.insert_one({
-        **user,
-        'name': user['name'],
-        'email': encrypt_field(user['email']),
+    encrypted_password = password_context.hash(password)
+    db.users.insert_one({
+        **user.mongo(),
+        'email': encrypt_field(user.email),
         'password': encrypt_field(encrypted_password),
         'activation_code': activation_code
     })
@@ -162,9 +146,8 @@ def register_user_from_profile(profile, scope):
     user_id = user_id_from_profile(profile, scope)
 
     if scope == 'github':
-        user = dict(_id=user_id,
+        user = User(id=user_id,
                     created_at=datetime.now(),
-                    email=None,
                     name=profile.get('name'),
                     is_admin=user_id in Config.ADMIN_USER_IDS,
                     avatar=profile.get('avatar_url'),
@@ -173,7 +156,7 @@ def register_user_from_profile(profile, scope):
                     is_verified=True)
 
     elif scope == 'google':
-        user = dict(_id=user_id,
+        user = User(id=user_id,
                     created_at=datetime.now(),
                     email=profile.get('email'),
                     name=profile.get('name'),
@@ -184,9 +167,8 @@ def register_user_from_profile(profile, scope):
                     is_verified=True)
 
     elif scope == 'stackoverflow':
-        user = dict(_id=user_id,
+        user = User(id=user_id,
                     created_at=datetime.now(),
-                    email=None,
                     name=profile['items'][0]['display_name'],
                     is_admin=user_id in Config.ADMIN_USER_IDS,
                     avatar=profile['items'][0]['profile_image'],
@@ -196,18 +178,20 @@ def register_user_from_profile(profile, scope):
     else:
         raise ValueError('Invalid scope')
 
-    Config.db.users.insert_one({
-        **user,
-        '_id': user['_id'],
-        'name': encrypt_field(user['name']),
-        'email': encrypt_field(user['email']) if user.get('email') else None,
+    db.users.insert_one({
+        **user.mongo(),
+        'name': user.name,
+        'email': encrypt_field(user.email) if user.email else None,
     })
     return user
 
 
 def check_captcha(captcha):
+    if captcha == 'test' and Config.ENVIRONMENT == 'development':
+        return
+
     if not captcha:
-        raise errors.Forbidden('Invalid captcha')
+        raise errors.Forbidden('Missing catpcha')
     url = 'https://www.google.com/recaptcha/api/siteverify'
     data = {
         'secret': Config.GOOGLE_CAPTCHA_SECRET_KEY,
@@ -236,19 +220,26 @@ def send_activation_code(email, activation_code):
         html_content=html_content
     )
     try:
-        # FIXME : key empty ?
         sg = SendGridAPIClient(Config.SENDGRID_API_KEY)
         sg.send(message)
     except Exception as e:
         raise errors.InternalError(f'Unable to send email with SendGrid | {str(e)}')
 
 
-def verify_user_email(user, activation_code):
-    if user.get('is_verified'):
-        raise errors.BadRequest(f"User already verified")
+def verify_user_email(activation_code):
+    user = user_from_activation_code(activation_code)
 
-    if user.get('activation_code') != activation_code:
+    if not user:
         raise errors.Forbidden('Invalid code provided')
 
-    Config.db.users.find_one_and_update({'_id': user['_id']},
-                                        {'$set': {'is_verified': True, 'activation_code': None}})
+    if user.is_verified:
+        raise errors.BadRequest(f"User already verified")
+
+    db.users.find_one_and_update({'_id': user.id},
+                                 {'$set': {'is_verified': True, 'activation_code': None}})
+
+    return user
+
+
+def unregister_user(user_id):
+    db.users.delete_one({'_id': user_id})

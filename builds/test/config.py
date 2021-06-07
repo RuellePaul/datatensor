@@ -1,9 +1,11 @@
 import os
 
-from flask import Flask
+from fastapi import FastAPI
 
 import errors
 from database import encrypt_init
+
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'  # to use OAuth2 without https
 
 if 'ENVIRONMENT' not in os.environ:
     raise errors.Forbidden('Environment variable are not set. Use init_env.sh script, or edit Pycharm configuration')
@@ -12,7 +14,7 @@ if 'ENVIRONMENT' not in os.environ:
 class Config:
     ENVIRONMENT = os.environ['ENVIRONMENT']
 
-    ROOT_PATH = os.path.abspath(os.path.join(Flask(__name__).root_path, os.pardir))
+    ROOT_PATH = os.path.abspath(os.path.join(FastAPI().root_path, os.pardir))
     DATASOURCES_PATH = os.path.join(ROOT_PATH, 'api', 'manager', 'generator', 'datasources')
 
     UI_URL = 'https://test.datatensor.io'
@@ -28,14 +30,20 @@ class Config:
         '83d2218ec37d73a99944dbcd90e5753908a418b99fa79678402ba6bc97a81f83'  # ThomasRoudil (github)
     ]
 
-    DEFAULT_DATASET_IDS = {
-        'coco2014': '507f191e810c19729de860ea'
-    }
-
-    SESSION_COOKIE_SECURE = True
-    REMEMBER_COOKIE_SECURE = True
-    SESSION_COOKIE_HTTPONLY = True
-    REMEMBER_COOKIE_HTTPONLY = True
+    DATASOURCES = [
+        {
+            'key': 'coco2014',
+            'name': 'COCO 2014',
+            'download_url': 'http://images.cocodataset.org/annotations/annotations_trainval2014.zip',
+            'filenames': ['instances_val2014.json', 'instances_train2014.json']
+        },
+        {
+            'key': 'coco2017',
+            'name': 'COCO 2017',
+            'download_url': 'http://images.cocodataset.org/annotations/annotations_trainval2017.zip',
+            'filenames': ['instances_val2017.json', 'instances_train2017.json']
+        },
+    ]
 
     DB_ENCRYPTION_KEY = os.environ['DB_ENCRYPTION_KEY']
     DB_HOST = 'mongodb://127.0.0.1:27017/'

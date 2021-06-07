@@ -1,8 +1,8 @@
 import React, {createContext, FC, ReactNode, useCallback, useEffect, useState} from 'react';
 import {Task} from 'src/types/task';
-import api from 'src/utils/api';
 import {POLLING_DELAY} from 'src/constants';
 import useAuth from 'src/hooks/useAuth';
+import api from 'src/utils/api';
 
 export interface TasksContextValue {
     tasks: Task[];

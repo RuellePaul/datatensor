@@ -57,7 +57,7 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) =
                 setSubmitting
             }) => {
                 try {
-                    await api.patch(`/users/${user._id}`, values);
+                    await api.patch(`/users/me`, values);
                     enqueueSnackbar(`Profile updated`, {variant: 'success'});
                     setStatus({success: true});
                     setSubmitting(false);
