@@ -2,6 +2,7 @@ import React, {FC, useEffect, useRef, useState} from 'react';
 import {Container, makeStyles} from '@material-ui/core';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
+import {API_HOSTNAME} from 'src/utils/api';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -22,7 +23,7 @@ const DashboardView: FC = () => {
     const [messages, setMessages] = useState<string[]>([]);
 
     useEffect(() => {
-        ws.current = new WebSocket(`ws://127.0.0.1:4069/message`);
+        ws.current = new WebSocket(`ws://${API_HOSTNAME}/message`);
         ws.current.onopen = () => console.log("ws opened");
         ws.current.onclose = () => console.log("ws closed");
 
