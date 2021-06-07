@@ -4,9 +4,6 @@ from uuid import uuid4
 import boto3
 import cv2
 import numpy
-from marshmallow import Schema
-from webargs import fields
-from werkzeug.utils import secure_filename
 
 import errors
 from config import Config
@@ -54,7 +51,7 @@ def upload_file(payload):
     dataset_id = payload['dataset_id']
     if file and allowed_file(filename):
         image_id = str(uuid4())
-        name = secure_filename(filename)
+        name = filename  # FIXME : secure filename
         image = cv2.imdecode(numpy.fromstring(file.read(), numpy.uint8), cv2.IMREAD_UNCHANGED)
         image = compress_image(image)
         image_bytes = cv2.imencode('.jpg', image)[1].tostring()
@@ -78,16 +75,6 @@ def delete_image_from_s3(image_id):
         )
     except Exception as e:
         raise errors.InternalError(f'Cannot delete file from S3, {str(e)}')
-
-
-class Image(Schema):
-    _id = fields.Str(dump_only=True)
-    dataset_id = fields.Str(dump_only=True)
-    name = fields.Str(required=True)
-    path = fields.Str(required=True)
-    width = fields.Int(required=True)
-    height = fields.Int(required=True)
-    size = fields.Int(required=True)
 
 
 def find_images(dataset_id, offset, limit):
