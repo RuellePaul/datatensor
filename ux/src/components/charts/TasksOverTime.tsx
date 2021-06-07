@@ -106,6 +106,7 @@ const TasksOverTime: FC<TasksOverTimeProps> = ({className, tasks, timeRange, ...
                                 theme.palette.error.main
                             ],
                             chart: {
+                                animations: {enabled: false},
                                 toolbar: {
                                     show: false
                                 }
