@@ -43,11 +43,11 @@ app.add_middleware(
 app.include_router(auth, prefix=f'{PREFIX}/auth', tags=['auth'])
 app.include_router(oauth, prefix=f'{PREFIX}/oauth', tags=['oauth'])
 
-# Users | 🔒️ Admin partially
+# Users | 🔒 Admin partially
 app.include_router(users, prefix=f'{PREFIX}/users',
                    dependencies=[Depends(logged_user)], tags=['users'])
 
-# Datasources | 🔒️ Admin only
+# Datasources | 🔒 Admin only
 app.include_router(datasources, prefix=f'{PREFIX}/datasources',
                    dependencies=[Depends(logged_admin)], tags=['datasources'])
 
@@ -73,10 +73,7 @@ datasets.include_router(images, prefix='/{dataset_id}/images', tags=['images'])
 app.include_router(labels, prefix=f'{PREFIX}/images/{{image_id}}/labels',
                    dependencies=[Depends(logged_user)], tags=['labels'])
 
-# Tasks | 🔒️ Admin only
-app.include_router(tasks, prefix=f'{PREFIX}/tasks',
-                   dependencies=[Depends(logged_admin)], tags=['tasks'])
-# Users ➤ Tasks
+# Users ➤ Tasks 🔒 Admin partially
 users.include_router(tasks, prefix='/{user_id}/tasks', tags=['tasks'])
 # Dataset ➤ Tasks
 datasets.include_router(tasks, prefix='/{dataset_id}/tasks', tags=['tasks'])
