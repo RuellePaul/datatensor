@@ -10,11 +10,9 @@ const GuestGuard: FC<GuestGuardProps> = ({children}) => {
     const {isAuthenticated, user} = useAuth();
 
     if (isAuthenticated) {
-        return <Redirect to={user.is_verified
-            ? user.is_admin
-                ? "/app/admin/reports/dashboard"
-                : "/app/reports/dashboard"
-            : "/email-confirmation"}
+        return <Redirect to={user.is_admin
+            ? "/app/admin/reports/dashboard"
+            : "/app/reports/dashboard"}
         />;
     }
 

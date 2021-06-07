@@ -110,7 +110,7 @@ const Results: FC<ResultsProps> = ({className, ...rest}) => {
                     >
                         <DTDataset
                             dataset={dataset}
-                            isWorking={tasks.filter(task => task.status === 'active' && task.dataset_id === dataset._id).length > 0}
+                            isWorking={tasks !== null && tasks.filter(task => task.status === 'active' && task.dataset_id === dataset._id).length > 0}
                         />
                     </Grid>
                 ))}

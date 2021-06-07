@@ -7,6 +7,8 @@ from logger import logger
 from authentication import core
 from authentication.models import *
 from config import Config
+from routers.notifications.core import insert_notification
+from routers.notifications.models import NotificationPostBody, NotificationType
 from routers.users.models import User
 from utils import parse, password_context
 
@@ -60,6 +62,12 @@ async def do_register(payload: AuthRegisterBody):
     core.send_activation_code(email, activation_code)
     user = core.register_user(user_id, payload.name, email, payload.password, activation_code)
 
+    if user.is_verified:
+        notification = NotificationPostBody(type=NotificationType('REGISTRATION'))
+    else:
+        notification = NotificationPostBody(type=NotificationType('EMAIL_CONFIRM_REQUIRED'))
+    insert_notification(user_id=user_id, notification=notification)
+
     logger.info(f'Registered user `{email}`')
 
     access_token = core.encode_access_token(user_id)
@@ -96,6 +104,9 @@ async def do_email_confirmation(payload: AuthEmailConfirmBody):
 
     user = core.verify_user_email(payload.activation_code)
     access_token = core.encode_access_token(user.id)
+
+    notification = NotificationPostBody(type=NotificationType('EMAIL_CONFIRM_DONE'))
+    insert_notification(user_id=user.id, notification=notification)
 
     logger.info(f"Verified email `{user.email}`")
 

@@ -4,7 +4,7 @@ import {POLLING_DELAY} from 'src/constants';
 import {API_HOSTNAME} from 'src/utils/api';
 
 export interface TasksContextValue {
-    tasks: Task[];
+    tasks: Task[] | null;
     saveTasks: (update: Task[] | ((tasks: Task[]) => Task[])) => void;
 }
 
@@ -13,7 +13,7 @@ interface TasksProviderProps {
 }
 
 export const TasksContext = createContext<TasksContextValue>({
-    tasks: [],
+    tasks: null,
     saveTasks: () => {
     }
 });
@@ -22,7 +22,7 @@ let intervalID;
 
 export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
 
-    const [currentTasks, setCurrentTasks] = useState<Task[]>([]);
+    const [currentTasks, setCurrentTasks] = useState<Task[]>(null);
 
     const ws = useRef(null);
     const [isPaused, setPaused] = useState(false);
@@ -32,27 +32,38 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
     };
 
     function sendMessage() {
-        console.log('Fetch ws...')
-        ws.current.send('');
+        if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+            console.log('Fetch ws...')
+            ws.current.send('');
+        }
     }
 
     // Send
     useEffect(() => {
         ws.current = new WebSocket(`ws://${API_HOSTNAME}/ws/tasks`);
-        ws.current.onopen = () => console.log("ws opened");
-        ws.current.onclose = () => console.log("ws closed");
-
-        intervalID = setInterval(sendMessage, POLLING_DELAY * 1000)
+        ws.current.onopen = () => {
+            console.info('Task websocket opened.');
+            setPaused(false);
+        };
+        ws.current.onclose = () => {
+            console.info('Task websocket closed.');
+        };
 
         return () => {
             ws.current.close();
             clearInterval(intervalID);
         };
-    }, []);
+
+    }, [])
 
     // Receive
     useEffect(() => {
         if (!ws.current) return;
+
+        if (isPaused)
+            clearInterval(intervalID)
+        else
+            intervalID = setInterval(sendMessage, POLLING_DELAY)
 
         ws.current.onmessage = (event) => {
             if (isPaused) return;
@@ -61,7 +72,12 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
         };
     }, [isPaused]);
 
-    let hasPendingOrActiveTasks = currentTasks.filter(task => ['pending', 'active'].includes(task.status)).length > 0;
+    useEffect(() => {
+        if (!currentTasks) return;
+
+        let hasPendingOrActiveTasks = currentTasks.filter(task => ['pending', 'active'].includes(task.status)).length > 0;
+        setPaused(!hasPendingOrActiveTasks);
+    }, [currentTasks])
 
     return (
         <TasksContext.Provider

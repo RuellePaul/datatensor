@@ -5,6 +5,7 @@ import moment from 'moment';
 import clsx from 'clsx';
 import {
     Avatar,
+    Badge,
     Box,
     Button,
     IconButton,
@@ -18,20 +19,27 @@ import {
     Tooltip,
     Typography
 } from '@material-ui/core';
-import {Done, Warning} from '@material-ui/icons';
+import {Done, Warning, Security, Face} from '@material-ui/icons';
 import {Bell as BellIcon} from 'react-feather';
 import {Theme} from 'src/theme';
 import {useDispatch, useSelector} from 'src/store';
-import {getNotifications, deleteNotifications} from 'src/slices/notification';
+import {deleteNotifications, getNotifications} from 'src/slices/notification';
 
 const titlesMap = {
     TASK_SUCCEED: 'Generator succeeded',
-    TASK_FAILED: 'Generator failed'
+    TASK_FAILED: 'Generator failed',
+    REGISTRATION: 'Welcome to datatensor 👋',
+    EMAIL_CONFIRM_REQUIRED: 'Please confirm your email address',
+    EMAIL_CONFIRM_DONE: 'Your email address has been verified !',
 };
 
 const iconsMap = {
     TASK_SUCCEED: Done,
-    TASK_FAILED: Warning
+    TASK_FAILED: Warning,
+    REGISTRATION: Face,
+    EMAIL_CONFIRM_REQUIRED: Security,
+    EMAIL_CONFIRM_DONE: Done,
+
 };
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -87,9 +95,11 @@ const Notifications: FC = () => {
                     ref={ref}
                     onClick={handleOpen}
                 >
-                    <SvgIcon>
-                        <BellIcon/>
-                    </SvgIcon>
+                    <Badge badgeContent={notifications.length} color="error">
+                        <SvgIcon>
+                            <BellIcon/>
+                        </SvgIcon>
+                    </Badge>
                 </IconButton>
             </Tooltip>
             <Popover
@@ -147,7 +157,8 @@ const Notifications: FC = () => {
                                         </ListItemAvatar>
                                         <ListItemText
                                             primary={(
-                                                <Box display='flex' justifyContent='space-between' alignItems='baseline'>
+                                                <Box display='flex' justifyContent='space-between'
+                                                     alignItems='baseline'>
                                                     {titlesMap[notification.type]}
 
                                                     <Typography variant='overline' color='textSecondary'>

@@ -234,6 +234,7 @@ const DTTasks: FC<TaskProps> = () => {
                 disableColumnMenu
                 disableColumnSelector
                 disableSelectionOnClick
+                loading={tasks === null}
                 sortModel={[
                     {
                         field: 'created_at',
