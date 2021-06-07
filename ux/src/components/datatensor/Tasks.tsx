@@ -210,7 +210,7 @@ const DTTasks: FC<TaskProps> = () => {
 
     const classes = useStyles();
 
-    const {tasks, loading} = useTasks();
+    const {tasks} = useTasks();
 
     const [selectedTask, setSelectedTask] = useState(null);
 
@@ -240,7 +240,6 @@ const DTTasks: FC<TaskProps> = () => {
                         sort: 'desc' as GridSortDirection,
                     },
                 ]}
-                loading={loading}
                 components={{
                     LoadingOverlay
                 }}

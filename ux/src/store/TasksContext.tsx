@@ -1,13 +1,11 @@
-import React, {createContext, FC, ReactNode, useCallback, useEffect, useState} from 'react';
+import React, {createContext, FC, ReactNode, useEffect, useRef, useState} from 'react';
 import {Task} from 'src/types/task';
 import {POLLING_DELAY} from 'src/constants';
-import useAuth from 'src/hooks/useAuth';
-import api from 'src/utils/api';
+import {API_HOSTNAME} from 'src/utils/api';
 
 export interface TasksContextValue {
     tasks: Task[];
     saveTasks: (update: Task[] | ((tasks: Task[]) => Task[])) => void;
-    loading: boolean;
 }
 
 interface TasksProviderProps {
@@ -17,59 +15,59 @@ interface TasksProviderProps {
 export const TasksContext = createContext<TasksContextValue>({
     tasks: [],
     saveTasks: () => {
-    },
-    loading: true
+    }
 });
 
-let timeoutId;
+let intervalID;
 
 export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
 
-    const {user} = useAuth();
-    const [loading, setLoading] = useState(true);
-    const [delayed, setDelayed] = useState(false);
     const [currentTasks, setCurrentTasks] = useState<Task[]>([]);
+
+    const ws = useRef(null);
+    const [isPaused, setPaused] = useState(false);
 
     const handleSaveTasks = (update: Task[] | ((tasks: Task[]) => Task[])): void => {
         setCurrentTasks(update);
     };
 
-    const fetchTasks = useCallback(async () => {
-        if (user)
-            try {
-                const response = await api.get<{ tasks: Task[] }>(`users/${user._id}/tasks/`);
-                handleSaveTasks(response.data.tasks);
-            } catch (err) {
-                console.error(err);
-            } finally {
-                setLoading(false);
-                setDelayed(false);
-            }
+    function sendMessage() {
+        console.log('Fetch ws...')
+        ws.current.send('');
+    }
 
-    }, [user]);
-
+    // Send
     useEffect(() => {
-        fetchTasks();
-    }, [fetchTasks]);
+        ws.current = new WebSocket(`ws://${API_HOSTNAME}/ws/tasks`);
+        ws.current.onopen = () => console.log("ws opened");
+        ws.current.onclose = () => console.log("ws closed");
 
+        intervalID = setInterval(sendMessage, POLLING_DELAY * 1000)
+
+        return () => {
+            ws.current.close();
+            clearInterval(intervalID);
+        };
+    }, []);
+
+    // Receive
     useEffect(() => {
-        let hasPendingOrActiveTasks = currentTasks.filter(task => ['pending', 'active'].includes(task.status)).length > 0;
+        if (!ws.current) return;
 
-        if (hasPendingOrActiveTasks && !delayed) {
-            setDelayed(true);
+        ws.current.onmessage = (event) => {
+            if (isPaused) return;
 
-            if (timeoutId)
-                clearTimeout(timeoutId);
-            timeoutId = setTimeout(fetchTasks, POLLING_DELAY * 1000);
-        }
-    }, [fetchTasks, currentTasks, delayed])
+            handleSaveTasks(JSON.parse(event.data));
+        };
+    }, [isPaused]);
+
+    let hasPendingOrActiveTasks = currentTasks.filter(task => ['pending', 'active'].includes(task.status)).length > 0;
 
     return (
         <TasksContext.Provider
             value={{
                 tasks: currentTasks,
-                saveTasks: handleSaveTasks,
-                loading: loading
+                saveTasks: handleSaveTasks
             }}
         >
             {children}

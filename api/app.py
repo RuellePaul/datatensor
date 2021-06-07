@@ -5,22 +5,23 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from fastapi import FastAPI, Depends, Request, WebSocket
 from starlette.middleware.cors import CORSMiddleware
 
-import errors
-from authentication.auth import auth
-from authentication.oauth import oauth
-from config import Config
-from database import encrypt_init
-from dependencies import logged_user, logged_admin
-from logger import logger
-from routers.categories.categories import categories
-from routers.datasets.datasets import datasets
-from routers.datasources.datasources import datasources
-from routers.images.images import images
-from routers.labels.labels import labels
-from routers.notifications.notifications import notifications
-from routers.tasks.tasks import tasks
-from routers.users.users import users
-from search.search import search
+from api import errors
+from api.authentication.auth import auth
+from api.authentication.oauth import oauth
+from api.config import Config
+from api.database import encrypt_init
+from api.dependencies import logged_user, logged_admin
+from api.logger import logger
+from api.routers.categories.categories import categories
+from api.routers.datasets.datasets import datasets
+from api.routers.datasources.datasources import datasources
+from api.routers.images.images import images
+from api.routers.labels.labels import labels
+from api.routers.notifications.notifications import notifications
+from api.routers.tasks.tasks import tasks
+from api.routers.users.users import users
+from api.search.search import search
+from api.socket.socket import sockets
 
 app = FastAPI()
 
@@ -38,6 +39,9 @@ app.add_middleware(
     allow_methods=['*'],
     allow_headers=['*'],
 )
+
+# Socket
+app.include_router(sockets)
 
 # Authentication
 app.include_router(auth, prefix=f'{PREFIX}/auth', tags=['auth'])
@@ -69,14 +73,15 @@ datasets.include_router(categories, prefix='/{dataset_id}/categories', tags=['ca
 # Datasets ➤ Images
 datasets.include_router(images, prefix='/{dataset_id}/images', tags=['images'])
 
+# Dataset ➤ Tasks
+datasets.include_router(tasks, prefix='/{dataset_id}/tasks', tags=['tasks'])
+
 # Images ➤ Labels
 app.include_router(labels, prefix=f'{PREFIX}/images/{{image_id}}/labels',
                    dependencies=[Depends(logged_user)], tags=['labels'])
 
 # Users ➤ Tasks 🔒 Admin partially
-users.include_router(tasks, prefix='/{user_id}/tasks', tags=['tasks'])
-# Dataset ➤ Tasks
-datasets.include_router(tasks, prefix='/{dataset_id}/tasks', tags=['tasks'])
+app.include_router(tasks, prefix=f'{PREFIX}/tasks', tags=['tasks'], dependencies=[Depends(logged_user)])
 
 
 @app.exception_handler(errors.APIError)
@@ -86,7 +91,10 @@ def handle_api_error(request: Request, error: errors.APIError):
 
 
 @app.websocket('/message')
-async def websocket_endpoint(websocket: WebSocket):
+async def get_tasks(websocket: WebSocket):
+    """
+    Websocket | paginated list of tasks.
+    """
     await websocket.accept()
     while True:
         data = await websocket.receive_text()

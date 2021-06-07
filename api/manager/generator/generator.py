@@ -11,7 +11,7 @@ import errors
 from config import Config
 from manager.task_utils import update_task, increment_task_progress
 from routers.datasets.models import Dataset
-from routers.images.core import allowed_file, upload_image, secure_filename
+from routers.images.core import allowed_file, upload_image
 from routers.tasks.models import TaskGeneratorProperties
 
 
@@ -47,7 +47,7 @@ def _process_image(args):
             '_id': image_id,
             'dataset_id': dataset_id,
             'path': path,
-            'name': secure_filename(str(filename)),
+            'name': str(filename),
             'size': len(image_bytes),
             'width': image_remote_dataset['width'],
             'height': image_remote_dataset['height']

@@ -46,10 +46,6 @@ class Task(MongoModel):
     error: Optional[str] = None
 
 
-class TasksResponse(BaseModel):
-    tasks: List[Task] = []
-
-
 class TaskResponse(BaseModel):
     task: Task
 
