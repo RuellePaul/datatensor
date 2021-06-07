@@ -30,12 +30,10 @@ def find_tasks(user, dataset_id, offset, limit):
             return list(db.tasks.find({'dataset_id': dataset_id}).skip(offset).limit(limit))
         return list(db.tasks.find({'user_id': user.id, 'dataset_id': dataset_id}).skip(offset).limit(limit))
 
-    if user.id:
+    if user.is_admin:
+        return list(db.tasks.find().skip(offset).limit(limit))
+    else:
         return list(db.tasks.find({'user_id': user.id}).skip(offset).limit(limit))
-
-    if not user.is_admin:
-        raise errors.Forbidden()
-    return list(db.tasks.find().skip(offset).limit(limit))
 
 
 def insert_task(user, dataset_id, task_type, properties):
