@@ -95,7 +95,11 @@ const Notifications: FC = () => {
                     ref={ref}
                     onClick={handleOpen}
                 >
-                    <Badge badgeContent={notifications.length} color="error">
+                    <Badge
+                        badgeContent={notifications.length}
+                        color="error"
+                        max={99}
+                    >
                         <SvgIcon>
                             <BellIcon/>
                         </SvgIcon>
