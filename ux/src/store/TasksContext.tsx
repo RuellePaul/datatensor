@@ -1,7 +1,7 @@
 import React, {createContext, FC, ReactNode, useEffect, useRef, useState} from 'react';
 import {Task} from 'src/types/task';
 import {POLLING_DELAY} from 'src/constants';
-import {API_HOSTNAME} from 'src/utils/api';
+import api, {API_HOSTNAME} from 'src/utils/api';
 
 export interface TasksContextValue {
     tasks: Task[] | null;
@@ -33,8 +33,7 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
 
     function sendMessage() {
         if (ws.current && ws.current.readyState === WebSocket.OPEN) {
-            console.log('Fetch ws...')
-            ws.current.send('');
+            ws.current.send(api.defaults.headers.common.Authorization);
         }
     }
 
@@ -54,7 +53,7 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
             clearInterval(intervalID);
         };
 
-    }, [])
+    }, []);
 
     // Receive
     useEffect(() => {
