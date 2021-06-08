@@ -70,8 +70,10 @@ export const DatasetProvider: FC<DatasetProviderProps> = ({dataset_id, children}
     }, [fetchDataset, fetchCategories]);
 
     useEffect(() => {
-        let activeTasks = tasks.filter(task => task.status === 'active' && task.dataset_id === dataset_id);
-        setIsWorking(activeTasks.length > 0);
+        if (tasks !== null) {
+            let activeTasks = tasks.filter(task => task.status === 'active' && task.dataset_id === dataset_id);
+            setIsWorking(activeTasks.length > 0);
+        }
     }, [dataset_id, tasks]);
 
     if (currentDataset === null)

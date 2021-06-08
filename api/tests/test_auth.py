@@ -50,13 +50,13 @@ class TestAuth(unittest.TestCase):
         user = response.json().get('user')
         assert user['is_verified']
 
-        response = client.post(f'{PREFIX}/auth/register', json=register_body.dict())
-        assert response.status_code == 403
-
         login_body = AuthLoginBody(email='test@datatensor.io',
                                    password='TestPassword123$%')
         response = client.post(f'{PREFIX}/auth/login', json=login_body.dict())
         assert response.status_code == 200
+        assert AuthResponse.validate(response.json())
+
+        access_token = response.json().get('accessToken')
 
         response = client.post(f'{PREFIX}/auth/unregister', headers={'Authorization': access_token})
         assert response.status_code == 200

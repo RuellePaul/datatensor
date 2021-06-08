@@ -1,22 +1,18 @@
 from fastapi import APIRouter, Depends
 
 from dependencies import logged_user
-from routers.notifications.core import find_notifications, remove_notifications
-from routers.notifications.models import *
+from routers.notifications.core import read_notifications, remove_notifications
 from routers.users.models import User
-from utils import parse
 
 notifications = APIRouter()
 
 
-@notifications.get('/', response_model=NotificationsResponse)
-async def get_notifications(user: User = Depends(logged_user), count: int = 0, limit: int = 0):
+@notifications.patch('/read')
+async def patch_notifications(user: User = Depends(logged_user)):
     """
-    Fetch paginated notifications list of logged user
+    Fetch notifications of logged user
     """
-    result = find_notifications(user.id, count, limit)
-    response = {'notifications': result}
-    return parse(response)
+    read_notifications(user.id)
 
 
 @notifications.delete('/')

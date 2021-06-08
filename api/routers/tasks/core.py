@@ -24,18 +24,12 @@ def _check_user_allowed_to_create_task(user, dataset_id, task_type):
         raise errors.Forbidden(f"Dataset {dataset_id} does not belong to user {user.id}")
 
 
-def find_tasks(user, dataset_id, offset, limit):
-    if dataset_id:
-        if user.is_admin:
-            return list(db.tasks.find({'dataset_id': dataset_id}).skip(offset).limit(limit))
-        return list(db.tasks.find({'user_id': user.id, 'dataset_id': dataset_id}).skip(offset).limit(limit))
+def find_tasks():
+    return list(db.tasks.find())
 
-    if user.id:
-        return list(db.tasks.find({'user_id': user.id}).skip(offset).limit(limit))
 
-    if not user.is_admin:
-        raise errors.Forbidden()
-    return list(db.tasks.find().skip(offset).limit(limit))
+def find_users_tasks(user):
+    return list(db.tasks.find({'user_id': user.id}))
 
 
 def insert_task(user, dataset_id, task_type, properties):

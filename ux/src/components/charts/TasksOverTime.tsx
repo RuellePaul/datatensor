@@ -1,14 +1,14 @@
 import React, {FC} from 'react';
 import Chart from 'react-apexcharts';
 import clsx from 'clsx';
-import {Card, CardContent, CardHeader, Divider, makeStyles, Theme, useTheme} from '@material-ui/core';
+import {Card, CardContent, CardHeader, Divider, LinearProgress, makeStyles, Theme, useTheme} from '@material-ui/core';
 import {Task} from 'src/types/task';
 import moment from 'moment';
 import {TimeRange} from 'src/types/timeRange';
 
 interface TasksOverTimeProps {
     className?: string;
-    tasks: Task[];
+    tasks: Task[] | null;
     timeRange: TimeRange;
 }
 
@@ -39,12 +39,14 @@ const TasksOverTime: FC<TasksOverTimeProps> = ({className, tasks, timeRange, ...
             data: buildArray(size + 1)
                 .map(index => (
                     tasks
-                        .filter(task => task.status === status)
-                        .filter(task => moment(task.created_at).isBetween(
-                            moment(new Date()).subtract(index + 1, interval),
-                            moment(new Date()).subtract(index, interval),
-                        ))
-                        .length
+                        ? tasks
+                            .filter(task => task.status === status)
+                            .filter(task => moment(task.created_at).isBetween(
+                                moment(new Date()).subtract(index + 1, interval),
+                                moment(new Date()).subtract(index, interval),
+                            ))
+                            .length
+                        : 0
                 )),
             labels: buildArray(size + 1).map(index => moment(new Date()).subtract(index, interval).format(format))
         }
@@ -93,67 +95,71 @@ const TasksOverTime: FC<TasksOverTimeProps> = ({className, tasks, timeRange, ...
             />
             <Divider/>
             <CardContent className={classes.shrink}>
-                <Chart
-                    options={{
-                        colors: [
-                            theme.palette.divider,
-                            theme.palette.info.main,
-                            theme.palette.success.main,
-                            theme.palette.error.main
-                        ],
-                        chart: {
-                            toolbar: {
-                                show: false
-                            }
-                        },
-                        dataLabels: {
-                            enabled: false
-                        },
-                        grid: {
-                            borderColor: theme.palette.divider
-                        },
-                        tooltip: {
-                            enabled: true,
-                            enabledOnSeries: undefined,
-                            theme: theme.palette.type,
-                            shared: true,
-                            intersect: false,
-                            onDatasetHover: {
-                                highlightDataSeries: true,
-                            }
-                        },
-                        xaxis: {
-                            categories: tasksOverTime[timeRange.value].success.labels
-                        },
-                        yaxis: [
-                            {
-                                labels: {
-                                    formatter: value => value.toFixed(0)
+                {tasks === null
+                    ? <LinearProgress/>
+                    : <Chart
+                        options={{
+                            colors: [
+                                theme.palette.divider,
+                                theme.palette.info.main,
+                                theme.palette.success.main,
+                                theme.palette.error.main
+                            ],
+                            chart: {
+                                animations: {enabled: false},
+                                toolbar: {
+                                    show: false
                                 }
-                            }
-                        ]
-                    }}
-                    series={[
-                        {
-                            name: 'Pending',
-                            data: tasksOverTime[timeRange.value].pending.data
-                        },
-                        {
-                            name: 'Active',
-                            data: tasksOverTime[timeRange.value].active.data
-                        },
-                        {
-                            name: 'Completed',
-                            data: tasksOverTime[timeRange.value].success.data
-                        },
-                        {
-                            name: 'Failed',
-                            data: tasksOverTime[timeRange.value].failed.data
-                        },
-                    ]}
-                    type='bar'
-                    height={350}
-                />
+                            },
+                            dataLabels: {
+                                enabled: false
+                            },
+                            grid: {
+                                borderColor: theme.palette.divider
+                            },
+                            tooltip: {
+                                enabled: true,
+                                enabledOnSeries: undefined,
+                                theme: theme.palette.type,
+                                shared: true,
+                                intersect: false,
+                                onDatasetHover: {
+                                    highlightDataSeries: true,
+                                }
+                            },
+                            xaxis: {
+                                categories: tasksOverTime[timeRange.value].success.labels
+                            },
+                            yaxis: [
+                                {
+                                    labels: {
+                                        formatter: value => value.toFixed(0)
+                                    }
+                                }
+                            ]
+                        }}
+                        series={[
+                            {
+                                name: 'Pending',
+                                data: tasksOverTime[timeRange.value].pending.data
+                            },
+                            {
+                                name: 'Active',
+                                data: tasksOverTime[timeRange.value].active.data
+                            },
+                            {
+                                name: 'Completed',
+                                data: tasksOverTime[timeRange.value].success.data
+                            },
+                            {
+                                name: 'Failed',
+                                data: tasksOverTime[timeRange.value].failed.data
+                            },
+                        ]}
+                        type='bar'
+                        height={350}
+                    />
+                }
             </CardContent>
         </Card>
     );

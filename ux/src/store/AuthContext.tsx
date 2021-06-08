@@ -9,6 +9,7 @@ interface AuthState {
     isInitialised: boolean;
     isAuthenticated: boolean;
     user: User | null;
+    accessToken: string | null;
 }
 
 interface AuthContextValue extends AuthState {
@@ -35,6 +36,7 @@ type LoginAction = {
     type: 'LOGIN';
     payload: {
         user: User;
+        accessToken: string;
     };
 };
 
@@ -46,6 +48,7 @@ type RegisterAction = {
     type: 'REGISTER';
     payload: {
         user: User;
+        accessToken: string;
     };
 };
 
@@ -58,10 +61,11 @@ type Action =
 const initialAuthState: AuthState = {
     isAuthenticated: false,
     isInitialised: false,
-    user: null
+    user: null,
+    accessToken: null
 };
 
-const isValidToken = (accessToken: string): boolean => {
+const isValidToken = (accessToken: string): boolean => {''
     if (!accessToken) {
         return false;
     }
@@ -91,32 +95,36 @@ const reducer = (state: AuthState, action: Action): AuthState => {
                 ...state,
                 isAuthenticated,
                 isInitialised: true,
-                user
+                user,
+                accessToken: localStorage.getItem('accessToken') || null
             };
         }
         case 'LOGIN': {
-            const {user} = action.payload;
+            const {user, accessToken} = action.payload;
 
             return {
                 ...state,
                 isAuthenticated: true,
-                user
+                user,
+                accessToken
             };
         }
         case 'LOGOUT': {
             return {
                 ...state,
                 isAuthenticated: false,
-                user: null
+                user: null,
+                accessToken: null
             };
         }
         case 'REGISTER': {
-            const {user} = action.payload;
+            const {user, accessToken} = action.payload;
 
             return {
                 ...state,
                 isAuthenticated: true,
-                user
+                user,
+                accessToken
             };
         }
         default: {
@@ -147,7 +155,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         dispatch({
             type: 'LOGIN',
             payload: {
-                user
+                user, accessToken
             }
         });
     };
@@ -160,7 +168,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         dispatch({
             type: 'LOGIN',
             payload: {
-                user
+                user, accessToken
             }
         });
     };
@@ -184,7 +192,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         dispatch({
             type: 'REGISTER',
             payload: {
-                user
+                user, accessToken
             }
         });
     };
@@ -200,7 +208,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         dispatch({
             type: 'LOGIN',
             payload: {
-                user
+                user, accessToken
             }
         });
 

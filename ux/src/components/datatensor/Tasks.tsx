@@ -210,7 +210,7 @@ const DTTasks: FC<TaskProps> = () => {
 
     const classes = useStyles();
 
-    const {tasks, loading} = useTasks();
+    const {tasks} = useTasks();
 
     const [selectedTask, setSelectedTask] = useState(null);
 
@@ -234,13 +234,13 @@ const DTTasks: FC<TaskProps> = () => {
                 disableColumnMenu
                 disableColumnSelector
                 disableSelectionOnClick
+                loading={tasks === null}
                 sortModel={[
                     {
                         field: 'created_at',
                         sort: 'desc' as GridSortDirection,
                     },
                 ]}
-                loading={loading}
                 components={{
                     LoadingOverlay
                 }}

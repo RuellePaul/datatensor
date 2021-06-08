@@ -264,6 +264,7 @@ const Generator: FC = () => {
                                                     onChange={handleChange}
                                                     value={values.image_count}
                                                     size='small'
+                                                    disabled={maxImageCount === null}
                                                     InputProps={{
                                                         startAdornment: (
                                                             <InputAdornment position='start'>
@@ -288,7 +289,7 @@ const Generator: FC = () => {
                                                                 {eligibleCategories
                                                                     .filter(category => values.selected_categories.includes(category.name))
                                                                     .map(category => category.labels_count)
-                                                                    .reduce((acc, val) => acc + val, 0)} labels).
+                                                                    .reduce((acc, val) => acc + val, 0)} labels)
                                                             </Typography>
                                                         </Box>
                                                     )}

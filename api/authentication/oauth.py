@@ -3,6 +3,8 @@ from fastapi import APIRouter
 from authentication import core
 from authentication.models import *
 from logger import logger
+from routers.notifications.core import insert_notification
+from routers.notifications.models import NotificationPostBody, NotificationType
 
 oauth = APIRouter()
 
@@ -35,6 +37,8 @@ async def oauth_callback(payload: OAuthCallbackBody):
 
     if not user:
         user = core.register_user_from_profile(profile, scope)
+        notification = NotificationPostBody(type=NotificationType('REGISTRATION'))
+        insert_notification(user_id, notification)
         logger.info(f'Registered `{user.name}` from `{scope}`')
 
     logger.info(f'Logged in as `{user.name}` from `{scope}`')

@@ -1,6 +1,7 @@
 import React, {FC, ReactNode} from 'react';
 import {Redirect} from 'react-router-dom';
 import useAuth from 'src/hooks/useAuth';
+import {TasksProvider} from 'src/store/TasksContext';
 
 interface AuthGuardProps {
     children?: ReactNode;
@@ -14,9 +15,9 @@ const AuthGuard: FC<AuthGuardProps> = ({children}) => {
     }
 
     return (
-        <>
+        <TasksProvider>
             {children}
-        </>
+        </TasksProvider>
     );
 };
 

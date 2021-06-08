@@ -117,7 +117,7 @@ const Search: FC = () => {
                                     )
                                 }}
                                 onChange={(event) => setValue(event.target.value)}
-                                placeholder="Search people &amp; places"
+                                placeholder="Search image datasets, categories and more..."
                                 value={value}
                                 variant="outlined"
                             />

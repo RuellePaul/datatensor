@@ -18,22 +18,21 @@ def search_datasets(query):
 
 
 def search_images(query):
-    images = list(db.images.find({'name': {'$regex': query, '$options': 'i'}},
-                                 {'name': 1}))
+    images = list(db.images.find({'name': {'$regex': query, '$options': 'i'}}))
     return images
 
 
 def search_users(query):
     users = list(db.users.find(
         {'$or': [{'email': {'$regex': query, '$options': 'i'}},
-                 {'name': {'$regex': query, '$options': 'i'}}]},
-        {'email': 1, 'name': 1}))
+                 {'name': {'$regex': query, '$options': 'i'}}]}
+    ))
     return users
 
 
 def search_categories(query):
     categories = list(db.categories.find(
         {'$or': [{'name': {'$regex': query, '$options': 'i'}},
-                 {'supercategory': {'$regex': query, '$options': 'i'}}]},
-        {'name': 1, 'supercategory': 1}))
+                 {'supercategory': {'$regex': query, '$options': 'i'}}]}
+    ))
     return categories

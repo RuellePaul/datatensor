@@ -37,8 +37,10 @@ def update_user_password(user, password, new_password):
 
 
 def remove_users(user_ids):
+    db.notifications.delete_many({'user_id': {'$in': user_ids}})
     db.users.delete_many({'_id': {'$in': user_ids}, 'is_admin': False})
 
 
 def remove_user(user_id):
+    db.notifications.delete_many({'user_id': user_id})
     db.users.delete_one({'_id': user_id, 'is_admin': False})
