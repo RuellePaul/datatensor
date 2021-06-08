@@ -97,7 +97,7 @@ const Notifications: FC = () => {
                 >
                     <Badge
                         badgeContent={notifications.length}
-                        color="error"
+                        color='error'
                         max={99}
                     >
                         <SvgIcon>
