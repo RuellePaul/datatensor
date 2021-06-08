@@ -1,74 +1,50 @@
-import json
-
-from fastapi.responses import JSONResponse
+from fastapi import HTTPException
 
 
-class APIError(Exception):
-    def __init__(self, http_status, message=None, code=None, data=None):
-        self.http_status = http_status
-        self.code = code
-        self.message = message
+class APIError(HTTPException):
+    def __init__(self, status_code, detail=None, data=None):
+        super().__init__(status_code,
+                         detail=detail or 'Something went wrong')
         self.data = data
-
-    def __str__(self):
-        return json.dumps(self.as_dict())
-
-    def as_dict(self):
-        return {'status': self.http_status,
-                'code': self.code,
-                'message': self.message,
-                'errorData': self.data}
-
-    def json_response(self):
-        return JSONResponse(
-            status_code=self.http_status,
-            content=self.as_dict(),
-        )
 
 
 class BadRequest(APIError):
-    def __init__(self, message=None, data=None):
+    def __init__(self, detail=None, data=None):
         super().__init__(400,
-                         code='bad_request',
-                         message=message or 'Bad request',
+                         detail=detail or 'Bad request',
                          data=data)
 
 
 class InvalidAuthentication(APIError):
-    def __init__(self, message=None, data=None):
+    def __init__(self, detail=None, data=None):
         super().__init__(401,
-                         code='invalid_authentication',
-                         message=message or 'Invalid Authentication',
+                         detail=detail or 'Invalid Authentication',
                          data=data)
 
 
 class ExpiredAuthentication(APIError):
-    def __init__(self, message=None, data=None):
+    def __init__(self, detail=None, data=None):
         super().__init__(401,
-                         code='expired_authentication',
-                         message=message or 'Expired authentication token',
+                         detail=detail or 'Expired authentication token',
                          data=data)
 
 
 class Forbidden(APIError):
-    def __init__(self, message=None, data=None):
+    def __init__(self, detail=None, data=None):
         super().__init__(403,
-                         code='forbidden',
-                         message=message or 'Forbidden',
+                         detail=detail or 'Forbidden',
                          data=data)
 
 
 class NotFound(APIError):
-    def __init__(self, message=None, data=None):
+    def __init__(self, detail=None, data=None):
         super().__init__(404,
-                         code='not_found',
-                         message=message or 'Not found',
+                         detail=detail or 'Not found',
                          data=data)
 
 
 class InternalError(APIError):
-    def __init__(self, message=None, data=None):
+    def __init__(self, detail=None, data=None):
         super().__init__(500,
-                         code='internal_error',
-                         message=message or 'Internal error',
+                         detail=detail or 'Internal error',
                          data=data)

@@ -2,15 +2,16 @@ import os
 
 import uvicorn
 from apscheduler.schedulers.background import BackgroundScheduler
-from fastapi import FastAPI, Depends, Request, WebSocket
+from fastapi import FastAPI, Depends, Request, WebSocket, HTTPException
+from fastapi.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
 
-from api import errors
 from api.authentication.auth import auth
 from api.authentication.oauth import oauth
 from api.config import Config
 from api.database import encrypt_init
 from api.dependencies import logged_user, logged_admin
+from api.errors import APIError
 from api.logger import logger
 from api.routers.categories.categories import categories
 from api.routers.datasets.datasets import datasets
@@ -84,10 +85,10 @@ app.include_router(labels, prefix=f'{PREFIX}/images/{{image_id}}/labels',
 app.include_router(tasks, prefix=f'{PREFIX}/tasks', tags=['tasks'], dependencies=[Depends(logged_user)])
 
 
-@app.exception_handler(errors.APIError)
-def handle_api_error(request: Request, error: errors.APIError):
+@app.exception_handler(HTTPException)
+def handle_api_error(request: Request, error: APIError):
     logger.error(error)
-    return error.json_response()
+    return JSONResponse(status_code=error.status_code, content={'message': error.detail, 'data': error.data})
 
 
 @app.websocket('/message')

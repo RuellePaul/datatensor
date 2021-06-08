@@ -38,7 +38,7 @@ def verify_access_token(access_token, verified=False, return_user_id=False):
         if not user_id:
             raise errors.InvalidAuthentication()
     except jwt.exceptions.ExpiredSignatureError:
-        raise errors.ExpiredAuthentication()
+        raise errors.ExpiredAuthentication(data='ERR_EXPIRED')
 
     if return_user_id:
         return user_id
