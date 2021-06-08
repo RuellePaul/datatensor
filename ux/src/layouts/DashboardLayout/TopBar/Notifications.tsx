@@ -1,5 +1,6 @@
 import React, {FC, useRef, useState} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
+import clsx from 'clsx';
 import {useSnackbar} from 'notistack';
 import {
     Badge,
@@ -13,12 +14,14 @@ import {
     Popover,
     SvgIcon,
     Tooltip,
-    Typography
+    Typography,
+    useTheme
 } from '@material-ui/core';
+import {FiberManualRecord} from '@material-ui/icons';
 import {Bell as BellIcon} from 'react-feather';
 import {Theme} from 'src/theme';
 import {useDispatch, useSelector} from 'src/store';
-import {deleteNotifications} from 'src/slices/notification';
+import {deleteNotifications, readNotifications} from 'src/slices/notification';
 import getDateDiff from 'src/utils/getDateDiff';
 import {User} from 'src/types/user';
 import useAuth from 'src/hooks/useAuth';
@@ -31,7 +34,7 @@ const titlesMap = {
     EMAIL_CONFIRM_DONE: 'Verified ✅',
 };
 
-const descriptionsMap = (user : User) => ({
+const descriptionsMap = (user: User) => ({
     TASK_SUCCEED: 'Generator task completed successfully.',
     TASK_FAILED: 'Generator task has failed.',
     REGISTRATION: "We're glad to see you as one of our members. Happy hacking on Datatensor !",
@@ -43,21 +46,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     popover: {
         width: 320
     },
-    icon: {
-        color: theme.palette.text.primary
-    },
-    success: {
-        background: theme.palette.success.light,
-        color: theme.palette.getContrastText(theme.palette.success.light)
-    },
-    error: {
-        background: theme.palette.error.main,
-        color: theme.palette.getContrastText(theme.palette.error.main)
-    },
+    highlight: {
+        background: 'rgba(255, 255, 255, 0.08)'
+    }
 }));
 
 const Notifications: FC = () => {
     const classes = useStyles();
+    const theme = useTheme();
 
     const {user} = useAuth();
 
@@ -67,12 +63,12 @@ const Notifications: FC = () => {
     const [isOpen, setOpen] = useState<boolean>(false);
     const {enqueueSnackbar} = useSnackbar();
 
-    const handleOpen = (): void => {
-        setOpen(true);
-    };
-
-    const handleClose = (): void => {
-        setOpen(false);
+    const handleReadNotifications = async () => {
+        try {
+            dispatch(readNotifications());
+        } catch (error) {
+            enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
+        }
     };
 
     const handleDeleteNotifications = async () => {
@@ -83,18 +79,30 @@ const Notifications: FC = () => {
         }
     };
 
+    const handleOpen = (): void => {
+        setOpen(true);
+    };
+
+    const handleClose = (): void => {
+        setOpen(false);
+        handleReadNotifications();
+    };
+
+
     return (
         <>
-            <Tooltip title="Notifications">
+            <Tooltip
+                title="Notifications"
+            >
                 <IconButton
                     color="inherit"
                     ref={ref}
                     onClick={handleOpen}
                 >
                     <Badge
-                        badgeContent={notifications.length}
+                        badgeContent={notifications.filter(notification => !notification.opened).length}
                         color='error'
-                        max={99}
+                        max={9}
                     >
                         <SvgIcon>
                             <BellIcon/>
@@ -126,7 +134,7 @@ const Notifications: FC = () => {
                             variant="h6"
                             color="textPrimary"
                         >
-                            There are no notifications
+                            You don't have notifications
                         </Typography>
                     </Box>
                 ) : (
@@ -139,6 +147,7 @@ const Notifications: FC = () => {
                                     return (
                                         <ListItem
                                             button
+                                            className={clsx(notification.opened === false && classes.highlight)}
                                             component={RouterLink}
                                             divider
                                             key={notification._id}
@@ -157,6 +166,11 @@ const Notifications: FC = () => {
                                                     </>
                                                 }
                                             />
+                                            {notification.opened === false && (
+                                                <SvgIcon htmlColor={theme.palette.info.main} fontSize="small">
+                                                    <FiberManualRecord color='inherit'/>
+                                                </SvgIcon>
+                                            )}
                                         </ListItem>
                                     );
                                 })}
@@ -170,7 +184,7 @@ const Notifications: FC = () => {
                                 size="small"
                                 onClick={handleDeleteNotifications}
                             >
-                                Mark all as read
+                                Delete all
                             </Button>
                         </Box>
                     </>

@@ -19,16 +19,9 @@ class Notification(MongoModel):
     id: str = Field(alias='_id')
     user_id: str
     created_at: datetime
+    opened: bool
     type: NotificationType
 
 
 class NotificationPostBody(BaseModel):
     type: NotificationType
-
-
-class NotificationsResponse(BaseModel):
-    notifications: List[Notification] = []
-
-
-class NotificationResponse(BaseModel):
-    notification: Notification

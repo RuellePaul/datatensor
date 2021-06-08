@@ -14,7 +14,12 @@ def insert_notification(user_id, notification):
     db.notifications.insert_one({'_id': str(uuid4()),
                                  'user_id': user_id,
                                  'created_at': datetime.now(),
+                                 'opened': False,
                                  **notification.dict()})
+
+
+def read_notifications(user_id):
+    db.notifications.update_many({'user_id': user_id}, {'$set': {'opened': True}})
 
 
 def remove_notifications(user_id):

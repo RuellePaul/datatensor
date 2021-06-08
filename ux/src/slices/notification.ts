@@ -20,6 +20,9 @@ const slice = createSlice({
 
             state.notifications = notifications;
         },
+        readNotifications(state: NotificationsState) {
+            state.notifications = state.notifications.map(notification => ({...notification, opened: true}));
+        },
         deleteNotifications(state: NotificationsState) {
             state.notifications = [];
         },
@@ -30,6 +33,12 @@ export const reducer = slice.reducer;
 
 export const setNotifications = (state: NotificationsState): AppThunk => async (dispatch) => {
     dispatch(slice.actions.setNotifications(state));
+};
+
+export const readNotifications = (): AppThunk => async (dispatch) => {
+    await api.patch('/notifications/read');
+
+    dispatch(slice.actions.readNotifications());
 };
 
 export const deleteNotifications = (): AppThunk => async (dispatch) => {

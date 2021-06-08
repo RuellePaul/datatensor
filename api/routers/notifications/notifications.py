@@ -1,10 +1,18 @@
 from fastapi import APIRouter, Depends
 
 from dependencies import logged_user
-from routers.notifications.core import remove_notifications
+from routers.notifications.core import read_notifications, remove_notifications
 from routers.users.models import User
 
 notifications = APIRouter()
+
+
+@notifications.patch('/read')
+async def patch_notifications(user: User = Depends(logged_user)):
+    """
+    Fetch notifications of logged user
+    """
+    read_notifications(user.id)
 
 
 @notifications.delete('/')
