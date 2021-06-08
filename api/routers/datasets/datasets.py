@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends
 
+import errors
 from dependencies import logged_user
 from routers.datasets.core import find_datasets, find_dataset, remove_dataset, insert_dataset
 from routers.datasets.models import *
@@ -29,8 +30,10 @@ async def get_dataset(dataset_id):
 @datasets.post('/')
 async def post_dataset(dataset: DatasetPostBody, user: User = Depends(logged_user)):
     """
-    Create a new dataset.
+    Create a new dataset. 🔒️ Verified users only
     """
+    if not user.is_verified:
+        raise errors.InvalidAuthentication('User email is not verified', data='ERR_VERIFY')
     insert_dataset(user.id, dataset)
 
 

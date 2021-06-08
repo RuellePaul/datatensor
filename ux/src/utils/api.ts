@@ -21,12 +21,12 @@ api.defaults.withCredentials = true;
 api.interceptors.response.use(
     (response) => response,
     (error) => {
-        if (error.response?.data?.errorData === 'ERR_VERIFY') {
+        if (error.response?.data?.data === 'ERR_VERIFY') {
             if (window.location.pathname !== '/email-confirmation')
                 window.location.replace('/email-confirmation')
         }
 
-        if (error.response?.data?.code === 'expired_authentication') {
+        if (error.response?.data?.data === 'ERR_EXPIRED') {
             window.location.href = '/login';
         }
 
