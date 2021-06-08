@@ -1,9 +1,10 @@
 import React, {createContext, FC, ReactNode, useEffect, useRef, useState} from 'react';
 import {Task} from 'src/types/task';
 import {POLLING_DELAY} from 'src/constants';
-import api, {API_HOSTNAME} from 'src/utils/api';
+import {API_HOSTNAME} from 'src/utils/api';
 import {setNotifications} from 'src/slices/notification';
 import {useDispatch} from './index';
+import useAuth from '../hooks/useAuth';
 
 export interface TasksContextValue {
     tasks: Task[] | null;
@@ -25,6 +26,7 @@ let notificationsIntervalID;
 
 export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
 
+    const {accessToken} = useAuth();
     const [currentTasks, setCurrentTasks] = useState<Task[]>(null);
     const dispatch = useDispatch();
 
@@ -35,18 +37,6 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
     const handleSaveTasks = (update: Task[] | ((tasks: Task[]) => Task[])): void => {
         setCurrentTasks(update);
     };
-
-    function sendTaskMessage() {
-        if (wsTask.current && wsTask.current.readyState === WebSocket.OPEN) {
-            wsTask.current.send(api.defaults.headers.common.Authorization);
-        }
-    }
-
-    function sendNotificationsMessage() {
-        if (wsNotifications.current && wsNotifications.current.readyState === WebSocket.OPEN) {
-            wsNotifications.current.send(api.defaults.headers.common.Authorization);
-        }
-    }
 
     // Send
     useEffect(() => {
@@ -80,6 +70,13 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
     useEffect(() => {
         if (!wsTask.current) return;
 
+        function sendTaskMessage() {
+            console.log('Send tasks poll...')
+            if (wsTask.current && wsTask.current.readyState === WebSocket.OPEN) {
+                wsTask.current.send(accessToken);
+            }
+        }
+
         if (isPaused)
             clearInterval(tasksIntervalID)
         else
@@ -90,11 +87,18 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
 
             handleSaveTasks(JSON.parse(event.data));
         };
-    }, [isPaused]);
+    }, [isPaused, accessToken]);
 
     // Receive notifications
     useEffect(() => {
         if (!wsNotifications.current) return;
+
+        function sendNotificationsMessage() {
+            console.log('Send notifications poll...')
+            if (wsNotifications.current && wsNotifications.current.readyState === WebSocket.OPEN) {
+                wsNotifications.current.send(accessToken);
+            }
+        }
 
         if (isPaused)
             clearInterval(notificationsIntervalID)
@@ -106,14 +110,17 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
 
             dispatch(setNotifications(JSON.parse(event.data)));
         };
-    }, [isPaused, dispatch]);
+    }, [isPaused, dispatch, accessToken]);
 
     useEffect(() => {
-        if (!currentTasks) return;
+        if (currentTasks && accessToken) {
+            let hasPendingOrActiveTasks = currentTasks.filter(task => ['pending', 'active'].includes(task.status)).length > 0;
+            setPaused(!hasPendingOrActiveTasks);
+        }
+    }, [currentTasks, accessToken])
 
-        let hasPendingOrActiveTasks = currentTasks.filter(task => ['pending', 'active'].includes(task.status)).length > 0;
-        setPaused(!hasPendingOrActiveTasks);
-    }, [currentTasks])
+    if (!accessToken)
+        return null
 
     return (
         <TasksContext.Provider

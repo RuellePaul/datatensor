@@ -6,7 +6,6 @@ import ScrollReset from 'src/components/utils/ScrollReset';
 import CookiesNotification from 'src/components/overlays/CookiesNotification';
 import SettingsNotification from 'src/components/overlays/SettingsNotification';
 import {AuthProvider} from 'src/store/AuthContext';
-import {TasksProvider} from 'src/store/TasksContext';
 import routes, {renderRoutes} from 'src/routes';
 import Providers from './providers';
 
@@ -18,13 +17,11 @@ const App: FC = () => {
         <Providers>
             <Router history={history}>
                 <AuthProvider>
-                    <TasksProvider>
-                        <GlobalStyles/>
-                        <ScrollReset/>
-                        <CookiesNotification/>
-                        <SettingsNotification/>
-                        {renderRoutes(routes)}
-                    </TasksProvider>
+                    <GlobalStyles/>
+                    <ScrollReset/>
+                    <CookiesNotification/>
+                    <SettingsNotification/>
+                    {renderRoutes(routes)}
                 </AuthProvider>
             </Router>
         </Providers>
