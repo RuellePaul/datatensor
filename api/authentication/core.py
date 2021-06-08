@@ -245,4 +245,5 @@ def verify_user_email(activation_code):
 
 
 def unregister_user(user_id):
+    db.notifications.delete_many({'user_id': user_id})
     db.users.delete_one({'_id': user_id})
