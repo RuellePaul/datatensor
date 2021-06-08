@@ -20,12 +20,10 @@ class Notification(MongoModel):
     user_id: str
     created_at: datetime
     type: NotificationType
-    description: Optional[str] = None
 
 
 class NotificationPostBody(BaseModel):
     type: NotificationType
-    description: Optional[str] = None
 
 
 class NotificationsResponse(BaseModel):

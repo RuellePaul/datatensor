@@ -1,17 +1,13 @@
 import React, {FC, useRef, useState} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import {useSnackbar} from 'notistack';
-import moment from 'moment';
-import clsx from 'clsx';
 import {
-    Avatar,
     Badge,
     Box,
     Button,
     IconButton,
     List,
     ListItem,
-    ListItemAvatar,
     ListItemText,
     makeStyles,
     Popover,
@@ -19,28 +15,29 @@ import {
     Tooltip,
     Typography
 } from '@material-ui/core';
-import {Done, Face, Security, Warning} from '@material-ui/icons';
 import {Bell as BellIcon} from 'react-feather';
 import {Theme} from 'src/theme';
 import {useDispatch, useSelector} from 'src/store';
 import {deleteNotifications} from 'src/slices/notification';
+import getDateDiff from 'src/utils/getDateDiff';
+import {User} from 'src/types/user';
+import useAuth from 'src/hooks/useAuth';
 
 const titlesMap = {
-    TASK_SUCCEED: 'Generator succeeded',
-    TASK_FAILED: 'Generator failed',
+    TASK_SUCCEED: 'Task succeeded ✅',
+    TASK_FAILED: 'Task failed ❌',
     REGISTRATION: 'Welcome to datatensor 👋',
-    EMAIL_CONFIRM_REQUIRED: 'Please confirm your email address',
-    EMAIL_CONFIRM_DONE: 'Your email address has been verified !',
+    EMAIL_CONFIRM_REQUIRED: 'Security 🔒',
+    EMAIL_CONFIRM_DONE: 'Verified ✅',
 };
 
-const iconsMap = {
-    TASK_SUCCEED: Done,
-    TASK_FAILED: Warning,
-    REGISTRATION: Face,
-    EMAIL_CONFIRM_REQUIRED: Security,
-    EMAIL_CONFIRM_DONE: Done,
-
-};
+const descriptionsMap = (user : User) => ({
+    TASK_SUCCEED: 'Generator task completed successfully.',
+    TASK_FAILED: 'Generator task has failed.',
+    REGISTRATION: "We're glad to see you as one of our members. Happy hacking on Datatensor !",
+    EMAIL_CONFIRM_REQUIRED: 'Please confirm your email address to access all datatensor features.',
+    EMAIL_CONFIRM_DONE: `Your email address ${user.email} has been verified !`,
+});
 
 const useStyles = makeStyles((theme: Theme) => ({
     popover: {
@@ -61,6 +58,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const Notifications: FC = () => {
     const classes = useStyles();
+
+    const {user} = useAuth();
+
     const {notifications} = useSelector((state) => state.notifications);
     const ref = useRef<any>(null);
     const dispatch = useDispatch();
@@ -132,46 +132,34 @@ const Notifications: FC = () => {
                 ) : (
                     <>
                         <List disablePadding>
-                            {notifications.map((notification) => {
-                                const Icon = iconsMap[notification.type];
-
-                                return (
-                                    <ListItem
-                                        component={RouterLink}
-                                        divider
-                                        key={notification._id}
-                                        to="#"
-                                    >
-                                        <ListItemAvatar>
-                                            <Avatar
-                                                className={clsx({
-                                                    [classes.icon]: true,
-                                                    [classes.success]: notification.type === 'TASK_SUCCEED',
-                                                    [classes.error]: notification.type === 'TASK_FAILED',
-                                                })}
-                                            >
-                                                <SvgIcon fontSize="small">
-                                                    <Icon/>
-                                                </SvgIcon>
-                                            </Avatar>
-                                        </ListItemAvatar>
-                                        <ListItemText
-                                            primary={(
-                                                <Box display='flex' justifyContent='space-between'
-                                                     alignItems='baseline'>
-                                                    {titlesMap[notification.type]}
-
-                                                    <Typography variant='overline' color='textSecondary'>
-                                                        {moment(notification.created_at).format('HH:mm:ss')}
-                                                    </Typography>
-                                                </Box>
-                                            )}
-                                            primaryTypographyProps={{variant: 'subtitle2', color: 'textPrimary'}}
-                                            secondary={notification.description}
-                                        />
-                                    </ListItem>
-                                );
-                            })}
+                            {notifications
+                                .slice()
+                                .sort((a, b) => (new Date(b.created_at).getTime()) - (new Date(a.created_at).getTime()) ? -1 : 1)
+                                .map((notification) => {
+                                    return (
+                                        <ListItem
+                                            button
+                                            component={RouterLink}
+                                            divider
+                                            key={notification._id}
+                                            to="#"
+                                        >
+                                            <ListItemText
+                                                primary={titlesMap[notification.type]}
+                                                primaryTypographyProps={{variant: 'subtitle2', color: 'textPrimary'}}
+                                                secondary={
+                                                    <>
+                                                        {descriptionsMap(user)[notification.type]}
+                                                        <br/>
+                                                        <Typography component='span' variant='caption'>
+                                                            {getDateDiff(new Date(), notification.created_at, 'passed_event')}
+                                                        </Typography>
+                                                    </>
+                                                }
+                                            />
+                                        </ListItem>
+                                    );
+                                })}
                         </List>
                         <Box
                             p={1}
