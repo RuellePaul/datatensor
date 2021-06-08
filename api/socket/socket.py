@@ -6,6 +6,7 @@ from api.logger import logger
 from api.utils import parse
 from authentication.core import verify_access_token
 from routers.tasks.core import find_tasks, find_users_tasks
+from routers.notifications.core import find_notifications
 from routers.users.models import User
 
 sockets = APIRouter()
@@ -27,8 +28,29 @@ async def get_tasks(websocket: WebSocket):
                 tasks = find_users_tasks(user)
             await websocket.send_json(parse(tasks))
         except ConnectionClosedOK:
-            logger.info('Connexion closed.')
+            logger.info('Tasks websocket | closed')
             break
         except WebSocketDisconnect:
-            logger.warning('Connexion websocket disconnected.')
+            logger.info('Tasks websocket | disconnected.')
+            break
+
+
+@sockets.websocket('/ws/notifications')
+async def get_tasks(websocket: WebSocket):
+    """
+    Websocket | paginated list of tasks.
+    """
+    await websocket.accept()
+    while True:
+        try:
+            access_token = await websocket.receive_text()
+            user_id = verify_access_token(access_token, verified=False, return_user_id=True)
+            result = find_notifications(user_id)
+            response = {'notifications': result}
+            await websocket.send_json(parse(response))
+        except ConnectionClosedOK:
+            logger.info('Notifications closed.')
+            break
+        except WebSocketDisconnect:
+            logger.info('Notifications websocket | disconnected.')
             break

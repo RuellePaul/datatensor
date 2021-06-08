@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useRef, useState} from 'react';
+import React, {FC, useRef, useState} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import {useSnackbar} from 'notistack';
 import moment from 'moment';
@@ -19,11 +19,11 @@ import {
     Tooltip,
     Typography
 } from '@material-ui/core';
-import {Done, Warning, Security, Face} from '@material-ui/icons';
+import {Done, Face, Security, Warning} from '@material-ui/icons';
 import {Bell as BellIcon} from 'react-feather';
 import {Theme} from 'src/theme';
 import {useDispatch, useSelector} from 'src/store';
-import {deleteNotifications, getNotifications} from 'src/slices/notification';
+import {deleteNotifications} from 'src/slices/notification';
 
 const titlesMap = {
     TASK_SUCCEED: 'Generator succeeded',
@@ -82,10 +82,6 @@ const Notifications: FC = () => {
             enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
         }
     };
-
-    useEffect(() => {
-        dispatch(getNotifications());
-    }, [dispatch]);
 
     return (
         <>

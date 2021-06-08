@@ -29,7 +29,7 @@ def encode_access_token(user_id):
     return access_token
 
 
-def verify_access_token(access_token, verified=False):
+def verify_access_token(access_token, verified=False, return_user_id=False):
     if not access_token:
         raise errors.InvalidAuthentication()
 
@@ -39,6 +39,9 @@ def verify_access_token(access_token, verified=False):
             raise errors.InvalidAuthentication()
     except jwt.exceptions.ExpiredSignatureError:
         raise errors.ExpiredAuthentication()
+
+    if return_user_id:
+        return user_id
 
     user = db.users.find_one({'_id': user_id}, {'password': 0})
     if not user:

@@ -6,8 +6,8 @@ from config import Config
 db = Config.db
 
 
-def find_notifications(user_id, offset, limit):
-    return list(db.notifications.find({'user_id': user_id}).skip(offset).limit(limit))
+def find_notifications(user_id):
+    return list(db.notifications.find({'user_id': user_id}))
 
 
 def insert_notification(user_id, notification):

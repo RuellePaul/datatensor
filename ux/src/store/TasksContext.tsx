@@ -2,6 +2,8 @@ import React, {createContext, FC, ReactNode, useEffect, useRef, useState} from '
 import {Task} from 'src/types/task';
 import {POLLING_DELAY} from 'src/constants';
 import api, {API_HOSTNAME} from 'src/utils/api';
+import {setNotifications} from 'src/slices/notification';
+import {useDispatch} from './index';
 
 export interface TasksContextValue {
     tasks: Task[] | null;
@@ -18,58 +20,93 @@ export const TasksContext = createContext<TasksContextValue>({
     }
 });
 
-let intervalID;
+let tasksIntervalID;
+let notificationsIntervalID;
 
 export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
 
     const [currentTasks, setCurrentTasks] = useState<Task[]>(null);
+    const dispatch = useDispatch();
 
-    const ws = useRef(null);
+    const wsTask = useRef(null);
+    const wsNotifications = useRef(null);
     const [isPaused, setPaused] = useState(false);
 
     const handleSaveTasks = (update: Task[] | ((tasks: Task[]) => Task[])): void => {
         setCurrentTasks(update);
     };
 
-    function sendMessage() {
-        if (ws.current && ws.current.readyState === WebSocket.OPEN) {
-            ws.current.send(api.defaults.headers.common.Authorization);
+    function sendTaskMessage() {
+        if (wsTask.current && wsTask.current.readyState === WebSocket.OPEN) {
+            wsTask.current.send(api.defaults.headers.common.Authorization);
+        }
+    }
+
+    function sendNotificationsMessage() {
+        if (wsNotifications.current && wsNotifications.current.readyState === WebSocket.OPEN) {
+            wsNotifications.current.send(api.defaults.headers.common.Authorization);
         }
     }
 
     // Send
     useEffect(() => {
-        ws.current = new WebSocket(`ws://${API_HOSTNAME}/ws/tasks`);
-        ws.current.onopen = () => {
+        wsTask.current = new WebSocket(`ws://${API_HOSTNAME}/ws/tasks`);
+        wsTask.current.onopen = () => {
             console.info('Task websocket opened.');
             setPaused(false);
         };
-        ws.current.onclose = () => {
+        wsTask.current.onclose = () => {
             console.info('Task websocket closed.');
         };
 
-        return () => {
-            ws.current.close();
-            clearInterval(intervalID);
+        wsNotifications.current = new WebSocket(`ws://${API_HOSTNAME}/ws/notifications`);
+        wsNotifications.current.onopen = () => {
+            console.info('Notifications websocket opened.');
+            setPaused(false);
+        };
+        wsNotifications.current.onclose = () => {
+            console.info('Notifications websocket closed.');
         };
 
+        return () => {
+            wsTask.current.close();
+            clearInterval(tasksIntervalID);
+            wsNotifications.current.close();
+            clearInterval(notificationsIntervalID);
+        };
     }, []);
 
-    // Receive
+    // Receive tasks
     useEffect(() => {
-        if (!ws.current) return;
+        if (!wsTask.current) return;
 
         if (isPaused)
-            clearInterval(intervalID)
+            clearInterval(tasksIntervalID)
         else
-            intervalID = setInterval(sendMessage, POLLING_DELAY)
+            tasksIntervalID = setInterval(sendTaskMessage, POLLING_DELAY)
 
-        ws.current.onmessage = (event) => {
+        wsTask.current.onmessage = (event) => {
             if (isPaused) return;
 
             handleSaveTasks(JSON.parse(event.data));
         };
     }, [isPaused]);
+
+    // Receive notifications
+    useEffect(() => {
+        if (!wsNotifications.current) return;
+
+        if (isPaused)
+            clearInterval(notificationsIntervalID)
+        else
+            notificationsIntervalID = setInterval(sendNotificationsMessage, POLLING_DELAY)
+
+        wsNotifications.current.onmessage = (event) => {
+            if (isPaused) return;
+
+            dispatch(setNotifications(JSON.parse(event.data)));
+        };
+    }, [isPaused, dispatch]);
 
     useEffect(() => {
         if (!currentTasks) return;

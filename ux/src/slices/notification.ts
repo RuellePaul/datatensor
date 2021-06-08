@@ -15,7 +15,7 @@ const slice = createSlice({
     name: 'notifications',
     initialState,
     reducers: {
-        getNotifications(state: NotificationsState, action: PayloadAction<{ notifications: Notification[]; }>) {
+        setNotifications(state: NotificationsState, action: PayloadAction<{ notifications: Notification[]; }>) {
             const {notifications} = action.payload;
 
             state.notifications = notifications;
@@ -28,10 +28,8 @@ const slice = createSlice({
 
 export const reducer = slice.reducer;
 
-export const getNotifications = (): AppThunk => async (dispatch) => {
-    const response = await api.get<{ notifications: Notification[]; }>('/notifications/');
-
-    dispatch(slice.actions.getNotifications(response.data));
+export const setNotifications = (state: NotificationsState): AppThunk => async (dispatch) => {
+    dispatch(slice.actions.setNotifications(state));
 };
 
 export const deleteNotifications = (): AppThunk => async (dispatch) => {
