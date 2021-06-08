@@ -83,8 +83,6 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
             tasksIntervalID = setInterval(sendTaskMessage, POLLING_DELAY)
 
         wsTask.current.onmessage = (event) => {
-            if (isPaused) return;
-
             handleSaveTasks(JSON.parse(event.data));
         };
     }, [isPaused, accessToken]);
@@ -106,8 +104,6 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
             notificationsIntervalID = setInterval(sendNotificationsMessage, POLLING_DELAY)
 
         wsNotifications.current.onmessage = (event) => {
-            if (isPaused) return;
-
             dispatch(setNotifications(JSON.parse(event.data)));
         };
     }, [isPaused, dispatch, accessToken]);
