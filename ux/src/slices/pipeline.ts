@@ -22,25 +22,21 @@ const board: Board = {
     operations: [
         {
             id: '5e849c8708bd72683b454747',
-            description: 'This performs rotation on image.',
             listId: '5e849c39325dc5ef58e5a5db',
             name: 'Rotation'
         },
         {
             id: '5e849c90fabe1f1f4b3557f6',
-            description: 'This performs gaussian distortion on image.',
             listId: '5e849c39325dc5ef58e5a5db',
             name: 'Gaussian Distortion'
         },
         {
             id: '5e849c977ef6265938bfd90b',
-            description: 'This performs rotation on image.',
             listId: '5e849c39325dc5ef58e5a5db',
             name: 'Rotation',
         },
         {
             id: '5e849c9e34ee93bc7255c599',
-            description: 'This performs elastic distortion on image.',
             listId: '5e849c39325dc5ef58e5a5db',
             name: 'Elastic Distortion'
         }
@@ -130,8 +126,7 @@ export const createOperation = (listId: string, name: string): AppThunk => async
     const operation: Operation = {
         id: uuid(),
         listId: '5e849c39325dc5ef58e5a5db',
-        name: name,
-        description: null
+        name: name
     }
 
     dispatch(slice.actions.createOperation({operation}));

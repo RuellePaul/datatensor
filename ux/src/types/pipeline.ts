@@ -1,6 +1,5 @@
 export interface Operation {
     id: string;
-    description: string | null;
     listId: string;
     name: string;
 }
