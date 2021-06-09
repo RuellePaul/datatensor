@@ -42,7 +42,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     root: {},
     backdrop: {
         background: 'rgba(0, 0, 0, 0.8)',
-        backdropFilter: 'blur(5px)'
     },
     modal: {
         display: 'flex',
@@ -53,7 +52,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     paper: {
         overflow: 'hidden',
         background: 'transparent',
-        border: `dashed 2px ${theme.palette.divider}`
+        border: `dashed 2px ${theme.palette.divider}`,
+                backdropFilter: 'blur(5px)'
     },
     actions: {
         display: 'flex',
@@ -277,7 +277,7 @@ const DTImagesList: FC<ImagesListProps> = ({
                                 image={imageSelected}
                             >
                                 <Grid container spacing={4}>
-                                    <Grid item sm={8} xs={12}>
+                                    <Grid item md={8} xs={12}>
                                         <div className={classes.actions}>
                                             <ToggleButtonGroup
                                                 value={tool}
@@ -389,7 +389,7 @@ const DTImagesList: FC<ImagesListProps> = ({
                                         />
                                     </Grid>
 
-                                    <Grid item sm={4} xs={12}>
+                                    <Grid item md={4} xs={12}>
                                         <KeyboardShortcuts/>
 
                                         <Box mt={2}>
