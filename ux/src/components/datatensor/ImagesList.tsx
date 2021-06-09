@@ -336,12 +336,20 @@ const DTImagesList: FC<ImagesListProps> = ({
                                             <ImageConsumer>
                                                 {
                                                     value => (
-                                                        <IconButton
-                                                            disabled={value.positions.length <= 1}
-                                                            onClick={value.previousPosition}
+                                                        <Tooltip
+                                                            title={
+                                                                <Typography variant='overline'>
+                                                                    Undo (CTRL + Z)
+                                                                </Typography>
+                                                            }
                                                         >
-                                                            <RestoreIcon/>
-                                                        </IconButton>
+                                                            <IconButton
+                                                                disabled={value.positions.length <= 1}
+                                                                onClick={value.previousPosition}
+                                                            >
+                                                                <RestoreIcon/>
+                                                            </IconButton>
+                                                        </Tooltip>
                                                     )
                                                 }
                                             </ImageConsumer>
