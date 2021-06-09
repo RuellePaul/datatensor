@@ -37,6 +37,11 @@ const slice = createSlice({
             _.pull(state.operations.allIds, operationId);
             state.operations.allIds.splice(position, 0, operationId);
         },
+        updateOperation(state: PipelineState, action: PayloadAction<{ operationId: string; update: object; }>) {
+            const {operationId, update} = action.payload;
+
+            _.merge(state.operations.byId[operationId], update);
+        },
         deleteOperation(state: PipelineState, action: PayloadAction<{ operationId: string; }>) {
             const {operationId} = action.payload;
 
@@ -62,6 +67,13 @@ export const moveOperation = (operationId: string, position: number): AppThunk =
     dispatch(slice.actions.moveOperation({
         operationId,
         position
+    }));
+};
+
+export const updateOperation = (operationId: string, update: object): AppThunk => async (dispatch) => {
+    dispatch(slice.actions.updateOperation({
+        operationId,
+        update
     }));
 };
 

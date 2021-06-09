@@ -31,7 +31,7 @@ import {ImageConsumer, ImageProvider} from 'src/store/ImageContext';
 import {LAZY_LOAD_BATCH} from 'src/constants';
 import DTLabelisator from './Labelisator';
 import {Restore as RestoreIcon} from '@material-ui/icons';
-import KeyboardShortcuts from '../overlays/KeyboardShortcuts';
+import KeyboardShortcuts from 'src/components/overlays/KeyboardShortcuts';
 import DTCategories from './Categories';
 
 interface ImagesListProps {

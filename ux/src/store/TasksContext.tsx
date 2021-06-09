@@ -4,7 +4,7 @@ import {POLLING_DELAY} from 'src/constants';
 import {API_HOSTNAME} from 'src/utils/api';
 import {setNotifications} from 'src/slices/notification';
 import {useDispatch} from './index';
-import useAuth from '../hooks/useAuth';
+import useAuth from 'src/hooks/useAuth';
 
 export interface TasksContextValue {
     tasks: Task[] | null;
