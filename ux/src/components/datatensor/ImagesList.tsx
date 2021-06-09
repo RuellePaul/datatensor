@@ -41,7 +41,8 @@ interface ImagesListProps {
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
     backdrop: {
-        background: 'rgba(0, 0, 0, 0.85)'
+        background: 'rgba(0, 0, 0, 0.8)',
+        backdropFilter: 'blur(5px)'
     },
     modal: {
         display: 'flex',
@@ -68,6 +69,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     content: {
         minWidth: 100,
         maxWidth: theme.breakpoints.values.lg,
+        padding: theme.spacing(2)
     },
     grid: {
         display: 'flex',
