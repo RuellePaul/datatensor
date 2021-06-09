@@ -26,7 +26,7 @@ const Details: FC<DetailsProps> = ({
             {...rest}
         >
             <Box mt={3}>
-                {operation.name}
+                {operation.type}
             </Box>
         </div>
     );

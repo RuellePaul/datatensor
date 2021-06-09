@@ -89,7 +89,7 @@ const Operation: FC<OperationProps> = forwardRef(({
                         variant="h5"
                         color="textPrimary"
                     >
-                        {operation.name}
+                        {operation.type}
                     </Typography>
                 </CardContent>
             </Card>

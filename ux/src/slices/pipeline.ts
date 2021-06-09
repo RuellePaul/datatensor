@@ -3,7 +3,7 @@ import {createSlice} from '@reduxjs/toolkit';
 import _ from 'lodash';
 import {v4 as uuid} from 'uuid';
 import type {AppThunk} from 'src/store'
-import type {Operation} from 'src/types/pipeline';
+import type {Operation, OperationType} from 'src/types/pipeline';
 
 interface PipelineState {
     isLoaded: boolean;
@@ -48,10 +48,10 @@ const slice = createSlice({
 
 export const reducer = slice.reducer;
 
-export const createOperation = (name: string): AppThunk => async (dispatch) => {
+export const createOperation = (type: OperationType): AppThunk => async (dispatch) => {
     const operation: Operation = {
         id: uuid(),
-        name: name
+        type: type
     }
 
     dispatch(slice.actions.createOperation({operation}));

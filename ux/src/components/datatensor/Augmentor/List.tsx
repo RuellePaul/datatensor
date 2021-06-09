@@ -93,10 +93,9 @@ const List: FC<ListProps> = ({className, ...rest}) => {
                     <OperationAdd/>
                 </Box>
             </Paper>
-            <pre>
+            <pre style={{marginTop: 20}}>
                 {JSON.stringify(pipeline, null, 4)}
             </pre>
-
         </div>
     );
 };
