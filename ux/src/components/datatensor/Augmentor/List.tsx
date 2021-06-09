@@ -2,24 +2,16 @@ import type {FC} from 'react';
 import React from 'react';
 import clsx from 'clsx';
 import {Draggable, Droppable} from 'react-beautiful-dnd';
-import {Box, Divider, makeStyles, Paper, Typography} from '@material-ui/core';
-import type {Theme} from 'src/theme';
-import type {RootState} from 'src/store';
+import {Box, Divider, makeStyles, Paper} from '@material-ui/core';
 import {useSelector} from 'src/store';
-import type {List as ListType} from 'src/types/pipeline';
+import type {Theme} from 'src/theme';
 import Operation from './Operation';
 import OperationAdd from './OperationAdd';
 
 interface ListProps {
     className?: string;
-    listId: string;
 }
 
-const listSelector = (state: RootState, listId: string): ListType => {
-    const {lists} = state.pipeline;
-
-    return lists.byId[listId];
-};
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
@@ -53,30 +45,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const List: FC<ListProps> = ({className, listId, ...rest}) => {
+const List: FC<ListProps> = ({className, ...rest}) => {
     const classes = useStyles();
-    const list = useSelector((state) => listSelector(state, listId));
+    const pipeline = useSelector<any>((state) => state.pipeline);
     return (
         <div
             className={clsx(classes.root, className)}
             {...rest}
         >
             <Paper className={classes.inner}>
-                <Box
-                    p={2}
-                    display="flex"
-                    alignItems="center"
-                >
-                    <Typography
-                        color="inherit"
-                        variant="h5"
-                    >
-                        {list.name}
-                    </Typography>
-                </Box>
-                <Divider/>
                 <Droppable
-                    droppableId={list.id}
+                    droppableId='operationsPipeline'
                     type="card"
                 >
                     {(provided) => (
@@ -84,7 +63,7 @@ const List: FC<ListProps> = ({className, listId, ...rest}) => {
                             ref={provided.innerRef}
                             className={classes.droppableArea}
                         >
-                            {list.operationIds.map((operationId, index) => (
+                            {pipeline.operations.allIds.map((operationId, index) => (
                                 <Draggable
                                     draggableId={operationId}
                                     index={index}
@@ -111,9 +90,13 @@ const List: FC<ListProps> = ({className, listId, ...rest}) => {
                 </Droppable>
                 <Divider/>
                 <Box p={2}>
-                    <OperationAdd listId={list.id}/>
+                    <OperationAdd/>
                 </Box>
             </Paper>
+            <pre>
+                {JSON.stringify(pipeline, null, 4)}
+            </pre>
+
         </div>
     );
 };

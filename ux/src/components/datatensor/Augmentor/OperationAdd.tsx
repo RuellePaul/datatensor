@@ -8,7 +8,6 @@ import {createOperation} from 'src/slices/pipeline';
 
 interface OperationAddProps {
     className?: string;
-    listId: string;
 }
 
 const useStyles = makeStyles(() => ({
@@ -17,7 +16,6 @@ const useStyles = makeStyles(() => ({
 
 const OperationAdd: FC<OperationAddProps> = ({
                                                  className,
-                                                 listId,
                                                  ...rest
                                              }) => {
     const classes = useStyles();
@@ -42,7 +40,7 @@ const OperationAdd: FC<OperationAddProps> = ({
 
     const handleAddConfirm = async (): Promise<void> => {
         try {
-            await dispatch(createOperation(listId, name || 'Untitled Operation'));
+            await dispatch(createOperation(name || 'Untitled Operation'));
             setExpanded(false);
             setName('');
             enqueueSnackbar('Operation created', {
