@@ -51,20 +51,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     paper: {
         overflow: 'hidden',
-        background: 'transparent'
+        background: 'transparent',
+        border: `dashed 2px ${theme.palette.divider}`
     },
     actions: {
         display: 'flex',
         alignItems: 'center'
     },
     header: {
-        position: 'fixed',
-        top: 0,
-        left: 0,
         width: '100%',
+        maxWidth: theme.breakpoints.values.lg,
         padding: theme.spacing(1),
         display: 'flex',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     content: {
         minWidth: 100,
@@ -275,7 +274,7 @@ const DTImagesList: FC<ImagesListProps> = ({
                                 key={imageSelected._id}
                                 image={imageSelected}
                             >
-                                <Grid container spacing={2}>
+                                <Grid container spacing={4}>
                                     <Grid item sm={8} xs={12}>
                                         <div className={classes.actions}>
                                             <ToggleButtonGroup

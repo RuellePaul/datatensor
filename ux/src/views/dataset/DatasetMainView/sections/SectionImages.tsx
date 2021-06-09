@@ -71,7 +71,7 @@ const SectionImages: FC<SectionProps> = ({className}) => {
     const imagesCount = images.length;
 
     return (
-        <Box className={clsx(classes.root, className)}>
+        <div className={clsx(classes.root, className)}>
             <div className={classes.header}>
                 <Typography
                     className={classes.title}
@@ -129,7 +129,7 @@ const SectionImages: FC<SectionProps> = ({className}) => {
             </Button>
 
             <DTImagesList/>
-        </Box>
+        </div>
     )
 };
 

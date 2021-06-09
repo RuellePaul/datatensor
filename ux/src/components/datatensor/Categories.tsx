@@ -15,7 +15,6 @@ import {
     Grid,
     IconButton,
     InputLabel,
-    LinearProgress,
     makeStyles,
     MenuItem,
     Select,
@@ -138,25 +137,21 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
     return (
         <div className={clsx(classes.root, 'scroll')}>
             <Box my={2}>
-                {labels
-                    ? <div className={classes.categories}>
-                        {
-                            labeledCategories.map(category => (
-                                <Box
-                                    m={0.6}
-                                    key={category._id}
-                                >
-                                    <DTCategory
-                                        category={category}
-                                        index={categories.indexOf(category)}
-                                    />
-                                </Box>
-                            ))
-                        }
-                    </div>
-                    : <LinearProgress variant='query'/>
-                }
-
+                <div className={classes.categories}>
+                    {
+                        labeledCategories.map(category => (
+                            <Box
+                                m={0.6}
+                                key={category._id}
+                            >
+                                <DTCategory
+                                    category={category}
+                                    index={categories.indexOf(category)}
+                                />
+                            </Box>
+                        ))
+                    }
+                </div>
             </Box>
             <div className={classes.categories}>
                 {
