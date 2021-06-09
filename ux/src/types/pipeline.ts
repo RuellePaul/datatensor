@@ -1,4 +1,4 @@
-export interface Card {
+export interface Operation {
     id: string;
     cover: string | null;
     description: string | null;
@@ -9,18 +9,10 @@ export interface Card {
 export interface List {
     id: string;
     name: string;
-    cardIds: string[];
+    operationIds: string[];
 }
 
 export interface Board {
-    cards: Card[];
+    operations: Operation[];
     lists: List[];
-}
-
-import {Operation} from './operation';
-
-export interface Pipeline {
-    _id: string;
-    dataset_id: string;
-    operations: Operation[]
 }

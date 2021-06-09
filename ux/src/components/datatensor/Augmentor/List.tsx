@@ -8,8 +8,8 @@ import type {Theme} from 'src/theme';
 import type {RootState} from 'src/store';
 import {useSelector} from 'src/store';
 import type {List as ListType} from 'src/types/pipeline';
-import Card from './Card';
-import CardAdd from './CardAdd';
+import Operation from './Operation';
+import OperationAdd from './OperationAdd';
 
 interface ListProps {
     className?: string;
@@ -85,18 +85,18 @@ const List: FC<ListProps> = ({className, listId, ...rest}) => {
                             ref={provided.innerRef}
                             className={classes.droppableArea}
                         >
-                            {list.cardIds.map((cardId, index) => (
+                            {list.operationIds.map((operationId, index) => (
                                 <Draggable
-                                    draggableId={cardId}
+                                    draggableId={operationId}
                                     index={index}
-                                    key={cardId}
+                                    key={operationId}
                                 >
                                     {(provided, snapshot) => (
-                                        <Card
-                                            cardId={cardId}
+                                        <Operation
+                                            operationId={operationId}
                                             dragging={snapshot.isDragging}
                                             index={index}
-                                            key={cardId}
+                                            key={operationId}
                                             list={list}
                                             // @ts-ignore
                                             ref={provided.innerRef}
@@ -113,7 +113,7 @@ const List: FC<ListProps> = ({className, listId, ...rest}) => {
                 </Droppable>
                 <Divider/>
                 <Box p={2}>
-                    <CardAdd listId={list.id}/>
+                    <OperationAdd listId={list.id}/>
                 </Box>
             </Paper>
         </div>

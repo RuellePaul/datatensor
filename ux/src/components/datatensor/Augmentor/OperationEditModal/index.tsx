@@ -13,14 +13,14 @@ import {
 } from 'react-feather';
 import type {Theme} from 'src/theme';
 import {useDispatch} from 'src/store';
-import {deleteCard} from 'src/slices/pipeline';
-import type {Card, List} from 'src/types/pipeline';
+import {deleteOperation} from 'src/slices/pipeline';
+import type {Operation, List} from 'src/types/pipeline';
 import Details from './Details';
 import ActionButton from './ActionButton';
 
-interface CardEditModalProps {
+interface OperationEditModalProps {
     className?: string;
-    card: Card;
+    operation: Operation;
     list: List;
     onClose?: () => void;
     open: boolean;
@@ -35,8 +35,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const CardEditModal: FC<CardEditModalProps> = ({
-                                                   card,
+const OperationEditModal: FC<OperationEditModalProps> = ({
+                                                   operation,
                                                    className,
                                                    list,
                                                    onClose,
@@ -49,8 +49,8 @@ const CardEditModal: FC<CardEditModalProps> = ({
 
     const handleDelete = async (): Promise<void> => {
         try {
-            await dispatch(deleteCard(card.id));
-            enqueueSnackbar('Card archived', {
+            await dispatch(deleteOperation(operation.id));
+            enqueueSnackbar('Operation archived', {
                 variant: 'success'
             });
         } catch (err) {
@@ -100,7 +100,7 @@ const CardEditModal: FC<CardEditModalProps> = ({
                         sm={8}
                     >
                         <Details
-                            card={card}
+                            operation={operation}
                             list={list}
                         />
                     </Grid>
@@ -113,7 +113,7 @@ const CardEditModal: FC<CardEditModalProps> = ({
                             variant="overline"
                             color="textSecondary"
                         >
-                            Add to card
+                            Add to operation
                         </Typography>
                         <ActionButton
                             icon={<UsersIcon/>}
@@ -161,9 +161,9 @@ const CardEditModal: FC<CardEditModalProps> = ({
     );
 };
 
-CardEditModal.propTypes = {
+OperationEditModal.propTypes = {
     // @ts-ignore
-    card: PropTypes.object.isRequired,
+    operation: PropTypes.object.isRequired,
     className: PropTypes.string,
     // @ts-ignore
     list: PropTypes.object.isRequired,
@@ -171,10 +171,10 @@ CardEditModal.propTypes = {
     open: PropTypes.bool.isRequired
 };
 
-CardEditModal.defaultProps = {
+OperationEditModal.defaultProps = {
     open: false,
     onClose: () => {
     }
 };
 
-export default CardEditModal;
+export default OperationEditModal;

@@ -6,7 +6,7 @@ import {useSnackbar} from 'notistack';
 import {makeStyles} from '@material-ui/core';
 import type {Theme} from 'src/theme';
 import {useDispatch, useSelector} from 'src/store';
-import {getBoard, moveCard} from 'src/slices/pipeline';
+import {getBoard, moveOperation} from 'src/slices/pipeline';
 import List from './List';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -39,7 +39,7 @@ const PipelineView: FC = () => {
                 return;
             }
 
-            // Card has not been moved
+            // Operation has not been moved
             if (
                 source.droppableId === destination.droppableId
                 && source.index === destination.index
@@ -49,13 +49,13 @@ const PipelineView: FC = () => {
 
             if (source.droppableId === destination.droppableId) {
                 // Moved to the same list on different position
-                await dispatch(moveCard(draggableId, destination.index));
+                await dispatch(moveOperation(draggableId, destination.index));
             } else {
                 // Moved to another list
-                await dispatch(moveCard(draggableId, destination.index, destination.droppableId));
+                await dispatch(moveOperation(draggableId, destination.index, destination.droppableId));
             }
 
-            enqueueSnackbar('Card moved', {
+            enqueueSnackbar('Operation moved', {
                 variant: 'success'
             });
         } catch (err) {

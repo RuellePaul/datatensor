@@ -6,12 +6,12 @@ import _ from 'lodash';
 import {useSnackbar} from 'notistack';
 import {Box, makeStyles, TextField, Typography} from '@material-ui/core';
 import {useDispatch} from 'src/store';
-import {updateCard} from 'src/slices/pipeline';
-import type {Card, List} from 'src/types/pipeline';
+import {updateOperation} from 'src/slices/pipeline';
+import type {Operation, List} from 'src/types/pipeline';
 
 interface DetailsProps {
     className?: string;
-    card: Card;
+    operation: Operation;
     list: List;
 }
 
@@ -20,7 +20,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const Details: FC<DetailsProps> = ({
-                                       card,
+                                       operation,
                                        className,
                                        list,
                                        ...rest
@@ -31,8 +31,8 @@ const Details: FC<DetailsProps> = ({
 
     const handleUpdate = _.debounce(async (update) => {
         try {
-            await dispatch(updateCard(card.id, update));
-            enqueueSnackbar('Card updated', {
+            await dispatch(updateOperation(operation.id, update));
+            enqueueSnackbar('Operation updated', {
                 variant: 'success'
             });
         } catch (err) {
@@ -52,9 +52,9 @@ const Details: FC<DetailsProps> = ({
                 <TextField
                     variant="outlined"
                     fullWidth
-                    defaultValue={card.name}
+                    defaultValue={operation.name}
                     onChange={(event) => handleUpdate({name: event.target.value})}
-                    label="Card Title"
+                    label="Operation Title"
                 />
             </Box>
             <Box mt={3}>
@@ -72,7 +72,7 @@ const Details: FC<DetailsProps> = ({
                         variant="outlined"
                         onChange={(event) => handleUpdate({description: event.target.value})}
                         placeholder="Leave a message"
-                        defaultValue={card.description}
+                        defaultValue={operation.description}
                     />
                 </Box>
             </Box>
@@ -82,7 +82,7 @@ const Details: FC<DetailsProps> = ({
 
 Details.propTypes = {
     // @ts-ignore
-    card: PropTypes.object.isRequired,
+    operation: PropTypes.object.isRequired,
     className: PropTypes.string,
     // @ts-ignore
     list: PropTypes.object.isRequired

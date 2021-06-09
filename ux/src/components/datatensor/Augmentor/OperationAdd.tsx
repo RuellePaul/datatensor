@@ -5,9 +5,9 @@ import clsx from 'clsx';
 import {useSnackbar} from 'notistack';
 import {Box, Button, makeStyles, TextField} from '@material-ui/core';
 import {useDispatch} from 'src/store';
-import {createCard} from 'src/slices/pipeline';
+import {createOperation} from 'src/slices/pipeline';
 
-interface CardAddProps {
+interface OperationAddProps {
     className?: string;
     listId: string;
 }
@@ -16,7 +16,7 @@ const useStyles = makeStyles(() => ({
     root: {}
 }));
 
-const CardAdd: FC<CardAddProps> = ({
+const OperationAdd: FC<OperationAddProps> = ({
                                        className,
                                        listId,
                                        ...rest
@@ -43,10 +43,10 @@ const CardAdd: FC<CardAddProps> = ({
 
     const handleAddConfirm = async (): Promise<void> => {
         try {
-            await dispatch(createCard(listId, name || 'Untitled Card'));
+            await dispatch(createOperation(listId, name || 'Untitled Operation'));
             setExpanded(false);
             setName('');
-            enqueueSnackbar('Card created', {
+            enqueueSnackbar('Operation created', {
                 variant: 'success'
             });
         } catch (err) {
@@ -66,8 +66,8 @@ const CardAdd: FC<CardAddProps> = ({
                 <>
                     <TextField
                         fullWidth
-                        label="Card Title"
-                        name="cardName"
+                        label="Operation Title"
+                        name="operationName"
                         onChange={handleChange}
                         value={name}
                         variant="outlined"
@@ -106,9 +106,9 @@ const CardAdd: FC<CardAddProps> = ({
     );
 };
 
-CardAdd.propTypes = {
+OperationAdd.propTypes = {
     className: PropTypes.string,
     listId: PropTypes.string.isRequired
 };
 
-export default CardAdd;
+export default OperationAdd;

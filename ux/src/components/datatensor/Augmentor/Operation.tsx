@@ -2,29 +2,29 @@ import type {FC} from 'react';
 import React, {forwardRef, useState} from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import {Card as MuiCard, CardContent, CardMedia, makeStyles, Typography} from '@material-ui/core';
+import {Card, CardContent, CardMedia, makeStyles, Typography} from '@material-ui/core';
 import type {Theme} from 'src/theme';
 import type {RootState} from 'src/store';
 import {useSelector} from 'src/store';
-import type {Card as CardType, List} from 'src/types/pipeline';
-import CardEditModal from './CardEditModal';
+import type {Operation as OperationType, List} from 'src/types/pipeline';
+import OperationEditModal from './OperationEditModal';
 
-interface CardProps {
+interface OperationProps {
     className?: string;
-    cardId: string;
+    operationId: string;
     dragging: boolean;
     index?: number;
     list: List;
     style?: {};
 }
 
-interface PopulatedCard extends CardType {
+interface PopulatedOperation extends OperationType {
 
 }
 
-const cardSelector = (state: RootState, cardId: string): PopulatedCard => {
-    const {cards,} = state.pipeline;
-    return cards.byId[cardId]
+const operationSelector = (state: RootState, operationId: string): PopulatedOperation => {
+    const {operations,} = state.pipeline;
+    return operations.byId[operationId]
 };
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         paddingTop: theme.spacing(1),
         paddingBottom: theme.spacing(1)
     },
-    card: {
+    operation: {
         '&:hover': {
             backgroundColor: theme.palette.background.dark
         }
@@ -51,8 +51,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const Card: FC<CardProps> = forwardRef(({
-                                            cardId,
+const Operation: FC<OperationProps> = forwardRef(({
+                                            operationId,
                                             className,
                                             dragging,
                                             index,
@@ -61,7 +61,7 @@ const Card: FC<CardProps> = forwardRef(({
                                             ...rest
                                         }, ref) => {
     const classes = useStyles();
-    const card = useSelector((state) => cardSelector(state, cardId));
+    const operation = useSelector((state) => operationSelector(state, operationId));
     const [isOpened, setOpened] = useState<boolean>(false);
 
     const handleOpen = (): void => {
@@ -81,19 +81,19 @@ const Card: FC<CardProps> = forwardRef(({
             style={style}
             {...rest}
         >
-            <MuiCard
+            <Card
                 className={clsx(
-                    classes.card,
+                    classes.operation,
                     {[classes.dragging]: dragging}
                 )}
                 raised={dragging}
                 variant={dragging ? 'elevation' : 'outlined'}
                 onClick={handleOpen}
             >
-                {card.cover && (
+                {operation.cover && (
                     <CardMedia
                         className={classes.cover}
-                        image={card.cover}
+                        image={operation.cover}
                     />
                 )}
                 <CardContent>
@@ -101,22 +101,22 @@ const Card: FC<CardProps> = forwardRef(({
                         variant="h5"
                         color="textPrimary"
                     >
-                        {card.name}
+                        {operation.name}
                     </Typography>
                 </CardContent>
-            </MuiCard>
-            <CardEditModal
+            </Card>
+            <OperationEditModal
                 open={isOpened}
                 onClose={handleClose}
-                card={card}
+                operation={operation}
                 list={list}
             />
         </div>
     );
 });
 
-Card.propTypes = {
-    cardId: PropTypes.string.isRequired,
+Operation.propTypes = {
+    operationId: PropTypes.string.isRequired,
     className: PropTypes.string,
     dragging: PropTypes.bool.isRequired,
     index: PropTypes.number,
@@ -125,9 +125,9 @@ Card.propTypes = {
     style: PropTypes.object
 };
 
-Card.defaultProps = {
+Operation.defaultProps = {
     dragging: false,
     style: {}
 };
 
-export default Card;
+export default Operation;
