@@ -14,14 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     header: {
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        [theme.breakpoints.down('xs')]: {
-            alignItems: 'flex-start',
-            flexDirection: 'column',
-            '& h4': {
-                margin: theme.spacing(0, 0, 1)
-            }
-        }
+        justifyContent: 'space-between'
     },
     title: {
         position: 'relative',
