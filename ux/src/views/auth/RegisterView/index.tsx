@@ -33,7 +33,7 @@ const RegisterView: FC = () => {
             className={classes.root}
             title="Register"
         >
-            <Container
+            <Container component='section'
                 className={classes.cardContainer}
                 maxWidth="sm"
             >

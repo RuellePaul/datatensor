@@ -44,7 +44,7 @@ const AccountView: FC = () => {
             className={classes.root}
             title="Settings"
         >
-            <Container maxWidth="lg">
+            <Container component='section' maxWidth="lg">
                 <Header/>
                 <Box mt={3}>
                     <Tabs

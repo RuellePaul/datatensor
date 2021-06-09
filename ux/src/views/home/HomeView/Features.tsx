@@ -27,7 +27,7 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
             className={clsx(classes.root, className)}
             {...rest}
         >
-            <Container maxWidth="lg">
+            <Container component='section' maxWidth="lg">
                 <Typography
                     component="p"
                     variant="overline"

@@ -25,7 +25,7 @@ const DatasetBrowseView: FC = () => {
             title="Dataset List"
         >
             <DatasetsProvider>
-                <Container maxWidth="lg">
+                <Container component='section' maxWidth="lg">
                     <Header/>
                     <Box mt={3}>
                         <Filter/>

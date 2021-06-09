@@ -79,7 +79,7 @@ const AdminDashboardView: FC = () => {
             className={classes.root}
             title="Dashboard | Admin"
         >
-            <Container maxWidth="lg">
+            <Container component='section' maxWidth="lg">
                 <Header
                     timeRange={timeRange}
                     setTimeRange={setTimeRange}

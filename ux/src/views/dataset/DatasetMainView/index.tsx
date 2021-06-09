@@ -5,16 +5,9 @@ import {Box, CircularProgress, Container, Divider, makeStyles, Tab, Tabs, Toolti
 import {Alert, TabContext} from '@material-ui/lab';
 import Header from './Header';
 import SectionImages from './sections/SectionImages';
-import SectionLabeling from './sections/SectionLabeling';
 import SectionAugmentation from './sections/SectionAugmentation';
 import SectionSettings from './sections/SectionSettings';
-import {
-    DashboardOutlined,
-    DynamicFeedOutlined,
-    PhotoLibraryOutlined,
-    PhotoSizeSelectActualOutlined,
-    SettingsOutlined
-} from '@material-ui/icons';
+import {DashboardOutlined, DynamicFeedOutlined, PhotoLibraryOutlined, SettingsOutlined} from '@material-ui/icons';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
 import {ImagesConsumer, ImagesProvider} from 'src/store/ImagesContext';
@@ -80,7 +73,7 @@ const DatasetMainView: FC = () => {
                     >
                         <ImagesProvider>
                             <TabContext value={tab.toString()}>
-                                <Container maxWidth='lg'>
+                                <Container component='section' maxWidth='lg'>
                                     <Header/>
 
                                     {value.isWorking && (
@@ -101,25 +94,6 @@ const DatasetMainView: FC = () => {
                                                 >
                                                     <DTTab label="Overview" icon={DashboardOutlined}/>
                                                     <DTTab label="Images" icon={PhotoLibraryOutlined}/>
-                                                    <DTTab
-                                                        label={
-                                                            value.images.length === 0
-                                                                ? (
-                                                                    <Tooltip title={(
-                                                                        <Typography variant='h6'>
-                                                                            You need to upload images first
-                                                                        </Typography>
-                                                                    )}>
-                                                                        <span>Labeling</span>
-                                                                    </Tooltip>
-                                                                )
-                                                                : 'Labeling'
-
-                                                        }
-                                                        disabled={value.images.length === 0}
-                                                        style={{pointerEvents: 'auto'}}
-                                                        icon={PhotoSizeSelectActualOutlined}
-                                                    />
                                                     <DTTab
                                                         label={
                                                             value.images.length === 0
@@ -153,14 +127,11 @@ const DatasetMainView: FC = () => {
                                     <SectionImages
                                         className={clsx(tab !== 1 && 'hidden')}
                                     />
-                                    <SectionLabeling
+                                    <SectionAugmentation
                                         className={clsx(tab !== 2 && 'hidden')}
                                     />
-                                    <SectionAugmentation
-                                        className={clsx(tab !== 3 && 'hidden')}
-                                    />
                                     <SectionSettings
-                                        className={clsx(tab !== 4 && 'hidden')}
+                                        className={clsx(tab !== 3 && 'hidden')}
                                     />
                                 </Container>
                             </TabContext>

@@ -40,7 +40,7 @@ const UserDetailsView: FC = () => {
             title='User details'
         >
             <UserProvider user_id={user_id}>
-                <Container maxWidth='lg'>
+                <Container component='section' maxWidth='lg'>
                     <Header/>
 
                     <Box display='flex' alignItems='center' mt={2}>

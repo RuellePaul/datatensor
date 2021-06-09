@@ -26,7 +26,7 @@ const FAQS: FC<FAQSProps> = ({className, ...rest}) => {
             className={clsx(classes.root, className)}
             {...rest}
         >
-            <Container maxWidth="lg">
+            <Container component='section' maxWidth="lg">
                 <Typography
                     variant="h1"
                     color="textPrimary"

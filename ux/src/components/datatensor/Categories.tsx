@@ -1,5 +1,9 @@
 import React, {FC, useState} from 'react';
-import useIsMountedRef from 'src/hooks/useIsMountedRef';
+import {useSnackbar} from 'notistack';
+import clsx from 'clsx';
+
+import {Formik} from 'formik';
+import * as Yup from 'yup';
 import {
     Box,
     Button,
@@ -11,6 +15,7 @@ import {
     Grid,
     IconButton,
     InputLabel,
+    LinearProgress,
     makeStyles,
     MenuItem,
     Select,
@@ -19,21 +24,19 @@ import {
     useTheme
 } from '@material-ui/core';
 import {Add as AddIcon, Close as CloseIcon} from '@material-ui/icons';
-import {Formik} from 'formik';
-import * as Yup from 'yup';
+import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import api from 'src/utils/api';
 import {Theme} from 'src/theme';
 import {Category} from 'src/types/category';
 import useDataset from 'src/hooks/useDataset';
 import useImage from 'src/hooks/useImage';
 import useCategory from 'src/hooks/useCategory';
-import {COLORS} from 'src/utils/colors';
 import {currentCategoryCount} from 'src/utils/labeling';
 import {SUPERCATEGORIES} from 'src/constants';
-import {useSnackbar} from 'notistack';
+import {COLORS} from 'src/utils/colors';
 
 interface CategoriesProps {
-
+    className?: string
 }
 
 interface CategoryProps {
@@ -46,6 +49,9 @@ interface ChipsProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+    root: {
+        maxHeight: 600
+    },
     categories: {
         display: 'flex',
         flexWrap: 'wrap'
@@ -67,7 +73,6 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
     const {currentCategory, saveCurrentCategory} = useCategory();
     const {labels, saveLabels} = useImage();
 
-    const count = currentCategoryCount(labels, category);
     const isSelected = currentCategory?.name === category.name;
 
     const handleDeleteCategory = async (category_id: string) => {
@@ -79,6 +84,8 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
         if (currentCategory && currentCategory._id === category_id)
             saveCurrentCategory(null);
     };
+
+    const count = labels ? currentCategoryCount(labels, category) : 0;
 
     return (
         <Chip
@@ -118,27 +125,37 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
     const classes = useStyles();
     const {labels} = useImage();
 
-    const labeledCategories = categories.filter(category => currentCategoryCount(labels, category) > 0);
-    const unlabeledCategories = categories.filter(category => currentCategoryCount(labels, category) === 0);
+    let labeledCategories, unlabeledCategories;
+
+    if (labels) {
+        labeledCategories = categories.filter(category => currentCategoryCount(labels, category) > 0);
+        unlabeledCategories = categories.filter(category => currentCategoryCount(labels, category) === 0);
+    } else {
+        labeledCategories = [];
+        unlabeledCategories = categories;
+    }
 
     return (
-        <>
+        <div className={clsx(classes.root, 'scroll')}>
             <Box my={2}>
-                <div className={classes.categories}>
-                    {
-                        labeledCategories.map(category => (
-                            <Box
-                                m={0.6}
-                                key={category._id}
-                            >
-                                <DTCategory
-                                    category={category}
-                                    index={categories.indexOf(category)}
-                                />
-                            </Box>
-                        ))
-                    }
-                </div>
+                {labels
+                    ? <div className={classes.categories}>
+                        {
+                            labeledCategories.map(category => (
+                                <Box
+                                    m={0.6}
+                                    key={category._id}
+                                >
+                                    <DTCategory
+                                        category={category}
+                                        index={categories.indexOf(category)}
+                                    />
+                                </Box>
+                            ))
+                        }
+                    </div>
+                    : <LinearProgress variant='query'/>
+                }
 
             </Box>
             <div className={classes.categories}>
@@ -163,11 +180,11 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
             >
                 {children}
             </Box>
-        </>
+        </div>
     )
 };
 
-const DTCategories: FC<CategoriesProps> = () => {
+const DTCategories: FC<CategoriesProps> = ({className}) => {
 
     const classes = useStyles();
     const isMountedRef = useIsMountedRef();
@@ -175,7 +192,6 @@ const DTCategories: FC<CategoriesProps> = () => {
     const {enqueueSnackbar} = useSnackbar();
 
     const {dataset, categories, saveCategories} = useDataset();
-    const {labels} = useImage();
 
     const [openCategoryCreation, setOpenCategoryCreation] = useState(false);
 
@@ -183,11 +199,8 @@ const DTCategories: FC<CategoriesProps> = () => {
         setOpenCategoryCreation(false);
     };
 
-    if (!labels)
-        return null;
-
     return (
-        <>
+        <div className={clsx(classes.root, className)}>
             <Chips
                 categories={categories}
             >
@@ -328,7 +341,7 @@ const DTCategories: FC<CategoriesProps> = () => {
                     </Box>
                 </DialogContent>
             </Dialog>
-        </>
+        </div>
     )
 };
 
