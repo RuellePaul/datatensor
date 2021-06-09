@@ -96,7 +96,6 @@ const List: FC<ListProps> = ({className, listId, ...rest}) => {
                                             dragging={snapshot.isDragging}
                                             index={index}
                                             key={operationId}
-                                            list={list}
                                             // @ts-ignore
                                             ref={provided.innerRef}
                                             style={{...provided.draggableProps.style}}
