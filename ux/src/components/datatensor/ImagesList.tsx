@@ -42,6 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     root: {},
     backdrop: {
         background: 'rgba(0, 0, 0, 0.8)',
+        backdropFilter: 'blur(5px)'
     },
     modal: {
         display: 'flex',
@@ -51,9 +52,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     paper: {
         overflow: 'hidden',
-        background: 'transparent',
+        background: 'rgba(0, 0, 0, 0.6)',
         border: `dashed 2px ${theme.palette.divider}`,
-                backdropFilter: 'blur(5px)'
+
     },
     actions: {
         display: 'flex',
