@@ -13,6 +13,7 @@ interface OperationProps {
     className?: string;
     operationId: string;
     dragging: boolean;
+    setDragDisabled?: (update: boolean | ((dataset: boolean) => boolean)) => void;
     index?: number;
     style?: {};
 }
@@ -51,6 +52,7 @@ const Operation: FC<OperationProps> = forwardRef(({
                                                       operationId,
                                                       className,
                                                       dragging,
+                                                      setDragDisabled,
                                                       index,
                                                       style,
                                                       ...rest
@@ -89,6 +91,7 @@ const Operation: FC<OperationProps> = forwardRef(({
                     <Box
                         display='flex'
                         alignItems='center'
+                        mb={2}
                     >
                         <Box mr={2}>
                             {OPERATIONS_ICONS[operation.type]}
@@ -101,6 +104,12 @@ const Operation: FC<OperationProps> = forwardRef(({
                         </Typography>
                     </Box>
 
+                    <Typography
+                        variant='subtitle2'
+                        color='textSecondary'
+                    >
+                        Probability
+                    </Typography>
                     <Slider
                         defaultValue={operation.probability}
                         min={0.05}
@@ -108,6 +117,9 @@ const Operation: FC<OperationProps> = forwardRef(({
                         step={0.05}
                         marks
                         valueLabelDisplay='auto'
+                        onClick={event => event.stopPropagation()}
+                        onMouseEnter={() => setDragDisabled(true)}
+                        onMouseLeave={() => setDragDisabled(false)}
                     />
                 </CardContent>
             </Card>

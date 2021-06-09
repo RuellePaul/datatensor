@@ -1,5 +1,5 @@
 import type {FC} from 'react';
-import React from 'react';
+import React, {useState} from 'react';
 import clsx from 'clsx';
 import {Draggable, Droppable} from 'react-beautiful-dnd';
 import {Box, Divider, makeStyles, Paper} from '@material-ui/core';
@@ -41,7 +41,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const Pipeline: FC<ListProps> = ({className, ...rest}) => {
     const classes = useStyles();
+
+    const [dragDisabled, setDragDisabled] = useState<boolean>(false);
+
     const pipeline = useSelector<any>((state) => state.pipeline);
+
     return (
         <div
             className={clsx(classes.root, className)}
@@ -62,6 +66,7 @@ const Pipeline: FC<ListProps> = ({className, ...rest}) => {
                                     draggableId={operationId}
                                     index={index}
                                     key={operationId}
+                                    isDragDisabled={dragDisabled}
                                 >
                                     {(provided, snapshot) => (
                                         <Operation
@@ -69,6 +74,7 @@ const Pipeline: FC<ListProps> = ({className, ...rest}) => {
                                             dragging={snapshot.isDragging}
                                             index={index}
                                             key={operationId}
+                                            setDragDisabled={setDragDisabled}
                                             // @ts-ignore
                                             ref={provided.innerRef}
                                             style={{...provided.draggableProps.style}}
