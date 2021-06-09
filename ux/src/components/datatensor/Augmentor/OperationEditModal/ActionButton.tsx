@@ -1,6 +1,5 @@
 import type {FC, ReactElement, ReactNode} from 'react';
 import React from 'react';
-import PropTypes from 'prop-types';
 import type {ButtonProps} from '@material-ui/core';
 import {Button, makeStyles, SvgIcon} from '@material-ui/core';
 import type {Theme} from 'src/theme';
@@ -43,11 +42,6 @@ const ActionButton: FC<ActionButtonProps> = ({
             {children}
         </Button>
     );
-};
-
-ActionButton.propTypes = {
-    icon: PropTypes.element,
-    children: PropTypes.node
 };
 
 export default ActionButton;

@@ -1,7 +1,6 @@
 import type {FC} from 'react';
 import React, {forwardRef, useState} from 'react';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import {Card, CardContent, makeStyles, Typography} from '@material-ui/core';
 import type {Theme} from 'src/theme';
 import type {RootState} from 'src/store';
@@ -102,19 +101,5 @@ const Operation: FC<OperationProps> = forwardRef(({
         </div>
     );
 });
-
-Operation.propTypes = {
-    operationId: PropTypes.string.isRequired,
-    className: PropTypes.string,
-    dragging: PropTypes.bool.isRequired,
-    index: PropTypes.number,
-    // @ts-ignore
-    style: PropTypes.object
-};
-
-Operation.defaultProps = {
-    dragging: false,
-    style: {}
-};
 
 export default Operation;

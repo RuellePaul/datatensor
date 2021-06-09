@@ -1,12 +1,7 @@
 import type {FC} from 'react';
 import React from 'react';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
-import _ from 'lodash';
-import {useSnackbar} from 'notistack';
-import {Box, makeStyles, TextField, Typography} from '@material-ui/core';
-import {useDispatch} from 'src/store';
-import {updateOperation} from 'src/slices/pipeline';
+import {Box, makeStyles} from '@material-ui/core';
 import type {Operation} from 'src/types/pipeline';
 
 interface DetailsProps {
@@ -24,22 +19,6 @@ const Details: FC<DetailsProps> = ({
                                        ...rest
                                    }) => {
     const classes = useStyles();
-    const dispatch = useDispatch();
-    const {enqueueSnackbar} = useSnackbar();
-
-    const handleUpdate = _.debounce(async (update) => {
-        try {
-            await dispatch(updateOperation(operation.id, update));
-            enqueueSnackbar('Operation updated', {
-                variant: 'success'
-            });
-        } catch (err) {
-            console.error(err);
-            enqueueSnackbar('Something went wrong', {
-                variant: 'error'
-            });
-        }
-    }, 1000);
 
     return (
         <div
@@ -47,41 +26,10 @@ const Details: FC<DetailsProps> = ({
             {...rest}
         >
             <Box mt={3}>
-                <TextField
-                    variant="outlined"
-                    fullWidth
-                    defaultValue={operation.name}
-                    onChange={(event) => handleUpdate({name: event.target.value})}
-                    label="Operation Title"
-                />
-            </Box>
-            <Box mt={3}>
-                <Typography
-                    variant="h4"
-                    color="textPrimary"
-                >
-                    Description
-                </Typography>
-                <Box mt={2}>
-                    <TextField
-                        multiline
-                        rows={6}
-                        fullWidth
-                        variant="outlined"
-                        onChange={(event) => handleUpdate({description: event.target.value})}
-                        placeholder="Leave a message"
-                        defaultValue={operation.description}
-                    />
-                </Box>
+                {operation.name}
             </Box>
         </div>
     );
 }
-
-Details.propTypes = {
-    // @ts-ignore
-    operation: PropTypes.object.isRequired,
-    className: PropTypes.string,
-};
 
 export default Details;

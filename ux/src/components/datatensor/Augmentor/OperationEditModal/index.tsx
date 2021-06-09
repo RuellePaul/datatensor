@@ -1,6 +1,5 @@
 import type {FC} from 'react';
 import React from 'react';
-import PropTypes from 'prop-types';
 import {useSnackbar} from 'notistack';
 import {Box, Dialog, Divider, Grid, IconButton, makeStyles, SvgIcon, Typography} from '@material-ui/core';
 import {
@@ -143,21 +142,6 @@ const OperationEditModal: FC<OperationEditModalProps> = ({
             </div>
         </Dialog>
     );
-};
-
-OperationEditModal.propTypes = {
-    // @ts-ignore
-    operation: PropTypes.object.isRequired,
-    className: PropTypes.string,
-    // @ts-ignore
-    onClose: PropTypes.func,
-    open: PropTypes.bool.isRequired
-};
-
-OperationEditModal.defaultProps = {
-    open: false,
-    onClose: () => {
-    }
 };
 
 export default OperationEditModal;

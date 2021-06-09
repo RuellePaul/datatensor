@@ -1,6 +1,5 @@
 import type {ChangeEvent, FC} from 'react';
 import React, {useState} from 'react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {useSnackbar} from 'notistack';
 import {Box, Button, makeStyles, TextField} from '@material-ui/core';
@@ -17,10 +16,10 @@ const useStyles = makeStyles(() => ({
 }));
 
 const OperationAdd: FC<OperationAddProps> = ({
-                                       className,
-                                       listId,
-                                       ...rest
-                                   }) => {
+                                                 className,
+                                                 listId,
+                                                 ...rest
+                                             }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const {enqueueSnackbar} = useSnackbar();
@@ -104,11 +103,6 @@ const OperationAdd: FC<OperationAddProps> = ({
             )}
         </div>
     );
-};
-
-OperationAdd.propTypes = {
-    className: PropTypes.string,
-    listId: PropTypes.string.isRequired
 };
 
 export default OperationAdd;

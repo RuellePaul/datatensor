@@ -1,7 +1,6 @@
 import type {FC} from 'react';
 import React from 'react';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import {Draggable, Droppable} from 'react-beautiful-dnd';
 import {Box, Divider, makeStyles, Paper, Typography} from '@material-ui/core';
 import type {Theme} from 'src/theme';
@@ -118,11 +117,6 @@ const List: FC<ListProps> = ({className, listId, ...rest}) => {
             </Paper>
         </div>
     );
-};
-
-List.propTypes = {
-    className: PropTypes.string,
-    listId: PropTypes.string.isRequired
 };
 
 export default List;

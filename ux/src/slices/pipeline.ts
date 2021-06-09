@@ -1,10 +1,10 @@
 import type {PayloadAction} from '@reduxjs/toolkit';
 import {createSlice} from '@reduxjs/toolkit';
 import _ from 'lodash';
+import {v4 as uuid} from 'uuid';
 import type {AppThunk} from 'src/store'
-import api from 'src/utils/api';
 import objFromArray from 'src/utils/objFromArray';
-import type {Board, Operation, List} from 'src/types/pipeline';
+import type {Board, List, Operation} from 'src/types/pipeline';
 
 const board: Board = {
     lists: [
@@ -91,11 +91,6 @@ const slice = createSlice({
             state.operations.allIds.push(operation.id);
             state.lists.byId[operation.listId].operationIds.push(operation.id);
         },
-        updateOperation(state: PipelineState, action: PayloadAction<{ operation: Operation; }>) {
-            const {operation} = action.payload;
-
-            _.merge(state.operations.byId[operation.id], operation);
-        },
         moveOperation(state: PipelineState, action: PayloadAction<{ operationId: string; position: number; listId?: string; }>) {
             const {operationId, position, listId} = action.payload;
             const {listId: sourceListId} = state.operations.byId[operationId];
@@ -132,21 +127,14 @@ export const getBoard = (): AppThunk => async (dispatch) => {
 };
 
 export const createOperation = (listId: string, name: string): AppThunk => async (dispatch) => {
-    const response = await api.post<{ operation: Operation; }>('/api/pipeline/operations/new', {
-        listId,
-        name
-    });
+    const operation: Operation = {
+        id: uuid(),
+        listId: '5e849c39325dc5ef58e5a5db',
+        name: name,
+        description: null
+    }
 
-    dispatch(slice.actions.createOperation(response.data));
-};
-
-export const updateOperation = (operationId: string, update: any): AppThunk => async (dispatch) => {
-    const response = await api.post<{ operation: Operation; }>('/api/pipeline/operations/update', {
-        operationId,
-        update
-    });
-
-    dispatch(slice.actions.updateOperation(response.data));
+    dispatch(slice.actions.createOperation({operation}));
 };
 
 export const moveOperation = (operationId: string, position: number, listId?: string): AppThunk => async (dispatch) => {
