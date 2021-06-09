@@ -67,9 +67,8 @@ const OperationEditModal: FC<OperationEditModalProps> = ({
             <div className={classes.root}>
                 <Box
                     display='flex'
-                    justifyContent='space-between'
                 >
-                    <Box flexGrow/>
+                    <Box flexGrow={1}/>
                     <IconButton onClick={onClose}>
                         <SvgIcon>
                             <CloseIcon/>

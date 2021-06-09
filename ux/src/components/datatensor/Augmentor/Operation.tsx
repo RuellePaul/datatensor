@@ -2,7 +2,7 @@ import type {FC} from 'react';
 import React, {forwardRef, useState} from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import {Card, CardContent, CardMedia, makeStyles, Typography} from '@material-ui/core';
+import {Card, CardContent, makeStyles, Typography} from '@material-ui/core';
 import type {Theme} from 'src/theme';
 import type {RootState} from 'src/store';
 import {useSelector} from 'src/store';
@@ -39,9 +39,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     dragging: {
         backgroundColor: theme.palette.background.dark
-    },
-    cover: {
-        height: 200
     },
     badge: {
         '& + &': {
@@ -88,12 +85,6 @@ const Operation: FC<OperationProps> = forwardRef(({
                 variant={dragging ? 'elevation' : 'outlined'}
                 onClick={handleOpen}
             >
-                {operation.cover && (
-                    <CardMedia
-                        className={classes.cover}
-                        image={operation.cover}
-                    />
-                )}
                 <CardContent>
                     <Typography
                         variant="h5"

@@ -22,28 +22,24 @@ const board: Board = {
     operations: [
         {
             id: '5e849c8708bd72683b454747',
-            cover: '/static/images/examples/lenna.jpg',
             description: 'This performs rotation on image.',
             listId: '5e849c39325dc5ef58e5a5db',
             name: 'Rotation'
         },
         {
             id: '5e849c90fabe1f1f4b3557f6',
-            cover: null,
             description: 'This performs gaussian distortion on image.',
             listId: '5e849c39325dc5ef58e5a5db',
             name: 'Gaussian Distortion'
         },
         {
             id: '5e849c977ef6265938bfd90b',
-            cover: null,
             description: 'This performs rotation on image.',
             listId: '5e849c39325dc5ef58e5a5db',
             name: 'Rotation',
         },
         {
             id: '5e849c9e34ee93bc7255c599',
-            cover: null,
             description: 'This performs elastic distortion on image.',
             listId: '5e849c39325dc5ef58e5a5db',
             name: 'Elastic Distortion'
@@ -154,12 +150,6 @@ export const updateOperation = (operationId: string, update: any): AppThunk => a
 };
 
 export const moveOperation = (operationId: string, position: number, listId?: string): AppThunk => async (dispatch) => {
-    await api.post('/api/pipeline/operations/move', {
-        operationId,
-        position,
-        listId
-    });
-
     dispatch(slice.actions.moveOperation({
         operationId,
         position,
@@ -168,10 +158,6 @@ export const moveOperation = (operationId: string, position: number, listId?: st
 };
 
 export const deleteOperation = (operationId: string): AppThunk => async (dispatch) => {
-    await api.post('/api/pipeline/operations/remove', {
-        operationId
-    });
-
     dispatch(slice.actions.deleteOperation({operationId}));
 };
 

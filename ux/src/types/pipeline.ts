@@ -1,6 +1,5 @@
 export interface Operation {
     id: string;
-    cover: string | null;
     description: string | null;
     listId: string;
     name: string;
