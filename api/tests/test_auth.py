@@ -1,5 +1,3 @@
-import unittest
-
 from fastapi.testclient import TestClient
 
 from app import app, PREFIX
@@ -8,7 +6,7 @@ from authentication.models import AuthLoginBody, AuthRegisterBody, AuthEmailConf
 client = TestClient(app)
 
 
-class TestAuth(unittest.TestCase):
+class TestAuth:
 
     def test_oauth_authorization_github(self):
         response = client.get(f'{PREFIX}/oauth/authorization/github')
