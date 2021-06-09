@@ -7,7 +7,7 @@ import {makeStyles} from '@material-ui/core';
 import type {Theme} from 'src/theme';
 import {useDispatch} from 'src/store';
 import {moveOperation} from 'src/slices/pipeline';
-import List from './List';
+import Pipeline from './Pipeline';
 
 const useStyles = makeStyles((theme: Theme) => ({
     content: {
@@ -69,7 +69,7 @@ const PipelineView: FC = () => {
         <DragDropContext onDragEnd={handleDragEnd}>
             <div className={classes.content}>
                 <div className={classes.inner}>
-                    <List/>
+                    <Pipeline/>
                 </div>
             </div>
         </DragDropContext>

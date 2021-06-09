@@ -18,6 +18,7 @@ export type OperationType =
 export interface Operation {
     id: string;
     type: OperationType;
+    probability: number;
 }
 
 export interface Pipeline {

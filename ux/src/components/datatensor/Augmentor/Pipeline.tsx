@@ -23,10 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         maxHeight: '100%',
         overflowY: 'hidden',
         overflowX: 'hidden',
-        width: 380,
-        [theme.breakpoints.down('xs')]: {
-            width: 300
-        }
+        width: 340
     },
     title: {
         cursor: 'pointer'
@@ -35,17 +32,14 @@ const useStyles = makeStyles((theme: Theme) => ({
         minHeight: 80,
         flexGrow: 1,
         overflowY: 'auto',
-        paddingTop: theme.spacing(1),
-        paddingBottom: theme.spacing(1),
-        paddingLeft: theme.spacing(2),
-        paddingRight: theme.spacing(2)
+        padding: theme.spacing(1, 2)
     },
     menu: {
         width: 240
     }
 }));
 
-const List: FC<ListProps> = ({className, ...rest}) => {
+const Pipeline: FC<ListProps> = ({className, ...rest}) => {
     const classes = useStyles();
     const pipeline = useSelector<any>((state) => state.pipeline);
     return (
@@ -100,4 +94,4 @@ const List: FC<ListProps> = ({className, ...rest}) => {
     );
 };
 
-export default List;
+export default Pipeline;

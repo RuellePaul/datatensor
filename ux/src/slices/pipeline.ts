@@ -51,7 +51,8 @@ export const reducer = slice.reducer;
 export const createOperation = (type: OperationType): AppThunk => async (dispatch) => {
     const operation: Operation = {
         id: uuid(),
-        type: type
+        type: type,
+        probability: 0.8
     }
 
     dispatch(slice.actions.createOperation({operation}));

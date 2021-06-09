@@ -3,23 +3,11 @@ import React, {useState} from 'react';
 import clsx from 'clsx';
 import {useSnackbar} from 'notistack';
 import {Box, Button, capitalize, FormControl, InputLabel, makeStyles, MenuItem, Select} from '@material-ui/core';
-import {
-    AspectRatio as ScaleIcon,
-    BlurOn as DistortionIcon,
-    Brightness7 as BrightnessIcon,
-    CropRotate as RotateIcon,
-    Equalizer as HistogramIcon,
-    Flip as FlipIcon,
-    FormatItalic as SkewIcon,
-    InvertColors as InvertIcon,
-    Iso as BlackAndWhiteIcon,
-    PaletteOutlined as ColorIcon,
-    PhotoSizeSelectLarge as CropIcon,
-} from '@material-ui/icons';
 import {Theme} from 'src/theme';
 import {useDispatch} from 'src/store';
 import {createOperation} from 'src/slices/pipeline';
 import {OperationType} from 'src/types/pipeline';
+import {OPERATIONS_TYPES, OPERATIONS_ICONS} from 'src/config';
 
 interface OperationAddProps {
     className?: string;
@@ -35,41 +23,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const OPERATIONS_TYPES: OperationType[] = [
-    'rotate',
-    'flip',
-    'skew',
-    'scale',
-    'crop',
-    'shear',
-    'elastic_distortion',
-    'gaussian_distortion',
-    'random_brightness',
-    'random_color',
-    'random_contrast',
-    'histogram_equalisation',
-    'invert',
-    'grey_scale',
-    'black_and_white'
-]
-
-const OPERATIONS_ICONS = {
-    rotate: <RotateIcon/>,
-    flip: <FlipIcon/>,
-    skew: <SkewIcon/>,
-    scale: <ScaleIcon/>,
-    crop: <CropIcon/>,
-    shear: <RotateIcon/>,
-    elastic_distortion: <DistortionIcon/>,
-    gaussian_distortion: <DistortionIcon/>,
-    random_brightness: <BrightnessIcon/>,
-    random_color: <ColorIcon/>,
-    random_contrast: <RotateIcon/>,
-    histogram_equalisation: <HistogramIcon/>,
-    invert: <InvertIcon/>,
-    grey_scale: <RotateIcon/>,
-    black_and_white: <BlackAndWhiteIcon/>
-}
 
 const OperationAdd: FC<OperationAddProps> = ({
                                                  className,

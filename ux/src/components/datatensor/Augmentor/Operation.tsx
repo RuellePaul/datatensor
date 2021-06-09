@@ -1,12 +1,13 @@
 import type {FC} from 'react';
 import React, {forwardRef, useState} from 'react';
 import clsx from 'clsx';
-import {Card, CardContent, makeStyles, Typography} from '@material-ui/core';
+import {Box, capitalize, Card, CardContent, Slider, makeStyles, Typography} from '@material-ui/core';
 import type {Theme} from 'src/theme';
 import type {RootState} from 'src/store';
 import {useSelector} from 'src/store';
 import type {Operation as OperationType} from 'src/types/pipeline';
 import OperationEditModal from './OperationEditModal';
+import {OPERATIONS_ICONS} from 'src/config';
 
 interface OperationProps {
     className?: string;
@@ -85,12 +86,29 @@ const Operation: FC<OperationProps> = forwardRef(({
                 onClick={handleOpen}
             >
                 <CardContent>
-                    <Typography
-                        variant="h5"
-                        color="textPrimary"
+                    <Box
+                        display='flex'
+                        alignItems='center'
                     >
-                        {operation.type}
-                    </Typography>
+                        <Box mr={2}>
+                            {OPERATIONS_ICONS[operation.type]}
+                        </Box>
+                        <Typography
+                            variant='h5'
+                            color='textPrimary'
+                        >
+                            {capitalize(operation.type).replaceAll('_', ' ')}
+                        </Typography>
+                    </Box>
+
+                    <Slider
+                        defaultValue={operation.probability}
+                        min={0.05}
+                        max={1}
+                        step={0.05}
+                        marks
+                        valueLabelDisplay='auto'
+                    />
                 </CardContent>
             </Card>
             <OperationEditModal

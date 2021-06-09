@@ -31,7 +31,7 @@ import useDataset from 'src/hooks/useDataset';
 import useImage from 'src/hooks/useImage';
 import useCategory from 'src/hooks/useCategory';
 import {currentCategoryCount} from 'src/utils/labeling';
-import {SUPERCATEGORIES} from 'src/constants';
+import {SUPERCATEGORIES} from 'src/config';
 import {COLORS} from 'src/utils/colors';
 
 interface CategoriesProps {
