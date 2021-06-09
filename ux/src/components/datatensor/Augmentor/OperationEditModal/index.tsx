@@ -14,14 +14,13 @@ import {
 import type {Theme} from 'src/theme';
 import {useDispatch} from 'src/store';
 import {deleteOperation} from 'src/slices/pipeline';
-import type {Operation, List} from 'src/types/pipeline';
+import type {Operation} from 'src/types/pipeline';
 import Details from './Details';
 import ActionButton from './ActionButton';
 
 interface OperationEditModalProps {
     className?: string;
     operation: Operation;
-    list: List;
     onClose?: () => void;
     open: boolean;
 }
@@ -29,20 +28,16 @@ interface OperationEditModalProps {
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         padding: theme.spacing(3)
-    },
-    listName: {
-        fontWeight: theme.typography.fontWeightMedium
     }
 }));
 
 const OperationEditModal: FC<OperationEditModalProps> = ({
-                                                   operation,
-                                                   className,
-                                                   list,
-                                                   onClose,
-                                                   open,
-                                                   ...rest
-                                               }) => {
+                                                             operation,
+                                                             className,
+                                                             onClose,
+                                                             open,
+                                                             ...rest
+                                                         }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const {enqueueSnackbar} = useSnackbar();
@@ -65,25 +60,16 @@ const OperationEditModal: FC<OperationEditModalProps> = ({
         <Dialog
             onClose={onClose}
             open={open}
-            maxWidth="md"
+            maxWidth='md'
             fullWidth
             {...rest}
         >
             <div className={classes.root}>
                 <Box
-                    display="flex"
-                    justifyContent="space-between"
+                    display='flex'
+                    justifyContent='space-between'
                 >
-                    <Typography
-                        variant="body2"
-                        color="textSecondary"
-                    >
-                        in list
-                        {' '}
-                        <span className={classes.listName}>
-              {list.name}
-            </span>
-                    </Typography>
+                    <Box flexGrow/>
                     <IconButton onClick={onClose}>
                         <SvgIcon>
                             <CloseIcon/>
@@ -101,7 +87,6 @@ const OperationEditModal: FC<OperationEditModalProps> = ({
                     >
                         <Details
                             operation={operation}
-                            list={list}
                         />
                     </Grid>
                     <Grid
@@ -110,8 +95,8 @@ const OperationEditModal: FC<OperationEditModalProps> = ({
                         sm={4}
                     >
                         <Typography
-                            variant="overline"
-                            color="textSecondary"
+                            variant='overline'
+                            color='textSecondary'
                         >
                             Add to operation
                         </Typography>
@@ -123,8 +108,8 @@ const OperationEditModal: FC<OperationEditModalProps> = ({
                         </ActionButton>
                         <Box mt={3}>
                             <Typography
-                                variant="overline"
-                                color="textSecondary"
+                                variant='overline'
+                                color='textSecondary'
                             >
                                 Actions
                             </Typography>
@@ -166,7 +151,6 @@ OperationEditModal.propTypes = {
     operation: PropTypes.object.isRequired,
     className: PropTypes.string,
     // @ts-ignore
-    list: PropTypes.object.isRequired,
     onClose: PropTypes.func,
     open: PropTypes.bool.isRequired
 };

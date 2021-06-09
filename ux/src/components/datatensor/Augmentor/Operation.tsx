@@ -6,7 +6,7 @@ import {Card, CardContent, CardMedia, makeStyles, Typography} from '@material-ui
 import type {Theme} from 'src/theme';
 import type {RootState} from 'src/store';
 import {useSelector} from 'src/store';
-import type {Operation as OperationType, List} from 'src/types/pipeline';
+import type {Operation as OperationType} from 'src/types/pipeline';
 import OperationEditModal from './OperationEditModal';
 
 interface OperationProps {
@@ -14,7 +14,6 @@ interface OperationProps {
     operationId: string;
     dragging: boolean;
     index?: number;
-    list: List;
     style?: {};
 }
 
@@ -52,14 +51,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const Operation: FC<OperationProps> = forwardRef(({
-                                            operationId,
-                                            className,
-                                            dragging,
-                                            index,
-                                            list,
-                                            style,
-                                            ...rest
-                                        }, ref) => {
+                                                      operationId,
+                                                      className,
+                                                      dragging,
+                                                      index,
+                                                      style,
+                                                      ...rest
+                                                  }, ref) => {
     const classes = useStyles();
     const operation = useSelector((state) => operationSelector(state, operationId));
     const [isOpened, setOpened] = useState<boolean>(false);
@@ -109,7 +107,6 @@ const Operation: FC<OperationProps> = forwardRef(({
                 open={isOpened}
                 onClose={handleClose}
                 operation={operation}
-                list={list}
             />
         </div>
     );
@@ -121,7 +118,6 @@ Operation.propTypes = {
     dragging: PropTypes.bool.isRequired,
     index: PropTypes.number,
     // @ts-ignore
-    list: PropTypes.object.isRequired,
     style: PropTypes.object
 };
 

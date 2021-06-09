@@ -7,12 +7,11 @@ import {useSnackbar} from 'notistack';
 import {Box, makeStyles, TextField, Typography} from '@material-ui/core';
 import {useDispatch} from 'src/store';
 import {updateOperation} from 'src/slices/pipeline';
-import type {Operation, List} from 'src/types/pipeline';
+import type {Operation} from 'src/types/pipeline';
 
 interface DetailsProps {
     className?: string;
     operation: Operation;
-    list: List;
 }
 
 const useStyles = makeStyles(() => ({
@@ -22,7 +21,6 @@ const useStyles = makeStyles(() => ({
 const Details: FC<DetailsProps> = ({
                                        operation,
                                        className,
-                                       list,
                                        ...rest
                                    }) => {
     const classes = useStyles();
@@ -84,8 +82,6 @@ Details.propTypes = {
     // @ts-ignore
     operation: PropTypes.object.isRequired,
     className: PropTypes.string,
-    // @ts-ignore
-    list: PropTypes.object.isRequired
 };
 
 export default Details;
