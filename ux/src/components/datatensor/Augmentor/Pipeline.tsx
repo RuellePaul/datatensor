@@ -54,7 +54,6 @@ const Pipeline: FC<ListProps> = ({className, ...rest}) => {
             <Paper className={classes.inner}>
                 <Droppable
                     droppableId='operationsPipeline'
-                    type="card"
                 >
                     {(provided) => (
                         <div
@@ -93,9 +92,6 @@ const Pipeline: FC<ListProps> = ({className, ...rest}) => {
                     <OperationAdd/>
                 </Box>
             </Paper>
-            <pre style={{marginTop: 20}}>
-                {JSON.stringify(pipeline, null, 4)}
-            </pre>
         </div>
     );
 };

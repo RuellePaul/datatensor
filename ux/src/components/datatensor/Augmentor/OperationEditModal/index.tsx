@@ -1,21 +1,26 @@
 import type {FC} from 'react';
 import React from 'react';
 import {useSnackbar} from 'notistack';
-import {Box, Dialog, Divider, Grid, IconButton, makeStyles, SvgIcon, Typography} from '@material-ui/core';
 import {
-    Archive as ArchiveIcon,
-    ArrowRight as ArrowRightIcon,
-    Copy as CopyIcon,
-    Layout as LayoutIcon,
-    Users as UsersIcon,
-    XCircle as CloseIcon
-} from 'react-feather';
+    Box,
+    Button,
+    capitalize,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    Divider,
+    IconButton,
+    makeStyles,
+    SvgIcon,
+    Typography
+} from '@material-ui/core';
+import {Close, Delete} from '@material-ui/icons';
 import type {Theme} from 'src/theme';
 import {useDispatch} from 'src/store';
 import {deleteOperation} from 'src/slices/pipeline';
 import type {Operation} from 'src/types/pipeline';
-import Details from './Details';
-import ActionButton from './ActionButton';
+import {OPERATIONS_ICONS} from '../../../../config';
+import ProbabilitySlider from './ProbabilitySlider';
 
 interface OperationEditModalProps {
     className?: string;
@@ -25,9 +30,7 @@ interface OperationEditModalProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {
-        padding: theme.spacing(3)
-    }
+    content: {}
 }));
 
 const OperationEditModal: FC<OperationEditModalProps> = ({
@@ -57,87 +60,48 @@ const OperationEditModal: FC<OperationEditModalProps> = ({
         <Dialog
             onClose={onClose}
             open={open}
-            maxWidth='md'
+            maxWidth='xs'
+            PaperProps={{className: classes.content}}
             fullWidth
             {...rest}
         >
-            <div className={classes.root}>
+            <DialogContent>
                 <Box
                     display='flex'
+                    mb={2}
                 >
+                    <Box mr={2}>
+                        {OPERATIONS_ICONS[operation.type]}
+                    </Box>
+                    <Typography
+                        variant='h5'
+                    >
+                        {capitalize(operation.type).replaceAll('_', ' ')}
+                    </Typography>
                     <Box flexGrow={1}/>
-                    <IconButton onClick={onClose}>
+                    <IconButton size='small' onClick={onClose}>
                         <SvgIcon>
-                            <CloseIcon/>
+                            <Close/>
                         </SvgIcon>
                     </IconButton>
                 </Box>
-                <Grid
-                    container
-                    spacing={5}
+
+                <ProbabilitySlider
+                    operation={operation}
+                />
+
+
+            </DialogContent>
+
+            <DialogActions>
+                <Button
+                    variant='outlined'
+                    startIcon={<Delete/>}
+                    onClick={handleDelete}
                 >
-                    <Grid
-                        item
-                        xs={12}
-                        sm={8}
-                    >
-                        <Details
-                            operation={operation}
-                        />
-                    </Grid>
-                    <Grid
-                        item
-                        xs={12}
-                        sm={4}
-                    >
-                        <Typography
-                            variant='overline'
-                            color='textSecondary'
-                        >
-                            Add to operation
-                        </Typography>
-                        <ActionButton
-                            icon={<UsersIcon/>}
-                            disabled
-                        >
-                            Labels
-                        </ActionButton>
-                        <Box mt={3}>
-                            <Typography
-                                variant='overline'
-                                color='textSecondary'
-                            >
-                                Actions
-                            </Typography>
-                            <ActionButton
-                                icon={<ArrowRightIcon/>}
-                                disabled
-                            >
-                                Move
-                            </ActionButton>
-                            <ActionButton
-                                icon={<CopyIcon/>}
-                                disabled
-                            >
-                                Copy
-                            </ActionButton>
-                            <ActionButton
-                                icon={<LayoutIcon/>}
-                                disabled
-                            >
-                                Make Template
-                            </ActionButton>
-                            <Divider/>
-                            <ActionButton
-                                icon={<ArchiveIcon/>}
-                                onClick={handleDelete}
-                            >
-                                Archive
-                            </ActionButton>
-                        </Box>
-                    </Grid>
-                </Grid>
-            </div>
+                    Delete operation
+                </Button>
+            </DialogActions>
         </Dialog>
     );
 };

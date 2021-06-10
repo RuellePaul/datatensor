@@ -1,14 +1,14 @@
 import type {FC} from 'react';
 import React, {forwardRef, useState} from 'react';
 import clsx from 'clsx';
-import {Box, capitalize, Card, CardContent, makeStyles, Slider, Typography} from '@material-ui/core';
+import {Box, capitalize, Card, CardContent, Divider, makeStyles, Typography} from '@material-ui/core';
 import type {Theme} from 'src/theme';
 import type {RootState} from 'src/store';
-import {useDispatch, useSelector} from 'src/store';
+import {useSelector} from 'src/store';
 import type {Operation as OperationType} from 'src/types/pipeline';
 import OperationEditModal from './OperationEditModal';
 import {OPERATIONS_ICONS} from 'src/config';
-import {updateOperation} from 'src/slices/pipeline';
+import ProbabilitySlider from './OperationEditModal/ProbabilitySlider';
 
 interface OperationProps {
     className?: string;
@@ -60,7 +60,6 @@ const Operation: FC<OperationProps> = forwardRef(({
                                                   }, ref) => {
     const classes = useStyles();
 
-    const dispatch = useDispatch();
     const operation = useSelector((state) => operationSelector(state, operationId));
 
     const [isOpened, setOpened] = useState<boolean>(false);
@@ -71,14 +70,6 @@ const Operation: FC<OperationProps> = forwardRef(({
 
     const handleClose = (): void => {
         setOpened(false);
-    };
-
-    const handleProbabilityChange = async (event, value): Promise<void> => {
-        try {
-            await dispatch(updateOperation(operationId, {probability: value}));
-        } catch (err) {
-            console.error(err);
-        }
     };
 
 
@@ -117,23 +108,9 @@ const Operation: FC<OperationProps> = forwardRef(({
                         </Typography>
                     </Box>
 
-                    <Typography
-                        variant='subtitle2'
-                        color='textSecondary'
-                    >
-                        Probability
-                    </Typography>
-                    <Slider
-                        min={0.05}
-                        max={1}
-                        step={0.05}
-                        marks
-                        valueLabelDisplay='auto'
-                        onClick={event => event.stopPropagation()}
-                        value={operation.probability}
-                        onChange={handleProbabilityChange}
-                        onMouseEnter={() => setDragDisabled(true)}
-                        onMouseLeave={() => setDragDisabled(false)}
+                    <ProbabilitySlider
+                        operation={operation}
+                        setDragDisabled={setDragDisabled}
                     />
                 </CardContent>
             </Card>

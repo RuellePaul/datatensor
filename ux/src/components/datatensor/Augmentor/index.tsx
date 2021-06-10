@@ -38,7 +38,19 @@ const PipelineView: FC = () => {
 
             await dispatch(moveOperation(draggableId, destination.index));
         } catch (err) {
+            console.error(err);        try {
+            // Dropped outside the list
+            if (!destination)
+                return;
+
+            // Operation has not been moved
+            if (source.droppableId === destination.droppableId && source.index === destination.index)
+                return;
+
+            await dispatch(moveOperation(draggableId, destination.index));
+        } catch (err) {
             console.error(err);
+        }
         }
     };
 
