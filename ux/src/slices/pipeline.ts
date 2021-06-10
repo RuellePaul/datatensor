@@ -2,8 +2,10 @@ import type {PayloadAction} from '@reduxjs/toolkit';
 import {createSlice} from '@reduxjs/toolkit';
 import _ from 'lodash';
 import {v4 as uuid} from 'uuid';
+import objFromArray from 'src/utils/objFromArray';
 import type {AppThunk} from 'src/store'
-import type {Operation, OperationType} from 'src/types/pipeline';
+import type {Operation, OperationType, Pipeline} from 'src/types/pipeline';
+import {DEFAULT_PIPELINE} from 'src/config';
 
 interface PipelineState {
     isLoaded: boolean;
@@ -25,6 +27,13 @@ const slice = createSlice({
     name: 'pipeline',
     initialState,
     reducers: {
+        setDefaultPipeline(state: PipelineState, action: PayloadAction<Pipeline>) {
+            const {operations} = action.payload;
+
+            state.operations.byId = objFromArray(operations);
+            state.operations.allIds = Object.keys(state.operations.byId);
+            state.isLoaded = true;
+        },
         createOperation(state: PipelineState, action: PayloadAction<{ operation: Operation; }>) {
             const {operation} = action.payload;
 
@@ -52,6 +61,11 @@ const slice = createSlice({
 });
 
 export const reducer = slice.reducer;
+
+export const setDefaultPipeline = (): AppThunk => async (dispatch) => {
+
+    dispatch(slice.actions.setDefaultPipeline(DEFAULT_PIPELINE));
+};
 
 export const createOperation = (type: OperationType): AppThunk => async (dispatch) => {
     const operation: Operation = {

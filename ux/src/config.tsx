@@ -12,7 +12,7 @@ import {
     PaletteOutlined as ColorIcon,
     PhotoSizeSelectLarge as CropIcon
 } from '@material-ui/icons';
-import {OperationType} from './types/pipeline';
+import {OperationType, Pipeline} from './types/pipeline';
 import {SuperCategory} from 'src/types/category';
 
 export const SUPERCATEGORIES: SuperCategory[] = ['person', 'vehicle', 'electronic', 'indoor', 'outdoor', 'sports', 'furniture', 'accessory', 'kitchen', 'animal', 'appliance', 'food'];
@@ -33,7 +33,7 @@ export const OPERATIONS_TYPES: OperationType[] = [
     'invert',
     'grey_scale',
     'black_and_white'
-]
+];
 
 export const OPERATIONS_ICONS = {
     rotate: <RotateIcon/>,
@@ -51,4 +51,19 @@ export const OPERATIONS_ICONS = {
     invert: <InvertIcon/>,
     grey_scale: <RotateIcon/>,
     black_and_white: <BlackAndWhiteIcon/>
-}
+};
+
+export const DEFAULT_PIPELINE: Pipeline = {
+    operations: [
+        {
+            id: '6e72802f-e64e-4ad9-8dc6-ede3fa2f498b',
+            type: 'rotate',
+            probability: 0.8
+        },
+        {
+            id: 'db3d3209-b76e-43c0-a625-3f0ea826eb23',
+            type: 'elastic_distortion',
+            probability: 0.8
+        }
+    ]
+};

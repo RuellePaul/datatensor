@@ -1,13 +1,12 @@
 import type {ChangeEvent, FC} from 'react';
 import React, {useState} from 'react';
 import clsx from 'clsx';
-import {useSnackbar} from 'notistack';
 import {Box, Button, capitalize, FormControl, InputLabel, makeStyles, MenuItem, Select} from '@material-ui/core';
 import {Theme} from 'src/theme';
 import {useDispatch} from 'src/store';
 import {createOperation} from 'src/slices/pipeline';
 import {OperationType} from 'src/types/pipeline';
-import {OPERATIONS_TYPES, OPERATIONS_ICONS} from 'src/config';
+import {OPERATIONS_ICONS, OPERATIONS_TYPES} from 'src/config';
 
 interface OperationAddProps {
     className?: string;
@@ -30,7 +29,6 @@ const OperationAdd: FC<OperationAddProps> = ({
                                              }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const {enqueueSnackbar} = useSnackbar();
     const [isExpanded, setExpanded] = useState<boolean>(false);
     const [operationType, setOperationType] = useState<OperationType>(OPERATIONS_TYPES[0]);
 
@@ -49,19 +47,9 @@ const OperationAdd: FC<OperationAddProps> = ({
     };
 
     const handleAddConfirm = async (): Promise<void> => {
-        try {
-            await dispatch(createOperation(operationType));
-            setExpanded(false);
-            setOperationType(OPERATIONS_TYPES[0]);
-            enqueueSnackbar('Operation created', {
-                variant: 'success'
-            });
-        } catch (err) {
-            console.error(err);
-            enqueueSnackbar('Something went wrong', {
-                variant: 'error'
-            });
-        }
+        await dispatch(createOperation(operationType));
+        setExpanded(false);
+        setOperationType(OPERATIONS_TYPES[0]);
     };
 
     return (

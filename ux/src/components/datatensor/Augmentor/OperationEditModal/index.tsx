@@ -44,9 +44,7 @@ const OperationEditModal: FC<OperationEditModalProps> = ({
     const handleDelete = async (): Promise<void> => {
         try {
             await dispatch(deleteOperation(operation.id));
-            enqueueSnackbar('Operation archived', {
-                variant: 'success'
-            });
+            enqueueSnackbar('Operation deleted');
         } catch (err) {
             console.error(err);
             enqueueSnackbar('Something went wrong', {
