@@ -4,17 +4,23 @@ from uuid import uuid4
 
 import errors
 from config import Config
+from routers.datasets.models import Dataset
 from routers.images.core import delete_image_from_s3
 
 db = Config.db
 
 
 def find_datasets(user_id, offset, limit):
-    return list(db.datasets.find({'$or': [{'user_id': user_id}, {'is_public': True}]}).skip(offset).limit(limit))
+    datasets = list(db.datasets
+                    .find({'$or': [{'user_id': user_id}, {'is_public': True}]})
+                    .skip(offset)
+                    .limit(limit))
+    return [Dataset.from_mongo(dataset) for dataset in datasets]
 
 
 def find_dataset(dataset_id):
-    return db.datasets.find_one({'_id': dataset_id})
+    dataset = db.datasets.find_one({'_id': dataset_id})
+    return Dataset.from_mongo(dataset)
 
 
 def insert_dataset(user_id, dataset):

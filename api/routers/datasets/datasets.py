@@ -14,8 +14,8 @@ async def get_datasets(user: User = Depends(logged_user), offset: int = 0, limit
     """
     Fetch paginated datasets list of logged user.
     """
-    result = find_datasets(user.id, offset, limit)
-    return {'datasets': [Dataset.from_mongo(dataset) for dataset in result]}
+    datasets = find_datasets(user.id, offset, limit)
+    return {'datasets': datasets}
 
 
 @datasets.get('/{dataset_id}', response_model=DatasetResponse)
@@ -23,8 +23,8 @@ async def get_dataset(dataset_id):
     """
     Fetch dataset.
     """
-    result = find_dataset(dataset_id)
-    return {'dataset': Dataset.from_mongo(result)}
+    dataset = find_dataset(dataset_id)
+    return {'dataset': dataset}
 
 
 @datasets.post('/')

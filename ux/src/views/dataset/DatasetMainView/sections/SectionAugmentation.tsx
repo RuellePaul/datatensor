@@ -4,6 +4,7 @@ import {Button, Grid, makeStyles} from '@material-ui/core';
 import {Refresh} from '@material-ui/icons';
 import {Theme} from 'src/theme';
 import AugmentorPipeline from 'src/components/datatensor/AugmentorPipeline';
+import PipelineSample from 'src/components/datatensor/PipelineSample';
 import DTImage from 'src/components/datatensor/Image';
 import useImages from 'src/hooks/useImages';
 import {ImageProvider} from 'src/store/ImageContext';
@@ -69,6 +70,13 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                         xs={12}
                     >
                         <AugmentorPipeline/>
+                    </Grid>
+                    <Grid
+                        item
+                        sm={4}
+                        xs={12}
+                    >
+                        <PipelineSample/>
                     </Grid>
                 </Grid>
             </ImageProvider>
