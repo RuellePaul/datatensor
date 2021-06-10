@@ -5,24 +5,20 @@ import {DragDropContext} from 'react-beautiful-dnd';
 import {makeStyles} from '@material-ui/core';
 import type {Theme} from 'src/theme';
 import {useDispatch} from 'src/store';
-import {setDefaultPipeline, moveOperation} from 'src/slices/pipeline';
+import {moveOperation, setDefaultPipeline} from 'src/slices/pipeline';
 import Pipeline from './Pipeline';
 
 const useStyles = makeStyles((theme: Theme) => ({
     content: {
+        width: '100%',
         flexGrow: 1,
         flexShrink: 1,
         display: 'flex',
-        overflowY: 'hidden',
-        overflowX: 'auto'
-    },
-    inner: {
-        display: 'flex',
-        padding: theme.spacing(3, 1)
+        overflow: 'hidden',
     }
 }));
 
-const PipelineView: FC = () => {
+const AugmentorPipeline: FC = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
@@ -38,19 +34,20 @@ const PipelineView: FC = () => {
 
             await dispatch(moveOperation(draggableId, destination.index));
         } catch (err) {
-            console.error(err);        try {
-            // Dropped outside the list
-            if (!destination)
-                return;
-
-            // Operation has not been moved
-            if (source.droppableId === destination.droppableId && source.index === destination.index)
-                return;
-
-            await dispatch(moveOperation(draggableId, destination.index));
-        } catch (err) {
             console.error(err);
-        }
+            try {
+                // Dropped outside the list
+                if (!destination)
+                    return;
+
+                // Operation has not been moved
+                if (source.droppableId === destination.droppableId && source.index === destination.index)
+                    return;
+
+                await dispatch(moveOperation(draggableId, destination.index));
+            } catch (err) {
+                console.error(err);
+            }
         }
     };
 
@@ -61,12 +58,10 @@ const PipelineView: FC = () => {
     return (
         <DragDropContext onDragEnd={handleDragEnd}>
             <div className={classes.content}>
-                <div className={classes.inner}>
-                    <Pipeline/>
-                </div>
+                <Pipeline/>
             </div>
         </DragDropContext>
     );
 };
 
-export default PipelineView;
+export default AugmentorPipeline;

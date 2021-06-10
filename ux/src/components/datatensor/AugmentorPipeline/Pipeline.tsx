@@ -14,28 +14,21 @@ interface ListProps {
 
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {},
+    root: {
+        width: '100%'
+    },
     inner: {
-        marginLeft: theme.spacing(1),
-        marginRight: theme.spacing(1),
         display: 'flex',
         flexDirection: 'column',
         maxHeight: '100%',
         overflowY: 'hidden',
         overflowX: 'hidden',
-        width: 340
-    },
-    title: {
-        cursor: 'pointer'
     },
     droppableArea: {
         minHeight: 80,
         flexGrow: 1,
         overflowY: 'auto',
         padding: theme.spacing(1, 2)
-    },
-    menu: {
-        width: 240
     }
 }));
 

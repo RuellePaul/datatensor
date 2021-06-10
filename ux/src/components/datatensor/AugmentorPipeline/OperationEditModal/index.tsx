@@ -8,7 +8,6 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    Divider,
     IconButton,
     makeStyles,
     SvgIcon,

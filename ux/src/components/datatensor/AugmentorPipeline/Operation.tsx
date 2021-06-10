@@ -1,7 +1,7 @@
 import type {FC} from 'react';
 import React, {forwardRef, useState} from 'react';
 import clsx from 'clsx';
-import {Box, capitalize, Card, CardContent, Divider, makeStyles, Typography} from '@material-ui/core';
+import {Box, capitalize, Card, CardContent, makeStyles, Typography} from '@material-ui/core';
 import type {Theme} from 'src/theme';
 import type {RootState} from 'src/store';
 import {useSelector} from 'src/store';

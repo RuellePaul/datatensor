@@ -146,7 +146,7 @@ const DTImagesList: FC<ImagesListProps> = ({
         saveImages(images.filter(image => image._id !== imageSelected._id));
         saveDataset({...dataset, image_count: dataset.image_count - 1})
         handleCloseMenu();
-        images.length <= 1 && handleCloseImage();
+        handleCloseImage();
     };
 
     const handleKeyDown = (event: React.KeyboardEvent<unknown>) => {
