@@ -1,3 +1,5 @@
+import cv2
+import base64
 from fastapi import APIRouter, Depends
 
 import errors
@@ -6,13 +8,12 @@ from routers.augmentor.core import perform_augmentation
 from routers.augmentor.models import SampleBody
 from routers.datasets.core import find_dataset
 from routers.images.core import find_image
-from routers.images.models import ImagesResponse
 from routers.users.models import User
 
 augmentor = APIRouter()
 
 
-@augmentor.post('/sample', response_model=ImagesResponse)
+@augmentor.post('/sample')
 async def augmentor_sample(payload: SampleBody, user: User = Depends(logged_user)):
     """
     Execute a sample of augmentor operations pipeline
@@ -27,9 +28,12 @@ async def augmentor_sample(payload: SampleBody, user: User = Depends(logged_user
 
     image = find_image(dataset_id, image_id)
 
-    images = perform_augmentation(
+    augmented_images = perform_augmentation(
         image,
         operations
     )
+    augmented_image = augmented_images[0]
 
-    return {'images': images}
+    result = cv2.imencode('.jpg', augmented_image)[1].tostring()
+
+    return base64.b64encode(result)
