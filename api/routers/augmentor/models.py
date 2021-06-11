@@ -26,6 +26,7 @@ class Operation(BaseModel):
     id: str
     type: OperationType
     probability: float
+    properties: dict
 
 
 class SampleBody(BaseModel):

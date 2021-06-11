@@ -37,5 +37,5 @@ class AugmentorPipeline(DataPipeline):
 def perform_augmentation(image: Image, operations: List[Operation]):
     pipeline = AugmentorPipeline(images=[image])
     for operation in operations:
-        getattr(pipeline, operation.type)(probability=operation.probability, **{})
+        getattr(pipeline, operation.type)(probability=operation.probability, **operation.properties)
     return pipeline.sample(1)

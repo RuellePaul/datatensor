@@ -46,9 +46,6 @@ const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
         doSample()
     }, [doSample]);
 
-    if (imageBase64 === null)
-        return null;
-
     return (
         <div className={clsx(classes.root, className)}>
             <img
@@ -57,6 +54,10 @@ const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
                 width="100%"
                 draggable={false}
             />
+
+            <pre>
+                {JSON.stringify(pipeline.operations.allIds.map(id => pipeline.operations.byId[id]), null, 4)}
+            </pre>
         </div>
     );
 };

@@ -58,12 +58,12 @@ export const DEFAULT_PIPELINE: Pipeline = {
         {
             id: '6e72802f-e64e-4ad9-8dc6-ede3fa2f498b',
             type: 'rotate',
-            probability: 0.8
-        },
-        {
-            id: 'db3d3209-b76e-43c0-a625-3f0ea826eb23',
-            type: 'elastic_distortion',
-            probability: 0.8
+            probability: 0.8,
+            properties: {
+                max_left_rotation: 25,
+                max_right_rotation: 25
+            }
         }
+
     ]
 };

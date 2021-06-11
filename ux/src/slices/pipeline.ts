@@ -71,7 +71,8 @@ export const createOperation = (type: OperationType): AppThunk => async (dispatc
     const operation: Operation = {
         id: uuid(),
         type: type,
-        probability: 0.8
+        probability: 0.8,
+        properties: {}
     }
 
     dispatch(slice.actions.createOperation({operation}));
