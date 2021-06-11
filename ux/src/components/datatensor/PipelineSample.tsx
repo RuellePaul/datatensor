@@ -25,19 +25,19 @@ const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
     const pipeline = useSelector<any>((state) => state.pipeline);
     const image_id = image._id;
 
-    const [imageBase64, setImageBase64] = useState<string | null>(null);
+    const [imagesBase64, setImagesBase64] = useState<string[]>([]);
 
     const doSample = useCallback(async () => {
         if (pipeline.isLoaded) {
             const operations: Operation[] = pipeline.operations.allIds.map(id => pipeline.operations.byId[id])
 
-            const response = await api.post<string>('/augmentor/sample', {
+            const response = await api.post<string[]>('/augmentor/sample', {
                 dataset_id,
                 image_id,
                 operations,
             })
 
-            setImageBase64(response.data);
+            setImagesBase64(response.data);
         }
     }, [pipeline, dataset_id, image_id])
 
@@ -47,12 +47,15 @@ const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
 
     return (
         <div className={clsx(classes.root, className)}>
-            <img
-                src={`data:image/png;base64, ${imageBase64}`}
-                alt='Augmented sample'
-                width="100%"
-                draggable={false}
-            />
+            {imagesBase64.map((imageBase64, index) => (
+                <img
+                    key={`sample-${index}`}
+                    src={`data:image/png;base64, ${imageBase64}`}
+                    alt='Augmented sample'
+                    width="100%"
+                    draggable={false}
+                />
+            ))}
 
             <pre>
                 {JSON.stringify(pipeline.operations.allIds.map(id => pipeline.operations.byId[id]), null, 4)}

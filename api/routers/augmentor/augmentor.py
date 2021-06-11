@@ -33,8 +33,7 @@ async def augmentor_sample(payload: SampleBody, user: User = Depends(logged_user
         image,
         operations
     )
-    augmented_image = augmented_images[0]
 
-    result = cv2.imencode('.jpg', augmented_image)[1].tostring()
-
-    return base64.b64encode(result)
+    encoded_images = [cv2.imencode('.jpg', augmented_image)[1].tostring() for augmented_image in augmented_images]
+    base64_encode_images = [base64.b64encode(image) for image in encoded_images]
+    return base64_encode_images
