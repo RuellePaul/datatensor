@@ -1,6 +1,6 @@
 export type OperationType =
     'rotate'
-    | 'flip'
+    | 'flip_random'
     | 'skew'
     | 'scale'
     | 'crop'
@@ -15,11 +15,29 @@ export type OperationType =
     | 'grey_scale'
     | 'black_and_white';
 
+export interface RotateProperties {
+    max_left_rotation: number;
+    max_right_rotation: number;
+}
+
+export interface FlipRandomProperties {
+}
+
+export interface SkewProperties {
+    magnitude: number;
+}
+
+export type OperationProperties =
+    RotateProperties
+    | FlipRandomProperties
+    | SkewProperties
+
+
 export interface Operation {
     id: string;
     type: OperationType;
     probability: number;
-    properties: object;
+    properties: OperationProperties;
 }
 
 export interface Pipeline {

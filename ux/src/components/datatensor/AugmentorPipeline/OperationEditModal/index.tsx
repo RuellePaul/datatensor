@@ -100,6 +100,7 @@ const OperationEditModal: FC<OperationEditModalProps> = ({
                     variant='outlined'
                     startIcon={<Delete/>}
                     onClick={handleDelete}
+                    size='small'
                 >
                     Delete operation
                 </Button>

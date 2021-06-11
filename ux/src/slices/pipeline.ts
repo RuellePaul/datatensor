@@ -5,7 +5,7 @@ import {v4 as uuid} from 'uuid';
 import objFromArray from 'src/utils/objFromArray';
 import type {AppThunk} from 'src/store'
 import type {Operation, OperationType, Pipeline} from 'src/types/pipeline';
-import {DEFAULT_PIPELINE} from 'src/config';
+import {DEFAULT_PIPELINE, OPERATIONS_INITIAL_PROPERTIES} from 'src/config';
 
 interface PipelineState {
     isLoaded: boolean;
@@ -72,7 +72,7 @@ export const createOperation = (type: OperationType): AppThunk => async (dispatc
         id: uuid(),
         type: type,
         probability: 0.8,
-        properties: {}
+        properties: OPERATIONS_INITIAL_PROPERTIES[type]
     }
 
     dispatch(slice.actions.createOperation({operation}));

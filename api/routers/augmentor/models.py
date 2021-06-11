@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 class OperationType(str, Enum):
     ROTATE = 'rotate'
-    FLIP = 'flip'
+    FLIP_RANDOM = 'flip_random'
     SKEW = 'skew'
     SCALE = 'scale'
     CROP = 'crop'
