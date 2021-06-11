@@ -8,7 +8,6 @@ class OperationType(str, Enum):
     ROTATE = 'rotate'
     FLIP_RANDOM = 'flip_random'
     SKEW = 'skew'
-    SCALE = 'scale'
     CROP = 'crop'
     SHEAR = 'shear'
     ELASTIC_DISTORTION = 'elastic_distortion'
@@ -18,7 +17,7 @@ class OperationType(str, Enum):
     RANDOM_CONTRAST = 'random_contrast'
     HISTOGRAM_EQUALISATION = 'histogram_equalisation'
     INVERT = 'invert'
-    GREY_SCALE = 'grey_scale'
+    GREYSCALE = 'greyscale'
     BLACK_AND_WHITE = 'black_and_white'
 
 

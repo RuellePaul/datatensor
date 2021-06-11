@@ -2,7 +2,6 @@ export type OperationType =
     'rotate'
     | 'flip_random'
     | 'skew'
-    | 'scale'
     | 'crop'
     | 'shear'
     | 'elastic_distortion'
@@ -12,15 +11,12 @@ export type OperationType =
     | 'random_contrast'
     | 'histogram_equalisation'
     | 'invert'
-    | 'grey_scale'
+    | 'greyscale'
     | 'black_and_white';
 
 export interface RotateProperties {
     max_left_rotation: number;
     max_right_rotation: number;
-}
-
-export interface FlipRandomProperties {
 }
 
 export interface SkewProperties {
@@ -29,7 +25,6 @@ export interface SkewProperties {
 
 export type OperationProperties =
     RotateProperties
-    | FlipRandomProperties
     | SkewProperties
 
 

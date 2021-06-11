@@ -1,7 +1,6 @@
 import React from 'react';
 import * as Yup from 'yup';
 import {
-    AspectRatio as ScaleIcon,
     BlurOn as DistortionIcon,
     Brightness7 as BrightnessIcon,
     CropRotate as RotateIcon,
@@ -22,7 +21,6 @@ export const OPERATIONS_TYPES: OperationType[] = [
     'rotate',
     'flip_random',
     'skew',
-    'scale',
     'crop',
     'shear',
     'elastic_distortion',
@@ -32,7 +30,7 @@ export const OPERATIONS_TYPES: OperationType[] = [
     'random_contrast',
     'histogram_equalisation',
     'invert',
-    'grey_scale',
+    'greyscale',
     'black_and_white'
 ];
 
@@ -40,7 +38,6 @@ export const OPERATIONS_ICONS = {
     rotate: <RotateIcon/>,
     flip_random: <FlipIcon/>,
     skew: <SkewIcon/>,
-    scale: <ScaleIcon/>,
     crop: <CropIcon/>,
     shear: <RotateIcon/>,
     elastic_distortion: <DistortionIcon/>,
@@ -50,7 +47,7 @@ export const OPERATIONS_ICONS = {
     random_contrast: <RotateIcon/>,
     histogram_equalisation: <HistogramIcon/>,
     invert: <InvertIcon/>,
-    grey_scale: <RotateIcon/>,
+    greyscale: <RotateIcon/>,
     black_and_white: <BlackAndWhiteIcon/>
 };
 
@@ -59,7 +56,6 @@ export const OPERATIONS_INITIAL_PROPERTIES = {
         max_left_rotation: 25,
         max_right_rotation: 25
     },
-    flip_random: {},
     skew: {
         magnitude: 1
     }

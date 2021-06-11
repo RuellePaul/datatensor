@@ -29,7 +29,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({operation}) => {
     return (
         <Formik
             initialValues={{
-                ...OPERATIONS_INITIAL_PROPERTIES[operation.type],
+                ...(OPERATIONS_INITIAL_PROPERTIES[operation.type] || {}),
                 ...operation.properties
             }}
             validationSchema={Yup.object().shape(OPERATIONS_SHAPES[operation.type] || {})}
