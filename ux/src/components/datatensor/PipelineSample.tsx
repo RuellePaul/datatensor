@@ -5,7 +5,6 @@ import {makeStyles} from '@material-ui/core';
 import type {Theme} from 'src/theme';
 import {useSelector} from 'src/store';
 import {Operation} from 'src/types/pipeline';
-import {Image} from 'src/types/image';
 import useImage from 'src/hooks/useImage';
 import api from 'src/utils/api';
 

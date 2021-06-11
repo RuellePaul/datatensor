@@ -32,7 +32,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({operation}) => {
                 max_left_rotation: Yup.number().min(0).max(25),
                 max_right_rotation: Yup.number().min(0).max(25)
             })}
-            onSubmit={async (values, {}) => {
+            onSubmit={async (values) => {
                 try {
                     await handlePropertiesChange(values);
                 } catch (error) {
