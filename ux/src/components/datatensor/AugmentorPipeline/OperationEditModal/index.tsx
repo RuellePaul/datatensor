@@ -18,8 +18,9 @@ import type {Theme} from 'src/theme';
 import {useDispatch} from 'src/store';
 import {deleteOperation} from 'src/slices/pipeline';
 import type {Operation} from 'src/types/pipeline';
-import {OPERATIONS_ICONS} from '../../../../config';
 import ProbabilitySlider from './ProbabilitySlider';
+import OperationProperties from './OperationProperties';
+import {OPERATIONS_ICONS} from 'src/config';
 
 interface OperationEditModalProps {
     className?: string;
@@ -89,7 +90,9 @@ const OperationEditModal: FC<OperationEditModalProps> = ({
                     operation={operation}
                 />
 
-
+                <OperationProperties
+                    operation={operation}
+                />
             </DialogContent>
 
             <DialogActions>
