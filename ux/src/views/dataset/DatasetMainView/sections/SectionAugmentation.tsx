@@ -50,7 +50,14 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                 >
                     <Grid
                         item
-                        sm={3}
+                        sm={5}
+                        xs={12}
+                    >
+                        <AugmentorPipeline/>
+                    </Grid>
+                    <Grid
+                        item
+                        sm={7}
                         xs={12}
                     >
                         <Button
@@ -63,20 +70,9 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                         </Button>
 
                         <DTImage/>
-                    </Grid>
-                    <Grid
-                        item
-                        sm={4}
-                        xs={12}
-                    >
-                        <AugmentorPipeline/>
-                    </Grid>
-                    <Grid
-                        item
-                        sm={4}
-                        xs={12}
-                    >
+
                         <PipelineSample/>
+
                     </Grid>
                 </Grid>
             </ImageProvider>

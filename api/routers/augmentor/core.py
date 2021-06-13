@@ -38,4 +38,4 @@ def perform_augmentation(image: Image, operations: List[Operation]):
     pipeline = AugmentorPipeline(images=[image])
     for operation in operations:
         getattr(pipeline, operation.type)(probability=operation.probability, **operation.properties)
-    return pipeline.sample(1)
+    return pipeline.sample(9)

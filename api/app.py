@@ -96,17 +96,6 @@ def handle_api_error(request: Request, error: APIError):
     return JSONResponse(status_code=error.status_code, content={'message': error.detail, 'data': error.data})
 
 
-@app.websocket('/message')
-async def get_tasks(websocket: WebSocket):
-    """
-    Websocket | paginated list of tasks.
-    """
-    await websocket.accept()
-    while True:
-        data = await websocket.receive_text()
-        await websocket.send_text(f"Message text was: {data}")
-
-
 if __name__ == '__main__':
     encrypt_init(Config.DB_HOST, key=Config.DB_ENCRYPTION_KEY, setup=True)
     uvicorn.run('app:app',

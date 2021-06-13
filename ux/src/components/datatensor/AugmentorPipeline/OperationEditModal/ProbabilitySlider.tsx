@@ -36,9 +36,9 @@ const ProbabilitySlider: FC<ProbabilitySliderProps> = ({operation, setDragDisabl
                 step={0.05}
                 marks
                 valueLabelDisplay='auto'
+                defaultValue={operation.probability}
                 onClick={event => event.stopPropagation()}
-                value={operation.probability}
-                onChange={handleProbabilityChange}
+                onChangeCommitted={handleProbabilityChange}
                 onMouseEnter={() => setDragDisabled && setDragDisabled(true)}
                 onMouseLeave={() => setDragDisabled && setDragDisabled(false)}
             />

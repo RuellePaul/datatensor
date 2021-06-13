@@ -1,12 +1,13 @@
 import React, {FC, useCallback, useEffect, useState} from 'react';
 import {useParams} from 'react-router';
 import clsx from 'clsx';
-import {makeStyles} from '@material-ui/core';
+import {Grid, LinearProgress, makeStyles, Typography} from '@material-ui/core';
 import type {Theme} from 'src/theme';
 import {useSelector} from 'src/store';
 import {Operation} from 'src/types/pipeline';
 import useImage from 'src/hooks/useImage';
 import api from 'src/utils/api';
+import ImageBase64 from 'src/components/utils/ImageBase64';
 
 interface PipelineSampleProps {
     className?: string;
@@ -25,9 +26,11 @@ const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
     const pipeline = useSelector<any>((state) => state.pipeline);
     const image_id = image._id;
 
-    const [imagesBase64, setImagesBase64] = useState<string[]>([]);
+    const [imagesBase64, setImagesBase64] = useState<string[] | null>(null);
 
     const doSample = useCallback(async () => {
+        setImagesBase64(null);
+
         if (pipeline.isLoaded) {
             const operations: Operation[] = pipeline.operations.allIds.map(id => pipeline.operations.byId[id])
 
@@ -47,19 +50,38 @@ const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
 
     return (
         <div className={clsx(classes.root, className)}>
-            {imagesBase64.map((imageBase64, index) => (
-                <img
-                    key={`sample-${index}`}
-                    src={`data:image/png;base64, ${imageBase64}`}
-                    alt='Augmented sample'
-                    width="100%"
-                    draggable={false}
-                />
-            ))}
-
-            <pre>
-                {JSON.stringify(pipeline.operations.allIds.map(id => pipeline.operations.byId[id]), null, 4)}
-            </pre>
+            <Grid
+                container
+                spacing={1}
+            >
+                {imagesBase64 === null
+                    ? (
+                        <Grid
+                            item
+                            xs={12}
+                        >
+                            <Typography
+                                color='textSecondary'
+                                variant='subtitle2'
+                                gutterBottom
+                            >
+                                Computing....
+                            </Typography>
+                            <LinearProgress variant='query'/>
+                        </Grid>
+                    ) : (
+                        imagesBase64.map((imageBase64, index) => (
+                            <Grid
+                                key={index}
+                                item
+                                xs={4}
+                            >
+                                <ImageBase64 base64string={imageBase64}/>
+                            </Grid>
+                        ))
+                    )
+                }
+            </Grid>
         </div>
     );
 };
