@@ -27,6 +27,11 @@ class TestAuth:
         assert data['authorization_url'].startswith('https://stackoverflow.com/oauth')
 
     def test_auth(self):
+        login_body = AuthLoginBody(email='test@datatensor.io',
+                                   password='TestPassword123$%')
+        response = client.post(f'{PREFIX}/auth/login', json=login_body.dict())
+        assert response.status_code == 401
+
         register_body = AuthRegisterBody(email='test@datatensor.io',
                                          password='TestPassword123$%',
                                          name='Session Test',
