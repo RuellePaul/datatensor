@@ -96,6 +96,8 @@ class Settings(BaseSettings):
 
     def __init__(self):
         super().__init__()
+        if os.environ.get('__TEST__'):
+            self.DB_NAME = f'{self.DB_NAME}_test'
         self.DB_ENCRYPT_CLIENT, self.db = encrypt_init(self.DB_HOST,
                                                        db_name=self.DB_NAME,
                                                        key=self.DB_ENCRYPTION_KEY)
