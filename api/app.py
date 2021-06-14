@@ -2,8 +2,9 @@ import os
 
 import uvicorn
 from apscheduler.schedulers.background import BackgroundScheduler
-from fastapi import FastAPI, Depends, Request, WebSocket, HTTPException
+from fastapi import FastAPI, Depends, Request, HTTPException
 from fastapi.responses import JSONResponse
+from pydantic import ValidationError
 from starlette.middleware.cors import CORSMiddleware
 
 from api.authentication.auth import auth
@@ -94,6 +95,12 @@ app.include_router(tasks, prefix=f'{PREFIX}/tasks', tags=['tasks'], dependencies
 def handle_api_error(request: Request, error: APIError):
     logger.error(error)
     return JSONResponse(status_code=error.status_code, content={'message': error.detail, 'data': error.data})
+
+
+@app.exception_handler(ValidationError)
+def handle_api_error(request: Request, error: ValidationError):
+    logger.error(error)
+    return JSONResponse(status_code=500, content={'message': error.json()})
 
 
 if __name__ == '__main__':

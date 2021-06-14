@@ -52,7 +52,7 @@ def find_datasources() -> List[Datasource]:
     return Config.DATASOURCES
 
 
-def find_categories(datasource_key):
+def find_categories(datasource_key: DatasourceKey):
     try:
         annotations_path, datasource = _download_annotations(datasource_key)
     except Exception as e:
