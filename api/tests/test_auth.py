@@ -3,6 +3,7 @@ from fastapi.testclient import TestClient
 from app import app, PREFIX
 from tests.conftest import Store
 from authentication.models import AuthLoginBody, AuthRegisterBody, AuthEmailConfirmBody, AuthResponse
+from routers.users.models import User
 
 client = TestClient(app)
 
@@ -67,7 +68,7 @@ class TestJWTAuthWorkflow:
         response = client.get(f'{PREFIX}/auth/me',
                               headers={'Authorization': Store.access_token})
         assert response.status_code == 200
-        assert AuthResponse.validate(response.json())
+        assert User.validate(response.json())
 
     def test_valid_login(self):
         login_body = AuthLoginBody(email='test@datatensor.io',
