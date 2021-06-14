@@ -8,7 +8,7 @@ class OperationType(str, Enum):
     ROTATE = 'rotate'
     FLIP_RANDOM = 'flip_random'
     SKEW = 'skew'
-    CROP = 'crop'
+    CROP_RANDOM = 'crop_random'
     SHEAR = 'shear'
     ELASTIC_DISTORTION = 'elastic_distortion'
     GAUSSIAN_DISTORTION = 'gaussian_distortion'

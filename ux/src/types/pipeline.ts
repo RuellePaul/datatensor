@@ -2,7 +2,7 @@ export type OperationType =
     'rotate'
     | 'flip_random'
     | 'skew'
-    | 'crop'
+    | 'crop_random'
     | 'shear'
     | 'elastic_distortion'
     | 'gaussian_distortion'
