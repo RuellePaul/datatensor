@@ -1,6 +1,8 @@
 import os
+from typing import Any, List
 
 from fastapi import FastAPI
+from pydantic import AnyHttpUrl, BaseSettings
 
 import errors
 from database import encrypt_init
@@ -11,26 +13,26 @@ if 'ENVIRONMENT' not in os.environ:
     raise errors.Forbidden('Environment variable are not set. Use init_env.sh script, or edit Pycharm configuration')
 
 
-class Config:
-    ENVIRONMENT = os.environ['ENVIRONMENT']
+class Settings(BaseSettings):
+    ENVIRONMENT: str = os.environ['ENVIRONMENT']
 
-    ROOT_PATH = os.path.abspath(os.path.join(FastAPI().root_path, os.pardir))
-    DATASOURCES_PATH = os.path.join(ROOT_PATH, 'api', 'manager', 'generator', 'datasources')
+    ROOT_PATH: str = os.path.abspath(os.path.join(FastAPI().root_path, os.pardir))
+    DATASOURCES_PATH: str = os.path.join(ROOT_PATH, 'api', 'manager', 'generator', 'datasources')
 
-    UI_URL = 'https://localhost:5069'
-    API_URI = 'http://127.0.0.1:4069'
+    UI_URL: str = 'https://localhost:5069'
+    API_URI: str = 'http://127.0.0.1:4069'
 
-    SECRET_KEY = os.environ['FLASK_SECRET_KEY']
+    SECRET_KEY: str = os.environ['FLASK_SECRET_KEY']
 
-    MAX_CONTENT_LENGTH = 1 * 1000 * 1024 * 1024  # 1 Go
+    MAX_CONTENT_LENGTH: int = 1 * 1000 * 1024 * 1024  # 1 Go
 
-    ADMIN_USER_IDS = [
+    ADMIN_USER_IDS: List[str] = [
         '58a802c1b350056c737ca447db48c7c645581b265e61d2ceeae5e0320adc7e6a',  # RuellePaul (github)
         'b813fd7e62edcdd7b630837e2f7314e0aa28684eca85a15787be242386ee4e0f',  # RuellePaul (google)
         '83d2218ec37d73a99944dbcd90e5753908a418b99fa79678402ba6bc97a81f83'  # ThomasRoudil (github)
     ]
 
-    DATASOURCES = [
+    DATASOURCES: List[dict] = [
         {
             'key': 'coco2014',
             'name': 'COCO 2014',
@@ -45,25 +47,15 @@ class Config:
         },
     ]
 
-    SESSION_COOKIE_SECURE = True
-    REMEMBER_COOKIE_SECURE = True
-    SESSION_COOKIE_HTTPONLY = True
-    REMEMBER_COOKIE_HTTPONLY = True
+    ACCESS_TOKEN_KEY: str = os.environ['ACCESS_TOKEN_KEY']
+    SESSION_DURATION_IN_MINUTES: int = 120
 
-    DB_ENCRYPTION_KEY = os.environ['DB_ENCRYPTION_KEY']
-    DB_HOST = 'localhost:27017'
-    DB_NAME = f'datatensor_{ENVIRONMENT}'
-    DB_ENCRYPT_CLIENT, db = encrypt_init(DB_HOST, db_name=DB_NAME, key=DB_ENCRYPTION_KEY)
+    GOOGLE_CAPTCHA_PUBLIC_KEY: str = '6LcFmzcaAAAAAHWoKJ-oEJRO_grEjEjQb0fedPHo'
+    GOOGLE_CAPTCHA_SECRET_KEY: str = os.environ['GOOGLE_CAPTCHA_SECRET_KEY']
 
-    ACCESS_TOKEN_KEY = os.environ['ACCESS_TOKEN_KEY']
-    SESSION_DURATION_IN_MINUTES = 120
+    SENDGRID_API_KEY: str = os.environ['SENDGRID_API_KEY']
 
-    GOOGLE_CAPTCHA_PUBLIC_KEY = '6LcFmzcaAAAAAHWoKJ-oEJRO_grEjEjQb0fedPHo'
-    GOOGLE_CAPTCHA_SECRET_KEY = os.environ['GOOGLE_CAPTCHA_SECRET_KEY']
-
-    SENDGRID_API_KEY = os.environ['SENDGRID_API_KEY']
-
-    OAUTH = {
+    OAUTH: dict = {
         'github': {
             'AUTHORIZATION_URL': 'https://github.com/login/oauth/authorize',
             'TOKEN_URL': 'https://github.com/login/oauth/access_token',
@@ -91,7 +83,22 @@ class Config:
         }
     }
 
-    S3_BUCKET = 'dtservertestbucket'
-    S3_KEY = os.environ['S3_KEY']
-    S3_SECRET = os.environ['S3_SECRET']
-    S3_LOCATION = f'http://{S3_BUCKET}.s3.amazonaws.com/'
+    S3_BUCKET: str = 'dtservertestbucket'
+    S3_KEY: str = os.environ['S3_KEY']
+    S3_SECRET: str = os.environ['S3_SECRET']
+    S3_LOCATION: AnyHttpUrl = f'http://{S3_BUCKET}.s3.amazonaws.com/'
+
+    DB_ENCRYPTION_KEY: str = os.environ['DB_ENCRYPTION_KEY']
+    DB_HOST: str = 'localhost:27017'
+    DB_NAME: str = f'datatensor_{ENVIRONMENT}'
+    DB_ENCRYPT_CLIENT: Any = None
+    db: Any = None
+
+    def __init__(self):
+        super().__init__()
+        self.DB_ENCRYPT_CLIENT, self.db = encrypt_init(self.DB_HOST,
+                                                       db_name=self.DB_NAME,
+                                                       key=self.DB_ENCRYPTION_KEY)
+
+
+Config = Settings()
