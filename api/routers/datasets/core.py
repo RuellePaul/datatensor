@@ -1,6 +1,7 @@
 import concurrent.futures
 from datetime import datetime
 from uuid import uuid4
+from typing import List
 
 import errors
 from config import Config
@@ -10,7 +11,7 @@ from routers.images.core import delete_image_from_s3
 db = Config.db
 
 
-def find_datasets(user_id, offset, limit):
+def find_datasets(user_id, offset, limit) -> List[Dataset]:
     datasets = list(db.datasets
                     .find({'$or': [{'user_id': user_id}, {'is_public': True}]})
                     .skip(offset)
@@ -18,7 +19,7 @@ def find_datasets(user_id, offset, limit):
     return [Dataset.from_mongo(dataset) for dataset in datasets]
 
 
-def find_dataset(dataset_id):
+def find_dataset(dataset_id) -> Dataset:
     dataset = db.datasets.find_one({'_id': dataset_id})
     return Dataset.from_mongo(dataset)
 
