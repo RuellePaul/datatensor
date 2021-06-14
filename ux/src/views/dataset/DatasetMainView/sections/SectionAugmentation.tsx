@@ -54,12 +54,7 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                         xs={12}
                     >
                         <AugmentorPipeline/>
-                    </Grid>
-                    <Grid
-                        item
-                        sm={7}
-                        xs={12}
-                    >
+
                         <Button
                             className={classes.refresh}
                             onClick={pickRandomImage}
@@ -70,9 +65,13 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                         </Button>
 
                         <DTImage/>
-
+                    </Grid>
+                    <Grid
+                        item
+                        sm={7}
+                        xs={12}
+                    >
                         <PipelineSample/>
-
                     </Grid>
                 </Grid>
             </ImageProvider>

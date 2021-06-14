@@ -8,7 +8,6 @@ import {
     Flip as FlipIcon,
     FormatItalic as SkewIcon,
     InvertColors as InvertIcon,
-    Iso as BlackAndWhiteIcon,
     PaletteOutlined as ColorIcon,
     PhotoSizeSelectLarge as CropIcon
 } from '@material-ui/icons';
@@ -23,15 +22,14 @@ export const OPERATIONS_TYPES: OperationType[] = [
     'skew',
     'crop_random',
     'shear',
-    'elastic_distortion',
+    'random_distortion',
     'gaussian_distortion',
     'random_brightness',
     'random_color',
     'random_contrast',
     'histogram_equalisation',
     'invert',
-    'greyscale',
-    'black_and_white'
+    'greyscale'
 ];
 
 export const OPERATIONS_ICONS = {
@@ -40,15 +38,14 @@ export const OPERATIONS_ICONS = {
     skew: <SkewIcon/>,
     crop_random: <CropIcon/>,
     shear: <RotateIcon/>,
-    elastic_distortion: <DistortionIcon/>,
+    random_distortion: <DistortionIcon/>,
     gaussian_distortion: <DistortionIcon/>,
     random_brightness: <BrightnessIcon/>,
     random_color: <ColorIcon/>,
     random_contrast: <RotateIcon/>,
     histogram_equalisation: <HistogramIcon/>,
     invert: <InvertIcon/>,
-    greyscale: <RotateIcon/>,
-    black_and_white: <BlackAndWhiteIcon/>
+    greyscale: <RotateIcon/>
 };
 
 export const OPERATIONS_INITIAL_PROPERTIES = {
@@ -58,6 +55,38 @@ export const OPERATIONS_INITIAL_PROPERTIES = {
     },
     skew: {
         magnitude: 1
+    },
+    crop_random: {
+        percentage_area: 0.75,
+        randomise_percentage_area: false
+    },
+    shear: {
+        max_shear_left: 25,
+        max_shear_right: 25
+    },
+    random_distortion: {
+        grid_width: 8,
+        grid_height: 8,
+        magnitude: 10
+    },
+    gaussian_distortion: {
+        grid_width: 8,
+        grid_height: 8,
+        magnitude: 10,
+        corner: 'bell',
+        method: 'in'
+    },
+    random_brightness: {
+        min_factor: 1,
+        max_factor: 2
+    },
+    random_contrast: {
+        min_factor: 1,
+        max_factor: 2
+    },
+    random_color: {
+        min_factor: 1,
+        max_factor: 2
     }
 }
 

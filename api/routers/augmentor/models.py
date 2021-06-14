@@ -10,7 +10,7 @@ class OperationType(str, Enum):
     SKEW = 'skew'
     CROP_RANDOM = 'crop_random'
     SHEAR = 'shear'
-    ELASTIC_DISTORTION = 'elastic_distortion'
+    RANDOM_DISTORTION = 'random_distortion'
     GAUSSIAN_DISTORTION = 'gaussian_distortion'
     RANDOM_BRIGHTNESS = 'random_brightness'
     RANDOM_COLOR = 'random_color'
@@ -18,7 +18,6 @@ class OperationType(str, Enum):
     HISTOGRAM_EQUALISATION = 'histogram_equalisation'
     INVERT = 'invert'
     GREYSCALE = 'greyscale'
-    BLACK_AND_WHITE = 'black_and_white'
 
 
 class Operation(BaseModel):

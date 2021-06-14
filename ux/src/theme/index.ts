@@ -31,6 +31,7 @@ interface ThemeConfig {
 interface ThemeOptions {
     name?: string;
     direction?: Direction;
+    breakpoints?: Record<string, any>;
     typography?: Record<string, any>;
     overrides?: Record<string, any>;
     palette?: Record<string, any>;
@@ -40,6 +41,15 @@ interface ThemeOptions {
 const baseOptions: ThemeOptions = {
     direction: 'ltr',
     typography,
+    breakpoints: {
+        values: {
+            xs: 0,
+            sm: 600,
+            md: 960,
+            lg: 1320,
+            xl: 1920,
+        },
+    },
     overrides: {
         MuiLinearProgress: {
             root: {
