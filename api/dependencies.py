@@ -8,7 +8,7 @@ from routers.users.models import User
 
 async def logged_user(authorization: str = Header(...)):
     user = verify_access_token(access_token=authorization)
-    return User.from_mongo(user)
+    return user
 
 
 async def logged_admin(user: User = Depends(logged_user)):

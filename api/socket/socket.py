@@ -21,7 +21,7 @@ async def get_tasks(websocket: WebSocket):
     while True:
         try:
             access_token = await websocket.receive_text()
-            user = User.from_mongo(verify_access_token(access_token))
+            user = verify_access_token(access_token)
             if user.is_admin:
                 tasks = find_tasks()
             else:
@@ -44,8 +44,8 @@ async def get_tasks(websocket: WebSocket):
     while True:
         try:
             access_token = await websocket.receive_text()
-            user_id = verify_access_token(access_token, verified=False, return_user_id=True)
-            result = find_notifications(user_id)
+            user = verify_access_token(access_token)
+            result = find_notifications(user.id)
             response = {'notifications': result}
             await websocket.send_json(parse(response))
         except ConnectionClosedOK:

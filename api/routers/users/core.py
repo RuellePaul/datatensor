@@ -1,16 +1,21 @@
+from typing import List
+
 import errors
 from config import Config
+from routers.users.models import User
 from utils import encrypt_field, password_context
 
 db = Config.db
 
 
-def find_users(offset, limit):
-    return list(db.users.find().skip(offset).limit(limit))
+def find_users(offset, limit) -> List[User]:
+    users_in_db = list(db.users.find().skip(offset).limit(limit))
+    return [User.from_mongo(user) for user in users_in_db]
 
 
-def find_user(user_id):
-    return db.users.find_one({'_id': user_id})
+def find_user(user_id) -> User:
+    user_in_db = db.users.find_one({'_id': user_id})
+    return User.from_mongo(user_in_db)
 
 
 def update_user(user, update):

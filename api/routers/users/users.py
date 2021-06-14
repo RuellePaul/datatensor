@@ -14,8 +14,7 @@ async def get_users(offset: int = 0, limit: int = 0):
     Fetch paginated datatensor users list.
     🔒️ Admin only
     """
-    result = find_users(offset, limit)
-    response = {'users': [User.from_mongo(user) for user in result]}
+    response = {'users': find_users(offset, limit)}
     return parse(response)
 
 
@@ -24,8 +23,7 @@ async def get_user(user_id):
     """
     Fetch user, given `user_id`
     """
-    result = find_user(user_id)
-    response = {'user': User.from_mongo(result)}
+    response = {'user': find_user(user_id)}
     return parse(response)
 
 
