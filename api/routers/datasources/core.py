@@ -1,6 +1,7 @@
 import os
 import json
 import zipfile
+from typing import List
 
 import requests
 from uuid import uuid4
@@ -8,12 +9,13 @@ from uuid import uuid4
 import errors
 from config import Config
 from logger import logger
+from routers.datasources.models import Datasource, DatasourceKey
 
 
 db = Config.db
 
 
-def _download_annotations(datasource_key):
+def _download_annotations(datasource_key: DatasourceKey):
     if not os.path.exists(Config.DATASOURCES_PATH):
         os.mkdir(Config.DATASOURCES_PATH)
 
@@ -46,7 +48,7 @@ def _download_annotations(datasource_key):
     return annotations_path, datasource
 
 
-def find_datasources():
+def find_datasources() -> List[Datasource]:
     return Config.DATASOURCES
 
 

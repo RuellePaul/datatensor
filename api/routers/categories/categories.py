@@ -30,11 +30,10 @@ async def get_category(dataset_id, category_id):
 @categories.post('/')
 async def post_category(category: CategoryPostBody, dataset_id):
     """
-    Create a new category on given dataset.
+    Create a new category on given dataset, and return it.
     """
-    inserted_id = insert_category(dataset_id, category)
-    result = {'_id': inserted_id, **category.dict()}
-    return {'category': parse(result)}
+    response = {'category': insert_category(dataset_id, category)}
+    return parse(response)
 
 
 @categories.delete('/{category_id}')

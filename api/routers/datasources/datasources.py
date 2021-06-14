@@ -13,8 +13,7 @@ def get_datasources():
     Fetch list of datasources.
     🔒️ Admin only
     """
-    result = find_datasources()
-    response = {'datasources': result}
+    response = {'datasources': find_datasources()}
     return parse(response)
 
 
@@ -24,8 +23,7 @@ def get_categories(datasource_key: DatasourceKey):
     Fetch available categories for given datasource.
     🔒️ Admin only
     """
-    result = find_categories(datasource_key)
-    response = {'categories': result}
+    response = {'categories': find_categories(datasource_key)}
     return parse(response)
 
 
