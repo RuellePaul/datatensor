@@ -39,12 +39,6 @@ class TestOAuthWorkflow:
 
 class TestJWTAuthWorkflow:
 
-    def test_invalid_login(self):
-        login_body = AuthLoginBody(email='test@datatensor.io',
-                                   password='TestPassword123$%')
-        response = client.post(f'{PREFIX}/auth/login', json=login_body.dict())
-        assert response.status_code == 401
-
     def test_valid_register(self):
         register_body = AuthRegisterBody(email='test@datatensor.io',
                                          password='TestPassword123$%',
@@ -79,8 +73,18 @@ class TestJWTAuthWorkflow:
         assert response.status_code == 200
         assert User.validate(response.json())
 
+    def test_valid_unregister(self):
+        response = client.post(f'{PREFIX}/auth/unregister',
+                               headers={'Authorization': Store.access_token})
+        assert response.status_code == 200
+
+    def test_invalid_unregister(self):
+        response = client.post(f'{PREFIX}/auth/unregister',
+                               headers={'Authorization': Store.access_token})
+        assert response.status_code == 401
+
     def test_valid_login(self):
-        login_body = AuthLoginBody(email='test@datatensor.io',
+        login_body = AuthLoginBody(email='user@datatensor.io',
                                    password='TestPassword123$%')
         response = client.post(f'{PREFIX}/auth/login', json=login_body.dict())
         assert response.status_code == 200
@@ -94,10 +98,16 @@ class TestJWTAuthWorkflow:
         Store.access_token = access_token
         Store.user = user
 
-    def test_valid_unregister(self):
-        response = client.post(f'{PREFIX}/auth/unregister',
-                               headers={'Authorization': Store.access_token})
-        assert response.status_code == 200
+    def test_invalid_login(self):
+        login_body = AuthLoginBody(email='wrong@datatensor.io',
+                                   password='TestPassword123$%')
+        response = client.post(f'{PREFIX}/auth/login', json=login_body.dict())
+        assert response.status_code == 401
+
+        login_body = AuthLoginBody(email='admin@datatensor.io',
+                                   password='WrongPassword123$%')
+        response = client.post(f'{PREFIX}/auth/login', json=login_body.dict())
+        assert response.status_code == 401
 
     def test_valid_admin_login(self):
         login_body = AuthLoginBody(email='admin@datatensor.io',
