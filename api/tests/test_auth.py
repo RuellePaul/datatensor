@@ -86,7 +86,30 @@ class TestJWTAuthWorkflow:
         assert response.status_code == 200
         assert AuthResponse.validate(response.json())
 
+        access_token = response.json().get('accessToken')
+        user = response.json().get('user')
+        assert user['is_verified']
+        assert not user['is_admin']
+
+        Store.access_token = access_token
+        Store.user = user
+
     def test_valid_unregister(self):
         response = client.post(f'{PREFIX}/auth/unregister',
                                headers={'Authorization': Store.access_token})
         assert response.status_code == 200
+
+    def test_valid_admin_login(self):
+        login_body = AuthLoginBody(email='admin@datatensor.io',
+                                   password='TestPassword123$%')
+        response = client.post(f'{PREFIX}/auth/login', json=login_body.dict())
+        assert response.status_code == 200
+        assert AuthResponse.validate(response.json())
+
+        admin_access_token = response.json().get('accessToken')
+        admin_user = response.json().get('user')
+        assert admin_user['is_verified']
+        assert admin_user['is_admin']
+
+        Store.admin_access_token = admin_access_token
+        Store.admin_user = admin_user
