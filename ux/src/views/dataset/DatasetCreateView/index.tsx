@@ -22,7 +22,7 @@ const ProductCreateView: FC = () => {
             className={classes.root}
             title="Add Dataset"
         >
-            <Container maxWidth="lg">
+            <Container component='section' maxWidth="lg">
                 <Header/>
                 <DatasetCreateForm/>
             </Container>

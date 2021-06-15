@@ -50,7 +50,7 @@ const PricingView: FC = () => {
             className={classes.root}
             title="Pricing"
         >
-            <Container maxWidth="sm">
+            <Container component='section' maxWidth="sm">
                 <Typography
                     align="center"
                     variant="h1"
@@ -71,7 +71,7 @@ const PricingView: FC = () => {
                 </Box>
             </Container>
             <Box mt="160px">
-                <Container maxWidth="lg">
+                <Container component='section' maxWidth="lg">
                     <Grid
                         container
                         spacing={4}

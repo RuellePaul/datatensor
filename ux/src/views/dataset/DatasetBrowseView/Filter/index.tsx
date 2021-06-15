@@ -1,5 +1,4 @@
 import React, {ChangeEvent, FC, KeyboardEvent, useState} from 'react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {Box, Card, Checkbox, Chip, Divider, FormControlLabel, Input, makeStyles} from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
@@ -99,10 +98,6 @@ const Filter: FC<FilterProps> = ({className, ...rest}) => {
             </Box>
         </Card>
     );
-};
-
-Filter.propTypes = {
-    className: PropTypes.string
 };
 
 export default Filter;

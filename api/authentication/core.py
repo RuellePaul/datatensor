@@ -29,7 +29,7 @@ def encode_access_token(user_id):
     return access_token
 
 
-def verify_access_token(access_token, verified=False, return_user_id=False):
+def verify_access_token(access_token) -> User:
     if not access_token:
         raise errors.InvalidAuthentication()
 
@@ -40,17 +40,11 @@ def verify_access_token(access_token, verified=False, return_user_id=False):
     except jwt.exceptions.ExpiredSignatureError:
         raise errors.ExpiredAuthentication(data='ERR_EXPIRED')
 
-    if return_user_id:
-        return user_id
-
     user = db.users.find_one({'_id': user_id}, {'password': 0})
     if not user:
         raise errors.InvalidAuthentication("User doesn't exists")
 
-    if verified and not user.get('is_verified'):
-        raise errors.InvalidAuthentication("User email is not verified", data='ERR_VERIFY')
-
-    return user
+    return User.from_mongo(user)
 
 
 # User related
@@ -110,15 +104,15 @@ def user_id_hash(identifier):
     return user_id
 
 
-def user_from_user_id(user_id):
+def user_from_user_id(user_id) -> User:
     return User.from_mongo(db.users.find_one({'_id': user_id}))
 
 
-def user_with_password_from_user_id(user_id):
+def user_with_password_from_user_id(user_id) -> UserWithPassword:
     return UserWithPassword.from_mongo(db.users.find_one({'_id': user_id}))
 
 
-def user_from_activation_code(activation_code):
+def user_from_activation_code(activation_code) -> User:
     return User.from_mongo(db.users.find_one({'activation_code': activation_code}))
 
 
@@ -126,7 +120,7 @@ def generate_activation_code():
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=32))
 
 
-def register_user(user_id, name, email, password, activation_code):
+def register_user(user_id, name, email, password, activation_code) -> User:
     user = User(id=user_id,
                 created_at=datetime.now(),
                 email=email,
@@ -145,7 +139,7 @@ def register_user(user_id, name, email, password, activation_code):
     return user
 
 
-def register_user_from_profile(profile, scope):
+def register_user_from_profile(profile, scope) -> User:
     user_id = user_id_from_profile(profile, scope)
 
     if scope == 'github':
@@ -183,7 +177,6 @@ def register_user_from_profile(profile, scope):
 
     db.users.insert_one({
         **user.mongo(),
-        'name': user.name,
         'email': encrypt_field(user.email) if user.email else None,
     })
     return user
@@ -229,7 +222,7 @@ def send_activation_code(email, activation_code):
         raise errors.InternalError(f'Unable to send email with SendGrid | {str(e)}')
 
 
-def verify_user_email(activation_code):
+def verify_user_email(activation_code) -> User:
     user = user_from_activation_code(activation_code)
 
     if not user:

@@ -32,7 +32,7 @@ const NotFoundView: FC = () => {
             className={classes.root}
             title="404: Not found"
         >
-            <Container maxWidth="lg">
+            <Container component='section' maxWidth="lg">
                 <Typography
                     align="center"
                     variant={mobileDevice ? 'h4' : 'h1'}

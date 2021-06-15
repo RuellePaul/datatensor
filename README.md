@@ -48,6 +48,12 @@ Run the api using :
 
 <br/>
 
+## Tests :vertical_traffic_light:
+
+Run pytest in directory `api/tests`
+
+⚠️&nbsp;&nbsp; You must run tests suite with variable environment `__TEST__ = 1` set
+
 ## Deployment :bow_and_arrow:
 
 _This section show deployment for `test` env, but the same apply for other envs._

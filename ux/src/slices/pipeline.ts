@@ -1,75 +1,23 @@
 import type {PayloadAction} from '@reduxjs/toolkit';
 import {createSlice} from '@reduxjs/toolkit';
 import _ from 'lodash';
-import type {AppThunk} from 'src/store'
-import api from 'src/utils/api';
+import {v4 as uuid} from 'uuid';
 import objFromArray from 'src/utils/objFromArray';
-import type {Board, Card, List} from 'src/types/pipeline';
-
-const board: Board = {
-    lists: [
-        {
-            id: '5e849c39325dc5ef58e5a5db',
-            name: 'Pipeline',
-            cardIds: [
-                '5e849c8708bd72683b454747',
-                '5e849c90fabe1f1f4b3557f6',
-                '5e849c977ef6265938bfd90b',
-                '5e849c9e34ee93bc7255c599'
-            ]
-        }
-    ],
-    cards: [
-        {
-            id: '5e849c8708bd72683b454747',
-            cover: '/static/images/examples/lenna.jpg',
-            description: 'This performs rotation on image.',
-            listId: '5e849c39325dc5ef58e5a5db',
-            name: 'Rotation'
-        },
-        {
-            id: '5e849c90fabe1f1f4b3557f6',
-            cover: null,
-            description: 'This performs gaussian distortion on image.',
-            listId: '5e849c39325dc5ef58e5a5db',
-            name: 'Gaussian Distortion'
-        },
-        {
-            id: '5e849c977ef6265938bfd90b',
-            cover: null,
-            description: 'This performs rotation on image.',
-            listId: '5e849c39325dc5ef58e5a5db',
-            name: 'Rotation',
-        },
-        {
-            id: '5e849c9e34ee93bc7255c599',
-            cover: null,
-            description: 'This performs elastic distortion on image.',
-            listId: '5e849c39325dc5ef58e5a5db',
-            name: 'Elastic Distortion'
-        }
-    ]
-};
+import type {AppThunk} from 'src/store'
+import type {Operation, OperationType, Pipeline} from 'src/types/pipeline';
+import {DEFAULT_PIPELINE, OPERATIONS_INITIAL_PROPERTIES} from 'src/config';
 
 interface PipelineState {
     isLoaded: boolean;
-    lists: {
-        byId: Record<string, List>;
-        allIds: string[];
-    };
-    cards: {
-        byId: Record<string, Card>;
+    operations: {
+        byId: Record<string, Operation>;
         allIds: string[];
     };
 }
 
 const initialState: PipelineState = {
     isLoaded: false,
-    lists: {
-        byId: {},
-        allIds: []
-    },
-    cards: {
+    operations: {
         byId: {},
         allIds: []
     }
@@ -79,100 +27,73 @@ const slice = createSlice({
     name: 'pipeline',
     initialState,
     reducers: {
-        getBoard(state: PipelineState, action: PayloadAction<{ board: Board; }>) {
-            const {board} = action.payload;
+        setDefaultPipeline(state: PipelineState, action: PayloadAction<Pipeline>) {
+            const {operations} = action.payload;
 
-            state.lists.byId = objFromArray(board.lists);
-            state.lists.allIds = Object.keys(state.lists.byId);
-            state.cards.byId = objFromArray(board.cards);
-            state.cards.allIds = Object.keys(state.cards.byId);
+            state.operations.byId = objFromArray(operations);
+            state.operations.allIds = Object.keys(state.operations.byId);
             state.isLoaded = true;
         },
-        createCard(state: PipelineState, action: PayloadAction<{ card: Card; }>) {
-            const {card} = action.payload;
+        createOperation(state: PipelineState, action: PayloadAction<{ operation: Operation; }>) {
+            const {operation} = action.payload;
 
-            state.cards.byId[card.id] = card;
-            state.cards.allIds.push(card.id);
-            state.lists.byId[card.listId].cardIds.push(card.id);
+            state.operations.byId[operation.id] = operation;
+            state.operations.allIds.push(operation.id);
         },
-        updateCard(state: PipelineState, action: PayloadAction<{ card: Card; }>) {
-            const {card} = action.payload;
+        moveOperation(state: PipelineState, action: PayloadAction<{ operationId: string; position: number; }>) {
+            const {operationId, position} = action.payload;
 
-            _.merge(state.cards.byId[card.id], card);
+            _.pull(state.operations.allIds, operationId);
+            state.operations.allIds.splice(position, 0, operationId);
         },
-        moveCard(state: PipelineState, action: PayloadAction<{ cardId: string; position: number; listId?: string; }>) {
-            const {cardId, position, listId} = action.payload;
-            const {listId: sourceListId} = state.cards.byId[cardId];
+        updateOperation(state: PipelineState, action: PayloadAction<{ operationId: string; update: object; }>) {
+            const {operationId, update} = action.payload;
 
-            // Remove card from source list
-            _.pull(state.lists.byId[sourceListId].cardIds, cardId);
-
-            // If listId arg exists, it means that
-            // we have to add the card to the new list
-            if (listId) {
-                state.cards.byId[cardId].listId = listId;
-                state.lists.byId[listId].cardIds.splice(position, 0, cardId);
-            } else {
-                state.lists.byId[sourceListId].cardIds.splice(position, 0, cardId);
-            }
+            _.merge(state.operations.byId[operationId], update);
         },
-        deleteCard(state: PipelineState, action: PayloadAction<{ cardId: string; }>) {
-            const {cardId} = action.payload;
-            const {listId} = state.cards.byId[cardId];
+        deleteOperation(state: PipelineState, action: PayloadAction<{ operationId: string; }>) {
+            const {operationId} = action.payload;
 
-            state.cards.byId = _.omit(state.cards.byId, cardId);
-            _.pull(state.cards.allIds, cardId);
-            _.pull(state.lists.byId[listId].cardIds, cardId);
+            state.operations.byId = _.omit(state.operations.byId, operationId);
+            _.pull(state.operations.allIds, operationId);
         },
     }
 });
 
 export const reducer = slice.reducer;
 
-export const getBoard = (): AppThunk => async (dispatch) => {
-    const response = {data: {board}};
+export const setDefaultPipeline = (): AppThunk => async (dispatch) => {
 
-    dispatch(slice.actions.getBoard(response.data));
+    dispatch(slice.actions.setDefaultPipeline(DEFAULT_PIPELINE));
 };
 
-export const createCard = (listId: string, name: string): AppThunk => async (dispatch) => {
-    const response = await api.post<{ card: Card; }>('/api/pipeline/cards/new', {
-        listId,
-        name
-    });
+export const createOperation = (type: OperationType): AppThunk => async (dispatch) => {
+    const operation: Operation = {
+        id: uuid(),
+        type: type,
+        probability: 0.8,
+        properties: OPERATIONS_INITIAL_PROPERTIES[type] || {}
+    }
 
-    dispatch(slice.actions.createCard(response.data));
+    dispatch(slice.actions.createOperation({operation}));
 };
 
-export const updateCard = (cardId: string, update: any): AppThunk => async (dispatch) => {
-    const response = await api.post<{ card: Card; }>('/api/pipeline/cards/update', {
-        cardId,
-        update
-    });
-
-    dispatch(slice.actions.updateCard(response.data));
-};
-
-export const moveCard = (cardId: string, position: number, listId?: string): AppThunk => async (dispatch) => {
-    await api.post('/api/pipeline/cards/move', {
-        cardId,
-        position,
-        listId
-    });
-
-    dispatch(slice.actions.moveCard({
-        cardId,
-        position,
-        listId
+export const moveOperation = (operationId: string, position: number): AppThunk => async (dispatch) => {
+    dispatch(slice.actions.moveOperation({
+        operationId,
+        position
     }));
 };
 
-export const deleteCard = (cardId: string): AppThunk => async (dispatch) => {
-    await api.post('/api/pipeline/cards/remove', {
-        cardId
-    });
+export const updateOperation = (operationId: string, update: object): AppThunk => async (dispatch) => {
+    dispatch(slice.actions.updateOperation({
+        operationId,
+        update
+    }));
+};
 
-    dispatch(slice.actions.deleteCard({cardId}));
+export const deleteOperation = (operationId: string): AppThunk => async (dispatch) => {
+    dispatch(slice.actions.deleteOperation({operationId}));
 };
 
 export default slice;

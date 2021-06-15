@@ -4,11 +4,11 @@ import React, {FC, ReactNode, useEffect} from 'react';
 import {Link as RouterLink, matchPath, useLocation} from 'react-router-dom';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {Box, Chip, Divider, Drawer, Hidden, Link, List, ListSubheader, makeStyles, Typography} from '@material-ui/core';
+import {DeveloperBoard as AdminDashboardIcon} from '@material-ui/icons';
 import {
     Activity as ActivityIcon,
     Database as DatabaseIcon,
     Package as PackageIcon,
-    PieChart as PieChartIcon,
     Users as UsersIcon
 } from 'react-feather';
 import Logo from 'src/components/utils/Logo';
@@ -41,7 +41,7 @@ const sections = (user: User): Section[] => [
         items: [
             ...(user.is_admin ? [{
                 title: 'App dashboard',
-                icon: PieChartIcon,
+                icon: AdminDashboardIcon,
                 href: '/app/admin/reports/dashboard',
                 info: () => (
                     <Chip

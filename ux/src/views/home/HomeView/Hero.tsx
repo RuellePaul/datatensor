@@ -52,7 +52,7 @@ const Hero: FC<HeroProps> = ({className, ...rest}) => {
             className={clsx(classes.root, className)}
             {...rest}
         >
-            <Container maxWidth="lg">
+            <Container component='section' maxWidth="lg">
                 <Grid
                     container
                     spacing={3}

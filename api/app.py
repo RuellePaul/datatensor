@@ -2,8 +2,9 @@ import os
 
 import uvicorn
 from apscheduler.schedulers.background import BackgroundScheduler
-from fastapi import FastAPI, Depends, Request, WebSocket, HTTPException
+from fastapi import FastAPI, Depends, Request, HTTPException
 from fastapi.responses import JSONResponse
+from pydantic import ValidationError
 from starlette.middleware.cors import CORSMiddleware
 
 from api.authentication.auth import auth
@@ -13,6 +14,7 @@ from api.database import encrypt_init
 from api.dependencies import logged_user, logged_admin
 from api.errors import APIError
 from api.logger import logger
+from api.routers.augmentor.augmentor import augmentor
 from api.routers.categories.categories import categories
 from api.routers.datasets.datasets import datasets
 from api.routers.datasources.datasources import datasources
@@ -68,6 +70,10 @@ app.include_router(search, prefix=f'{PREFIX}/search',
 app.include_router(datasets, prefix=f'{PREFIX}/datasets',
                    dependencies=[Depends(logged_user)], tags=['datasets'])
 
+# Augmentor
+app.include_router(augmentor, prefix=f'{PREFIX}/augmentor',
+                   dependencies=[Depends(logged_user)], tags=['augmentor'])
+
 # Datasets ➤ Categories
 datasets.include_router(categories, prefix='/{dataset_id}/categories', tags=['categories'])
 
@@ -91,15 +97,10 @@ def handle_api_error(request: Request, error: APIError):
     return JSONResponse(status_code=error.status_code, content={'message': error.detail, 'data': error.data})
 
 
-@app.websocket('/message')
-async def get_tasks(websocket: WebSocket):
-    """
-    Websocket | paginated list of tasks.
-    """
-    await websocket.accept()
-    while True:
-        data = await websocket.receive_text()
-        await websocket.send_text(f"Message text was: {data}")
+@app.exception_handler(ValidationError)
+def handle_api_error(request: Request, error: ValidationError):
+    logger.error(error)
+    return JSONResponse(status_code=500, content={'message': error.json()})
 
 
 if __name__ == '__main__':

@@ -36,7 +36,7 @@ const Testimonials: FC<TestimonialsProps> = ({className, ...rest}) => {
             className={clsx(classes.root, className)}
             {...rest}
         >
-            <Container maxWidth="lg">
+            <Container component='section' maxWidth="lg">
                 <Typography
                     variant="h2"
                     align="center"

@@ -21,7 +21,7 @@ const DashboardView: FC = () => {
             className={classes.root}
             title="Dashboard"
         >
-            <Container maxWidth="lg">
+            <Container component='section' maxWidth="lg">
                 ...
             </Container>
         </Page>

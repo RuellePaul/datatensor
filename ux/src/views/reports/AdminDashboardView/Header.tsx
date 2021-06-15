@@ -1,6 +1,5 @@
 import React, {FC, useRef, useState} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {Breadcrumbs, Button, Grid, Link, makeStyles, Menu, MenuItem, SvgIcon, Typography} from '@material-ui/core';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
@@ -96,10 +95,6 @@ const Header: FC<HeaderProps> = ({className, timeRange, setTimeRange, timeRanges
             </Grid>
         </Grid>
     );
-};
-
-Header.propTypes = {
-    className: PropTypes.string
 };
 
 export default Header;

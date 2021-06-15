@@ -25,7 +25,7 @@ const CTA: FC<CTAProps> = ({className, ...rest}) => {
             className={clsx(classes.root, className)}
             {...rest}
         >
-            <Container maxWidth="lg">
+            <Container component='section' maxWidth="lg">
                 <Typography
                     variant="h1"
                     align="center"

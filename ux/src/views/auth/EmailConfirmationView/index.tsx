@@ -38,7 +38,7 @@ const EmailConfirmationView: FC = () => {
                         className={classes.root}
                         title="Confirmation"
                     >
-                        <Container maxWidth="lg">
+                        <Container component='section' maxWidth="lg">
                             <Typography
                                 align="center"
                                 variant='h2'

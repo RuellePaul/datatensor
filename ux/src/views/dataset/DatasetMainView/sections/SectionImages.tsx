@@ -1,6 +1,6 @@
 import React, {FC, useState} from 'react';
 import {Box, Button, Dialog, DialogContent, DialogTitle, IconButton, makeStyles, Typography} from '@material-ui/core';
-import {Close as CloseIcon} from '@material-ui/icons';
+import {Close as CloseIcon, KeyboardArrowDown as ArrowDownIcon} from '@material-ui/icons';
 import DTImagesList from 'src/components/datatensor/ImagesList';
 import ImagesDropzone from 'src/components/ImagesDropzone';
 import useImages from 'src/hooks/useImages';
@@ -14,14 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     header: {
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        [theme.breakpoints.down('xs')]: {
-            alignItems: 'flex-start',
-            flexDirection: 'column',
-            '& h4': {
-                margin: theme.spacing(0, 0, 1)
-            }
-        }
+        justifyContent: 'space-between'
     },
     title: {
         position: 'relative',
@@ -40,6 +33,12 @@ const useStyles = makeStyles((theme: Theme) => ({
         right: theme.spacing(1),
         top: theme.spacing(1),
         color: theme.palette.grey[500],
+    },
+    expandWrapper: {
+        display: 'flex',
+        alignItems: 'center',
+        margin: theme.spacing(2, 0, 1),
+        color: theme.palette.grey[400]
     }
 }));
 
@@ -73,7 +72,7 @@ const SectionImages: FC<SectionProps> = ({className}) => {
                     color="textPrimary"
                 >
                     {images.length > 0
-                        ? `Showing ${imagesCount} / ${dataset.image_count} image${imagesCount > 1 ? 's' : ''}`
+                        ? `Showing ${dataset.image_count} image${dataset.image_count > 1 ? 's' : ''}`
                         : `No images found`
                     }
                 </Typography>
@@ -113,9 +112,16 @@ const SectionImages: FC<SectionProps> = ({className}) => {
                 </Dialog>
             </div>
 
-            <Box mt={3}>
-                <DTImagesList/>
-            </Box>
+            <Button className={classes.expandWrapper}>
+                <ArrowDownIcon fontSize='large'/>
+                <Box ml={1} mr={3}>
+                    <Typography variant='overline'>
+                        Original images ({imagesCount} / {dataset.image_count})
+                    </Typography>
+                </Box>
+            </Button>
+
+            <DTImagesList/>
         </div>
     )
 };
