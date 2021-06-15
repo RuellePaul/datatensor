@@ -141,9 +141,9 @@ export const DEFAULT_PIPELINE: Pipeline = {
         },
         {
             id: '100af1ba-9cd7-44c5-9f31-223996f916f7',
-            type: 'random_distortion',
+            type: 'random_color',
             probability: 0.65,
-            properties: OPERATIONS_INITIAL_PROPERTIES.random_distortion
+            properties: OPERATIONS_INITIAL_PROPERTIES.random_color
         },
     ]
 };

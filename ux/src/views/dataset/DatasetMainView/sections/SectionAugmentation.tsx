@@ -1,6 +1,6 @@
 import React, {FC, useEffect, useState} from 'react';
 import clsx from 'clsx';
-import {Button, Grid, makeStyles} from '@material-ui/core';
+import {Box, Button, Grid, makeStyles} from '@material-ui/core';
 import {Refresh} from '@material-ui/icons';
 import {Theme} from 'src/theme';
 import AugmentorPipeline from 'src/components/datatensor/AugmentorPipeline';
@@ -46,15 +46,13 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
             >
                 <Grid
                     container
-                    spacing={4}
+                    spacing={3}
                 >
                     <Grid
                         item
-                        sm={5}
+                        sm={4}
                         xs={12}
                     >
-                        <AugmentorPipeline/>
-
                         <Button
                             className={classes.refresh}
                             onClick={pickRandomImage}
@@ -65,10 +63,14 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                         </Button>
 
                         <DTImage/>
+
+                        <Box mt={3}>
+                            <AugmentorPipeline/>
+                        </Box>
                     </Grid>
                     <Grid
                         item
-                        sm={7}
+                        sm={8}
                         xs={12}
                     >
                         <PipelineSample/>
