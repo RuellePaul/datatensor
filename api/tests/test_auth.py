@@ -1,11 +1,19 @@
 from fastapi.testclient import TestClient
 
 from app import app, PREFIX
-from tests.conftest import Store
 from authentication.models import AuthLoginBody, AuthRegisterBody, AuthEmailConfirmBody, AuthResponse
+from config import Config
 from routers.users.models import User
+from tests.conftest import Store
+from tests.init_db import init_db
 
 client = TestClient(app)
+
+if Config.DB_NAME != 'datatensor_development_test':
+    raise ValueError('Invalid database selected.')
+
+Config.db.client.drop_database(Config.DB_NAME)
+init_db(Config.db)
 
 
 class TestOAuthWorkflow:
@@ -48,6 +56,7 @@ class TestJWTAuthWorkflow:
         access_token = response.json().get('accessToken')
         user = response.json().get('user')
         assert not user['is_verified']
+        assert not user['is_admin']
 
         Store.access_token = access_token
         Store.user = user
