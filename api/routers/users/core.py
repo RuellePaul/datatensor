@@ -15,6 +15,8 @@ def find_users(offset, limit) -> List[User]:
 
 def find_user(user_id) -> User:
     user_in_db = db.users.find_one({'_id': user_id})
+    if not user_in_db:
+        raise errors.NotFound(f'User {user_id} not found')
     return User.from_mongo(user_in_db)
 
 
