@@ -2,11 +2,23 @@ import type {FC} from 'react';
 import React from 'react';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-import {Box, Button, Divider, Grid, Slider, TextField, Typography} from '@material-ui/core';
+import {
+    Box,
+    Button,
+    capitalize,
+    Grid,
+    InputLabel,
+    MenuItem,
+    Select,
+    Slider,
+    TextField,
+    Typography
+} from '@material-ui/core';
 import {useDispatch} from 'src/store';
 import type {Operation} from 'src/types/pipeline';
 import {updateOperation} from 'src/slices/pipeline';
 import {OPERATIONS_INITIAL_PROPERTIES, OPERATIONS_SHAPES} from 'src/config';
+import {Alert} from '@material-ui/lab';
 
 interface OperationPropertiesProps {
     operation: Operation,
@@ -78,7 +90,6 @@ const OperationProperties: FC<OperationPropertiesProps> = ({operation}) => {
                                     <TextField
                                         error={Boolean(touched.max_left_rotation && errors.max_left_rotation)}
                                         fullWidth
-                                        helperText={touched.max_left_rotation && errors.max_left_rotation}
                                         label='Max left rotation'
                                         name='max_left_rotation'
                                         onBlur={handleBlur}
@@ -98,7 +109,6 @@ const OperationProperties: FC<OperationPropertiesProps> = ({operation}) => {
                                     <TextField
                                         error={Boolean(touched.max_right_rotation && errors.max_right_rotation)}
                                         fullWidth
-                                        helperText={touched.max_right_rotation && errors.max_right_rotation}
                                         label='Max right rotation'
                                         name='max_right_rotation'
                                         onBlur={handleBlur}
@@ -176,7 +186,6 @@ const OperationProperties: FC<OperationPropertiesProps> = ({operation}) => {
                                     <TextField
                                         error={Boolean(touched.max_shear_left && errors.max_shear_left)}
                                         fullWidth
-                                        helperText={touched.max_shear_left && errors.max_shear_left}
                                         label='Max shear left'
                                         name='max_shear_left'
                                         onBlur={handleBlur}
@@ -196,7 +205,6 @@ const OperationProperties: FC<OperationPropertiesProps> = ({operation}) => {
                                     <TextField
                                         error={Boolean(touched.max_shear_right && errors.max_shear_right)}
                                         fullWidth
-                                        helperText={touched.max_shear_right && errors.max_shear_right}
                                         label='Max shear left'
                                         name='max_shear_right'
                                         onBlur={handleBlur}
@@ -220,7 +228,6 @@ const OperationProperties: FC<OperationPropertiesProps> = ({operation}) => {
                                     <TextField
                                         error={Boolean(touched.grid_width && errors.grid_width)}
                                         fullWidth
-                                        helperText={touched.grid_width && errors.grid_width}
                                         label='Grid width'
                                         name='grid_width'
                                         onBlur={handleBlur}
@@ -240,7 +247,6 @@ const OperationProperties: FC<OperationPropertiesProps> = ({operation}) => {
                                     <TextField
                                         error={Boolean(touched.grid_height && errors.grid_height)}
                                         fullWidth
-                                        helperText={touched.grid_height && errors.grid_height}
                                         label='Grid height'
                                         name='grid_height'
                                         onBlur={handleBlur}
@@ -254,7 +260,6 @@ const OperationProperties: FC<OperationPropertiesProps> = ({operation}) => {
                                 </Grid>
                                 <Grid
                                     item
-                                    sm={6}
                                     xs={12}
                                 >
                                     <Typography
@@ -277,12 +282,183 @@ const OperationProperties: FC<OperationPropertiesProps> = ({operation}) => {
                                 </Grid>
                             </>
                         )}
+                        {operation.type === 'gaussian_distortion' && (
+                            <>
+                                <Grid
+                                    item
+                                    sm={6}
+                                    xs={12}
+                                >
+                                    <TextField
+                                        error={Boolean(touched.grid_width && errors.grid_width)}
+                                        fullWidth
+                                        label='Grid width'
+                                        name='grid_width'
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        type='number'
+                                        value={values.grid_width}
+                                        variant='outlined'
+                                        InputProps={{inputProps: {min: 1, max: 20}}}
+                                        size='small'
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
+                                    sm={6}
+                                    xs={12}
+                                >
+                                    <TextField
+                                        error={Boolean(touched.grid_height && errors.grid_height)}
+                                        fullWidth
+                                        label='Grid height'
+                                        name='grid_height'
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        type='number'
+                                        value={values.grid_height}
+                                        variant='outlined'
+                                        InputProps={{inputProps: {min: 1, max: 20}}}
+                                        size='small'
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
+                                    xs={12}
+                                >
+                                    <Typography
+                                        color='textPrimary'
+                                        variant='subtitle2'
+                                    >
+                                        Magnitude
+                                    </Typography>
+                                    <Slider
+                                        name='magnitude'
+                                        onBlur={handleBlur}
+                                        onChange={(event, value) => setFieldValue('magnitude', value)}
+                                        value={values.magnitude}
+                                        min={1}
+                                        max={20}
+                                        step={1}
+                                        marks
+                                        valueLabelDisplay='auto'
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
+                                    sm={6}
+                                    xs={12}
+                                >
+                                    <InputLabel>Corner</InputLabel>
+                                    <Select
+                                        fullWidth
+                                        name='corner'
+                                        onChange={handleChange}
+                                        value={values.corner || 'bell'}
+                                        variant='outlined'
+                                    >
+                                        {['bell', 'ul', 'ur', 'dl', 'dr'].map(corner => (
+                                            <MenuItem
+                                                key={corner}
+                                                value={corner}
+                                            >
+                                                {capitalize(corner)}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </Grid>
+                                <Grid
+                                    item
+                                    sm={6}
+                                    xs={12}
+                                >
+                                    <InputLabel>Method</InputLabel>
+                                    <Select
+                                        fullWidth
+                                        name='method'
+                                        onChange={handleChange}
+                                        value={values.method || 'in'}
+                                        variant='outlined'
+                                    >
+                                        {['in', 'out'].map(method => (
+                                            <MenuItem
+                                                key={method}
+                                                value={method}
+                                            >
+                                                {capitalize(method)}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </Grid>
+                            </>
+                        )}
+
+                        {['random_brightness', 'random_color', 'random_contrast'].includes(operation.type) && (
+                            <>
+                                <Grid
+                                    item
+                                    sm={6}
+                                    xs={12}
+                                >
+                                    <Typography
+                                        color='textPrimary'
+                                        variant='subtitle2'
+                                    >
+                                        Min factor
+                                    </Typography>
+                                    <Slider
+                                        name='min_factor'
+                                        onBlur={handleBlur}
+                                        onChange={(event, value) => setFieldValue('min_factor', value)}
+                                        value={values.min_factor}
+                                        min={1}
+                                        max={4}
+                                        step={0.05}
+                                        marks
+                                        valueLabelDisplay='auto'
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
+                                    sm={6}
+                                    xs={12}
+                                >
+                                    <Typography
+                                        color='textPrimary'
+                                        variant='subtitle2'
+                                    >
+                                        Max factor
+                                    </Typography>
+                                    <Slider
+                                        name='max_factor'
+                                        onBlur={handleBlur}
+                                        onChange={(event, value) => setFieldValue('max_factor', value)}
+                                        value={values.max_factor}
+                                        min={1}
+                                        max={4}
+                                        step={0.05}
+                                        marks
+                                        valueLabelDisplay='auto'
+                                    />
+                                </Grid>
+                            </>
+                        )}
                     </Grid>
+
+                    {Object.keys(errors).length > 0 && (
+                        <Alert severity='error'>
+                            {Object.values(errors).map(error => (
+                                <>
+                                    {error}
+                                    <br/>
+                                </>))}
+                        </Alert>
+                    )}
 
                     <Box my={2}>
                         <Button
                             color='secondary'
-                            disabled={isSubmitting}
+                            disabled={isSubmitting || Object.keys(errors).length > 0}
                             type='submit'
                             variant='contained'
                             size='small'
@@ -290,8 +466,6 @@ const OperationProperties: FC<OperationPropertiesProps> = ({operation}) => {
                             Update properties
                         </Button>
                     </Box>
-
-                    <Divider/>
                 </form>
             )}
         </Formik>

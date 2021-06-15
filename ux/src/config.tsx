@@ -5,12 +5,12 @@ import {
     Brightness7 as BrightnessIcon,
     CropRotate as RotateIcon,
     Equalizer as HistogramIcon,
+    FiberManualRecord as GreyScaleIcon,
     Flip as FlipIcon,
     FormatItalic as SkewIcon,
     InvertColors as InvertIcon,
     PaletteOutlined as ColorIcon,
-    PhotoSizeSelectLarge as CropIcon,
-    FiberManualRecord as GreyScaleIcon
+    PhotoSizeSelectLarge as CropIcon
 } from '@material-ui/icons';
 import {OperationType, Pipeline} from './types/pipeline';
 import {SuperCategory} from 'src/types/category';
@@ -119,15 +119,15 @@ export const OPERATIONS_SHAPES = {
     },
     random_brightness: {
         min_factor: Yup.number().min(1).max(4).required('Field required'),
-        max_factor: Yup.number().min(1).max(4).required('Field required')
+        max_factor: Yup.number().min(1).max(4).required('Field required').moreThan(Yup.ref('min_factor'))
     },
     random_contrast: {
         min_factor: Yup.number().min(1).max(4).required('Field required'),
-        max_factor: Yup.number().min(1).max(4).required('Field required')
+        max_factor: Yup.number().min(1).max(4).required('Field required').moreThan(Yup.ref('min_factor'))
     },
     random_color: {
         min_factor: Yup.number().min(1).max(4).required('Field required'),
-        max_factor: Yup.number().min(1).max(4).required('Field required')
+        max_factor: Yup.number().min(1).max(4).required('Field required').moreThan(Yup.ref('min_factor'))
     }
 };
 
