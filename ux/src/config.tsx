@@ -49,6 +49,29 @@ export const OPERATIONS_ICONS = {
     greyscale: <GreyScaleIcon/>
 };
 
+export const OPERATIONS_DESCRIPTION = {
+    rotate: `The operation will rotate an image by an random amount, within a range specified.
+             The parameters max_left_rotation and max_right_rotation allow you to control this range.`,
+    flip_random: `Flip (mirror) the image along either its horizontal or vertical axis.`,
+    skew: `Skew an image in a random direction, either left to right, top to bottom, or one of 8 corner directions.`,
+    crop_random: `Crop a random area of an image, based on the percentage area to be returned.`,
+    shear: `Shear the image by a specified number of degrees.`,
+    random_distortion: `This function performs a randomised, elastic distortion controlled by the parameters specified. 
+                        The grid width and height controls how fine the distortions are. Smaller sizes will result in 
+                        larger, more pronounced, and less granular distortions. Larger numbers will result in finer, 
+                        more granular distortions. The magnitude of the distortions can be controlled using magnitude.`,
+    gaussian_distortion: `This function performs a randomised, elastic distortion controlled by the parameters specified. 
+                          The grid width and height controls how fine the distortions are. Smaller sizes will result in 
+                          larger, more pronounced, and less granular distortions. Larger numbers will result in finer, 
+                          more granular distortions. The magnitude of the distortions can be controlled using magnitude.`,
+    random_brightness: `Random change brightness of an image.`,
+    random_color: `Random change saturation of an image.`,
+    random_contrast: `Random change contrast of an image.`,
+    histogram_equalisation: `Apply histogram equalisation to the image.`,
+    invert: `Invert an image.`,
+    greyscale: `Convert image to greyscale.`
+};
+
 export const OPERATIONS_INITIAL_PROPERTIES = {
     rotate: {
         max_left_rotation: 25,
