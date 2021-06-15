@@ -138,7 +138,12 @@ export const DEFAULT_PIPELINE: Pipeline = {
             type: 'rotate',
             probability: 0.8,
             properties: OPERATIONS_INITIAL_PROPERTIES.rotate
-        }
-
+        },
+        {
+            id: '100af1ba-9cd7-44c5-9f31-223996f916f7',
+            type: 'random_distortion',
+            probability: 0.65,
+            properties: OPERATIONS_INITIAL_PROPERTIES.random_distortion
+        },
     ]
 };
