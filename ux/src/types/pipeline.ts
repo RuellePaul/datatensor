@@ -38,12 +38,14 @@ export interface RandomDistortionProperties {
     magnitude: number;
 }
 
+type Corner = 'bell' | 'ul' | 'ur' | 'dl' | 'dr';
+type Method = 'in' | 'out';
 export interface GaussianDistortionProperties {
     grid_width: number;
     grid_height: number;
     magnitude: number;
-    corner: 'bell' | 'ul' | 'ur' | 'dl' | 'dr';
-    method: 'in' | 'out';
+    corner: Corner;
+    method: Method;
 }
 
 export interface RandomBrightnessProperties {

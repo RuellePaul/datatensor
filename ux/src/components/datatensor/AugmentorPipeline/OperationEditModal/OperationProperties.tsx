@@ -139,6 +139,144 @@ const OperationProperties: FC<OperationPropertiesProps> = ({operation}) => {
                                 </Grid>
                             </>
                         )}
+                        {operation.type === 'crop_random' && (
+                            <>
+                                <Grid
+                                    item
+                                    sm={6}
+                                    xs={12}
+                                >
+                                    <Typography
+                                        color='textPrimary'
+                                        variant='subtitle2'
+                                    >
+                                        Percentage_area
+                                    </Typography>
+                                    <Slider
+                                        name='percentage_area'
+                                        onBlur={handleBlur}
+                                        onChange={(event, value) => setFieldValue('percentage_area', value)}
+                                        value={values.percentage_area}
+                                        min={0.05}
+                                        max={1}
+                                        step={0.05}
+                                        marks
+                                        valueLabelDisplay='auto'
+                                    />
+                                </Grid>
+                            </>
+                        )}
+                        {operation.type === 'shear' && (
+                            <>
+                                <Grid
+                                    item
+                                    sm={6}
+                                    xs={12}
+                                >
+                                    <TextField
+                                        error={Boolean(touched.max_shear_left && errors.max_shear_left)}
+                                        fullWidth
+                                        helperText={touched.max_shear_left && errors.max_shear_left}
+                                        label='Max shear left'
+                                        name='max_shear_left'
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        type='number'
+                                        value={values.max_shear_left}
+                                        variant='outlined'
+                                        InputProps={{inputProps: {min: 1, max: 25}}}
+                                        size='small'
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
+                                    sm={6}
+                                    xs={12}
+                                >
+                                    <TextField
+                                        error={Boolean(touched.max_shear_right && errors.max_shear_right)}
+                                        fullWidth
+                                        helperText={touched.max_shear_right && errors.max_shear_right}
+                                        label='Max shear left'
+                                        name='max_shear_right'
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        type='number'
+                                        value={values.max_shear_right}
+                                        variant='outlined'
+                                        InputProps={{inputProps: {min: 1, max: 25}}}
+                                        size='small'
+                                    />
+                                </Grid>
+                            </>
+                        )}
+                        {operation.type === 'random_distortion' && (
+                            <>
+                                <Grid
+                                    item
+                                    sm={6}
+                                    xs={12}
+                                >
+                                    <TextField
+                                        error={Boolean(touched.grid_width && errors.grid_width)}
+                                        fullWidth
+                                        helperText={touched.grid_width && errors.grid_width}
+                                        label='Grid width'
+                                        name='grid_width'
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        type='number'
+                                        value={values.grid_width}
+                                        variant='outlined'
+                                        InputProps={{inputProps: {min: 1, max: 20}}}
+                                        size='small'
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
+                                    sm={6}
+                                    xs={12}
+                                >
+                                    <TextField
+                                        error={Boolean(touched.grid_height && errors.grid_height)}
+                                        fullWidth
+                                        helperText={touched.grid_height && errors.grid_height}
+                                        label='Grid height'
+                                        name='grid_height'
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        type='number'
+                                        value={values.grid_height}
+                                        variant='outlined'
+                                        InputProps={{inputProps: {min: 1, max: 20}}}
+                                        size='small'
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
+                                    sm={6}
+                                    xs={12}
+                                >
+                                    <Typography
+                                        color='textPrimary'
+                                        variant='subtitle2'
+                                    >
+                                        Magnitude
+                                    </Typography>
+                                    <Slider
+                                        name='magnitude'
+                                        onBlur={handleBlur}
+                                        onChange={(event, value) => setFieldValue('magnitude', value)}
+                                        value={values.magnitude}
+                                        min={1}
+                                        max={20}
+                                        step={1}
+                                        marks
+                                        valueLabelDisplay='auto'
+                                    />
+                                </Grid>
+                            </>
+                        )}
                     </Grid>
 
                     <Box my={2}>

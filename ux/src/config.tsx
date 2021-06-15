@@ -9,7 +9,8 @@ import {
     FormatItalic as SkewIcon,
     InvertColors as InvertIcon,
     PaletteOutlined as ColorIcon,
-    PhotoSizeSelectLarge as CropIcon
+    PhotoSizeSelectLarge as CropIcon,
+    FiberManualRecord as GreyScaleIcon
 } from '@material-ui/icons';
 import {OperationType, Pipeline} from './types/pipeline';
 import {SuperCategory} from 'src/types/category';
@@ -45,7 +46,7 @@ export const OPERATIONS_ICONS = {
     random_contrast: <RotateIcon/>,
     histogram_equalisation: <HistogramIcon/>,
     invert: <InvertIcon/>,
-    greyscale: <RotateIcon/>
+    greyscale: <GreyScaleIcon/>
 };
 
 export const OPERATIONS_INITIAL_PROPERTIES = {
@@ -97,6 +98,36 @@ export const OPERATIONS_SHAPES = {
     },
     skew: {
         magnitude: Yup.number().min(0).max(1).required('Field required')
+    },
+    crop_random: {
+        percentage_area: Yup.number().min(0).max(1).required('Field required'),
+        randomise_percentage_area: Yup.boolean()
+    },
+    shear: {
+        max_shear_left: Yup.number().min(1).max(25).required('Field required'),
+        max_shear_right: Yup.number().min(1).max(25).required('Field required')
+    },
+    random_distortion: {
+        grid_width: Yup.number().min(1).max(20).required('Field required'),
+        grid_height: Yup.number().min(1).max(20).required('Field required'),
+        magnitude: Yup.number().min(1).max(20).required('Field required')
+    },
+    gaussian_distortion: {
+        grid_width: Yup.number().min(1).max(20).required('Field required'),
+        grid_height: Yup.number().min(1).max(20).required('Field required'),
+        magnitude: Yup.number().min(1).max(20).required('Field required')
+    },
+    random_brightness: {
+        min_factor: Yup.number().min(1).max(4).required('Field required'),
+        max_factor: Yup.number().min(1).max(4).required('Field required')
+    },
+    random_contrast: {
+        min_factor: Yup.number().min(1).max(4).required('Field required'),
+        max_factor: Yup.number().min(1).max(4).required('Field required')
+    },
+    random_color: {
+        min_factor: Yup.number().min(1).max(4).required('Field required'),
+        max_factor: Yup.number().min(1).max(4).required('Field required')
     }
 };
 
