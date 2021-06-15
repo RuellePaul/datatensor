@@ -18,7 +18,7 @@ class AugmentorPipeline(DataPipeline):
         super().__init__(images, **kwargs)
 
     def sample(self, n):
-        image_bytes = requests.get(self.images[0]['path']).content
+        image_bytes = requests.get(self.images[0].path).content
         input_images = [cv2.imdecode(numpy.fromstring(image_bytes, numpy.uint8), cv2.IMREAD_UNCHANGED)]
         input_images = [PILImage.fromarray(x) for x in input_images]
 

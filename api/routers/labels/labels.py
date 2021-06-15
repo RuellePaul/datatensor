@@ -12,8 +12,7 @@ async def get_labels(image_id, offset: int = 0, limit: int = 0):
     """
     Fetch paginated labels list of given image.
     """
-    result = find_labels(image_id, offset, limit)
-    response = {'labels': result}
+    response = {'labels': find_labels(image_id, offset, limit)}
     return parse(response)
 
 
@@ -22,8 +21,7 @@ async def get_label(image_id, label_id):
     """
     Fetch given label of given image.
     """
-    result = find_label(image_id, label_id)
-    response = {'label': result}
+    response = {'label': find_label(image_id, label_id)}
     return parse(response)
 
 

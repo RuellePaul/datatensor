@@ -1,5 +1,6 @@
 import concurrent.futures
 from uuid import uuid4
+from typing import List
 
 import boto3
 import cv2
@@ -7,6 +8,7 @@ import numpy
 
 import errors
 from config import Config
+from routers.images.models import Image
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
@@ -45,7 +47,7 @@ def upload_image(image_bytes, image_id):
         raise errors.InternalError(f'Cannot upload file to S3, {str(e)}')
 
 
-def upload_file(payload):
+def upload_file(payload) -> Image:
     file = payload['file']
     filename = payload['filename']
     dataset_id = payload['dataset_id']
@@ -56,15 +58,15 @@ def upload_file(payload):
         image = compress_image(image)
         image_bytes = cv2.imencode('.jpg', image)[1].tostring()
         path = upload_image(image_bytes, image_id)
-        return {
-            '_id': image_id,
-            'dataset_id': dataset_id,
-            'path': path,
-            'name': name,
-            'size': len(image_bytes),
-            'width': image.shape[1],
-            'height': image.shape[0]
-        }
+        return Image(
+            _id=image_id,
+            dataset_id=dataset_id,
+            path=path,
+            name=name,
+            size=len(image_bytes),
+            width=image.shape[1],
+            height=image.shape[0],
+        )
 
 
 def delete_image_from_s3(image_id):
@@ -77,30 +79,36 @@ def delete_image_from_s3(image_id):
         raise errors.InternalError(f'Cannot delete file from S3, {str(e)}')
 
 
-def find_images(dataset_id, offset, limit):
-    return list(db.images.find({'dataset_id': dataset_id}).skip(offset).limit(limit))
+def find_images(dataset_id, offset, limit) -> List[Image]:
+    images = list(db.images
+                  .find({'dataset_id': dataset_id})
+                  .skip(offset)
+                  .limit(limit))
+    return [Image.from_mongo(image) for image in images]
 
 
-def find_image(dataset_id, image_id):
-    return db.images.find_one({'_id': image_id,
-                               'dataset_id': dataset_id})
+def find_image(dataset_id, image_id) -> Image:
+    image = db.images.find_one({'_id': image_id, 'dataset_id': dataset_id})
+    return Image.from_mongo(image)
 
 
-def insert_images(dataset_id, request_files):
+def insert_images(dataset_id, request_files) -> List[Image]:
     with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
         results = executor.map(upload_file, [{'filename': file.filename, 'file': file.file, 'dataset_id': dataset_id}
                                              for file in request_files])
         images = list(filter(None.__ne__, results))
-        db.images.insert_many(images)
+        db.images.insert_many([image.mongo() for image in images])
         db.datasets.update_one({'_id': dataset_id},
                                {'$inc': {
                                    'image_count': len(images)
                                }},
                                upsert=False)
-        return images
+    return images
 
 
 def remove_image(dataset_id, image_id):
+    if not db.images.find_one({'_id': image_id}):
+        raise errors.Forbidden(f'Image {image_id} does not exist')
     delete_image_from_s3(image_id)
     db.labels.delete_many({'image_id': image_id})
     db.images.delete_one({'_id': image_id,

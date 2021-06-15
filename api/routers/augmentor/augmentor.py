@@ -9,6 +9,7 @@ from routers.augmentor.core import perform_augmentation
 from routers.augmentor.models import SampleBody
 from routers.datasets.core import find_dataset
 from routers.images.core import find_image
+from routers.labels.core import find_labels
 from routers.users.models import User
 
 augmentor = APIRouter()
@@ -28,6 +29,7 @@ async def augmentor_sample(payload: SampleBody, user: User = Depends(logged_user
         raise errors.Forbidden('You can only sample your own datasets')
 
     image = find_image(dataset_id, image_id)
+    labels = find_labels(image_id, offset=0, limit=0)
 
     augmented_images = perform_augmentation(
         image,

@@ -1,6 +1,10 @@
+import uuid
+from typing import List
+
 import boto3
 
 from config import Config
+from routers.labels.models import Label
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
@@ -12,16 +16,20 @@ s3 = boto3.client(
 )
 
 
-def find_labels(image_id, offset, limit):
-    return list(db.labels.find({'image_id': image_id}).skip(offset).limit(limit))
+def find_labels(image_id, offset, limit) -> List[Label]:
+    labels = list(db.labels.find({'image_id': image_id}).skip(offset).limit(limit))
+    return [Label.from_mongo(label) for label in labels]
 
 
-def find_label(image_id, label_id):
-    return db.labels.find_one({'_id': label_id,
-                               'image_id': image_id})
+def find_label(image_id, label_id) -> Label:
+    label = db.labels.find_one({'_id': label_id,
+                                'image_id': image_id})
+    return Label.from_mongo(label)
 
 
 def replace_labels(image_id, labels):
     db.labels.delete_many({'image_id': image_id})
     if labels:
-        db.labels.insert_many([{**label.dict(), 'image_id': image_id} for label in labels])
+        db.labels.insert_many([{**label.dict(),
+                                'image_id': image_id,
+                                '_id': str(uuid.uuid4())} for label in labels])
