@@ -12,8 +12,7 @@ async def get_categories(dataset_id, offset: int = 0, limit: int = 0):
     """
     Fetch paginated categories list of given dataset.
     """
-    result = find_categories(dataset_id, offset, limit)
-    response = {'categories': result}
+    response = {'categories': find_categories(dataset_id, offset, limit)}
     return parse(response)
 
 
@@ -22,8 +21,7 @@ async def get_category(dataset_id, category_id):
     """
     Fetch given category of given dataset.
     """
-    result = find_category(dataset_id, category_id)
-    response = {'category': result}
+    response = {'category': find_category(dataset_id, category_id)}
     return parse(response)
 
 
