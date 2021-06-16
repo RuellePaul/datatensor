@@ -77,9 +77,16 @@ class AugmentorPipeline(DataPipeline):
                     augmented_images = operation.perform_operation(augmented_images)
 
             output_images.append(numpy.asarray(augmented_images[0]))
+
             labels = [retrieve_label_from_ellipsis(numpy.asarray(image))
                       for image in augmented_images[1:]]
+
+            for index, label in enumerate(labels):
+                if label:
+                    label.category_id = self.labels[index].category_id
+
             labels = list(filter(None.__ne__, labels))
+
             output_images_labels.append(labels)
 
         return output_images, output_images_labels
