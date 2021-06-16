@@ -1,4 +1,4 @@
-import React, {FC, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {useParams} from 'react-router';
 import clsx from 'clsx';
 import {Box, CircularProgress, Container, Divider, makeStyles, Tab, Tabs, Tooltip, Typography} from '@material-ui/core';
@@ -52,13 +52,20 @@ const DatasetMainView: FC = () => {
 
     const classes = useStyles();
 
-    const [tab, setTab] = useState(0);
+    const [tab, setTab] = useState<number>(0);
+    const [openedTabs, setOpenedTabs] = useState<number[]>([0]);
 
     const handleTabChange = (event: React.ChangeEvent<{}>, newTab: number) => {
         setTab(newTab);
     };
 
     const {dataset_id} = useParams();
+
+    useEffect(() => {
+        setOpenedTabs(openedTabs => openedTabs.includes(tab)
+            ? openedTabs
+            : [...openedTabs, tab]);
+    }, [tab]);
 
     if (!dataset_id)
         return null;
@@ -124,15 +131,21 @@ const DatasetMainView: FC = () => {
                                         <Divider/>
                                     </Box>
 
-                                    <SectionImages
-                                        className={clsx(tab !== 1 && 'hidden')}
-                                    />
-                                    <SectionAugmentation
-                                        className={clsx(tab !== 2 && 'hidden')}
-                                    />
-                                    <SectionSettings
-                                        className={clsx(tab !== 3 && 'hidden')}
-                                    />
+                                    {openedTabs.includes(1) && (
+                                        <SectionImages
+                                            className={clsx(tab !== 1 && 'hidden')}
+                                        />
+                                    )}
+                                    {openedTabs.includes(2) && (
+                                        <SectionAugmentation
+                                            className={clsx(tab !== 2 && 'hidden')}
+                                        />
+                                    )}
+                                    {openedTabs.includes(3) && (
+                                        <SectionSettings
+                                            className={clsx(tab !== 3 && 'hidden')}
+                                        />
+                                    )}
                                 </Container>
                             </TabContext>
                         </ImagesProvider>
