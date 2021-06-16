@@ -8,6 +8,7 @@ import {Operation} from 'src/types/pipeline';
 import useImage from 'src/hooks/useImage';
 import api from 'src/utils/api';
 import ImageBase64 from 'src/components/utils/ImageBase64';
+import {Label} from 'src/types/label';
 
 interface PipelineSampleProps {
     className?: string;
@@ -27,6 +28,7 @@ const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
     const image_id = image._id;
 
     const [imagesBase64, setImagesBase64] = useState<string[] | null>(null);
+    const [imagesLabels, setImagesLabels] = useState<Label[][] | null>(null);
 
     const doSample = useCallback(async () => {
         setImagesBase64(null);
@@ -34,13 +36,14 @@ const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
         if (pipeline.isLoaded) {
             const operations: Operation[] = pipeline.operations.allIds.map(id => pipeline.operations.byId[id])
 
-            const response = await api.post<string[]>('/augmentor/sample', {
+            const response = await api.post<{ images: string[], images_labels: Label[][] }>('/augmentor/sample', {
                 dataset_id,
                 image_id,
-                operations,
+                operations
             })
 
-            setImagesBase64(response.data);
+            setImagesBase64(response.data.images);
+            setImagesLabels(response.data.images_labels)
         }
     }, [pipeline, dataset_id, image_id])
 
@@ -54,7 +57,7 @@ const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
                 container
                 spacing={1}
             >
-                {imagesBase64 === null
+                {imagesBase64 === null || imagesLabels === null
                     ? (
                         <Grid
                             item
@@ -74,9 +77,12 @@ const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
                             <Grid
                                 key={index}
                                 item
-                                xs={4}
+                                xs={6}
                             >
-                                <ImageBase64 base64string={imageBase64}/>
+                                <ImageBase64
+                                    base64string={imageBase64}
+                                    labels={imagesLabels[index]}
+                                />
                             </Grid>
                         ))
                     )
