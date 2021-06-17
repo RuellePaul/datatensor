@@ -98,6 +98,19 @@ class TestJWTAuthWorkflow:
         Store.access_token = access_token
         Store.user = user
 
+        login_body = AuthLoginBody(email='unverified@datatensor.io',
+                                   password='TestPassword123$%')
+        response = client.post(f'{PREFIX}/auth/login', json=login_body.dict())
+        assert response.status_code == 200
+        assert AuthResponse.validate(response.json())
+
+        unverified_access_token = response.json().get('accessToken')
+        unverified_user = response.json().get('user')
+        assert not unverified_user['is_verified']
+
+        Store.unverified_access_token = unverified_access_token
+        Store.unverified_user = unverified_user
+
     def test_invalid_login(self):
         login_body = AuthLoginBody(email='wrong@datatensor.io',
                                    password='TestPassword123$%')

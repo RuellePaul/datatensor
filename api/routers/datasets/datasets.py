@@ -13,7 +13,7 @@ datasets = APIRouter()
 @datasets.get('/', response_model=DatasetsResponse)
 async def get_datasets(user: User = Depends(logged_user), offset: int = 0, limit: int = 0):
     """
-    Fetch paginated datasets list of logged user.
+    Fetch paginated datasets list (either user datasets, or public ones).
     """
     response = {'datasets': find_datasets(user.id, offset, limit)}
     return parse(response)
@@ -36,7 +36,7 @@ async def post_dataset(dataset: DatasetPostBody, user: User = Depends(logged_use
     🔒️ Verified users
     """
     if not user.is_verified:
-        raise errors.InvalidAuthentication('User email is not verified', data='ERR_VERIFY')
+        raise errors.Forbidden('User email is not verified', data='ERR_VERIFY')
     insert_dataset(user.id, dataset)
 
 
