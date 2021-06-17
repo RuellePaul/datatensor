@@ -36,7 +36,7 @@ def update_user_password(user, password, new_password):
     user_password = bytes(user_password_encrypted, 'utf-8')
 
     if not password_context.verify(password, user_password):
-        raise errors.Forbidden("Passwords don't match")
+        raise errors.InvalidAuthentication("Passwords don't match")
 
     encrypted_password = password_context.hash(new_password)
     db.users.find_one_and_update({'_id': user.id},
