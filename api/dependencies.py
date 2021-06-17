@@ -13,4 +13,4 @@ async def logged_user(authorization: str = Header(...)):
 
 async def logged_admin(user: User = Depends(logged_user)):
     if user.id not in Config.ADMIN_USER_IDS:
-        raise errors.Forbidden('Admin only.')
+        raise errors.Forbidden(errors.USER_NOT_ADMIN)

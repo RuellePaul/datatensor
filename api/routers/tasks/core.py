@@ -16,12 +16,12 @@ def _check_user_allowed_to_create_task(user, dataset_id, task_type):
         return
 
     if task_type == 'generator':
-        raise errors.Forbidden(f"Task `generator` is admin only")
+        raise errors.Forbidden(errors.USER_NOT_ADMIN)
 
     user_datasets = db.datasets.find({'user_id': user.id})
     user_dataset_ids = [dataset['_id'] for dataset in user_datasets]
     if dataset_id not in user_dataset_ids:
-        raise errors.Forbidden(f"Dataset {dataset_id} does not belong to user {user.id}")
+        raise errors.Forbidden(errors.NOT_YOUR_DATASET)
 
 
 def find_tasks():

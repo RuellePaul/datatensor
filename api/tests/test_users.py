@@ -2,6 +2,7 @@ from uuid import uuid4
 
 from fastapi.testclient import TestClient
 
+import errors
 from app import app, PREFIX
 from authentication.models import AuthLoginBody
 from routers.users.models import User, UsersResponse, UserResponse, UserUpdateProfileBody, UserUpdatePasswordBody
@@ -16,6 +17,7 @@ class TestUsers:
         response = client.get(f'{PREFIX}/users/',
                               headers={'Authorization': Store.access_token})
         assert response.status_code == 403
+        assert response.json().get('message') == errors.USER_NOT_ADMIN
 
         response = client.get(f'{PREFIX}/users/',
                               headers={'Authorization': None})
@@ -35,6 +37,7 @@ class TestUsers:
         response = client.get(f'{PREFIX}/users/{str(uuid4())}',
                               headers={'Authorization': Store.access_token})
         assert response.status_code == 404
+        assert response.json().get('message') == errors.USER_NOT_FOUND
 
     def test_valid_get_user(self):
         response = client.get(f'{PREFIX}/users/{Store.user["id"]}',
@@ -93,6 +96,7 @@ class TestUsers:
                                 headers={'Authorization': Store.access_token},
                                 json=body.dict())
         assert response.status_code == 401
+        assert response.json().get('message') == errors.INVALID_PASSWORD
 
     def test_valid_patch_user_password(self):
         login_body = AuthLoginBody(email='user@datatensor.io',
@@ -112,10 +116,23 @@ class TestUsers:
         response = client.post(f'{PREFIX}/auth/login', json=login_body.dict())
         assert response.status_code == 200
 
+    # TODO : test delete users
+
     def test_invalid_delete_user(self):
         response = client.delete(f'{PREFIX}/users/{Store.user["id"]}',
                                  headers={'Authorization': Store.access_token})
         assert response.status_code == 403
+        assert response.json().get('message') == errors.USER_NOT_ADMIN
+
+        response = client.delete(f'{PREFIX}/users/{Store.admin_user["id"]}',
+                                 headers={'Authorization': Store.admin_access_token})
+        assert response.status_code == 403
+        assert response.json().get('message') == errors.USER_IS_ADMIN
+
+        response = client.delete(f'{PREFIX}/users/{str(uuid4())}',
+                                 headers={'Authorization': Store.admin_access_token})
+        assert response.status_code == 404
+        assert response.json().get('message') == errors.USER_NOT_FOUND
 
         response = client.delete(f'{PREFIX}/users/{Store.user["id"]}',
                                  headers={'Authorization': None})

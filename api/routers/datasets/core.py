@@ -34,8 +34,12 @@ def insert_dataset(user_id, dataset):
 
 def remove_dataset(user_id, dataset_id):
     dataset_to_remove = db.datasets.find_one({'_id': dataset_id})
+
+    if not dataset_to_remove:
+        raise errors.NotFound(errors.DATASET_NOT_FOUND)
+
     if dataset_to_remove['user_id'] != user_id:
-        raise errors.Forbidden('You can only remove your own datasets')
+        raise errors.Forbidden(errors.NOT_YOUR_DATASET)
 
     images = list(Config.db.images.find({'dataset_id': dataset_id}))
     if images:

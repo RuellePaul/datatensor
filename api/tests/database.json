@@ -25,6 +25,39 @@
             "name": "Jack Sparrow",
             "scope": null,
             "tier": "standard"
+        },
+        {
+            "_id": "e61c75a28498e2a097c22432fad3c64d8684dd5891d65e7fbeaeda5d801bd2fd",
+            "avatar": null,
+            "created_at": "2021-06-15T22:54:57.236Z",
+            "email": "unverified@datatensor.io",
+            "is_admin": false,
+            "is_verified": false,
+            "is_public": true,
+            "password": "$2b$12$kwd0G7o/Haqsf69yoRWiw.78oqugRXBrqXG2iRmxI3j2TxR1tdKiC",
+            "name": "Jack Sparrow",
+            "scope": null,
+            "tier": "standard"
+        }
+    ],
+    "datasets": [
+        {
+            "_id": "83b06b61-fcf4-48a1-8fd3-9233b2e15a25",
+            "created_at": "2021-06-15T22:54:57.236Z",
+            "description": "Only for test purposes",
+            "image_count": 0,
+            "is_public": true,
+            "name": "Admin dataset",
+            "user_id": "4768b80e01b15556366790ffafa7a344e71f76f6c942c6acbcec87a602336219"
+        },
+        {
+            "_id": "ba865075-3b3c-48b5-833f-641cbafe1143",
+            "created_at": "2021-06-15T22:54:57.236Z",
+            "description": "Only for test purposes",
+            "image_count": 0,
+            "is_public": false,
+            "name": "User dataset",
+            "user_id": "d4c8e6fca7030235fdbed1336e80660f9460e60e1751c8934909a0448c3108d2"
         }
     ]
 }

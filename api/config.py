@@ -10,7 +10,7 @@ from database import encrypt_init
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'  # to use OAuth2 without https
 
 if 'ENVIRONMENT' not in os.environ:
-    raise errors.Forbidden('Environment variable are not set. Use init_env.sh script, or edit Pycharm configuration')
+    raise errors.InternalError('Environment variable are not set. Use init_env.sh script, or edit Pycharm configuration')
 
 
 class Settings(BaseSettings):
