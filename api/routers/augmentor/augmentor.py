@@ -27,7 +27,7 @@ async def augmentor_sample(payload: SampleBody, user: User = Depends(logged_user
 
     dataset = find_dataset(dataset_id)
     if dataset.user_id != user.id:
-        raise errors.Forbidden('You can only sample your own datasets')
+        raise errors.Forbidden(errors.NOT_YOUR_DATASET)
 
     image = find_image(dataset_id, image_id)
     labels = find_labels(image_id, offset=0, limit=0)

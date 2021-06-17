@@ -103,9 +103,6 @@ def main(user_id, task_id, properties: TaskGeneratorProperties):
     dataset_id = str(uuid4())
     update_task(task_id, dataset_id=dataset_id, status='active')
 
-    if Config.db.datasets.find_one({'_id': dataset_id}):
-        raise errors.Forbidden(f'Dataset {dataset_id} is already built')
-
     datasource = [datasource for datasource in Config.DATASOURCES if datasource['key'] == datasource_key][0]
 
     # TODO : use multiple filenames

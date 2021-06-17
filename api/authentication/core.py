@@ -43,7 +43,7 @@ def verify_access_token(access_token) -> User:
 
     user = db.users.find_one({'_id': user_id}, {'password': 0})
     if not user:
-        raise errors.InvalidAuthentication("User doesn't exists")
+        raise errors.InvalidAuthentication(errors.USER_NOT_FOUND)
 
     return User.from_mongo(user)
 
@@ -77,7 +77,7 @@ def profile_from_code(code, scope):
     try:
         client.parse_request_body_response(response.text)
     except oauthlib.oauth2.rfc6749.errors.OAuth2Error as e:
-        raise errors.InvalidAuthentication(f'Cannot fetch OAuth2 profile : {str(e)}')
+        raise errors.InternalError(f'Cannot fetch OAuth2 profile : {str(e)}')
     uri, headers, body = client.add_token(Config.OAUTH[scope]['USER_URL'])
     profile = requests.get(uri, headers=headers, data=body, params={
         'access_token': response.json()['access_token'],
@@ -188,7 +188,7 @@ def check_captcha(captcha):
         return
 
     if not captcha:
-        raise errors.Forbidden('Missing catpcha')
+        raise errors.Forbidden(errors.CAPTCHA_MISSING)
     url = 'https://www.google.com/recaptcha/api/siteverify'
     data = {
         'secret': Config.GOOGLE_CAPTCHA_SECRET_KEY,
@@ -196,9 +196,9 @@ def check_captcha(captcha):
     }
     r = requests.post(url, data=data)
     if r.status_code != 200:
-        raise errors.InternalError('Invalid captcha')
+        raise errors.InternalError(errors.CAPTCHA_INVALID)
     if not r.json().get('success'):
-        raise errors.BadRequest('Invalid captcha')
+        raise errors.BadRequest(errors.CAPTCHA_INVALID)
 
 
 def send_email_with_activation_code(email, activation_code):
@@ -232,10 +232,10 @@ def verify_user_email(activation_code) -> User:
     user = user_from_activation_code(activation_code)
 
     if not user:
-        raise errors.Forbidden('Invalid code provided')
+        raise errors.Forbidden(errors.INVALID_CODE)
 
     if user.is_verified:
-        raise errors.BadRequest(f"User already verified")
+        raise errors.BadRequest(errors.ALREADY_VERIFIED)
 
     db.users.find_one_and_update({'_id': user.id},
                                  {'$set': {'is_verified': True, 'activation_code': None}})

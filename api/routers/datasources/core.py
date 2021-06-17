@@ -66,7 +66,7 @@ def find_categories(datasource_key: DatasourceKey):
         datasource_annotations = datasource_content['annotations']
         json_file.close()
     except FileNotFoundError:
-        raise errors.NotFound(f'Filename {filename} not found for datasource {datasource_key}')
+        raise errors.InternalError(f'Filename {filename} not found for datasource {datasource_key}')
 
     for category in categories:
         category['labels_count'] = 0
@@ -102,6 +102,6 @@ def find_max_image_count(datasource_key, selected_categories):
 
         image_remote_ids = [label['image_id'] for label in labels_remote]
     except FileNotFoundError:
-        raise errors.NotFound(f'Filename {filename} not found for datasource {datasource_key}')
+        raise errors.InternalError(f'Filename {filename} not found for datasource {datasource_key}')
 
     return len(set(image_remote_ids))

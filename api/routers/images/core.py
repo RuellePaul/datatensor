@@ -108,7 +108,7 @@ def insert_images(dataset_id, request_files) -> List[Image]:
 
 def remove_image(dataset_id, image_id):
     if not db.images.find_one({'_id': image_id}):
-        raise errors.Forbidden(f'Image {image_id} does not exist')
+        raise errors.Forbidden(errors.IMAGE_NOT_FOUND)
     delete_image_from_s3(image_id)
     db.labels.delete_many({'image_id': image_id})
     db.images.delete_one({'_id': image_id,

@@ -20,7 +20,7 @@ def find_category(dataset_id, category_id) -> Category:
 
 def insert_category(dataset_id, category) -> Category:
     if db.categories.find_one({'dataset_id': dataset_id, 'name': category.name}):
-        raise errors.Forbidden(f'Category {category.name} already exists')
+        raise errors.Forbidden(errors.CATEGORY_ALREADY_EXISTS)
     category = Category(
         _id=str(uuid4()),
         dataset_id=dataset_id,

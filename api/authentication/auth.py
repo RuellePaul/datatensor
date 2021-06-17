@@ -22,11 +22,11 @@ async def do_login(payload: AuthLoginBody):
     user_id = core.user_id_hash(payload.email)
     user = core.user_with_password_from_user_id(user_id)
     if not user:
-        raise errors.InvalidAuthentication('Invalid email or password')
+        raise errors.InvalidAuthentication(errors.INVALID_CREDENTIALS)
 
     user_password = bytes(user.password, 'utf-8')
     if not password_context.verify(payload.password, user_password):
-        raise errors.InvalidAuthentication('Invalid email or password')
+        raise errors.InvalidAuthentication(errors.INVALID_CREDENTIALS)
 
     logger.info(f'Logged in as `{payload.email}`')
 
@@ -52,7 +52,7 @@ async def do_register(payload: AuthRegisterBody):
     user = core.user_from_user_id(user_id)
 
     if user:
-        raise errors.Forbidden(f'User `{email}` already exists')
+        raise errors.Forbidden(errors.USER_ALREADY_EXISTS)
 
     if Config.ENVIRONMENT == 'development' and payload.email == 'test@datatensor.io':
         activation_code = 'test_activation_code'
