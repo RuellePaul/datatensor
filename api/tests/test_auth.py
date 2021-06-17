@@ -1,5 +1,6 @@
 from fastapi.testclient import TestClient
 
+import errors
 from app import app, PREFIX
 from authentication.models import AuthLoginBody, AuthRegisterBody, AuthEmailConfirmBody, AuthResponse
 from config import Config
@@ -116,11 +117,13 @@ class TestJWTAuthWorkflow:
                                    password='TestPassword123$%')
         response = client.post(f'{PREFIX}/auth/login', json=login_body.dict())
         assert response.status_code == 401
+        assert response.json().get('message') == errors.INVALID_CREDENTIALS
 
         login_body = AuthLoginBody(email='admin@datatensor.io',
                                    password='WrongPassword123$%')
         response = client.post(f'{PREFIX}/auth/login', json=login_body.dict())
         assert response.status_code == 401
+        assert response.json().get('message') == errors.INVALID_CREDENTIALS
 
     def test_valid_admin_login(self):
         login_body = AuthLoginBody(email='admin@datatensor.io',

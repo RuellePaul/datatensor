@@ -53,8 +53,9 @@ class InternalError(APIError):
 CAPTCHA_MISSING = 'Missing google recatpcha.'
 CAPTCHA_INVALID = 'Invalid captcha. Try again.'
 ALREADY_VERIFIED = 'User is already verified.'
-NOT_VERIFIED = 'User email is not verified.'
-NOT_ADMIN = 'This action requires admin privileges.'
+USER_NOT_VERIFIED = 'User email is not verified.'
+USER_NOT_ADMIN = 'This action requires admin privileges.'
+USER_IS_ADMIN = 'This user has admin privileges.'
 INVALID_CREDENTIALS = 'Invalid email or password. Please try again.'
 INVALID_CODE = 'Invalid code provided.'
 INVALID_PASSWORD = "Passwords don't match. Please try again."

@@ -16,7 +16,7 @@ def _check_user_allowed_to_create_task(user, dataset_id, task_type):
         return
 
     if task_type == 'generator':
-        raise errors.Forbidden(errors.NOT_ADMIN)
+        raise errors.Forbidden(errors.USER_NOT_ADMIN)
 
     user_datasets = db.datasets.find({'user_id': user.id})
     user_dataset_ids = [dataset['_id'] for dataset in user_datasets]

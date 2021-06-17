@@ -36,7 +36,7 @@ async def post_dataset(dataset: DatasetPostBody, user: User = Depends(logged_use
     🔒️ Verified users
     """
     if not user.is_verified:
-        raise errors.Forbidden(errors.NOT_VERIFIED, data='ERR_VERIFY')
+        raise errors.Forbidden(errors.USER_NOT_VERIFIED, data='ERR_VERIFY')
     insert_dataset(user.id, dataset)
 
 

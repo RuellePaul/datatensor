@@ -1,4 +1,5 @@
 import logging
+import os
 
 
 def create_logger():
@@ -9,7 +10,10 @@ def create_logger():
     console_handler.setFormatter(formatter)
 
     _logger.addHandler(console_handler)
+
     _logger.setLevel(logging.INFO)
+    if os.environ.get('__TEST__'):
+        _logger.setLevel(logging.CRITICAL)
 
     return _logger
 

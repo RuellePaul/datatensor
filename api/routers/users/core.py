@@ -49,5 +49,11 @@ def remove_users(user_ids):
 
 
 def remove_user(user_id):
+    user_to_delete = find_user(user_id)
+    if not user_to_delete:
+        raise errors.NotFound(errors.USER_NOT_FOUND)
+    if user_to_delete.is_admin:
+        raise errors.Forbidden(errors.USER_IS_ADMIN)
+
     db.notifications.delete_many({'user_id': user_id})
     db.users.delete_one({'_id': user_id, 'is_admin': False})

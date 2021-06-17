@@ -1,5 +1,6 @@
 from fastapi.testclient import TestClient
 
+import errors
 from app import app, PREFIX
 from routers.datasets.models import DatasetPostBody, DatasetsResponse, DatasetResponse
 from tests.conftest import Store
@@ -38,6 +39,7 @@ class TestDatasets:
                                headers={'Authorization': Store.unverified_access_token},
                                json=body.dict())
         assert response.status_code == 403
+        assert response.json().get('message') == errors.USER_NOT_VERIFIED
 
     def test_valid_dataset_post(self):
         body = DatasetPostBody(name='Dogs',
@@ -52,10 +54,12 @@ class TestDatasets:
         response = client.delete(f'{PREFIX}/datasets/83b06b61-fcf4-48a1-8fd3-9233b2e15a25',
                                  headers={'Authorization': Store.access_token})
         assert response.status_code == 403
+        assert response.json().get('message') == errors.NOT_YOUR_DATASET
 
         response = client.delete(f'{PREFIX}/datasets/ba865075-3b3c-48b5-833f-641cbafe1143',
                                  headers={'Authorization': Store.admin_access_token})
         assert response.status_code == 403
+        assert response.json().get('message') == errors.NOT_YOUR_DATASET
 
     def test_valid_delete_dataset(self):
         response = client.delete(f'{PREFIX}/datasets/ba865075-3b3c-48b5-833f-641cbafe1143',
@@ -69,4 +73,5 @@ class TestDatasets:
         response = client.delete(f'{PREFIX}/datasets/ba865075-3b3c-48b5-833f-641cbafe1143',
                                  headers={'Authorization': Store.access_token})
         assert response.status_code == 404
+        assert response.json().get('message') == errors.DATASET_NOT_FOUND
 
