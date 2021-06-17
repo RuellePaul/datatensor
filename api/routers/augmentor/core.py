@@ -53,13 +53,12 @@ def retrieve_label_from_ellipsis(image) -> Union[Label, None]:
 
 class AugmentorPipeline(DataPipeline):
 
-    def __init__(self, image: Image, labels: List[Label], **kwargs):
+    def __init__(self, image: Image, labels: List[Label]):
         self.image = image
         self.labels = labels
-        super().__init__(image, labels, **kwargs)
+        super().__init__(image, labels)
 
     def sample(self, n):
-
         images = [from_image_path(self.image.path)]
         for label in self.labels:
             images.append(draw_ellipsis(self.image.width, self.image.height, label))
