@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useCallback, useEffect, useState} from 'react';
 import clsx from 'clsx';
 import {Box, Button, Grid, makeStyles} from '@material-ui/core';
 import {Refresh} from '@material-ui/icons';
@@ -28,13 +28,14 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
 
     const [randomImage, setRandomImage] = useState<Image | null>(null);
 
-    const pickRandomImage = () => setRandomImage(images[Math.floor(Math.random() * images.length)]);
+    const pickRandomImage = useCallback(() => {
+        setRandomImage(images[Math.floor(Math.random() * images.length)])
+    }, [images]);
 
     useEffect(() => {
         pickRandomImage();
 
-        // eslint-disable-next-line
-    }, [images]);
+    }, [pickRandomImage]);
 
     if (!randomImage)
         return null;

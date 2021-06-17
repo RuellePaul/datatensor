@@ -1,16 +1,20 @@
 import React, {FC} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
-import {Breadcrumbs, capitalize, Grid, Link, makeStyles, Typography} from '@material-ui/core';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import {Box, Breadcrumbs, capitalize, Chip, Grid, Link, makeStyles, Typography} from '@material-ui/core';
+import {Lock as PrivateIcon, NavigateNext as NavigateNextIcon, Public as PublicIcon} from '@material-ui/icons';
 import useDataset from 'src/hooks/useDataset';
+import {Theme} from 'src/theme';
 
 interface HeaderProps {
     className?: string;
 }
 
-const useStyles = makeStyles(() => ({
-    root: {}
+const useStyles = makeStyles((theme: Theme) => ({
+    root: {},
+    chip: {
+        marginLeft: theme.spacing(1)
+    }
 }));
 
 const Header: FC<HeaderProps> = ({className, ...rest}) => {
@@ -49,12 +53,21 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                     >
                         Datasets
                     </Link>
-                    <Typography
-                        variant="body1"
-                        color="textPrimary"
-                    >
-                        {dataset.name && capitalize(dataset.name)}
-                    </Typography>
+                    <Box display='flex'>
+                        <Typography
+                            variant="body1"
+                            color="textPrimary"
+                        >
+                            {dataset.name && capitalize(dataset.name)}
+                        </Typography>
+                        <Chip
+                            className={classes.chip}
+                            label={dataset.is_public ? 'Public' : 'Private'}
+                            icon={dataset.is_public ? <PublicIcon/> : <PrivateIcon/>}
+                            size='small'
+                            variant='outlined'
+                        />
+                    </Box>
                 </Breadcrumbs>
             </Grid>
         </Grid>

@@ -1,12 +1,11 @@
 from fastapi import APIRouter, Depends
 
 import errors
-from dependencies import logged_user
-from logger import logger
-
 from authentication import core
 from authentication.models import *
 from config import Config
+from dependencies import logged_user
+from logger import logger
 from routers.notifications.core import insert_notification
 from routers.notifications.models import NotificationPostBody, NotificationType
 from routers.users.models import User
@@ -59,7 +58,8 @@ async def do_register(payload: AuthRegisterBody):
         activation_code = 'test_activation_code'
     else:
         activation_code = core.generate_activation_code()
-    core.send_activation_code(email, activation_code)
+
+    core.send_email_with_activation_code(email, activation_code)
     user = core.register_user(user_id, payload.name, email, payload.password, activation_code)
 
     if user.is_verified:

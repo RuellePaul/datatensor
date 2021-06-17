@@ -1,0 +1,30 @@
+{
+    "users": [
+        {
+            "_id": "4768b80e01b15556366790ffafa7a344e71f76f6c942c6acbcec87a602336219",
+            "avatar": "https://avatars.githubusercontent.com/u/47316542?v=4",
+            "created_at": "2021-06-15T22:54:57.236Z",
+            "email": "admin@datatensor.io",
+            "is_admin": true,
+            "is_verified": true,
+            "is_public": false,
+            "password": "$2b$12$kwd0G7o/Haqsf69yoRWiw.78oqugRXBrqXG2iRmxI3j2TxR1tdKiC",
+            "name": "Admin Test",
+            "scope": null,
+            "tier": "premium"
+        },
+        {
+            "_id": "d4c8e6fca7030235fdbed1336e80660f9460e60e1751c8934909a0448c3108d2",
+            "avatar": null,
+            "created_at": "2021-06-15T22:54:57.236Z",
+            "email": "user@datatensor.io",
+            "is_admin": false,
+            "is_verified": true,
+            "is_public": true,
+            "password": "$2b$12$kwd0G7o/Haqsf69yoRWiw.78oqugRXBrqXG2iRmxI3j2TxR1tdKiC",
+            "name": "Jack Sparrow",
+            "scope": null,
+            "tier": "standard"
+        }
+    ]
+}

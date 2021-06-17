@@ -14,13 +14,14 @@ import {
     Typography
 } from '@material-ui/core';
 import {Close, Delete} from '@material-ui/icons';
+import {Alert, AlertTitle} from '@material-ui/lab';
 import type {Theme} from 'src/theme';
 import {useDispatch} from 'src/store';
 import {deleteOperation} from 'src/slices/pipeline';
 import type {Operation} from 'src/types/pipeline';
 import ProbabilitySlider from './ProbabilitySlider';
 import OperationProperties from './OperationProperties';
-import {OPERATIONS_ICONS} from 'src/config';
+import {OPERATIONS_DESCRIPTION, OPERATIONS_ICONS} from 'src/config';
 
 interface OperationEditModalProps {
     className?: string;
@@ -30,7 +31,13 @@ interface OperationEditModalProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    content: {}
+    deleteAction: {
+        color: theme.palette.common.white,
+        backgroundColor: theme.palette.error.main,
+        '&:hover': {
+            backgroundColor: theme.palette.error.dark
+        }
+    }
 }));
 
 const OperationEditModal: FC<OperationEditModalProps> = ({
@@ -61,7 +68,6 @@ const OperationEditModal: FC<OperationEditModalProps> = ({
             onClose={onClose}
             open={open}
             maxWidth='xs'
-            PaperProps={{className: classes.content}}
             fullWidth
             {...rest}
         >
@@ -93,10 +99,24 @@ const OperationEditModal: FC<OperationEditModalProps> = ({
                 <OperationProperties
                     operation={operation}
                 />
+
+                <Box
+                    my={1}
+                    bgcolor='background.dark'
+                >
+                    <Alert severity='info'>
+                        <AlertTitle>
+                            Informations
+                        </AlertTitle>
+                        {OPERATIONS_DESCRIPTION[operation.type]}
+                    </Alert>
+                </Box>
+
             </DialogContent>
 
             <DialogActions>
                 <Button
+                    className={classes.deleteAction}
                     variant='outlined'
                     startIcon={<Delete/>}
                     onClick={handleDelete}

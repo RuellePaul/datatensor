@@ -1,4 +1,5 @@
 import hashlib
+import os
 import random
 import ssl
 import string
@@ -200,13 +201,17 @@ def check_captcha(captcha):
         raise errors.BadRequest('Invalid captcha')
 
 
-def send_activation_code(email, activation_code):
+def send_email_with_activation_code(email, activation_code):
     subject = "Welcome to Datatensor ! Confirm your email"
+    activation_url = f'{Config.UI_URL}/email-confirmation?activation_code={activation_code}'
     html_content = f"""
-        <h5>You're on your way!</h2>
-        Let's confirm your email address.
+        <h5>Welcome to Datatensor !</h5>
         By clicking on the following link, you are confirming your email address.
-        {Config.UI_URL}/email-confirmation?activation_code={activation_code}
+        <br/>
+        <a href="{activation_url}">Confirm your email</a>
+        <br/>
+        <br/>
+        Happy hacking !
    """
 
     message = Mail(
@@ -217,7 +222,8 @@ def send_activation_code(email, activation_code):
     )
     try:
         sg = SendGridAPIClient(Config.SENDGRID_API_KEY)
-        sg.send(message)
+        if not os.environ.get('__TEST__'):
+            sg.send(message)
     except Exception as e:
         raise errors.InternalError(f'Unable to send email with SendGrid | {str(e)}')
 

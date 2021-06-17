@@ -9,7 +9,9 @@ from routers.augmentor.core import perform_augmentation
 from routers.augmentor.models import SampleBody
 from routers.datasets.core import find_dataset
 from routers.images.core import find_image
+from routers.labels.core import find_labels
 from routers.users.models import User
+from utils import parse
 
 augmentor = APIRouter()
 
@@ -28,12 +30,17 @@ async def augmentor_sample(payload: SampleBody, user: User = Depends(logged_user
         raise errors.Forbidden('You can only sample your own datasets')
 
     image = find_image(dataset_id, image_id)
+    labels = find_labels(image_id, offset=0, limit=0)
 
-    augmented_images = perform_augmentation(
+    augmented_images, augmented_labels = perform_augmentation(
         image,
+        labels,
         operations
     )
 
     encoded_images = [cv2.imencode('.jpg', augmented_image)[1].tostring() for augmented_image in augmented_images]
-    base64_encode_images = [base64.b64encode(image) for image in encoded_images]
-    return base64_encode_images
+    base64_encoded_images = [base64.b64encode(image) for image in encoded_images]
+    return {
+        'images': base64_encoded_images,
+        'images_labels': parse(augmented_labels)
+    }

@@ -12,8 +12,7 @@ async def get_images(dataset_id: str, offset: int = 0, limit: int = 0):
     """
     Fetch paginated images list of given dataset.
     """
-    result = find_images(dataset_id, offset, limit)
-    response = {'images': [Image.from_mongo(image) for image in result]}
+    response = {'images': find_images(dataset_id, offset, limit)}
     return parse(response)
 
 
@@ -22,8 +21,7 @@ async def get_image(dataset_id, image_id):
     """
     Fetch given image of given dataset.
     """
-    result = find_image(dataset_id, image_id)
-    response = {'image': result}
+    response = {'image': find_image(dataset_id, image_id)}
     return parse(response)
 
 
@@ -32,8 +30,7 @@ async def post_images(dataset_id, files: List[UploadFile] = File(...)):
     """
     Upload a list of images.
     """
-    result = insert_images(dataset_id, files)
-    response = {'images': [Image.from_mongo(image) for image in result]}
+    response = {'images': insert_images(dataset_id, files)}
     return parse(response)
 
 
