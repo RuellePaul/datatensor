@@ -1,0 +1,1 @@
+celery -A worker worker --loglevel=INFO

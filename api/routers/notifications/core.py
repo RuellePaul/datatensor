@@ -1,13 +1,16 @@
 from datetime import datetime
 from uuid import uuid4
+from typing import List
 
 from config import Config
+from routers.notifications.models import Notification
 
 db = Config.db
 
 
-def find_notifications(user_id):
-    return list(db.notifications.find({'user_id': user_id}))
+def find_notifications(user_id) -> List[Notification]:
+    notifications = list(db.notifications.find({'user_id': user_id}))
+    return [Notification.from_mongo(notification) for notification in notifications]
 
 
 def insert_notification(user_id, notification):

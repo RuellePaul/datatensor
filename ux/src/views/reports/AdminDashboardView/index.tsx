@@ -77,9 +77,9 @@ const AdminDashboardView: FC = () => {
     return (
         <Page
             className={classes.root}
-            title="Dashboard | Admin"
+            title='Dashboard | Admin'
         >
-            <Container component='section' maxWidth="lg">
+            <Container component='section' maxWidth='lg'>
                 <Header
                     timeRange={timeRange}
                     setTimeRange={setTimeRange}
@@ -91,7 +91,7 @@ const AdminDashboardView: FC = () => {
                 >
                     <Grid
                         item
-                        lg={7}
+                        md={7}
                         xs={12}
                     >
                         <TasksOverTime
@@ -101,7 +101,7 @@ const AdminDashboardView: FC = () => {
                     </Grid>
                     <Grid
                         item
-                        lg={5}
+                        md={5}
                         xs={12}
                     >
                         <Generator/>
@@ -122,7 +122,7 @@ const AdminDashboardView: FC = () => {
                     </Grid>
                     <Grid
                         item
-                        lg={7}
+                        md={7}
                         xs={12}
                     >
                         <UsersOverTime

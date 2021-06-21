@@ -48,7 +48,7 @@ def _download_annotations(datasource_key: DatasourceKey):
     return annotations_path, datasource
 
 
-def find_datasources() -> List[Datasource]:
+def find_datasources() -> List[dict]:
     return Config.DATASOURCES
 
 

@@ -1,19 +1,19 @@
-import asyncio
 from datetime import datetime
 from uuid import uuid4
+from typing import List
 
 import errors
 from config import Config
-from manager import task_manager
 from routers.tasks.models import Task, TaskStatus
 from utils import parse
+from worker import generator
 
 db = Config.db
 
 
-def _check_user_allowed_to_create_task(user, dataset_id, task_type):
+def user_is_allowed_to_create_task(user, dataset_id, task_type):
     if user.is_admin:
-        return
+        return True
 
     if task_type == 'generator':
         raise errors.Forbidden(errors.USER_NOT_ADMIN)
@@ -24,18 +24,19 @@ def _check_user_allowed_to_create_task(user, dataset_id, task_type):
         raise errors.Forbidden(errors.NOT_YOUR_DATASET)
 
 
-def find_tasks():
-    return list(db.tasks.find())
+def find_tasks() -> List[Task]:
+    tasks = list(db.tasks.find())
+    result = [Task.from_mongo(task) for task in tasks]
+    return result
 
 
-def find_users_tasks(user):
-    return list(db.tasks.find({'user_id': user.id}))
+def find_users_tasks(user) -> List[Task]:
+    tasks = list(db.tasks.find({'user_id': user.id}))
+    return [Task.from_mongo(task) for task in tasks]
 
 
-def insert_task(user, dataset_id, task_type, properties):
-    from app import scheduler
-
-    _check_user_allowed_to_create_task(user, dataset_id, task_type)
+def insert_task(user, dataset_id, task_type, properties) -> Task:
+    assert user_is_allowed_to_create_task(user, dataset_id, task_type)
 
     task = Task(
         id=str(uuid4()),
@@ -47,13 +48,9 @@ def insert_task(user, dataset_id, task_type, properties):
         progress=0,
         properties=properties
     )
-    db.tasks.insert_one(parse(task.mongo()))
+    db.tasks.insert_one(task.mongo())
 
-    @scheduler.scheduled_job('date',
-                             id=task.id,
-                             run_date=datetime.now(),
-                             max_instances=1)
-    def scheduled_task():
-        asyncio.run(task_manager.run_task(task))
+    if task.type == 'generator':
+        generator.delay(task.user_id, task.id, properties=task.properties)
 
     return task

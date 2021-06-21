@@ -23,17 +23,21 @@ Paste these commands in your project folder. This will clone the project & insta
 (venv) $ cd datatensor
 (venv) $ pip install --upgrade pip
 (venv) $ pip install -r api/requirements.txt
+(venv) $ brew install rabbitmq
+(venv) $ brew services rabbitmq start
 (venv) $ cd ux
 (venv) $ yarn
 ```
 
 ### Run
 
+#### Locally
+
 Set environment variable in `/development/init_env.sh`
 
 **Backend**
 
-Run the api using :
+Run FastAPI backend using :
 
 ```bash
 (venv) $ python api/app.py
@@ -41,12 +45,42 @@ Run the api using :
 
 **Front end**
 
+Run React front-end using :
+
 ```bash
 (venv) $ cd ux
 (venv) $ yarn run development
 ```
 
+**Worker**
+
+Run Rabbit MQ server using :
+
+```bash
+(venv) $ cd api
+(venv) $ celery -A worker worker --loglevel=INFO
+```
+
+```bash
+(venv) $ cd api
+(venv) $ celery -A worker worker --loglevel=INFO
+```
+
 <br/>
+
+#### With docker 
+
+_MacOS Procedure_
+
+Install docker using :
+
+```bash
+brew install --cask docker
+```
+
+Launch Docker Desktop, and run docker deamon.
+
+
 
 ## Tests :vertical_traffic_light:
 
