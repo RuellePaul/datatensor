@@ -77,29 +77,6 @@ const sections = (user: User): Section[] => [
                 title: 'Datasets',
                 icon: PackageIcon,
                 href: '/app/manage/datasets'
-            },
-            {
-                title: 'Training data',
-                icon: DatabaseIcon,
-                href: '/admin/manage/datasets',
-                items: [
-                    {
-                        title: 'Upload',
-                        href: '/404'
-                    },
-                    {
-                        title: 'Video to images',
-                        href: '/404'
-                    },
-                    {
-                        title: 'From the web',
-                        href: '/404'
-                    },
-                    {
-                        title: 'Augmentation',
-                        href: '/404'
-                    }
-                ]
             }
         ]
     }

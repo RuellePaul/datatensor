@@ -10,9 +10,8 @@ import requests
 from config import Config
 from routers.datasets.models import Dataset
 from routers.images.core import allowed_file, upload_image
-from utils import update_task, increment_task_progress
 from routers.tasks.models import TaskGeneratorProperties
-
+from utils import update_task, increment_task_progress
 
 db = Config.db
 
@@ -132,7 +131,7 @@ def main(user_id, task_id, properties: TaskGeneratorProperties):
                       user_id=user_id,
                       created_at=datetime.now(),
                       name=_generate_dataset_name(categories),
-                      description=f"Generated with {len(categories)} categories, from {datasource['name']}",
+                      description=f"Generated with {len(categories)} categorie{'s' if len(categories) > 1 else ''}, from {datasource['name']}",
                       image_count=image_count,
                       is_public=True)
     db.datasets.insert_one(dataset.mongo())
