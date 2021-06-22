@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     ENVIRONMENT: str = os.environ['ENVIRONMENT']
 
     ROOT_PATH: str = os.path.abspath(os.path.join(FastAPI().root_path, os.pardir))
-    DATASOURCES_PATH: str = os.path.join(ROOT_PATH, 'api', 'manager', 'generator', 'datasources')
+    DATASOURCES_PATH: str = os.path.join(ROOT_PATH, 'api', 'workflows', 'generator', 'datasources')
 
     UI_URL: str = 'https://localhost:5069'
     API_URI: str = 'http://127.0.0.1:4069'

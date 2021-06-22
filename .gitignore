@@ -191,5 +191,5 @@ dmypy.json
 ../.idea
 
 # generator data
-api/manager/generator/datasources
-api/manager/generator/datasources/*
+api/workflows/generator/datasources
+api/workflows/generator/datasources/*

@@ -119,6 +119,7 @@ const Generator: FC = () => {
                         });
                         saveTasks(tasks => [...tasks, response.data.task]);
                         resetForm();
+                        setEligibleCategories([]);
 
                         if (isMountedRef.current) {
                             setStatus({success: true});

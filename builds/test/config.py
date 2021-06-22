@@ -15,7 +15,7 @@ class Config:
     ENVIRONMENT = os.environ['ENVIRONMENT']
 
     ROOT_PATH = os.path.abspath(os.path.join(FastAPI().root_path, os.pardir))
-    DATASOURCES_PATH = os.path.join(ROOT_PATH, 'api', 'manager', 'generator', 'datasources')
+    DATASOURCES_PATH = os.path.join(ROOT_PATH, 'api', 'workflows', 'generator', 'datasources')
 
     UI_URL = 'https://test.datatensor.io'
     API_URI = 'https://test.datatensor.io/api'

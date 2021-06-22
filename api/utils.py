@@ -10,6 +10,7 @@ from pymongo.encryption import Algorithm
 
 from config import Config
 
+db = Config.db
 
 password_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
@@ -37,6 +38,20 @@ def default(value):
 
 def parse(data):
     return json.loads(json.dumps(data, default=default))
+
+
+def update_task(task_id, **args):
+    db.tasks.find_one_and_update({'_id': task_id}, {'$set': args})
+
+
+def increment_task_progress(task_id, delta):
+    db.tasks.update_one(
+        {'_id': task_id},
+        {
+            '$inc': {
+                'progress': delta
+            }
+        }, upsert=False)
 
 
 class OID(str):

@@ -43,7 +43,7 @@ def remove_dataset(user_id, dataset_id):
 
     images = list(Config.db.images.find({'dataset_id': dataset_id}))
     if images:
-        with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=16) as executor:
             executor.map(delete_image_from_s3,
                          [image['_id'] for image in images])
 

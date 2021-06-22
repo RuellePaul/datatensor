@@ -7,12 +7,13 @@ from uuid import uuid4
 
 import requests
 
-import errors
 from config import Config
-from manager.task_utils import update_task, increment_task_progress
 from routers.datasets.models import Dataset
 from routers.images.core import allowed_file, upload_image
 from routers.tasks.models import TaskGeneratorProperties
+from utils import update_task, increment_task_progress
+
+db = Config.db
 
 
 def _download_image(image_url):
@@ -70,8 +71,8 @@ def _process_image(args):
             if category['name'] not in [saved_category['name'] for saved_category in saved_categories]:
                 saved_categories.append(category)
 
-        Config.db.images.insert_one(saved_image)
-        Config.db.labels.insert_many(labels)
+        db.images.insert_one(saved_image)
+        db.labels.insert_many(labels)
 
 
 def _filter_annotations(json_remote_dataset, selected_categories, image_count=None):
@@ -130,18 +131,18 @@ def main(user_id, task_id, properties: TaskGeneratorProperties):
                       user_id=user_id,
                       created_at=datetime.now(),
                       name=_generate_dataset_name(categories),
-                      description=f"Generated with {len(categories)} categories, from {datasource['name']}",
+                      description=f"Generated with {len(categories)} categorie{'s' if len(categories) > 1 else ''}, from {datasource['name']}",
                       image_count=image_count,
                       is_public=True)
-    Config.db.datasets.insert_one(dataset.mongo())
-    Config.db.categories.insert_many([{
+    db.datasets.insert_one(dataset.mongo())
+    db.categories.insert_many([{
         '_id': category['_id'],
         'dataset_id': category['dataset_id'],
         'name': category['name'],
         'supercategory': category['supercategory']
     } for category in categories])
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=16) as executor:
         executor.map(_process_image,
                      ({'task_id': task_id,
                        'dataset_id': dataset_id,
@@ -151,8 +152,7 @@ def main(user_id, task_id, properties: TaskGeneratorProperties):
                        'categories': categories}
                       for image in images_remote))
 
-    update_task(task_id, progress=1)
-    sleep(2)
-    image_count = len(list(Config.db.images.find({'dataset_id': dataset_id})))
-    Config.db.datasets.find_one_and_update({'_id': dataset_id}, {'$set': {'image_count': image_count}})
-    return
+    sleep(1)
+
+    image_count = db.images.count({'dataset_id': dataset_id})
+    db.datasets.find_one_and_update({'_id': dataset_id}, {'$set': {'image_count': image_count}})

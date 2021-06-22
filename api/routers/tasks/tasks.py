@@ -14,6 +14,5 @@ async def post_task(payload: TaskPostBody, dataset_id=None, user: User = Depends
     """
     Create a new pending task
     """
-    result = insert_task(user, dataset_id, payload.type, payload.properties)
-    response = {'task': result}
+    response = {'task': insert_task(user, dataset_id, payload.type, payload.properties)}
     return parse(response)
