@@ -16,7 +16,7 @@ def find_notifications(user_id) -> List[Notification]:
     return [Notification.from_mongo(notification) for notification in notifications]
 
 
-def insert_notification(user_id, notification):
+def insert_notification(user_id, notification: Notification):
     db.notifications.insert_one({'_id': str(uuid4()),
                                  'user_id': user_id,
                                  'created_at': datetime.now(),

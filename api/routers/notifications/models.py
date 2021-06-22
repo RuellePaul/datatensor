@@ -1,5 +1,6 @@
 from enum import Enum
 from datetime import datetime
+from typing import Optional
 
 from pydantic import Field
 
@@ -20,7 +21,10 @@ class Notification(MongoModel):
     created_at: datetime
     opened: bool
     type: NotificationType
+    task_id: Optional[str] = None
 
 
 class NotificationPostBody(BaseModel):
     type: NotificationType
+    task_id: Optional[str] = None
+    description: Optional[str] = None

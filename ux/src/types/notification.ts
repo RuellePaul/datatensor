@@ -4,4 +4,5 @@ export interface Notification {
     type: 'TASK_SUCCEED' | 'TASK_FAILED' | 'EMAIL_CONFIRM_REQUIRED' | 'EMAIL_CONFIRM_DONE' | 'REGISTRATION';
     created_at: string;
     opened: boolean;
+    task_id?: string;
 }
