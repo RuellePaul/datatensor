@@ -107,7 +107,7 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({callback, className, ...rest})
             let formData = new FormData();
             files.map(image => formData.append('files', image));
             try {
-                const response = await api.post<{ images: Image[] }>(`/datasets/${dataset._id}/images/`, formData, {
+                const response = await api.post<{ images: Image[] }>(`/datasets/${dataset.id}/images/`, formData, {
                     headers: {'Content-Type': 'multipart/form-data'}
                 });
                 saveImages((images: Image[]) => [...images, ...response.data.images]);

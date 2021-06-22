@@ -40,7 +40,7 @@ export const ImagesProvider: FC<ImagesProviderProps> = ({images, children}) => {
         try {
             if (currentImages.length === dataset.image_count) return;
 
-            const response = await api.get<{ images: Image[] }>(`/datasets/${dataset._id}/images/`, {
+            const response = await api.get<{ images: Image[] }>(`/datasets/${dataset.id}/images/`, {
                 params: {
                     offset: currentOffset,
                     limit: LAZY_LOAD_BATCH
@@ -53,7 +53,7 @@ export const ImagesProvider: FC<ImagesProviderProps> = ({images, children}) => {
         }
 
         // eslint-disable-next-line
-    }, [dataset._id, currentOffset]);
+    }, [dataset.id, currentOffset]);
 
     useEffect(() => {
         fetchImages();

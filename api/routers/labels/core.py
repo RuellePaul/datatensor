@@ -17,7 +17,7 @@ s3 = boto3.client(
 )
 
 
-def find_labels(image_id, offset, limit) -> List[Label]:
+def find_labels(image_id, offset=0, limit=0) -> List[Label]:
     labels = list(db.labels.find({'image_id': image_id}).skip(offset).limit(limit))
     if labels is None:
         raise errors.NotFound(errors.LABEL_NOT_FOUND)

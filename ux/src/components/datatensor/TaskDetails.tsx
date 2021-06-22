@@ -68,7 +68,7 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                                     Task details
                                 </Typography>
                                 <Typography color='textSecondary'>
-                                    ID : {task._id}
+                                    ID : {task.id}
                                 </Typography>
                             </div>
 

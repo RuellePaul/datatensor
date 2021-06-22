@@ -5,7 +5,7 @@ from utils import BaseModel, MongoModel
 
 
 class Label(MongoModel):
-    id: str = Field(alias='_id')
+    id: str = Field()
     x: float
     y: float
     w: float

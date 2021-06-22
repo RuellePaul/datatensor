@@ -32,8 +32,8 @@ const ContextMenu: FC<ContextMenuProps> = ({canvas, selectedLabels, point, handl
     const handleUpdateLabelCategory = (category) => {
         handleClose();
         reset(canvas);
-        let newLabels = labels.map(label => selectedLabels.map(selectedLabel => selectedLabel._id).includes(label._id)
-            ? {...label, category_id: category._id}
+        let newLabels = labels.map(label => selectedLabels.map(selectedLabel => selectedLabel.id).includes(label.id)
+            ? {...label, category_id: category.id}
             : label);
         saveLabels(newLabels);
         storePosition(newLabels);
@@ -42,7 +42,7 @@ const ContextMenu: FC<ContextMenuProps> = ({canvas, selectedLabels, point, handl
     const handleDeleteLabel = () => {
         handleClose();
         reset(canvas);
-        const newLabels = labels.filter(label => !selectedLabels.map(label => label._id).includes(label._id));
+        const newLabels = labels.filter(label => !selectedLabels.map(label => label.id).includes(label.id));
         saveLabels(newLabels);
         storePosition(newLabels);
     };
@@ -79,7 +79,7 @@ const ContextMenu: FC<ContextMenuProps> = ({canvas, selectedLabels, point, handl
                         onClick={() => handleUpdateLabelCategory(category)}
                     >
                         <Typography variant="inherit" noWrap>
-                            {selectedLabels.map(selectedLabel => selectedLabel.category_id).includes(category._id)
+                            {selectedLabels.map(selectedLabel => selectedLabel.category_id).includes(category.id)
                                 ? <strong>{capitalize(category.name)}</strong>
                                 : capitalize(category.name)
                             }

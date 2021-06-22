@@ -1,7 +1,7 @@
 export type TaskType = 'generator' | 'augmentor';
 
 export interface Task {
-    _id: string;
+    id: string;
     user_id: string;
     dataset_id: string | null;
     type: TaskType;

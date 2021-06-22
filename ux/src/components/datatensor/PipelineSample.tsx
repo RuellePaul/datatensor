@@ -25,7 +25,7 @@ const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
     const {image} = useImage();
 
     const pipeline = useSelector<any>((state) => state.pipeline);
-    const image_id = image._id;
+    const image_id = image.id;
 
     const [imagesBase64, setImagesBase64] = useState<string[] | null>(null);
     const [imagesLabels, setImagesLabels] = useState<Label[][] | null>(null);

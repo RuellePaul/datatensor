@@ -16,7 +16,7 @@ class NotificationType(str, Enum):
 
 
 class Notification(MongoModel):
-    id: str = Field(alias='_id')
+    id: str = Field()
     user_id: str
     created_at: datetime
     opened: bool

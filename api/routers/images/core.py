@@ -1,6 +1,6 @@
 import concurrent.futures
-from uuid import uuid4
 from typing import List
+from uuid import uuid4
 
 import boto3
 import cv2
@@ -59,7 +59,7 @@ def upload_file(payload) -> Image:
         image_bytes = cv2.imencode('.jpg', image)[1].tostring()
         path = upload_image(image_bytes, image_id)
         return Image(
-            _id=image_id,
+            id=image_id,
             dataset_id=dataset_id,
             path=path,
             name=name,
@@ -79,7 +79,7 @@ def delete_image_from_s3(image_id):
         raise errors.InternalError(f'Cannot delete file from S3, {str(e)}')
 
 
-def find_images(dataset_id, offset, limit) -> List[Image]:
+def find_images(dataset_id, offset=0, limit=0) -> List[Image]:
     images = list(db.images
                   .find({'dataset_id': dataset_id})
                   .skip(offset)

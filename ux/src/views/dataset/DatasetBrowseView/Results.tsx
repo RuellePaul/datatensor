@@ -103,14 +103,14 @@ const Results: FC<ResultsProps> = ({className, ...rest}) => {
                 {datasets.map((dataset) => (
                     <Grid
                         item
-                        key={dataset._id}
+                        key={dataset.id}
                         md={4}
                         sm={6}
                         xs={12}
                     >
                         <DTDataset
                             dataset={dataset}
-                            isWorking={tasks !== null && tasks.filter(task => task.status === 'active' && task.dataset_id === dataset._id).length > 0}
+                            isWorking={tasks !== null && tasks.filter(task => task.status === 'active' && task.dataset_id === dataset.id).length > 0}
                         />
                     </Grid>
                 ))}

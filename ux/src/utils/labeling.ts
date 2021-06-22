@@ -91,7 +91,7 @@ export const drawLabels = (canvas: HTMLCanvasElement, labels: Label[], categorie
     context.setLineDash([dash]);
 
     for (const label of labels) {
-        const category = categories.find(category => label.category_id === category._id);
+        const category = categories.find(category => label.category_id === category.id);
 
         const {x, y, w, h} = convertLabel(canvas, label, offset);
 
@@ -166,7 +166,7 @@ export const currentLabelsHoverIds = (canvas: HTMLCanvasElement, point: Point, l
             if (y < point[1]) {
                 if ((x + w) > point[0]) {
                     if ((y + h) > point[1]) {
-                        labelsHoverIds.push(label._id);
+                        labelsHoverIds.push(label.id);
                     }
                 }
             }
@@ -254,4 +254,4 @@ export const checkLabelsEquality = (labels: Label[], newLabels: Label[]) => _.is
 
 export const formatRatio = ratio => Math.abs(Math.round(ratio * 1e6) / 1e6);
 
-export const currentCategoryCount = (labels: Label[], category: Category) => labels.filter(label => label.category_id === category._id)?.length || 0;
+export const currentCategoryCount = (labels: Label[], category: Category) => labels.filter(label => label.category_id === category.id)?.length || 0;

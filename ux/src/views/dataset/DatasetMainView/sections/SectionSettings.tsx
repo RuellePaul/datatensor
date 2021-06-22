@@ -71,8 +71,8 @@ const SectionSettings: FC<SectionProps> = ({className}) => {
     const handleDeleteDataset = async () => {
         setIsDeleting(true);
         try {
-            await api.delete(`/datasets/${dataset._id}`);
-            saveDatasets(datasets => datasets.filter((current: Dataset) => current._id !== dataset._id));
+            await api.delete(`/datasets/${dataset.id}`);
+            saveDatasets(datasets => datasets.filter((current: Dataset) => current.id !== dataset.id));
             enqueueSnackbar(`Deleted dataset ${dataset.name}`, {variant: 'info'});
             handleCloseDeleteDataset();
             history.push('/app/manage/datasets')

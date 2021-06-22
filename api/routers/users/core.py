@@ -8,7 +8,7 @@ from utils import encrypt_field, password_context
 db = Config.db
 
 
-def find_users(offset, limit) -> List[User]:
+def find_users(offset=0, limit=0) -> List[User]:
     users = list(db.users.find().skip(offset).limit(limit))
     return [User.from_mongo(user) for user in users]
 

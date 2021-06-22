@@ -98,7 +98,6 @@ const Notifications: FC = () => {
         if (notification.task_id) {
             handleClose();
 
-            // FIXME : messed up `id` and `_id` with websocket stores (?)
             // @ts-ignore
             const task = tasks.find(task => task.id === notification.task_id);
 
@@ -166,7 +165,7 @@ const Notifications: FC = () => {
                                             button
                                             className={clsx(notification.opened === false && classes.highlight)}
                                             divider
-                                            key={notification._id}
+                                            key={notification.id}
                                             onClick={() => handleNotificationClick(notification)}
                                         >
                                             <ListItemText

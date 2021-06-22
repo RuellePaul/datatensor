@@ -21,7 +21,7 @@ class SuperCategory(str, Enum):
 
 
 class Category(MongoModel):
-    id: str = Field(alias='_id')
+    id: str = Field()
     dataset_id: str
     name: str
     supercategory: Optional[SuperCategory] = None

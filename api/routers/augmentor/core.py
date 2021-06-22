@@ -42,7 +42,7 @@ def retrieve_label_from_ellipsis(image) -> Union[Label, None]:
     contour = min(contours, key=cv2.contourArea)
     rect = cv2.boundingRect(contour)
     label = Label(
-        _id=str(uuid4()),
+        id=str(uuid4()),
         x=round(rect[0] / image.shape[1], 6),
         y=round(rect[1] / image.shape[0], 6),
         w=round(rect[2] / image.shape[1], 6),

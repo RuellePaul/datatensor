@@ -190,7 +190,7 @@ const DTTasks: FC<TaskProps> = () => {
             rows={tasks || []}
             columns={columns}
             pageSize={5}
-            getRowId={task => task._id || task.id}
+            getRowId={task => task.id || task.id}
             disableColumnMenu
             disableColumnSelector
             disableSelectionOnClick
