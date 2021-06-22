@@ -9,15 +9,15 @@ db = Config.db
 
 
 def find_users(offset, limit) -> List[User]:
-    users_in_db = list(db.users.find().skip(offset).limit(limit))
-    return [User.from_mongo(user) for user in users_in_db]
+    users = list(db.users.find().skip(offset).limit(limit))
+    return [User.from_mongo(user) for user in users]
 
 
 def find_user(user_id) -> User:
-    user_in_db = db.users.find_one({'_id': user_id})
-    if not user_in_db:
+    user = db.users.find_one({'_id': user_id})
+    if not user:
         raise errors.NotFound(errors.USER_NOT_FOUND)
-    return User.from_mongo(user_in_db)
+    return User.from_mongo(user)
 
 
 def update_user(user, update):

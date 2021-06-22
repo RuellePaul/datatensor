@@ -84,11 +84,15 @@ def find_images(dataset_id, offset, limit) -> List[Image]:
                   .find({'dataset_id': dataset_id})
                   .skip(offset)
                   .limit(limit))
+    if images is None:
+        raise errors.NotFound(errors.IMAGE_NOT_FOUND)
     return [Image.from_mongo(image) for image in images]
 
 
 def find_image(dataset_id, image_id) -> Image:
     image = db.images.find_one({'_id': image_id, 'dataset_id': dataset_id})
+    if image is None:
+        raise errors.NotFound(errors.IMAGE_NOT_FOUND)
     return Image.from_mongo(image)
 
 

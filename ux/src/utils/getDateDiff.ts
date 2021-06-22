@@ -9,11 +9,11 @@ const getDateDiff = (date1, date2, format: 'duration' | 'passed_event' = 'durati
 
     if (format === 'duration') {
         if (days > 0)
-            return `${days}day${days > 1 ? 's': ''}, ${hours}h`;
+            return `${days}day${days > 1 ? 's': ''} ${hours}h`;
         else if (hours > 0)
-            return `${hours}h, ${min}m`;
+            return `${hours}h ${min}m`;
         else if (min > 0)
-            return `${min}m, ${sec}s`;
+            return `${min}m ${sec}s`;
         else
             return `${sec}s`
     }

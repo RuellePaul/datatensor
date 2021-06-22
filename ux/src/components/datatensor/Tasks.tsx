@@ -1,18 +1,7 @@
-import React, {FC, useState} from 'react';
+import React, {FC} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import moment from 'moment';
-import {
-    Box,
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    Grid,
-    IconButton,
-    LinearProgress,
-    Link,
-    makeStyles,
-    Typography
-} from '@material-ui/core';
+import {Box, capitalize, LinearProgress, Link, makeStyles, Typography} from '@material-ui/core';
 import {
     DataGrid,
     GridCellParams,
@@ -24,12 +13,10 @@ import {
 import FancyLabel from 'src/components/FancyLabel';
 import useTasks from 'src/hooks/useTasks';
 import {Theme} from 'src/theme';
-import {Close as CloseIcon} from '@material-ui/icons';
 import UserAvatar from 'src/components/UserAvatar';
-import {DatasetConsumer, DatasetProvider} from 'src/store/DatasetContext';
-import DTDataset from './Dataset';
 import {UserConsumer, UserProvider} from 'src/store/UserContext';
 import getDateDiff from 'src/utils/getDateDiff';
+import {Task, TaskType} from 'src/types/task';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -45,15 +32,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         '& .Mui-even': {
             background: theme.palette.background.dark,
         }
-    },
-    dialog: {
-        padding: theme.spacing(1, 2, 2)
-    },
-    close: {
-        position: 'absolute',
-        right: theme.spacing(1),
-        top: theme.spacing(1),
-        color: theme.palette.grey[500]
     }
 }));
 
@@ -69,17 +47,6 @@ function reducer(status) {
             return 'error'
         default:
             throw new Error('Invalid status')
-    }
-}
-
-function translateType(type) {
-    switch (type) {
-        case 'generator':
-            return '🏗️ Generator'
-        case 'delete':
-            return '🗑️ Delete'
-        case 'augmentor':
-            return 'Images augmentation'
     }
 }
 
@@ -103,10 +70,10 @@ const columns: GridColDef[] = [
                                 </Box>
 
                                 <Link
-                                    color="inherit"
+                                    color='inherit'
                                     component={RouterLink}
                                     to={`/app/admin/manage/users/${params.value.toString()}/details`}
-                                    variant="h6"
+                                    variant='h6'
                                 >
                                     {value.user.name}
                                 </Link>
@@ -123,7 +90,7 @@ const columns: GridColDef[] = [
         width: 160,
         renderCell: (params: GridCellParams) => (
             <strong>
-                {translateType(params.value)}
+                {capitalize(params.value as TaskType)}
             </strong>
         ),
     },
@@ -164,7 +131,7 @@ const columns: GridColDef[] = [
                 );
             return (
                 <>
-                    <Box width="100%" mr={1}>
+                    <Box width='100%' mr={1}>
                         <LinearProgress
                             variant={(params.row.progress <= 0 || params.row.progress) >= 1 ? 'query' : 'determinate'}
                             value={params.row.status === 'success' ? 100 : 100 * (params.value as number)}
@@ -172,8 +139,8 @@ const columns: GridColDef[] = [
                     </Box>
                     <Box minWidth={35}>
                         <Typography
-                            variant="body2"
-                            color="textSecondary">{`${(100 * params.row.progress).toFixed()}%`}
+                            variant='body2'
+                            color='textSecondary'>{`${(100 * params.row.progress).toFixed()}%`}
                         </Typography>
                     </Box>
                 </>
@@ -210,128 +177,35 @@ const DTTasks: FC<TaskProps> = () => {
 
     const classes = useStyles();
 
-    const {tasks} = useTasks();
-
-    const [selectedTask, setSelectedTask] = useState(null);
+    const {tasks, saveSelectedTask} = useTasks();
 
     const handleRowClick = (params: GridRowParams) => {
-        setSelectedTask(params.row);
-    }
-
-    const handleClose = () => {
-        setSelectedTask(null);
+        saveSelectedTask(params.row as Task);
     }
 
     return (
-        <>
-            <DataGrid
-                className={classes.root}
-                autoHeight
-                rows={tasks || []}
-                columns={columns}
-                pageSize={5}
-                getRowId={task => task._id || task.id}
-                disableColumnMenu
-                disableColumnSelector
-                disableSelectionOnClick
-                loading={tasks === null}
-                sortModel={[
-                    {
-                        field: 'created_at',
-                        sort: 'desc' as GridSortDirection,
-                    },
-                ]}
-                components={{
-                    LoadingOverlay
-                }}
-                onRowClick={handleRowClick}
-            />
-
-            <UserProvider user_id={selectedTask?.user_id}>
-                <Dialog
-                    disableRestoreFocus
-                    PaperProps={{
-                        className: classes.dialog
-                    }}
-                    fullWidth
-                    maxWidth='md'
-                    open={selectedTask !== null}
-                    onClose={handleClose}
-                >
-                    {selectedTask && (
-                        <>
-                            <DialogTitle
-                                className='flex'
-                                disableTypography
-                            >
-                                <div>
-                                    <Typography variant='h4'>
-                                        Task details
-                                    </Typography>
-                                    <Typography color='textSecondary'>
-                                        ID : {selectedTask?._id}
-                                    </Typography>
-                                </div>
-
-                                <IconButton
-                                    className={classes.close}
-                                    onClick={handleClose}
-                                >
-                                    <CloseIcon/>
-                                </IconButton>
-                            </DialogTitle>
-                            <DialogContent>
-                                <Box my={2}>
-                                    <Grid
-                                        container
-                                        spacing={4}
-                                    >
-                                        <Grid
-                                            item
-                                            md={7}
-                                            xs={12}
-                                        >
-                                            <Typography gutterBottom>
-                                                <strong>{translateType(selectedTask?.type)}</strong>,
-                                                the
-                                                {` `}
-                                                {moment(selectedTask?.created_at).format('DD/MM')},
-                                                at {moment(selectedTask?.created_at).format('HH:mm:ss')}
-                                            </Typography>
-
-                                            <Typography gutterBottom>
-                                                Properties :
-                                            </Typography>
-                                            <pre>
-                                                {JSON.stringify(selectedTask?.properties, null, 4)}
-                                            </pre>
-                                            {selectedTask.error && (
-                                                <Typography color="error" gutterBottom>
-                                                    Error : {selectedTask.error}
-                                                </Typography>
-                                            )}
-                                        </Grid>
-                                        <Grid
-                                            item
-                                            md={5}
-                                            xs={12}
-                                        >
-                                            <DatasetProvider dataset_id={selectedTask?.dataset_id}>
-                                                <DatasetConsumer>
-                                                    {value => <DTDataset dataset={value.dataset}
-                                                                         isWorking={value.isWorking}/>}
-                                                </DatasetConsumer>
-                                            </DatasetProvider>
-                                        </Grid>
-                                    </Grid>
-                                </Box>
-                            </DialogContent>
-                        </>
-                    )
-                    }
-                </Dialog>
-            </UserProvider>
-        </>
+        <DataGrid
+            className={classes.root}
+            autoHeight
+            rows={tasks || []}
+            columns={columns}
+            pageSize={5}
+            getRowId={task => task._id || task.id}
+            disableColumnMenu
+            disableColumnSelector
+            disableSelectionOnClick
+            loading={tasks === null}
+            sortModel={[
+                {
+                    field: 'created_at',
+                    sort: 'desc' as GridSortDirection,
+                },
+            ]}
+            components={{
+                LoadingOverlay
+            }}
+            onRowClick={handleRowClick}
+        />
     );
 };
 

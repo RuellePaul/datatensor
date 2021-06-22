@@ -1,11 +1,10 @@
 from datetime import datetime
-from uuid import uuid4
 from typing import List
+from uuid import uuid4
 
 import errors
 from config import Config
 from routers.tasks.models import Task, TaskStatus
-from utils import parse
 from worker import generator
 
 db = Config.db
@@ -26,12 +25,15 @@ def user_is_allowed_to_create_task(user, dataset_id, task_type):
 
 def find_tasks() -> List[Task]:
     tasks = list(db.tasks.find())
-    result = [Task.from_mongo(task) for task in tasks]
-    return result
+    if tasks is None:
+        raise errors.NotFound(errors.TASK_NOT_FOUND)
+    return [Task.from_mongo(task) for task in tasks]
 
 
 def find_users_tasks(user) -> List[Task]:
     tasks = list(db.tasks.find({'user_id': user.id}))
+    if tasks is None:
+        raise errors.NotFound(errors.TASK_NOT_FOUND)
     return [Task.from_mongo(task) for task in tasks]
 
 

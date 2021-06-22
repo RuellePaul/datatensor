@@ -1,14 +1,17 @@
 import React, {createContext, FC, ReactNode, useEffect, useRef, useState} from 'react';
 import {Task} from 'src/types/task';
-import {POLLING_DELAY} from 'src/constants';
-import {API_HOSTNAME} from 'src/utils/api';
 import {setNotifications} from 'src/slices/notification';
-import {useDispatch} from './index';
+import {useDispatch} from 'src/store';
+import TaskDetails from 'src/components/datatensor/TaskDetails';
 import useAuth from 'src/hooks/useAuth';
+import {HEARTBEAT_DELAY} from 'src/constants';
+import {API_HOSTNAME} from 'src/utils/api';
 
 export interface TasksContextValue {
     tasks: Task[] | null;
     saveTasks: (update: Task[] | ((tasks: Task[]) => Task[])) => void;
+    selectedTask: Task | null;
+    saveSelectedTask: (update: Task | ((tasks: Task) => Task)) => void;
 }
 
 interface TasksProviderProps {
@@ -18,7 +21,10 @@ interface TasksProviderProps {
 export const TasksContext = createContext<TasksContextValue>({
     tasks: null,
     saveTasks: () => {
-    }
+    },
+    selectedTask: null,
+    saveSelectedTask: () => {
+    },
 });
 
 let tasksIntervalID;
@@ -27,15 +33,21 @@ let notificationsIntervalID;
 export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
 
     const {accessToken} = useAuth();
-    const [currentTasks, setCurrentTasks] = useState<Task[]>(null);
     const dispatch = useDispatch();
 
     const wsTask = useRef(null);
     const wsNotifications = useRef(null);
     const [isPaused, setPaused] = useState(false);
 
+    const [currentTasks, setCurrentTasks] = useState<Task[]>(null);
+    const [selectedTask, setSelectedTask] = useState<Task>(null);
+
     const handleSaveTasks = (update: Task[] | ((tasks: Task[]) => Task[])): void => {
         setCurrentTasks(update);
+    };
+
+    const handleSaveSelectedTask = (update: Task | ((tasks: Task) => Task)): void => {
+        setSelectedTask(update);
     };
 
     // Send
@@ -80,7 +92,7 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
         if (isPaused)
             clearInterval(tasksIntervalID)
         else
-            tasksIntervalID = setInterval(sendTaskMessage, POLLING_DELAY)
+            tasksIntervalID = setInterval(sendTaskMessage, HEARTBEAT_DELAY)
 
         wsTask.current.onmessage = (event) => {
             handleSaveTasks(JSON.parse(event.data));
@@ -101,7 +113,7 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
         if (isPaused)
             clearInterval(notificationsIntervalID)
         else
-            notificationsIntervalID = setInterval(sendNotificationsMessage, POLLING_DELAY)
+            notificationsIntervalID = setInterval(sendNotificationsMessage, HEARTBEAT_DELAY)
 
         wsNotifications.current.onmessage = (event) => {
             dispatch(setNotifications(JSON.parse(event.data)));
@@ -122,10 +134,14 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
         <TasksContext.Provider
             value={{
                 tasks: currentTasks,
-                saveTasks: handleSaveTasks
+                saveTasks: handleSaveTasks,
+                selectedTask: selectedTask,
+                saveSelectedTask: handleSaveSelectedTask
             }}
         >
             {children}
+
+            <TaskDetails/>
         </TasksContext.Provider>
     )
 };
