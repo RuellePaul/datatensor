@@ -68,6 +68,7 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
         };
         wsNotifications.current.onclose = () => {
             console.info('Notifications websocket closed.');
+            // TODO : TRY RECONNECTING WORKFLOW
         };
 
         return () => {

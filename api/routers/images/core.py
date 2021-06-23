@@ -69,6 +69,21 @@ def upload_file(payload) -> Image:
         )
 
 
+def delete_images_from_s3(image_ids):
+    def getrows_byslice(array):
+        for start in range(0, len(array), 1000):
+            yield array[start:start + 1000]
+
+    try:
+        for image_ids_to_delete in getrows_byslice(image_ids):
+            s3.delete_objects(
+                Bucket=Config.S3_BUCKET,
+                Delete={'Objects': [{'Key': image_id} for image_id in image_ids_to_delete]}
+            )
+    except Exception as e:
+        raise errors.InternalError(f'Cannot delete file from S3, {str(e)}')
+
+
 def delete_image_from_s3(image_id):
     try:
         s3.delete_object(

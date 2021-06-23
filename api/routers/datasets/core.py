@@ -6,7 +6,7 @@ from uuid import uuid4
 import errors
 from config import Config
 from routers.datasets.models import Dataset
-from routers.images.core import delete_image_from_s3, find_images
+from routers.images.core import delete_images_from_s3, find_images
 
 db = Config.db
 
@@ -47,13 +47,10 @@ def remove_dataset(user_id, dataset_id):
 
     images = find_images(dataset_id)
     if images:
-        with concurrent.futures.ThreadPoolExecutor(max_workers=16) as executor:
-            executor.map(delete_image_from_s3,
-                         [image.id for image in images])
-
-        for image in images:
-            db.labels.delete_many({'image_id': image.id})
+        image_ids_to_remove = [image.id for image in images]
+        delete_images_from_s3(image_ids_to_remove)
         db.images.delete_many({'dataset_id': dataset_id})
+        db.labels.delete_many({'image_id': {'$in': image_ids_to_remove}})
 
     db.categories.delete_many({'dataset_id': dataset_id})
     db.tasks.delete_many({'dataset_id': dataset_id})
