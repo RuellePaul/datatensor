@@ -50,6 +50,8 @@ class TestDatasets:
                                json=body.dict())
         assert response.status_code == 200
 
+    # TODO: test delete datasets
+
     def test_invalid_delete_dataset(self):
         response = client.delete(f'{PREFIX}/datasets/83b06b61-fcf4-48a1-8fd3-9233b2e15a25',
                                  headers={'Authorization': Store.access_token})
@@ -74,4 +76,3 @@ class TestDatasets:
                                  headers={'Authorization': Store.access_token})
         assert response.status_code == 404
         assert response.json().get('message') == errors.DATASET_NOT_FOUND
-
