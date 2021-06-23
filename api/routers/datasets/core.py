@@ -1,7 +1,7 @@
 import concurrent.futures
 from datetime import datetime
-from uuid import uuid4
 from typing import List
+from uuid import uuid4
 
 import errors
 from config import Config
@@ -56,4 +56,15 @@ def remove_dataset(user_id, dataset_id):
         db.images.delete_many({'dataset_id': dataset_id})
 
     db.categories.delete_many({'dataset_id': dataset_id})
+    db.tasks.delete_many({'dataset_id': dataset_id})
     db.datasets.delete_one({'_id': dataset_id, 'user_id': user_id})
+
+
+def remove_datasets(user_id):
+    datasets = find_datasets(user_id)
+
+    for dataset in datasets:
+        try:
+            remove_dataset(user_id, dataset.id)
+        except errors.Forbidden:
+            pass

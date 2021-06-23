@@ -6,6 +6,7 @@ import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import {User} from 'src/types/user';
 import api from 'src/utils/api';
 import Header from './Header';
+import Actions from './Actions';
 import Generator from './Generator';
 import TasksOverTime from 'src/components/charts/TasksOverTime';
 import UsersOverTime from 'src/components/charts/UsersOverTime';
@@ -111,7 +112,7 @@ const AdminDashboardView: FC = () => {
                         lg={3}
                         xs={12}
                     >
-
+                        <Actions/>
                     </Grid>
                     <Grid
                         item
