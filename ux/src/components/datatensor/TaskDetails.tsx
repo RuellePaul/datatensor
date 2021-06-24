@@ -217,6 +217,19 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                             >
                                 <Grid
                                     item
+                                    xs={12}
+                                >
+                                    {
+                                        task.type === 'generator' && (
+                                            <GeneratorProperties properties={task.properties}/>
+                                        )
+                                    }
+                                    <Box mt={2}>
+                                        <Divider/>
+                                    </Box>
+                                </Grid>
+                                <Grid
+                                    item
                                     sm={4}
                                     xs={12}
                                 >
@@ -262,21 +275,6 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                                             )}
                                         </DatasetConsumer>
                                     </DatasetProvider>
-                                </Grid>
-
-                                <Grid
-                                    item
-                                    xs={12}
-                                >
-                                    <Box mb={2}>
-                                        <Divider/>
-                                    </Box>
-                                    {
-                                        task.type === 'generator' && (
-                                            <GeneratorProperties properties={task.properties}/>
-                                        )
-                                    }
-
                                 </Grid>
                             </Grid>
                         </DialogContent>
