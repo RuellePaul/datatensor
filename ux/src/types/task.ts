@@ -1,5 +1,7 @@
 export type TaskType = 'generator' | 'augmentor';
 
+export type TaskStatus = 'pending' | 'active' | 'success' | 'failed';
+
 export interface Task {
     id: string;
     user_id: string;
@@ -7,7 +9,7 @@ export interface Task {
     type: TaskType;
     properties: object,
     created_at: string;
-    status: 'pending' | 'active' | 'success' | 'failed',
+    status: TaskStatus,
     progress: number,
     ended_at?: string;
     error?: string

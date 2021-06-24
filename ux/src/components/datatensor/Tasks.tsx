@@ -1,7 +1,6 @@
 import React, {FC} from 'react';
-import {Link as RouterLink} from 'react-router-dom';
 import moment from 'moment';
-import {Box, capitalize, LinearProgress, Link, makeStyles, Typography} from '@material-ui/core';
+import {Box, capitalize, LinearProgress, makeStyles, Typography} from '@material-ui/core';
 import {
     DataGrid,
     GridCellParams,
@@ -10,14 +9,13 @@ import {
     GridRowParams,
     GridSortDirection
 } from '@material-ui/data-grid';
-import FancyLabel from 'src/components/FancyLabel';
 import useTasks from 'src/hooks/useTasks';
 import {Theme} from 'src/theme';
-import UserAvatar from 'src/components/UserAvatar';
 import {UserConsumer, UserProvider} from 'src/store/UserContext';
 import getDateDiff from 'src/utils/getDateDiff';
-import {Task, TaskType} from 'src/types/task';
-
+import {Task, TaskStatus, TaskType} from 'src/types/task';
+import {TaskStatusLabel} from 'src/components/datatensor/TaskDetails';
+import UserLabel from 'src/components/UserLabel';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -35,20 +33,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-function reducer(status) {
-    switch (status) {
-        case 'pending':
-            return 'default'
-        case 'success':
-            return 'success'
-        case 'active':
-            return 'info'
-        case 'failed':
-            return 'error'
-        default:
-            throw new Error('Invalid status')
-    }
-}
 
 const columns: GridColDef[] = [
     {
@@ -59,26 +43,7 @@ const columns: GridColDef[] = [
             <UserProvider user_id={params.value.toString()}>
                 <UserConsumer>
                     {
-                        value => (
-                            <>
-                                <Box mr={1}>
-                                    <UserAvatar
-                                        user={value.user}
-                                        style={{width: 30, height: 30}}
-                                    />
-
-                                </Box>
-
-                                <Link
-                                    color='inherit'
-                                    component={RouterLink}
-                                    to={`/app/admin/manage/users/${params.value.toString()}/details`}
-                                    variant='h6'
-                                >
-                                    {value.user.name}
-                                </Link>
-                            </>
-                        )
+                        value => <UserLabel user={value.user}/>
                     }
                 </UserConsumer>
             </UserProvider>
@@ -99,9 +64,7 @@ const columns: GridColDef[] = [
         headerName: 'Status',
         width: 120,
         renderCell: (params: GridCellParams) => (
-            <FancyLabel color={reducer(params.value)}>
-                {params.value}
-            </FancyLabel>
+            <TaskStatusLabel status={params.value as TaskStatus}/>
         ),
     },
     {

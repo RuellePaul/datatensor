@@ -1,22 +1,43 @@
 import React, {FC} from 'react';
-import moment from 'moment';
-import {Box, Dialog, DialogContent, DialogTitle, Grid, IconButton, makeStyles, Typography} from '@material-ui/core';
+import {
+    capitalize,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    Grid,
+    IconButton,
+    makeStyles,
+    Typography
+} from '@material-ui/core';
 import {Close as CloseIcon} from '@material-ui/icons';
 import {Theme} from 'src/theme';
-import {TaskType} from 'src/types/task';
-import {UserProvider} from 'src/store/UserContext';
+import {TaskStatus} from 'src/types/task';
+import {UserConsumer, UserProvider} from 'src/store/UserContext';
 import {DatasetConsumer, DatasetProvider} from 'src/store/DatasetContext';
-import DTDataset from 'src/components/datatensor/Dataset';
 import useTasks from 'src/hooks/useTasks';
+import FancyLabel from 'src/components/FancyLabel';
+import UserLabel from '../UserLabel';
+import getDateDiff from '../../utils/getDateDiff';
 
 interface TaskDetailsProps {
 
+}
+
+interface TaskStatusProps {
+    status: TaskStatus
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
     dialog: {
         padding: theme.spacing(1, 2, 2)
+    },
+    username: {
+        marginLeft: '8px !important'
+    },
+    avatar: {
+        width: 20,
+        height: 20
     },
     close: {
         position: 'absolute',
@@ -26,13 +47,28 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-function translateType(type: TaskType) {
-    switch (type) {
-        case 'generator':
-            return '🏗️ Generator'
-        case 'augmentor':
-            return 'Images augmentation'
+function colorReducer(status) {
+    switch (status) {
+        case 'pending':
+            return 'default'
+        case 'success':
+            return 'success'
+        case 'active':
+            return 'info'
+        case 'failed':
+            return 'error'
+        default:
+            throw new Error('Invalid status')
     }
+}
+
+export const TaskStatusLabel: FC<TaskStatusProps> = ({status}) => {
+
+    return (
+        <FancyLabel color={colorReducer(status)}>
+            {status}
+        </FancyLabel>
+    )
 }
 
 const TaskDetails: FC<TaskDetailsProps> = () => {
@@ -53,7 +89,7 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                     className: classes.dialog
                 }}
                 fullWidth
-                maxWidth='md'
+                maxWidth='sm'
                 open={task !== null}
                 onClose={handleClose}
             >
@@ -65,10 +101,10 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                         >
                             <div>
                                 <Typography variant='h4'>
-                                    Task details
+                                    {capitalize(task.type)}
                                 </Typography>
                                 <Typography color='textSecondary'>
-                                    ID : {task.id}
+                                    {getDateDiff(new Date(), task.created_at, 'passed_event')}
                                 </Typography>
                             </div>
 
@@ -79,51 +115,59 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                                 <CloseIcon/>
                             </IconButton>
                         </DialogTitle>
-                        <DialogContent>
-                            <Box my={2}>
+                        <DialogContent
+                            className='scroll'
+                        >
+                            <Grid
+                                container
+                                spacing={2}
+                            >
                                 <Grid
-                                    container
-                                    spacing={4}
+                                    item
+                                    sm={6}
+                                    xs={12}
                                 >
-                                    <Grid
-                                        item
-                                        md={7}
-                                        xs={12}
+                                    <Typography
+                                        variant="overline"
+                                        color="inherit"
+                                        gutterBottom
                                     >
-                                        <Typography gutterBottom>
-                                            <strong>{translateType(task?.type)}</strong>,
-                                            the
-                                            {` `}
-                                            {moment(task?.created_at).format('DD/MM')},
-                                            at {moment(task?.created_at).format('HH:mm:ss')}
-                                        </Typography>
-
-                                        <Typography gutterBottom>
-                                            Properties :
-                                        </Typography>
-                                        <pre>
-                                                {JSON.stringify(task?.properties, null, 4)}
-                                            </pre>
-                                        {task.error && (
-                                            <Typography color='error' gutterBottom>
-                                                Error : {task.error}
-                                            </Typography>
-                                        )}
-                                    </Grid>
-                                    <Grid
-                                        item
-                                        md={5}
-                                        xs={12}
-                                    >
-                                        <DatasetProvider dataset_id={task?.dataset_id}>
-                                            <DatasetConsumer>
-                                                {value => <DTDataset dataset={value.dataset}
-                                                                     isWorking={value.isWorking}/>}
-                                            </DatasetConsumer>
-                                        </DatasetProvider>
-                                    </Grid>
+                                        Created by
+                                    </Typography>
+                                    <UserConsumer>
+                                        {
+                                            value => <UserLabel user={value.user}/>
+                                        }
+                                    </UserConsumer>
                                 </Grid>
-                            </Box>
+                                <Grid
+                                    item
+                                    sm={6}
+                                    xs={12}
+                                >
+                                    <Typography
+                                        variant="overline"
+                                        color="inherit"
+                                        gutterBottom
+                                    >
+                                        Status
+                                    </Typography>
+
+                                    <br/>
+
+                                    <TaskStatusLabel status={task.status}/>
+
+                                </Grid>
+                            </Grid>
+
+
+                            <DatasetProvider dataset_id={task?.dataset_id}>
+                                <DatasetConsumer>
+                                    {value => (
+                                        <div/>
+                                    )}
+                                </DatasetConsumer>
+                            </DatasetProvider>
                         </DialogContent>
                     </>
                 )}
