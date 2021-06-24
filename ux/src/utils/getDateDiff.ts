@@ -25,6 +25,8 @@ const getDateDiff = (date1, date2, format: 'duration' | 'passed_event' = 'durati
             return `${hours} hour${hours > 1 ? 's': ''} ago`;
         else if (min > 0)
             return `${min} minute${min > 1 ? 's': ''} ago`;
+        else if (sec > 10)
+            return `${sec} second${sec > 1 ? 's': ''} ago`;
         else
             return `now`
     }
