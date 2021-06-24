@@ -51,6 +51,11 @@ const useStyles = makeStyles((theme: Theme) => ({
         maxHeight: 520,
         padding: theme.spacing(2)
     },
+    notification: {
+        padding: theme.spacing(1),
+        marginTop: 0,
+        marginBottom: 4
+    },
     highlight: {
         background: 'rgba(255, 255, 255, 0.08)'
     }
@@ -163,7 +168,7 @@ const Notifications: FC = () => {
                                     return (
                                         <ListItem
                                             button
-                                            className={clsx(notification.opened === false && classes.highlight)}
+                                            className={clsx(classes.notification, notification.opened === false && classes.highlight)}
                                             divider
                                             key={notification.id}
                                             onClick={() => handleNotificationClick(notification)}

@@ -1,5 +1,4 @@
 import React, {FC} from 'react';
-import moment from 'moment';
 import {Box, capitalize, LinearProgress, makeStyles, Typography} from '@material-ui/core';
 import {
     DataGrid,
@@ -103,7 +102,9 @@ const columns: GridColDef[] = [
                     <Box minWidth={35}>
                         <Typography
                             variant='body2'
-                            color='textSecondary'>{`${(100 * params.row.progress).toFixed()}%`}
+                            color='textSecondary'
+                        >
+                            {`${(100 * params.row.progress).toFixed()}%`}
                         </Typography>
                     </Box>
                 </>
@@ -113,12 +114,15 @@ const columns: GridColDef[] = [
     },
     {
         field: 'created_at',
-        headerName: 'Created at',
+        headerName: 'Created',
         width: 180,
         renderCell: (params: GridCellParams) => (
-            <div>
-                {typeof params.value === 'string' && moment(params.value).format('DD MMM | H:mm')}
-            </div>
+            <Typography
+                variant='body2'
+                color='textSecondary'
+            >
+                {getDateDiff(new Date(), params.value, 'passed_event')}
+            </Typography>
         )
     }
 ];

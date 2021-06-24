@@ -1,11 +1,15 @@
 import React, {FC} from 'react';
 import {
+    Box,
     capitalize,
+    Chip,
     Dialog,
     DialogContent,
     DialogTitle,
+    Divider,
     Grid,
     IconButton,
+    Link,
     makeStyles,
     Typography
 } from '@material-ui/core';
@@ -16,8 +20,8 @@ import {UserConsumer, UserProvider} from 'src/store/UserContext';
 import {DatasetConsumer, DatasetProvider} from 'src/store/DatasetContext';
 import useTasks from 'src/hooks/useTasks';
 import FancyLabel from 'src/components/FancyLabel';
-import UserLabel from '../UserLabel';
-import getDateDiff from '../../utils/getDateDiff';
+import UserLabel from 'src/components/UserLabel';
+import getDateDiff from 'src/utils/getDateDiff';
 
 interface TaskDetailsProps {
 
@@ -32,18 +36,24 @@ const useStyles = makeStyles((theme: Theme) => ({
     dialog: {
         padding: theme.spacing(1, 2, 2)
     },
-    username: {
-        marginLeft: '8px !important'
-    },
-    avatar: {
-        width: 20,
-        height: 20
-    },
     close: {
         position: 'absolute',
         right: theme.spacing(1),
         top: theme.spacing(1),
         color: theme.palette.grey[500]
+    },
+    chips: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        '& > *': {
+            margin: theme.spacing(0.5, 0.5, 0.5, 0),
+        }
+    },
+    link: {
+        display: 'flex',
+        alignItems: 'center',
+        marginLeft: theme.spacing(1),
+        cursor: 'pointer'
     }
 }));
 
@@ -157,6 +167,53 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                                     <br/>
 
                                     <TaskStatusLabel status={task.status}/>
+
+                                </Grid>
+
+                                <Grid
+                                    item
+                                    xs={12}
+                                >
+                                    <Box mb={2}>
+                                        <Divider/>
+                                    </Box>
+                                    {
+                                        task.type === 'generator' && (
+                                            <>
+                                                <Typography
+                                                    color='textPrimary'
+                                                    gutterBottom
+                                                >
+                                                    Generate <strong>{task.properties.image_count}</strong> images from
+                                                    {' '}
+                                                    <strong>
+                                                        {task.properties.selected_categories.length}
+                                                        {task.properties.selected_categories.length > 1
+                                                            ? ' categories'
+                                                            : ' category'
+                                                        }
+                                                    </strong> :
+                                                </Typography>
+                                                <div className={classes.chips}>
+                                                    {task.properties.selected_categories.slice(0, 18).map(category => (
+                                                        <Chip
+                                                            label={capitalize(category)}
+                                                            variant='outlined'
+                                                        />
+                                                    ))}
+                                                    {task.properties.selected_categories.length > 18 && (
+                                                        <Link
+                                                            className={classes.link}
+                                                            onClick={() => { /* TODO */ }}
+                                                        >
+                                                            and {task.properties.selected_categories.length - 18} more...
+                                                        </Link>
+                                                    )}
+                                                </div>
+                                            </>
+
+                                        )
+                                    }
 
                                 </Grid>
                             </Grid>
