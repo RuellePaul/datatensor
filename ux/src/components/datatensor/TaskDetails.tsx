@@ -84,6 +84,7 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
     return (
         <UserProvider user_id={task?.user_id}>
             <Dialog
+                closeAfterTransition
                 disableRestoreFocus
                 PaperProps={{
                     className: classes.dialog
