@@ -15,11 +15,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     root: {
         display: 'flex',
         alignItems: 'center'
+    },
+    link: {
+        display: 'block'
     }
 }));
 
 
 const UserLabel: FC<UserLabelProps> = ({
+                                           children,
                                            user,
                                            className,
                                        }) => {
@@ -39,15 +43,20 @@ const UserLabel: FC<UserLabelProps> = ({
 
             </Box>
 
-            <Link
-                color='inherit'
-                component={RouterLink}
-                onClick={event => event.stopPropagation()}
-                to={`/app/admin/manage/users/${user.id}/details`}
-                variant='h6'
-            >
-                {user.name}
-            </Link>
+            <div>
+                <Link
+                    className={classes.link}
+                    color='inherit'
+                    component={RouterLink}
+                    onClick={event => event.stopPropagation()}
+                    to={`/app/admin/manage/users/${user.id}/details`}
+                    variant='h6'
+                >
+                    {user.name}
+                </Link>
+
+                {children}
+            </div>
         </div>
     );
 };

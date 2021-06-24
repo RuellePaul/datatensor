@@ -132,6 +132,13 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
     }, [currentTasks, accessToken])
 
     useEffect(() => {
+        if (selectedTask)
+            setSelectedTask(currentTasks.find(task => task.id === selectedTask.id));
+
+        // eslint-disable-next-line
+    }, [currentTasks])
+
+    useEffect(() => {
         setSelectedTask(null);
     }, [location])
 

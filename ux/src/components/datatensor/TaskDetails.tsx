@@ -9,6 +9,7 @@ import {
     Divider,
     Grid,
     IconButton,
+    LinearProgress,
     Link,
     makeStyles,
     Typography
@@ -179,9 +180,6 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                                     {'  '}
                                     <TaskStatusLabel status={task.status}/>
                                 </Typography>
-                                <Typography color='textSecondary'>
-                                    {getDateDiff(new Date(), task.created_at, 'passed_event')}
-                                </Typography>
                             </div>
 
                             <IconButton
@@ -194,6 +192,25 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                         <DialogContent
                             className='scroll'
                         >
+                            {task.status === 'active' && (
+                                <Box
+                                    display='flex'
+                                    alignItems='center'
+                                >
+                                    <Box width='100%' mr={1}>
+                                        <LinearProgress
+                                            variant={(task.progress <= 0 || task.progress) >= 1 ? 'query' : 'determinate'}
+                                            value={100 * task.progress}
+                                        />
+                                    </Box>
+                                    <Typography
+                                        variant='body2'
+                                        color='textSecondary'
+                                    >
+                                        {`${(100 * task.progress).toFixed(2)}%`}
+                                    </Typography>
+                                </Box>
+                            )}
                             <Grid
                                 container
                                 spacing={2}
@@ -212,7 +229,14 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                                     </Typography>
                                     <UserConsumer>
                                         {
-                                            value => <UserLabel user={value.user}/>
+                                            value => <UserLabel user={value.user}>
+                                                <Typography
+                                                    variant='caption'
+                                                    color='textSecondary'
+                                                >
+                                                    {getDateDiff(new Date(), task.created_at, 'passed_event')}
+                                                </Typography>
+                                            </UserLabel>
                                         }
                                     </UserConsumer>
                                 </Grid>
