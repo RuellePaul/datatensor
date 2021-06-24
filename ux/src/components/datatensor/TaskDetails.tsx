@@ -22,6 +22,7 @@ import useTasks from 'src/hooks/useTasks';
 import FancyLabel from 'src/components/FancyLabel';
 import UserLabel from 'src/components/UserLabel';
 import getDateDiff from 'src/utils/getDateDiff';
+import DTDataset from './Dataset';
 
 interface TaskDetailsProps {
 
@@ -135,7 +136,7 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                             >
                                 <Grid
                                     item
-                                    sm={6}
+                                    sm={4}
                                     xs={12}
                                 >
                                     <Typography
@@ -150,12 +151,9 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                                             value => <UserLabel user={value.user}/>
                                         }
                                     </UserConsumer>
-                                </Grid>
-                                <Grid
-                                    item
-                                    sm={6}
-                                    xs={12}
-                                >
+
+                                    <br/>
+
                                     <Typography
                                         variant="overline"
                                         color="inherit"
@@ -167,7 +165,29 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                                     <br/>
 
                                     <TaskStatusLabel status={task.status}/>
+                                </Grid>
+                                <Grid
+                                    item
+                                    sm={8}
+                                    xs={12}
+                                >
+                                    <Typography
+                                        variant="overline"
+                                        color="inherit"
+                                        gutterBottom
+                                    >
+                                        Dataset
+                                    </Typography>
 
+                                    <DatasetProvider dataset_id={task?.dataset_id}>
+                                        <DatasetConsumer>
+                                            {value => (
+                                                <DTDataset
+                                                    dataset={value.dataset}
+                                                />
+                                            )}
+                                        </DatasetConsumer>
+                                    </DatasetProvider>
                                 </Grid>
 
                                 <Grid
@@ -192,7 +212,7 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                                                             ? ' categories'
                                                             : ' category'
                                                         }
-                                                    </strong> :
+                                                    </strong> (datasource <strong>{task.properties.datasource_key}</strong>) :
                                                 </Typography>
                                                 <div className={classes.chips}>
                                                     {task.properties.selected_categories.slice(0, 18).map(category => (
@@ -204,7 +224,8 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                                                     {task.properties.selected_categories.length > 18 && (
                                                         <Link
                                                             className={classes.link}
-                                                            onClick={() => { /* TODO */ }}
+                                                            onClick={() => { /* TODO */
+                                                            }}
                                                         >
                                                             and {task.properties.selected_categories.length - 18} more...
                                                         </Link>
@@ -217,15 +238,6 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
 
                                 </Grid>
                             </Grid>
-
-
-                            <DatasetProvider dataset_id={task?.dataset_id}>
-                                <DatasetConsumer>
-                                    {value => (
-                                        <div/>
-                                    )}
-                                </DatasetConsumer>
-                            </DatasetProvider>
                         </DialogContent>
                     </>
                 )}

@@ -1,4 +1,5 @@
 import React, {createContext, FC, ReactNode, useEffect, useRef, useState} from 'react';
+import {useLocation} from 'react-router-dom';
 import {Task} from 'src/types/task';
 import {setNotifications} from 'src/slices/notification';
 import {useDispatch} from 'src/store';
@@ -34,6 +35,8 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
 
     const {accessToken} = useAuth();
     const dispatch = useDispatch();
+
+    const location = useLocation();
 
     const wsTask = useRef(null);
     const wsNotifications = useRef(null);
@@ -127,6 +130,10 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
             setPaused(!hasPendingOrActiveTasks);
         }
     }, [currentTasks, accessToken])
+
+    useEffect(() => {
+        setSelectedTask(null);
+    }, [location])
 
     if (!accessToken)
         return null
