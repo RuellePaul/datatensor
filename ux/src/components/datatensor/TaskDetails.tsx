@@ -176,6 +176,8 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                             <div>
                                 <Typography variant='h4'>
                                     {capitalize(task.type)}
+                                    {'  '}
+                                    <TaskStatusLabel status={task.status}/>
                                 </Typography>
                                 <Typography color='textSecondary'>
                                     {getDateDiff(new Date(), task.created_at, 'passed_event')}
@@ -213,20 +215,6 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                                             value => <UserLabel user={value.user}/>
                                         }
                                     </UserConsumer>
-
-                                    <br/>
-
-                                    <Typography
-                                        variant="overline"
-                                        color="inherit"
-                                        gutterBottom
-                                    >
-                                        Status
-                                    </Typography>
-
-                                    <br/>
-
-                                    <TaskStatusLabel status={task.status}/>
                                 </Grid>
                                 <Grid
                                     item
