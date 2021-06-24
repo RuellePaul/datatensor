@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, useState} from 'react';
 import {
     Box,
     capitalize,
@@ -15,7 +15,7 @@ import {
 } from '@material-ui/core';
 import {Close as CloseIcon} from '@material-ui/icons';
 import {Theme} from 'src/theme';
-import {TaskStatus} from 'src/types/task';
+import {TaskGeneratorProperties, TaskStatus} from 'src/types/task';
 import {UserConsumer, UserProvider} from 'src/store/UserContext';
 import {DatasetConsumer, DatasetProvider} from 'src/store/DatasetContext';
 import useTasks from 'src/hooks/useTasks';
@@ -30,6 +30,10 @@ interface TaskDetailsProps {
 
 interface TaskStatusProps {
     status: TaskStatus
+}
+
+interface GeneratorProperties {
+    properties: TaskGeneratorProperties
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -81,6 +85,64 @@ export const TaskStatusLabel: FC<TaskStatusProps> = ({status}) => {
         </FancyLabel>
     )
 }
+
+const GeneratorProperties: FC<GeneratorProperties> = ({properties}) => {
+
+    const classes = useStyles();
+
+    const [expand, setExpand] = useState(false);
+
+    return (
+        <>
+            <Typography
+                color='textPrimary'
+                gutterBottom
+            >
+                Generate <strong>{properties.image_count}</strong> images from
+                {' '}
+                <strong>
+                    {properties.selected_categories.length}
+                    {properties.selected_categories.length > 1
+                        ? ' categories'
+                        : ' category'
+                    }
+                </strong> (datasource <strong>{properties.datasource_key}</strong>) :
+            </Typography>
+            <div className={classes.chips}>
+                {expand
+                    ? (
+                        <>
+                            {properties.selected_categories.map(category => (
+                                <Chip
+                                    label={capitalize(category)}
+                                    variant='outlined'
+                                />
+                            ))}
+                        </>
+                    ) : (
+                        <>
+                            {properties.selected_categories.slice(0, 18).map(category => (
+                                <Chip
+                                    label={capitalize(category)}
+                                    variant='outlined'
+                                />
+                            ))}
+                            {properties.selected_categories.length > 18 && (
+                                <Link
+                                    className={classes.link}
+                                    onClick={() => {
+                                        setExpand(true)
+                                    }}
+                                >
+                                    and {properties.selected_categories.length - 18} more...
+                                </Link>
+                            )}
+                        </>
+                    )}
+            </div>
+        </>
+    )
+};
 
 const TaskDetails: FC<TaskDetailsProps> = () => {
 
@@ -199,40 +261,7 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                                     </Box>
                                     {
                                         task.type === 'generator' && (
-                                            <>
-                                                <Typography
-                                                    color='textPrimary'
-                                                    gutterBottom
-                                                >
-                                                    Generate <strong>{task.properties.image_count}</strong> images from
-                                                    {' '}
-                                                    <strong>
-                                                        {task.properties.selected_categories.length}
-                                                        {task.properties.selected_categories.length > 1
-                                                            ? ' categories'
-                                                            : ' category'
-                                                        }
-                                                    </strong> (datasource <strong>{task.properties.datasource_key}</strong>) :
-                                                </Typography>
-                                                <div className={classes.chips}>
-                                                    {task.properties.selected_categories.slice(0, 18).map(category => (
-                                                        <Chip
-                                                            label={capitalize(category)}
-                                                            variant='outlined'
-                                                        />
-                                                    ))}
-                                                    {task.properties.selected_categories.length > 18 && (
-                                                        <Link
-                                                            className={classes.link}
-                                                            onClick={() => { /* TODO */
-                                                            }}
-                                                        >
-                                                            and {task.properties.selected_categories.length - 18} more...
-                                                        </Link>
-                                                    )}
-                                                </div>
-                                            </>
-
+                                            <GeneratorProperties properties={task.properties}/>
                                         )
                                     }
 
