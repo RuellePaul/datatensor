@@ -74,6 +74,7 @@ const DTDataset: FC<DatasetProps> = ({
         <Card
             className={clsx(classes.root, className)}
             ref={datasetRef}
+            variant="outlined"
             {...rest}
         >
             <UserProvider user_id={dataset.user_id}>

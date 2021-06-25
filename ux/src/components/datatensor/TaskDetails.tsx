@@ -24,6 +24,7 @@ import FancyLabel from 'src/components/FancyLabel';
 import UserLabel from 'src/components/UserLabel';
 import getDateDiff from 'src/utils/getDateDiff';
 import DTDataset from './Dataset';
+import clsx from 'clsx';
 
 interface TaskDetailsProps {
 
@@ -60,6 +61,10 @@ const useStyles = makeStyles((theme: Theme) => ({
         alignItems: 'center',
         marginLeft: theme.spacing(1),
         cursor: 'pointer'
+    },
+    block: {
+        display: 'block',
+        marginTop: theme.spacing(2)
     }
 }));
 
@@ -81,7 +86,10 @@ function colorReducer(status) {
 export const TaskStatusLabel: FC<TaskStatusProps> = ({status}) => {
 
     return (
-        <FancyLabel color={colorReducer(status)}>
+        <FancyLabel
+            className={clsx(['pending', 'active'].includes(status) && 'blinking')}
+            color={colorReducer(status)}
+        >
             {status}
         </FancyLabel>
     )
@@ -174,13 +182,9 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                             className='flex'
                             disableTypography
                         >
-                            <div>
-                                <Typography variant='h4'>
-                                    {capitalize(task.type)}
-                                    {'  '}
-                                    <TaskStatusLabel status={task.status}/>
-                                </Typography>
-                            </div>
+                            <Typography variant='h4'>
+                                {capitalize(task.type)}
+                            </Typography>
 
                             <IconButton
                                 className={classes.close}
@@ -219,6 +223,13 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                                     item
                                     xs={12}
                                 >
+                                    <Typography
+                                        variant="overline"
+                                        color="inherit"
+                                        gutterBottom
+                                    >
+                                        Task
+                                    </Typography>
                                     {
                                         task.type === 'generator' && (
                                             <GeneratorProperties properties={task.properties}/>
@@ -230,7 +241,7 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                                 </Grid>
                                 <Grid
                                     item
-                                    sm={4}
+                                    sm={5}
                                     xs={12}
                                 >
                                     <Typography
@@ -252,10 +263,22 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                                             </UserLabel>
                                         }
                                     </UserConsumer>
+
+                                    <Typography
+                                        className={classes.block}
+                                        variant="overline"
+                                        color="inherit"
+                                        gutterBottom
+                                    >
+                                        Status
+                                    </Typography>
+                                    <TaskStatusLabel
+                                        status={task.status}
+                                    />
                                 </Grid>
                                 <Grid
                                     item
-                                    sm={8}
+                                    sm={7}
                                     xs={12}
                                 >
                                     <Typography
