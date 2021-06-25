@@ -4,7 +4,7 @@ export const ENABLE_REDUX_DEV_TOOLS = true;
 
 export const LAZY_LOAD_BATCH = 20;
 
-export const POLLING_DELAY = 500;  // in ms
+export const HEARTBEAT_DELAY = 1000;  // in ms
 
 export const THEMES = {
     LIGHT: 'LIGHT',

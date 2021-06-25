@@ -8,21 +8,25 @@ from routers.categories.models import Category
 db = Config.db
 
 
-def find_categories(dataset_id, offset, limit) -> List[Category]:
-    categories_in_db = list(db.categories.find({'dataset_id': dataset_id}).skip(offset).limit(limit))
-    return [Category.from_mongo(category) for category in categories_in_db]
+def find_categories(dataset_id, offset=0, limit=0) -> List[Category]:
+    categories = list(db.categories.find({'dataset_id': dataset_id}).skip(offset).limit(limit))
+    if categories is None:
+        raise errors.NotFound(errors.CATEGORY_NOT_FOUND)
+    return [Category.from_mongo(category) for category in categories]
 
 
 def find_category(dataset_id, category_id) -> Category:
-    category_in_db = db.categories.find_one({'_id': category_id, 'dataset_id': dataset_id})
-    return Category.from_mongo(category_in_db)
+    category = db.categories.find_one({'_id': category_id, 'dataset_id': dataset_id})
+    if category is None:
+        raise errors.NotFound(errors.CATEGORY_NOT_FOUND)
+    return Category.from_mongo(category)
 
 
 def insert_category(dataset_id, category) -> Category:
     if db.categories.find_one({'dataset_id': dataset_id, 'name': category.name}):
         raise errors.Forbidden(errors.CATEGORY_ALREADY_EXISTS)
     category = Category(
-        _id=str(uuid4()),
+        id=str(uuid4()),
         dataset_id=dataset_id,
         name=category.name,
         supercategory=category.supercategory

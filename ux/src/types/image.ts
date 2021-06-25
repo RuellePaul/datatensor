@@ -1,5 +1,5 @@
 export interface Image {
-    _id: string;
+    id: string;
     dataset_id: string;
     path: string;
     name: string;

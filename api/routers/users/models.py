@@ -8,7 +8,7 @@ from authentication.models import Scope
 
 
 class User(MongoModel):
-    id: str = Field(alias='_id')
+    id: str = Field()
     email: Optional[str] = None  # github oauth users doesn't have an email
     name: str
     created_at: datetime

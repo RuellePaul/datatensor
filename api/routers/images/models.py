@@ -5,7 +5,7 @@ from utils import BaseModel, MongoModel
 
 
 class Image(MongoModel):
-    id: str = Field(alias='_id')
+    id: str = Field()
     dataset_id: str
     path: str
     name: str

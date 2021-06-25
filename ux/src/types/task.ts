@@ -1,12 +1,25 @@
+export type TaskType = 'generator' | 'augmentor';
+
+export type TaskStatus = 'pending' | 'active' | 'success' | 'failed';
+
+export interface TaskGeneratorProperties {
+    datasource_key: string;
+    selected_categories: string[];
+    image_count: number
+}
+
+
+export type TaskProperties = TaskGeneratorProperties
+
 export interface Task {
-    _id: string;
+    id: string;
     user_id: string;
     dataset_id: string | null;
-    type: 'generator' | 'augmentor';
-    properties: object,
+    type: TaskType;
+    properties: TaskProperties,
     created_at: string;
-    status: 'pending' | 'active' | 'success' | 'failed',
+    status: TaskStatus,
     progress: number,
     ended_at?: string;
     error?: string
-}
+};

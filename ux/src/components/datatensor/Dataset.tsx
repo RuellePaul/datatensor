@@ -54,7 +54,7 @@ const DTDataset: FC<DatasetProps> = ({
 
     const fetchImage = useCallback(async () => {
         try {
-            const response = await api.get<{ images: Image[] }>(`/datasets/${dataset._id}/images/`, {
+            const response = await api.get<{ images: Image[] }>(`/datasets/${dataset.id}/images/`, {
                 params: {
                     limit: 1
                 }
@@ -64,7 +64,7 @@ const DTDataset: FC<DatasetProps> = ({
             console.error(err);
         }
 
-    }, [dataset._id]);
+    }, [dataset.id]);
 
     useEffect(() => {
         fetchImage();
@@ -74,6 +74,7 @@ const DTDataset: FC<DatasetProps> = ({
         <Card
             className={clsx(classes.root, className)}
             ref={datasetRef}
+            variant="outlined"
             {...rest}
         >
             <UserProvider user_id={dataset.user_id}>
@@ -94,7 +95,7 @@ const DTDataset: FC<DatasetProps> = ({
 
 
             <CardActionArea
-                onClick={() => history.push(`/app/manage/datasets/${dataset._id}`)}
+                onClick={() => history.push(`/app/manage/datasets/${dataset.id}`)}
             >
                 <CardMedia
                     className={classes.media}

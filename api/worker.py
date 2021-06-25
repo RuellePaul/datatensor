@@ -27,14 +27,19 @@ def generator(user_id, task_id, properties):
     try:
         main(user_id, task_id, properties)
     except errors.APIError as error:
-        update_task(task_id, status='failed', error=error.message, ended_at=datetime.now())
-        notification = NotificationPostBody(type=NotificationType('TASK_FAILED'), description=error.message)
+        update_task(task_id, status='failed', error=error.detail, ended_at=datetime.now())
+        notification = NotificationPostBody(type=NotificationType('TASK_FAILED'),
+                                            task_id=task_id,
+                                            description=error.detail)
     except Exception as e:
         message = f"An error occured {str(e) if Config.ENVIRONMENT == 'development' else ''}"
         update_task(task_id, status='failed', error=message, ended_at=datetime.now())
-        notification = NotificationPostBody(type=NotificationType('TASK_FAILED'), description=message)
+        notification = NotificationPostBody(type=NotificationType('TASK_FAILED'),
+                                            task_id=task_id,
+                                            description=message)
     else:
         update_task(task_id, status='success', progress=1, ended_at=datetime.now())
-        notification = NotificationPostBody(type=NotificationType('TASK_SUCCEED'))
+        notification = NotificationPostBody(type=NotificationType('TASK_SUCCEED'),
+                                            task_id=task_id)
     finally:
         insert_notification(user_id=user_id, notification=notification)

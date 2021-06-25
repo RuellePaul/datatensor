@@ -225,12 +225,12 @@ const Results: FC<ResultsProps> = ({
 
     const handleSelectAllUsers = (event: ChangeEvent<HTMLInputElement>): void => {
         setSelectedUsers(event.target.checked
-            ? users.filter(user => user._id !== admin._id).map((user) => user._id)
+            ? users.filter(user => user.id !== admin.id).map((user) => user.id)
             : []);
     };
 
     const handleSelectOneUser = (event: any, customerId: string): void => {
-        if (customerId === admin._id)
+        if (customerId === admin.id)
             return;
         if (!selectedUsers.includes(customerId)) {
             setSelectedUsers((prevSelected) => [...prevSelected, customerId]);
@@ -241,7 +241,7 @@ const Results: FC<ResultsProps> = ({
 
     const handleDeleteSelectedUsers = async () => {
         await api.delete('/users/', {data: {user_ids: selectedUsers}});
-        setUsers(users => users.filter(user => !selectedUsers.includes(user._id)));
+        setUsers(users => users.filter(user => !selectedUsers.includes(user.id)));
         setSelectedUsers([]);
     };
 
@@ -379,23 +379,23 @@ const Results: FC<ResultsProps> = ({
                         </TableHead>
                         <TableBody>
                             {paginatedUsers.map((user) => {
-                                const isUserSelected = selectedUsers.includes(user._id);
+                                const isUserSelected = selectedUsers.includes(user.id);
 
                                 return (
                                     <TableRow
                                         className={classes.row}
                                         hover
-                                        key={user._id}
+                                        key={user.id}
                                         selected={isUserSelected}
-                                        onClick={(event) => handleSelectOneUser(event, user._id)}
+                                        onClick={(event) => handleSelectOneUser(event, user.id)}
                                     >
                                         <TableCell padding="checkbox">
                                             <Checkbox
                                                 checked={isUserSelected}
-                                                onChange={(event) => handleSelectOneUser(event, user._id)}
+                                                onChange={(event) => handleSelectOneUser(event, user.id)}
                                                 onClick={(event) => event.stopPropagation()}
                                                 value={isUserSelected}
-                                                disabled={user._id === admin._id}
+                                                disabled={user.id === admin.id}
                                             />
                                         </TableCell>
                                         <TableCell>
@@ -411,7 +411,7 @@ const Results: FC<ResultsProps> = ({
                                                     <Link
                                                         color="inherit"
                                                         component={RouterLink}
-                                                        to={`/app/admin/manage/users/${user._id}/details`}
+                                                        to={`/app/admin/manage/users/${user.id}/details`}
                                                         variant="h6"
                                                     >
                                                         {user.name}

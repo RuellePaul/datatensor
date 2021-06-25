@@ -75,12 +75,12 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
     const isSelected = currentCategory?.name === category.name;
 
     const handleDeleteCategory = async (category_id: string) => {
-        await api.delete(`/datasets/${dataset._id}/categories/${category_id}`);
+        await api.delete(`/datasets/${dataset.id}/categories/${category_id}`);
 
-        saveCategories(categories => categories.filter(category => category._id !== category_id));
+        saveCategories(categories => categories.filter(category => category.id !== category_id));
         saveLabels(labels => labels.filter(label => label.category_id !== category_id))
 
-        if (currentCategory && currentCategory._id === category_id)
+        if (currentCategory && currentCategory.id === category_id)
             saveCurrentCategory(null);
     };
 
@@ -114,7 +114,7 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
             title={`${category.name} | ${category.supercategory}`}
             size={count > 0 ? 'medium' : 'small'}
             variant={count > 0 ? 'outlined' : 'default'}
-            onDelete={() => handleDeleteCategory(category._id)}
+            onDelete={() => handleDeleteCategory(category.id)}
         />
     )
 };
@@ -142,7 +142,7 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
                         labeledCategories.map(category => (
                             <Box
                                 m={0.6}
-                                key={category._id}
+                                key={category.id}
                             >
                                 <DTCategory
                                     category={category}
@@ -158,7 +158,7 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
                     unlabeledCategories.map(category => (
                         <Box
                             m={0.4}
-                            key={category._id}
+                            key={category.id}
                         >
                             <DTCategory
                                 category={category}
@@ -243,7 +243,7 @@ const DTCategories: FC<CategoriesProps> = ({className}) => {
                                 setSubmitting
                             }) => {
                                 try {
-                                    const response = await api.post<{ category: Category }>(`/datasets/${dataset._id}/categories/`, values);
+                                    const response = await api.post<{ category: Category }>(`/datasets/${dataset.id}/categories/`, values);
                                     saveCategories([...categories, response.data.category]);
                                     setOpenCategoryCreation(false);
 

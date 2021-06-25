@@ -148,7 +148,7 @@ const DatasetCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
                                     <CardHeader title="Models"/>
                                     <Divider/>
                                     <CardContent>
-                                        {/* TODO : Model dropdown + multiple select */}
+
                                     </CardContent>
                                 </Card>
                             </Box>

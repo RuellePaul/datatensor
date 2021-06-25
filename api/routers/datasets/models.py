@@ -7,7 +7,7 @@ from utils import MongoModel
 
 
 class Dataset(MongoModel):
-    id: str = Field(alias='_id')
+    id: str = Field()
     user_id: str
     name: str
     description: str

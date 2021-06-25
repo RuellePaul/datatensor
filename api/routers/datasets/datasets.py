@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
 
 import errors
-from dependencies import logged_user
-from routers.datasets.core import find_datasets, find_dataset, remove_dataset, insert_dataset
+from dependencies import logged_admin, logged_user
+from routers.datasets.core import find_datasets, find_dataset, remove_dataset, remove_datasets, insert_dataset
 from routers.datasets.models import *
 from routers.users.models import User
 from utils import parse
@@ -40,9 +40,18 @@ async def post_dataset(dataset: DatasetPostBody, user: User = Depends(logged_use
     insert_dataset(user.id, dataset)
 
 
+@datasets.delete('/')
+async def delete_dataset(user: User = Depends(logged_admin)):
+    """
+    Delete all datasets of admin user, and other linked collections (`images`, `labels`, `tasks`...).
+    🔒️ Admin only
+    """
+    remove_datasets(user.id)
+
+
 @datasets.delete('/{dataset_id}')
 async def delete_dataset(dataset_id, user: User = Depends(logged_user)):
     """
-    Delete a dataset.
+    Delete a dataset, and other linked collections (`images`, `labels`, `tasks`...)
     """
     remove_dataset(user.id, dataset_id)

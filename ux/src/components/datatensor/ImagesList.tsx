@@ -141,9 +141,9 @@ const DTImagesList: FC<ImagesListProps> = ({
     const handleDeleteImage = async event => {
         event.stopPropagation();
 
-        await api.delete(`/datasets/${dataset._id}/images/${imageSelected._id}`);
+        await api.delete(`/datasets/${dataset.id}/images/${imageSelected.id}`);
         setSelected(Math.max(0, selected - 1));
-        saveImages(images.filter(image => image._id !== imageSelected._id));
+        saveImages(images.filter(image => image.id !== imageSelected.id));
         saveDataset({...dataset, image_count: dataset.image_count - 1})
         handleCloseMenu();
         handleCloseImage();
@@ -192,7 +192,7 @@ const DTImagesList: FC<ImagesListProps> = ({
                 >
                     {images.map((image, index) => (
                         <ImageProvider
-                            key={image._id}
+                            key={image.id}
                             image={image}
                         >
                             <DTImage
@@ -274,7 +274,7 @@ const DTImagesList: FC<ImagesListProps> = ({
 
                         <div className={classes.content}>
                             <ImageProvider
-                                key={imageSelected._id}
+                                key={imageSelected.id}
                                 image={imageSelected}
                             >
                                 <CategoryProvider>

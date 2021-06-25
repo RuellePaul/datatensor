@@ -13,7 +13,7 @@ export type SuperCategory =
     | 'food'
 
 export interface Category {
-    _id: string;
+    id: string;
     dataset_id: string;
     name: string;
     supercategory: SuperCategory

@@ -52,7 +52,7 @@ const UserDetailsView: FC = () => {
                             }
                         </UserConsumer>
                         <Box ml={2}>
-                            <Typography variant='h6' color='textPrimary'>
+                            <Typography variant='h4' color='textPrimary'>
                                 <UserConsumer>
                                     {
                                         value => value.user.name

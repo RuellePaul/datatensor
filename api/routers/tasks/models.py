@@ -34,7 +34,7 @@ TaskProperties = Union[TaskGeneratorProperties, TaskAugmentorProperties]
 
 
 class Task(MongoModel):
-    id: str = Field(alias='_id')
+    id: str = Field()
     user_id: str
     dataset_id: Optional[str] = None
     type: TaskType

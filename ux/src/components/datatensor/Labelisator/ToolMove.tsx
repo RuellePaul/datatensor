@@ -57,7 +57,7 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
 
     useEffect(() => {
         reset(canvasRef.current);
-    }, [image._id])
+    }, [image.id])
 
 
     const handleMouseDown = (event: React.MouseEvent<HTMLCanvasElement>) => {
@@ -73,20 +73,20 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
                 renderCursor(canvas, point, labels, (resizeLabel, direction) => {
                     setDirection(direction);
                     if (resizeLabel === null && direction === null) {
-                        saveLabels(labels.filter(label => !labelsHoverIds.includes(label._id)));
-                        setStoredLabels(labels.filter(label => labelsHoverIds.includes(label._id)));
-                        drawLabels(canvas, labels.filter(label => labelsHoverIds.includes(label._id)), categories, CANVAS_OFFSET, 5, true, true);
+                        saveLabels(labels.filter(label => !labelsHoverIds.includes(label.id)));
+                        setStoredLabels(labels.filter(label => labelsHoverIds.includes(label.id)));
+                        drawLabels(canvas, labels.filter(label => labelsHoverIds.includes(label.id)), categories, CANVAS_OFFSET, 5, true, true);
                     } else {
-                        saveLabels(labels.filter(label => label._id !== resizeLabel._id));
-                        setStoredLabels(labels.filter(label => label._id === resizeLabel._id));
-                        drawLabels(canvas, labels.filter(label => label._id === resizeLabel._id), categories, CANVAS_OFFSET, 5, true, true);
+                        saveLabels(labels.filter(label => label.id !== resizeLabel.id));
+                        setStoredLabels(labels.filter(label => label.id === resizeLabel.id));
+                        drawLabels(canvas, labels.filter(label => label.id === resizeLabel.id), categories, CANVAS_OFFSET, 5, true, true);
                     }
                 });
             }
         }
         if (event.nativeEvent.which === 3) {
             let labelsHoverIds = currentLabelsHoverIds(canvasRef.current, point, labels);
-            setStoredLabels(labels.filter(label => labelsHoverIds.includes(label._id)));
+            setStoredLabels(labels.filter(label => labelsHoverIds.includes(label.id)));
         }
     };
 
@@ -101,7 +101,7 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
                 setTool('label');
                 return;
             }
-            drawLabels(canvas, labels.filter(label => labelsHoverIds.includes(label._id)), categories, CANVAS_OFFSET, 5, true, true);
+            drawLabels(canvas, labels.filter(label => labelsHoverIds.includes(label.id)), categories, CANVAS_OFFSET, 5, true, true);
             renderCursor(canvas, point, labels, (label, direction) => setDirection(direction));
             if (direction === null)
                 if (labelsHoverIds.length === 0)

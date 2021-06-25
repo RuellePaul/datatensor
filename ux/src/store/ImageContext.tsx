@@ -46,21 +46,21 @@ export const ImageProvider: FC<ImageProviderProps> = ({image, children}) => {
     const fetchLabels = useCallback(async () => {
         setCurrentLabels(null);
         try {
-            const response = await api.get<{ labels: Label[] }>(`/images/${image._id}/labels/`);
+            const response = await api.get<{ labels: Label[] }>(`/images/${image.id}/labels/`);
             handleSaveLabels(response.data.labels);
             setPositions([response.data.labels]);
         } catch (err) {
             console.error(err);
         }
 
-    }, [image._id]);
+    }, [image.id]);
 
     useEffect(() => {
         fetchLabels();
     }, [fetchLabels]);
 
     const validateLabels = async () => {
-        await api.post(`/images/${image._id}/labels/`, {labels: currentLabels});
+        await api.post(`/images/${image.id}/labels/`, {labels: currentLabels});
         enqueueSnackbar('Labels updated', {variant: 'info'});
         setPositions([currentLabels]);
     };

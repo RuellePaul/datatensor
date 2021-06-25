@@ -2,6 +2,7 @@ from datetime import datetime
 from uuid import uuid4
 from typing import List
 
+import errors
 from config import Config
 from routers.notifications.models import Notification
 
@@ -10,10 +11,12 @@ db = Config.db
 
 def find_notifications(user_id) -> List[Notification]:
     notifications = list(db.notifications.find({'user_id': user_id}))
+    if notifications is None:
+        raise errors.NotFound(errors.NOTIFICATION_NOT_FOUND)
     return [Notification.from_mongo(notification) for notification in notifications]
 
 
-def insert_notification(user_id, notification):
+def insert_notification(user_id, notification: Notification):
     db.notifications.insert_one({'_id': str(uuid4()),
                                  'user_id': user_id,
                                  'created_at': datetime.now(),

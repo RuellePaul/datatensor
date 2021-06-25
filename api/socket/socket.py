@@ -25,7 +25,7 @@ async def get_tasks(websocket: WebSocket):
             if user.is_admin:
                 tasks = find_tasks()
             else:
-                tasks = find_users_tasks(user)
+                tasks = find_users_tasks(user.id)
             await websocket.send_json(parse(tasks))
         except ConnectionClosedOK:
             logger.info('Tasks websocket | closed')

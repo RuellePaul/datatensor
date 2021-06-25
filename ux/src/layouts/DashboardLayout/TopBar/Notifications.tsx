@@ -1,5 +1,4 @@
 import React, {FC, useRef, useState} from 'react';
-import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
 import {useSnackbar} from 'notistack';
 import {
@@ -22,9 +21,11 @@ import {Bell as BellIcon} from 'react-feather';
 import {Theme} from 'src/theme';
 import {useDispatch, useSelector} from 'src/store';
 import {deleteNotifications, readNotifications} from 'src/slices/notification';
-import getDateDiff from 'src/utils/getDateDiff';
-import {User} from 'src/types/user';
 import useAuth from 'src/hooks/useAuth';
+import useTasks from 'src/hooks/useTasks';
+import {Notification} from 'src/types/notification';
+import {User} from 'src/types/user';
+import getDateDiff from 'src/utils/getDateDiff';
 
 const titlesMap = {
     TASK_SUCCEED: 'Task succeeded ✅',
@@ -37,14 +38,23 @@ const titlesMap = {
 const descriptionsMap = (user: User) => ({
     TASK_SUCCEED: 'Generator task completed successfully.',
     TASK_FAILED: 'Generator task has failed.',
-    REGISTRATION: "We're glad to see you as one of our members. Happy hacking on Datatensor !",
+    REGISTRATION: 'We\'re glad to see you as one of our members. Happy hacking on Datatensor !',
     EMAIL_CONFIRM_REQUIRED: 'Please confirm your email address to access all datatensor features.',
     EMAIL_CONFIRM_DONE: `Your email address ${user.email} has been verified !`,
 });
 
 const useStyles = makeStyles((theme: Theme) => ({
     popover: {
-        width: 320
+        width: '100%',
+        maxWidth: 320,
+        height: 'unset !important',
+        maxHeight: 520,
+        padding: theme.spacing(2)
+    },
+    notification: {
+        padding: theme.spacing(1),
+        marginTop: 0,
+        marginBottom: 4
     },
     highlight: {
         background: 'rgba(255, 255, 255, 0.08)'
@@ -56,6 +66,7 @@ const Notifications: FC = () => {
     const theme = useTheme();
 
     const {user} = useAuth();
+    const {tasks, saveSelectedTask} = useTasks();
 
     const {notifications} = useSelector((state) => state.notifications);
     const ref = useRef<any>(null);
@@ -88,14 +99,25 @@ const Notifications: FC = () => {
         handleReadNotifications();
     };
 
+    const handleNotificationClick = (notification: Notification): void => {
+        if (notification.task_id) {
+            handleClose();
+
+            // @ts-ignore
+            const task = tasks.find(task => task.id === notification.task_id);
+
+            if (task)
+                saveSelectedTask(task);
+        }
+    };
 
     return (
         <>
             <Tooltip
-                title="Notifications"
+                title='Notifications'
             >
                 <IconButton
-                    color="inherit"
+                    color='inherit'
                     ref={ref}
                     onClick={handleOpen}
                 >
@@ -115,28 +137,27 @@ const Notifications: FC = () => {
                     vertical: 'bottom',
                     horizontal: 'center'
                 }}
-                classes={{paper: classes.popover}}
+                classes={{paper: clsx(classes.popover, 'scroll')}}
                 anchorEl={ref.current}
                 onClose={handleClose}
                 open={isOpen}
             >
-                <Box p={2}>
-                    <Typography
-                        variant="h5"
-                        color="textPrimary"
-                    >
-                        Notifications
-                    </Typography>
-                </Box>
+                <Typography
+                    variant='h4'
+                    color='textPrimary'
+                    align='center'
+                    gutterBottom
+                >
+                    Notifications
+                </Typography>
                 {notifications.length === 0 ? (
-                    <Box p={2}>
-                        <Typography
-                            variant="h6"
-                            color="textPrimary"
-                        >
-                            You don't have notifications
-                        </Typography>
-                    </Box>
+                    <Typography
+                        variant='h6'
+                        color='textSecondary'
+                        align='center'
+                    >
+                        You don't have any notification
+                    </Typography>
                 ) : (
                     <>
                         <List disablePadding>
@@ -147,11 +168,10 @@ const Notifications: FC = () => {
                                     return (
                                         <ListItem
                                             button
-                                            className={clsx(notification.opened === false && classes.highlight)}
-                                            component={RouterLink}
+                                            className={clsx(classes.notification, notification.opened === false && classes.highlight)}
                                             divider
-                                            key={notification._id}
-                                            to="#"
+                                            key={notification.id}
+                                            onClick={() => handleNotificationClick(notification)}
                                         >
                                             <ListItemText
                                                 primary={titlesMap[notification.type]}
@@ -167,7 +187,7 @@ const Notifications: FC = () => {
                                                 }
                                             />
                                             {notification.opened === false && (
-                                                <SvgIcon htmlColor={theme.palette.info.main} fontSize="small">
+                                                <SvgIcon htmlColor={theme.palette.info.main} fontSize='small'>
                                                     <FiberManualRecord color='inherit'/>
                                                 </SvgIcon>
                                             )}
@@ -177,11 +197,11 @@ const Notifications: FC = () => {
                         </List>
                         <Box
                             p={1}
-                            display="flex"
-                            justifyContent="center"
+                            display='flex'
+                            justifyContent='center'
                         >
                             <Button
-                                size="small"
+                                size='small'
                                 onClick={handleDeleteNotifications}
                             >
                                 Delete all

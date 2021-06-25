@@ -1,5 +1,5 @@
 export interface Dataset {
-    _id: string;
+    id: string;
     user_id: string;
     created_at: string;
     name: string;

@@ -5,12 +5,7 @@ import {Link as RouterLink, matchPath, useLocation} from 'react-router-dom';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {Box, Chip, Divider, Drawer, Hidden, Link, List, ListSubheader, makeStyles, Typography} from '@material-ui/core';
 import {DeveloperBoard as AdminDashboardIcon} from '@material-ui/icons';
-import {
-    Activity as ActivityIcon,
-    Database as DatabaseIcon,
-    Package as PackageIcon,
-    Users as UsersIcon
-} from 'react-feather';
+import {Activity as ActivityIcon, Package as PackageIcon, Users as UsersIcon} from 'react-feather';
 import Logo from 'src/components/utils/Logo';
 import UserAvatar from 'src/components/UserAvatar';
 import useAuth from 'src/hooks/useAuth';

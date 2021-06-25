@@ -1,6 +1,6 @@
 import concurrent.futures
-from uuid import uuid4
 from typing import List
+from uuid import uuid4
 
 import boto3
 import cv2
@@ -59,7 +59,7 @@ def upload_file(payload) -> Image:
         image_bytes = cv2.imencode('.jpg', image)[1].tostring()
         path = upload_image(image_bytes, image_id)
         return Image(
-            _id=image_id,
+            id=image_id,
             dataset_id=dataset_id,
             path=path,
             name=name,
@@ -67,6 +67,21 @@ def upload_file(payload) -> Image:
             width=image.shape[1],
             height=image.shape[0],
         )
+
+
+def delete_images_from_s3(image_ids):
+    def getrows_byslice(array):
+        for start in range(0, len(array), 1000):
+            yield array[start:start + 1000]
+
+    try:
+        for image_ids_to_delete in getrows_byslice(image_ids):
+            s3.delete_objects(
+                Bucket=Config.S3_BUCKET,
+                Delete={'Objects': [{'Key': image_id} for image_id in image_ids_to_delete]}
+            )
+    except Exception as e:
+        raise errors.InternalError(f'Cannot delete file from S3, {str(e)}')
 
 
 def delete_image_from_s3(image_id):
@@ -79,16 +94,20 @@ def delete_image_from_s3(image_id):
         raise errors.InternalError(f'Cannot delete file from S3, {str(e)}')
 
 
-def find_images(dataset_id, offset, limit) -> List[Image]:
+def find_images(dataset_id, offset=0, limit=0) -> List[Image]:
     images = list(db.images
                   .find({'dataset_id': dataset_id})
                   .skip(offset)
                   .limit(limit))
+    if images is None:
+        raise errors.NotFound(errors.IMAGE_NOT_FOUND)
     return [Image.from_mongo(image) for image in images]
 
 
 def find_image(dataset_id, image_id) -> Image:
     image = db.images.find_one({'_id': image_id, 'dataset_id': dataset_id})
+    if image is None:
+        raise errors.NotFound(errors.IMAGE_NOT_FOUND)
     return Image.from_mongo(image)
 
 
