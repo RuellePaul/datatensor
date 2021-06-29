@@ -1,9 +1,9 @@
 import React, {FC, useCallback, useEffect, useState} from 'react';
 import clsx from 'clsx';
-import {Box, Button, Grid, makeStyles} from '@material-ui/core';
+import {Box, Button, Grid, makeStyles, Typography} from '@material-ui/core';
 import {Refresh} from '@material-ui/icons';
 import {Theme} from 'src/theme';
-import AugmentorPipeline from 'src/components/datatensor/AugmentorPipeline';
+import Pipeline from 'src/components/datatensor/Pipeline';
 import PipelineSample from 'src/components/datatensor/PipelineSample';
 import DTImage from 'src/components/datatensor/Image';
 import useImages from 'src/hooks/useImages';
@@ -13,6 +13,27 @@ import {Image} from 'src/types/image';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
+    header: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
+    title: {
+        position: 'relative',
+        '&:after': {
+            position: 'absolute',
+            bottom: -8,
+            left: 0,
+            content: '""',
+            height: 3,
+            width: 48,
+            backgroundColor: theme.palette.primary.main
+        }
+    },
+    wrapper: {
+        border: `solid 1px ${theme.palette.divider}`,
+        borderRadius: theme.spacing(0.5)
+    },
     refresh: {
         width: '100%',
         margin: theme.spacing(1, 'auto')
@@ -42,6 +63,31 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
 
     return (
         <div className={clsx(classes.root, className)}>
+            <div className={classes.header}>
+                <Typography
+                    className={classes.title}
+                    variant='h5'
+                    color='textPrimary'
+                >
+                    Operation pipeline
+                </Typography>
+
+                <Box display='flex'>
+                    <Button variant='contained' color='primary' size='small'>
+                        Augment images
+                    </Button>
+                </Box>
+            </div>
+
+            <Box my={2}>
+                <Typography
+                    color='textSecondary'
+                    gutterBottom
+                >
+                    Choose operations pipeline that fit the best for your dataset.
+                </Typography>
+            </Box>
+
             <ImageProvider
                 image={randomImage}
             >
@@ -51,29 +97,63 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                 >
                     <Grid
                         item
-                        sm={4}
+                        md={3}
+                        sm={6}
                         xs={12}
                     >
-                        <Button
-                            className={classes.refresh}
-                            onClick={pickRandomImage}
-                            startIcon={<Refresh/>}
-                            size='small'
+                        <Typography
+                            variant='overline'
+                            color='textPrimary'
+                            align='center'
+                            gutterBottom
                         >
-                            Random image
-                        </Button>
+                            Input image
+                        </Typography>
 
-                        <DTImage/>
+                        <div className={classes.wrapper}>
+                            <Button
+                                className={classes.refresh}
+                                onClick={pickRandomImage}
+                                startIcon={<Refresh/>}
+                                size='small'
+                            >
+                                Random image
+                            </Button>
 
-                        <Box mt={3}>
-                            <AugmentorPipeline/>
-                        </Box>
+                            <DTImage/>
+                        </div>
                     </Grid>
                     <Grid
                         item
-                        sm={8}
+                        md={3}
+                        sm={6}
                         xs={12}
                     >
+                        <Typography
+                            variant='overline'
+                            color='textPrimary'
+                            align='center'
+                            gutterBottom
+                        >
+                            Operation pipeline
+                        </Typography>
+
+                        <Pipeline/>
+                    </Grid>
+                    <Grid
+                        item
+                        md={6}
+                        xs={12}
+                    >
+                        <Typography
+                            variant='overline'
+                            color='textPrimary'
+                            align='center'
+                            gutterBottom
+                        >
+                            Sample
+                        </Typography>
+
                         <PipelineSample/>
                     </Grid>
                 </Grid>

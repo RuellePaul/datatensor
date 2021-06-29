@@ -51,7 +51,7 @@ def retrieve_label_from_ellipsis(image) -> Union[Label, None]:
     return label
 
 
-class AugmentorPipeline(DataPipeline):
+class Pipeline(DataPipeline):
 
     def __init__(self, image: Image, labels: List[Label]):
         self.image = image
@@ -92,7 +92,10 @@ class AugmentorPipeline(DataPipeline):
 
 
 def perform_augmentation(image: Image, labels: List[Label], operations: List[Operation]):
-    pipeline = AugmentorPipeline(image, labels)
+    pipeline = Pipeline(image, labels)
     for operation in operations:
         getattr(pipeline, operation.type)(probability=operation.probability, **operation.properties)
-    return pipeline.sample(4)
+    if image.width > image.height:
+        return pipeline.sample(4)
+    else:
+        return pipeline.sample(3)

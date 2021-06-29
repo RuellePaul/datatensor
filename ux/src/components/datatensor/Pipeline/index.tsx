@@ -6,7 +6,7 @@ import {makeStyles} from '@material-ui/core';
 import type {Theme} from 'src/theme';
 import {useDispatch} from 'src/store';
 import {moveOperation, setDefaultPipeline} from 'src/slices/pipeline';
-import Pipeline from './Pipeline';
+import OperationsPipeline from './OperationsPipeline';
 
 const useStyles = makeStyles((theme: Theme) => ({
     content: {
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const AugmentorPipeline: FC = () => {
+const Pipeline: FC = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
@@ -58,10 +58,10 @@ const AugmentorPipeline: FC = () => {
     return (
         <DragDropContext onDragEnd={handleDragEnd}>
             <div className={classes.content}>
-                <Pipeline/>
+                <OperationsPipeline/>
             </div>
         </DragDropContext>
     );
 };
 
-export default AugmentorPipeline;
+export default Pipeline;

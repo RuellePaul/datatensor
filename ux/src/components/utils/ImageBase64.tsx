@@ -7,7 +7,7 @@ import {drawLabels, reset} from 'src/utils/labeling';
 import useDataset from 'src/hooks/useDataset';
 
 interface ImageBase64Props {
-    base64string: string;
+    imageBase64: string;
     labels: Label[];
     className?: string;
 
@@ -17,6 +17,7 @@ interface ImageBase64Props {
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         position: 'relative',
+        border: `solid 1px ${theme.palette.divider}`,
         '&:hover img': {
             boxShadow: theme.shadows[6],
             opacity: 0.85
@@ -28,11 +29,11 @@ const useStyles = makeStyles((theme: Theme) => ({
         left: 0,
         width: '100%',
         height: '100%',
-        zIndex: 1,
+        zIndex: 1
     },
 }));
 
-const ImageBase64: FC<ImageBase64Props> = ({base64string, labels, className, ...props}) => {
+const ImageBase64: FC<ImageBase64Props> = ({imageBase64, labels, className, ...props}) => {
 
     const classes = useStyles();
 
@@ -61,9 +62,9 @@ const ImageBase64: FC<ImageBase64Props> = ({base64string, labels, className, ...
             {...props}
         >
             <img
-                src={`data:image/png;base64, ${base64string}`}
+                src={`data:image/png;base64, ${imageBase64}`}
                 alt='Augmented sample'
-                width="100%"
+                width='100%'
                 draggable={false}
                 onLoad={handleLoad}
                 ref={imageRef}

@@ -1,7 +1,7 @@
 import React, {FC, useCallback, useEffect, useState} from 'react';
 import {useParams} from 'react-router';
 import clsx from 'clsx';
-import {Grid, LinearProgress, makeStyles, Typography} from '@material-ui/core';
+import {CircularProgress, Grid, makeStyles, Typography} from '@material-ui/core';
 import type {Theme} from 'src/theme';
 import {useSelector} from 'src/store';
 import {Operation} from 'src/types/pipeline';
@@ -78,17 +78,17 @@ const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
                             >
                                 Computing....
                             </Typography>
-                            <LinearProgress variant='query'/>
+                            <CircularProgress/>
                         </Grid>
                     ) : (
                         imagesBase64.map((imageBase64, index) => (
                             <Grid
                                 key={index}
                                 item
-                                xs={6}
+                                xs={image.width > image.height ? 6 : 4}
                             >
                                 <ImageBase64
-                                    base64string={imageBase64}
+                                    imageBase64={imageBase64}
                                     labels={imagesLabels[index]}
                                 />
                             </Grid>
