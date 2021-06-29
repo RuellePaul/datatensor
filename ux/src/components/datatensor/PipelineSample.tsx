@@ -10,6 +10,7 @@ import api from 'src/utils/api';
 import ImageBase64 from 'src/components/utils/ImageBase64';
 import {Label} from 'src/types/label';
 import {useSnackbar} from 'notistack';
+import wait from 'src/utils/wait';
 
 interface PipelineSampleProps {
     className?: string;
@@ -39,6 +40,8 @@ const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
             const operations: Operation[] = pipeline.operations.allIds.map(id => pipeline.operations.byId[id])
 
             try {
+                await wait(0);
+
                 const response = await api.post<{ images: string[], images_labels: Label[][] }>('/augmentor/sample', {
                     dataset_id,
                     image_id,
