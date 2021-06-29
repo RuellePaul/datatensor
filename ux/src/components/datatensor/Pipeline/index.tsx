@@ -8,6 +8,10 @@ import {useDispatch} from 'src/store';
 import {moveOperation, setDefaultPipeline} from 'src/slices/pipeline';
 import OperationsPipeline from './OperationsPipeline';
 
+interface PipelineProps {
+
+}
+
 const useStyles = makeStyles((theme: Theme) => ({
     content: {
         width: '100%',
@@ -18,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const Pipeline: FC = () => {
+const Pipeline: FC<PipelineProps> = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
 

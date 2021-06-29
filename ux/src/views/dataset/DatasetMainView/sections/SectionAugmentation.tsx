@@ -1,7 +1,22 @@
 import React, {FC, useCallback, useEffect, useState} from 'react';
 import clsx from 'clsx';
-import {Box, Button, Grid, makeStyles, Typography} from '@material-ui/core';
-import {Refresh} from '@material-ui/icons';
+import {Formik} from 'formik';
+import * as Yup from 'yup';
+import {useSnackbar} from 'notistack';
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    FormHelperText,
+    Grid,
+    IconButton,
+    makeStyles,
+    TextField,
+    Typography
+} from '@material-ui/core';
+import {Close as CloseIcon, Refresh} from '@material-ui/icons';
 import {Theme} from 'src/theme';
 import Pipeline from 'src/components/datatensor/Pipeline';
 import PipelineSample from 'src/components/datatensor/PipelineSample';
@@ -9,6 +24,7 @@ import DTImage from 'src/components/datatensor/Image';
 import useImages from 'src/hooks/useImages';
 import {ImageProvider} from 'src/store/ImageContext';
 import {SectionProps} from './SectionProps';
+import {Alert} from '@material-ui/lab';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
@@ -36,6 +52,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     refresh: {
         width: '100%',
         margin: theme.spacing(1, 'auto')
+    },
+    dialog: {
+        padding: theme.spacing(1, 2, 2)
+    },
+    close: {
+        position: 'absolute',
+        right: theme.spacing(1),
+        top: theme.spacing(1),
+        color: theme.palette.grey[500]
     }
 }));
 
@@ -43,10 +68,21 @@ const useStyles = makeStyles((theme: Theme) => ({
 const SectionAugmentation: FC<SectionProps> = ({className}) => {
 
     const classes = useStyles();
+    const {enqueueSnackbar} = useSnackbar();
 
     const {images} = useImages();
 
     const [randomIndex, setRandomIndex] = useState<number | null>(0);
+
+    const [openAugmentation, setOpenAugmentation] = useState<boolean>(false);
+
+    const handleOpen = () => {
+        setOpenAugmentation(true);
+    }
+
+    const handleClose = () => {
+        setOpenAugmentation(false);
+    }
 
     const pickRandomImage = useCallback(() => {
         if (images) {
@@ -74,11 +110,18 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                     variant='h5'
                     color='textPrimary'
                 >
-                    Operation pipeline
+                    Operations pipeline
                 </Typography>
 
-                <Box display='flex'>
-                    <Button variant='contained' color='primary' size='small'>
+                <Box
+                    display='flex'
+                >
+                    <Button
+                        variant='contained'
+                        color='primary'
+                        size='small'
+                        onClick={handleOpen}
+                    >
                         Augment images
                     </Button>
                 </Box>
@@ -141,7 +184,7 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                             align='center'
                             gutterBottom
                         >
-                            Operation pipeline
+                            Operations pipeline
                         </Typography>
 
                         <Pipeline/>
@@ -164,6 +207,169 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                     </Grid>
                 </Grid>
             </ImageProvider>
+
+            <Dialog
+                closeAfterTransition
+                disableRestoreFocus
+                PaperProps={{
+                    className: classes.dialog
+                }}
+                fullWidth
+                maxWidth='sm'
+                open={openAugmentation}
+                onClose={handleClose}
+            >
+                <DialogTitle
+                    className='flex'
+                    disableTypography
+                >
+                    <Typography variant='h4'>
+                        Augmentation
+                    </Typography>
+
+                    <IconButton
+                        className={classes.close}
+                        onClick={handleClose}
+                    >
+                        <CloseIcon/>
+                    </IconButton>
+                </DialogTitle>
+                <DialogContent
+                    className='scroll'
+                >
+                    <Grid
+                        container
+                        spacing={2}
+                    >
+                        <Grid
+                            item
+                            sm={6}
+                            xs={12}
+                        >
+                            <Formik
+                                initialValues={{
+                                    image_count: images.length * 2,
+                                    submit: null
+                                }}
+                                validationSchema={Yup.object().shape({
+                                    image_count: Yup.number().min(1).max(10 * images.length),
+                                })}
+                                onSubmit={async (values, {
+                                    setErrors,
+                                    setStatus,
+                                    setSubmitting
+                                }) => {
+                                    try {
+                                        console.info(values);
+
+                                        setStatus({success: true});
+                                        setSubmitting(false);
+                                        enqueueSnackbar('Augmentation task created', {variant: 'info'});
+                                    } catch (err) {
+                                        console.error(err);
+                                        setStatus({success: false});
+                                        setErrors({submit: err.message});
+                                        setSubmitting(false);
+                                    }
+                                }}
+                            >
+                                {({
+                                      errors,
+                                      handleBlur,
+                                      handleChange,
+                                      handleSubmit,
+                                      isSubmitting,
+                                      touched,
+                                      values
+                                  }) => (
+                                    <form
+                                        onSubmit={handleSubmit}
+                                        className={clsx(classes.root, className)}
+                                    >
+                                        <Typography
+                                            variant='overline'
+                                            color='textPrimary'
+                                            align='center'
+                                            gutterBottom
+                                        >
+                                            Properties
+                                        </Typography>
+
+                                        <Box my={1}>
+                                            <TextField
+                                                error={Boolean(touched.image_count && errors.image_count)}
+                                                helperText={touched.image_count && errors.image_count}
+                                                fullWidth
+                                                label='Image count'
+                                                name='image_count'
+                                                onBlur={handleBlur}
+                                                onChange={handleChange}
+                                                type='number'
+                                                value={values.image_count}
+                                                variant='outlined'
+                                            />
+                                        </Box>
+
+                                        <Box mt={2} mb={3}>
+                                            <Alert
+                                                severity='info'
+                                            >
+                                                There are
+                                                {' '}
+                                                <strong>
+                                                    {images.length} original images
+                                                </strong>
+                                                {' '}
+                                                in your dataset, so you can generate up to
+                                                {' '}
+                                                <strong>
+                                                    {images.length * 10} new images
+                                                </strong>
+                                                .
+                                            </Alert>
+                                        </Box>
+
+                                        {errors.submit && (
+                                            <Box mt={3}>
+                                                <FormHelperText error>
+                                                    {errors.submit}
+                                                </FormHelperText>
+                                            </Box>
+                                        )}
+
+                                        <Box mt={2}>
+                                            <Button
+                                                color='secondary'
+                                                variant='contained'
+                                                type='submit'
+                                                disabled={isSubmitting}
+                                            >
+                                                Create task
+                                            </Button>
+                                        </Box>
+                                    </form>
+                                )}
+                            </Formik>
+                        </Grid>
+                        <Grid
+                            item
+                            sm={6}
+                            xs={12}
+                        >
+                            <Typography
+                                variant='overline'
+                                color='textPrimary'
+                                align='center'
+                                gutterBottom
+                            >
+                                Operations pipeline
+                            </Typography>
+
+                            <Pipeline/>
+                        </Grid>
+                    </Grid>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 };

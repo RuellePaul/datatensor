@@ -96,15 +96,13 @@ const OperationEditModal: FC<OperationEditModalProps> = ({
                     operation={operation}
                 />
 
-                <OperationProperties
-                    operation={operation}
-                />
-
                 <Box
                     my={1}
-                    bgcolor='background.dark'
                 >
-                    <Alert severity='info'>
+                    <Alert
+                        severity='info'
+                        variant='filled'
+                    >
                         <AlertTitle>
                             Informations
                         </AlertTitle>
@@ -112,6 +110,9 @@ const OperationEditModal: FC<OperationEditModalProps> = ({
                     </Alert>
                 </Box>
 
+                <OperationProperties
+                    operation={operation}
+                />
             </DialogContent>
 
             <DialogActions>
