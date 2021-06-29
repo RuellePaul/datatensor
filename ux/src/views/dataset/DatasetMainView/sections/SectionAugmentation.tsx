@@ -9,7 +9,6 @@ import DTImage from 'src/components/datatensor/Image';
 import useImages from 'src/hooks/useImages';
 import {ImageProvider} from 'src/store/ImageContext';
 import {SectionProps} from './SectionProps';
-import {Image} from 'src/types/image';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
@@ -47,19 +46,25 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
 
     const {images} = useImages();
 
-    const [randomImage, setRandomImage] = useState<Image | null>(null);
+    const [randomIndex, setRandomIndex] = useState<number | null>(0);
 
     const pickRandomImage = useCallback(() => {
-        setRandomImage(images[Math.floor(Math.random() * images.length)])
-    }, [images]);
+        if (images) {
+            let random = Math.floor(Math.random() * images.length);
+
+            while (random === randomIndex) {
+                random = Math.floor(Math.random() * images.length);
+            }
+
+            setRandomIndex(random);
+        }
+    }, [images, randomIndex]);
 
     useEffect(() => {
         pickRandomImage();
 
-    }, [pickRandomImage]);
-
-    if (!randomImage)
-        return null;
+        // eslint-disable-next-line
+    }, [images]);
 
     return (
         <div className={clsx(classes.root, className)}>
@@ -89,7 +94,7 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
             </Box>
 
             <ImageProvider
-                image={randomImage}
+                image={images[randomIndex]}
             >
                 <Grid
                     container
@@ -116,6 +121,7 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                                 onClick={pickRandomImage}
                                 startIcon={<Refresh/>}
                                 size='small'
+                                disabled={images.length < 2}
                             >
                                 Random image
                             </Button>

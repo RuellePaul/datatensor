@@ -40,7 +40,7 @@ const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
             const operations: Operation[] = pipeline.operations.allIds.map(id => pipeline.operations.byId[id])
 
             try {
-                await wait(0);
+                await wait(10);
 
                 const response = await api.post<{ images: string[], images_labels: Label[][] }>('/augmentor/sample', {
                     dataset_id,
