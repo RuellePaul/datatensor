@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends
 
 import errors
 from dependencies import logged_user
-from routers.augmentor.core import perform_augmentation
+from routers.augmentor.core import perform_sample
 from routers.augmentor.models import SampleBody
 from routers.datasets.core import find_dataset
 from routers.images.core import find_image
@@ -32,7 +32,7 @@ async def augmentor_sample(payload: SampleBody, user: User = Depends(logged_user
     image = find_image(dataset_id, image_id)
     labels = find_labels(image_id, offset=0, limit=0)
 
-    augmented_images, augmented_labels = perform_augmentation(
+    augmented_images, augmented_labels = perform_sample(
         image,
         labels,
         operations

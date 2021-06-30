@@ -4,6 +4,7 @@ from typing import List, Optional, Union
 
 from pydantic import BaseModel, Field
 
+from routers.augmentor.models import Operation
 from routers.datasources.models import DatasourceKey
 from utils import MongoModel
 
@@ -28,6 +29,7 @@ class TaskGeneratorProperties(BaseModel):
 
 class TaskAugmentorProperties(BaseModel):
     image_count: int
+    operations: List[Operation]
 
 
 TaskProperties = Union[TaskGeneratorProperties, TaskAugmentorProperties]

@@ -29,6 +29,8 @@ import api from 'src/utils/api';
 import {Task} from 'src/types/task';
 import useTasks from 'src/hooks/useTasks';
 import useDataset from 'src/hooks/useDataset';
+import {useSelector} from 'src/store';
+import {Operation} from 'src/types/pipeline';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
@@ -91,7 +93,7 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
     }
 
     const pickRandomImage = useCallback(() => {
-        if (images) {
+        if (images && images.length > 1) {
             let random = Math.floor(Math.random() * images.length);
 
             while (random === randomIndex) {
@@ -107,6 +109,9 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
 
         // eslint-disable-next-line
     }, [images]);
+
+    const pipeline = useSelector<any>((state) => state.pipeline);
+    const operations: Operation[] = pipeline.operations.allIds.map(id => pipeline.operations.byId[id]);
 
     return (
         <div className={clsx(classes.root, className)}>
@@ -254,11 +259,11 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                         >
                             <Formik
                                 initialValues={{
-                                    image_count: images.length * 2,
+                                    image_count: dataset.image_count * 2,
                                     submit: null
                                 }}
                                 validationSchema={Yup.object().shape({
-                                    image_count: Yup.number().min(1).max(10 * images.length),
+                                    image_count: Yup.number().min(1).max(10 * dataset.image_count),
                                 })}
                                 onSubmit={async (values, {
                                     setErrors,
@@ -268,7 +273,10 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                                     try {
                                         const response = await api.post<{ task: Task }>(`/datasets/${dataset.id}/tasks/`, {
                                             type: 'augmentor',
-                                            properties: values
+                                            properties: {
+                                                operations,
+                                                image_count: values.image_count
+                                            }
                                         });
                                         saveTasks(tasks => [...tasks, response.data.task]);
 
@@ -327,13 +335,13 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                                                 There are
                                                 {' '}
                                                 <strong>
-                                                    {images.length} original images
+                                                    {dataset.image_count} original images
                                                 </strong>
                                                 {' '}
                                                 in your dataset, so you can generate up to
                                                 {' '}
                                                 <strong>
-                                                    {images.length * 10} new images
+                                                    {dataset.image_count * 10} new images
                                                 </strong>
                                                 .
                                             </Alert>

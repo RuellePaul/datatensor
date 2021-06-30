@@ -24,7 +24,7 @@ class Operation(BaseModel):
     id: str
     type: OperationType
     probability: float
-    properties: dict
+    properties: dict  # TODO: add OperationProperties type
 
 
 class SampleBody(BaseModel):

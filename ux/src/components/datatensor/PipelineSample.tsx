@@ -36,7 +36,7 @@ const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
     const doSample = useCallback(async () => {
         setImagesBase64(null);
 
-        if (pipeline.isLoaded) {
+        if (dataset_id && image_id && pipeline.isLoaded) {
             const operations: Operation[] = pipeline.operations.allIds.map(id => pipeline.operations.byId[id])
 
             try {
@@ -56,7 +56,9 @@ const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
                 enqueueSnackbar((error.message) || 'Something went wrong', {variant: 'error'});
             }
         }
-    }, [pipeline, dataset_id, image_id, enqueueSnackbar])
+
+        // eslint-disable-next-line
+    }, [pipeline, dataset_id, image_id])
 
     useEffect(() => {
         doSample()

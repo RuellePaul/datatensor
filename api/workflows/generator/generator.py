@@ -43,7 +43,6 @@ def _process_image(args):
             return
         image_bytes = response.content
         path = upload_image(image_bytes, image_id)
-        increment_task_progress(task_id, 1 / image_count)
         saved_image = {
             '_id': image_id,
             'dataset_id': dataset_id,
@@ -73,6 +72,7 @@ def _process_image(args):
 
         db.images.insert_one(saved_image)
         db.labels.insert_many(labels)
+        increment_task_progress(task_id, 1 / image_count)
 
 
 def _filter_annotations(json_remote_dataset, selected_categories, image_count=None):

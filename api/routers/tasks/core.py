@@ -60,12 +60,12 @@ def insert_task(user, dataset_id, task_type, properties) -> Task:
         properties=properties
     )
 
+    db.tasks.insert_one(task.mongo())
+
     if task.type == 'generator':
-        run_generator.delay(task.user_id, task.id, properties=task.properties)
+        run_generator.delay(user.id, task.id, properties=task.properties)
 
     if task.type == 'augmentor':
-        run_augmentor.delay(task.user_id, task.id, properties=task.properties)
-
-    db.tasks.insert_one(task.mongo())
+        run_augmentor.delay(user.id, task.id, dataset_id, properties=task.properties)
 
     return task

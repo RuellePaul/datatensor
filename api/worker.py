@@ -25,6 +25,10 @@ class CeleryConfig:
 app.config_from_object(CeleryConfig)
 
 
+# Enable debugger
+# app.conf.CELERY_ALWAYS_EAGER = True
+# app.conf.CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
+
 def handle_task_error(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
@@ -51,6 +55,7 @@ def handle_task_error(func):
                                                 task_id=task_id)
             insert_notification(user_id=user_id, notification=notification)
             return result
+
     return wrapper
 
 
@@ -62,5 +67,5 @@ def run_generator(user_id, task_id, properties):
 
 @app.task
 @handle_task_error
-def run_augmentor(user_id, task_id, properties):
-    augmentor.main(user_id, task_id, properties)
+def run_augmentor(user_id, task_id, dataset_id, properties):
+    augmentor.main(user_id, task_id, dataset_id, properties)
