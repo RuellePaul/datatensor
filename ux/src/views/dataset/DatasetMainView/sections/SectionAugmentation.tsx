@@ -17,6 +17,7 @@ import {
     Typography
 } from '@material-ui/core';
 import {Close as CloseIcon, Refresh} from '@material-ui/icons';
+import {Alert} from '@material-ui/lab';
 import {Theme} from 'src/theme';
 import Pipeline from 'src/components/datatensor/Pipeline';
 import PipelineSample from 'src/components/datatensor/PipelineSample';
@@ -24,7 +25,10 @@ import DTImage from 'src/components/datatensor/Image';
 import useImages from 'src/hooks/useImages';
 import {ImageProvider} from 'src/store/ImageContext';
 import {SectionProps} from './SectionProps';
-import {Alert} from '@material-ui/lab';
+import api from 'src/utils/api';
+import {Task} from 'src/types/task';
+import useTasks from 'src/hooks/useTasks';
+import useDataset from 'src/hooks/useDataset';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
@@ -70,7 +74,9 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
 
+    const {dataset} = useDataset();
     const {images} = useImages();
+    const {saveTasks} = useTasks();
 
     const [randomIndex, setRandomIndex] = useState<number | null>(0);
 
@@ -260,7 +266,11 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                                     setSubmitting
                                 }) => {
                                     try {
-                                        console.info(values);
+                                        const response = await api.post<{ task: Task }>(`/datasets/${dataset.id}/tasks/`, {
+                                            type: 'augmentor',
+                                            properties: values
+                                        });
+                                        saveTasks(tasks => [...tasks, response.data.task]);
 
                                         setStatus({success: true});
                                         setSubmitting(false);

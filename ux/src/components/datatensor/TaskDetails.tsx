@@ -16,7 +16,7 @@ import {
 } from '@material-ui/core';
 import {Close as CloseIcon} from '@material-ui/icons';
 import {Theme} from 'src/theme';
-import {TaskGeneratorProperties, TaskStatus} from 'src/types/task';
+import {TaskGeneratorProperties, TaskAugmentorProperties, TaskStatus} from 'src/types/task';
 import {UserConsumer, UserProvider} from 'src/store/UserContext';
 import {DatasetConsumer, DatasetProvider} from 'src/store/DatasetContext';
 import useTasks from 'src/hooks/useTasks';
@@ -36,6 +36,10 @@ interface TaskStatusProps {
 
 interface GeneratorProperties {
     properties: TaskGeneratorProperties
+}
+
+interface AugmentorProperties {
+    properties: TaskAugmentorProperties
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -153,6 +157,21 @@ const GeneratorProperties: FC<GeneratorProperties> = ({properties}) => {
     )
 };
 
+
+const AugmentorProperties: FC<AugmentorProperties> = ({properties}) => {
+
+    return (
+        <>
+            <Typography
+                color='textPrimary'
+                gutterBottom
+            >
+                Augmentation up to <strong>{properties.image_count}</strong> images
+            </Typography>
+        </>
+    )
+};
+
 const TaskDetails: FC<TaskDetailsProps> = () => {
 
     const classes = useStyles();
@@ -196,7 +215,7 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                         <DialogContent
                             className='scroll'
                         >
-                            {task.status === 'active' && (
+                            {(task.status === 'pending' || task.status === 'active') && (
                                 <Box
                                     display='flex'
                                     alignItems='center'
@@ -232,7 +251,16 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                                     </Typography>
                                     {
                                         task.type === 'generator' && (
-                                            <GeneratorProperties properties={task.properties}/>
+                                            <GeneratorProperties
+                                                properties={task.properties as TaskGeneratorProperties}
+                                            />
+                                        )
+                                    }
+                                    {
+                                        task.type === 'augmentor' && (
+                                            <AugmentorProperties
+                                                properties={task.properties as TaskAugmentorProperties}
+                                            />
                                         )
                                     }
                                     <Box mt={2}>

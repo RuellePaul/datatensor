@@ -8,8 +8,12 @@ export interface TaskGeneratorProperties {
     image_count: number
 }
 
+export interface TaskAugmentorProperties {
+    image_count: number
+}
 
-export type TaskProperties = TaskGeneratorProperties
+
+export type TaskProperties = TaskGeneratorProperties | TaskAugmentorProperties
 
 export interface Task {
     id: string;

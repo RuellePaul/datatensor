@@ -27,7 +27,7 @@ class TaskGeneratorProperties(BaseModel):
 
 
 class TaskAugmentorProperties(BaseModel):
-    pass
+    image_count: int
 
 
 TaskProperties = Union[TaskGeneratorProperties, TaskAugmentorProperties]
