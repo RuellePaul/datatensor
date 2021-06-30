@@ -6,7 +6,7 @@ import errors
 from config import Config
 from routers.datasets.core import find_datasets
 from routers.tasks.models import Task, TaskStatus
-from worker import generator
+from worker import run_generator, run_augmentor
 
 db = Config.db
 
@@ -59,9 +59,13 @@ def insert_task(user, dataset_id, task_type, properties) -> Task:
         progress=0,
         properties=properties
     )
-    db.tasks.insert_one(task.mongo())
 
     if task.type == 'generator':
-        generator.delay(task.user_id, task.id, properties=task.properties)
+        run_generator.delay(task.user_id, task.id, properties=task.properties)
+
+    if task.type == 'augmentor':
+        run_augmentor.delay(task.user_id, task.id, properties=task.properties)
+
+    db.tasks.insert_one(task.mongo())
 
     return task

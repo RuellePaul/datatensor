@@ -60,8 +60,9 @@ const Actions: FC = () => {
                         if (isMountedRef.current) {
                             setStatus({success: true});
                             setSubmitting(false);
-                            enqueueSnackbar(`Datasets deleted`, {variant: 'success'});
                         }
+
+                        window.location.reload();
                     } catch (error) {
                         console.error(error);
                         if (isMountedRef.current) {
