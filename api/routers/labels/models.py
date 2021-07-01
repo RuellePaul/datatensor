@@ -6,11 +6,11 @@ from utils import BaseModel, MongoModel
 
 class Label(MongoModel):
     id: str = Field()
-    image_id: str
     x: float
     y: float
     w: float
     h: float
+    image_id: Optional[str] = None
     category_id: Optional[str] = None
 
 
