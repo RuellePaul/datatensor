@@ -47,7 +47,7 @@ const SectionImages: FC<SectionProps> = ({className}) => {
 
     const classes = useStyles();
 
-    const {dataset} = useDataset();
+    const {dataset, pipelines} = useDataset();
 
     const {images} = useImages();
 
@@ -120,6 +120,17 @@ const SectionImages: FC<SectionProps> = ({className}) => {
                     </Typography>
                 </Box>
             </Button>
+
+            {pipelines.map(pipeline => (
+                <Button className={classes.expandWrapper}>
+                    <ArrowDownIcon fontSize='large'/>
+                    <Box ml={1} mr={3}>
+                        <Typography variant='overline'>
+                            Augmented images ({imagesCount} / {pipeline.image_count})
+                        </Typography>
+                    </Box>
+                </Button>
+            ))}
 
             <DTImagesList/>
         </div>

@@ -32,10 +32,14 @@ class Operation(BaseModel):
 class Pipeline(MongoModel):
     id: str = Field()
     dataset_id: str
+    image_count: int
     operations: List[Operation]
 
 
+class PipelinesResponse(BaseModel):
+    pipelines: List[Pipeline]
+
+
 class SampleBody(BaseModel):
-    dataset_id: str
     image_id: str
     operations: List[Operation]

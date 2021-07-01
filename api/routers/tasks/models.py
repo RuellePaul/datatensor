@@ -4,7 +4,7 @@ from typing import List, Optional, Union
 
 from pydantic import BaseModel, Field
 
-from routers.augmentor.models import Operation
+from routers.pipelines.models import Operation
 from routers.datasources.models import DatasourceKey
 from utils import MongoModel
 

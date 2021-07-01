@@ -84,4 +84,5 @@ export interface Operation {
 
 export interface Pipeline {
     operations: Operation[];
+    image_count?: number;
 }

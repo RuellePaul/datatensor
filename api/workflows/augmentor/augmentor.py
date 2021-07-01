@@ -7,8 +7,8 @@ from Augmentor import DataPipeline
 from PIL import Image as PILImage
 
 from config import Config
-from routers.augmentor.core import from_image_path, draw_ellipsis, retrieve_label_from_ellipsis
-from routers.augmentor.models import Pipeline
+from routers.pipelines.core import from_image_path, draw_ellipsis, retrieve_label_from_ellipsis
+from routers.pipelines.models import Pipeline
 from routers.images.core import find_images, upload_image
 from routers.images.models import Image
 from routers.labels.core import find_labels
@@ -33,7 +33,8 @@ class AugmentorPipeline(DataPipeline):
         pipeline = Pipeline(
             id=pipeline_id,
             dataset_id=self.dataset_id,
-            operations=self.properties.operations
+            operations=self.properties.operations,
+            image_count=self.properties.image_count
         )
         db.pipelines.insert_one(pipeline.mongo())
 

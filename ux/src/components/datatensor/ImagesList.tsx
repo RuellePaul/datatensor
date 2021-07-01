@@ -108,7 +108,7 @@ const DTImagesList: FC<ImagesListProps> = ({
     const classes = useStyles();
     const theme = useTheme();
 
-    const {dataset, saveDataset} = useDataset();
+    const {dataset, saveDataset, pipelines} = useDataset();
     const {images, saveImages, saveOffset} = useImages();
 
     const [open, setOpen] = useState(false);

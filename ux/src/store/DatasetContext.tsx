@@ -4,12 +4,15 @@ import {Dataset} from 'src/types/dataset';
 import api from 'src/utils/api';
 import {Box, CircularProgress} from '@material-ui/core';
 import useTasks from 'src/hooks/useTasks';
+import {Pipeline} from 'src/types/pipeline';
 
 export interface DatasetContextValue {
     dataset: Dataset;
     saveDataset: (update: Dataset | ((dataset: Dataset) => Dataset)) => void;
     categories: Category[];
     saveCategories: (update: Category[] | ((update: Category[]) => Category[])) => void;
+    pipelines: Pipeline[];
+    savePipelines: (update: Pipeline[] | ((update: Pipeline[]) => Pipeline[])) => void;
     isWorking: boolean;
 }
 
@@ -25,6 +28,9 @@ export const DatasetContext = createContext<DatasetContextValue>({
     categories: [],
     saveCategories: () => {
     },
+    pipelines: [],
+    savePipelines: () => {
+    },
     isWorking: false
 });
 
@@ -34,6 +40,7 @@ export const DatasetProvider: FC<DatasetProviderProps> = ({dataset_id, children}
 
     const [currentDataset, setCurrentDataset] = useState<Dataset>(null);
     const [currentCategories, setCurrentCategories] = useState<Category[]>([]);
+    const [currentPipelines, setCurrentPipelines] = useState<Pipeline[]>([]);
     const [isWorking, setIsWorking] = useState<boolean>(false);
 
     const handleSaveDataset = (update: Dataset | ((dataset: Dataset) => Dataset)): void => {
@@ -64,10 +71,25 @@ export const DatasetProvider: FC<DatasetProviderProps> = ({dataset_id, children}
 
     }, [dataset_id]);
 
+    const handleSavePipelines = (update: Pipeline[] | ((update: Pipeline[]) => Pipeline[])): void => {
+        setCurrentPipelines(update);
+    };
+
+    const fetchPipelines = useCallback(async () => {
+        try {
+            const response = await api.get<{ pipelines: Pipeline[] }>(`/datasets/${dataset_id}/pipelines/`);
+            handleSavePipelines(response.data.pipelines);
+        } catch (err) {
+            console.error(err);
+        }
+
+    }, [dataset_id]);
+
     useEffect(() => {
         fetchDataset();
         fetchCategories();
-    }, [fetchDataset, fetchCategories]);
+        fetchPipelines();
+    }, [fetchDataset, fetchCategories, fetchPipelines]);
 
     useEffect(() => {
         if (tasks !== null) {
@@ -93,6 +115,8 @@ export const DatasetProvider: FC<DatasetProviderProps> = ({dataset_id, children}
                 saveDataset: handleSaveDataset,
                 categories: currentCategories,
                 saveCategories: handleSaveCategories,
+                pipelines: currentPipelines,
+                savePipelines: handleSavePipelines,
                 isWorking: isWorking
             }}
         >

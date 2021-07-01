@@ -42,8 +42,7 @@ const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
             try {
                 await wait(10);
 
-                const response = await api.post<{ images: string[], images_labels: Label[][] }>('/augmentor/sample', {
-                    dataset_id,
+                const response = await api.post<{ images: string[], images_labels: Label[][] }>(`/datasets/${dataset_id}/pipelines/sample`, {
                     image_id,
                     operations
                 })
