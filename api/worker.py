@@ -25,10 +25,6 @@ class CeleryConfig:
 app.config_from_object(CeleryConfig)
 
 
-# Enable debugger
-# app.conf.CELERY_ALWAYS_EAGER = True
-# app.conf.CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
-
 def handle_task_error(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):

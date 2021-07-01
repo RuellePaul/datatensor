@@ -8,6 +8,7 @@ from PIL import Image as PILImage
 
 from config import Config
 from routers.augmentor.core import from_image_path, draw_ellipsis, retrieve_label_from_ellipsis
+from routers.augmentor.models import Pipeline
 from routers.images.core import find_images, upload_image
 from routers.images.models import Image
 from routers.labels.core import find_labels
@@ -17,17 +18,26 @@ from utils import update_task, increment_task_progress
 db = Config.db
 
 
-class Pipeline(DataPipeline):
+class AugmentorPipeline(DataPipeline):
 
-    def __init__(self, task_id, dataset_id):
+    def __init__(self, task_id, dataset_id, properties):
         self.task_id = task_id
         self.dataset_id = dataset_id
         self.images = find_images(dataset_id)
         self.labels = [find_labels(image.id) for image in self.images]
+        self.properties = properties
         super().__init__(self.images, self.labels)
 
-    def sample(self, image_count):
-        for index in range(image_count):
+    def sample(self):
+        pipeline_id = str(uuid4())
+        pipeline = Pipeline(
+            id=pipeline_id,
+            dataset_id=self.dataset_id,
+            operations=self.properties.operations
+        )
+        db.pipelines.insert_one(pipeline.mongo())
+
+        for index in range(self.properties.image_count):
             index = index % len(self.images)
 
             image = self.images[index]
@@ -64,17 +74,18 @@ class Pipeline(DataPipeline):
                 size=len(image_bytes),
                 width=augmented_images[0].width,
                 height=augmented_images[0].height,
+                pipeline_id=pipeline_id
             )
             db.images.insert_one(new_image.mongo())
             if new_labels:
                 db.labels.insert_many([label.mongo() for label in new_labels])
 
-            increment_task_progress(self.task_id, 1 / image_count)
+            increment_task_progress(self.task_id, 1 / self.properties.image_count)
 
 
 def main(user_id, task_id, dataset_id, properties: TaskAugmentorProperties):
     update_task(task_id, status='active')
-    pipeline = Pipeline(task_id, dataset_id)
+    pipeline = AugmentorPipeline(task_id, dataset_id, properties)
     for operation in properties.operations:
         getattr(pipeline, operation.type)(probability=operation.probability, **operation.properties)
-    pipeline.sample(properties.image_count)
+    pipeline.sample()

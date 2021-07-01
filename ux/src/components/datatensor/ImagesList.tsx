@@ -6,6 +6,7 @@ import {
     Backdrop,
     Box,
     Button,
+    Chip,
     Dialog,
     FormControlLabel,
     Grid,
@@ -94,6 +95,9 @@ const useStyles = makeStyles((theme: Theme) => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    chip: {
+        marginLeft: theme.spacing(1)
     }
 }));
 
@@ -242,6 +246,13 @@ const DTImagesList: FC<ImagesListProps> = ({
                                 >
                                     {bytesToSize(imageSelected.size)} ({imageSelected.width} x {imageSelected.height})
                                 </Typography>
+                                <Chip
+                                    className={classes.chip}
+                                    label={imageSelected.pipeline_id ? 'Augmented' : 'Original'}
+                                    size='small'
+                                    variant='outlined'
+                                />
+
                             </div>
 
                             <div className='flexGrow'/>
