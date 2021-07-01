@@ -118,6 +118,7 @@ const Actions: FC = () => {
                                             </InputLabel>
                                         </Box>
                                         <TextField
+                                            autoFocus
                                             error={Boolean(touched.confirm && errors.confirm)}
                                             fullWidth
                                             name='confirm'

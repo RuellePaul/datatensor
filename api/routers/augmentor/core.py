@@ -36,11 +36,9 @@ def draw_ellipsis(width, height, label: Label):
 
 def retrieve_label_from_ellipsis(image, image_id) -> Union[Label, None]:
     mask = cv2.inRange(image, (120, 120, 120), (255, 255, 255))
-    contours, hierarchy = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[-2:]
-    if not contours:
+    rect = cv2.boundingRect(mask)
+    if not rect:
         return None
-    contour = min(contours, key=cv2.contourArea)
-    rect = cv2.boundingRect(contour)
     label = Label(
         id=str(uuid4()),
         image_id=image_id,
