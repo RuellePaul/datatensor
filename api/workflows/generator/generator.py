@@ -16,6 +16,9 @@ from utils import update_task, increment_task_progress
 db = Config.db
 
 
+# TODO : refactor this (use models)
+
+
 def _download_image(image_url):
     try:
         response = requests.get(image_url)

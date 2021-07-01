@@ -71,7 +71,7 @@ class AugmentorPipeline(DataPipeline):
                 id=new_image_id,
                 dataset_id=self.dataset_id,
                 path=path,
-                name=f'{image.name} (augmented)',
+                name=f'augmented-{image.name}',
                 size=len(image_bytes),
                 width=augmented_images[0].width,
                 height=augmented_images[0].height,

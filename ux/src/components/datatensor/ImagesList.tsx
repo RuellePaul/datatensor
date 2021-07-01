@@ -37,6 +37,7 @@ import api from 'src/utils/api'
 import {LAZY_LOAD_BATCH} from 'src/constants';
 
 interface ImagesListProps {
+    pipeline_id?: string;
     className?: string;
 }
 
@@ -103,6 +104,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const DTImagesList: FC<ImagesListProps> = ({
                                                className,
+                                               pipeline_id,
                                                ...rest
                                            }) => {
     const classes = useStyles();
@@ -182,7 +184,10 @@ const DTImagesList: FC<ImagesListProps> = ({
                 dataLength={images.length}
                 next={() => setTimeout(() => saveOffset(offset => offset + LAZY_LOAD_BATCH), 100)}
                 height={'calc(100vh - 300px)'}
-                hasMore={dataset.image_count > images.length}
+                hasMore={pipeline_id
+                    ? pipelines.find(pipeline => pipeline.id === pipeline_id).image_count > images.length
+                    : dataset.image_count > images.length
+                }
                 loader={<LinearProgress/>}
             >
                 <Masonry
@@ -246,14 +251,14 @@ const DTImagesList: FC<ImagesListProps> = ({
                                 >
                                     {bytesToSize(imageSelected.size)} ({imageSelected.width} x {imageSelected.height})
                                 </Typography>
-                                <Chip
-                                    className={classes.chip}
-                                    label={imageSelected.pipeline_id ? 'Augmented' : 'Original'}
-                                    size='small'
-                                    variant='outlined'
-                                />
-
                             </div>
+
+                            <Chip
+                                className={classes.chip}
+                                label={imageSelected.pipeline_id ? 'Augmented' : 'Original'}
+                                size='small'
+                                variant='outlined'
+                            />
 
                             <div className='flexGrow'/>
 
