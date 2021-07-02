@@ -80,7 +80,7 @@ const LoginView: FC = () => {
                         <Box
                             display='flex'
                             className={classes.auth0buttons}
-                            mt={3}
+                            mt={2}
                         >
                             <OAuthLoginButton scope='github'/>
                             <OAuthLoginButton scope='google'/>
