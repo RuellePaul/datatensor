@@ -1,7 +1,6 @@
 import React, {FC, useCallback, useEffect, useRef, useState} from 'react';
 import {useHistory} from 'react-router';
 import clsx from 'clsx';
-import moment from 'moment';
 import {
     Box,
     capitalize,
@@ -10,11 +9,12 @@ import {
     CardContent,
     CardHeader,
     CardMedia,
+    Chip,
     CircularProgress,
     makeStyles,
     Typography
 } from '@material-ui/core';
-import {Lock, PhotoLibrary, Public} from '@material-ui/icons';
+import {Lock as PrivateIcon, PhotoLibrary, Public as PublicIcon} from '@material-ui/icons';
 import {Theme} from 'src/theme';
 import {Dataset} from 'src/types/dataset';
 import api from 'src/utils/api';
@@ -36,6 +36,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     media: {
         height: 200
+    },
+    chip: {
+        marginLeft: 6
     }
 }));
 
@@ -86,8 +89,25 @@ const DTDataset: FC<DatasetProps> = ({
                                     user={value.user}
                                 />
                             }
-                            title={dataset.name}
-                            subheader={`${value.user.name} | ${moment(dataset.created_at).format('DD MMMM, YYYY')}`}
+                            title={(
+                                <Typography variant='h6'>
+                                    {dataset.name}
+                                </Typography>
+                            )}
+                            subheader={
+                                <Box mt={'2px'}>
+                                    {value.user.name}
+                                    &nbsp;
+                                    •
+                                    <Chip
+                                        className={classes.chip}
+                                        label={dataset.is_public ? 'Public' : 'Private'}
+                                        icon={dataset.is_public ? <PublicIcon/> : <PrivateIcon/>}
+                                        size='small'
+                                        variant='outlined'
+                                    />
+                                </Box>
+                            }
                         />
                     }
                 </UserConsumer>
@@ -113,13 +133,8 @@ const DTDataset: FC<DatasetProps> = ({
                         <PhotoLibrary/>
                         <Box width={2}/>
                         <Typography variant='overline' noWrap>
-                            {dataset.image_count} (+0)
+                            {dataset.image_count} (+{dataset.augmented_count})
                         </Typography>
-                        <Box width={12}/>
-                        {dataset.is_public
-                            ? <Public fontSize='small'/>
-                            : <Lock fontSize='small'/>
-                        }
                     </Box>
                     <Typography
                         color='textSecondary'

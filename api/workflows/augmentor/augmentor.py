@@ -37,6 +37,11 @@ class AugmentorPipeline(DataPipeline):
             image_count=self.properties.image_count
         )
         db.pipelines.insert_one(pipeline.mongo())
+        db.datasets.update_one({'_id': self.dataset_id},
+                               {'$inc': {
+                                   'augmented_count': self.properties.image_count
+                               }},
+                               upsert=False)
 
         for index in range(self.properties.image_count):
             index = index % len(self.images)

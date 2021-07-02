@@ -136,6 +136,7 @@ def main(user_id, task_id, properties: TaskGeneratorProperties):
                       name=_generate_dataset_name(categories),
                       description=f"Generated with {len(categories)} categorie{'s' if len(categories) > 1 else ''}, from {datasource['name']}",
                       image_count=image_count,
+                      augmented_count=0,
                       is_public=True)
     db.datasets.insert_one(dataset.mongo())
     db.categories.insert_many([{
