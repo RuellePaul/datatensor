@@ -9,7 +9,7 @@ import {moveOperation, setDefaultPipeline} from 'src/slices/pipeline';
 import OperationsPipeline from './OperationsPipeline';
 
 interface PipelineProps {
-
+    readOnly?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const Pipeline: FC<PipelineProps> = () => {
+const Pipeline: FC<PipelineProps> = ({readOnly = false}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
@@ -56,8 +56,9 @@ const Pipeline: FC<PipelineProps> = () => {
     };
 
     useEffect(() => {
-        dispatch(setDefaultPipeline());
-    }, [dispatch]);
+        if (!readOnly)
+            dispatch(setDefaultPipeline());
+    }, [dispatch, readOnly]);
 
     return (
         <DragDropContext onDragEnd={handleDragEnd}>

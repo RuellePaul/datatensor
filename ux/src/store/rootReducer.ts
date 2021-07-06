@@ -1,10 +1,10 @@
 import {combineReducers} from '@reduxjs/toolkit';
 import {reducer as notificationReducer} from 'src/slices/notification';
-import {reducer as kanbanReducer} from 'src/slices/pipeline';
+import {reducer as pipelineReducer} from 'src/slices/pipeline';
 
 
 const rootReducer = combineReducers({
-    pipeline: kanbanReducer,
+    pipeline: pipelineReducer,
     notifications: notificationReducer
 });
 

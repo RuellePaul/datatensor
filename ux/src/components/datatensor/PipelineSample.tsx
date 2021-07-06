@@ -1,7 +1,7 @@
 import React, {FC, useCallback, useEffect, useState} from 'react';
 import {useParams} from 'react-router';
 import clsx from 'clsx';
-import {CircularProgress, Grid, makeStyles, Typography} from '@material-ui/core';
+import {Button, CircularProgress, Grid, makeStyles, Typography} from '@material-ui/core';
 import type {Theme} from 'src/theme';
 import {useSelector} from 'src/store';
 import {Operation} from 'src/types/pipeline';
@@ -57,7 +57,7 @@ const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
         }
 
         // eslint-disable-next-line
-    }, [pipeline, dataset_id, image_id])
+    }, [pipeline.isLoaded, dataset_id, image_id])
 
     useEffect(() => {
         doSample()
@@ -69,6 +69,18 @@ const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
                 container
                 spacing={1}
             >
+                <Grid
+                    item
+                    xs={12}
+                >
+                    <Button
+                        onClick={doSample}
+                        size='small'
+                        variant='outlined'
+                    >
+                        Compute sample
+                    </Button>
+                </Grid>
                 {imagesBase64 === null || imagesLabels === null
                     ? (
                         <Grid

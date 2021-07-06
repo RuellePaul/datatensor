@@ -383,7 +383,7 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                                 Operations pipeline
                             </Typography>
 
-                            <Pipeline/>
+                            <Pipeline readOnly/>
                         </Grid>
                     </Grid>
                 </DialogContent>
