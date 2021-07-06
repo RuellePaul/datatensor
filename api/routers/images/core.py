@@ -112,7 +112,7 @@ def find_image(dataset_id, image_id) -> Image:
 
 
 def insert_images(dataset_id, request_files) -> List[Image]:
-    with concurrent.futures.ThreadPoolExecutor(max_workers=16) as executor:
+    with concurrent.futures.ThreadPoolExecutor() as executor:
         results = executor.map(upload_file, [{'filename': file.filename, 'file': file.file, 'dataset_id': dataset_id}
                                              for file in request_files])
         images = list(filter(None.__ne__, results))

@@ -146,7 +146,7 @@ def main(user_id, task_id, properties: TaskGeneratorProperties):
         'supercategory': category['supercategory']
     } for category in categories])
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=16) as executor:
+    with concurrent.futures.ThreadPoolExecutor() as executor:
         executor.map(_process_image,
                      ({'task_id': task_id,
                        'dataset_id': dataset_id,
