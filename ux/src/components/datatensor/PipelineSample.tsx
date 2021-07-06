@@ -1,7 +1,9 @@
 import React, {FC, useCallback, useEffect, useState} from 'react';
 import {useParams} from 'react-router';
+import {useSnackbar} from 'notistack';
+import {Formik} from 'formik';
 import clsx from 'clsx';
-import {Button, CircularProgress, Grid, makeStyles, Typography} from '@material-ui/core';
+import {Box, Button, CircularProgress, FormHelperText, Grid, makeStyles} from '@material-ui/core';
 import type {Theme} from 'src/theme';
 import {useSelector} from 'src/store';
 import {Operation} from 'src/types/pipeline';
@@ -9,7 +11,6 @@ import useImage from 'src/hooks/useImage';
 import api from 'src/utils/api';
 import ImageBase64 from 'src/components/utils/ImageBase64';
 import {Label} from 'src/types/label';
-import {useSnackbar} from 'notistack';
 import wait from 'src/utils/wait';
 
 interface PipelineSampleProps {
@@ -17,7 +18,11 @@ interface PipelineSampleProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {}
+    root: {},
+    loader: {
+        width: '20px !important',
+        height: '20px !important'
+    }
 }));
 
 const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
@@ -30,12 +35,10 @@ const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
     const pipeline = useSelector<any>((state) => state.pipeline);
     const image_id = image.id;
 
-    const [imagesBase64, setImagesBase64] = useState<string[] | null>(null);
-    const [imagesLabels, setImagesLabels] = useState<Label[][] | null>(null);
+    const [imagesBase64, setImagesBase64] = useState<string[]>([]);
+    const [imagesLabels, setImagesLabels] = useState<Label[][]>([]);
 
     const doSample = useCallback(async () => {
-        setImagesBase64(null);
-
         if (dataset_id && image_id && pipeline.isLoaded) {
             const operations: Operation[] = pipeline.operations.allIds.map(id => pipeline.operations.byId[id])
 
@@ -73,44 +76,78 @@ const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
                     item
                     xs={12}
                 >
-                    <Button
-                        onClick={doSample}
-                        size='small'
-                        variant='outlined'
+                    <Formik
+                        initialValues={{
+                            submit: null,
+                        }}
+                        onSubmit={async (values, {
+                            setErrors,
+                            setStatus,
+                            setSubmitting
+                        }) => {
+                            try {
+                                await doSample();
+
+                                setStatus({success: true});
+                                setSubmitting(false);
+                            } catch (err) {
+                                console.error(err);
+                                setStatus({success: false});
+                                setErrors({submit: err.message});
+                                setSubmitting(false);
+                            }
+                        }}
                     >
-                        Compute sample
-                    </Button>
+                        {({
+                              errors,
+                              handleSubmit,
+                              isSubmitting,
+                          }) => (
+                            <form
+                                onSubmit={handleSubmit}
+                            >
+
+                                <Box mb={1}>
+                                    <Button
+                                        size='small'
+                                        variant='outlined'
+                                        type='submit'
+                                        disabled={isSubmitting}
+                                        endIcon={isSubmitting && (
+                                            <CircularProgress
+                                                className={classes.loader}
+                                                color='inherit'
+                                            />
+                                        )}
+                                    >
+                                        {isSubmitting ? 'Computing...' : 'Compute sample'}
+                                    </Button>
+                                </Box>
+
+                                {errors.submit && (
+                                    <Box mt={3}>
+                                        <FormHelperText error>
+                                            {errors.submit}
+                                        </FormHelperText>
+                                    </Box>
+                                )}
+                            </form>
+                        )}
+                    </Formik>
                 </Grid>
-                {imagesBase64 === null || imagesLabels === null
-                    ? (
-                        <Grid
-                            item
-                            xs={12}
-                        >
-                            <Typography
-                                color='textSecondary'
-                                variant='subtitle2'
-                                gutterBottom
-                            >
-                                Computing....
-                            </Typography>
-                            <CircularProgress/>
-                        </Grid>
-                    ) : (
-                        imagesBase64.map((imageBase64, index) => (
-                            <Grid
-                                key={index}
-                                item
-                                xs={image.width > image.height ? 6 : 4}
-                            >
-                                <ImageBase64
-                                    imageBase64={imageBase64}
-                                    labels={imagesLabels[index]}
-                                />
-                            </Grid>
-                        ))
-                    )
-                }
+
+                {imagesBase64.map((imageBase64, index) => (
+                    <Grid
+                        key={index}
+                        item
+                        xs={image.width > image.height ? 6 : 4}
+                    >
+                        <ImageBase64
+                            imageBase64={imageBase64}
+                            labels={imagesLabels[index]}
+                        />
+                    </Grid>
+                ))}
             </Grid>
         </div>
     );
