@@ -1,4 +1,4 @@
-import React, {FC, useCallback, useEffect, useState} from 'react';
+import React, {FC, useCallback, useState} from 'react';
 import {useParams} from 'react-router';
 import {useSnackbar} from 'notistack';
 import {Formik} from 'formik';
@@ -60,7 +60,7 @@ const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
         }
 
         // eslint-disable-next-line
-    }, [pipeline.isLoaded, dataset_id, image_id])
+    }, [pipeline.isLoaded, dataset_id, image_id, pipeline.operations])
 
     return (
         <div className={clsx(classes.root, className)}>
