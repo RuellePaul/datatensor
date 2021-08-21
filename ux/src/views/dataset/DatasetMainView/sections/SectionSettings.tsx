@@ -73,7 +73,7 @@ const SectionSettings: FC<SectionProps> = ({className}) => {
     const {enqueueSnackbar} = useSnackbar();
 
     const {saveDatasets} = useDatasets();
-    const {dataset, categories} = useDataset();
+    const {dataset, saveDataset, categories} = useDataset();
 
 
     const [openDeleteDataset, setOpenDeleteDataset] = useState(false);
@@ -105,6 +105,20 @@ const SectionSettings: FC<SectionProps> = ({className}) => {
             enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
         } finally {
             setIsDeleting(false);
+        }
+    }
+
+    const handleChangeDatasetPrivacy = async () => {
+        try {
+            handleCloseChangePrivacy();
+            await api.patch(`/datasets/${dataset.id}/privacy`, {is_public: !dataset.is_public});
+
+            saveDataset({
+                ...dataset,
+                is_public: !dataset.is_public
+            });
+        } catch (error) {
+            enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
         }
     }
 
@@ -158,7 +172,6 @@ const SectionSettings: FC<SectionProps> = ({className}) => {
                 </Grid>
             </Grid>
 
-
             <Dialog
                 disableRestoreFocus
                 fullWidth
@@ -170,7 +183,7 @@ const SectionSettings: FC<SectionProps> = ({className}) => {
                     disableTypography
                 >
                     <Typography variant='h4'>
-                        Delete dataset | Confirmation
+                        Delete dataset
                     </Typography>
 
                     <IconButton
@@ -258,6 +271,14 @@ const SectionSettings: FC<SectionProps> = ({className}) => {
                                 variant='outlined'
                             />
                         </Typography>
+
+                        <Button
+                            onClick={handleChangeDatasetPrivacy}
+                            variant="contained"
+                        >
+                            {dataset.is_public ? 'Make private' : 'Make public'}
+                        </Button>
+
                     </Box>
                 </DialogContent>
             </Dialog>

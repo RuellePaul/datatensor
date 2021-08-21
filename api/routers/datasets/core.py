@@ -4,7 +4,7 @@ from uuid import uuid4
 
 import errors
 from config import Config
-from routers.datasets.models import Dataset, DatasetPostBody
+from routers.datasets.models import Dataset, DatasetPostBody, DatasetPatchPrivacyBody
 from routers.images.core import delete_images_from_s3, find_images
 
 db = Config.db
@@ -25,6 +25,19 @@ def find_dataset(dataset_id) -> Dataset:
     if dataset is None:
         raise errors.NotFound(errors.DATASET_NOT_FOUND)
     return Dataset.from_mongo(dataset)
+
+
+def update_dataset_privacy(user_id, dataset_id, payload: DatasetPatchPrivacyBody):
+    dataset_to_update = db.datasets.find_one({'_id': dataset_id})
+
+    if not dataset_to_update:
+        raise errors.NotFound(errors.DATASET_NOT_FOUND)
+
+    if dataset_to_update['user_id'] != user_id:
+        raise errors.Forbidden(errors.NOT_YOUR_DATASET)
+
+    db.datasets.find_one_and_update({'_id': dataset_id},
+                                    {'$set': {'is_public': payload.is_public}})
 
 
 def insert_dataset(user_id, payload: DatasetPostBody):

@@ -29,3 +29,7 @@ class DatasetPostBody(BaseModel):
     name: str
     description: str
     is_public: bool = False
+
+
+class DatasetPatchPrivacyBody(BaseModel):
+    is_public: bool

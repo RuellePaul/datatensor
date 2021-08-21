@@ -2,7 +2,8 @@ from fastapi import APIRouter, Depends
 
 import errors
 from dependencies import logged_admin, logged_user
-from routers.datasets.core import find_datasets, find_dataset, remove_dataset, remove_datasets, insert_dataset
+from routers.datasets.core import find_datasets, find_dataset, remove_dataset, remove_datasets, insert_dataset, \
+    update_dataset_privacy
 from routers.datasets.models import *
 from routers.users.models import User
 from utils import parse
@@ -38,6 +39,14 @@ async def post_dataset(payload: DatasetPostBody, user: User = Depends(logged_use
     if not user.is_verified:
         raise errors.Forbidden(errors.USER_NOT_VERIFIED, data='ERR_VERIFY')
     insert_dataset(user.id, payload)
+
+
+@datasets.patch('/{dataset_id}/privacy')
+async def patch_dataset_privacy(dataset_id, payload: DatasetPatchPrivacyBody, user: User = Depends(logged_user)):
+    """
+    Update dataset privacy.
+    """
+    update_dataset_privacy(user.id, dataset_id, payload)
 
 
 @datasets.delete('/')
