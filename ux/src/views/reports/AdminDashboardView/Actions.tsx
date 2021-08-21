@@ -54,14 +54,15 @@ const Actions: FC = () => {
                     resetForm
                 }) => {
                     try {
-                        await api.delete(`/datasets`);
+                        await api.delete(`/datasets/`);
                         resetForm();
 
                         if (isMountedRef.current) {
                             setStatus({success: true});
                             setSubmitting(false);
-                            enqueueSnackbar(`Datasets deleted`, {variant: 'success'});
                         }
+
+                        window.location.reload();
                     } catch (error) {
                         console.error(error);
                         if (isMountedRef.current) {
@@ -100,7 +101,7 @@ const Actions: FC = () => {
                                 <Button
                                     onClick={() => setFieldValue('clicked', true)}
                                 >
-                                    Delete datasets
+                                    Delete your datasets
                                 </Button>
                             )}
                             {
@@ -117,6 +118,7 @@ const Actions: FC = () => {
                                             </InputLabel>
                                         </Box>
                                         <TextField
+                                            autoFocus
                                             error={Boolean(touched.confirm && errors.confirm)}
                                             fullWidth
                                             name='confirm'

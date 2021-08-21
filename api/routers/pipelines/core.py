@@ -8,9 +8,21 @@ import requests
 from Augmentor import DataPipeline
 from PIL import Image as PILImage
 
-from routers.augmentor.models import Operation
+import errors
+from config import Config
 from routers.images.models import Image
 from routers.labels.models import Label
+from routers.pipelines.models import Pipeline
+from routers.pipelines.models import Operation
+
+db = Config.db
+
+
+def find_pipelines(dataset_id, offset=0, limit=0) -> List[Label]:
+    pipelines = list(db.pipelines.find({'dataset_id': dataset_id}).skip(offset).limit(limit))
+    if pipelines is None:
+        raise errors.NotFound(errors.PIPELINE_NOT_FOUND)
+    return [Pipeline.from_mongo(pipeline) for pipeline in pipelines]
 
 
 def from_image_bytes(image_bytes):
@@ -34,15 +46,14 @@ def draw_ellipsis(width, height, label: Label):
     return blank_image
 
 
-def retrieve_label_from_ellipsis(image) -> Union[Label, None]:
+def retrieve_label_from_ellipsis(image, image_id) -> Union[Label, None]:
     mask = cv2.inRange(image, (120, 120, 120), (255, 255, 255))
-    contours, hierarchy = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[-2:]
-    if not contours:
+    rect = cv2.boundingRect(mask)
+    if not rect:
         return None
-    contour = min(contours, key=cv2.contourArea)
-    rect = cv2.boundingRect(contour)
     label = Label(
         id=str(uuid4()),
+        image_id=image_id,
         x=round(rect[0] / image.shape[1], 6),
         y=round(rect[1] / image.shape[0], 6),
         w=round(rect[2] / image.shape[1], 6),
@@ -77,7 +88,7 @@ class AugmentorPipeline(DataPipeline):
 
             output_images.append(numpy.asarray(augmented_images[0]))
 
-            labels = [retrieve_label_from_ellipsis(numpy.asarray(image))
+            labels = [retrieve_label_from_ellipsis(numpy.asarray(image), self.image.id)
                       for image in augmented_images[1:]]
 
             for index, label in enumerate(labels):
@@ -91,8 +102,11 @@ class AugmentorPipeline(DataPipeline):
         return output_images, output_images_labels
 
 
-def perform_augmentation(image: Image, labels: List[Label], operations: List[Operation]):
+def perform_sample(image: Image, labels: List[Label], operations: List[Operation]):
     pipeline = AugmentorPipeline(image, labels)
     for operation in operations:
         getattr(pipeline, operation.type)(probability=operation.probability, **operation.properties)
-    return pipeline.sample(4)
+    if image.width > image.height:
+        return pipeline.sample(4)
+    else:
+        return pipeline.sample(3)

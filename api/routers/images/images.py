@@ -8,11 +8,11 @@ images = APIRouter()
 
 
 @images.get('/', response_model=ImagesResponse)
-async def get_images(dataset_id: str, offset: int = 0, limit: int = 0):
+async def get_images(dataset_id: str, pipeline_id: Optional[str] = None, offset: int = 0, limit: int = 0):
     """
     Fetch paginated images list of given dataset.
     """
-    response = {'images': find_images(dataset_id, offset, limit)}
+    response = {'images': find_images(dataset_id, pipeline_id, offset, limit)}
     return parse(response)
 
 

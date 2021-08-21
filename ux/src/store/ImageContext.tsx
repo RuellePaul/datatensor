@@ -45,15 +45,18 @@ export const ImageProvider: FC<ImageProviderProps> = ({image, children}) => {
 
     const fetchLabels = useCallback(async () => {
         setCurrentLabels(null);
-        try {
-            const response = await api.get<{ labels: Label[] }>(`/images/${image.id}/labels/`);
-            handleSaveLabels(response.data.labels);
-            setPositions([response.data.labels]);
-        } catch (err) {
-            console.error(err);
+
+        if (image) {
+            try {
+                const response = await api.get<{ labels: Label[] }>(`/images/${image.id}/labels/`);
+                handleSaveLabels(response.data.labels);
+                setPositions([response.data.labels]);
+            } catch (err) {
+                console.error(err);
+            }
         }
 
-    }, [image.id]);
+    }, [image]);
 
     useEffect(() => {
         fetchLabels();

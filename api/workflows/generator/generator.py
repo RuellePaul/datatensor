@@ -16,6 +16,9 @@ from utils import update_task, increment_task_progress
 db = Config.db
 
 
+# TODO : refactor this (use models)
+
+
 def _download_image(image_url):
     try:
         response = requests.get(image_url)
@@ -43,7 +46,6 @@ def _process_image(args):
             return
         image_bytes = response.content
         path = upload_image(image_bytes, image_id)
-        increment_task_progress(task_id, 1 / image_count)
         saved_image = {
             '_id': image_id,
             'dataset_id': dataset_id,
@@ -73,6 +75,7 @@ def _process_image(args):
 
         db.images.insert_one(saved_image)
         db.labels.insert_many(labels)
+        increment_task_progress(task_id, 1 / image_count)
 
 
 def _filter_annotations(json_remote_dataset, selected_categories, image_count=None):
@@ -133,6 +136,7 @@ def main(user_id, task_id, properties: TaskGeneratorProperties):
                       name=_generate_dataset_name(categories),
                       description=f"Generated with {len(categories)} categorie{'s' if len(categories) > 1 else ''}, from {datasource['name']}",
                       image_count=image_count,
+                      augmented_count=0,
                       is_public=True)
     db.datasets.insert_one(dataset.mongo())
     db.categories.insert_many([{
@@ -142,7 +146,7 @@ def main(user_id, task_id, properties: TaskGeneratorProperties):
         'supercategory': category['supercategory']
     } for category in categories])
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=16) as executor:
+    with concurrent.futures.ThreadPoolExecutor() as executor:
         executor.map(_process_image,
                      ({'task_id': task_id,
                        'dataset_id': dataset_id,

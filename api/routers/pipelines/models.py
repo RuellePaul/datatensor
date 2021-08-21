@@ -1,7 +1,9 @@
 from enum import Enum
 from typing import List
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+
+from utils import MongoModel
 
 
 class OperationType(str, Enum):
@@ -27,7 +29,17 @@ class Operation(BaseModel):
     properties: dict
 
 
-class SampleBody(BaseModel):
+class Pipeline(MongoModel):
+    id: str = Field()
     dataset_id: str
+    image_count: int
+    operations: List[Operation]
+
+
+class PipelinesResponse(BaseModel):
+    pipelines: List[Pipeline]
+
+
+class SampleBody(BaseModel):
     image_id: str
     operations: List[Operation]

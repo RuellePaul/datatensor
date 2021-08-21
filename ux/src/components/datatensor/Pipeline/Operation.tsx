@@ -31,21 +31,18 @@ const operationSelector = (state: RootState, operationId: string): PopulatedOper
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         outline: 'none',
-        paddingTop: theme.spacing(1),
-        paddingBottom: theme.spacing(1)
+        padding: theme.spacing(1, 0),
     },
     operation: {
         '&:hover': {
             backgroundColor: theme.palette.background.dark
         }
     },
+    content: {
+        padding: `${theme.spacing(1.5)}px !important`,
+    },
     dragging: {
         backgroundColor: theme.palette.background.dark
-    },
-    badge: {
-        '& + &': {
-            marginLeft: theme.spacing(2)
-        }
     }
 }));
 
@@ -91,11 +88,13 @@ const Operation: FC<OperationProps> = forwardRef(({
                 variant={dragging ? 'elevation' : 'outlined'}
                 onClick={handleOpen}
             >
-                <CardContent>
+                <CardContent
+                    className={classes.content}
+                >
                     <Box
                         display='flex'
                         alignItems='center'
-                        mb={2}
+                        mb={1.5}
                     >
                         <Box mr={2}>
                             {OPERATIONS_ICONS[operation.type]}

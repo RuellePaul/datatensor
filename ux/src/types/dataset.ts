@@ -5,5 +5,6 @@ export interface Dataset {
     name: string;
     description: string;
     image_count: number;
+    augmented_count: number;
     is_public: boolean;
 }

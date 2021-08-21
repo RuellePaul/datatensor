@@ -10,6 +10,7 @@ class Label(MongoModel):
     y: float
     w: float
     h: float
+    image_id: Optional[str] = None
     category_id: Optional[str] = None
 
 

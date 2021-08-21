@@ -98,6 +98,8 @@ const DatasetMainView: FC = () => {
                                                 <Tabs
                                                     value={tab}
                                                     onChange={handleTabChange}
+                                                    scrollButtons="auto"
+                                                    variant="scrollable"
                                                 >
                                                     <DTTab label="Overview" icon={DashboardOutlined}/>
                                                     <DTTab label="Images" icon={PhotoLibraryOutlined}/>

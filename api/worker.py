@@ -1,12 +1,15 @@
-from celery import Celery
+import functools
 from datetime import datetime
+
+from celery import Celery
 
 import errors
 from config import Config
-from workflows.generator.generator import main
 from routers.notifications.core import insert_notification
 from routers.notifications.models import NotificationPostBody, NotificationType
 from utils import update_task
+from workflows.augmentor import augmentor
+from workflows.generator import generator
 
 app = Celery('worker', broker='pyamqp://', backend='rpc://')
 
@@ -22,24 +25,43 @@ class CeleryConfig:
 app.config_from_object(CeleryConfig)
 
 
+def handle_task_error(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        user_id = args[0]
+        task_id = args[1]
+        try:
+            result = func(*args, **kwargs)
+        except errors.APIError as error:
+            update_task(task_id, status='failed', error=error.detail, ended_at=datetime.now())
+            notification = NotificationPostBody(type=NotificationType('TASK_FAILED'),
+                                                task_id=task_id,
+                                                description=error.detail)
+            insert_notification(user_id=user_id, notification=notification)
+        except Exception as e:
+            message = f"An error occured {str(e) if Config.ENVIRONMENT == 'development' else ''}"
+            update_task(task_id, status='failed', error=message, ended_at=datetime.now())
+            notification = NotificationPostBody(type=NotificationType('TASK_FAILED'),
+                                                task_id=task_id,
+                                                description=message)
+            insert_notification(user_id=user_id, notification=notification)
+        else:
+            update_task(task_id, status='success', progress=1, ended_at=datetime.now())
+            notification = NotificationPostBody(type=NotificationType('TASK_SUCCEED'),
+                                                task_id=task_id)
+            insert_notification(user_id=user_id, notification=notification)
+            return result
+
+    return wrapper
+
+
 @app.task
-def generator(user_id, task_id, properties):
-    try:
-        main(user_id, task_id, properties)
-    except errors.APIError as error:
-        update_task(task_id, status='failed', error=error.detail, ended_at=datetime.now())
-        notification = NotificationPostBody(type=NotificationType('TASK_FAILED'),
-                                            task_id=task_id,
-                                            description=error.detail)
-    except Exception as e:
-        message = f"An error occured {str(e) if Config.ENVIRONMENT == 'development' else ''}"
-        update_task(task_id, status='failed', error=message, ended_at=datetime.now())
-        notification = NotificationPostBody(type=NotificationType('TASK_FAILED'),
-                                            task_id=task_id,
-                                            description=message)
-    else:
-        update_task(task_id, status='success', progress=1, ended_at=datetime.now())
-        notification = NotificationPostBody(type=NotificationType('TASK_SUCCEED'),
-                                            task_id=task_id)
-    finally:
-        insert_notification(user_id=user_id, notification=notification)
+@handle_task_error
+def run_generator(user_id, task_id, properties):
+    generator.main(user_id, task_id, properties)
+
+
+@app.task
+@handle_task_error
+def run_augmentor(user_id, task_id, dataset_id, properties):
+    augmentor.main(user_id, task_id, dataset_id, properties)

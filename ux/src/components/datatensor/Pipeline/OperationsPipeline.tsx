@@ -26,13 +26,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     droppableArea: {
         minHeight: 80,
+        maxHeight: 500,
         flexGrow: 1,
         overflowY: 'auto',
         padding: theme.spacing(1, 2)
     }
 }));
 
-const Pipeline: FC<ListProps> = ({className, ...rest}) => {
+const OperationsPipeline: FC<ListProps> = ({className, ...rest}) => {
     const classes = useStyles();
 
     const [dragDisabled, setDragDisabled] = useState<boolean>(false);
@@ -51,7 +52,7 @@ const Pipeline: FC<ListProps> = ({className, ...rest}) => {
                     {(provided) => (
                         <div
                             ref={provided.innerRef}
-                            className={classes.droppableArea}
+                            className={clsx(classes.droppableArea, 'scroll')}
                         >
                             {pipeline.operations.allIds.map((operationId, index) => (
                                 <Draggable
@@ -89,4 +90,4 @@ const Pipeline: FC<ListProps> = ({className, ...rest}) => {
     );
 };
 
-export default Pipeline;
+export default OperationsPipeline;

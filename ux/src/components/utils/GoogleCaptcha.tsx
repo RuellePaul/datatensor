@@ -17,7 +17,6 @@ const GoogleCaptcha: FC<GoogleCaptchaProps> = ({helperText, ...rest}) => (
         <FormHelperText error>
             {helperText}
         </FormHelperText>
-
     </>
 );
 

@@ -4,23 +4,25 @@ from uuid import uuid4
 
 import errors
 from config import Config
+from routers.datasets.core import find_datasets
 from routers.tasks.models import Task, TaskStatus
-from worker import generator
+from worker import run_generator, run_augmentor
 
 db = Config.db
 
 
-def user_is_allowed_to_create_task(user, dataset_id, task_type):
-    if user.is_admin:
-        return True
-
+def user_is_allowed_to_create_task(user, dataset_id, task_type) -> bool:
     if task_type == 'generator':
-        raise errors.Forbidden(errors.USER_NOT_ADMIN)
+        if not user.is_admin:
+            raise errors.Forbidden(errors.USER_NOT_ADMIN)
 
-    user_datasets = db.datasets.find({'user_id': user.id})
-    user_dataset_ids = [dataset['_id'] for dataset in user_datasets]
-    if dataset_id not in user_dataset_ids:
-        raise errors.Forbidden(errors.NOT_YOUR_DATASET)
+    if task_type == 'augmentor':
+        if dataset_id is None:
+            raise errors.Forbidden(errors.DATASET_NOT_FOUND)
+        user_dataset_ids = [dataset.id for dataset in find_datasets(user.id)]
+        if dataset_id not in user_dataset_ids:
+            raise errors.Forbidden(errors.NOT_YOUR_DATASET)
+    return True
 
 
 def find_tasks() -> List[Task]:
@@ -57,9 +59,13 @@ def insert_task(user, dataset_id, task_type, properties) -> Task:
         progress=0,
         properties=properties
     )
+
     db.tasks.insert_one(task.mongo())
 
     if task.type == 'generator':
-        generator.delay(task.user_id, task.id, properties=task.properties)
+        run_generator.delay(user.id, task.id, properties=task.properties)
+
+    if task.type == 'augmentor':
+        run_augmentor.delay(user.id, task.id, dataset_id, properties=task.properties)
 
     return task

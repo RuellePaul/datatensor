@@ -13,7 +13,7 @@ export interface ImagesContextValue {
 }
 
 interface ImagesProviderProps {
-    images?: Image[];
+    pipeline_id?: string;
     children?: ReactNode;
 }
 
@@ -26,11 +26,11 @@ export const ImagesContext = createContext<ImagesContextValue>({
     }
 });
 
-export const ImagesProvider: FC<ImagesProviderProps> = ({images, children}) => {
-    const [currentImages, setCurrentImages] = useState<Image[] | []>(images || []);
+export const ImagesProvider: FC<ImagesProviderProps> = ({pipeline_id, children}) => {
+    const [currentImages, setCurrentImages] = useState<Image[] | []>([]);
     const [currentOffset, setCurrentOffset] = useState<number>(0);
 
-    const {dataset} = useDataset();
+    const {dataset, pipelines} = useDataset();
 
     const handleSaveImages = (update: Image[] | ((images: Image[]) => Image[])): void => {
         setCurrentImages(update);
@@ -38,10 +38,12 @@ export const ImagesProvider: FC<ImagesProviderProps> = ({images, children}) => {
 
     const fetchImages = useCallback(async () => {
         try {
-            if (currentImages.length === dataset.image_count) return;
+            if (pipeline_id === null && currentImages.length >= dataset.image_count) return;
+            if (pipeline_id && currentImages.length >= pipelines.find(pipeline => pipeline.id === pipeline_id).image_count) return;
 
             const response = await api.get<{ images: Image[] }>(`/datasets/${dataset.id}/images/`, {
                 params: {
+                    pipeline_id,
                     offset: currentOffset,
                     limit: LAZY_LOAD_BATCH
                 }

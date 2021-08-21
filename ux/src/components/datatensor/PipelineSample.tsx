@@ -1,7 +1,9 @@
-import React, {FC, useCallback, useEffect, useState} from 'react';
+import React, {FC, useCallback, useState} from 'react';
 import {useParams} from 'react-router';
+import {useSnackbar} from 'notistack';
+import {Formik} from 'formik';
 import clsx from 'clsx';
-import {Grid, LinearProgress, makeStyles, Typography} from '@material-ui/core';
+import {Box, Button, CircularProgress, FormHelperText, Grid, makeStyles} from '@material-ui/core';
 import type {Theme} from 'src/theme';
 import {useSelector} from 'src/store';
 import {Operation} from 'src/types/pipeline';
@@ -9,14 +11,18 @@ import useImage from 'src/hooks/useImage';
 import api from 'src/utils/api';
 import ImageBase64 from 'src/components/utils/ImageBase64';
 import {Label} from 'src/types/label';
-import {useSnackbar} from 'notistack';
+import wait from 'src/utils/wait';
 
 interface PipelineSampleProps {
     className?: string;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {}
+    root: {},
+    loader: {
+        width: '20px !important',
+        height: '20px !important'
+    }
 }));
 
 const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
@@ -29,18 +35,17 @@ const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
     const pipeline = useSelector<any>((state) => state.pipeline);
     const image_id = image.id;
 
-    const [imagesBase64, setImagesBase64] = useState<string[] | null>(null);
-    const [imagesLabels, setImagesLabels] = useState<Label[][] | null>(null);
+    const [imagesBase64, setImagesBase64] = useState<string[]>([]);
+    const [imagesLabels, setImagesLabels] = useState<Label[][]>([]);
 
     const doSample = useCallback(async () => {
-        setImagesBase64(null);
-
-        if (pipeline.isLoaded) {
+        if (dataset_id && image_id && pipeline.isLoaded) {
             const operations: Operation[] = pipeline.operations.allIds.map(id => pipeline.operations.byId[id])
 
             try {
-                const response = await api.post<{ images: string[], images_labels: Label[][] }>('/augmentor/sample', {
-                    dataset_id,
+                await wait(10);
+
+                const response = await api.post<{ images: string[], images_labels: Label[][] }>(`/datasets/${dataset_id}/pipelines/sample`, {
                     image_id,
                     operations
                 })
@@ -53,11 +58,9 @@ const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
                 enqueueSnackbar((error.message) || 'Something went wrong', {variant: 'error'});
             }
         }
-    }, [pipeline, dataset_id, image_id, enqueueSnackbar])
 
-    useEffect(() => {
-        doSample()
-    }, [doSample]);
+        // eslint-disable-next-line
+    }, [pipeline.isLoaded, dataset_id, image_id, pipeline.operations])
 
     return (
         <div className={clsx(classes.root, className)}>
@@ -65,36 +68,82 @@ const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
                 container
                 spacing={1}
             >
-                {imagesBase64 === null || imagesLabels === null
-                    ? (
-                        <Grid
-                            item
-                            xs={12}
-                        >
-                            <Typography
-                                color='textSecondary'
-                                variant='subtitle2'
-                                gutterBottom
+                <Grid
+                    item
+                    xs={12}
+                >
+                    <Formik
+                        initialValues={{
+                            submit: null,
+                        }}
+                        onSubmit={async (values, {
+                            setErrors,
+                            setStatus,
+                            setSubmitting
+                        }) => {
+                            try {
+                                await doSample();
+
+                                setStatus({success: true});
+                                setSubmitting(false);
+                            } catch (err) {
+                                console.error(err);
+                                setStatus({success: false});
+                                setErrors({submit: err.message});
+                                setSubmitting(false);
+                            }
+                        }}
+                    >
+                        {({
+                              errors,
+                              handleSubmit,
+                              isSubmitting,
+                          }) => (
+                            <form
+                                onSubmit={handleSubmit}
                             >
-                                Computing....
-                            </Typography>
-                            <LinearProgress variant='query'/>
-                        </Grid>
-                    ) : (
-                        imagesBase64.map((imageBase64, index) => (
-                            <Grid
-                                key={index}
-                                item
-                                xs={6}
-                            >
-                                <ImageBase64
-                                    base64string={imageBase64}
-                                    labels={imagesLabels[index]}
-                                />
-                            </Grid>
-                        ))
-                    )
-                }
+
+                                <Box mb={1}>
+                                    <Button
+                                        size='small'
+                                        variant='outlined'
+                                        type='submit'
+                                        disabled={isSubmitting}
+                                        endIcon={isSubmitting && (
+                                            <CircularProgress
+                                                className={classes.loader}
+                                                color='inherit'
+                                            />
+                                        )}
+                                    >
+                                        {isSubmitting ? 'Computing...' : 'Compute sample'}
+                                    </Button>
+                                </Box>
+
+                                {errors.submit && (
+                                    <Box mt={3}>
+                                        <FormHelperText error>
+                                            {errors.submit}
+                                        </FormHelperText>
+                                    </Box>
+                                )}
+                            </form>
+                        )}
+                    </Formik>
+                </Grid>
+
+                {imagesBase64.map((imageBase64, index) => (
+                    <Grid
+                        key={index}
+                        item
+                        xs={image.width > image.height ? 6 : 4}
+                    >
+                        <ImageBase64
+                            imageBase64={imageBase64}
+                            labels={imagesLabels[index]}
+                        />
+                    </Grid>
+                ))}
             </Grid>
         </div>
     );

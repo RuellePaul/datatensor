@@ -30,14 +30,14 @@ async def get_dataset(dataset_id):
 
 
 @datasets.post('/')
-async def post_dataset(dataset: DatasetPostBody, user: User = Depends(logged_user)):
+async def post_dataset(payload: DatasetPostBody, user: User = Depends(logged_user)):
     """
     Create a new dataset.
     🔒️ Verified users
     """
     if not user.is_verified:
         raise errors.Forbidden(errors.USER_NOT_VERIFIED, data='ERR_VERIFY')
-    insert_dataset(user.id, dataset)
+    insert_dataset(user.id, payload)
 
 
 @datasets.delete('/')

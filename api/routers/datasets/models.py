@@ -14,6 +14,7 @@ class Dataset(MongoModel):
     is_public: bool = False
     created_at: datetime
     image_count: int
+    augmented_count: int
 
 
 class DatasetsResponse(BaseModel):

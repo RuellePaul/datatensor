@@ -1,13 +1,14 @@
 import React, {FC, useState} from 'react';
+import clsx from 'clsx';
 import {Box, Button, Dialog, DialogContent, DialogTitle, IconButton, makeStyles, Typography} from '@material-ui/core';
 import {Close as CloseIcon, KeyboardArrowDown as ArrowDownIcon} from '@material-ui/icons';
 import DTImagesList from 'src/components/datatensor/ImagesList';
 import ImagesDropzone from 'src/components/ImagesDropzone';
-import useImages from 'src/hooks/useImages';
-import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
+import useImages from 'src/hooks/useImages';
+import {ImagesProvider} from 'src/store/ImagesContext';
+import {Theme} from 'src/theme';
 import {SectionProps} from './SectionProps';
-import clsx from 'clsx';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
@@ -47,7 +48,7 @@ const SectionImages: FC<SectionProps> = ({className}) => {
 
     const classes = useStyles();
 
-    const {dataset} = useDataset();
+    const {dataset, pipelines} = useDataset();
 
     const {images} = useImages();
 
@@ -62,6 +63,8 @@ const SectionImages: FC<SectionProps> = ({className}) => {
     };
 
     const imagesCount = images.length;
+
+    const [pipelineId, setPipelineId] = useState<string | null>(null);
 
     return (
         <div className={clsx(classes.root, className)}>
@@ -112,16 +115,52 @@ const SectionImages: FC<SectionProps> = ({className}) => {
                 </Dialog>
             </div>
 
-            <Button className={classes.expandWrapper}>
-                <ArrowDownIcon fontSize='large'/>
-                <Box ml={1} mr={3}>
-                    <Typography variant='overline'>
-                        Original images ({imagesCount} / {dataset.image_count})
-                    </Typography>
-                </Box>
-            </Button>
+            <Box
+                display='flex'
+                alignItems='center'
+            >
+                <Button
+                    className={classes.expandWrapper}
+                    onClick={() => setPipelineId(null)}
+                >
+                    <ArrowDownIcon fontSize='large'/>
+                    <Box ml={1} mr={3}>
+                        <Typography variant='overline'>
+                            Original images ({imagesCount} / {dataset.image_count})
+                        </Typography>
+                    </Box>
+                </Button>
 
-            <DTImagesList/>
+                {pipelines.map(pipeline => (
+                    <Button
+                        className={classes.expandWrapper}
+                        key={pipeline.id}
+                        onClick={() => setPipelineId(pipeline.id)}
+                    >
+                        <ArrowDownIcon fontSize='large'/>
+                        <Box ml={1} mr={3}>
+                            <Typography variant='overline'>
+                                Augmented images ({pipeline.image_count})
+                            </Typography>
+                        </Box>
+                    </Button>
+                ))}
+            </Box>
+
+            {
+                pipelineId
+                    ? (
+                        <ImagesProvider
+                            key={pipelineId}
+                            pipeline_id={pipelineId}
+                        >
+                            <DTImagesList
+                                pipeline_id={pipelineId}
+                            />
+                        </ImagesProvider>
+                    )
+                    : <DTImagesList/>
+            }
         </div>
     )
 };

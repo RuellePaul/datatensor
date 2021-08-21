@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
             width: '100%'
         },
         '#root': {
+            overflow: 'auto',
             height: '100%',
             width: '100%',
         },
