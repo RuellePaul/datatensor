@@ -213,87 +213,87 @@ const DTImagesList: FC<ImagesListProps> = ({
                 </Masonry>
             </InfiniteScroll>
 
-            {imageSelected && (
-                <Dialog
-                    className={classes.modal}
-                    maxWidth="lg"
-                    open={open}
-                    onClose={handleCloseImage}
-                    BackdropComponent={Backdrop}
-                    BackdropProps={{
-                        className: classes.backdrop,
-                    }}
-                    PaperProps={{
-                        className: classes.paper
-                    }}
-                >
-                    <>
-                        <div className={classes.header}>
-                            <IconButton
-                                onClick={handleCloseImage}
-                            >
-                                <BackIcon
-                                    width={32}
-                                    height={32}
-                                    color='white'
+            <CategoryProvider>
+                {imageSelected && (
+                    <Dialog
+                        className={classes.modal}
+                        maxWidth="lg"
+                        open={open}
+                        onClose={handleCloseImage}
+                        BackdropComponent={Backdrop}
+                        BackdropProps={{
+                            className: classes.backdrop,
+                        }}
+                        PaperProps={{
+                            className: classes.paper
+                        }}
+                    >
+                        <>
+                            <div className={classes.header}>
+                                <IconButton
+                                    onClick={handleCloseImage}
+                                >
+                                    <BackIcon
+                                        width={32}
+                                        height={32}
+                                        color='white'
+                                    />
+                                </IconButton>
+                                <div>
+                                    <Typography
+                                        variant='h5'
+                                        color='textPrimary'
+                                    >
+                                        {imageSelected.name}
+                                    </Typography>
+                                    <Typography
+                                        variant='h6'
+                                        color='textSecondary'
+                                    >
+                                        {bytesToSize(imageSelected.size)} ({imageSelected.width} x {imageSelected.height})
+                                    </Typography>
+                                </div>
+
+                                <Chip
+                                    className={classes.chip}
+                                    label={imageSelected.pipeline_id ? 'Augmented' : 'Original'}
+                                    size='small'
+                                    variant='outlined'
                                 />
-                            </IconButton>
-                            <div>
-                                <Typography
-                                    variant='h5'
-                                    color='textPrimary'
+
+                                <div className='flexGrow'/>
+
+                                <IconButton
+                                    onClick={handleOpenMenu}
                                 >
-                                    {imageSelected.name}
-                                </Typography>
-                                <Typography
-                                    variant='h6'
-                                    color='textSecondary'
+                                    <MoreIcon
+                                        width={30}
+                                        height={30}
+                                        color='white'
+                                    />
+                                </IconButton>
+                                <Menu
+                                    anchorEl={anchorEl}
+                                    keepMounted
+                                    open={openMenu}
+                                    onClose={handleCloseMenu}
+                                    PaperProps={{
+                                        style: {
+                                            width: '20ch'
+                                        }
+                                    }}
                                 >
-                                    {bytesToSize(imageSelected.size)} ({imageSelected.width} x {imageSelected.height})
-                                </Typography>
+                                    <MenuItem onClick={handleDeleteImage}>
+                                        Delete
+                                    </MenuItem>
+                                </Menu>
                             </div>
 
-                            <Chip
-                                className={classes.chip}
-                                label={imageSelected.pipeline_id ? 'Augmented' : 'Original'}
-                                size='small'
-                                variant='outlined'
-                            />
-
-                            <div className='flexGrow'/>
-
-                            <IconButton
-                                onClick={handleOpenMenu}
-                            >
-                                <MoreIcon
-                                    width={30}
-                                    height={30}
-                                    color='white'
-                                />
-                            </IconButton>
-                            <Menu
-                                anchorEl={anchorEl}
-                                keepMounted
-                                open={openMenu}
-                                onClose={handleCloseMenu}
-                                PaperProps={{
-                                    style: {
-                                        width: '20ch'
-                                    }
-                                }}
-                            >
-                                <MenuItem onClick={handleDeleteImage}>
-                                    Delete
-                                </MenuItem>
-                            </Menu>
-                        </div>
-
-                        <div className={classes.content}>
-                            <ImageProvider
-                                key={imageSelected.id}
-                                image={imageSelected}
-                            >
-                                <CategoryProvider>
+                            <div className={classes.content}>
+                                <ImageProvider
+                                    key={imageSelected.id}
+                                    image={imageSelected}
+                                >
                                     <Grid container spacing={4}>
                                         <Grid item md={8} xs={12}>
                                             <div className={classes.actions}>
@@ -416,21 +416,21 @@ const DTImagesList: FC<ImagesListProps> = ({
 
                                         </Grid>
                                     </Grid>
-                                </CategoryProvider>
-                            </ImageProvider>
-                        </div>
+                                </ImageProvider>
+                            </div>
 
-                        <div className={classes.footer}>
-                            <Pagination
-                                color='primary'
-                                count={images.length}
-                                page={selected + 1}
-                                onChange={handlePaginationChange}
-                            />
-                        </div>
-                    </>
-                </Dialog>
-            )}
+                            <div className={classes.footer}>
+                                <Pagination
+                                    color='primary'
+                                    count={images.length}
+                                    page={selected + 1}
+                                    onChange={handlePaginationChange}
+                                />
+                            </div>
+                        </>
+                    </Dialog>
+                )}
+            </CategoryProvider>
         </div>
     );
 };

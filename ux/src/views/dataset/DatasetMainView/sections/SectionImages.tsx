@@ -134,6 +134,7 @@ const SectionImages: FC<SectionProps> = ({className}) => {
                 {pipelines.map(pipeline => (
                     <Button
                         className={classes.expandWrapper}
+                        key={pipeline.id}
                         onClick={() => setPipelineId(pipeline.id)}
                     >
                         <ArrowDownIcon fontSize='large'/>

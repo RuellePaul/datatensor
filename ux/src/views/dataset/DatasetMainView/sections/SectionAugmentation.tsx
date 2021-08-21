@@ -121,7 +121,7 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                     variant='h5'
                     color='textPrimary'
                 >
-                    Operations pipeline
+                    Images augmentation
                 </Typography>
 
                 <Box
@@ -283,6 +283,7 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                                         setStatus({success: true});
                                         setSubmitting(false);
                                         enqueueSnackbar('Augmentation task created', {variant: 'info'});
+                                        handleClose();
                                     } catch (err) {
                                         console.error(err);
                                         setStatus({success: false});

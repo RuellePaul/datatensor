@@ -54,7 +54,7 @@ const Actions: FC = () => {
                     resetForm
                 }) => {
                     try {
-                        await api.delete(`/datasets`);
+                        await api.delete(`/datasets/`);
                         resetForm();
 
                         if (isMountedRef.current) {
@@ -101,7 +101,7 @@ const Actions: FC = () => {
                                 <Button
                                     onClick={() => setFieldValue('clicked', true)}
                                 >
-                                    Delete datasets
+                                    Delete your datasets
                                 </Button>
                             )}
                             {

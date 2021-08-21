@@ -17,6 +17,7 @@ export const CategoryContext = createContext<CategoryContextValue>({
 });
 
 export const CategoryProvider: FC<CategoryProviderProps> = ({children}) => {
+
     const [currentCategory, setCurrentCategory] = useState<Category>(null);
 
     const handleSaveCategory = (update: Category | ((category: Category) => Category)): void => {
