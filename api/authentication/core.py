@@ -222,8 +222,7 @@ def send_email_with_activation_code(email, activation_code):
     )
     try:
         sg = SendGridAPIClient(Config.SENDGRID_API_KEY)
-        if not os.environ.get('__TEST__'):
-            sg.send(message)
+        sg.send(message)
     except Exception as e:
         raise errors.InternalError(f'Unable to send email with SendGrid | {str(e)}')
 

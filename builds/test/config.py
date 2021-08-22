@@ -20,8 +20,6 @@ class Config:
     UI_URL = 'https://test.datatensor.io'
     API_URI = 'https://test.datatensor.io/api'
 
-    SECRET_KEY = os.environ['FLASK_SECRET_KEY']
-
     MAX_CONTENT_LENGTH = 1 * 1000 * 1024 * 1024  # 1 Go
 
     ADMIN_USER_IDS = [

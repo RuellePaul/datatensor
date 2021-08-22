@@ -2,16 +2,15 @@ from fastapi.testclient import TestClient
 
 import errors
 from app import app, PREFIX
-from authentication.models import AuthLoginBody, AuthRegisterBody, AuthEmailConfirmBody, AuthResponse
-from config import Config
+from authentication.models import AuthLoginBody, AuthRegisterBody, AuthEmailConfirmBody, AuthResponse, \
+    OAuthAuthorizationResponse
+from config import Settings
 from routers.users.models import User
-from tests.conftest import Store
 from tests.init_db import init_db
 
 client = TestClient(app)
 
-if Config.DB_NAME != 'datatensor_development_test':
-    raise ValueError('Invalid database selected.')
+Config = Settings(environment='tests')
 
 Config.db.client.drop_database(Config.DB_NAME)
 init_db(Config.db)
@@ -21,20 +20,23 @@ class TestOAuthWorkflow:
 
     def test_oauth_authorization_github(self):
         response = client.get(f'{PREFIX}/oauth/authorization/github')
-        assert response.status_code == 200, response.text
+        assert response.status_code == 200
         data = response.json()
+        assert OAuthAuthorizationResponse.validate(data)
         assert data['authorization_url'].startswith('https://github.com/login/oauth/authorize')
 
     def test_oauth_authorization_google(self):
         response = client.get(f'{PREFIX}/oauth/authorization/google')
-        assert response.status_code == 200, response.text
+        assert response.status_code == 200
         data = response.json()
+        assert OAuthAuthorizationResponse.validate(data)
         assert data['authorization_url'].startswith('https://accounts.google.com/o/oauth2/v2/auth')
 
     def test_oauth_authorization_stackoverflow(self):
         response = client.get(f'{PREFIX}/oauth/authorization/stackoverflow')
-        assert response.status_code == 200, response.text
+        assert response.status_code == 200
         data = response.json()
+        assert OAuthAuthorizationResponse.validate(data)
         assert data['authorization_url'].startswith('https://stackoverflow.com/oauth')
 
 

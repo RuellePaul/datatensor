@@ -6,7 +6,6 @@ import errors
 from app import app, PREFIX
 from authentication.models import AuthLoginBody
 from routers.users.models import User, UsersResponse, UserResponse, UserUpdateProfileBody, UserUpdatePasswordBody
-from tests.conftest import Store
 
 client = TestClient(app)
 

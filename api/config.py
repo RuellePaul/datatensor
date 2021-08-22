@@ -9,20 +9,19 @@ from database import encrypt_init
 
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'  # to use OAuth2 without https
 
-if 'ENVIRONMENT' not in os.environ:
+if 'ACCESS_TOKEN_KEY' not in os.environ:
     raise errors.InternalError('Environment variable are not set. Use init_env.sh script, or edit Pycharm configuration')
 
 
 class Settings(BaseSettings):
-    ENVIRONMENT: str = os.environ['ENVIRONMENT']
+
+    ENVIRONMENT = os.environ['ENVIRONMENT']
 
     ROOT_PATH: str = os.path.abspath(os.path.join(FastAPI().root_path, os.pardir))
     DATASOURCES_PATH: str = os.path.join(ROOT_PATH, 'api', 'workflows', 'generator', 'datasources')
 
     UI_URL: str = 'https://localhost:5069'
     API_URI: str = 'http://127.0.0.1:4069'
-
-    SECRET_KEY: str = os.environ['FLASK_SECRET_KEY']
 
     MAX_CONTENT_LENGTH: int = 1 * 1000 * 1024 * 1024  # 1 Go
 
@@ -91,14 +90,14 @@ class Settings(BaseSettings):
 
     DB_ENCRYPTION_KEY: str = os.environ['DB_ENCRYPTION_KEY']
     DB_HOST: str = 'localhost:27017'
-    DB_NAME: str = f'datatensor_{ENVIRONMENT}'
+    DB_NAME: str = ''
     DB_ENCRYPT_CLIENT: Any = None
     db: Any = None
 
-    def __init__(self):
+    def __init__(self, environment=os.environ['ENVIRONMENT']):
         super().__init__()
-        if os.environ.get('__TEST__'):
-            self.DB_NAME = f'{self.DB_NAME}_test'
+        self.ENVIRONMENT: str = environment
+        self.DB_NAME: str = f'datatensor_{environment}'
         self.DB_ENCRYPT_CLIENT, self.db = encrypt_init(self.DB_HOST,
                                                        db_name=self.DB_NAME,
                                                        key=self.DB_ENCRYPTION_KEY)
