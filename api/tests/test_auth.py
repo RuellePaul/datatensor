@@ -2,21 +2,18 @@ from fastapi.testclient import TestClient
 
 import errors
 from app import app, PREFIX
-from authentication.models import AuthLoginBody, AuthRegisterBody, AuthEmailConfirmBody, AuthResponse, \
-    OAuthAuthorizationResponse
-from config import Settings
+from authentication.models import *
+from config import Config
 from routers.users.models import User
 from tests.init_db import init_db
 
 client = TestClient(app)
 
-Config = Settings(environment='tests')
-
 Config.db.client.drop_database(Config.DB_NAME)
 init_db(Config.db)
 
 
-class TestOAuthWorkflow:
+class TestOAuthAuthorization:
 
     def test_oauth_authorization_github(self):
         response = client.get(f'{PREFIX}/oauth/authorization/github')
@@ -40,23 +37,31 @@ class TestOAuthWorkflow:
         assert data['authorization_url'].startswith('https://stackoverflow.com/oauth')
 
 
-class TestJWTAuthWorkflow:
+class TestAuthRegister:
 
     def test_valid_register(self):
-        register_body = AuthRegisterBody(email='test@datatensor.io',
-                                         password='TestPassword123$%',
-                                         name='Session Test',
-                                         recaptcha='test')
+        register_body = AuthRegisterBody(email='register@datatensor.io',
+                                         password='PasswordTest123$%',
+                                         name='Registered User',
+                                         recaptcha='')
         response = client.post(f'{PREFIX}/auth/register', json=register_body.dict())
         assert response.status_code == 200
         assert AuthResponse.validate(response.json())
-        access_token = response.json().get('accessToken')
         user = response.json().get('user')
         assert not user['is_verified']
         assert not user['is_admin']
 
-        Store.access_token = access_token
-        Store.user = user
+    def test_invalid_register(self):
+        register_body = AuthRegisterBody(email='user@datatensor.io',
+                                         password='PasswordTest123$%',
+                                         name='Registered User',
+                                         recaptcha='')
+        response = client.post(f'{PREFIX}/auth/register', json=register_body.dict())
+        assert response.status_code == 403
+        assert response.json().get('message') == errors.USER_ALREADY_EXISTS
+
+
+class TestJWTAuthWorkflow:
 
     def test_valid_activation_code(self):
         email_confirm_body = AuthEmailConfirmBody(activation_code='test_activation_code')

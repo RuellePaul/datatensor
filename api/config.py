@@ -50,7 +50,6 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_KEY: str = os.environ['ACCESS_TOKEN_KEY']
     SESSION_DURATION_IN_MINUTES: int = 120
 
-    GOOGLE_CAPTCHA_PUBLIC_KEY: str = '6LcFmzcaAAAAAHWoKJ-oEJRO_grEjEjQb0fedPHo'
     GOOGLE_CAPTCHA_SECRET_KEY: str = os.environ['GOOGLE_CAPTCHA_SECRET_KEY']
 
     SENDGRID_API_KEY: str = os.environ['SENDGRID_API_KEY']
@@ -94,10 +93,9 @@ class Settings(BaseSettings):
     DB_ENCRYPT_CLIENT: Any = None
     db: Any = None
 
-    def __init__(self, environment=os.environ['ENVIRONMENT']):
+    def __init__(self):
         super().__init__()
-        self.ENVIRONMENT: str = environment
-        self.DB_NAME: str = f'datatensor_{environment}'
+        self.DB_NAME: str = f'datatensor_{self.ENVIRONMENT}'
         self.DB_ENCRYPT_CLIENT, self.db = encrypt_init(self.DB_HOST,
                                                        db_name=self.DB_NAME,
                                                        key=self.DB_ENCRYPTION_KEY)
