@@ -10,6 +10,7 @@ import Actions from './Actions';
 import Generator from './Generator';
 import TasksOverTime from 'src/components/charts/TasksOverTime';
 import UsersOverTime from 'src/components/charts/UsersOverTime';
+import UserScopes from 'src/components/charts/UserScopes';
 import DTTasks from 'src/components/datatensor/Tasks';
 import {TimeRange} from 'src/types/timeRange'
 import useTasks from 'src/hooks/useTasks';
@@ -129,6 +130,15 @@ const AdminDashboardView: FC = () => {
                         <UsersOverTime
                             users={users}
                             timeRange={timeRange}
+                        />
+                    </Grid>
+                    <Grid
+                        item
+                        md={5}
+                        xs={12}
+                    >
+                        <UserScopes
+                            users={users}
                         />
                     </Grid>
                 </Grid>
