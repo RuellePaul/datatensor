@@ -4,6 +4,7 @@ import {User} from 'src/types/user';
 import SplashScreen from 'src/components/screens/SplashScreen';
 import api from 'src/utils/api';
 import {useHistory} from 'react-router-dom';
+import {useSnackbar} from 'notistack';
 
 interface AuthState {
     isInitialised: boolean;
@@ -65,7 +66,8 @@ const initialAuthState: AuthState = {
     accessToken: null
 };
 
-const isValidToken = (accessToken: string): boolean => {''
+const isValidToken = (accessToken: string): boolean => {
+    ''
     if (!accessToken) {
         return false;
     }
@@ -146,6 +148,7 @@ const AuthContext = createContext<AuthContextValue>({
 export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
     const history = useHistory();
     const [state, dispatch] = useReducer(reducer, initialAuthState);
+    const {enqueueSnackbar} = useSnackbar();
 
     const login = async (email: string, password: string) => {
         const response = await api.post<{ accessToken: string; user: User }>('/auth/login', {email, password});
@@ -198,21 +201,28 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
     };
 
     const confirmEmail = async (activation_code: string) => {
-        const response = await api.post<{ accessToken: string; user: User }>('/auth/email-confirmation', {
-            activation_code
-        });
-        const {accessToken, user} = response.data;
+        try {
+            const response = await api.post<{ accessToken: string; user: User }>('/auth/email-confirmation', {
+                activation_code
+            });
 
-        setSession(accessToken);
+            const {accessToken, user} = response.data;
 
-        dispatch({
-            type: 'LOGIN',
-            payload: {
-                user, accessToken
-            }
-        });
+            setSession(accessToken);
 
-        history.push('/app');
+            dispatch({
+                type: 'LOGIN',
+                payload: {
+                    user, accessToken
+                }
+            });
+
+            history.push('/app');
+        } catch (error) {
+            enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
+
+            history.push('/')
+        }
     };
 
     useEffect(() => {
