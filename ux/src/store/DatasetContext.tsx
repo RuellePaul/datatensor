@@ -13,7 +13,6 @@ export interface DatasetContextValue {
     saveCategories: (update: Category[] | ((update: Category[]) => Category[])) => void;
     pipelines: Pipeline[];
     savePipelines: (update: Pipeline[] | ((update: Pipeline[]) => Pipeline[])) => void;
-    isWorking: boolean;
 }
 
 interface DatasetProviderProps {
@@ -30,8 +29,7 @@ export const DatasetContext = createContext<DatasetContextValue>({
     },
     pipelines: [],
     savePipelines: () => {
-    },
-    isWorking: false
+    }
 });
 
 export const DatasetProvider: FC<DatasetProviderProps> = ({dataset_id, children}) => {
@@ -41,7 +39,6 @@ export const DatasetProvider: FC<DatasetProviderProps> = ({dataset_id, children}
     const [currentDataset, setCurrentDataset] = useState<Dataset>(null);
     const [currentCategories, setCurrentCategories] = useState<Category[]>([]);
     const [currentPipelines, setCurrentPipelines] = useState<Pipeline[]>([]);
-    const [isWorking, setIsWorking] = useState<boolean>(false);
 
     const handleSaveDataset = (update: Dataset | ((dataset: Dataset) => Dataset)): void => {
         setCurrentDataset(update);
@@ -91,13 +88,6 @@ export const DatasetProvider: FC<DatasetProviderProps> = ({dataset_id, children}
         fetchPipelines();
     }, [fetchDataset, fetchCategories, fetchPipelines]);
 
-    useEffect(() => {
-        if (tasks !== null) {
-            let activeTasks = tasks.filter(task => task.status === 'active' && task.dataset_id === dataset_id);
-            setIsWorking(activeTasks.length > 0);
-        }
-    }, [dataset_id, tasks]);
-
     if (currentDataset === null)
         return (
             <Box
@@ -116,8 +106,7 @@ export const DatasetProvider: FC<DatasetProviderProps> = ({dataset_id, children}
                 categories: currentCategories,
                 saveCategories: handleSaveCategories,
                 pipelines: currentPipelines,
-                savePipelines: handleSavePipelines,
-                isWorking: isWorking
+                savePipelines: handleSavePipelines
             }}
         >
             {children}

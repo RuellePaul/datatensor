@@ -14,6 +14,7 @@ import {
     SvgIcon,
     Tooltip,
     Typography,
+    capitalize,
     useTheme
 } from '@material-ui/core';
 import {FiberManualRecord} from '@material-ui/icons';
@@ -36,8 +37,8 @@ const titlesMap = {
 };
 
 const descriptionsMap = (user: User) => ({
-    TASK_SUCCEED: 'Generator task completed successfully.',
-    TASK_FAILED: 'Generator task has failed.',
+    TASK_SUCCEED: ' task completed successfully.',
+    TASK_FAILED: ' task has failed.',
     REGISTRATION: 'We\'re glad to see you as one of our members. Happy hacking on Datatensor !',
     EMAIL_CONFIRM_REQUIRED: 'Please confirm your email address to access all datatensor features.',
     EMAIL_CONFIRM_DONE: `Your email address ${user.email} has been verified !`,
@@ -178,6 +179,7 @@ const Notifications: FC = () => {
                                                 primaryTypographyProps={{variant: 'subtitle2', color: 'textPrimary'}}
                                                 secondary={
                                                     <>
+                                                        {['TASK_SUCCEED', 'TASK_FAILED'].includes(notification.type) && capitalize(tasks.find(task => task.id === notification.task_id).type)}
                                                         {descriptionsMap(user)[notification.type]}
                                                         <br/>
                                                         <Typography component='span' variant='caption'>

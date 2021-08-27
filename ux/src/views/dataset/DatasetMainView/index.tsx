@@ -1,8 +1,8 @@
 import React, {FC, useEffect, useState} from 'react';
 import {useParams} from 'react-router';
 import clsx from 'clsx';
-import {Box, CircularProgress, Container, Divider, makeStyles, Tab, Tabs, Tooltip, Typography} from '@material-ui/core';
-import {Alert, TabContext} from '@material-ui/lab';
+import {Box, Container, Divider, makeStyles, Tab, Tabs, Tooltip, Typography} from '@material-ui/core';
+import {TabContext} from '@material-ui/lab';
 import Header from './Header';
 import SectionImages from './sections/SectionImages';
 import SectionAugmentation from './sections/SectionAugmentation';
@@ -10,6 +10,7 @@ import SectionSettings from './sections/SectionSettings';
 import {DashboardOutlined, DynamicFeedOutlined, PhotoLibraryOutlined, SettingsOutlined} from '@material-ui/icons';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
+import WorkingAlert from 'src/components/datatensor/WorkingAlert';
 import {ImagesConsumer, ImagesProvider} from 'src/store/ImagesContext';
 import {DatasetConsumer, DatasetProvider} from 'src/store/DatasetContext';
 
@@ -83,14 +84,7 @@ const DatasetMainView: FC = () => {
                                 <Container component='section' maxWidth='lg'>
                                     <Header/>
 
-                                    {value.isWorking && (
-                                        <Box mt={2}>
-                                            <Alert severity="warning">
-                                                A task is running {' '}
-                                                <CircularProgress color="inherit" size={14}/>
-                                            </Alert>
-                                        </Box>
-                                    )}
+                                    <WorkingAlert dataset_id={dataset_id}/>
 
                                     <Box mt={2}>
                                         <ImagesConsumer>
