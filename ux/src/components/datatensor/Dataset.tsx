@@ -10,7 +10,6 @@ import {
     CardHeader,
     CardMedia,
     Chip,
-    CircularProgress,
     makeStyles,
     Typography
 } from '@material-ui/core';
@@ -20,12 +19,11 @@ import {Dataset} from 'src/types/dataset';
 import api from 'src/utils/api';
 import {Image} from 'src/types/image';
 import UserAvatar from 'src/components/UserAvatar';
+import WorkingAlert from 'src/components/datatensor/WorkingAlert';
 import {UserConsumer, UserProvider} from 'src/store/UserContext';
-import {Alert} from '@material-ui/lab';
 
 interface DatasetProps {
     dataset: Dataset;
-    isWorking?: boolean;
     className?: string;
 }
 
@@ -45,7 +43,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 const DTDataset: FC<DatasetProps> = ({
                                          className,
                                          dataset,
-                                         isWorking = false,
                                          ...rest
                                      }) => {
     const classes = useStyles();
@@ -143,15 +140,9 @@ const DTDataset: FC<DatasetProps> = ({
                         dangerouslySetInnerHTML={{__html: dataset.description || '<i>No description provided</i>'}}
                     />
 
-
-                    {isWorking && (
-                        <Box mt={2}>
-                            <Alert severity="warning">
-                                A task is running {' '}
-                                <CircularProgress color="inherit" size={14}/>
-                            </Alert>
-                        </Box>
-                    )}
+                    <WorkingAlert
+                        dataset_id={dataset.id}
+                    />
                 </CardContent>
             </CardActionArea>
         </Card>
