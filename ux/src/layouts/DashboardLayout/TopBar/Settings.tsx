@@ -40,7 +40,6 @@ const Settings: FC = () => {
     const [isOpen, setOpen] = useState<boolean>(false);
     const [values, setValues] = useState({
         direction: settings.direction,
-        responsiveFontSizes: settings.responsiveFontSizes,
         theme: settings.theme
     });
 
@@ -113,22 +112,6 @@ const Settings: FC = () => {
                             />
                         )}
                         label="RTL"
-                    />
-                </Box>
-                <Box
-                    mt={2}
-                    px={1}
-                >
-                    <FormControlLabel
-                        control={(
-                            <Switch
-                                checked={values.responsiveFontSizes}
-                                edge="start"
-                                name="direction"
-                                onChange={(event) => handleChange('responsiveFontSizes', event.target.checked)}
-                            />
-                        )}
-                        label="Responsive font sizes"
                     />
                 </Box>
                 <Box mt={2}>

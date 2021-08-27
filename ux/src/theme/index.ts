@@ -24,7 +24,6 @@ type Direction = 'ltr' | 'rtl';
 
 interface ThemeConfig {
     direction?: Direction;
-    responsiveFontSizes?: boolean;
     theme?: string;
 }
 
@@ -186,9 +185,7 @@ export const createTheme = (config: ThemeConfig = {}): Theme => {
         )
     );
 
-    if (config.responsiveFontSizes) {
-        theme = responsiveFontSizes(theme);
-    }
+    theme = responsiveFontSizes(theme);
 
     return theme as Theme;
 };

@@ -21,7 +21,6 @@ const InnerSettingsProviders: FC = ({children}) => {
 
     const theme = createTheme({
         direction: settings.direction,
-        responsiveFontSizes: settings.responsiveFontSizes,
         theme: settings.theme
     });
 
