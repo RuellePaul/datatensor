@@ -2,6 +2,7 @@ import React, {forwardRef, HTMLProps, ReactNode, useCallback, useEffect} from 'r
 import {Helmet} from 'react-helmet';
 import {useLocation} from 'react-router-dom';
 import track from 'src/utils/analytics';
+import {useSelector} from 'src/store';
 
 interface PageProps extends HTMLProps<HTMLDivElement> {
     children?: ReactNode;
@@ -14,6 +15,10 @@ const Page = forwardRef<HTMLDivElement, PageProps>(({
                                                         ...rest
                                                     }, ref) => {
     const location = useLocation();
+
+    const {notifications} = useSelector((state) => state.notifications);
+
+    const unreadNotificationsCount = notifications.filter(notification => !notification.opened).length
 
     const sendPageViewEvent = useCallback(() => {
         track.pageview({
@@ -33,6 +38,7 @@ const Page = forwardRef<HTMLDivElement, PageProps>(({
         >
             <Helmet>
                 <title>
+                    {unreadNotificationsCount > 0 ? `(${unreadNotificationsCount}) ` : ''}
                     {title}
                     {' | '}
                     Datatensor

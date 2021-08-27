@@ -155,13 +155,6 @@ const DTImagesList: FC<ImagesListProps> = ({
         handleCloseImage();
     };
 
-    const handleKeyDown = (event: React.KeyboardEvent<unknown>) => {
-        if (event.key === 'ArrowLeft')
-            setSelected(Math.max(0, selected - 1));
-        else if (event.key === 'ArrowRight')
-            setSelected(Math.min(selected + 1, images.length - 1));
-    };
-
     const handlePaginationChange = (event: React.ChangeEvent<unknown>, value: number) => {
         setSelected(value - 1);
     };
@@ -176,7 +169,6 @@ const DTImagesList: FC<ImagesListProps> = ({
     return (
         <div
             className={clsx(classes.root, className)}
-            onKeyDown={handleKeyDown}
             {...rest}
         >
             <InfiniteScroll
@@ -256,7 +248,7 @@ const DTImagesList: FC<ImagesListProps> = ({
 
                                 <Chip
                                     className={classes.chip}
-                                    label={imageSelected.pipeline_id ? 'Augmented' : 'Original'}
+                                    label={imageSelected.pipeline_id ? 'Augmented image' : 'Original image'}
                                     size='small'
                                     variant='outlined'
                                 />
@@ -379,22 +371,22 @@ const DTImagesList: FC<ImagesListProps> = ({
                                                         </Typography>
                                                     }
                                                 >
-                                        <span>
-                                            {<ImageConsumer>
-                                                {
-                                                    value => (
-                                                        <Button
-                                                            variant="outlined"
-                                                            color="secondary"
-                                                            size='small'
-                                                            onClick={value.validateLabels}
-                                                        >
-                                                            Save
-                                                        </Button>
-                                                    )
-                                                }
-                                            </ImageConsumer>}
-                                        </span>
+                                                    <span>
+                                                        {<ImageConsumer>
+                                                            {
+                                                                value => (
+                                                                    <Button
+                                                                        variant="outlined"
+                                                                        color="secondary"
+                                                                        size='small'
+                                                                        onClick={value.validateLabels}
+                                                                    >
+                                                                        Save
+                                                                    </Button>
+                                                                )
+                                                            }
+                                                        </ImageConsumer>}
+                                                    </span>
                                                 </Tooltip>
                                             </div>
 

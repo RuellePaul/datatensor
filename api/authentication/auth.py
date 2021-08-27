@@ -54,10 +54,7 @@ async def do_register(payload: AuthRegisterBody):
     if user:
         raise errors.Forbidden(errors.USER_ALREADY_EXISTS)
 
-    if Config.ENVIRONMENT == 'development' and payload.email == 'test@datatensor.io':
-        activation_code = 'test_activation_code'
-    else:
-        activation_code = core.generate_activation_code()
+    activation_code = core.generate_activation_code()
 
     core.send_email_with_activation_code(email, activation_code)
     user = core.register_user(user_id, payload.name, email, payload.password, activation_code)

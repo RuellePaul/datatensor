@@ -12,8 +12,6 @@ def create_logger():
     _logger.addHandler(console_handler)
 
     _logger.setLevel(logging.INFO)
-    if os.environ.get('__TEST__'):
-        _logger.setLevel(logging.CRITICAL)
 
     return _logger
 
