@@ -17,7 +17,7 @@ import {
 import {Search as SearchIcon, XCircle as XIcon} from 'react-feather';
 import api from 'src/utils/api';
 
-interface SearchResult {
+interface SearchDatatensorResult {
     datasets: object;
     images: object;
     users: object;
@@ -37,7 +37,7 @@ const Search: FC = () => {
     const [value, setValue] = useState<string>('');
     const [isOpen, setOpen] = useState<boolean>(false);
     const [isLoading, setLoading] = useState<boolean>(false);
-    const [result, setResult] = useState<SearchResult | null>(null);
+    const [result, setResult] = useState<SearchDatatensorResult | null>(null);
 
     const handleOpen = (): void => {
         setOpen(true);
@@ -51,7 +51,7 @@ const Search: FC = () => {
         try {
             setLoading(true);
 
-            const response = await api.get<{ result: SearchResult; }>('/search/', {params: {query: value}});
+            const response = await api.get<{ result: SearchDatatensorResult; }>('/search/', {params: {query: value}});
             setResult(response.data.result);
         } catch (error) {
             enqueueSnackbar(error?.message || 'Something went wrong', {

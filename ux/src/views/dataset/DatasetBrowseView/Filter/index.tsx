@@ -1,8 +1,9 @@
-import React, {ChangeEvent, FC, KeyboardEvent, useState} from 'react';
+import React, {ChangeEvent, FC, KeyboardEvent, useCallback, useEffect, useState} from 'react';
 import clsx from 'clsx';
 import {Box, Card, Checkbox, Chip, Divider, FormControlLabel, Input, makeStyles} from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import {Theme} from 'src/theme';
+import api from 'src/utils/api';
 
 interface FilterProps {
     className?: string;
@@ -50,6 +51,16 @@ const Filter: FC<FilterProps> = ({className, ...rest}) => {
     const handleChipDelete = (chip: string): void => {
         setChips((prevChips) => prevChips.filter((prevChip) => chip !== prevChip));
     };
+
+    const searchDatasets = useCallback(async (category_names) => {
+        if (category_names.length === 0) return;
+
+        await api.post<{ dataset_ids: string[] }>('/search/datasets', {category_names});
+    }, []);
+
+    useEffect(() => {
+        searchDatasets(chips)
+    }, [chips, searchDatasets]);
 
     return (
         <Card

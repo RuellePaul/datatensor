@@ -42,3 +42,11 @@ def search_categories(query) -> List[Category]:
                  {'supercategory': {'$regex': query, '$options': 'i'}}]}
     ))
     return [Category.from_mongo(category) for category in categories]
+
+
+def search_dataset_ids_from_category_names(category_names: List[str]):
+    query = '|'.join(category_names)
+    categories = list(db.categories.find({'$or': [{'name': {'$regex': query, '$options': 'i'}},
+                                                  {'supercategory': {'$regex': query, '$options': 'i'}}]}))
+    matched_datasets_ids = [category['dataset_id'] for category in categories]
+    return list(set(matched_datasets_ids))
