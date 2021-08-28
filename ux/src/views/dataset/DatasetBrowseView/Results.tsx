@@ -40,7 +40,7 @@ const Results: FC<ResultsProps> = ({className, ...rest}) => {
 
     const sortRef = useRef<HTMLButtonElement | null>(null);
     const [openSort, setOpenSort] = useState<boolean>(false);
-    const [selectedSort, setSelectedSort] = useState<string>('Most recent');
+    const [selectedSort, setSelectedSort] = useState<string>('Most images');
 
 
     const handleSortOpen = (): void => {
@@ -98,19 +98,26 @@ const Results: FC<ResultsProps> = ({className, ...rest}) => {
                 container
                 spacing={3}
             >
-                {datasets.map((dataset) => (
-                    <Grid
-                        item
-                        key={dataset.id}
-                        md={4}
-                        sm={6}
-                        xs={12}
-                    >
-                        <DTDataset
-                            dataset={dataset}
-                        />
-                    </Grid>
-                ))}
+                {datasets
+                    .sort((a, b) => {
+                        if (selectedSort === 'Most images')
+                            return (b.image_count + (b.augmented_count || 0)) - (a.image_count + (a.augmented_count || 0))
+                        else if (selectedSort === 'Most original images')
+                            return b.image_count - a.image_count
+                        else if (selectedSort === 'Most recent')
+                            return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+                    })
+                    .map((dataset) => (
+                        <Grid
+                            item
+                            key={dataset.id}
+                            md={4}
+                            sm={6}
+                            xs={12}
+                        >
+                            <DTDataset dataset={dataset}/>
+                        </Grid>
+                    ))}
             </Grid>
             <Box
                 mt={6}
@@ -125,7 +132,7 @@ const Results: FC<ResultsProps> = ({className, ...rest}) => {
                 open={openSort}
                 elevation={1}
             >
-                {['Most recent', 'Best mAP'].map(
+                {['Most images', 'Most original images', 'Most recent'].map(
                     (option) => (
                         <MenuItem
                             key={option}
