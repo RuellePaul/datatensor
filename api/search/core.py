@@ -9,6 +9,10 @@ from routers.users.models import User
 db = Config.db
 
 
+# FIXME : datasets fetched by a search query must be public, or private if they belongs to user.
+# This is a security issue
+
+
 def search_datasets(query) -> List[Dataset]:
     categories = list(db.categories.find({'$or': [{'name': {'$regex': query, '$options': 'i'}},
                                                   {'supercategory': {'$regex': query, '$options': 'i'}}]}))
