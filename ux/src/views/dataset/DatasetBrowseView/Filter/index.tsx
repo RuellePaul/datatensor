@@ -68,7 +68,7 @@ const Filter: FC<FilterProps> = ({className, ...rest}) => {
                     className={classes.searchInput}
                     onChange={handleInputChange}
                     onKeyUp={handleInputKeyup}
-                    placeholder="Enter a keyword"
+                    placeholder="Search a category"
                     value={inputValue}
                 />
                 <Box flexGrow={1}/>

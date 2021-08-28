@@ -106,6 +106,8 @@ const Results: FC<ResultsProps> = ({className, ...rest}) => {
                             return b.image_count - a.image_count
                         else if (selectedSort === 'Most recent')
                             return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+                        else
+                            return 0
                     })
                     .map((dataset) => (
                         <Grid
