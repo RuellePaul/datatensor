@@ -36,7 +36,7 @@ const Results: FC<ResultsProps> = ({className, ...rest}) => {
 
     const classes = useStyles();
 
-    const {datasets} = useDatasets();
+    const {displayedDatasets} = useDatasets();
 
     const sortRef = useRef<HTMLButtonElement | null>(null);
     const [openSort, setOpenSort] = useState<boolean>(false);
@@ -76,7 +76,7 @@ const Results: FC<ResultsProps> = ({className, ...rest}) => {
                 >
                     Showing
                     {' '}
-                    {datasets.length}
+                    {displayedDatasets.length}
                     {' '}
                     datasets
                 </Typography>
@@ -98,7 +98,7 @@ const Results: FC<ResultsProps> = ({className, ...rest}) => {
                 container
                 spacing={3}
             >
-                {datasets
+                {displayedDatasets
                     .sort((a, b) => {
                         if (selectedSort === 'Most images')
                             return (b.image_count + (b.augmented_count || 0)) - (a.image_count + (a.augmented_count || 0))

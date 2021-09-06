@@ -15,6 +15,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import {Theme} from 'src/theme';
 import api from 'src/utils/api';
 import {Category} from 'src/types/category';
+import useDatasets from '../../../../hooks/useDatasets';
 
 interface FilterProps {
     className?: string;
@@ -38,7 +39,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const Filter: FC<FilterProps> = ({className, ...rest}) => {
+
     const classes = useStyles();
+
+    const {datasets, saveDisplayedDatasets} = useDatasets();
 
     const [categories, setCategories] = useState<Category[]>([]);
     const fetchCategories = useCallback(async () => {
@@ -56,11 +60,21 @@ const Filter: FC<FilterProps> = ({className, ...rest}) => {
     }, [fetchCategories]);
 
 
-    const searchDatasets = useCallback(async (category_names) => {
-        if (category_names.length === 0) return;
+    const [categoriesSelected, setCategoriesSelected] = useState<Category[]>([]);
 
-        await api.post<{ dataset_ids: string[] }>('/search/datasets', {category_names});
-    }, []);
+    const searchDatasets = useCallback(async (category_names) => {
+        if (category_names.length === 0) {
+            saveDisplayedDatasets(datasets);
+            return;
+        }
+
+        const response = await api.post<{ dataset_ids: string[] }>('/search/datasets', {category_names});
+        saveDisplayedDatasets(datasets.filter(dataset => response.data.dataset_ids.includes(dataset.id)))
+    }, [datasets]);
+
+    useEffect(() => {
+        searchDatasets(categoriesSelected.map(category => category.name));
+    }, [searchDatasets, categoriesSelected])
 
     return (
         <Card
@@ -81,6 +95,8 @@ const Filter: FC<FilterProps> = ({className, ...rest}) => {
                     groupBy={(category) => capitalize(category.supercategory)}
                     getOptionLabel={(category) => capitalize(category.name)}
                     multiple
+                    onChange={(event, newCategories) => setCategoriesSelected(newCategories as Category[])}
+                    value={categoriesSelected}
                     renderInput={(params) => (
                         <TextField
                             {...params}
