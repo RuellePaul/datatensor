@@ -1,7 +1,8 @@
 from fastapi import APIRouter
 
 import errors
-from api.search.core import search_users, search_images, search_datasets, search_categories, search_dataset_ids_from_category_names
+from api.search.core import search_users, search_images, search_datasets, search_categories, \
+    search_dataset_ids_from_category_names
 from api.search.models import *
 from utils import parse
 
@@ -19,6 +20,14 @@ async def search_datatensor(query: str):
         'categories': search_categories(query)
     }
     response = {'result': result}
+    return parse(response)
+
+
+@search.get('/categories', response_model=SearchCategoriesResponse)
+async def search_all_category_names():
+    response = {
+        'categories': search_categories()
+    }
     return parse(response)
 
 

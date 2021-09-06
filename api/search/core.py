@@ -40,11 +40,14 @@ def search_users(query) -> List[User]:
     return [User.from_mongo(user) for user in users]
 
 
-def search_categories(query) -> List[Category]:
-    categories = list(db.categories.find(
-        {'$or': [{'name': {'$regex': query, '$options': 'i'}},
-                 {'supercategory': {'$regex': query, '$options': 'i'}}]}
-    ))
+def search_categories(query=None) -> List[Category]:
+    if query:
+        categories = list(db.categories.find(
+            {'$or': [{'name': {'$regex': query, '$options': 'i'}},
+                     {'supercategory': {'$regex': query, '$options': 'i'}}]}
+        ))
+    else:
+        categories = list(db.categories.find())
     return [Category.from_mongo(category) for category in categories]
 
 

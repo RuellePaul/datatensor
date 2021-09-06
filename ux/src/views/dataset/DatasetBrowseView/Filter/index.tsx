@@ -1,9 +1,20 @@
-import React, {ChangeEvent, FC, KeyboardEvent, useCallback, useEffect, useState} from 'react';
+import React, {FC, useCallback, useEffect, useState} from 'react';
 import clsx from 'clsx';
-import {Box, Card, Checkbox, Chip, Divider, FormControlLabel, Input, makeStyles} from '@material-ui/core';
+import {
+    Box,
+    capitalize,
+    Card,
+    Checkbox,
+    FormControlLabel,
+    InputAdornment,
+    makeStyles,
+    TextField
+} from '@material-ui/core';
+import {Autocomplete} from '@material-ui/lab';
 import SearchIcon from '@material-ui/icons/Search';
 import {Theme} from 'src/theme';
 import api from 'src/utils/api';
+import {Category} from 'src/types/category';
 
 interface FilterProps {
     className?: string;
@@ -12,7 +23,11 @@ interface FilterProps {
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
     searchInput: {
-        marginLeft: theme.spacing(2)
+        width: '100%',
+        marginRight: theme.spacing(3),
+        '& input': {
+            minHeight: 30
+        }
     },
     toggle: {
         whiteSpace: 'nowrap'
@@ -24,43 +39,28 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const Filter: FC<FilterProps> = ({className, ...rest}) => {
     const classes = useStyles();
-    const [inputValue, setInputValue] = useState<string>('');
-    const [chips, setChips] = useState<string[]>([
-        'Cat',
-        'Dog',
-        'Human',
-        'Bicycle'
-    ]);
 
-    const handleInputChange = (event: ChangeEvent<HTMLInputElement>): void => {
-        event.persist();
-        setInputValue(event.target.value);
-    };
-
-    const handleInputKeyup = (event: KeyboardEvent<HTMLInputElement>): void => {
-        event.persist();
-
-        if (event.keyCode === 13 && inputValue) {
-            if (!chips.includes(inputValue)) {
-                setChips((prevChips) => [...prevChips, inputValue]);
-                setInputValue('');
-            }
+    const [categories, setCategories] = useState<Category[]>([]);
+    const fetchCategories = useCallback(async () => {
+        try {
+            const response = await api.get<{ categories: Category[] }>(`/search/categories`);
+            setCategories(response.data.categories);
+        } catch (err) {
+            console.error(err);
         }
-    };
 
-    const handleChipDelete = (chip: string): void => {
-        setChips((prevChips) => prevChips.filter((prevChip) => chip !== prevChip));
-    };
+    }, []);
+
+    useEffect(() => {
+        fetchCategories();
+    }, [fetchCategories]);
+
 
     const searchDatasets = useCallback(async (category_names) => {
         if (category_names.length === 0) return;
 
         await api.post<{ dataset_ids: string[] }>('/search/datasets', {category_names});
     }, []);
-
-    useEffect(() => {
-        searchDatasets(chips)
-    }, [chips, searchDatasets]);
 
     return (
         <Card
@@ -72,15 +72,32 @@ const Filter: FC<FilterProps> = ({className, ...rest}) => {
                 display="flex"
                 alignItems="center"
             >
-                <SearchIcon/>
-                <Input
-                    disableUnderline
-                    fullWidth
+                <Autocomplete
                     className={classes.searchInput}
-                    onChange={handleInputChange}
-                    onKeyUp={handleInputKeyup}
-                    placeholder="Search a category"
-                    value={inputValue}
+                    options={categories
+                        .sort((a, b) => -b.name.localeCompare(a.name))
+                        .sort((a, b) => -b.supercategory.localeCompare(a.supercategory))
+                    }
+                    groupBy={(category) => capitalize(category.supercategory)}
+                    getOptionLabel={(category) => capitalize(category.name)}
+                    multiple
+                    renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            label='Search for categories...'
+                            InputProps={{
+                                ...params.InputProps,
+                                startAdornment: (
+                                    <>
+                                        <InputAdornment position='start'>
+                                            <SearchIcon/>
+                                        </InputAdornment>
+                                        {params.InputProps.startAdornment}
+                                    </>
+                                ),
+                            }}
+                        />
+                    )}
                 />
                 <Box flexGrow={1}/>
                 <FormControlLabel
@@ -90,22 +107,6 @@ const Filter: FC<FilterProps> = ({className, ...rest}) => {
                     )}
                     label="Show public datasets"
                 />
-            </Box>
-            <Divider/>
-            <Box
-                p={2}
-                display="flex"
-                alignItems="center"
-                flexWrap="wrap"
-            >
-                {chips.map((chip) => (
-                    <Chip
-                        className={classes.chip}
-                        key={chip}
-                        label={chip}
-                        onDelete={() => handleChipDelete(chip)}
-                    />
-                ))}
             </Box>
         </Card>
     );

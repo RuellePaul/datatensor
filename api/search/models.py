@@ -23,5 +23,9 @@ class SearchDatasetsPayload(BaseModel):
     category_names: List[str]
 
 
+class SearchCategoriesResponse(BaseModel):
+    categories: List[Category]
+
+
 class SearchDatasetsResponse(BaseModel):
     dataset_ids: List[str]

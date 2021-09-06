@@ -11,6 +11,7 @@ export type SuperCategory =
     | 'animal'
     | 'appliance'
     | 'food'
+    | 'miscellaneous'
 
 export interface Category {
     id: string;

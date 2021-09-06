@@ -179,7 +179,7 @@ const Notifications: FC = () => {
                                                 primaryTypographyProps={{variant: 'subtitle2', color: 'textPrimary'}}
                                                 secondary={
                                                     <>
-                                                        {['TASK_SUCCEED', 'TASK_FAILED'].includes(notification.type) && capitalize(tasks.find(task => task.id === notification.task_id).type)}
+                                                        {['TASK_SUCCEED', 'TASK_FAILED'].includes(notification.type) && tasks && capitalize(tasks.find(task => task.id === notification.task_id).type)}
                                                         {descriptionsMap(user)[notification.type]}
                                                         <br/>
                                                         <Typography component='span' variant='caption'>

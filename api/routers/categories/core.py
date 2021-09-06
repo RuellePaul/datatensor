@@ -3,7 +3,7 @@ from uuid import uuid4
 
 import errors
 from config import Config
-from routers.categories.models import Category
+from routers.categories.models import Category, SuperCategory
 
 db = Config.db
 
@@ -29,7 +29,7 @@ def insert_category(dataset_id, category) -> Category:
         id=str(uuid4()),
         dataset_id=dataset_id,
         name=category.name,
-        supercategory=category.supercategory
+        supercategory=category.supercategory or SuperCategory('miscellaneous')
     )
     db.categories.insert_one(category.mongo())
     return category

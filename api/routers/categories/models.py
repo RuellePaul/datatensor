@@ -18,6 +18,7 @@ class SuperCategory(str, Enum):
     animal = 'animal'
     appliance = 'appliance'
     food = 'food'
+    miscellaneous = 'miscellaneous'
 
 
 class Category(MongoModel):
