@@ -62,16 +62,19 @@ const Filter: FC<FilterProps> = ({className, ...rest}) => {
 
     const [categoriesSelected, setCategoriesSelected] = useState<Category[]>([]);
 
-    useEffect(() => {
-        if (categoriesSelected.length === 0)
+    const searchDatasets = useCallback(async (category_names) => {
+        if (category_names.length === 0) {
             saveDisplayedDatasets(datasets);
-        else
-            saveDisplayedDatasets(
-                datasets.filter(dataset => categoriesSelected.map(category => category.dataset_id).includes(dataset.id))
-            )
+            return;
+        }
 
-        // eslint-disable-next-line
-    }, [datasets, categoriesSelected])
+        const response = await api.post<{ dataset_ids: string[] }>('/search/datasets', {category_names});
+        saveDisplayedDatasets(datasets.filter(dataset => response.data.dataset_ids.includes(dataset.id)))
+    }, [datasets]);
+
+    useEffect(() => {
+        searchDatasets(categoriesSelected.map(category => category.name));
+    }, [searchDatasets, categoriesSelected])
 
     return (
         <Card

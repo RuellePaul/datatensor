@@ -1,7 +1,8 @@
 from fastapi import APIRouter
 
 import errors
-from api.search.core import search_users, search_images, search_datasets, search_categories
+from api.search.core import search_users, search_images, search_datasets, search_categories, \
+    search_dataset_ids_from_category_names
 from api.search.models import *
 from utils import parse
 
@@ -29,3 +30,10 @@ async def search_all_category_names():
     }
     return parse(response)
 
+
+@search.post('/datasets', response_model=SearchDatasetsResponse)
+async def search_datasets_from_category_names(payload: SearchDatasetsPayload):
+    response = {
+        'dataset_ids': search_dataset_ids_from_category_names(payload.category_names)
+    }
+    return parse(response)
