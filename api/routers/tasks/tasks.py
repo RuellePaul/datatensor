@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends
 
-from dependencies import logged_user
-from routers.tasks.core import insert_task
-from routers.tasks.models import *
-from routers.users.models import User
-from utils import parse
+from api.dependencies import logged_user
+from api.routers.tasks.core import insert_task
+from api.routers.tasks.models import *
+from api.routers.users.models import User
+from api.utils import parse
 
 tasks = APIRouter()
 

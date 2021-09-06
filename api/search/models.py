@@ -2,10 +2,10 @@ from typing import List
 
 from pydantic import BaseModel
 
-from routers.categories.models import Category
-from routers.datasets.models import Dataset
-from routers.images.models import Image
-from routers.users.models import User
+from api.routers.categories.models import Category
+from api.routers.datasets.models import Dataset
+from api.routers.images.models import Image
+from api.routers.users.models import User
 
 
 class SearchDatatensorResult(BaseModel):

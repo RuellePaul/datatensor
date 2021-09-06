@@ -2,9 +2,9 @@ from datetime import datetime
 from uuid import uuid4
 from typing import List
 
-import errors
-from config import Config
-from routers.notifications.models import Notification
+from api import errors
+from api.config import Config
+from api.routers.notifications.models import Notification
 
 db = Config.db
 

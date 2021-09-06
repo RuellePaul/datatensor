@@ -1,8 +1,8 @@
 from fastapi import APIRouter
 
-from routers.labels.core import find_labels, find_label, replace_labels
-from routers.labels.models import *
-from utils import parse
+from api.routers.labels.core import find_labels, find_label, replace_labels
+from api.routers.labels.models import *
+from api.utils import parse
 
 labels = APIRouter()
 

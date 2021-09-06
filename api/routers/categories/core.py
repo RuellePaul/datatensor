@@ -1,9 +1,9 @@
 from typing import List
 from uuid import uuid4
 
-import errors
-from config import Config
-from routers.categories.models import Category, SuperCategory
+from api import errors
+from api.config import Config
+from api.routers.categories.models import Category, SuperCategory
 
 db = Config.db
 
