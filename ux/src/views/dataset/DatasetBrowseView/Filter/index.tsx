@@ -69,7 +69,9 @@ const Filter: FC<FilterProps> = ({className, ...rest}) => {
         }
 
         const response = await api.post<{ dataset_ids: string[] }>('/search/datasets', {category_names});
-        saveDisplayedDatasets(datasets.filter(dataset => response.data.dataset_ids.includes(dataset.id)))
+        saveDisplayedDatasets(datasets.filter(dataset => response.data.dataset_ids.includes(dataset.id)));
+
+        // eslint-disable-next-line
     }, [datasets]);
 
     useEffect(() => {
