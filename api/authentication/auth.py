@@ -3,7 +3,6 @@ from fastapi import APIRouter, Depends
 import errors
 from authentication import core
 from authentication.models import *
-from config import Config
 from dependencies import logged_user
 from logger import logger
 from routers.notifications.core import insert_notification
