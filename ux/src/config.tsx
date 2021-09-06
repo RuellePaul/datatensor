@@ -15,7 +15,21 @@ import {
 import {OperationType, Pipeline} from './types/pipeline';
 import {SuperCategory} from 'src/types/category';
 
-export const SUPERCATEGORIES: SuperCategory[] = ['person', 'vehicle', 'electronic', 'indoor', 'outdoor', 'sports', 'furniture', 'accessory', 'kitchen', 'animal', 'appliance', 'food'];
+export const SUPERCATEGORIES: SuperCategory[] = [
+    'person',
+    'vehicle',
+    'electronic',
+    'indoor',
+    'outdoor',
+    'sports',
+    'furniture',
+    'accessory',
+    'kitchen',
+    'animal',
+    'appliance',
+    'food',
+    'miscellaneous'
+];
 
 export const OPERATIONS_TYPES: OperationType[] = [
     'rotate',

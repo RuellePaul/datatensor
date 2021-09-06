@@ -5,6 +5,8 @@ import api from 'src/utils/api';
 export interface DatasetsContextValue {
     datasets: Dataset[];
     saveDatasets: (update: Dataset[] | ((datasets: Dataset[]) => Dataset[])) => void;
+    displayedDatasets: Dataset[] | null;
+    saveDisplayedDatasets: (update: Dataset[] | ((datasets: Dataset[]) => Dataset[])) => void;
 }
 
 interface DatasetsProviderProps {
@@ -14,14 +16,23 @@ interface DatasetsProviderProps {
 export const DatasetsContext = createContext<DatasetsContextValue>({
     datasets: [],
     saveDatasets: () => {
+    },
+    displayedDatasets: null,
+    saveDisplayedDatasets: () => {
     }
 });
 
 export const DatasetsProvider: FC<DatasetsProviderProps> = ({children}) => {
+
     const [currentDatasets, setCurrentDatasets] = useState<Dataset[]>([]);
+    const [displayedDatasets, setDisplayedDatasets] = useState<Dataset[] | null>(null);
 
     const handleSaveDatasets = (update: Dataset[] | ((datasets: Dataset[]) => Dataset[])): void => {
         setCurrentDatasets(update);
+    };
+
+    const handleSaveDisplayedDatasets = (update: Dataset[] | ((datasets: Dataset[]) => Dataset[])): void => {
+        setDisplayedDatasets(update);
     };
 
     const fetchDatasets = useCallback(async () => {
@@ -43,7 +54,9 @@ export const DatasetsProvider: FC<DatasetsProviderProps> = ({children}) => {
         <DatasetsContext.Provider
             value={{
                 datasets: currentDatasets,
-                saveDatasets: handleSaveDatasets
+                saveDatasets: handleSaveDatasets,
+                displayedDatasets: displayedDatasets || currentDatasets,
+                saveDisplayedDatasets: handleSaveDisplayedDatasets
             }}
         >
             {children}

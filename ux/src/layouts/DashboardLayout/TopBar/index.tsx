@@ -8,7 +8,6 @@ import {THEMES} from 'src/constants';
 import {Theme} from 'src/theme';
 import Account from './Account';
 import Notifications from './Notifications';
-import Search from './Search';
 import Settings from './Settings';
 
 interface TopBarProps {
@@ -64,7 +63,6 @@ const TopBar: FC<TopBarProps> = ({
                     ml={2}
                     flexGrow={1}
                 />
-                <Search/>
                 <Notifications/>
                 <Settings/>
                 <Box ml={2}>

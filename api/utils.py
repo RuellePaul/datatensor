@@ -95,3 +95,8 @@ class MongoModel(BaseModel):
             return data
         id = data.pop('_id', None)
         return cls(**dict(data, id=id))
+
+
+def get_unique(iterable, key):
+    unique_keys = list(set([el[key] for el in iterable]))
+    return [next(el for el in iterable if el[key] == unique_key) for unique_key in unique_keys]

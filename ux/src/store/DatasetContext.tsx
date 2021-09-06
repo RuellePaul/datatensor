@@ -3,7 +3,6 @@ import {Category} from 'src/types/category';
 import {Dataset} from 'src/types/dataset';
 import api from 'src/utils/api';
 import {Box, CircularProgress} from '@material-ui/core';
-import useTasks from 'src/hooks/useTasks';
 import {Pipeline} from 'src/types/pipeline';
 
 export interface DatasetContextValue {
@@ -33,8 +32,6 @@ export const DatasetContext = createContext<DatasetContextValue>({
 });
 
 export const DatasetProvider: FC<DatasetProviderProps> = ({dataset_id, children}) => {
-
-    const {tasks} = useTasks();
 
     const [currentDataset, setCurrentDataset] = useState<Dataset>(null);
     const [currentCategories, setCurrentCategories] = useState<Category[]>([]);
