@@ -2,6 +2,7 @@ import React, {FC, useEffect, useState} from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Masonry from 'react-masonry-css';
 import clsx from 'clsx';
+import {useSnackbar} from 'notistack';
 import {
     Backdrop,
     Box,
@@ -109,6 +110,7 @@ const DTImagesList: FC<ImagesListProps> = ({
                                            }) => {
     const classes = useStyles();
     const theme = useTheme();
+    const {enqueueSnackbar} = useSnackbar();
 
     const {dataset, saveDataset, pipelines} = useDataset();
     const {images, saveImages, saveOffset} = useImages();
@@ -147,12 +149,17 @@ const DTImagesList: FC<ImagesListProps> = ({
     const handleDeleteImage = async event => {
         event.stopPropagation();
 
-        await api.delete(`/datasets/${dataset.id}/images/${imageSelected.id}`);
-        setSelected(Math.max(0, selected - 1));
-        saveImages(images.filter(image => image.id !== imageSelected.id));
-        saveDataset({...dataset, image_count: dataset.image_count - 1})
-        handleCloseMenu();
-        handleCloseImage();
+        try {
+            await api.delete(`/datasets/${dataset.id}/images/${imageSelected.id}`);
+            setSelected(Math.max(0, selected - 1));
+            saveImages(images.filter(image => image.id !== imageSelected.id));
+            saveDataset({...dataset, image_count: dataset.image_count - 1})
+            handleCloseMenu();
+            handleCloseImage();
+        } catch (error) {
+            enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
+        }
+
     };
 
     const handlePaginationChange = (event: React.ChangeEvent<unknown>, value: number) => {
