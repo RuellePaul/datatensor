@@ -6,6 +6,8 @@ from routers.datasets.models import Dataset
 from routers.images.models import Image
 from routers.users.models import User
 
+from utils import get_unique
+
 db = Config.db
 
 
@@ -48,6 +50,7 @@ def search_categories(query=None) -> List[Category]:
         ))
     else:
         categories = list(db.categories.find())
+        categories = get_unique(categories, 'name')
     return [Category.from_mongo(category) for category in categories]
 
 
