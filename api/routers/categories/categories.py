@@ -1,8 +1,9 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
-from routers.categories.core import find_categories, find_category, remove_category, insert_category
-from routers.categories.models import *
-from utils import parse
+from api.dependencies import dataset_belongs_to_user
+from api.routers.categories.core import find_categories, find_category, remove_category, insert_category
+from api.routers.categories.models import *
+from api.utils import parse
 
 categories = APIRouter()
 
@@ -26,16 +27,16 @@ async def get_category(dataset_id, category_id):
 
 
 @categories.post('/')
-async def post_category(category: CategoryPostBody, dataset_id):
+async def post_category(category: CategoryPostBody, dataset_id, dataset=Depends(dataset_belongs_to_user)):
     """
-    Create a new category on given dataset, and return it.
+    Create a new category on given dataset, and returns it.
     """
     response = {'category': insert_category(dataset_id, category)}
     return parse(response)
 
 
 @categories.delete('/{category_id}')
-async def delete_category(dataset_id, category_id):
+async def delete_category(dataset_id, category_id, dataset=Depends(dataset_belongs_to_user)):
     """
     Delete given category of given dataset.
     """

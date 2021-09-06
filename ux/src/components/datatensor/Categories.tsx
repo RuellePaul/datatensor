@@ -65,8 +65,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const DTCategory: FC<CategoryProps> = ({category, index}) => {
 
-
     const theme = useTheme();
+    const {enqueueSnackbar} = useSnackbar();
 
     const {dataset, saveCategories} = useDataset();
     const {currentCategory, saveCurrentCategory} = useCategory();
@@ -75,13 +75,17 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
     const isSelected = currentCategory?.name === category.name;
 
     const handleDeleteCategory = async (category_id: string) => {
-        await api.delete(`/datasets/${dataset.id}/categories/${category_id}`);
+        try {
+            await api.delete(`/datasets/${dataset.id}/categories/${category_id}`);
 
-        saveCategories(categories => categories.filter(category => category.id !== category_id));
-        saveLabels(labels => labels.filter(label => label.category_id !== category_id))
+            saveCategories(categories => categories.filter(category => category.id !== category_id));
+            saveLabels(labels => labels.filter(label => label.category_id !== category_id))
 
-        if (currentCategory && currentCategory.id === category_id)
-            saveCurrentCategory(null);
+            if (currentCategory && currentCategory.id === category_id)
+                saveCurrentCategory(null);
+        } catch (error) {
+            enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
+        }
     };
 
     const count = labels ? currentCategoryCount(labels, category) : 0;

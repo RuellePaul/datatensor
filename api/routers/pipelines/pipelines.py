@@ -3,15 +3,12 @@ import base64
 import cv2
 from fastapi import APIRouter, Depends
 
-import errors
-from dependencies import logged_user
-from routers.datasets.core import find_dataset
-from routers.images.core import find_image
-from routers.labels.core import find_labels
-from routers.pipelines.core import find_pipelines, perform_sample
-from routers.pipelines.models import SampleBody, PipelinesResponse
-from routers.users.models import User
-from utils import parse
+from api.dependencies import dataset_belongs_to_user
+from api.routers.images.core import find_image
+from api.routers.labels.core import find_labels
+from api.routers.pipelines.core import find_pipelines, perform_sample
+from api.routers.pipelines.models import SampleBody, PipelinesResponse
+from api.utils import parse
 
 pipelines = APIRouter()
 
@@ -26,16 +23,12 @@ async def get_pipelines(dataset_id, offset: int = 0, limit: int = 0):
 
 
 @pipelines.post('/sample')
-async def sample(dataset_id, payload: SampleBody, user: User = Depends(logged_user)):
+async def sample(dataset_id, payload: SampleBody, dataset=Depends(dataset_belongs_to_user)):
     """
     Execute a sample of augmentor operations pipeline
     """
     image_id = payload.image_id
     operations = payload.operations
-
-    dataset = find_dataset(dataset_id)
-    if dataset.user_id != user.id:
-        raise errors.Forbidden(errors.NOT_YOUR_DATASET)
 
     image = find_image(dataset_id, image_id)
     labels = find_labels(image_id, offset=0, limit=0)

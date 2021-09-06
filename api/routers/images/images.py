@@ -1,8 +1,9 @@
-from fastapi import APIRouter, File, UploadFile
+from fastapi import APIRouter, Depends, File, UploadFile
 
-from routers.images.core import find_images, find_image, remove_image, insert_images
-from routers.images.models import *
-from utils import parse
+from api.dependencies import dataset_belongs_to_user
+from api.routers.images.core import find_images, find_image, remove_image, insert_images
+from api.routers.images.models import *
+from api.utils import parse
 
 images = APIRouter()
 
@@ -26,7 +27,7 @@ async def get_image(dataset_id, image_id):
 
 
 @images.post('/')
-async def post_images(dataset_id, files: List[UploadFile] = File(...)):
+async def post_images(dataset_id, files: List[UploadFile] = File(...), dataset=Depends(dataset_belongs_to_user)):
     """
     Upload a list of images.
     """
@@ -35,7 +36,7 @@ async def post_images(dataset_id, files: List[UploadFile] = File(...)):
 
 
 @images.delete('/{image_id}')
-async def delete_image(dataset_id, image_id):
+async def delete_image(dataset_id, image_id, dataset=Depends(dataset_belongs_to_user)):
     """
     Delete given image of given dataset.
     """
