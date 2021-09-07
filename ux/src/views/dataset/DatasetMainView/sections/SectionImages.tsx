@@ -1,8 +1,9 @@
 import React, {FC, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import clsx from 'clsx';
+import {useSnackbar} from 'notistack';
 import {Box, Button, Dialog, DialogContent, DialogTitle, IconButton, makeStyles, Typography} from '@material-ui/core';
-import {Close as CloseIcon, KeyboardArrowDown as ArrowDownIcon} from '@material-ui/icons';
+import {Close as CloseIcon, Delete, KeyboardArrowDown as ArrowDownIcon} from '@material-ui/icons';
 import ImagesDropzone from 'src/components/ImagesDropzone';
 import DTImagesList from 'src/components/datatensor/ImagesList';
 import Pipeline from 'src/components/datatensor/Pipeline';
@@ -12,6 +13,8 @@ import {setDefaultPipeline, setPipeline} from 'src/slices/pipeline';
 import {ImagesProvider} from 'src/store/ImagesContext';
 import {Theme} from 'src/theme';
 import {SectionProps} from './SectionProps';
+import api from 'src/utils/api';
+import useTasks from 'src/hooks/useTasks';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
@@ -43,6 +46,13 @@ const useStyles = makeStyles((theme: Theme) => ({
         alignItems: 'center',
         margin: theme.spacing(2, 0, 1),
         color: theme.palette.grey[400]
+    },
+    deleteAction: {
+        color: theme.palette.common.white,
+        backgroundColor: theme.palette.error.main,
+        '&:hover': {
+            backgroundColor: theme.palette.error.dark
+        }
     }
 }));
 
@@ -50,10 +60,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 const SectionImages: FC<SectionProps> = ({className}) => {
 
     const classes = useStyles();
+    const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
 
-    const {dataset, pipelines} = useDataset();
+    const {dataset, pipelines, savePipelines} = useDataset();
 
+    const {tasks} = useTasks();
     const {images} = useImages();
 
     const [openUpload, setOpenUpload] = useState(false);
@@ -81,6 +93,23 @@ const SectionImages: FC<SectionProps> = ({className}) => {
     const imagesCount = images.length;
 
     const [pipelineId, setPipelineId] = useState<string | null>(null);
+
+    const handleDeletePipeline = async () => {
+        if (!pipelineId) return;
+
+        try {
+            await api.delete(`/datasets/${dataset.id}/pipelines/${pipelineId}`);
+            setPipelineId(null);
+            savePipelines(pipelines => pipelines.filter(pipeline => pipeline.id !== pipelineId));
+            enqueueSnackbar(`Deleted pipeline & associated images`, {variant: 'info'});
+        } catch (error) {
+            enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
+        }
+    }
+
+    const activeTasksCount = tasks
+        ? tasks.filter(task => task.status === 'active' && task.dataset_id === dataset.id).length
+        : 0;
 
     return (
         <div className={clsx(classes.root, className)}>
@@ -167,11 +196,30 @@ const SectionImages: FC<SectionProps> = ({className}) => {
                 pipelineId
                     ? (
                         <>
-                            <Button
-                                onClick={handlePipelineOpen}
+                            <Box
+                                display='flex'
+                                alignItems='center'
+                                justifyContent='space-between'
+                                py={2}
                             >
-                                View operations pipeline
-                            </Button>
+                                <Button
+                                    onClick={handlePipelineOpen}
+                                >
+                                    View operations pipeline
+                                </Button>
+
+                                <Button
+                                    className={clsx(activeTasksCount === 0 && classes.deleteAction)}
+                                    variant='outlined'
+                                    startIcon={<Delete/>}
+                                    onClick={handleDeletePipeline}
+                                    size='small'
+                                    disabled={activeTasksCount > 0}
+                                >
+                                    Delete pipeline
+                                </Button>
+                            </Box>
+
 
                             <Dialog
                                 disableRestoreFocus

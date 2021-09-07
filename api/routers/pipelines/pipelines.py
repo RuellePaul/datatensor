@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends
 from api.dependencies import dataset_belongs_to_user
 from api.routers.images.core import find_image
 from api.routers.labels.core import find_labels
-from api.routers.pipelines.core import find_pipelines, perform_sample
+from api.routers.pipelines.core import find_pipelines, perform_sample, delete_pipeline
 from api.routers.pipelines.models import SampleBody, PipelinesResponse
 from api.utils import parse
 
@@ -46,3 +46,11 @@ async def sample(dataset_id, payload: SampleBody, dataset=Depends(dataset_belong
         'images': base64_encoded_images,
         'images_labels': parse(augmented_labels)
     }
+
+
+@pipelines.delete('/{pipeline_id}')
+async def sample(dataset_id, pipeline_id, dataset=Depends(dataset_belongs_to_user)):
+    """
+    Delete a pipeline & associated images, labels, and task
+    """
+    delete_pipeline(dataset, pipeline_id)
