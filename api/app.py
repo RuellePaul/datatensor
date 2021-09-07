@@ -70,9 +70,6 @@ app.include_router(search, prefix=f'{PREFIX}/search',
 app.include_router(datasets, prefix=f'{PREFIX}/datasets',
                    dependencies=[Depends(logged_user)], tags=['datasets'])
 
-# TODO : security branch
-# FIXME : a user can do operations on a other user dataset (e.g : delete an image/category, or upload an image...)
-
 # Datasets ➤ Categories
 datasets.include_router(categories, prefix='/{dataset_id}/categories', tags=['categories'])
 
