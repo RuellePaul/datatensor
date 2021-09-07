@@ -1,11 +1,14 @@
 import React, {FC, useState} from 'react';
+import {useDispatch} from 'react-redux';
 import clsx from 'clsx';
 import {Box, Button, Dialog, DialogContent, DialogTitle, IconButton, makeStyles, Typography} from '@material-ui/core';
 import {Close as CloseIcon, KeyboardArrowDown as ArrowDownIcon} from '@material-ui/icons';
-import DTImagesList from 'src/components/datatensor/ImagesList';
 import ImagesDropzone from 'src/components/ImagesDropzone';
+import DTImagesList from 'src/components/datatensor/ImagesList';
+import Pipeline from 'src/components/datatensor/Pipeline';
 import useDataset from 'src/hooks/useDataset';
 import useImages from 'src/hooks/useImages';
+import {setDefaultPipeline, setPipeline} from 'src/slices/pipeline';
 import {ImagesProvider} from 'src/store/ImagesContext';
 import {Theme} from 'src/theme';
 import {SectionProps} from './SectionProps';
@@ -47,6 +50,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const SectionImages: FC<SectionProps> = ({className}) => {
 
     const classes = useStyles();
+    const dispatch = useDispatch();
 
     const {dataset, pipelines} = useDataset();
 
@@ -60,6 +64,18 @@ const SectionImages: FC<SectionProps> = ({className}) => {
 
     const handleCloseUpload = () => {
         setOpenUpload(false);
+    };
+
+    const [openPipeline, setOpenPipeline] = useState(false);
+
+    const handlePipelineOpen = () => {
+        dispatch(setPipeline(pipelines.find(pipeline => pipeline.id === pipelineId)));
+        setOpenPipeline(true);
+    };
+
+    const handlePipelineClose = () => {
+        setOpenPipeline(false);
+        dispatch(setDefaultPipeline());
     };
 
     const imagesCount = images.length;
@@ -150,14 +166,49 @@ const SectionImages: FC<SectionProps> = ({className}) => {
             {
                 pipelineId
                     ? (
-                        <ImagesProvider
-                            key={pipelineId}
-                            pipeline_id={pipelineId}
-                        >
-                            <DTImagesList
+                        <>
+                            <Button
+                                onClick={handlePipelineOpen}
+                            >
+                                View operations pipeline
+                            </Button>
+
+                            <Dialog
+                                disableRestoreFocus
+                                fullWidth
+                                maxWidth='xs'
+                                open={openPipeline}
+                                onClose={handlePipelineClose}
+                            >
+                                <DialogTitle
+                                    className='flex'
+                                    disableTypography
+                                >
+                                    <Typography variant='h4'>
+                                        Operations pipeline
+                                    </Typography>
+
+                                    <IconButton
+                                        className={classes.close}
+                                        onClick={handlePipelineClose}
+                                    >
+                                        <CloseIcon fontSize="large"/>
+                                    </IconButton>
+                                </DialogTitle>
+                                <DialogContent>
+                                    <Pipeline readOnly/>
+                                </DialogContent>
+                            </Dialog>
+
+                            <ImagesProvider
+                                key={pipelineId}
                                 pipeline_id={pipelineId}
-                            />
-                        </ImagesProvider>
+                            >
+                                <DTImagesList
+                                    pipeline_id={pipelineId}
+                                />
+                            </ImagesProvider>
+                        </>
                     )
                     : <DTImagesList/>
             }

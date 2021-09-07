@@ -27,7 +27,7 @@ const slice = createSlice({
     name: 'pipeline',
     initialState,
     reducers: {
-        setDefaultPipeline(state: PipelineState, action: PayloadAction<Pipeline>) {
+        setPipeline(state: PipelineState, action: PayloadAction<Pipeline>) {
             const {operations} = action.payload;
 
             state.operations.byId = objFromArray(operations);
@@ -64,7 +64,12 @@ export const reducer = slice.reducer;
 
 export const setDefaultPipeline = (): AppThunk => async (dispatch) => {
 
-    dispatch(slice.actions.setDefaultPipeline(DEFAULT_PIPELINE));
+    dispatch(slice.actions.setPipeline(DEFAULT_PIPELINE));
+};
+
+export const setPipeline = (pipeline: Pipeline): AppThunk => async (dispatch) => {
+
+    dispatch(slice.actions.setPipeline(pipeline));
 };
 
 export const createOperation = (type: OperationType): AppThunk => async (dispatch) => {
