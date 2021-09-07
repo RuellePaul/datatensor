@@ -39,7 +39,8 @@ const LoginView: FC = () => {
             className={classes.root}
             title="Login"
         >
-            <Container component='section'
+            <Container
+                component='section'
                 className={classes.cardContainer}
                 maxWidth="sm"
             >
