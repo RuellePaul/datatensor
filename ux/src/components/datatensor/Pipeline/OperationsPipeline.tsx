@@ -10,6 +10,7 @@ import OperationAdd from './OperationAdd';
 
 interface ListProps {
     className?: string;
+    readOnly?: boolean;
 }
 
 
@@ -33,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const OperationsPipeline: FC<ListProps> = ({className, ...rest}) => {
+const OperationsPipeline: FC<ListProps> = ({className, readOnly, ...rest}) => {
     const classes = useStyles();
 
     const [dragDisabled, setDragDisabled] = useState<boolean>(false);
@@ -59,7 +60,7 @@ const OperationsPipeline: FC<ListProps> = ({className, ...rest}) => {
                                     draggableId={operationId}
                                     index={index}
                                     key={operationId}
-                                    isDragDisabled={dragDisabled}
+                                    isDragDisabled={readOnly || dragDisabled}
                                 >
                                     {(provided, snapshot) => (
                                         <Operation
@@ -70,6 +71,7 @@ const OperationsPipeline: FC<ListProps> = ({className, ...rest}) => {
                                             setDragDisabled={setDragDisabled}
                                             // @ts-ignore
                                             ref={provided.innerRef}
+                                            readOnly={readOnly}
                                             style={{...provided.draggableProps.style}}
                                             {...provided.draggableProps}
                                             {...provided.dragHandleProps}
@@ -81,10 +83,14 @@ const OperationsPipeline: FC<ListProps> = ({className, ...rest}) => {
                         </div>
                     )}
                 </Droppable>
-                <Divider/>
-                <Box p={2}>
-                    <OperationAdd/>
-                </Box>
+                {!readOnly && (
+                    <>
+                        <Divider/>
+                        <Box p={2}>
+                            <OperationAdd/>
+                        </Box>
+                    </>
+                )}
             </Paper>
         </div>
     );

@@ -63,7 +63,7 @@ const Pipeline: FC<PipelineProps> = ({readOnly = false}) => {
     return (
         <DragDropContext onDragEnd={handleDragEnd}>
             <div className={classes.content}>
-                <OperationsPipeline/>
+                <OperationsPipeline readOnly={readOnly}/>
             </div>
         </DragDropContext>
     );

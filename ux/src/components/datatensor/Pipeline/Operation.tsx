@@ -14,6 +14,7 @@ interface OperationProps {
     className?: string;
     operationId: string;
     dragging: boolean;
+    readOnly?: boolean;
     setDragDisabled?: (update: boolean | ((dataset: boolean) => boolean)) => void;
     index?: number;
     style?: {};
@@ -49,6 +50,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Operation: FC<OperationProps> = forwardRef(({
                                                       operationId,
                                                       className,
+                                                      readOnly,
                                                       dragging,
                                                       setDragDisabled,
                                                       index,
@@ -110,6 +112,7 @@ const Operation: FC<OperationProps> = forwardRef(({
                     <ProbabilitySlider
                         operation={operation}
                         setDragDisabled={setDragDisabled}
+                        disabled={readOnly}
                     />
                 </CardContent>
             </Card>
