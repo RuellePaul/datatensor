@@ -1,7 +1,8 @@
-from pydantic import Field
 from typing import List, Optional
 
-from utils import BaseModel, MongoModel
+from pydantic import BaseModel, Field
+
+from api.utils import MongoModel
 
 
 class Label(MongoModel):

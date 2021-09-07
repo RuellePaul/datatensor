@@ -1,8 +1,9 @@
 from enum import Enum
-from pydantic import Field
 from typing import List, Optional
 
-from utils import BaseModel, MongoModel
+from pydantic import BaseModel, Field
+
+from api.utils import MongoModel
 
 
 class SuperCategory(str, Enum):
