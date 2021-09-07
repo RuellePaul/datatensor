@@ -6,9 +6,9 @@ import boto3
 import cv2
 import numpy
 
-import errors
-from config import Config
-from routers.images.models import Image
+from api import errors
+from api.config import Config
+from api.routers.images.models import Image
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 

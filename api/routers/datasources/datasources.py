@@ -1,8 +1,8 @@
 from fastapi import APIRouter
 
-from routers.datasources.core import find_datasources, find_categories, find_max_image_count
-from routers.datasources.models import *
-from utils import parse
+from api.routers.datasources.core import find_datasources, find_categories, find_max_image_count
+from api.routers.datasources.models import *
+from api.utils import parse
 
 datasources = APIRouter()
 

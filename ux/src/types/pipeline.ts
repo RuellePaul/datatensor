@@ -40,6 +40,7 @@ export interface RandomDistortionProperties {
 
 type Corner = 'bell' | 'ul' | 'ur' | 'dl' | 'dr';
 type Method = 'in' | 'out';
+
 export interface GaussianDistortionProperties {
     grid_width: number;
     grid_height: number;

@@ -1,5 +1,4 @@
 import hashlib
-import os
 import random
 import ssl
 import string
@@ -12,10 +11,10 @@ from oauthlib.oauth2 import WebApplicationClient
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
-import errors
-from config import Config
-from routers.users.models import User, UserWithPassword
-from utils import encrypt_field, password_context
+from api import errors
+from api.config import Config
+from api.routers.users.models import User, UserWithPassword
+from api.utils import encrypt_field, password_context
 
 if Config.ENVIRONMENT == 'development':  # allow sendgrid email on development environment
     ssl._create_default_https_context = ssl._create_unverified_context

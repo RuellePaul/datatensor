@@ -4,9 +4,9 @@ from typing import List, Optional, Union
 
 from pydantic import BaseModel, Field
 
-from routers.pipelines.models import Operation
-from routers.datasources.models import DatasourceKey
-from utils import MongoModel
+from api.routers.datasources.models import DatasourceKey
+from api.routers.pipelines.models import Operation
+from api.utils import MongoModel
 
 
 class TaskType(str, Enum):

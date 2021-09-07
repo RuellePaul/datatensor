@@ -1,10 +1,10 @@
-from enum import Enum
 from datetime import datetime
+from enum import Enum
 from typing import Optional
 
-from pydantic import Field
+from pydantic import BaseModel, Field
 
-from utils import BaseModel, MongoModel
+from api.utils import MongoModel
 
 
 class NotificationType(str, Enum):

@@ -9,7 +9,7 @@ const getDateDiff = (date1, date2, format: 'duration' | 'passed_event' = 'durati
 
     if (format === 'duration') {
         if (days > 0)
-            return `${days}day${days > 1 ? 's': ''} ${hours}h`;
+            return `${days}day${days > 1 ? 's' : ''} ${hours}h`;
         else if (hours > 0)
             return `${hours}h ${min}m`;
         else if (min > 0)
@@ -20,13 +20,13 @@ const getDateDiff = (date1, date2, format: 'duration' | 'passed_event' = 'durati
 
     if (format === 'passed_event') {
         if (days > 0)
-            return `${days} day${days > 1 ? 's': ''} ago`;
+            return `${days} day${days > 1 ? 's' : ''} ago`;
         else if (hours > 0)
-            return `${hours} hour${hours > 1 ? 's': ''} ago`;
+            return `${hours} hour${hours > 1 ? 's' : ''} ago`;
         else if (min > 0)
-            return `${min} minute${min > 1 ? 's': ''} ago`;
+            return `${min} minute${min > 1 ? 's' : ''} ago`;
         else if (sec > 10)
-            return `${sec} second${sec > 1 ? 's': ''} ago`;
+            return `${sec} second${sec > 1 ? 's' : ''} ago`;
         else
             return `now`
     }

@@ -4,17 +4,17 @@ from typing import Any, List
 from fastapi import FastAPI
 from pydantic import AnyHttpUrl, BaseSettings
 
-import errors
-from database import encrypt_init
+from api import errors
+from api.database import encrypt_init
 
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'  # to use OAuth2 without https
 
 if 'ACCESS_TOKEN_KEY' not in os.environ:
-    raise errors.InternalError('Environment variable are not set. Use init_env.sh script, or edit Pycharm configuration')
+    raise errors.InternalError(
+        'Environment variable are not set. Use init_env.sh script, or edit Pycharm configuration')
 
 
 class Settings(BaseSettings):
-
     ENVIRONMENT = os.environ['ENVIRONMENT']
 
     ROOT_PATH: str = os.path.abspath(os.path.join(FastAPI().root_path, os.pardir))

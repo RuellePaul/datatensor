@@ -16,7 +16,7 @@ import {
 } from '@material-ui/core';
 import {Close as CloseIcon} from '@material-ui/icons';
 import {Theme} from 'src/theme';
-import {TaskGeneratorProperties, TaskAugmentorProperties, TaskStatus} from 'src/types/task';
+import {TaskAugmentorProperties, TaskGeneratorProperties, TaskStatus} from 'src/types/task';
 import {UserConsumer, UserProvider} from 'src/store/UserContext';
 import {DatasetConsumer, DatasetProvider} from 'src/store/DatasetContext';
 import useTasks from 'src/hooks/useTasks';

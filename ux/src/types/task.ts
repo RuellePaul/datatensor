@@ -26,4 +26,4 @@ export interface Task {
     progress: number,
     ended_at?: string;
     error?: string
-};
+}

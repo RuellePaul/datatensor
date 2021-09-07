@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
 
-from dependencies import logged_user
-from routers.notifications.core import read_notifications, remove_notifications
-from routers.users.models import User
+from api.dependencies import logged_user
+from api.routers.notifications.core import read_notifications, remove_notifications
+from api.routers.users.models import User
 
 notifications = APIRouter()
 

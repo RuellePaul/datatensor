@@ -5,6 +5,7 @@ import {
     Badge,
     Box,
     Button,
+    capitalize,
     IconButton,
     List,
     ListItem,
@@ -14,7 +15,6 @@ import {
     SvgIcon,
     Tooltip,
     Typography,
-    capitalize,
     useTheme
 } from '@material-ui/core';
 import {FiberManualRecord} from '@material-ui/icons';

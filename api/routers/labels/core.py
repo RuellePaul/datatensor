@@ -3,9 +3,9 @@ from typing import List
 
 import boto3
 
-import errors
-from config import Config
-from routers.labels.models import Label
+from api import errors
+from api.config import Config
+from api.routers.labels.models import Label
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 

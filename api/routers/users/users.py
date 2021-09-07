@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
 
-from dependencies import logged_admin, logged_user
-from routers.users.core import find_users, find_user, remove_users, remove_user, update_user, update_user_password
-from routers.users.models import *
-from utils import parse
+from api.dependencies import logged_admin, logged_user
+from api.routers.users.core import find_users, find_user, remove_users, remove_user, update_user, update_user_password
+from api.routers.users.models import *
+from api.utils import parse
 
 users = APIRouter()
 

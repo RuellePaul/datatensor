@@ -7,14 +7,14 @@ import numpy
 from Augmentor import DataPipeline
 from PIL import Image as PILImage
 
-from config import Config
-from routers.images.core import find_images, upload_image
-from routers.images.models import Image
-from routers.labels.core import find_labels
-from routers.pipelines.core import from_image_path, draw_ellipsis, retrieve_label_from_ellipsis
-from routers.pipelines.models import Pipeline
-from routers.tasks.models import TaskAugmentorProperties
-from utils import update_task, increment_task_progress
+from api.config import Config
+from api.routers.images.core import find_images, upload_image
+from api.routers.images.models import Image
+from api.routers.labels.core import find_labels
+from api.routers.pipelines.core import from_image_path, draw_ellipsis, retrieve_label_from_ellipsis
+from api.routers.pipelines.models import Pipeline
+from api.routers.tasks.models import TaskAugmentorProperties
+from api.utils import update_task, increment_task_progress
 
 db = Config.db
 
@@ -95,15 +95,15 @@ class AugmentorPipeline(DataPipeline):
                                upsert=False)
         with concurrent.futures.ThreadPoolExecutor() as executor:
             result = executor.map(process_augmentation,
-                         [{'index': index % len(self.images),
-                           'image': self.images[index % len(self.images)],
-                           'labels': self.labels,
-                           'operations': self.operations,
-                           'dataset_id': self.dataset_id,
-                           'pipeline_id': pipeline_id,
-                           'task_id': self.task_id,
-                           'image_count': self.properties.image_count
-                           } for index in range(self.properties.image_count)])
+                                  [{'index': index % len(self.images),
+                                    'image': self.images[index % len(self.images)],
+                                    'labels': self.labels,
+                                    'operations': self.operations,
+                                    'dataset_id': self.dataset_id,
+                                    'pipeline_id': pipeline_id,
+                                    'task_id': self.task_id,
+                                    'image_count': self.properties.image_count
+                                    } for index in range(self.properties.image_count)])
 
 
 def main(user_id, task_id, dataset_id, properties: TaskAugmentorProperties):
