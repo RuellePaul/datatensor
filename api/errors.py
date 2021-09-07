@@ -79,3 +79,4 @@ NOTIFICATION_ALREADY_EXISTS = 'This notification already exists.'
 
 NOT_YOUR_DATASET = 'Action not permitted : not your dataset'
 USER_HAS_A_SCOPE = 'Action not permitted : your account is linked to external authentication.'
+TOO_MANY_PIPELINES = 'Action not permitted : this dataset already has two pipelines.'
