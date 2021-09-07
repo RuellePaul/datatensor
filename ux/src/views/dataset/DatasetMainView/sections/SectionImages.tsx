@@ -2,7 +2,17 @@ import React, {FC, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import clsx from 'clsx';
 import {useSnackbar} from 'notistack';
-import {Box, Button, Dialog, DialogContent, DialogTitle, IconButton, makeStyles, Typography} from '@material-ui/core';
+import {
+    Box,
+    Button,
+    CircularProgress,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    makeStyles,
+    Typography
+} from '@material-ui/core';
 import {Close as CloseIcon, Delete, KeyboardArrowDown as ArrowDownIcon} from '@material-ui/icons';
 import ImagesDropzone from 'src/components/ImagesDropzone';
 import DTImagesList from 'src/components/datatensor/ImagesList';
@@ -53,6 +63,10 @@ const useStyles = makeStyles((theme: Theme) => ({
         '&:hover': {
             backgroundColor: theme.palette.error.dark
         }
+    },
+    loader: {
+        width: '20px !important',
+        height: '20px !important'
     }
 }));
 
@@ -94,8 +108,11 @@ const SectionImages: FC<SectionProps> = ({className}) => {
 
     const [pipelineId, setPipelineId] = useState<string | null>(null);
 
+    const [isDeleting, setIsDeleting] = useState(false);
     const handleDeletePipeline = async () => {
         if (!pipelineId) return;
+
+        setIsDeleting(true);
 
         try {
             await api.delete(`/datasets/${dataset.id}/pipelines/${pipelineId}`);
@@ -104,6 +121,8 @@ const SectionImages: FC<SectionProps> = ({className}) => {
             enqueueSnackbar(`Deleted pipeline & associated images`, {variant: 'info'});
         } catch (error) {
             enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
+        } finally {
+            setIsDeleting(false);
         }
     }
 
@@ -209,12 +228,18 @@ const SectionImages: FC<SectionProps> = ({className}) => {
                                 </Button>
 
                                 <Button
-                                    className={clsx(activeTasksCount === 0 && classes.deleteAction)}
+                                    className={clsx((activeTasksCount === 0 && !isDeleting) && classes.deleteAction)}
                                     variant='outlined'
                                     startIcon={<Delete/>}
+                                    endIcon={isDeleting && (
+                                        <CircularProgress
+                                            className={classes.loader}
+                                            color="inherit"
+                                        />
+                                    )}
                                     onClick={handleDeletePipeline}
                                     size='small'
-                                    disabled={activeTasksCount > 0}
+                                    disabled={isDeleting || activeTasksCount > 0}
                                 >
                                     Delete pipeline
                                 </Button>

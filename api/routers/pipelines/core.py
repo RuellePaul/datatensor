@@ -35,7 +35,7 @@ def delete_pipeline(dataset: Dataset, pipeline_id):
         db.images.delete_many({'dataset_id': dataset.id, 'pipeline_id': pipeline_id})
         db.labels.delete_many({'image_id': {'$in': image_ids_to_remove}})
         db.datasets.update_one({'_id': dataset.id},
-                               {'$inc': {'augmented_count': dataset.augmented_count - len(images)}},
+                               {'$inc': {'augmented_count': -len(images)}},
                                upsert=False)
     db.pipelines.delete_one({'_id': pipeline_id})
 
