@@ -78,7 +78,7 @@ const Results: FC<ResultsProps> = ({className, ...rest}) => {
                     {' '}
                     {displayedDatasets.length}
                     {' '}
-                    datasets
+                    dataset{displayedDatasets.length > 1 ? 's' : ''}
                 </Typography>
                 <Box
                     display="flex"
