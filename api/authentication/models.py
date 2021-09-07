@@ -1,4 +1,5 @@
 from enum import Enum
+
 from pydantic import BaseModel, HttpUrl
 
 
@@ -36,5 +37,3 @@ class OAuthAuthorizationResponse(BaseModel):
 class OAuthCallbackBody(BaseModel):
     code: str
     scope: Scope
-
-

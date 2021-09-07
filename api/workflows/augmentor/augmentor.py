@@ -95,15 +95,15 @@ class AugmentorPipeline(DataPipeline):
                                upsert=False)
         with concurrent.futures.ThreadPoolExecutor() as executor:
             result = executor.map(process_augmentation,
-                         [{'index': index % len(self.images),
-                           'image': self.images[index % len(self.images)],
-                           'labels': self.labels,
-                           'operations': self.operations,
-                           'dataset_id': self.dataset_id,
-                           'pipeline_id': pipeline_id,
-                           'task_id': self.task_id,
-                           'image_count': self.properties.image_count
-                           } for index in range(self.properties.image_count)])
+                                  [{'index': index % len(self.images),
+                                    'image': self.images[index % len(self.images)],
+                                    'labels': self.labels,
+                                    'operations': self.operations,
+                                    'dataset_id': self.dataset_id,
+                                    'pipeline_id': pipeline_id,
+                                    'task_id': self.task_id,
+                                    'image_count': self.properties.image_count
+                                    } for index in range(self.properties.image_count)])
 
 
 def main(user_id, task_id, dataset_id, properties: TaskAugmentorProperties):

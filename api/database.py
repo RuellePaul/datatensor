@@ -1,4 +1,5 @@
 from base64 import b64decode
+
 from pymongo import errors, MongoClient
 from pymongo.encryption import ClientEncryption
 from pymongo.encryption_options import AutoEncryptionOpts

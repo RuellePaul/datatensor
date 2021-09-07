@@ -1,6 +1,6 @@
 from datetime import datetime
-from uuid import uuid4
 from typing import List
+from uuid import uuid4
 
 from api import errors
 from api.config import Config

@@ -12,8 +12,8 @@ from api import errors
 from api.config import Config
 from api.routers.images.models import Image
 from api.routers.labels.models import Label
-from api.routers.pipelines.models import Pipeline
 from api.routers.pipelines.models import Operation
+from api.routers.pipelines.models import Pipeline
 
 db = Config.db
 

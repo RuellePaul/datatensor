@@ -1,16 +1,15 @@
-import os
 import json
+import os
 import zipfile
 from typing import List
+from uuid import uuid4
 
 import requests
-from uuid import uuid4
 
 from api import errors
 from api.config import Config
 from api.logger import logger
-from api.routers.datasources.models import Datasource, DatasourceKey
-
+from api.routers.datasources.models import DatasourceKey
 
 db = Config.db
 
