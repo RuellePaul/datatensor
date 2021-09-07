@@ -74,6 +74,7 @@ def remove_dataset(user_id, dataset_id):
     db.tasks.delete_many({'dataset_id': dataset_id})
     db.pipelines.delete_many({'dataset_id': dataset_id})
     db.datasets.delete_one({'_id': dataset_id, 'user_id': user_id})
+    # TODO : delete notifications (with their task_id)
 
 
 def remove_datasets(user_id):
