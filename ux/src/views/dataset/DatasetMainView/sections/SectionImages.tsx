@@ -18,6 +18,7 @@ import {
 import {Close as CloseIcon, Delete} from '@material-ui/icons';
 import ImagesDropzone from 'src/components/ImagesDropzone';
 import DTImagesList from 'src/components/datatensor/ImagesList';
+import DTImagesStack from 'src/components/datatensor/ImagesStack';
 import Pipeline from 'src/components/datatensor/Pipeline';
 import useDataset from 'src/hooks/useDataset';
 import useImages from 'src/hooks/useImages';
@@ -203,6 +204,21 @@ const SectionImages: FC<SectionProps> = ({className}) => {
                         />
                     </DialogContent>
                 </Dialog>
+            </div>
+
+            <div className='flex'>
+                <ImagesProvider>
+                    <DTImagesStack/>
+                </ImagesProvider>
+
+                {pipelines.map(pipeline => (
+                    <ImagesProvider
+                        key={pipeline.id}
+                        pipeline_id={pipeline.id}
+                    >
+                        <DTImagesStack/>
+                    </ImagesProvider>
+                ))}
             </div>
 
             <Box mb={2}>
