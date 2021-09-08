@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
-import {ButtonBase, makeStyles, Typography} from '@material-ui/core';
+import {ButtonBase, makeStyles} from '@material-ui/core';
 import DTImage from 'src/components/datatensor/Image';
 import useImages from 'src/hooks/useImages';
 import {Theme} from 'src/theme';

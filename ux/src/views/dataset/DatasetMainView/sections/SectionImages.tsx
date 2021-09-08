@@ -20,7 +20,6 @@ import DTImagesList from 'src/components/datatensor/ImagesList';
 import DTImagesStack from 'src/components/datatensor/ImagesStack';
 import Pipeline from 'src/components/datatensor/Pipeline';
 import useDataset from 'src/hooks/useDataset';
-import useImages from 'src/hooks/useImages';
 import {setDefaultPipeline, setPipeline} from 'src/slices/pipeline';
 import {ImagesProvider} from 'src/store/ImagesContext';
 import {Theme} from 'src/theme';
@@ -71,18 +70,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-function TabPanel(props) {
-    const {children, value, index} = props;
-
-    return (
-        <>
-            {(index instanceof Array ? index.includes(value) : value === index) && (
-                children
-            )}
-        </>
-    );
-}
-
 
 const SectionImages: FC<SectionProps> = ({className}) => {
 
@@ -93,13 +80,6 @@ const SectionImages: FC<SectionProps> = ({className}) => {
     const {dataset, pipelines, savePipelines} = useDataset();
 
     const {tasks} = useTasks();
-    const {images} = useImages();
-
-    const [subTab, setSubTab] = React.useState(0);
-
-    const handleChangeSubTab = (event, newValue) => {
-        setSubTab(newValue);
-    };
 
     const [openUpload, setOpenUpload] = useState(false);
 
@@ -124,8 +104,6 @@ const SectionImages: FC<SectionProps> = ({className}) => {
         setOpenPipeline(false);
         dispatch(setDefaultPipeline());
     };
-
-    const imagesCount = images.length;
 
     const [pipelineId, setPipelineId] = useState<string | null>(null);
 

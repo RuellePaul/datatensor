@@ -65,7 +65,7 @@ export const ImagesProvider: FC<ImagesProviderProps> = ({pipeline_id, children})
         setCurrentImages([]);
         setCurrentOffset(0);
         fetchImages(true);
-    }, [pipeline_id]);
+    }, [pipeline_id, fetchImages]);
 
     if (currentImages === null)
         return (
