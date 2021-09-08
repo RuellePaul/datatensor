@@ -78,6 +78,7 @@ const DTImage: FC<DTImageProps> = ({
                     draggable={false}
                     onLoad={handleLoad}
                     ref={imageRef}
+                    loading="lazy"
                 />
                 <canvas
                     className={classes.canvas}
@@ -98,6 +99,7 @@ const DTImage: FC<DTImageProps> = ({
                 draggable={false}
                 onLoad={handleLoad}
                 ref={imageRef}
+                loading="lazy"
             />
             <canvas
                 className={classes.canvas}

@@ -11,9 +11,11 @@ import {
     DialogTitle,
     IconButton,
     makeStyles,
+    Tab,
+    Tabs,
     Typography
 } from '@material-ui/core';
-import {Close as CloseIcon, Delete, KeyboardArrowDown as ArrowDownIcon} from '@material-ui/icons';
+import {Close as CloseIcon, Delete} from '@material-ui/icons';
 import ImagesDropzone from 'src/components/ImagesDropzone';
 import DTImagesList from 'src/components/datatensor/ImagesList';
 import Pipeline from 'src/components/datatensor/Pipeline';
@@ -70,6 +72,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
+function TabPanel(props) {
+    const {children, value, index} = props;
+
+    return (
+        <>
+            {(index instanceof Array ? index.includes(value) : value === index) && (
+                children
+            )}
+        </>
+    );
+}
+
 
 const SectionImages: FC<SectionProps> = ({className}) => {
 
@@ -81,6 +95,12 @@ const SectionImages: FC<SectionProps> = ({className}) => {
 
     const {tasks} = useTasks();
     const {images} = useImages();
+
+    const [subTab, setSubTab] = React.useState(0);
+
+    const handleChangeSubTab = (event, newValue) => {
+        setSubTab(newValue);
+    };
 
     const [openUpload, setOpenUpload] = useState(false);
 
@@ -139,7 +159,13 @@ const SectionImages: FC<SectionProps> = ({className}) => {
                     color="textPrimary"
                 >
                     {images.length > 0
-                        ? `Showing ${dataset.image_count} image${dataset.image_count > 1 ? 's' : ''}`
+                        ? <>
+                            {dataset.image_count}
+                            {' '}
+                            <span className="smaller">(+{dataset.augmented_count})</span>
+                            {' '}
+                            image{(dataset.image_count + dataset.augmented_count) > 1 ? 's' : ''}
+                        </>
                         : `No images found`
                     }
                 </Typography>
@@ -179,112 +205,104 @@ const SectionImages: FC<SectionProps> = ({className}) => {
                 </Dialog>
             </div>
 
-            <Box
-                display='flex'
-                alignItems='center'
-            >
-                <Button
-                    className={classes.expandWrapper}
-                    onClick={() => setPipelineId(null)}
+            <Box mb={2}>
+                <Tabs
+                    centered
+                    value={subTab}
+                    onChange={handleChangeSubTab}
                 >
-                    <ArrowDownIcon fontSize='large'/>
-                    <Box ml={1} mr={3}>
-                        <Typography variant='overline'>
-                            Original images ({imagesCount} / {dataset.image_count})
-                        </Typography>
-                    </Box>
-                </Button>
-
-                {pipelines.map(pipeline => (
-                    <Button
-                        className={classes.expandWrapper}
-                        key={pipeline.id}
-                        onClick={() => setPipelineId(pipeline.id)}
-                    >
-                        <ArrowDownIcon fontSize='large'/>
-                        <Box ml={1} mr={3}>
-                            <Typography variant='overline'>
-                                Augmented images ({pipeline.image_count})
+                    <Tab
+                        label={
+                            <Typography color='textPrimary' variant='overline'>
+                                Original • {dataset.image_count}
                             </Typography>
-                        </Box>
-                    </Button>
-                ))}
+                        }
+                    />
+                    {pipelines.map(pipeline => (
+                        <Tab
+                            label={
+                                <Typography color='textPrimary' variant='overline'>
+                                    Augmented • {pipeline.image_count}
+                                </Typography>
+                            }
+                            key={pipeline.id}
+                            onClick={() => setPipelineId(pipeline.id)}
+                        />
+                    ))}
+                </Tabs>
+
             </Box>
+            <TabPanel value={subTab} index={0}>
+                <DTImagesList/>
+            </TabPanel>
+            <TabPanel value={subTab} index={[1, 2]}>
+                <Box
+                    display='flex'
+                    alignItems='center'
+                    justifyContent='space-between'
+                    py={2}
+                >
+                    <Button
+                        onClick={handlePipelineOpen}
+                    >
+                        View operations pipeline
+                    </Button>
 
-            {
-                pipelineId
-                    ? (
-                        <>
-                            <Box
-                                display='flex'
-                                alignItems='center'
-                                justifyContent='space-between'
-                                py={2}
-                            >
-                                <Button
-                                    onClick={handlePipelineOpen}
-                                >
-                                    View operations pipeline
-                                </Button>
-
-                                <Button
-                                    className={clsx((activeTasksCount === 0 && !isDeleting) && classes.deleteAction)}
-                                    variant='outlined'
-                                    startIcon={<Delete/>}
-                                    endIcon={isDeleting && (
-                                        <CircularProgress
-                                            className={classes.loader}
-                                            color="inherit"
-                                        />
-                                    )}
-                                    onClick={handleDeletePipeline}
-                                    size='small'
-                                    disabled={isDeleting || activeTasksCount > 0}
-                                >
-                                    Delete pipeline
-                                </Button>
-                            </Box>
+                    <Button
+                        className={clsx((activeTasksCount === 0 && !isDeleting) && classes.deleteAction)}
+                        variant='outlined'
+                        startIcon={<Delete/>}
+                        endIcon={isDeleting && (
+                            <CircularProgress
+                                className={classes.loader}
+                                color="inherit"
+                            />
+                        )}
+                        onClick={handleDeletePipeline}
+                        size='small'
+                        disabled={isDeleting || activeTasksCount > 0}
+                    >
+                        Delete pipeline
+                    </Button>
+                </Box>
 
 
-                            <Dialog
-                                disableRestoreFocus
-                                fullWidth
-                                maxWidth='xs'
-                                open={openPipeline}
-                                onClose={handlePipelineClose}
-                            >
-                                <DialogTitle
-                                    className='flex'
-                                    disableTypography
-                                >
-                                    <Typography variant='h4'>
-                                        Operations pipeline
-                                    </Typography>
+                <Dialog
+                    disableRestoreFocus
+                    fullWidth
+                    maxWidth='xs'
+                    open={openPipeline}
+                    onClose={handlePipelineClose}
+                >
+                    <DialogTitle
+                        className='flex'
+                        disableTypography
+                    >
+                        <Typography variant='h4'>
+                            Operations pipeline
+                        </Typography>
 
-                                    <IconButton
-                                        className={classes.close}
-                                        onClick={handlePipelineClose}
-                                    >
-                                        <CloseIcon fontSize="large"/>
-                                    </IconButton>
-                                </DialogTitle>
-                                <DialogContent>
-                                    <Pipeline readOnly/>
-                                </DialogContent>
-                            </Dialog>
+                        <IconButton
+                            className={classes.close}
+                            onClick={handlePipelineClose}
+                        >
+                            <CloseIcon fontSize="large"/>
+                        </IconButton>
+                    </DialogTitle>
+                    <DialogContent>
+                        <Pipeline readOnly/>
+                    </DialogContent>
+                </Dialog>
 
-                            <ImagesProvider
-                                key={pipelineId}
-                                pipeline_id={pipelineId}
-                            >
-                                <DTImagesList
-                                    pipeline_id={pipelineId}
-                                />
-                            </ImagesProvider>
-                        </>
-                    )
-                    : <DTImagesList/>
-            }
+                <ImagesProvider
+                    key={pipelineId}
+                    pipeline_id={pipelineId}
+                >
+                    <DTImagesList
+                        pipeline_id={pipelineId}
+                    />
+                </ImagesProvider>
+            </TabPanel>
         </div>
     )
 };
