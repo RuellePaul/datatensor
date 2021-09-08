@@ -11,11 +11,10 @@ import {
     DialogTitle,
     IconButton,
     makeStyles,
-    Tab,
-    Tabs,
     Typography
 } from '@material-ui/core';
 import {Close as CloseIcon, Delete} from '@material-ui/icons';
+import FancyLabel from 'src/components/FancyLabel';
 import ImagesDropzone from 'src/components/ImagesDropzone';
 import DTImagesList from 'src/components/datatensor/ImagesList';
 import DTImagesStack from 'src/components/datatensor/ImagesStack';
@@ -31,22 +30,21 @@ import useTasks from 'src/hooks/useTasks';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
-    header: {
+    wrapper: {
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        [theme.breakpoints.down('md')]: {
+            flexDirection: 'column',
+            justifyContent: 'center',
+            '& > div': {
+                margin: theme.spacing(2, 0)
+            }
+        },
+        margin: theme.spacing(2, 0)
     },
-    title: {
-        position: 'relative',
-        '&:after': {
-            position: 'absolute',
-            bottom: -8,
-            left: 0,
-            content: '" "',
-            height: 3,
-            width: 48,
-            backgroundColor: theme.palette.primary.main
-        }
+    label: {
+        margin: theme.spacing(1, 2, 1, 0)
     },
     close: {
         position: 'absolute',
@@ -116,6 +114,8 @@ const SectionImages: FC<SectionProps> = ({className}) => {
     const [openPipeline, setOpenPipeline] = useState(false);
 
     const handlePipelineOpen = () => {
+        if (!pipelineId) return;
+
         dispatch(setPipeline(pipelines.find(pipeline => pipeline.id === pipelineId)));
         setOpenPipeline(true);
     };
@@ -153,62 +153,90 @@ const SectionImages: FC<SectionProps> = ({className}) => {
 
     return (
         <div className={clsx(classes.root, className)}>
-            <div className={classes.header}>
-                <Typography
-                    className={classes.title}
-                    variant="h5"
-                    color="textPrimary"
-                >
-                    {images.length > 0
-                        ? <>
-                            {dataset.image_count}
-                            {' '}
-                            <span className="smaller">(+{dataset.augmented_count})</span>
-                            {' '}
-                            image{(dataset.image_count + dataset.augmented_count) > 1 ? 's' : ''}
-                        </>
-                        : `No images found`
-                    }
-                </Typography>
+            <Typography
+                variant="h3"
+                color="textPrimary"
+            >
+                All images
+            </Typography>
 
-                <Box display='flex'>
-                    <Button variant='contained' color="primary" onClick={handleUploadOpen} size="small">
-                        Upload images
-                    </Button>
-                </Box>
+            <FancyLabel
+                className={classes.label}
+                color='info'
+            >
+                {dataset.image_count + dataset.augmented_count} images
+            </FancyLabel>
+            <FancyLabel
+                className={classes.label}
+                color='default'
+            >
+                {dataset.image_count} original images
+            </FancyLabel>
+            <FancyLabel
+                className={classes.label}
+                color='default'
+            >
+                + {dataset.augmented_count} augmented images
+            </FancyLabel>
 
-                <Dialog
-                    open={openUpload}
-                    onClose={handleCloseUpload}
-                >
-                    <DialogTitle disableTypography>
-                        <Typography variant='h4'>
-                            Upload Images
-                        </Typography>
-                        <IconButton
-                            className={classes.close}
-                            onClick={handleCloseUpload}
-                        >
-                            <CloseIcon/>
-                        </IconButton>
-                    </DialogTitle>
-                    <DialogContent>
-                        <Typography
-                            color='textSecondary'
-                            gutterBottom
-                        >
-                            Upload images of objects that you want to detect
-                        </Typography>
-                        <ImagesDropzone
-                            callback={handleCloseUpload}
-                        />
-                    </DialogContent>
-                </Dialog>
-            </div>
 
-            <div className='flex'>
+            <Box display='flex'>
+                <Button variant='contained' color="primary" onClick={handleUploadOpen} size="small">
+                    Upload images
+                </Button>
+            </Box>
+
+            <Dialog
+                open={openUpload}
+                onClose={handleCloseUpload}
+            >
+                <DialogTitle disableTypography>
+                    <Typography variant='h4'>
+                        Upload Images
+                    </Typography>
+                    <IconButton
+                        className={classes.close}
+                        onClick={handleCloseUpload}
+                    >
+                        <CloseIcon/>
+                    </IconButton>
+                </DialogTitle>
+                <DialogContent>
+                    <Typography
+                        color='textSecondary'
+                        gutterBottom
+                    >
+                        Upload images of objects that you want to detect
+                    </Typography>
+                    <ImagesDropzone
+                        callback={handleCloseUpload}
+                    />
+                </DialogContent>
+            </Dialog>
+
+            <div
+                className={classes.wrapper}
+            >
                 <ImagesProvider>
-                    <DTImagesStack/>
+                    <Box
+                        display='flex'
+                        flexDirection='column'
+                        justifyContent='center'
+                        alignItems='center'
+                        width='100%'
+                    >
+                        <Typography
+                            variant='overline'
+                            color='textPrimary'
+                            gutterBottom
+                            align='center'
+                        >
+                            Original images ({dataset.image_count})
+                        </Typography>
+                        <DTImagesStack
+                            onClick={() => setPipelineId(null)}
+                        />
+                    </Box>
                 </ImagesProvider>
 
                 {pipelines.map(pipeline => (
@@ -216,109 +244,89 @@ const SectionImages: FC<SectionProps> = ({className}) => {
                         key={pipeline.id}
                         pipeline_id={pipeline.id}
                     >
-                        <DTImagesStack/>
+                        <Box
+                            display='flex'
+                            flexDirection='column'
+                            justifyContent='center'
+                            alignItems='center'
+                            width='100%'
+                        >
+                            <Typography
+                                variant='overline'
+                                color='textPrimary'
+                                gutterBottom
+                                align='center'
+                            >
+                                Augmented images ({pipeline.image_count})
+                            </Typography>
+                            <DTImagesStack
+                                onClick={() => setPipelineId(pipeline.id)}
+                            />
+                        </Box>
                     </ImagesProvider>
                 ))}
             </div>
 
-            <Box mb={2}>
-                <Tabs
-                    centered
-                    value={subTab}
-                    onChange={handleChangeSubTab}
+            <Box
+                display='flex'
+                alignItems='center'
+                justifyContent='space-between'
+                py={2}
+            >
+                <Button
+                    onClick={handlePipelineOpen}
                 >
-                    <Tab
-                        label={
-                            <Typography color='textPrimary' variant='overline'>
-                                Original • {dataset.image_count}
-                            </Typography>
-                        }
-                    />
-                    {pipelines.map(pipeline => (
-                        <Tab
-                            label={
-                                <Typography color='textPrimary' variant='overline'>
-                                    Augmented • {pipeline.image_count}
-                                </Typography>
-                            }
-                            key={pipeline.id}
-                            onClick={() => setPipelineId(pipeline.id)}
+                    View operations pipeline
+                </Button>
+
+                <Button
+                    className={clsx((activeTasksCount === 0 && !isDeleting) && classes.deleteAction)}
+                    variant='outlined'
+                    startIcon={<Delete/>}
+                    endIcon={isDeleting && (
+                        <CircularProgress
+                            className={classes.loader}
+                            color="inherit"
                         />
-                    ))}
-                </Tabs>
-
+                    )}
+                    onClick={handleDeletePipeline}
+                    size='small'
+                    disabled={isDeleting || activeTasksCount > 0}
+                >
+                    Delete pipeline
+                </Button>
             </Box>
-            <TabPanel value={subTab} index={0}>
-                <DTImagesList/>
-            </TabPanel>
-            <TabPanel value={subTab} index={[1, 2]}>
-                <Box
-                    display='flex'
-                    alignItems='center'
-                    justifyContent='space-between'
-                    py={2}
+
+            <ImagesProvider pipeline_id={pipelineId}>
+                <DTImagesList pipeline_id={pipelineId}/>
+            </ImagesProvider>
+
+            <Dialog
+                disableRestoreFocus
+                fullWidth
+                maxWidth='xs'
+                open={openPipeline}
+                onClose={handlePipelineClose}
+            >
+                <DialogTitle
+                    className='flex'
+                    disableTypography
                 >
-                    <Button
-                        onClick={handlePipelineOpen}
+                    <Typography variant='h4'>
+                        Operations pipeline
+                    </Typography>
+
+                    <IconButton
+                        className={classes.close}
+                        onClick={handlePipelineClose}
                     >
-                        View operations pipeline
-                    </Button>
-
-                    <Button
-                        className={clsx((activeTasksCount === 0 && !isDeleting) && classes.deleteAction)}
-                        variant='outlined'
-                        startIcon={<Delete/>}
-                        endIcon={isDeleting && (
-                            <CircularProgress
-                                className={classes.loader}
-                                color="inherit"
-                            />
-                        )}
-                        onClick={handleDeletePipeline}
-                        size='small'
-                        disabled={isDeleting || activeTasksCount > 0}
-                    >
-                        Delete pipeline
-                    </Button>
-                </Box>
-
-
-                <Dialog
-                    disableRestoreFocus
-                    fullWidth
-                    maxWidth='xs'
-                    open={openPipeline}
-                    onClose={handlePipelineClose}
-                >
-                    <DialogTitle
-                        className='flex'
-                        disableTypography
-                    >
-                        <Typography variant='h4'>
-                            Operations pipeline
-                        </Typography>
-
-                        <IconButton
-                            className={classes.close}
-                            onClick={handlePipelineClose}
-                        >
-                            <CloseIcon fontSize="large"/>
-                        </IconButton>
-                    </DialogTitle>
-                    <DialogContent>
-                        <Pipeline readOnly/>
-                    </DialogContent>
-                </Dialog>
-
-                <ImagesProvider
-                    key={pipelineId}
-                    pipeline_id={pipelineId}
-                >
-                    <DTImagesList
-                        pipeline_id={pipelineId}
-                    />
-                </ImagesProvider>
-            </TabPanel>
+                        <CloseIcon fontSize="large"/>
+                    </IconButton>
+                </DialogTitle>
+                <DialogContent>
+                    <Pipeline readOnly/>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 };

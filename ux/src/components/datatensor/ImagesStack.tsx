@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
-import {ButtonBase, makeStyles} from '@material-ui/core';
+import {ButtonBase, makeStyles, Typography} from '@material-ui/core';
 import DTImage from 'src/components/datatensor/Image';
 import useImages from 'src/hooks/useImages';
 import {Theme} from 'src/theme';
@@ -8,6 +8,7 @@ import {ImageProvider} from 'src/store/ImageContext';
 
 interface ImagesListProps {
     className?: string;
+    onClick?: any;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -90,10 +91,10 @@ const DTImagesStack: FC<ImagesListProps> = ({
     return (
         <div
             className={clsx(classes.root, className)}
-            {...rest}
         >
             <ButtonBase
                 className={classes.button}
+                {...rest}
             />
             {images
                 .slice(0, 4)
@@ -108,6 +109,7 @@ const DTImagesStack: FC<ImagesListProps> = ({
                     </ImageProvider>
                 ))
             }
+
         </div>
     );
 };

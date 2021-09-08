@@ -36,7 +36,7 @@ export const ImagesProvider: FC<ImagesProviderProps> = ({pipeline_id, children})
         setCurrentImages(update);
     };
 
-    const fetchImages = useCallback(async () => {
+    const fetchImages = useCallback(async (reset: boolean = false) => {
         try {
             if (pipeline_id === null && currentImages.length >= dataset.image_count) return;
             if (pipeline_id && currentImages.length >= pipelines.find(pipeline => pipeline.id === pipeline_id).image_count) return;
@@ -48,18 +48,24 @@ export const ImagesProvider: FC<ImagesProviderProps> = ({pipeline_id, children})
                     limit: LAZY_LOAD_BATCH
                 }
             });
-            handleSaveImages(images => [...images, ...response.data.images]);
+            handleSaveImages(images => reset ? response.data.images : [...images, ...response.data.images]);
         } catch (err) {
             handleSaveImages([]);
             console.error(err);
         }
 
         // eslint-disable-next-line
-    }, [dataset.id, currentOffset]);
+    }, [dataset.id, currentOffset, pipeline_id]);
 
     useEffect(() => {
         fetchImages();
     }, [fetchImages]);
+
+    useEffect(() => {
+        setCurrentImages([]);
+        setCurrentOffset(0);
+        fetchImages(true);
+    }, [pipeline_id]);
 
     if (currentImages === null)
         return (
