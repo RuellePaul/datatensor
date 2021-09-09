@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
-import {ButtonBase, makeStyles} from '@material-ui/core';
+import {makeStyles} from '@material-ui/core';
 import DTImage from 'src/components/datatensor/Image';
 import useImages from 'src/hooks/useImages';
 import {Theme} from 'src/theme';
@@ -30,19 +30,17 @@ const useStyles = makeStyles((theme: Theme) => ({
             '& .layer-3': {
                 transform: 'scale(1.01)'
             }
+        },
+        '& img': {
+            opacity: '1 !important'
         }
-    },
-    button: {
-        width: '100%',
-        height: 240,
-        zIndex: 100
     },
     stack: {
         position: 'absolute',
         top: theme.spacing(1),
         left: theme.spacing(1),
         width: `calc(100% - ${theme.spacing(2)}px)`,
-        maxHeight: 240,
+        maxHeight: 260,
         overflow: 'hidden',
         border: `solid 1px #000000cc`,
         boxShadow: theme.shadows[3],
@@ -79,6 +77,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
+const STACK_IMAGE_COUNT = 4;
+
 const DTImagesStack: FC<ImagesListProps> = ({
                                                 className,
                                                 ...rest
@@ -91,22 +91,21 @@ const DTImagesStack: FC<ImagesListProps> = ({
     return (
         <div
             className={clsx(classes.root, className)}
+            {...rest}
         >
-            <ButtonBase
-                className={classes.button}
-                {...rest}
-            />
             {images
-                .slice(0, 4)
+                .slice(0, STACK_IMAGE_COUNT)
                 .map((image, index) => (
-                    <ImageProvider
-                        key={image.id}
-                        image={image}
-                    >
-                        <DTImage
-                            className={clsx(classes.stack, `layer-${index}`)}
-                        />
-                    </ImageProvider>
+                    <div className={clsx(classes.stack, `layer-${index}`)}>
+                        <ImageProvider
+                            key={image.id}
+                            image={image}
+                        >
+                            <DTImage
+                                clickable={index === STACK_IMAGE_COUNT - 1}
+                            />
+                        </ImageProvider>
+                    </div>
                 ))
             }
 

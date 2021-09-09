@@ -77,7 +77,7 @@ const SectionImages: FC<SectionProps> = ({className}) => {
     const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
 
-    const {dataset, pipelines, savePipelines} = useDataset();
+    const {dataset, saveDataset, pipelines, savePipelines} = useDataset();
 
     const {tasks} = useTasks();
 
@@ -116,6 +116,7 @@ const SectionImages: FC<SectionProps> = ({className}) => {
         try {
             await api.delete(`/datasets/${dataset.id}/pipelines/${pipelineId}`);
             setPipelineId(null);
+            saveDataset(dataset => ({...dataset, augmented_count: dataset.augmented_count - pipelines.find(pipeline => pipeline.id === pipelineId).image_count}))
             savePipelines(pipelines => pipelines.filter(pipeline => pipeline.id !== pipelineId));
             enqueueSnackbar(`Deleted pipeline & associated images`, {variant: 'info'});
         } catch (error) {
@@ -148,13 +149,13 @@ const SectionImages: FC<SectionProps> = ({className}) => {
                 className={classes.label}
                 color='default'
             >
-                {dataset.image_count} original images
+                {dataset.image_count} original
             </FancyLabel>
             <FancyLabel
                 className={classes.label}
                 color='default'
             >
-                + {dataset.augmented_count} augmented images
+                + {dataset.augmented_count} augmented
             </FancyLabel>
 
 
@@ -195,32 +196,29 @@ const SectionImages: FC<SectionProps> = ({className}) => {
             <div
                 className={classes.wrapper}
             >
-                <ImagesProvider>
-                    <Box
-                        display='flex'
-                        flexDirection='column'
-                        justifyContent='center'
-                        alignItems='center'
-                        width='100%'
+                <Box
+                    display='flex'
+                    flexDirection='column'
+                    justifyContent='center'
+                    alignItems='center'
+                    width='100%'
+                >
+                    <Typography
+                        variant='overline'
+                        color='textPrimary'
+                        gutterBottom
+                        align='center'
                     >
-                        <Typography
-                            variant='overline'
-                            color='textPrimary'
-                            gutterBottom
-                            align='center'
-                        >
-                            Original images ({dataset.image_count})
-                        </Typography>
-                        <DTImagesStack
-                            onClick={() => setPipelineId(null)}
-                        />
-                    </Box>
-                </ImagesProvider>
+                        Original images ({dataset.image_count})
+                    </Typography>
+                    <DTImagesStack
+                        onClick={() => setPipelineId(null)}
+                    />
+                </Box>
 
                 {pipelines.map(pipeline => (
                     <ImagesProvider
                         key={pipeline.id}
-                        pipeline_id={pipeline.id}
                     >
                         <Box
                             display='flex'
@@ -275,9 +273,7 @@ const SectionImages: FC<SectionProps> = ({className}) => {
                 </Button>
             </Box>
 
-            <ImagesProvider pipeline_id={pipelineId}>
-                <DTImagesList pipeline_id={pipelineId}/>
-            </ImagesProvider>
+            <DTImagesList/>
 
             <Dialog
                 disableRestoreFocus

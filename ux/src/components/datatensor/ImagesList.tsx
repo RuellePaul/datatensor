@@ -206,6 +206,11 @@ const DTImagesList: FC<ImagesListProps> = ({
                             <DTImage
                                 clickable
                                 onClick={() => handleOpenImage(index)}
+                                style={{
+                                    '& canvas': {
+                                        animationDelay: Math.floor(Math.random() * 1000 * index)
+                                    }
+                                }}
                             />
                         </ImageProvider>
                     ))}
