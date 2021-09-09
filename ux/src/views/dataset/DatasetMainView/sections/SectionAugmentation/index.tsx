@@ -24,7 +24,7 @@ import PipelineSample from 'src/components/datatensor/PipelineSample';
 import DTImage from 'src/components/datatensor/Image';
 import useImages from 'src/hooks/useImages';
 import {ImageProvider} from 'src/store/ImageContext';
-import {SectionProps} from './SectionProps';
+import {SectionProps} from '../SectionProps';
 import api from 'src/utils/api';
 import {Task} from 'src/types/task';
 import useTasks from 'src/hooks/useTasks';

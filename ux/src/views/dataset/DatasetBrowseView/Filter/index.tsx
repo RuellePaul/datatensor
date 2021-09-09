@@ -15,7 +15,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import {Theme} from 'src/theme';
 import api from 'src/utils/api';
 import {Category} from 'src/types/category';
-import useDatasets from '../../../../hooks/useDatasets';
+import useDatasets from 'src/hooks/useDatasets';
 
 interface FilterProps {
     className?: string;

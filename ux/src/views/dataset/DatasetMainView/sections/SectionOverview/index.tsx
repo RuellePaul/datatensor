@@ -2,7 +2,7 @@ import React, {FC} from 'react';
 import clsx from 'clsx';
 import {makeStyles} from '@material-ui/core';
 import {Theme} from 'src/theme';
-import {SectionProps} from './SectionProps';
+import {SectionProps} from '../SectionProps';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {}
