@@ -1,11 +1,13 @@
-import React, {FC} from 'react';
-import {Link as RouterLink} from 'react-router-dom';
+import React, {FC, useEffect} from 'react';
+import {Link as RouterLink, useHistory} from 'react-router-dom';
+import {useSnackbar} from 'notistack';
 import {Box, Card, CardContent, Container, Divider, Link, makeStyles, Typography} from '@material-ui/core';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
 import Logo from 'src/components/utils/Logo';
 import JWTLogin from './JWTLogin';
 import OAuthLoginButton from './OAuthLoginButton';
+import parseQueryArgs from 'src/utils/parseQueryArgs';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -32,7 +34,19 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const LoginView: FC = () => {
+
     const classes = useStyles();
+    const history = useHistory();
+    const {enqueueSnackbar} = useSnackbar();
+
+    useEffect(() => {
+        if (parseQueryArgs('expired')) {
+            enqueueSnackbar(`Session expired.`, {variant: 'warning'});
+            history.replace('/login');
+        }
+
+        // eslint-disable-next-line
+    }, [])
 
     return (
         <Page
