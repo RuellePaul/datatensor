@@ -50,7 +50,7 @@ async def patch_dataset_privacy(dataset_id, payload: DatasetPatchPrivacyBody, us
 
 
 @datasets.delete('/')
-async def delete_dataset(user: User = Depends(logged_admin)):
+async def delete_datasets(user: User = Depends(logged_admin)):
     """
     Delete all datasets of admin user, and other linked collections (`images`, `labels`, `tasks`...).
     🔒️ Admin only
