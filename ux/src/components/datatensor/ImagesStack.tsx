@@ -14,21 +14,22 @@ interface ImagesListProps {
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         position: 'relative',
-        height: 240,
         width: '100%',
-        maxWidth: 360,
+        maxWidth: 400,
+        height: 300,
+        margin: theme.spacing(1, 0, 3),
         '&:hover': {
             '& .layer-0': {
-                transform: 'translate(10px, 5px) rotate(5deg) scale(1.01)',
+                transform: 'scale(1.01)'
             },
             '& .layer-1': {
-                transform: 'translate(0px, 10px) rotate(3deg) scale(1.01)',
+                transform: 'translate(-5px, 5px) rotate(-6deg) scale(1.01)'
             },
             '& .layer-2': {
-                transform: 'translate(-5px, 5px) rotate(-6deg) scale(1.01)',
+                transform: 'translate(0px, 10px) rotate(3deg) scale(1.01)'
             },
             '& .layer-3': {
-                transform: 'scale(1.01)'
+                transform: 'translate(10px, 5px) rotate(5deg) scale(1.01)'
             }
         },
         '& img': {
@@ -48,31 +49,34 @@ const useStyles = makeStyles((theme: Theme) => ({
         transform: 'translate(0px, 0px)',
         cursor: 'pointer',
         '&.layer-0': {
-            transform: 'translate(10px, 5px) rotate(4deg)',
-            zIndex: 0,
+            zIndex: 3,
             '& img, & canvas': {
-                zIndex: 0
+                zIndex: 3
             }
         },
         '&.layer-1': {
-            transform: 'translate(0px, 10px) rotate(2deg)',
-            zIndex: 1,
-            '& img, & canvas': {
-                zIndex: 1
-            }
-        },
-        '&.layer-2': {
             transform: 'translate(-5px, 5px) rotate(-5deg)',
             zIndex: 2,
             '& img, & canvas': {
                 zIndex: 2
             }
         },
-        '&.layer-3': {
-            zIndex: 3,
+        '&.layer-2': {
+            transform: 'translate(0px, 10px) rotate(2deg)',
+            zIndex: 1,
+            filter: 'blur(1px)',
             '& img, & canvas': {
-                zIndex: 3
+                zIndex: 1
             }
+        },
+        '&.layer-3': {
+            transform: 'translate(10px, 5px) rotate(4deg)',
+            zIndex: 0,
+            filter: 'blur(2px)',
+            '& img, & canvas': {
+                zIndex: 0
+            }
+
         }
     }
 }));
@@ -102,7 +106,7 @@ const DTImagesStack: FC<ImagesListProps> = ({
                             image={image}
                         >
                             <DTImage
-                                clickable={index === STACK_IMAGE_COUNT - 1}
+                                clickable={index === 0}
                             />
                         </ImageProvider>
                     </div>

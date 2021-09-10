@@ -13,6 +13,7 @@ export interface ImagesContextValue {
 }
 
 interface ImagesProviderProps {
+    pipeline_id?: string;
     children?: ReactNode;
 }
 
@@ -25,34 +26,35 @@ export const ImagesContext = createContext<ImagesContextValue>({
     }
 });
 
-export const ImagesProvider: FC<ImagesProviderProps> = ({children}) => {
+export const ImagesProvider: FC<ImagesProviderProps> = ({children, pipeline_id}) => {
     const [currentImages, setCurrentImages] = useState<Image[] | []>([]);
     const [currentOffset, setCurrentOffset] = useState<number>(0);
 
-    const {dataset, pipelines} = useDataset();
+    const {dataset} = useDataset();
 
     const handleSaveImages = (update: Image[] | ((images: Image[]) => Image[])): void => {
         setCurrentImages(update);
     };
 
-    const fetchImages = useCallback(async (reset: boolean = false) => {
+    const fetchImages = useCallback(async () => {
         try {
             if (currentImages.length >= dataset.image_count) return;
 
             const response = await api.get<{ images: Image[] }>(`/datasets/${dataset.id}/images/`, {
                 params: {
                     offset: currentOffset,
-                    limit: LAZY_LOAD_BATCH
+                    limit: LAZY_LOAD_BATCH,
+                    pipeline_id
                 }
             });
-            handleSaveImages(images => reset ? response.data.images : [...images, ...response.data.images]);
+            handleSaveImages(images => response.data.images);
         } catch (err) {
             handleSaveImages([]);
             console.error(err);
         }
 
         // eslint-disable-next-line
-    }, [dataset.id, currentOffset]);
+    }, [dataset.id, currentOffset, pipeline_id]);
 
     useEffect(() => {
         fetchImages();
