@@ -47,7 +47,7 @@ export const ImagesProvider: FC<ImagesProviderProps> = ({children, pipeline_id})
                     pipeline_id
                 }
             });
-            handleSaveImages(images => response.data.images);
+            handleSaveImages(images => [...images, ...response.data.images]);
         } catch (err) {
             handleSaveImages([]);
             console.error(err);
