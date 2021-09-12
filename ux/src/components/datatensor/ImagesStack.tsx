@@ -100,7 +100,10 @@ const DTImagesStack: FC<ImagesListProps> = ({
             {images
                 .slice(0, STACK_IMAGE_COUNT)
                 .map((image, index) => (
-                    <div className={clsx(classes.stack, `layer-${index}`)}>
+                    <div
+                        className={clsx(classes.stack, `layer-${index}`)}
+                        key={`layer-${index}`}
+                    >
                         <ImageProvider
                             key={image.id}
                             image={image}

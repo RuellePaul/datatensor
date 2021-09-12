@@ -1,17 +1,12 @@
-import React, {FC, useState} from 'react';
+import React, {FC} from 'react';
 import clsx from 'clsx';
-import {Box, IconButton, makeStyles, Typography} from '@material-ui/core';
-import {ArrowLeft as BackIcon} from '@material-ui/icons';
+import {makeStyles, Typography} from '@material-ui/core';
 import FancyLabel from 'src/components/FancyLabel';
-import DTImagesList from 'src/components/datatensor/ImagesList';
-import DTImagesStack from 'src/components/datatensor/ImagesStack';
 import useDataset from 'src/hooks/useDataset';
 import {ImagesProvider} from 'src/store/ImagesContext';
 import {Theme} from 'src/theme';
+import ImagesStackPanel from './ImagesStackPanel';
 import {SectionProps} from '../SectionProps';
-import UploadAction from './UploadAction';
-import ViewPipelineAction from './ViewPipelineAction';
-import DeletePipelineAction from './DeletePipelineAction';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
@@ -19,67 +14,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         margin: theme.spacing(1, 2, 1, 0)
     }
 }));
-
-interface ImagesStackPanelProps {
-    title: string;
-    pipeline_id?: string;
-}
-
-
-const ImagesStackPanel: FC<ImagesStackPanelProps> = ({title, pipeline_id}) => {
-
-    const {savePipelines} = useDataset();
-    const [selected, setSelected] = useState<boolean>(false);
-
-    return (
-        <Box
-            display='flex'
-            flexDirection='column'
-            justifyContent='center'
-            alignItems='center'
-        >
-            <Typography
-                variant='h5'
-                color={pipeline_id ? 'textSecondary' : 'textPrimary'}
-                gutterBottom
-                align='center'
-            >
-                <strong>
-                    {title}
-                </strong>
-            </Typography>
-            {selected
-                ? (
-                    <>
-                        {pipeline_id
-                            ? (
-                                <>
-                                    <ViewPipelineAction
-                                        pipeline_id={pipeline_id}
-                                    />
-                                    <DeletePipelineAction
-                                        pipeline_id={pipeline_id}
-                                        callback={() => savePipelines(pipelines => pipelines.filter(pipeline => pipeline.id !== pipeline_id))}
-                                    />
-                                </>
-                            ) : (
-                                <UploadAction/>
-                            )}
-                        <IconButton onClick={() => setSelected(false)}>
-                            <BackIcon/>
-                        </IconButton>
-                        <DTImagesList pipeline_id={pipeline_id}/>
-                    </>
-                ) : (
-                    <DTImagesStack
-                        onClick={() => setSelected(true)}
-                    />
-                )}
-        </Box>
-
-    )
-}
-
 
 const SectionImages: FC<SectionProps> = ({className}) => {
 
@@ -92,12 +26,15 @@ const SectionImages: FC<SectionProps> = ({className}) => {
             <Typography
                 variant="h3"
                 color="textPrimary"
+                gutterBottom
             >
                 All images
             </Typography>
 
             <Typography
+                variant="h5"
                 color="textPrimary"
+                gutterBottom
             >
                 Currently, this dataset contains
                 {' '}

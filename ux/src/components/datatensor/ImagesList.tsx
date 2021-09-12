@@ -234,15 +234,13 @@ const DTImagesList: FC<ImagesListProps> = ({
                     >
                         <>
                             <div className={classes.header}>
-                                <IconButton
+                                <Button
                                     onClick={handleCloseImage}
+                                    size='small'
+                                    startIcon={<BackIcon/>}
                                 >
-                                    <BackIcon
-                                        width={32}
-                                        height={32}
-                                        color='white'
-                                    />
-                                </IconButton>
+                                    Back
+                                </Button>
                                 <div>
                                     <Typography
                                         variant='h5'
