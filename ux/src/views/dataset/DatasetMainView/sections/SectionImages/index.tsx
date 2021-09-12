@@ -45,7 +45,6 @@ const SectionImages: FC<SectionProps> = ({className}) => {
             </Typography>
 
             <Typography
-                variant="h6"
                 color="textPrimary"
                 gutterBottom
             >
