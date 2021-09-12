@@ -1,5 +1,5 @@
 import React, {FC, useState} from 'react';
-import {Button, Card, CardContent, CardHeader, makeStyles} from '@material-ui/core';
+import {Box, Button, Card, CardContent, CardHeader, makeStyles, Typography} from '@material-ui/core';
 import {ArrowLeft as BackIcon} from 'react-feather';
 import DTImagesList from 'src/components/datatensor/ImagesList';
 import DTImagesStack from 'src/components/datatensor/ImagesStack';
@@ -8,15 +8,23 @@ import {Theme} from 'src/theme';
 import UploadAction from './UploadAction';
 import ViewPipelineAction from './ViewPipelineAction';
 import DeletePipelineAction from './DeletePipelineAction';
+import useImages from 'src/hooks/useImages';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        marginBottom: theme.spacing(3)
+        marginBottom: theme.spacing(3),
+        '& .MuiCardHeader-action': {
+            margin: 0
+        }
     },
     content: {
         display: 'flex',
         alignItems: 'center',
         padding: `${theme.spacing(0, 2)} !important`,
+    },
+    header: {
+        borderBottom: `1px dashed ${theme.palette.divider}`,
+        marginBottom: theme.spacing(1)
     }
 }));
 
@@ -29,12 +37,18 @@ interface ImagesStackPanelProps {
 const ImagesStackPanel: FC<ImagesStackPanelProps> = ({title, pipeline_id}) => {
 
     const classes = useStyles();
-    const {savePipelines} = useDataset();
+    const {dataset, pipelines, savePipelines} = useDataset();
+    const {images} = useImages();
     const [selected, setSelected] = useState<boolean>(false);
 
     return (
-        <Card className={classes.root}>
+        <Card
+            className={classes.root}
+            elevation={5}
+            variant='outlined'
+        >
             <CardHeader
+                className={classes.header}
                 action={pipeline_id
                     ? (
                         <>
@@ -56,13 +70,28 @@ const ImagesStackPanel: FC<ImagesStackPanelProps> = ({title, pipeline_id}) => {
                 {selected
                     ? (
                         <div>
-                            <Button
-                                onClick={() => setSelected(false)}
-                                size='small'
-                                startIcon={<BackIcon/>}
+                            <Box
+                                display='flex'
+                                alignItems='center'
+                                justifyContent='space-between'
+                                mb={2}
                             >
-                                Back
-                            </Button>
+                                <Button
+                                    onClick={() => setSelected(false)}
+                                    size='small'
+                                    startIcon={<BackIcon/>}
+                                >
+                                    Back
+                                </Button>
+                                <Typography
+                                    variant='body2'
+                                    color='textSecondary'
+                                >
+                                    {images.length} / {pipeline_id
+                                    ? pipelines.find(pipeline => pipeline.id === pipeline_id).image_count
+                                    : dataset.image_count}
+                                </Typography>
+                            </Box>
                             <DTImagesList pipeline_id={pipeline_id}/>
                         </div>
                     ) : (

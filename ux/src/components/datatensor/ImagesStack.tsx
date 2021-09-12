@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     root: {
         position: 'relative',
         width: '100%',
-        maxWidth: 400,
+        maxWidth: 440,
         height: 300,
         margin: theme.spacing(1, 0, 3),
         '&:hover': {

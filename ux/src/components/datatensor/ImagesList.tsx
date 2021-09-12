@@ -181,8 +181,8 @@ const DTImagesList: FC<ImagesListProps> = ({
             <InfiniteScroll
                 className='scroll'
                 dataLength={images.length}
-                next={() => setTimeout(() => saveOffset(offset => offset + LAZY_LOAD_BATCH), 100)}
-                height={'calc(100vh - 300px)'}
+                next={() => saveOffset(offset => offset + LAZY_LOAD_BATCH)}
+                height={700}
                 hasMore={pipeline_id
                     ? pipelines.find(pipeline => pipeline.id === pipeline_id).image_count > images.length
                     : dataset.image_count > images.length

@@ -8,6 +8,9 @@ import {setDefaultPipeline, setPipeline} from 'src/slices/pipeline';
 import useDataset from 'src/hooks/useDataset';
 
 const useStyles = makeStyles((theme: Theme) => ({
+    button: {
+        marginRight: theme.spacing(1)
+    },
     close: {
         position: 'absolute',
         right: theme.spacing(1),
@@ -47,6 +50,7 @@ const ViewPipelineAction: FC<ViewPipelineActionProps> = ({pipeline_id}) => {
     return (
         <>
             <Button
+                className={classes.button}
                 size='small'
                 onClick={handlePipelineOpen}
                 variant='outlined'
