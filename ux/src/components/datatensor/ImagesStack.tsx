@@ -33,6 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
             }
         },
         '& img': {
+            width: '100%',
             opacity: '1 !important'
         }
     },
