@@ -12,7 +12,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     root: {},
     label: {
         margin: theme.spacing(1, 2, 1, 0)
-    }
+    },
+    title: {
+        position: 'relative',
+        '&:after': {
+            position: 'absolute',
+            bottom: -8,
+            left: 0,
+            content: '" "',
+            height: 3,
+            width: 68,
+            backgroundColor: theme.palette.primary.main
+        }
+    },
 }));
 
 const SectionImages: FC<SectionProps> = ({className}) => {
@@ -24,6 +36,7 @@ const SectionImages: FC<SectionProps> = ({className}) => {
     return (
         <div className={clsx(classes.root, className)}>
             <Typography
+                className={classes.title}
                 variant="h3"
                 color="textPrimary"
                 gutterBottom
@@ -32,7 +45,7 @@ const SectionImages: FC<SectionProps> = ({className}) => {
             </Typography>
 
             <Typography
-                variant="h5"
+                variant="h6"
                 color="textPrimary"
                 gutterBottom
             >
