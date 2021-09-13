@@ -4,7 +4,7 @@ from uuid import uuid4
 
 from api import errors
 from api.config import Config
-from api.routers.datasets.core import find_datasets
+from api.routers.datasets.core import find_own_datasets
 from api.routers.tasks.models import Task, TaskStatus
 from worker import run_generator, run_augmentor
 
@@ -19,7 +19,7 @@ def user_is_allowed_to_create_task(user, dataset_id, task_type) -> bool:
     if task_type == 'augmentor':
         if dataset_id is None:
             raise errors.Forbidden(errors.DATASET_NOT_FOUND)
-        user_dataset_ids = [dataset.id for dataset in find_datasets(user.id)]
+        user_dataset_ids = [dataset.id for dataset in find_own_datasets(user.id)]
         if dataset_id not in user_dataset_ids:
             raise errors.Forbidden(errors.NOT_YOUR_DATASET)
         pipelines_count = db.pipelines.count({'dataset_id': dataset_id})

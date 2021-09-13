@@ -20,6 +20,16 @@ def find_datasets(user_id, offset=0, limit=0) -> List[Dataset]:
     return [Dataset.from_mongo(dataset) for dataset in datasets]
 
 
+def find_own_datasets(user_id, offset=0, limit=0) -> List[Dataset]:
+    datasets = list(db.datasets
+                    .find({'$or': [{'user_id': user_id}]})
+                    .skip(offset)
+                    .limit(limit))
+    if datasets is None:
+        raise errors.NotFound(errors.DATASET_NOT_FOUND)
+    return [Dataset.from_mongo(dataset) for dataset in datasets]
+
+
 def find_dataset(dataset_id) -> Dataset:
     dataset = db.datasets.find_one({'_id': dataset_id})
     if dataset is None:
