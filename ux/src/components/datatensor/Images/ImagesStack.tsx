@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
 import {makeStyles} from '@material-ui/core';
-import DTImage from 'src/components/datatensor/Image';
+import DTImage from 'src/components/datatensor/Images/Image';
 import useImages from 'src/hooks/useImages';
 import {Theme} from 'src/theme';
 import {ImageProvider} from 'src/store/ImageContext';
