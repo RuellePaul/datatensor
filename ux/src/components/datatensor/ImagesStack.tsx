@@ -32,6 +32,9 @@ const useStyles = makeStyles((theme: Theme) => ({
                 transform: 'translate(10px, 5px) rotate(5deg) scale(1.01)'
             }
         },
+        '& button': {
+            width: '100%'
+        },
         '& img': {
             width: '100%',
             opacity: '1 !important'
