@@ -8,9 +8,10 @@ import {updateOperation} from 'src/slices/pipeline';
 interface ProbabilitySliderProps {
     operation: Operation,
     setDragDisabled?: (update: boolean) => void
+    disabled?: boolean
 }
 
-const ProbabilitySlider: FC<ProbabilitySliderProps> = ({operation, setDragDisabled}) => {
+const ProbabilitySlider: FC<ProbabilitySliderProps> = ({operation, setDragDisabled, ...rest}) => {
     const dispatch = useDispatch();
 
     const handleProbabilityChange = async (event, value): Promise<void> => {
@@ -41,6 +42,7 @@ const ProbabilitySlider: FC<ProbabilitySliderProps> = ({operation, setDragDisabl
                 onChangeCommitted={handleProbabilityChange}
                 onMouseEnter={() => setDragDisabled && setDragDisabled(true)}
                 onMouseLeave={() => setDragDisabled && setDragDisabled(false)}
+                {...rest}
             />
         </>
     );

@@ -34,6 +34,7 @@ const WorkingAlert: FC<WorkingAlertProps> = ({
         return null;
 
     const activeTask = tasks.find(task => task.status === 'active' && task.dataset_id === dataset_id);
+    const activeTasksCount = tasks.filter(task => task.status === 'active' && task.dataset_id === dataset_id).length;
 
     if (!activeTask)
         return null;
@@ -58,7 +59,11 @@ const WorkingAlert: FC<WorkingAlertProps> = ({
                     color='inherit'
                     onClick={handleOpenTask}
                 >
-                    A task is running
+                    {activeTasksCount > 1
+                        ? 'Some tasks are running'
+                        : 'A task is running'
+                    }
+
                 </Link>
 
                 <CircularProgress

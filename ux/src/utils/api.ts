@@ -27,7 +27,7 @@ api.interceptors.response.use(
         }
 
         if (error.response?.data?.data === 'ERR_EXPIRED') {
-            window.location.href = '/login';
+            window.location.href = '/login?expired';
         }
 
         return Promise.reject((error.response && error.response.data) || 'Something went wrong')

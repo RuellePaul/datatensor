@@ -5,7 +5,7 @@ from uuid import uuid4
 from api import errors
 from api.config import Config
 from api.routers.datasets.models import Dataset, DatasetPostBody, DatasetPatchPrivacyBody
-from api.routers.images.core import delete_images_from_s3, find_images
+from api.routers.images.core import delete_images_from_s3, find_all_images
 
 db = Config.db
 
@@ -13,6 +13,16 @@ db = Config.db
 def find_datasets(user_id, offset=0, limit=0) -> List[Dataset]:
     datasets = list(db.datasets
                     .find({'$or': [{'user_id': user_id}, {'is_public': True}]})
+                    .skip(offset)
+                    .limit(limit))
+    if datasets is None:
+        raise errors.NotFound(errors.DATASET_NOT_FOUND)
+    return [Dataset.from_mongo(dataset) for dataset in datasets]
+
+
+def find_own_datasets(user_id, offset=0, limit=0) -> List[Dataset]:
+    datasets = list(db.datasets
+                    .find({'$or': [{'user_id': user_id}]})
                     .skip(offset)
                     .limit(limit))
     if datasets is None:
@@ -63,7 +73,7 @@ def remove_dataset(user_id, dataset_id):
     if dataset_to_remove['user_id'] != user_id:
         raise errors.Forbidden(errors.NOT_YOUR_DATASET)
 
-    images = find_images(dataset_id)
+    images = find_all_images(dataset_id)
     if images:
         image_ids_to_remove = [image.id for image in images]
         delete_images_from_s3(image_ids_to_remove)
@@ -74,6 +84,7 @@ def remove_dataset(user_id, dataset_id):
     db.tasks.delete_many({'dataset_id': dataset_id})
     db.pipelines.delete_many({'dataset_id': dataset_id})
     db.datasets.delete_one({'_id': dataset_id, 'user_id': user_id})
+    # TODO : delete notifications (with their task_id)
 
 
 def remove_datasets(user_id):

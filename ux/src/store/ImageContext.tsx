@@ -1,8 +1,9 @@
 import React, {createContext, FC, ReactNode, useCallback, useEffect, useState} from 'react';
+import {useSnackbar} from 'notistack';
 import {Label} from 'src/types/label';
 import {Image} from 'src/types/image';
 import api from 'src/utils/api';
-import {useSnackbar} from 'notistack';
+import useDataset from 'src/hooks/useDataset';
 
 export interface ImageContextValue {
     image: Image;
@@ -35,6 +36,7 @@ export const ImageContext = createContext<ImageContextValue>({
 
 export const ImageProvider: FC<ImageProviderProps> = ({image, children}) => {
 
+    const {dataset} = useDataset();
     const {enqueueSnackbar} = useSnackbar();
 
     const [currentLabels, setCurrentLabels] = useState<Label[]>(null);
@@ -48,7 +50,7 @@ export const ImageProvider: FC<ImageProviderProps> = ({image, children}) => {
 
         if (image) {
             try {
-                const response = await api.get<{ labels: Label[] }>(`/images/${image.id}/labels/`);
+                const response = await api.get<{ labels: Label[] }>(`/datasets/${dataset.id}/images/${image.id}/labels/`);
                 handleSaveLabels(response.data.labels);
                 setPositions([response.data.labels]);
             } catch (err) {
@@ -56,16 +58,21 @@ export const ImageProvider: FC<ImageProviderProps> = ({image, children}) => {
             }
         }
 
-    }, [image]);
+    }, [dataset.id, image]);
 
     useEffect(() => {
         fetchLabels();
     }, [fetchLabels]);
 
     const validateLabels = async () => {
-        await api.post(`/images/${image.id}/labels/`, {labels: currentLabels});
+        try {
+                    await api.post(`/datasets/${dataset.id}/images/${image.id}/labels/`, {labels: currentLabels});
         enqueueSnackbar('Labels updated', {variant: 'info'});
         setPositions([currentLabels]);
+
+        } catch (error) {
+            enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
+        }
     };
 
     const [positions, setPositions] = useState<Label[][]>([]);

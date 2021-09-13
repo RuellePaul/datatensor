@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import {Box, Container, Divider, makeStyles, Tab, Tabs, Tooltip, Typography} from '@material-ui/core';
 import {TabContext} from '@material-ui/lab';
 import Header from './Header';
+import SectionOverview from './sections/SectionOverview';
 import SectionImages from './sections/SectionImages';
 import SectionAugmentation from './sections/SectionAugmentation';
 import SectionSettings from './sections/SectionSettings';
@@ -127,6 +128,11 @@ const DatasetMainView: FC = () => {
                                         <Divider/>
                                     </Box>
 
+                                    {openedTabs.includes(0) && (
+                                        <SectionOverview
+                                            className={clsx(tab !== 0 && 'hidden')}
+                                        />
+                                    )}
                                     {openedTabs.includes(1) && (
                                         <SectionImages
                                             className={clsx(tab !== 1 && 'hidden')}

@@ -15,6 +15,11 @@
     flex-grow: 700;
 }
 
+.smaller {
+    font-size: 0.7em !important;
+    vertical-align: middle !important;
+}
+
 .blinking {
     animation: blinker 1.5s ease infinite;
 }

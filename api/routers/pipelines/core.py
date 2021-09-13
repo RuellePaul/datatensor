@@ -10,6 +10,8 @@ from PIL import Image as PILImage
 
 from api import errors
 from api.config import Config
+from api.routers.datasets.models import Dataset
+from api.routers.images.core import find_images, delete_images_from_s3
 from api.routers.images.models import Image
 from api.routers.labels.models import Label
 from api.routers.pipelines.models import Operation
@@ -23,6 +25,19 @@ def find_pipelines(dataset_id, offset=0, limit=0) -> List[Label]:
     if pipelines is None:
         raise errors.NotFound(errors.PIPELINE_NOT_FOUND)
     return [Pipeline.from_mongo(pipeline) for pipeline in pipelines]
+
+
+def delete_pipeline(dataset: Dataset, pipeline_id):
+    images = find_images(dataset.id, pipeline_id)
+    if images:
+        image_ids_to_remove = [image.id for image in images]
+        delete_images_from_s3(image_ids_to_remove)
+        db.images.delete_many({'dataset_id': dataset.id, 'pipeline_id': pipeline_id})
+        db.labels.delete_many({'image_id': {'$in': image_ids_to_remove}})
+        db.datasets.update_one({'_id': dataset.id},
+                               {'$inc': {'augmented_count': -len(images)}},
+                               upsert=False)
+    db.pipelines.delete_one({'_id': pipeline_id})
 
 
 def from_image_bytes(image_bytes):

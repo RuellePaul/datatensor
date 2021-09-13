@@ -1,5 +1,6 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
+from api.dependencies import dataset_belongs_to_user
 from api.routers.labels.core import find_labels, find_label, replace_labels
 from api.routers.labels.models import *
 from api.utils import parse
@@ -26,7 +27,7 @@ async def get_label(image_id, label_id):
 
 
 @labels.post('/')
-async def post_labels(image_id, payload: LabelPostBody):
+async def post_labels(image_id, payload: LabelPostBody, dataset=Depends(dataset_belongs_to_user)):
     """
     Replace labels to a given image.
     """

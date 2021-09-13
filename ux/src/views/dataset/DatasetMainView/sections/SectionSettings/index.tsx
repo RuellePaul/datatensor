@@ -17,7 +17,7 @@ import {Alert, AlertTitle,} from '@material-ui/lab';
 import useDatasets from 'src/hooks/useDatasets';
 import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
-import {SectionProps} from './SectionProps';
+import {SectionProps} from '../SectionProps';
 import api from 'src/utils/api';
 import {Dataset} from 'src/types/dataset';
 import {useSnackbar} from 'notistack';

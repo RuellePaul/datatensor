@@ -70,24 +70,20 @@ app.include_router(search, prefix=f'{PREFIX}/search',
 app.include_router(datasets, prefix=f'{PREFIX}/datasets',
                    dependencies=[Depends(logged_user)], tags=['datasets'])
 
-# TODO : security branch
-# FIXME : a user can do operations on a other user dataset (e.g : delete an image/category, or upload an image...)
-
 # Datasets ➤ Categories
 datasets.include_router(categories, prefix='/{dataset_id}/categories', tags=['categories'])
 
 # Datasets ➤ Pipelines
 datasets.include_router(pipelines, prefix='/{dataset_id}/pipelines', tags=['pipelines'])
 
+# Images ➤ Labels
+images.include_router(labels, prefix='/{image_id}/labels', tags=['labels'])
+
 # Datasets ➤ Images
 datasets.include_router(images, prefix='/{dataset_id}/images', tags=['images'])
 
 # Dataset ➤ Tasks
 datasets.include_router(tasks, prefix='/{dataset_id}/tasks', tags=['tasks'])
-
-# Images ➤ Labels
-app.include_router(labels, prefix=f'{PREFIX}/images/{{image_id}}/labels',
-                   dependencies=[Depends(logged_user)], tags=['labels'])
 
 # Users ➤ Tasks 🔒 Admin partially
 app.include_router(tasks, prefix=f'{PREFIX}/tasks', tags=['tasks'], dependencies=[Depends(logged_user)])

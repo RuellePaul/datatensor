@@ -20,9 +20,12 @@ const useStyles = makeStyles((theme: Theme) => ({
         position: 'relative'
     },
     clickable: {
+        '& .MuiTouchRipple-root': {
+            zIndex: 1000
+        },
         '&:hover img': {
             boxShadow: theme.shadows[6],
-            opacity: 0.85
+            opacity: 0.85,
         }
     },
     canvas: {
@@ -78,9 +81,10 @@ const DTImage: FC<DTImageProps> = ({
                     draggable={false}
                     onLoad={handleLoad}
                     ref={imageRef}
+                    loading="lazy"
                 />
                 <canvas
-                    className={classes.canvas}
+                    className={clsx(classes.canvas)}
                     ref={canvasRef}
                 />
             </ButtonBase>
@@ -98,9 +102,10 @@ const DTImage: FC<DTImageProps> = ({
                 draggable={false}
                 onLoad={handleLoad}
                 ref={imageRef}
+                loading="lazy"
             />
             <canvas
-                className={classes.canvas}
+                className={clsx(classes.canvas)}
                 ref={canvasRef}
             />
         </div>
