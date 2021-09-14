@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import useEventListener from 'use-typed-event-listener';
 import {makeStyles} from '@material-ui/core';
-import DTImage from 'src/components/datatensor/Images/Image';
+import DTImage from 'src/components/core/Images/Image';
 import ToolLabel from './ToolLabel';
 import ToolMove from './ToolMove';
 import {Theme} from 'src/theme';

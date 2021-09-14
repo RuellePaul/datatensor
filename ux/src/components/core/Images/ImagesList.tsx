@@ -3,7 +3,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import Masonry from 'react-masonry-css';
 import clsx from 'clsx';
 import {LinearProgress, makeStyles, useTheme} from '@material-ui/core';
-import DTImage from 'src/components/datatensor/Images/Image';
+import DTImage from 'src/components/core/Images/Image';
 import useImages from 'src/hooks/useImages';
 import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';

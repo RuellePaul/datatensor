@@ -19,9 +19,9 @@ import {
 import {Close as CloseIcon, Refresh} from '@material-ui/icons';
 import {Alert} from '@material-ui/lab';
 import {Theme} from 'src/theme';
-import Pipeline from 'src/components/datatensor/Pipeline';
-import PipelineSample from 'src/components/datatensor/PipelineSample';
-import DTImage from 'src/components/datatensor/Images/Image';
+import Pipeline from 'src/components/core/Pipeline';
+import PipelineSample from 'src/components/core/PipelineSample';
+import DTImage from 'src/components/core/Images/Image';
 import useImages from 'src/hooks/useImages';
 import {ImageProvider} from 'src/store/ImageContext';
 import {SectionProps} from '../SectionProps';

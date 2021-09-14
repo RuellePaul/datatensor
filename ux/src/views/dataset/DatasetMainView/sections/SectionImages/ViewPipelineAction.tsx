@@ -3,7 +3,7 @@ import {useDispatch} from 'react-redux';
 import {Button, Dialog, DialogContent, DialogTitle, IconButton, makeStyles, Typography} from '@material-ui/core';
 import {Close as CloseIcon} from '@material-ui/icons';
 import {Theme} from 'src/theme';
-import Pipeline from 'src/components/datatensor/Pipeline';
+import Pipeline from 'src/components/core/Pipeline';
 import {setDefaultPipeline, setPipeline} from 'src/slices/pipeline';
 import useDataset from 'src/hooks/useDataset';
 

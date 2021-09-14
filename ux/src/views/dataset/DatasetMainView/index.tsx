@@ -11,7 +11,7 @@ import SectionSettings from './sections/SectionSettings';
 import {DashboardOutlined, DynamicFeedOutlined, PhotoLibraryOutlined, SettingsOutlined} from '@material-ui/icons';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
-import WorkingAlert from 'src/components/datatensor/WorkingAlert';
+import WorkingAlert from 'src/components/core/WorkingAlert';
 import {ImagesConsumer, ImagesProvider} from 'src/store/ImagesContext';
 import {DatasetConsumer, DatasetProvider} from 'src/store/DatasetContext';
 

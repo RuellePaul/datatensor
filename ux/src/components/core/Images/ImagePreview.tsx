@@ -2,11 +2,23 @@ import React, {FC, useEffect, useState} from 'react';
 import useEventListener from 'use-typed-event-listener';
 import {useSnackbar} from 'notistack';
 import {ArrowLeft as BackIcon, MoreVertical as MoreIcon} from 'react-feather';
-import {Backdrop, Button, Chip, Dialog, IconButton, makeStyles, Menu, MenuItem, Typography} from '@material-ui/core';
+import {
+    Backdrop,
+    Box,
+    Button,
+    Chip,
+    Dialog,
+    Divider,
+    IconButton,
+    makeStyles,
+    Menu,
+    MenuItem,
+    Typography
+} from '@material-ui/core';
 import {Pagination} from '@material-ui/lab';
 import {Theme} from 'src/theme';
 import api from 'src/utils/api';
-import DTImage from 'src/components/datatensor/Images/Image';
+import DTImage from 'src/components/core/Images/Image';
 import bytesToSize from 'src/utils/bytesToSize';
 import useDataset from 'src/hooks/useDataset';
 import useImages from 'src/hooks/useImages';
@@ -30,12 +42,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     backdrop: {
         background: 'rgba(0, 0, 0, 0.8)',
-        backdropFilter: 'blur(5px)'
+        backdropFilter: 'blur(3px)'
     },
     paper: {
         overflow: 'hidden',
-        background: 'rgba(0, 0, 0, 0.6)',
-        border: `dashed 2px ${theme.palette.divider}`
+        background: 'rgba(0, 0, 0, 0.3)',
+        maxHeight: '80%',
+        border: `solid 1px #ffffff66`,
+        boxShadow: '0px 0px 5px #ffffff29'
     },
     header: {
         width: '100%',
@@ -43,6 +57,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         padding: theme.spacing(1),
         display: 'flex',
         alignItems: 'center',
+        justifyContent: 'space-between'
     },
     content: {
         minWidth: 100,
@@ -157,29 +172,33 @@ const DTImagePreview: FC<DTImagePreviewProps> = ({
                     >
                         Back
                     </Button>
-                    <div>
-                        <Typography
-                            variant='h5'
-                            color='textPrimary'
-                        >
-                            {imageSelected.name}
-                        </Typography>
-                        <Typography
-                            variant='h6'
-                            color='textSecondary'
-                        >
-                            {bytesToSize(imageSelected.size)} ({imageSelected.width} x {imageSelected.height})
-                        </Typography>
-                    </div>
 
-                    <Chip
-                        className={classes.chip}
-                        label={imageSelected.pipeline_id ? 'Augmented image' : 'Original image'}
-                        size='small'
-                        variant='outlined'
-                    />
+                    <Box
+                        display='flex'
+                        alignItems='center'
+                        px={1}>
+                        <div>
+                            <Typography
+                                variant='h5'
+                                color='textPrimary'
+                            >
+                                {imageSelected.name}
+                            </Typography>
+                            <Typography
+                                variant='h6'
+                                color='textSecondary'
+                            >
+                                {bytesToSize(imageSelected.size)} ({imageSelected.width} x {imageSelected.height})
+                            </Typography>
+                        </div>
 
-                    <div className='flexGrow'/>
+                        <Chip
+                            className={classes.chip}
+                            label={imageSelected.pipeline_id ? 'Augmented image' : 'Original image'}
+                            size='small'
+                            variant='outlined'
+                        />
+                    </Box>
 
                     <IconButton
                         onClick={handleOpenMenu}
@@ -206,6 +225,8 @@ const DTImagePreview: FC<DTImagePreviewProps> = ({
                         </MenuItem>
                     </Menu>
                 </div>
+
+                <Divider/>
 
                 <div className={classes.content}>
                     <ImageProvider

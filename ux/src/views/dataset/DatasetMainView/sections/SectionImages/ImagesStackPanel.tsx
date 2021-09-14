@@ -1,8 +1,8 @@
 import React, {FC, useState} from 'react';
 import {Box, Button, Card, CardContent, CardHeader, makeStyles, Typography} from '@material-ui/core';
 import {ArrowLeft as BackIcon} from 'react-feather';
-import DTImagesList from 'src/components/datatensor/Images/ImagesList';
-import DTImagesStack from 'src/components/datatensor/Images/ImagesStack';
+import DTImagesList from 'src/components/core/Images/ImagesList';
+import DTImagesStack from 'src/components/core/Images/ImagesStack';
 import useDataset from 'src/hooks/useDataset';
 import {Theme} from 'src/theme';
 import UploadAction from './UploadAction';
