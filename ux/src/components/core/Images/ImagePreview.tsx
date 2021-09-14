@@ -10,11 +10,14 @@ import {
     Dialog,
     Divider,
     IconButton,
+    ListItemIcon,
+    ListItemText,
     makeStyles,
     Menu,
     MenuItem,
     Typography
 } from '@material-ui/core';
+import {CropSharp as LabelisatorIcon, DeleteOutline as DeleteIcon} from '@material-ui/icons';
 import {Pagination} from '@material-ui/lab';
 import {Theme} from 'src/theme';
 import api from 'src/utils/api';
@@ -138,7 +141,11 @@ const DTImagePreview: FC<DTImagePreviewProps> = ({
             if (selected === images.length - 1) return;
             setSelected(selected + 1);
         }
-    }
+    };
+
+    const handleOpenLabelisator = () => {
+        window.location.hash = imageSelected.id;
+    };
 
     useEffect(() => {
         if (selected === images.length - 1)
@@ -220,8 +227,21 @@ const DTImagePreview: FC<DTImagePreviewProps> = ({
                             }
                         }}
                     >
+                        <MenuItem onClick={handleOpenLabelisator}>
+                            <ListItemIcon>
+                                <LabelisatorIcon/>
+                            </ListItemIcon>
+                            <ListItemText>
+                                Labelize
+                            </ListItemText>
+                        </MenuItem>
                         <MenuItem onClick={handleDeleteImage}>
-                            Delete
+                            <ListItemIcon>
+                                <DeleteIcon/>
+                            </ListItemIcon>
+                            <ListItemText>
+                                Delete
+                            </ListItemText>
                         </MenuItem>
                     </Menu>
                 </div>

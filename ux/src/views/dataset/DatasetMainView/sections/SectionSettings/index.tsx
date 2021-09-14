@@ -25,10 +25,10 @@ import {
     Close as CloseIcon,
     Lock as PrivateIcon,
     Public as PublicIcon,
-    Visibility as PrivacyIcon
+    Visibility as PrivacyIcon,
+    DeleteOutline as DeleteIcon
 } from '@material-ui/icons';
 import clsx from 'clsx';
-import DeleteIcon from '@material-ui/icons/DeleteOutline';
 import {useHistory} from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) => ({

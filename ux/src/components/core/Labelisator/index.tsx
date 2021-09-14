@@ -78,7 +78,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                     autoSwitch={autoSwitch}
                 />
             )}
-            <DTImage/>
+            <DTImage skeleton/>
         </div>
     );
 };
