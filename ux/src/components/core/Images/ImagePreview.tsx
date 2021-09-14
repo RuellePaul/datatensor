@@ -233,7 +233,7 @@ const DTImagePreview: FC<DTImagePreviewProps> = ({
                         key={imageSelected.id}
                         image={imageSelected}
                     >
-                        <DTImage/>
+                        <DTImage skeleton/>
                     </ImageProvider>
                 </div>
 

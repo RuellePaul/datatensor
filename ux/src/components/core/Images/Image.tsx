@@ -1,16 +1,17 @@
-import React, {FC, useEffect, useRef} from 'react';
+import React, {FC, useEffect, useRef, useState} from 'react';
 import clsx from 'clsx';
 import {ButtonBase, makeStyles} from '@material-ui/core';
 import {Theme} from 'src/theme';
 import {drawLabels, reset} from 'src/utils/labeling';
 import useDataset from 'src/hooks/useDataset';
 import useImage from 'src/hooks/useImage';
-import {useTabContext} from '@material-ui/lab';
+import {Skeleton, useTabContext} from '@material-ui/lab';
 
 
 interface DTImageProps {
     className?: string;
     clickable?: boolean;
+    skeleton?: boolean;
     onClick?: () => void;
     style?: object;
 }
@@ -36,12 +37,17 @@ const useStyles = makeStyles((theme: Theme) => ({
         height: '100%',
         zIndex: 1,
     },
+    skeleton: {
+        maxWidth: '100% !important',
+        maxHeight: '50vw !important'
+    }
 }));
 
 
 const DTImage: FC<DTImageProps> = ({
                                        className,
                                        clickable = false,
+                                       skeleton = false,
                                        ...rest
                                    }) => {
     const classes = useStyles();
@@ -54,7 +60,12 @@ const DTImage: FC<DTImageProps> = ({
 
     const {value} = useTabContext();
 
+    const [loaded, setLoaded] = useState<boolean>(false);
+
     const handleLoad = () => {
+        if (imageRef.current?.complete)
+            setLoaded(true);
+
         if (canvasRef.current && imageRef.current?.complete) {
             reset(canvasRef.current);
             drawLabels(canvasRef.current, labels, categories, 0);
@@ -66,7 +77,7 @@ const DTImage: FC<DTImageProps> = ({
             reset(canvasRef.current);
             drawLabels(canvasRef.current, labels, categories, 0);
         }
-    }, [labels, categories, value]);
+    }, [labels, categories, value, loaded]);
 
     if (clickable)
         return (
@@ -81,7 +92,6 @@ const DTImage: FC<DTImageProps> = ({
                     draggable={false}
                     onLoad={handleLoad}
                     ref={imageRef}
-                    loading="lazy"
                 />
                 <canvas
                     className={clsx(classes.canvas)}
@@ -91,24 +101,34 @@ const DTImage: FC<DTImageProps> = ({
         );
 
     return (
-        <div
-            className={clsx(classes.root, className)}
-            {...rest}
-        >
-            <img
-                src={image.path}
-                alt={image.name}
-                width="100%"
-                draggable={false}
-                onLoad={handleLoad}
-                ref={imageRef}
-                loading="lazy"
-            />
-            <canvas
-                className={clsx(classes.canvas)}
-                ref={canvasRef}
-            />
-        </div>
+        <>
+            {skeleton && (
+                <Skeleton
+                    className={clsx(classes.skeleton, loaded && 'hidden')}
+                    animation='wave'
+                    width={image.width}
+                    height={image.height}
+                    variant='rect'
+                />
+            )}
+            <div
+                className={clsx(classes.root, className, skeleton && !loaded && 'hidden')}
+                {...rest}
+            >
+                <img
+                    src={image.path}
+                    alt={image.name}
+                    width="100%"
+                    draggable={false}
+                    onLoad={handleLoad}
+                    ref={imageRef}
+                />
+                <canvas
+                    className={clsx(classes.canvas)}
+                    ref={canvasRef}
+                />
+            </div>
+        </>
     );
 };
 
