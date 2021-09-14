@@ -111,7 +111,6 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
         >
             <AppBar
                 className={classes.header}
-                color='transparent'
             >
                 <Toolbar className={classes.toolbar}>
                     <IconButton
