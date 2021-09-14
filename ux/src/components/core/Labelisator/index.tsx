@@ -1,71 +1,109 @@
-import React, {FC} from 'react';
-import useEventListener from 'use-typed-event-listener';
-import {makeStyles} from '@material-ui/core';
+import React, {FC, forwardRef, useCallback, useEffect, useState} from 'react';
+import {AppBar, Button, Dialog, IconButton, makeStyles, Slide, Toolbar} from '@material-ui/core';
+import {TransitionProps} from '@material-ui/core/transitions';
+import {Close as CloseIcon} from '@material-ui/icons';
 import DTImage from 'src/components/core/Images/Image';
 import ToolLabel from './ToolLabel';
 import ToolMove from './ToolMove';
 import {Theme} from 'src/theme';
-import {CANVAS_OFFSET} from 'src/utils/labeling';
-import useImages from 'src/hooks/useImages';
-import useImage from 'src/hooks/useImage';
+import useDataset from 'src/hooks/useDataset';
+import {Image} from 'src/types/image';
+import api from 'src/utils/api';
+import {ImageProvider} from 'src/store/ImageContext';
 
 interface DTLabelisatorProps {
-    tool: 'label' | 'move';
-    setTool: any;
-    autoSwitch: boolean;
-    selected: number;
-    setSelected: any;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {
-        position: 'relative',
-        margin: `${CANVAS_OFFSET}px auto`
+    root: {},
+    header: {
+        position: 'relative'
     },
+    toolbar: {
+        justifyContent: 'space-between'
+    }
 }));
 
+const Transition = forwardRef(function Transition(
+    props: TransitionProps & { children?: React.ReactElement },
+    ref: React.Ref<unknown>,
+) {
+    return <Slide direction='up' ref={ref} {...props} />;
+});
 
-const DTLabelisator: FC<DTLabelisatorProps> = ({
-                                                   autoSwitch,
-                                                   tool,
-                                                   setTool,
-                                                   selected,
-                                                   setSelected
-                                               }) => {
+
+const DTLabelisator: FC<DTLabelisatorProps> = () => {
     const classes = useStyles();
 
-    const {images} = useImages();
-    const {image, validateLabels, previousPosition} = useImage();
+    const {dataset} = useDataset();
+    const [autoSwitch, setAutoSwitch] = useState<boolean>(true);
+    const [tool, setTool] = useState<'label' | 'move'>('label');
 
-    const handleKeyDown = async (event: KeyboardEvent) => {
-        if (event.key === 'ArrowLeft') {
-            if (selected === 0) return;
-            setSelected(selected - 1);
-        } else if (event.key === 'ArrowRight') {
-            if (selected === images.length - 1) return;
-            setSelected(selected + 1);
-        } else if (event.key === 'a') {
-            setTool('label')
-        } else if (!event.ctrlKey && event.key === 'z') {
-            setTool('move')
-        } else if (event.key === 's') {
-            validateLabels();
-        } else if (event.key === ' ') {
-            validateLabels();
-            if (selected === images.length - 1) return;
-            setSelected(selected + 1);
-        } else if (event.ctrlKey && event.key === 'z') {
-            previousPosition()
+    const index = window.location.hash.split('#')[1];
+
+    const [image, setImage] = useState<Image>(null);
+
+    const fetchImage = useCallback(async () => {
+        try {
+            const response = await api.get<{ images: Image[] }>(`/datasets/${dataset.id}/images/`, {
+                params: {
+                    offset: index,
+                    limit: 1
+                }
+            });
+            setImage(response.data.images[0]);
+        } catch (err) {
+            console.error(err);
         }
-    };
 
-    useEventListener(window, 'keydown', handleKeyDown);
+    }, [dataset.id, index]);
+
+    useEffect(() => {
+        fetchImage()
+    }, [fetchImage]);
+
+    const handleClose = () => {
+        window.location.hash = '';
+    }
+
+    const [open, setOpen] = useState<boolean>(false);
+
+    useEffect(() => {
+        const onHashChange = () => setOpen(window.location.hash.length > 0);
+        window.addEventListener('hashchange', onHashChange);
+        return () => window.removeEventListener('hashchange', onHashChange);
+
+        // eslint-disable-next-line
+    }, []);
+
+    if (!image)
+        return null;
 
     return (
-        <div
-            className={classes.root}
-            style={{maxWidth: 700 * image.width / image.height}}
+        <Dialog
+            fullScreen
+            open={open}
+            onClose={handleClose}
+            TransitionComponent={Transition}
         >
+            <AppBar
+                className={classes.header}
+                color='transparent'
+            >
+                <Toolbar className={classes.toolbar}>
+                    <IconButton
+                        edge='start'
+                        color='inherit'
+                        onClick={handleClose}
+                    >
+                        <CloseIcon/>
+                    </IconButton>
+
+                    <Button color='inherit' onClick={handleClose}>
+                        Save
+                    </Button>
+                </Toolbar>
+            </AppBar>
             {tool === 'label' && (
                 <ToolLabel
                     setTool={setTool}
@@ -78,8 +116,10 @@ const DTLabelisator: FC<DTLabelisatorProps> = ({
                     autoSwitch={autoSwitch}
                 />
             )}
-            <DTImage skeleton/>
-        </div>
+            <ImageProvider image={image}>
+                <DTImage skeleton/>
+            </ImageProvider>
+        </Dialog>
     );
 };
 

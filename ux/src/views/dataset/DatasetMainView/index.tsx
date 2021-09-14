@@ -11,6 +11,7 @@ import SectionSettings from './sections/SectionSettings';
 import {DashboardOutlined, DynamicFeedOutlined, PhotoLibraryOutlined, SettingsOutlined} from '@material-ui/icons';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
+import DTLabelisator from 'src/components/core/Labelisator';
 import WorkingAlert from 'src/components/core/WorkingAlert';
 import {ImagesConsumer, ImagesProvider} from 'src/store/ImagesContext';
 import {DatasetConsumer, DatasetProvider} from 'src/store/DatasetContext';
@@ -149,6 +150,8 @@ const DatasetMainView: FC = () => {
                                         />
                                     )}
                                 </Container>
+
+                                <DTLabelisator/>
                             </TabContext>
                         </ImagesProvider>
                     </Page>
