@@ -146,7 +146,7 @@ const DTImagePreview: FC<DTImagePreviewProps> = ({
     const handleOpenLabelisator = () => {
         handleClose();
         handleCloseMenu();
-        window.location.hash = selected.toString();
+        window.location.hash = imageSelected.id;
     };
 
     useEffect(() => {

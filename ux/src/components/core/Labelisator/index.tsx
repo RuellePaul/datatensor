@@ -12,6 +12,7 @@ import {
     IconButton,
     makeStyles,
     Slide,
+    Slider,
     Switch,
     Toolbar,
     Tooltip,
@@ -30,6 +31,7 @@ import {Image} from 'src/types/image';
 import api from 'src/utils/api';
 import {ImageConsumer, ImageProvider} from 'src/store/ImageContext';
 import {CANVAS_OFFSET} from 'src/utils/labeling';
+import {updateOperation} from '../../../slices/pipeline';
 
 interface DTLabelisatorProps {
 }
@@ -74,25 +76,45 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
             setTool(newTool);
     };
 
-    const index = window.location.hash.split('#')[1];
+    const [imageIds, setImageIds] = useState<string[]>([]);
+
+    const fetchImageIds = useCallback(async () => {
+        setImageIds([]);
+        try {
+            const response = await api.get<{ image_ids: string[] }>(`/datasets/${dataset.id}/images/ids`);
+            setImageIds(response.data.image_ids);
+        } catch (err) {
+            console.error(err);
+        }
+
+    }, [dataset.id]);
+
+    useEffect(() => {
+        fetchImageIds()
+    }, [fetchImageIds])
+
+    const image_id = window.location.hash.split('#')[1];
 
     const [image, setImage] = useState<Image>(null);
 
     const fetchImage = useCallback(async () => {
         setImage(null);
         try {
-            const response = await api.get<{ images: Image[] }>(`/datasets/${dataset.id}/images/`, {
-                params: {
-                    offset: index,
-                    limit: 1
-                }
-            });
-            setImage(response.data.images[0]);
+            const response = await api.get<{ image: Image }>(`/datasets/${dataset.id}/images/${image_id}`);
+            setImage(response.data.image);
         } catch (err) {
             console.error(err);
         }
 
-    }, [dataset.id, index]);
+    }, [dataset.id, image_id]);
+
+    const handleSliderChange = (event, value) => {
+        try {
+            window.location.hash = imageIds[value]
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
     useEffect(() => {
         fetchImage()
@@ -150,6 +172,28 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                         container
                         spacing={4}
                     >
+                        <Grid
+                            item
+                            xs={12}
+                        >
+                            <Typography
+                                variant='overline'
+                                color='textSecondary'
+                            >
+                                Image {imageIds.indexOf(image_id) + 1} / {imageIds.length}
+                            </Typography>
+
+                            <Slider
+                                min={0}
+                                max={imageIds.length - 1}
+                                marks
+                                valueLabelDisplay='auto'
+                                defaultValue={imageIds.indexOf(image_id)}
+                                onClick={event => event.stopPropagation()}
+                                onChangeCommitted={handleSliderChange}
+                                valueLabelFormat={x => x + 1}
+                            />
+                        </Grid>
                         <Grid
                             item
                             md={8}

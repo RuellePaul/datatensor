@@ -20,5 +20,9 @@ class ImagesResponse(BaseModel):
     images: List[Image] = []
 
 
+class ImageIdsResponse(BaseModel):
+    image_ids: List[str] = []
+
+
 class ImageResponse(BaseModel):
     image: Image
