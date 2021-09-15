@@ -149,7 +149,6 @@ const DTImagePreview: FC<DTImagePreviewProps> = ({
     };
 
     const handleOpenLabelisator = () => {
-        handleClose();
         handleCloseMenu();
         window.location.hash = imageSelected.id;
     };
@@ -168,7 +167,7 @@ const DTImagePreview: FC<DTImagePreviewProps> = ({
 
     const toggleFullScreen = () => {
         const element = ref.current as any;
-        if (fullScreen) {
+        if (fullScreen && document.fullscreenElement) {
             document.exitFullscreen();
             setFullScreen(false);
             return;
@@ -281,7 +280,7 @@ const DTImagePreview: FC<DTImagePreviewProps> = ({
                         key={imageSelected.id}
                         image={imageSelected}
                     >
-                        <DTImage skeleton fullScreen={fullScreen}/>
+                        <DTImage skeleton/>
                     </ImageProvider>
                 </div>
 

@@ -5,6 +5,7 @@ import {
     AppBar,
     Box,
     Button,
+    CircularProgress,
     Container,
     Dialog,
     FormControlLabel,
@@ -302,30 +303,33 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                 </Tooltip>
                             </Box>
 
-                            {image && (
-                                <Box
-                                    position='relative'
-                                    my={`${CANVAS_OFFSET}px`}
-                                >
-                                    <div className={clsx(tool !== 'label' && 'hidden')}>
-                                        <ToolLabel
-                                            setTool={setTool}
-                                            autoSwitch={autoSwitch}
-                                        />
-                                    </div>
-                                    <div className={clsx(tool !== 'move' && 'hidden')}>
-                                        <ToolMove
-                                            setTool={setTool}
-                                            autoSwitch={autoSwitch}
-                                        />
-                                    </div>
+                            {image
+                                ? (
+                                    <Box
+                                        position='relative'
+                                        my={`${CANVAS_OFFSET}px`}
+                                    >
+                                        <div className={clsx(tool !== 'label' && 'hidden')}>
+                                            <ToolLabel
+                                                setTool={setTool}
+                                                autoSwitch={autoSwitch}
+                                            />
+                                        </div>
+                                        <div className={clsx(tool !== 'move' && 'hidden')}>
+                                            <ToolMove
+                                                setTool={setTool}
+                                                autoSwitch={autoSwitch}
+                                            />
+                                        </div>
 
-                                    <DTImage
-                                        skeleton
-                                        fullWidth
-                                    />
-                                </Box>
-                            )}
+                                        <DTImage
+                                            skeleton
+                                            fullWidth
+                                        />
+                                    </Box>
+                                )
+                                : <CircularProgress/>
+                            }
                         </Grid>
 
                         <Grid
