@@ -5,6 +5,7 @@ import {
     AppBar,
     Box,
     Button,
+    Container,
     Dialog,
     FormControlLabel,
     Grid,
@@ -38,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         overflowX: 'hidden'
     },
     content: {
-        padding: theme.spacing(2, 3)
+        padding: theme.spacing(2, 0)
     },
     header: {
         position: 'relative'
@@ -134,97 +135,100 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                     </Toolbar>
                 </AppBar>
 
-                <Grid
-                    className={classes.content}
-                    container
-                    spacing={4}
+                <Container
+                    maxWidth='lg'
                 >
                     <Grid
-                        item
-                        md={8}
-                        xs={12}
+                        className={classes.content}
+                        container
+                        spacing={4}
                     >
-                        <div>
-                            <ToggleButtonGroup
-                                value={tool}
-                                exclusive
-                                onChange={handleToolChange}
-                                size='small'
-                            >
-                                <ToggleButton
-                                    value="label"
-                                    disabled={autoSwitch}
+                        <Grid
+                            item
+                            md={8}
+                            xs={12}
+                        >
+                            <div>
+                                <ToggleButtonGroup
+                                    value={tool}
+                                    exclusive
+                                    onChange={handleToolChange}
+                                    size='small'
                                 >
-                                    <Tooltip
-                                        title={<Typography variant='overline'>
-                                            Draw tool (a)
-                                        </Typography>}
+                                    <ToggleButton
+                                        value="label"
+                                        disabled={autoSwitch}
                                     >
-                                        <LabelIcon/>
-                                    </Tooltip>
-                                </ToggleButton>
-                                <ToggleButton
-                                    value="move"
-                                    disabled={autoSwitch}
-                                >
-                                    <Tooltip
-                                        title={<Typography variant='overline'>
-                                            Move tool (z)
-                                        </Typography>}
-                                    >
-                                        <MoveIcon/>
-                                    </Tooltip>
-                                </ToggleButton>
-                            </ToggleButtonGroup>
-
-                            <FormControlLabel
-                                control={(
-                                    <Switch
-                                        color="secondary"
-                                        size='small'
-                                        checked={autoSwitch}
-                                        onChange={() => setAutoSwitch(!autoSwitch)}
-                                    />
-                                )}
-                                label={(
-                                    <Typography
-                                        color='textSecondary'
-                                    >
-                                        Auto switch
-                                    </Typography>
-                                )}
-                            />
-
-                            <div className='flexGrow'/>
-
-                            <ImageConsumer>
-                                {
-                                    value => (
                                         <Tooltip
-                                            title={
-                                                <Typography variant='overline'>
-                                                    Undo (CTRL + Z)
-                                                </Typography>
-                                            }
+                                            title={<Typography variant='overline'>
+                                                Draw tool (a)
+                                            </Typography>}
                                         >
-                                            <IconButton
-                                                disabled={value.positions.length <= 1}
-                                                onClick={value.previousPosition}
-                                            >
-                                                <RestoreIcon/>
-                                            </IconButton>
+                                            <LabelIcon/>
                                         </Tooltip>
-                                    )
-                                }
-                            </ImageConsumer>
+                                    </ToggleButton>
+                                    <ToggleButton
+                                        value="move"
+                                        disabled={autoSwitch}
+                                    >
+                                        <Tooltip
+                                            title={<Typography variant='overline'>
+                                                Move tool (z)
+                                            </Typography>}
+                                        >
+                                            <MoveIcon/>
+                                        </Tooltip>
+                                    </ToggleButton>
+                                </ToggleButtonGroup>
 
-                            <Tooltip
-                                title={
-                                    <Typography variant='overline'>
-                                        Save (SPACE)
-                                    </Typography>
-                                }
-                            >
+                                <FormControlLabel
+                                    control={(
+                                        <Switch
+                                            color="secondary"
+                                            size='small'
+                                            checked={autoSwitch}
+                                            onChange={() => setAutoSwitch(!autoSwitch)}
+                                        />
+                                    )}
+                                    label={(
+                                        <Typography
+                                            color='textSecondary'
+                                        >
+                                            Auto switch
+                                        </Typography>
+                                    )}
+                                />
+
+                                <div className='flexGrow'/>
+
+                                <ImageConsumer>
+                                    {
+                                        value => (
+                                            <Tooltip
+                                                title={
+                                                    <Typography variant='overline'>
+                                                        Undo (CTRL + Z)
+                                                    </Typography>
+                                                }
+                                            >
+                                                <IconButton
+                                                    disabled={value.positions.length <= 1}
+                                                    onClick={value.previousPosition}
+                                                >
+                                                    <RestoreIcon/>
+                                                </IconButton>
+                                            </Tooltip>
+                                        )
+                                    }
+                                </ImageConsumer>
+
+                                <Tooltip
+                                    title={
+                                        <Typography variant='overline'>
+                                            Save (SPACE)
+                                        </Typography>
+                                    }
+                                >
                                 <span>
                                     {<ImageConsumer>
                                         {
@@ -241,34 +245,35 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                         }
                                     </ImageConsumer>}
                                 </span>
-                            </Tooltip>
-                        </div>
-
-                        <Box position='relative'>
-                            <div className={clsx(tool !== 'label' && 'hidden')}>
-                                <ToolLabel
-                                    setTool={setTool}
-                                    autoSwitch={autoSwitch}
-                                />
-                            </div>
-                            <div className={clsx(tool !== 'move' && 'hidden')}>
-                                <ToolMove
-                                    setTool={setTool}
-                                    autoSwitch={autoSwitch}
-                                />
+                                </Tooltip>
                             </div>
 
-                            <DTImage skeleton/>
-                        </Box>
+                            <Box position='relative'>
+                                <div className={clsx(tool !== 'label' && 'hidden')}>
+                                    <ToolLabel
+                                        setTool={setTool}
+                                        autoSwitch={autoSwitch}
+                                    />
+                                </div>
+                                <div className={clsx(tool !== 'move' && 'hidden')}>
+                                    <ToolMove
+                                        setTool={setTool}
+                                        autoSwitch={autoSwitch}
+                                    />
+                                </div>
+
+                                <DTImage skeleton/>
+                            </Box>
+                        </Grid>
+                        <Grid
+                            item
+                            md={4}
+                            xs={12}
+                        >
+                            <DTCategories/>
+                        </Grid>
                     </Grid>
-                    <Grid
-                        item
-                        md={4}
-                        xs={12}
-                    >
-                        <DTCategories/>
-                    </Grid>
-                </Grid>
+                </Container>
             </ImageProvider>
         </Dialog>
     );
