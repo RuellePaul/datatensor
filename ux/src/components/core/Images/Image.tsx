@@ -13,6 +13,7 @@ interface DTImageProps {
     clickable?: boolean;
     skeleton?: boolean;
     fullWidth?: boolean;
+    fullScreen?: boolean;
     onClick?: () => void;
     style?: object;
 }
@@ -50,6 +51,7 @@ const DTImage: FC<DTImageProps> = ({
                                        clickable = false,
                                        skeleton = false,
                                        fullWidth = false,
+                                       fullScreen = false,
                                        ...rest
                                    }) => {
     const classes = useStyles();
@@ -80,6 +82,17 @@ const DTImage: FC<DTImageProps> = ({
             drawLabels(canvasRef.current, labels, categories, 0);
         }
     }, [labels, categories, value, loaded]);
+
+    useEffect(() => {
+        if (canvasRef.current && imageRef.current?.complete) {
+            setTimeout(() => {
+                reset(canvasRef.current);
+                drawLabels(canvasRef.current, labels, categories, 0);
+            }, 250)
+        }
+
+        // eslint-disable-next-line
+    }, [fullScreen]);
 
     if (clickable)
         return (

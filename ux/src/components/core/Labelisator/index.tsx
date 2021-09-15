@@ -31,7 +31,6 @@ import {Image} from 'src/types/image';
 import api from 'src/utils/api';
 import {ImageConsumer, ImageProvider} from 'src/store/ImageContext';
 import {CANVAS_OFFSET} from 'src/utils/labeling';
-import {updateOperation} from '../../../slices/pipeline';
 
 interface DTLabelisatorProps {
 }
