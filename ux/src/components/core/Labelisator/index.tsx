@@ -1,4 +1,5 @@
 import React, {FC, forwardRef, useCallback, useEffect, useState} from 'react';
+import clsx from 'clsx';
 import {Maximize as LabelIcon, Move as MoveIcon} from 'react-feather';
 import {
     AppBar,
@@ -17,6 +18,7 @@ import {ToggleButton, ToggleButtonGroup} from '@material-ui/lab';
 import {TransitionProps} from '@material-ui/core/transitions';
 import {Close as CloseIcon, Restore as RestoreIcon} from '@material-ui/icons';
 import DTImage from 'src/components/core/Images/Image';
+import DTCategories from 'src/components/core/Categories';
 import ToolLabel from './ToolLabel';
 import ToolMove from './ToolMove';
 import {Theme} from 'src/theme';
@@ -229,20 +231,22 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                 </div>
 
                 <div className={classes.wrapper}>
-                    {tool === 'label' && (
+                    <div className={clsx(tool !== 'label' && 'hidden')}>
                         <ToolLabel
                             setTool={setTool}
                             autoSwitch={autoSwitch}
                         />
-                    )}
-                    {tool === 'move' && (
+                    </div>
+                    <div className={clsx(tool !== 'move' && 'hidden')}>
                         <ToolMove
                             setTool={setTool}
                             autoSwitch={autoSwitch}
                         />
-                    )}
+                    </div>
+
                     <DTImage skeleton/>
 
+                    <DTCategories/>
                 </div>
             </ImageProvider>
         </Dialog>
