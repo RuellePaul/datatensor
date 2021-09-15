@@ -12,6 +12,7 @@ interface DTImageProps {
     className?: string;
     clickable?: boolean;
     skeleton?: boolean;
+    fullWidth?: boolean;
     onClick?: () => void;
     style?: object;
 }
@@ -48,6 +49,7 @@ const DTImage: FC<DTImageProps> = ({
                                        className,
                                        clickable = false,
                                        skeleton = false,
+                                       fullWidth = false,
                                        ...rest
                                    }) => {
     const classes = useStyles();
@@ -106,7 +108,7 @@ const DTImage: FC<DTImageProps> = ({
                 <Skeleton
                     className={clsx(classes.skeleton, loaded && 'hidden')}
                     animation='wave'
-                    width={image.width}
+                    width={fullWidth ? '100%' : image.width}
                     height={image.height}
                     variant='rect'
                 />

@@ -29,6 +29,7 @@ import useDataset from 'src/hooks/useDataset';
 import {Image} from 'src/types/image';
 import api from 'src/utils/api';
 import {ImageConsumer, ImageProvider} from 'src/store/ImageContext';
+import {CANVAS_OFFSET} from 'src/utils/labeling';
 
 interface DTLabelisatorProps {
 }
@@ -46,6 +47,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     toolbar: {
         justifyContent: 'space-between'
+    },
+    switch: {
+        marginLeft: theme.spacing(2)
     }
 }));
 
@@ -75,6 +79,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
     const [image, setImage] = useState<Image>(null);
 
     const fetchImage = useCallback(async () => {
+        setImage(null);
         try {
             const response = await api.get<{ images: Image[] }>(`/datasets/${dataset.id}/images/`, {
                 params: {
@@ -107,9 +112,6 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
         // eslint-disable-next-line
     }, []);
 
-    if (!image)
-        return null;
-
     return (
         <Dialog
             className={classes.root}
@@ -124,7 +126,12 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                     className={classes.header}
                 >
                     <Toolbar className={classes.toolbar}>
-                        <div/>
+                        <Typography
+                            variant='h4'
+                            color='textPrimary'
+                        >
+                            Labelisator
+                        </Typography>
                         <IconButton
                             edge='start'
                             color='inherit'
@@ -148,7 +155,10 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                             md={8}
                             xs={12}
                         >
-                            <div>
+                            <Box
+                                display='flex'
+                                alignItems='center'
+                            >
                                 <ToggleButtonGroup
                                     value={tool}
                                     exclusive
@@ -182,6 +192,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                 </ToggleButtonGroup>
 
                                 <FormControlLabel
+                                    className={classes.switch}
                                     control={(
                                         <Switch
                                             color="secondary"
@@ -229,42 +240,51 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                         </Typography>
                                     }
                                 >
-                                <span>
-                                    {<ImageConsumer>
-                                        {
-                                            value => (
-                                                <Button
-                                                    variant="outlined"
-                                                    color="secondary"
-                                                    size='small'
-                                                    onClick={value.validateLabels}
-                                                >
-                                                    Save
-                                                </Button>
-                                            )
-                                        }
-                                    </ImageConsumer>}
-                                </span>
+                                    <span>
+                                        {<ImageConsumer>
+                                            {
+                                                value => (
+                                                    <Button
+                                                        variant="outlined"
+                                                        color="secondary"
+                                                        size='small'
+                                                        onClick={value.validateLabels}
+                                                    >
+                                                        Save
+                                                    </Button>
+                                                )
+                                            }
+                                        </ImageConsumer>}
+                                    </span>
                                 </Tooltip>
-                            </div>
-
-                            <Box position='relative'>
-                                <div className={clsx(tool !== 'label' && 'hidden')}>
-                                    <ToolLabel
-                                        setTool={setTool}
-                                        autoSwitch={autoSwitch}
-                                    />
-                                </div>
-                                <div className={clsx(tool !== 'move' && 'hidden')}>
-                                    <ToolMove
-                                        setTool={setTool}
-                                        autoSwitch={autoSwitch}
-                                    />
-                                </div>
-
-                                <DTImage skeleton/>
                             </Box>
+
+                            {image && (
+                                <Box
+                                    position='relative'
+                                    my={`${CANVAS_OFFSET}px`}
+                                >
+                                    <div className={clsx(tool !== 'label' && 'hidden')}>
+                                        <ToolLabel
+                                            setTool={setTool}
+                                            autoSwitch={autoSwitch}
+                                        />
+                                    </div>
+                                    <div className={clsx(tool !== 'move' && 'hidden')}>
+                                        <ToolMove
+                                            setTool={setTool}
+                                            autoSwitch={autoSwitch}
+                                        />
+                                    </div>
+
+                                    <DTImage
+                                        skeleton
+                                        fullWidth
+                                    />
+                                </Box>
+                            )}
                         </Grid>
+
                         <Grid
                             item
                             md={4}
