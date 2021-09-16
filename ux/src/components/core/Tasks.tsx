@@ -13,7 +13,7 @@ import {Theme} from 'src/theme';
 import {UserConsumer, UserProvider} from 'src/store/UserContext';
 import getDateDiff from 'src/utils/getDateDiff';
 import {Task, TaskStatus, TaskType} from 'src/types/task';
-import {TaskStatusLabel} from 'src/components/datatensor/TaskDetails';
+import {TaskStatusLabel} from 'src/components/core/TaskDetails';
 import UserLabel from 'src/components/UserLabel';
 
 const useStyles = makeStyles((theme: Theme) => ({

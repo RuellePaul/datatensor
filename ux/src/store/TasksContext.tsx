@@ -3,7 +3,7 @@ import {useLocation} from 'react-router-dom';
 import {Task} from 'src/types/task';
 import {setNotifications} from 'src/slices/notification';
 import {useDispatch} from 'src/store';
-import TaskDetails from 'src/components/datatensor/TaskDetails';
+import TaskDetails from 'src/components/core/TaskDetails';
 import useAuth from 'src/hooks/useAuth';
 import {HEARTBEAT_DELAY} from 'src/constants';
 import {API_HOSTNAME} from 'src/utils/api';

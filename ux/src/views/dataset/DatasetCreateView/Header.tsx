@@ -31,24 +31,16 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                     <Link
                         variant="body1"
                         color="inherit"
-                        to="/app"
+                        to="/app/datasets"
                         component={RouterLink}
                     >
-                        Dashboard
-                    </Link>
-                    <Link
-                        variant="body1"
-                        color="inherit"
-                        to="/admin/manage"
-                        component={RouterLink}
-                    >
-                        Manage
+                        Datasets
                     </Link>
                     <Typography
                         variant="body1"
                         color="textPrimary"
                     >
-                        Datasets
+                        Create
                     </Typography>
                 </Breadcrumbs>
                 <Typography
@@ -61,7 +53,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
             <Grid item>
                 <Button
                     component={RouterLink}
-                    to="/app/manage/datasets"
+                    to="/app/datasets"
                 >
                     Cancel
                 </Button>

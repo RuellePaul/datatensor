@@ -37,14 +37,6 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                     >
                         Dashboard
                     </Link>
-                    <Link
-                        variant="body1"
-                        color="inherit"
-                        to="/app/manage"
-                        component={RouterLink}
-                    >
-                        Manage
-                    </Link>
                     <Typography
                         variant="body1"
                         color="textPrimary"

@@ -338,7 +338,7 @@ const Results: FC<ResultsProps> = ({
                             <Button
                                 className={classes.bulkAction}
                                 variant="outlined"
-                                onClick={() => history.push(`/app/admin/manage/users/${selectedUsers[0]}/details`)}
+                                onClick={() => history.push(`/app/admin/users/${selectedUsers[0]}/details`)}
                             >
                                 View details
                             </Button>
@@ -411,7 +411,7 @@ const Results: FC<ResultsProps> = ({
                                                     <Link
                                                         color="inherit"
                                                         component={RouterLink}
-                                                        to={`/app/admin/manage/users/${user.id}/details`}
+                                                        to={`/app/admin/users/${user.id}/details`}
                                                         variant="h6"
                                                     >
                                                         {user.name}

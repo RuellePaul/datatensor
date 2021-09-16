@@ -49,7 +49,7 @@ interface ChipsProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        maxHeight: 600
+        maxHeight: 'calc(100vh - 80px)'
     },
     categories: {
         display: 'flex',
@@ -140,7 +140,7 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
 
     return (
         <div className={clsx(classes.root, 'scroll')}>
-            <Box my={2}>
+            <Box mb={2}>
                 <div className={classes.categories}>
                     {
                         labeledCategories.map(category => (
@@ -155,6 +155,11 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
                             </Box>
                         ))
                     }
+                    <Box
+                        m={0.6}
+                    >
+                        {children}
+                    </Box>
                 </div>
             </Box>
             <div className={classes.categories}>
@@ -172,13 +177,6 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
                     ))
                 }
             </div>
-            <Box
-                display='flex'
-                justifyContent='flex-end'
-                my={2}
-            >
-                {children}
-            </Box>
         </div>
     )
 };

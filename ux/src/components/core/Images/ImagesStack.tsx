@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
 import {makeStyles} from '@material-ui/core';
-import DTImage from 'src/components/datatensor/Image';
+import DTImage from 'src/components/core/Images/Image';
 import useImages from 'src/hooks/useImages';
 import {Theme} from 'src/theme';
 import {ImageProvider} from 'src/store/ImageContext';
@@ -31,6 +31,9 @@ const useStyles = makeStyles((theme: Theme) => ({
             '& .layer-3': {
                 transform: 'translate(10px, 5px) rotate(5deg) scale(1.01)'
             }
+        },
+        '& button': {
+            width: '100%'
         },
         '& img': {
             width: '100%',

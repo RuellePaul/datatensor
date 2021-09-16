@@ -66,9 +66,9 @@ export const ImageProvider: FC<ImageProviderProps> = ({image, children}) => {
 
     const validateLabels = async () => {
         try {
-                    await api.post(`/datasets/${dataset.id}/images/${image.id}/labels/`, {labels: currentLabels});
-        enqueueSnackbar('Labels updated', {variant: 'info'});
-        setPositions([currentLabels]);
+            await api.post(`/datasets/${dataset.id}/images/${image.id}/labels/`, {labels: currentLabels});
+            enqueueSnackbar('Labels updated', {variant: 'info'});
+            setPositions([currentLabels]);
 
         } catch (error) {
             enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});

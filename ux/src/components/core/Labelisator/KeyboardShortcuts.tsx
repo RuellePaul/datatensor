@@ -154,10 +154,6 @@ const KeyboardShortcuts: FC = () => {
                                     Save labels
                                 </Shortcut>
                                 <Divider/>
-                                <Shortcut keyDesc='SPACE'>
-                                    Save labels and go to next image
-                                </Shortcut>
-                                <Divider/>
                             </Grid>
                         </Grid>
                     </Box>

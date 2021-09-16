@@ -11,7 +11,7 @@ import Generator from './Generator';
 import TasksOverTime from 'src/components/charts/TasksOverTime';
 import UsersOverTime from 'src/components/charts/UsersOverTime';
 import UserScopes from 'src/components/charts/UserScopes';
-import DTTasks from 'src/components/datatensor/Tasks';
+import DTTasks from 'src/components/core/Tasks';
 import {TimeRange} from 'src/types/timeRange'
 import useTasks from 'src/hooks/useTasks';
 

@@ -19,7 +19,7 @@ import {Dataset} from 'src/types/dataset';
 import api from 'src/utils/api';
 import {Image} from 'src/types/image';
 import UserAvatar from 'src/components/UserAvatar';
-import WorkingAlert from 'src/components/datatensor/WorkingAlert';
+import WorkingAlert from 'src/components/core/WorkingAlert';
 import {UserConsumer, UserProvider} from 'src/store/UserContext';
 
 interface DatasetProps {
@@ -112,7 +112,7 @@ const DTDataset: FC<DatasetProps> = ({
 
 
             <CardActionArea
-                onClick={() => history.push(`/app/manage/datasets/${dataset.id}`)}
+                onClick={() => history.push(`/app/datasets/${dataset.id}`)}
             >
                 <CardMedia
                     className={classes.media}

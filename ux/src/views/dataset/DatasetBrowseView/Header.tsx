@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
-import {Breadcrumbs, Button, Grid, Link, makeStyles, SvgIcon, Typography} from '@material-ui/core';
+import {Breadcrumbs, Button, Grid, makeStyles, SvgIcon, Typography} from '@material-ui/core';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import {PlusCircle as PlusIcon} from 'react-feather';
 
@@ -30,14 +30,6 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                     separator={<NavigateNextIcon fontSize="small"/>}
                     aria-label="breadcrumb"
                 >
-                    <Link
-                        variant="body1"
-                        color="inherit"
-                        to="/app/datasets"
-                        component={RouterLink}
-                    >
-                        Manage
-                    </Link>
                     <Typography
                         variant="body1"
                         color="textPrimary"
@@ -56,7 +48,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                 <Button
                     color="secondary"
                     component={RouterLink}
-                    to="/app/manage/datasets/create"
+                    to="/app/datasets/create"
                     variant="contained"
                     startIcon={
                         <SvgIcon fontSize="small">

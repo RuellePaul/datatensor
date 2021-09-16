@@ -17,6 +17,15 @@ async def get_images(dataset_id: str, pipeline_id: Optional[str] = None, offset:
     return parse(response)
 
 
+@images.get('/ids', response_model=ImageIdsResponse)
+async def get_image_ids(dataset_id: str, pipeline_id: Optional[str] = None):
+    """
+    Fetch all image_ids of given dataset (original image_ids or <pipeline> image ids).
+    """
+    response = {'image_ids': [image.id for image in find_images(dataset_id, pipeline_id)]}
+    return parse(response)
+
+
 @images.get('/{image_id}', response_model=ImageResponse)
 async def get_image(dataset_id, image_id):
     """

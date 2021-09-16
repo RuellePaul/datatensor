@@ -1,10 +1,10 @@
 .hidden {
-    position: absolute;
-    overflow: hidden;
-    width: 0.1px;
-    height: 0.1px;
-    opacity: 0;
-    z-index: -1;
+    position: absolute !important;
+    overflow: hidden !important;
+    width: 0.1px !important;
+    height: 0.1px !important;
+    opacity: 0 !important;
+    z-index: -1 !important;
 }
 
 .flex {

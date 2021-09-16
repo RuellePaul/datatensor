@@ -4,7 +4,7 @@ import {Box, Button, Grid, ListItemText, makeStyles, Menu, MenuItem, Typography}
 import {Pagination} from '@material-ui/lab';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import {Theme} from 'src/theme';
-import DTDataset from 'src/components/datatensor/Dataset';
+import DTDataset from 'src/components/core/Dataset';
 import useDatasets from 'src/hooks/useDatasets';
 
 interface ResultsProps {

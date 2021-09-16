@@ -69,7 +69,7 @@ const DatasetCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
                     setStatus({success: true});
                     setSubmitting(false);
                     enqueueSnackbar('Dataset Created', {variant: 'info'});
-                    history.push('/app/manage/datasets');
+                    history.push('/app/datasets');
                 } catch (err) {
                     console.error(err);
                     setStatus({success: false});

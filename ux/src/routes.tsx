@@ -86,53 +86,43 @@ const routes: Routes = [
             },
             {
                 exact: true,
-                path: '/app/admin/manage/users',
+                path: '/app/admin/users',
                 component: lazy(() => import('src/views/user/UserListView'))
             },
             {
                 exact: true,
-                path: '/app/admin/manage/users/:user_id/details',
+                path: '/app/admin/users/:user_id/details',
                 component: lazy(() => import('src/views/user/UserDetailsView'))
             },
             {
                 exact: true,
-                path: '/app/manage/datasets',
+                path: '/app/datasets',
                 component: lazy(() => import('src/views/dataset/DatasetBrowseView'))
             },
             {
                 exact: true,
-                path: '/app/manage/datasets/create',
+                path: '/app/datasets/create',
                 component: lazy(() => import('src/views/dataset/DatasetCreateView'))
             },
             {
                 exact: true,
-                path: '/app/manage/datasets/:dataset_id',
+                path: '/app/datasets/:dataset_id',
                 component: lazy(() => import('src/views/dataset/DatasetMainView'))
             },
             {
                 exact: true,
-                path: '/app/manage',
-                component: () => <Redirect to="/app/admin/manage/users"/>
-            },
-            {
-                exact: true,
-                path: '/app/reports/dashboard',
+                path: '/app/dashboard',
                 component: lazy(() => import('src/views/reports/DashboardView'))
             },
             {
                 exact: true,
-                path: '/app/admin/reports/dashboard',
+                path: '/app/admin/dashboard',
                 component: lazy(() => import('src/views/reports/AdminDashboardView'))
             },
             {
                 exact: true,
-                path: '/app/reports',
-                component: () => <Redirect to="/app/reports/dashboard"/>
-            },
-            {
-                exact: true,
                 path: '/app',
-                component: () => <Redirect to="/app/reports/dashboard"/>
+                component: () => <Redirect to="/app/dashboard"/>
             },
             {
                 component: () => <Redirect to="/404"/>
