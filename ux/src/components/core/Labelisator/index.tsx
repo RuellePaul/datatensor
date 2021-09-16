@@ -1,6 +1,7 @@
 import React, {FC, forwardRef, useCallback, useEffect, useState} from 'react';
 import clsx from 'clsx';
 import {Maximize as LabelIcon, Move as MoveIcon} from 'react-feather';
+import useEventListener from 'use-typed-event-listener';
 import {
     AppBar,
     Box,
@@ -32,7 +33,6 @@ import {Image} from 'src/types/image';
 import api from 'src/utils/api';
 import {ImageConsumer, ImageProvider} from 'src/store/ImageContext';
 import {CANVAS_OFFSET} from 'src/utils/labeling';
-import useEventListener from 'use-typed-event-listener';
 
 interface DTLabelisatorProps {
 }
