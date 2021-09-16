@@ -134,6 +134,11 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
         // eslint-disable-next-line
     }, []);
 
+    const [index, setIndex] = useState<number>(0);
+    useEffect(() => {
+        setIndex(imageIds.indexOf(image_id))
+    }, [imageIds, image_id])
+
     return (
         <Dialog
             className={classes.root}
@@ -192,6 +197,8 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                 onClick={event => event.stopPropagation()}
                                 onChangeCommitted={handleSliderChange}
                                 valueLabelFormat={x => x + 1}
+                                value={index}
+                                onChange={(event, value) => setIndex(value as number)}
                             />
                         </Grid>
                         <Grid
