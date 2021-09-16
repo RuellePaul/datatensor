@@ -19,7 +19,7 @@ import {
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import {User} from 'src/types/user';
 import api from 'src/utils/api';
-import countries from './countries';
+import countries, {Country} from './countries';
 
 interface GeneralSettingsProps {
     className?: string;
@@ -74,6 +74,7 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) =
                   handleChange,
                   handleSubmit,
                   isSubmitting,
+                  setFieldValue,
                   touched,
                   values
               }) => (
@@ -163,12 +164,13 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) =
                                     <Autocomplete
                                         getOptionLabel={(option) => option.text}
                                         options={countries}
+                                        defaultValue={countries.find(country => country.text === user.country)}
+                                        onChange={(event, country) => setFieldValue('country', (country as Country).text)}
                                         renderInput={(params) => (
                                             <TextField
                                                 fullWidth
                                                 label="Country"
                                                 name="country"
-                                                onChange={handleChange}
                                                 variant="outlined"
                                                 {...params}
                                             />

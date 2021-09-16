@@ -75,15 +75,6 @@ async def do_register(payload: AuthRegisterBody):
     return parse(response)
 
 
-@auth.post('/unregister')
-async def do_unregister(user: User = Depends(logged_user)):
-    """
-    Unregister logged user
-    """
-    core.unregister_user(user.id)
-    logger.info(f'Unregister user `{user.email}`')
-
-
 @auth.get('/me')
 async def me(user: User = Depends(logged_user)):
     """
@@ -114,3 +105,12 @@ async def do_email_confirmation(payload: AuthEmailConfirmBody):
         }
     }
     return parse(response)
+
+
+@auth.post('/unregister')
+async def do_unregister(user: User = Depends(logged_user)):
+    """
+    Unregister logged user
+    """
+    core.unregister_user(user.id)
+    logger.info(f'Unregister user `{user.email}` (scope: {user.scope})')

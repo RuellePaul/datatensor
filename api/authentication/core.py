@@ -13,6 +13,7 @@ from sendgrid.helpers.mail import Mail
 
 from api import errors
 from api.config import Config
+from api.routers.datasets.core import remove_datasets
 from api.routers.users.models import User, UserWithPassword
 from api.utils import encrypt_field, password_context
 
@@ -239,5 +240,7 @@ def verify_user_email(activation_code) -> User:
 
 
 def unregister_user(user_id):
+    remove_datasets(user_id)
     db.notifications.delete_many({'user_id': user_id})
+    db.tasks.delete_many({'user_id': user_id})
     db.users.delete_one({'_id': user_id})
