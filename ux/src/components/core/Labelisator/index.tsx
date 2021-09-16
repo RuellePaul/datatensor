@@ -30,6 +30,7 @@ import ToolLabel from './ToolLabel';
 import ToolMove from './ToolMove';
 import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
+import usePipeline from 'src/hooks/usePipeline';
 import {Image} from 'src/types/image';
 import api from 'src/utils/api';
 import {ImageConsumer, ImageProvider} from 'src/store/ImageContext';
@@ -69,6 +70,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
     const classes = useStyles();
 
     const {dataset} = useDataset();
+    const {pipeline, savePipeline} = usePipeline();
 
     const [autoSwitch, setAutoSwitch] = useState<boolean>(true);
 
@@ -83,13 +85,17 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
     const fetchImageIds = useCallback(async () => {
         setImageIds([]);
         try {
-            const response = await api.get<{ image_ids: string[] }>(`/datasets/${dataset.id}/images/ids`);
+            const response = await api.get<{ image_ids: string[] }>(`/datasets/${dataset.id}/images/ids`, {
+                params: {
+                    pipeline_id: pipeline?.id
+                }
+            });
             setImageIds(response.data.image_ids);
         } catch (err) {
             console.error(err);
         }
 
-    }, [dataset.id]);
+    }, [dataset.id, pipeline]);
 
     useEffect(() => {
         fetchImageIds()
@@ -124,6 +130,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
 
     const handleClose = () => {
         setOpen(false);
+        savePipeline(null);
         window.location.hash = '';
     }
 

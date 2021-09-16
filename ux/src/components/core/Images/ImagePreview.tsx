@@ -26,6 +26,7 @@ import DTImage from 'src/components/core/Images/Image';
 import bytesToSize from 'src/utils/bytesToSize';
 import useDataset from 'src/hooks/useDataset';
 import useImages from 'src/hooks/useImages';
+import usePipeline from 'src/hooks/usePipeline';
 import {ImageProvider} from 'src/store/ImageContext';
 import {LAZY_LOAD_BATCH} from 'src/constants';
 
@@ -95,7 +96,8 @@ const DTImagePreview: FC<DTImagePreviewProps> = ({
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
 
-    const {dataset, saveDataset} = useDataset();
+    const {dataset, saveDataset, pipelines} = useDataset();
+    const {savePipeline} = usePipeline();
 
     const {images, saveImages, saveOffset} = useImages();
     const imageSelected = images[selected];
@@ -146,6 +148,10 @@ const DTImagePreview: FC<DTImagePreviewProps> = ({
     };
 
     const handleOpenLabelisator = () => {
+        if (imageSelected.pipeline_id) {
+            savePipeline(pipelines.find(pipeline => pipeline.id === imageSelected.pipeline_id));
+        }
+
         handleCloseMenu();
         window.location.hash = imageSelected.id;
     };
