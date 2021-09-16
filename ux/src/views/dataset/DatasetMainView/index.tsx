@@ -15,6 +15,7 @@ import DTLabelisator from 'src/components/core/Labelisator';
 import WorkingAlert from 'src/components/core/WorkingAlert';
 import {ImagesConsumer, ImagesProvider} from 'src/store/ImagesContext';
 import {DatasetConsumer, DatasetProvider} from 'src/store/DatasetContext';
+import {CategoryProvider} from 'src/store/CategoryContext';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -151,7 +152,9 @@ const DatasetMainView: FC = () => {
                                     )}
                                 </Container>
 
-                                <DTLabelisator/>
+                                <CategoryProvider>
+                                    <DTLabelisator/>
+                                </CategoryProvider>
                             </TabContext>
                         </ImagesProvider>
                     </Page>

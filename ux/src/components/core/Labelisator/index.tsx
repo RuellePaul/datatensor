@@ -1,7 +1,6 @@
 import React, {FC, forwardRef, useCallback, useEffect, useState} from 'react';
 import clsx from 'clsx';
 import {Maximize as LabelIcon, Move as MoveIcon} from 'react-feather';
-import useEventListener from 'use-typed-event-listener';
 import {
     AppBar,
     Box,
@@ -25,6 +24,8 @@ import {TransitionProps} from '@material-ui/core/transitions';
 import {Close as CloseIcon, Restore as RestoreIcon} from '@material-ui/icons';
 import DTCategories from 'src/components/core/Categories';
 import DTImage from 'src/components/core/Images/Image';
+import KeyboardListener from './KeyboardListener';
+import KeyboardShortcuts from './KeyboardShortcuts';
 import ToolLabel from './ToolLabel';
 import ToolMove from './ToolMove';
 import {Theme} from 'src/theme';
@@ -49,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         position: 'relative'
     },
     toolbar: {
-        justifyContent: 'space-between'
+        alignItems: 'center'
     },
     switch: {
         marginLeft: theme.spacing(2)
@@ -122,6 +123,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
     }, [fetchImage]);
 
     const handleClose = () => {
+        setOpen(false);
         window.location.hash = '';
     }
 
@@ -139,18 +141,6 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
     useEffect(() => {
         setIndex(imageIds.indexOf(image_id))
     }, [imageIds, image_id])
-
-    const handleKeyDown = async (event: KeyboardEvent) => {
-        if (event.key === 'ArrowLeft') {
-            if (index === 0) return;
-            window.location.hash = imageIds[index - 1]
-        } else if (event.key === 'ArrowRight') {
-            if (index === imageIds.length - 1) return;
-            window.location.hash = imageIds[index + 1]
-        }
-    };
-
-    useEventListener(window, 'keydown', handleKeyDown);
 
     return (
         <Dialog
@@ -172,6 +162,10 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                         >
                             Labelisator
                         </Typography>
+                        <Box flexGrow={1}/>
+                        <Box mr={2}>
+                            <KeyboardShortcuts/>
+                        </Box>
                         <IconButton
                             edge='start'
                             color='inherit'
@@ -188,7 +182,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                     <Grid
                         className={classes.content}
                         container
-                        spacing={4}
+                        spacing={2}
                     >
                         <Grid
                             item
@@ -204,7 +198,6 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                             <Slider
                                 min={0}
                                 max={imageIds.length - 1}
-                                marks
                                 valueLabelDisplay='auto'
                                 defaultValue={imageIds.indexOf(image_id)}
                                 onClick={event => event.stopPropagation()}
@@ -235,7 +228,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                     >
                                         <Tooltip
                                             title={<Typography variant='overline'>
-                                                Draw tool (a)
+                                                Draw (a)
                                             </Typography>}
                                         >
                                             <LabelIcon/>
@@ -247,7 +240,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                     >
                                         <Tooltip
                                             title={<Typography variant='overline'>
-                                                Move tool (z)
+                                                Move (z)
                                             </Typography>}
                                         >
                                             <MoveIcon/>
@@ -345,6 +338,12 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                         <DTImage
                                             skeleton
                                             fullWidth
+                                        />
+
+                                        <KeyboardListener
+                                            index={index}
+                                            imageIds={imageIds}
+                                            setTool={setTool}
                                         />
                                     </Box>
                                 )
