@@ -32,6 +32,7 @@ import {Image} from 'src/types/image';
 import api from 'src/utils/api';
 import {ImageConsumer, ImageProvider} from 'src/store/ImageContext';
 import {CANVAS_OFFSET} from 'src/utils/labeling';
+import useEventListener from 'use-typed-event-listener';
 
 interface DTLabelisatorProps {
 }
@@ -138,6 +139,18 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
     useEffect(() => {
         setIndex(imageIds.indexOf(image_id))
     }, [imageIds, image_id])
+
+    const handleKeyDown = async (event: KeyboardEvent) => {
+        if (event.key === 'ArrowLeft') {
+            if (index === 0) return;
+            window.location.hash = imageIds[index - 1]
+        } else if (event.key === 'ArrowRight') {
+            if (index === imageIds.length - 1) return;
+            window.location.hash = imageIds[index + 1]
+        }
+    };
+
+    useEventListener(window, 'keydown', handleKeyDown);
 
     return (
         <Dialog
