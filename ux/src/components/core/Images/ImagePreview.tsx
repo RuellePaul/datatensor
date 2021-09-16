@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useRef, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import clsx from 'clsx';
 import useEventListener from 'use-typed-event-listener';
 import {useSnackbar} from 'notistack';
@@ -68,9 +68,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         maxWidth: theme.breakpoints.values.lg,
         padding: theme.spacing(2),
         overflow: 'auto'
-    },
-    fullScreen: {
-        maxWidth: '100% !important'
     },
     footer: {
         position: 'fixed',
@@ -162,22 +159,6 @@ const DTImagePreview: FC<DTImagePreviewProps> = ({
 
     useEventListener(window, 'keydown', handleKeyDown);
 
-    const ref = useRef();
-    const [fullScreen, setFullScreen] = useState<boolean>(false);
-
-    const toggleFullScreen = () => {
-        const element = ref.current as any;
-        if (fullScreen && document.fullscreenElement) {
-            document.exitFullscreen();
-            setFullScreen(false);
-            return;
-        } else {
-            element.requestFullscreen();
-            setFullScreen(true);
-            return;
-        }
-    }
-
     return (
         <Dialog
             className={classes.root}
@@ -189,13 +170,11 @@ const DTImagePreview: FC<DTImagePreviewProps> = ({
                 className: classes.backdrop
             }}
             PaperProps={{
-                className: classes.paper,
-                ref: ref,
-                onDoubleClick: toggleFullScreen
+                className: classes.paper
             }}
         >
             <>
-                <div className={clsx(classes.header, fullScreen && classes.fullScreen)}>
+                <div className={clsx(classes.header)}>
                     <Button
                         onClick={handleClose}
                         size='small'
@@ -232,7 +211,6 @@ const DTImagePreview: FC<DTImagePreviewProps> = ({
                     </Box>
 
                     <IconButton
-                        disabled={fullScreen}
                         onClick={handleOpenMenu}
                     >
                         <MoreIcon
@@ -274,7 +252,7 @@ const DTImagePreview: FC<DTImagePreviewProps> = ({
                 <Divider/>
 
                 <div
-                    className={clsx(classes.content, fullScreen && classes.fullScreen, fullScreen && 'scroll')}
+                    className={clsx(classes.content)}
                 >
                     <ImageProvider
                         key={imageSelected.id}
