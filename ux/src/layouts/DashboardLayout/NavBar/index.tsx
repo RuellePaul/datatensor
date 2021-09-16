@@ -37,7 +37,7 @@ const sections = (user: User): Section[] => [
             ...(user.is_admin ? [{
                 title: 'App dashboard',
                 icon: AdminDashboardIcon,
-                href: '/app/admin/reports/dashboard',
+                href: '/app/admin/dashboard',
                 info: () => (
                     <Chip
                         size="small"
@@ -49,7 +49,7 @@ const sections = (user: User): Section[] => [
             {
                 title: 'Dashboard',
                 icon: ActivityIcon,
-                href: '/app/reports/dashboard'
+                href: '/app/dashboard'
             }
         ]
     },
@@ -59,7 +59,7 @@ const sections = (user: User): Section[] => [
             ...(user.is_admin ? [{
                 title: 'Users',
                 icon: UsersIcon,
-                href: '/app/admin/manage/users',
+                href: '/app/admin/users',
                 info: () => (
                     <Chip
                         size="small"
@@ -71,7 +71,7 @@ const sections = (user: User): Section[] => [
             {
                 title: 'Datasets',
                 icon: PackageIcon,
-                href: '/app/manage/datasets'
+                href: '/app/datasets'
             }
         ]
     }

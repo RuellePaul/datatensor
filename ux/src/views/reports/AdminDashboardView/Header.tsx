@@ -1,7 +1,6 @@
 import React, {FC, useRef, useState} from 'react';
-import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
-import {Breadcrumbs, Button, Grid, Link, makeStyles, Menu, MenuItem, SvgIcon, Typography} from '@material-ui/core';
+import {Breadcrumbs, Button, Grid, makeStyles, Menu, MenuItem, SvgIcon, Typography} from '@material-ui/core';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import {Calendar as CalendarIcon} from 'react-feather';
 import {TimeRange} from 'src/types/timeRange'
@@ -35,14 +34,6 @@ const Header: FC<HeaderProps> = ({className, timeRange, setTimeRange, timeRanges
                     separator={<NavigateNextIcon fontSize="small"/>}
                     aria-label="breadcrumb"
                 >
-                    <Link
-                        variant="body1"
-                        color="inherit"
-                        to="/app"
-                        component={RouterLink}
-                    >
-                        Reports
-                    </Link>
                     <Typography
                         variant="body1"
                         color="textPrimary"

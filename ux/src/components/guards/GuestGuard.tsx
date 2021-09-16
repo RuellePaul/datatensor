@@ -11,8 +11,8 @@ const GuestGuard: FC<GuestGuardProps> = ({children}) => {
 
     if (isAuthenticated) {
         return <Redirect to={user.is_admin
-            ? "/app/admin/reports/dashboard"
-            : "/app/reports/dashboard"}
+            ? "/app/admin/dashboard"
+            : "/app/dashboard"}
         />;
     }
 

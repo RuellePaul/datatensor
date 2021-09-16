@@ -40,15 +40,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                     <Link
                         variant="body1"
                         color="inherit"
-                        to="/app/manage/datasets"
-                        component={RouterLink}
-                    >
-                        Manage
-                    </Link>
-                    <Link
-                        variant="body1"
-                        color="inherit"
-                        to="/app/manage/datasets"
+                        to="/app/datasets"
                         component={RouterLink}
                     >
                         Datasets

@@ -112,7 +112,7 @@ const DTDataset: FC<DatasetProps> = ({
 
 
             <CardActionArea
-                onClick={() => history.push(`/app/manage/datasets/${dataset.id}`)}
+                onClick={() => history.push(`/app/datasets/${dataset.id}`)}
             >
                 <CardMedia
                     className={classes.media}

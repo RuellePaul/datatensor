@@ -23,10 +23,10 @@ import {Dataset} from 'src/types/dataset';
 import {useSnackbar} from 'notistack';
 import {
     Close as CloseIcon,
+    DeleteOutline as DeleteIcon,
     Lock as PrivateIcon,
     Public as PublicIcon,
-    Visibility as PrivacyIcon,
-    DeleteOutline as DeleteIcon
+    Visibility as PrivacyIcon
 } from '@material-ui/icons';
 import clsx from 'clsx';
 import {useHistory} from 'react-router-dom';
@@ -100,7 +100,7 @@ const SectionSettings: FC<SectionProps> = ({className}) => {
             await api.delete(`/datasets/${dataset.id}`);
             saveDatasets(datasets => datasets.filter((current: Dataset) => current.id !== dataset.id));
             enqueueSnackbar(`Deleted dataset ${dataset.name}`, {variant: 'info'});
-            history.push('/app/manage/datasets')
+            history.push('/app/datasets')
         } catch (error) {
             enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
         } finally {
