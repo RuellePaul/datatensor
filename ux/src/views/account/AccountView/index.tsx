@@ -5,6 +5,7 @@ import Header from './Header';
 import General from './General';
 import Notifications from './Notifications';
 import Security from './Security';
+import Unregister from './Unregister';
 import Page from 'src/components/Page';
 import useAuth from 'src/hooks/useAuth';
 import {Theme} from 'src/theme';
@@ -32,7 +33,8 @@ const AccountView: FC = () => {
         ...(!user.scope
                 ? [{value: 'security', label: 'Security'}]
                 : []
-        )
+        ),
+        {value: 'unregister', label: 'Unregister'},
     ];
 
     const handleTabsChange = (event: ChangeEvent<{}>, value: string): void => {
@@ -68,6 +70,7 @@ const AccountView: FC = () => {
                     {currentTab === 'general' && <General/>}
                     {currentTab === 'notifications' && <Notifications/>}
                     {currentTab === 'security' && <Security/>}
+                    {currentTab === 'unregister' && <Unregister/>}
                 </Box>
             </Container>
         </Page>

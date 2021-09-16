@@ -1,12 +1,10 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 
 from api.authentication import core
 from api.authentication.models import *
-from api.dependencies import logged_user
 from api.logger import logger
 from api.routers.notifications.core import insert_notification
 from api.routers.notifications.models import NotificationPostBody, NotificationType
-from api.routers.users.models import User
 
 oauth = APIRouter()
 
@@ -52,12 +50,3 @@ async def oauth_callback(payload: OAuthCallbackBody):
     }
 
     return response
-
-
-@oauth.post('/unregister')
-async def oauth_unregister(user: User = Depends(logged_user)):
-    """
-    Unregister logged user
-    """
-    core.unregister_user(user.id)
-    logger.info(f'Unregister user `{user.email}` (scope : {user.scope})')
