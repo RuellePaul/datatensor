@@ -48,9 +48,7 @@ interface ChipsProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {
-        maxHeight: 'calc(100vh - 80px)'
-    },
+    root: {},
     categories: {
         display: 'flex',
         flexWrap: 'wrap'
