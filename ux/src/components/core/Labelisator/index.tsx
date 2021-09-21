@@ -109,7 +109,10 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
     const [image, setImage] = useState<Image>(null);
 
     const fetchImage = useCallback(async () => {
+        if (!image_id) return;
+
         setImage(null);
+
         try {
             const response = await api.get<{ image: Image }>(`/datasets/${dataset.id}/images/${image_id}`);
             setImage(response.data.image);
