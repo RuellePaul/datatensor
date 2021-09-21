@@ -9,6 +9,7 @@ import numpy
 from api import errors
 from api.config import Config
 from api.routers.images.models import Image
+from api.routers.labels.core import find_labels, regroup_labels_by_category
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
@@ -139,10 +140,24 @@ def remove_image(dataset_id, image_id):
     image_to_delete = find_image(dataset_id, image_id)
     if not image_to_delete:
         raise errors.Forbidden(errors.IMAGE_NOT_FOUND)
+
+    # Find labels of image to delete
+    labels = find_labels(image_id)
+
+    # Delete image and associated labels
     delete_image_from_s3(image_id)
     db.labels.delete_many({'image_id': image_id})
     db.images.delete_one({'_id': image_id,
                           'dataset_id': dataset_id})
+
+    # Decrease labels_count on associated categories
+    for category_id, labels_count in regroup_labels_by_category(labels).items():
+        db.categories.find_one_and_update(
+            {'_id': category_id},
+            {'$inc': {'labels_count': -labels_count}}
+        )
+
+    # Decrease image_count on associated dataset
     db.datasets.update_one(
         {
             '_id': dataset_id
