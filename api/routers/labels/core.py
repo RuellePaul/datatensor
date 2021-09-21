@@ -24,6 +24,11 @@ def find_labels(image_id, offset=0, limit=0) -> List[Label]:
     return [Label.from_mongo(label) for label in labels]
 
 
+def find_labels_count_for_category(category_id) -> int:
+    labels_count = db.labels.count({'category_id': category_id})
+    return labels_count
+
+
 def find_label(image_id, label_id) -> Label:
     label = db.labels.find_one({'_id': label_id,
                                 'image_id': image_id})

@@ -27,6 +27,7 @@ class Category(MongoModel):
     dataset_id: str
     name: str
     supercategory: Optional[SuperCategory] = None
+    labels_count: Optional[int] = None
 
 
 class CategoriesResponse(BaseModel):
