@@ -4,6 +4,7 @@ import {Button, makeStyles} from '@material-ui/core';
 import {Theme} from 'src/theme';
 import {SectionProps} from '../SectionProps';
 import useImages from 'src/hooks/useImages';
+import Categories from 'src/components/core/Dataset/Categories';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {}
@@ -25,6 +26,8 @@ const SectionOverview: FC<SectionProps> = ({className}) => {
                     Labelisator
                 </Button>
             )}
+
+            <Categories/>
         </div>
     )
 };
