@@ -88,7 +88,7 @@ const DTDataset: FC<DatasetProps> = ({
                             }
                             title={(
                                 <Typography variant='h6'>
-                                    {dataset.name}
+                                    {dataset.name && capitalize(dataset.name)}
                                 </Typography>
                             )}
                             subheader={

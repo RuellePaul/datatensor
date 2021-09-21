@@ -4,7 +4,7 @@ from uuid import uuid4
 from api import errors
 from api.config import Config
 from api.routers.categories.models import Category, SuperCategory
-from api.routers.labels.core import find_labels_count_for_category
+from api.routers.labels.core import find_labels_for_categories
 
 db = Config.db
 
@@ -14,8 +14,9 @@ def find_categories(dataset_id, offset=0, limit=0) -> List[Category]:
     if categories is None:
         raise errors.NotFound(errors.CATEGORY_NOT_FOUND)
     categories = [Category.from_mongo(category) for category in categories]
+    labels = find_labels_for_categories(categories)
     for category in categories:
-        category.labels_count = find_labels_count_for_category(category_id=category.id)
+        category.labels_count = len([label for label in labels if label.category_id == category.id])
     return categories
 
 

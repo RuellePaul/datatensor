@@ -5,6 +5,7 @@ import boto3
 
 from api import errors
 from api.config import Config
+from api.routers.categories.models import Category
 from api.routers.labels.models import Label
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
@@ -24,9 +25,10 @@ def find_labels(image_id, offset=0, limit=0) -> List[Label]:
     return [Label.from_mongo(label) for label in labels]
 
 
-def find_labels_count_for_category(category_id) -> int:
-    labels_count = db.labels.count({'category_id': category_id})
-    return labels_count
+def find_labels_for_categories(categories: List[Category]) -> List[Label]:
+    category_ids = [category.id for category in categories]
+    labels = db.labels.find({'category_id': {'$in': category_ids}})
+    return [Label.from_mongo(label) for label in labels]
 
 
 def find_label(image_id, label_id) -> Label:
