@@ -22,7 +22,7 @@ import {
 import {ToggleButton, ToggleButtonGroup} from '@material-ui/lab';
 import {TransitionProps} from '@material-ui/core/transitions';
 import {Close as CloseIcon, Restore as RestoreIcon} from '@material-ui/icons';
-import DTCategories from 'src/components/core/Categories';
+import DTCategories from 'src/components/core/Labelisator/Categories';
 import DTImage from 'src/components/core/Images/Image';
 import KeyboardListener from './KeyboardListener';
 import KeyboardShortcuts from './KeyboardShortcuts';

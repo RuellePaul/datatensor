@@ -20,10 +20,10 @@ import {TaskAugmentorProperties, TaskGeneratorProperties, TaskStatus} from 'src/
 import {UserConsumer, UserProvider} from 'src/store/UserContext';
 import {DatasetConsumer, DatasetProvider} from 'src/store/DatasetContext';
 import useTasks from 'src/hooks/useTasks';
+import DTDataset from 'src/components/core/Dataset';
 import FancyLabel from 'src/components/FancyLabel';
 import UserLabel from 'src/components/UserLabel';
 import getDateDiff from 'src/utils/getDateDiff';
-import DTDataset from './Dataset';
 import clsx from 'clsx';
 
 interface TaskDetailsProps {
