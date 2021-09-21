@@ -98,5 +98,5 @@ class MongoModel(BaseModel):
 
 
 def get_unique(iterable, key):
-    unique_keys = list(set([el[key] for el in iterable]))
+    unique_keys = list(set([el[key].lower() for el in iterable]))
     return [next(el for el in iterable if el[key] == unique_key) for unique_key in unique_keys]
