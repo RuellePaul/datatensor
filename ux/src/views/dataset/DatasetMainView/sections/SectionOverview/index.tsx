@@ -32,7 +32,7 @@ const SectionOverview: FC<SectionProps> = ({className}) => {
             <Box mb={2}>
                 <Typography
                     className={classes.title}
-                    variant="h3"
+                    variant="h4"
                     color="textPrimary"
                 >
                     Dataset overview

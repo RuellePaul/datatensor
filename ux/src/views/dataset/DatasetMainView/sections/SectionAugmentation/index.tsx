@@ -118,7 +118,7 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
             <div className={classes.header}>
                 <Typography
                     className={classes.title}
-                    variant='h5'
+                    variant='h4'
                     color='textPrimary'
                 >
                     Images augmentation
