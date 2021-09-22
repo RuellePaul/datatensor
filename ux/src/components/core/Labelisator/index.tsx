@@ -309,7 +309,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                     <Tooltip
                                         title={
                                             <Typography variant='overline'>
-                                                Save (SPACE)
+                                                Save (S)
                                             </Typography>
                                         }
                                     >
