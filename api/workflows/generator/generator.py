@@ -10,6 +10,8 @@ import requests
 from api.config import Config
 from api.routers.datasets.models import Dataset
 from api.routers.images.core import allowed_file, upload_image
+from api.routers.labels.core import regroup_labels_by_category
+from api.routers.labels.models import Label
 from api.routers.tasks.models import TaskGeneratorProperties
 from api.utils import update_task, increment_task_progress
 
@@ -75,6 +77,12 @@ def _process_image(args):
 
         db.images.insert_one(saved_image)
         db.labels.insert_many(labels)
+        labels = [Label.from_mongo(label) for label in labels]
+        for category_id, labels_count in regroup_labels_by_category(labels).items():
+            db.categories.find_one_and_update(
+                {'_id': category_id},
+                {'$inc': {'labels_count': labels_count}}
+            )
         increment_task_progress(task_id, 1 / image_count)
 
 
@@ -143,7 +151,8 @@ def main(user_id, task_id, properties: TaskGeneratorProperties):
         '_id': category['_id'],
         'dataset_id': category['dataset_id'],
         'name': category['name'],
-        'supercategory': category['supercategory']
+        'supercategory': category['supercategory'],
+        'labels_count': 0
     } for category in categories])
 
     with concurrent.futures.ThreadPoolExecutor() as executor:

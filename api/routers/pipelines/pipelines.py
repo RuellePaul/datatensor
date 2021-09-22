@@ -53,4 +53,4 @@ async def sample(dataset_id, pipeline_id, dataset=Depends(dataset_belongs_to_use
     """
     Delete a pipeline & associated images, labels, and task
     """
-    delete_pipeline(dataset, pipeline_id)
+    delete_pipeline(dataset_id, pipeline_id)

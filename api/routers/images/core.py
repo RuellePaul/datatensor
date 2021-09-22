@@ -10,6 +10,7 @@ from api import errors
 from api.config import Config
 from api.routers.images.models import Image
 from api.routers.labels.core import find_labels, regroup_labels_by_category
+from api.routers.labels.models import Label
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
@@ -136,6 +137,29 @@ def insert_images(dataset_id, request_files) -> List[Image]:
     return images
 
 
+def remove_images(dataset_id, image_ids):
+    # Find labels of images to delete
+    labels = list(db.labels.find({'image_id': {'$in': image_ids}}))
+    labels = [Label.from_mongo(label) for label in labels]
+
+    # Delete images and associated labels
+    delete_images_from_s3(image_ids)
+    db.images.delete_many({'_id': {'$in': image_ids}})
+    db.labels.delete_many({'image_id': {'$in': image_ids}})
+
+    # Decrease labels_count on associated categories
+    for category_id, labels_count in regroup_labels_by_category(labels).items():
+        db.categories.find_one_and_update(
+            {'_id': category_id},
+            {'$inc': {'labels_count': -labels_count}}
+        )
+
+    # Decrease image_count on associated dataset
+    db.datasets.update_one({'_id': dataset_id},
+                           {'$inc': {'augmented_count': -len(image_ids)}},
+                           upsert=False)
+
+
 def remove_image(dataset_id, image_id):
     image_to_delete = find_image(dataset_id, image_id)
     if not image_to_delete:
@@ -146,9 +170,8 @@ def remove_image(dataset_id, image_id):
 
     # Delete image and associated labels
     delete_image_from_s3(image_id)
+    db.images.delete_one({'_id': image_id, 'dataset_id': dataset_id})
     db.labels.delete_many({'image_id': image_id})
-    db.images.delete_one({'_id': image_id,
-                          'dataset_id': dataset_id})
 
     # Decrease labels_count on associated categories
     for category_id, labels_count in regroup_labels_by_category(labels).items():
@@ -158,12 +181,6 @@ def remove_image(dataset_id, image_id):
         )
 
     # Decrease image_count on associated dataset
-    db.datasets.update_one(
-        {
-            '_id': dataset_id
-        },
-        {
-            '$inc': {
-                'image_count': -1
-            }
-        }, upsert=False)
+    db.datasets.update_one({'_id': dataset_id},
+                           {'$inc': {'image_count': -1}},
+                           upsert=False)
