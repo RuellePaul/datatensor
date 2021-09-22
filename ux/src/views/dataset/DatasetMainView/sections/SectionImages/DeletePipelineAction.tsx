@@ -20,7 +20,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         width: '20px !important',
         height: '20px !important'
     }
-
 }));
 
 interface DeletePipelineActionProps {
