@@ -131,7 +131,7 @@ const Generator: FC = () => {
                         if (isMountedRef.current) {
                             setStatus({success: false});
                             setSubmitting(false);
-                            enqueueSnackbar(error.message, {variant: 'error'});
+                            enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
                         }
                     }
                 }}
