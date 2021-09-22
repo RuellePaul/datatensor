@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
-import {Box, makeStyles, Typography} from '@material-ui/core';
+import {Box, Grid, makeStyles, Typography} from '@material-ui/core';
 import {Theme} from 'src/theme';
 import {SectionProps} from '../SectionProps';
 import Categories from 'src/components/core/Dataset/Categories';
@@ -39,9 +39,25 @@ const SectionOverview: FC<SectionProps> = ({className}) => {
                 </Typography>
             </Box>
 
-            <LabelisatorAction/>
-
-            <Categories/>
+            <Grid
+                container
+                spacing={3}
+            >
+                <Grid
+                    item
+                    sm={8}
+                    xs={12}
+                >
+                    <Categories/>
+                </Grid>
+                <Grid
+                    item
+                    sm={4}
+                    xs={12}
+                >
+                    <LabelisatorAction/>
+                </Grid>
+            </Grid>
         </div>
     )
 };

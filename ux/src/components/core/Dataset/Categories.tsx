@@ -29,7 +29,9 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
             clickable
             label={(
                 <Typography variant='body2'>
-                    {capitalize(category.name)} {(category.labels_count)}
+                    <strong>
+                        {capitalize(category.name)} {(category.labels_count)}
+                    </strong>
                 </Typography>
             )}
             onClick={() => {
