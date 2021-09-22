@@ -35,7 +35,7 @@ const SectionImages: FC<SectionProps> = ({className}) => {
 
     return (
         <div className={clsx(classes.root, className)}>
-            <Box mb={2}>
+            <Box mb={3}>
                 <Typography
                     className={classes.title}
                     variant="h4"

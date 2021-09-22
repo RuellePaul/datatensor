@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) => ({
             left: 0,
             content: '""',
             height: 3,
-            width: 48,
+            width: 68,
             backgroundColor: theme.palette.primary.main
         }
     },

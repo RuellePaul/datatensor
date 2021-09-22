@@ -32,8 +32,18 @@ import clsx from 'clsx';
 import {useHistory} from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {
-        padding: theme.spacing(2, 0)
+    root: {},
+    title: {
+        position: 'relative',
+        '&:after': {
+            position: 'absolute',
+            bottom: -8,
+            left: 0,
+            content: '" "',
+            height: 3,
+            width: 68,
+            backgroundColor: theme.palette.primary.main
+        }
     },
     privacyAction: {
         color: theme.palette.common.white,
@@ -124,6 +134,16 @@ const SectionSettings: FC<SectionProps> = ({className}) => {
 
     return (
         <div className={clsx(classes.root, className)}>
+            <Box mb={3}>
+                <Typography
+                    className={classes.title}
+                    variant="h4"
+                    color="textPrimary"
+                >
+                    Dataset settings
+                </Typography>
+            </Box>
+
             <Grid container spacing={2}>
                 <Grid item sm={6} xs={12}>
                     <Box mb={2}>
