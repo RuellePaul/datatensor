@@ -7,7 +7,6 @@ import DTImage from 'src/components/core/Images/Image';
 import useImages from 'src/hooks/useImages';
 import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
-import {CategoryProvider} from 'src/store/CategoryContext';
 import {ImageProvider} from 'src/store/ImageContext';
 import {LAZY_LOAD_BATCH} from 'src/constants';
 import DTImagePreview from './ImagePreview';
@@ -99,16 +98,14 @@ const DTImagesList: FC<ImagesListProps> = ({
                 </Masonry>
             </InfiniteScroll>
 
-            <CategoryProvider>
-                {imageSelected && (
-                    <DTImagePreview
-                        open={open}
-                        setOpen={setOpen}
-                        selected={selected}
-                        setSelected={setSelected}
-                    />
-                )}
-            </CategoryProvider>
+            {imageSelected && (
+                <DTImagePreview
+                    open={open}
+                    setOpen={setOpen}
+                    selected={selected}
+                    setSelected={setSelected}
+                />
+            )}
         </div>
     );
 };
