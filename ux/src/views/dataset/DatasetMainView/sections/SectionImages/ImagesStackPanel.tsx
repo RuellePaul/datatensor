@@ -1,5 +1,6 @@
 import React, {FC, useState} from 'react';
-import {Box, Button, Card, CardContent, CardHeader, makeStyles, Typography} from '@material-ui/core';
+import {Link as RouterLink} from 'react-router-dom';
+import {Box, Button, Card, CardContent, CardHeader, Grid, Link, makeStyles, Typography} from '@material-ui/core';
 import {ArrowLeft as BackIcon} from 'react-feather';
 import DTImagesList from 'src/components/core/Images/ImagesList';
 import DTImagesStack from 'src/components/core/Images/ImagesStack';
@@ -20,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     content: {
         display: 'flex',
         alignItems: 'center',
-        padding: `${theme.spacing(0, 2)} !important`,
+        padding: `${theme.spacing(2, 2, 1, 2)} !important`,
     },
     header: {
         borderBottom: `1px dashed ${theme.palette.divider}`,
@@ -34,7 +35,10 @@ interface ImagesStackPanelProps {
 }
 
 
-const ImagesStackPanel: FC<ImagesStackPanelProps> = ({title, pipeline_id}) => {
+const ImagesStackPanel: FC<ImagesStackPanelProps> = ({
+                                                         title,
+                                                         pipeline_id = null
+                                                    }) => {
 
     const classes = useStyles();
     const {dataset, pipelines, savePipelines} = useDataset();
@@ -85,7 +89,7 @@ const ImagesStackPanel: FC<ImagesStackPanelProps> = ({title, pipeline_id}) => {
                                 </Button>
                                 <Typography
                                     variant='body2'
-                                    color='textSecondary'
+                                    color='textPrimary'
                                 >
                                     {images.length} / {pipeline_id
                                     ? pipelines.find(pipeline => pipeline.id === pipeline_id).image_count
@@ -95,9 +99,66 @@ const ImagesStackPanel: FC<ImagesStackPanelProps> = ({title, pipeline_id}) => {
                             <DTImagesList pipeline_id={pipeline_id}/>
                         </div>
                     ) : (
-                        <DTImagesStack
-                            onClick={() => setSelected(true)}
-                        />
+                        <Grid
+                            container
+                            spacing={1}
+                        >
+                            <Grid
+                                item
+                                md={5}
+                                xs={12}
+                            >
+                                <DTImagesStack
+                                    onClick={() => setSelected(true)}
+                                />
+                            </Grid>
+                            <Grid
+                                item
+                                md={7}
+                                xs={12}
+                            >
+                                {
+                                    pipeline_id === null && (
+                                        <>
+                                            <Typography
+                                                variant='h4'
+                                                color='textPrimary'
+                                                gutterBottom
+                                            >
+                                                Original images
+                                            </Typography>
+
+                                            <Typography
+                                                color='textSecondary'
+                                                gutterBottom
+                                            >
+                                                These images needs to be labeled by hand, and will be used to perform
+                                                augmentation
+                                                task to grow your dataset.
+                                            </Typography>
+
+                                            <Typography
+                                                color='textSecondary'
+                                                gutterBottom
+                                            >
+                                                Check
+                                                {' '}
+                                                <Link
+                                                    variant='subtitle1'
+                                                    color='secondary'
+                                                    component={RouterLink}
+                                                    to='/docs'
+                                                >
+                                                    original images
+                                                </Link>
+                                                {' '}
+                                                section on our documentation to understand.
+                                            </Typography>
+                                        </>
+                                    )
+                                }
+                            </Grid>
+                        </Grid>
                     )}
             </CardContent>
         </Card>

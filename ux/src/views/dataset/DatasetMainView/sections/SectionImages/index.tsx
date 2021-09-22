@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
-import {makeStyles, Typography} from '@material-ui/core';
+import {Box, makeStyles, Typography} from '@material-ui/core';
 import FancyLabel from 'src/components/FancyLabel';
 import useDataset from 'src/hooks/useDataset';
 import {ImagesProvider} from 'src/store/ImagesContext';
@@ -35,14 +35,15 @@ const SectionImages: FC<SectionProps> = ({className}) => {
 
     return (
         <div className={clsx(classes.root, className)}>
-            <Typography
-                className={classes.title}
-                variant="h3"
-                color="textPrimary"
-                gutterBottom
-            >
-                All images
-            </Typography>
+            <Box mb={2}>
+                <Typography
+                    className={classes.title}
+                    variant="h3"
+                    color="textPrimary"
+                >
+                    All images
+                </Typography>
+            </Box>
 
             <Typography
                 color="textPrimary"
