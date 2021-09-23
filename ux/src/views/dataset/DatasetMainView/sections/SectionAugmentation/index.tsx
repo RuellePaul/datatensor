@@ -39,18 +39,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         alignItems: 'center',
         justifyContent: 'space-between'
     },
-    title: {
-        position: 'relative',
-        '&:after': {
-            position: 'absolute',
-            bottom: -8,
-            left: 0,
-            content: '""',
-            height: 3,
-            width: 68,
-            backgroundColor: theme.palette.primary.main
-        }
-    },
     wrapper: {
         border: `solid 1px ${theme.palette.divider}`,
         borderRadius: theme.spacing(0.5)
@@ -116,14 +104,6 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
     return (
         <div className={clsx(classes.root, className)}>
             <div className={classes.header}>
-                <Typography
-                    className={classes.title}
-                    variant='h4'
-                    color='textPrimary'
-                >
-                    Images augmentation
-                </Typography>
-
                 <Box
                     display='flex'
                 >

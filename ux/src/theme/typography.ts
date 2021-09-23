@@ -26,7 +26,7 @@ export default {
     },
     h6: {
         fontWeight: 500,
-        fontSize: 14,
+        fontSize: 15,
         letterSpacing: '-0.05px'
     },
     overline: {

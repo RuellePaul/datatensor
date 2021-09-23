@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
-import {Box, makeStyles, Typography} from '@material-ui/core';
+import {makeStyles, Typography} from '@material-ui/core';
 import FancyLabel from 'src/components/FancyLabel';
 import useDataset from 'src/hooks/useDataset';
 import {ImagesProvider} from 'src/store/ImagesContext';
@@ -12,19 +12,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     root: {},
     label: {
         margin: theme.spacing(1, 2, 1, 0)
-    },
-    title: {
-        position: 'relative',
-        '&:after': {
-            position: 'absolute',
-            bottom: -8,
-            left: 0,
-            content: '" "',
-            height: 3,
-            width: 68,
-            backgroundColor: theme.palette.primary.main
-        }
-    },
+    }
 }));
 
 const SectionImages: FC<SectionProps> = ({className}) => {
@@ -35,15 +23,6 @@ const SectionImages: FC<SectionProps> = ({className}) => {
 
     return (
         <div className={clsx(classes.root, className)}>
-            <Box mb={3}>
-                <Typography
-                    className={classes.title}
-                    variant="h4"
-                    color="textPrimary"
-                >
-                    All images
-                </Typography>
-            </Box>
 
             <Typography
                 color="textPrimary"
