@@ -3,6 +3,7 @@ import {Link as RouterLink} from 'react-router-dom';
 import {Box, Button, Container, makeStyles, Typography, useMediaQuery, useTheme} from '@material-ui/core';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
+import {ArrowLeft as BackIcon} from 'react-feather';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -64,11 +65,21 @@ const NotFoundView: FC = () => {
                     display="flex"
                     justifyContent="center"
                 >
+                    <Box mr={2}>
+                        <Button
+                            color="secondary"
+                            onClick={() => window.history.back()}
+                            startIcon={<BackIcon/>}
+                            variant="outlined"
+                        >
+                            Back to previous page
+                        </Button>
+                    </Box>
                     <Button
                         color="secondary"
                         component={RouterLink}
                         to="/app/dashboard"
-                        variant="outlined"
+                        variant="contained"
                     >
                         Back to home
                     </Button>
