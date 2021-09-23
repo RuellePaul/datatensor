@@ -45,14 +45,14 @@ const SectionOverview: FC<SectionProps> = ({className}) => {
             >
                 <Grid
                     item
-                    sm={8}
+                    md={8}
                     xs={12}
                 >
                     <Categories/>
                 </Grid>
                 <Grid
                     item
-                    sm={4}
+                    md={4}
                     xs={12}
                 >
                     <LabelisatorAction/>
