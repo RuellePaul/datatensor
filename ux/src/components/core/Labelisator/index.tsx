@@ -198,7 +198,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                         <Grid
                             className={classes.content}
                             container
-                            spacing={2}
+                            spacing={3}
                         >
                             <Grid
                                 item

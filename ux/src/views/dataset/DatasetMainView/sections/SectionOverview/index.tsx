@@ -23,17 +23,17 @@ const SectionOverview: FC<SectionProps> = ({className}) => {
             >
                 <Grid
                     item
-                    md={8}
-                    xs={12}
-                >
-                    <Categories/>
-                </Grid>
-                <Grid
-                    item
-                    md={4}
+                    md={5}
                     xs={12}
                 >
                     <LabelisatorAction/>
+                </Grid>
+                <Grid
+                    item
+                    md={7}
+                    xs={12}
+                >
+                    <Categories/>
                 </Grid>
             </Grid>
         </div>

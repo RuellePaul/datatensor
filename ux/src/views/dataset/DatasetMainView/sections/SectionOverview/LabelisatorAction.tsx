@@ -47,14 +47,16 @@ const LabelisatorAction: FC<LabelisatorActionProps> = ({className}) => {
                     color='textSecondary'
                     gutterBottom
                 >
-                    {totalLabelsCount > 0 ? 'Edit labels' : 'Start labeling'} with our labelisator tool.
+                    {totalLabelsCount > 0 ? 'Edit labels' : 'Start labeling'} with labelisator tool.
                 </Typography>
             </CardContent>
-            <CardActions>
+            <CardActions
+                style={{justifyContent: 'flex-end'}}
+            >
                 <Button
                     color='primary'
                     onClick={() => window.location.hash = images[0].id}
-                    variant='outlined'
+                    variant='contained'
                 >
                     Labelisator
                 </Button>

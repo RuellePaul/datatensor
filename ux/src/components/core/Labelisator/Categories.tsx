@@ -50,6 +50,7 @@ interface ChipsProps {
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
     categories: {
+        marginTop: theme.spacing(1),
         display: 'flex',
         flexWrap: 'wrap'
     },
@@ -115,7 +116,7 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
             }
             title={`${category.name} | ${category.supercategory}`}
             size={count > 0 ? 'medium' : 'small'}
-            variant={count > 0 ? 'outlined' : 'default'}
+            variant='outlined'
             onDelete={() => handleDeleteCategory(category.id)}
         />
     )
@@ -139,11 +140,18 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
     return (
         <div className={clsx(classes.root, 'scroll')}>
             <Box mb={2}>
+                <Typography
+                    variant='overline'
+                    color='textPrimary'
+                >
+                    On this image
+                </Typography>
                 <div className={classes.categories}>
                     {
                         labeledCategories.map(category => (
                             <Box
-                                m={0.6}
+                                mr={1}
+                                mb={1}
                                 key={category.id}
                             >
                                 <DTCategory
@@ -154,17 +162,26 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
                         ))
                     }
                     <Box
-                        m={0.6}
+                        mr={1}
+                        mb={1}
                     >
                         {children}
                     </Box>
                 </div>
             </Box>
+
+            <Typography
+                variant='overline'
+                color='textPrimary'
+            >
+                Other categories
+            </Typography>
             <div className={classes.categories}>
                 {
                     unlabeledCategories.map(category => (
                         <Box
-                            m={0.4}
+                            mr={1}
+                            mb={1}
                             key={category.id}
                         >
                             <DTCategory
