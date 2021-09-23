@@ -19,7 +19,8 @@ interface CategoryProps {
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         display: 'flex',
-        flexWrap: 'wrap'
+        flexWrap: 'wrap',
+        alignContent: 'flex-start'
     },
     link: {
         display: 'flex',

@@ -4,6 +4,7 @@ import {Grid, makeStyles} from '@material-ui/core';
 import {Theme} from 'src/theme';
 import {SectionProps} from '../SectionProps';
 import Categories from 'src/components/core/Dataset/Categories';
+import ImagesSlideshow from 'src/components/core/Images/ImagesSlideshow';
 import LabelisatorAction from './LabelisatorAction';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -19,8 +20,23 @@ const SectionOverview: FC<SectionProps> = ({className}) => {
         <div className={clsx(classes.root, className)}>
             <Grid
                 container
-                spacing={3}
+                spacing={4}
             >
+                <Grid
+                    item
+                    md={8}
+                    xs={12}
+                >
+
+                </Grid>
+                <Grid
+                    item
+                    md={4}
+                    xs={12}
+                    justify='flex-end'
+                >
+                    <ImagesSlideshow/>
+                </Grid>
                 <Grid
                     item
                     md={5}
