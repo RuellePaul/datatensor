@@ -1,8 +1,9 @@
 import React, {FC, useState} from 'react';
 import clsx from 'clsx';
-import {Box, capitalize, Chip, Link, makeStyles, Typography} from '@material-ui/core';
+import {Box, capitalize, Chip, Link, makeStyles, Typography, useTheme} from '@material-ui/core';
 import {Theme} from 'src/theme';
 import {Category} from 'src/types/category';
+import useCategory from 'src/hooks/useCategory';
 import useDataset from 'src/hooks/useDataset';
 import {COLORS} from 'src/utils/colors';
 import {MAX_CATEGORIES_DISPLAYED} from 'src/config'
@@ -33,6 +34,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const DTCategory: FC<CategoryProps> = ({category, index}) => {
 
+    const theme = useTheme();
+
+    const {currentCategory, saveCurrentCategory} = useCategory();
+
+    const isSelected = currentCategory?.name === category.name;
+
     return (
         <Box
             m={0.5}
@@ -46,11 +53,13 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
                         </strong>
                     </Typography>
                 )}
-                onClick={() => {
-                }}
-                style={{color: COLORS[index]}}
+                onClick={() => saveCurrentCategory(isSelected ? null : category)}
                 title={`${category.name} | ${category.supercategory}`}
                 size='medium'
+                style={isSelected
+                    ? {color: theme.palette.getContrastText(COLORS[index]), background: COLORS[index]}
+                    : {color: COLORS[index]}
+                }
                 variant='outlined'
             />
         </Box>

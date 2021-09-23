@@ -31,6 +31,7 @@ import ToolLabel from './ToolLabel';
 import ToolMove from './ToolMove';
 import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
+import useCategory from 'src/hooks/useCategory';
 import usePipeline from 'src/hooks/usePipeline';
 import {Image} from 'src/types/image';
 import api from 'src/utils/api';
@@ -76,6 +77,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
 
     const {dataset} = useDataset();
     const {pipeline, savePipeline} = usePipeline();
+    const {saveCurrentCategory} = useCategory();
 
     const [autoSwitch, setAutoSwitch] = useState<boolean>(true);
 
@@ -138,6 +140,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
 
     const handleClose = () => {
         setOpen(false);
+        saveCurrentCategory(null);
         savePipeline(null);
         window.location.hash = '';
     }
