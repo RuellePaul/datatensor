@@ -45,7 +45,7 @@ def find_label(image_id, label_id) -> Label:
     return Label.from_mongo(label)
 
 
-def replace_labels(image_id, labels):
+def replace_labels(image_id, labels) -> Dict[str, int]:
     # Find current image labels
     old_labels = find_labels(image_id)
 
@@ -55,7 +55,8 @@ def replace_labels(image_id, labels):
     # Update labels_count on associated categories
     old = regroup_labels_by_category(old_labels)
     new = regroup_labels_by_category(labels)
-    for category_id, labels_count in merge_regrouped_labels(old, new).items():
+    merged = merge_regrouped_labels(old, new)
+    for category_id, labels_count in merged.items():
         db.categories.find_one_and_update(
             {'_id': category_id},
             {'$inc': {'labels_count': labels_count}}
@@ -66,3 +67,5 @@ def replace_labels(image_id, labels):
         db.labels.insert_many([{**label.dict(),
                                 'image_id': image_id,
                                 '_id': str(uuid.uuid4())} for label in labels])
+
+    return merged

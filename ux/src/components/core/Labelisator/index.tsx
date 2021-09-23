@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import {Maximize as LabelIcon, Move as MoveIcon} from 'react-feather';
 import {
     AppBar,
+    Badge,
     Box,
     Button,
     CircularProgress,
@@ -42,7 +43,8 @@ interface DTLabelisatorProps {
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
     paper: {
-        overflow: 'hidden'
+        overflow: 'hidden',
+        background: theme.palette.background.dark
     },
     scroll: {
         overflowY: 'auto'
@@ -225,7 +227,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                             </Grid>
                             <Grid
                                 item
-                                md={8}
+                                lg={8}
                                 xs={12}
                             >
                                 <Box
@@ -288,20 +290,29 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                     <ImageConsumer>
                                         {
                                             value => (
-                                                <Tooltip
-                                                    title={
-                                                        <Typography variant='overline'>
-                                                            Undo (CTRL + Z)
-                                                        </Typography>
-                                                    }
-                                                >
+                                                <Box mr={1}>
                                                     <IconButton
                                                         disabled={value.positions.length <= 1}
                                                         onClick={value.previousPosition}
                                                     >
-                                                        <RestoreIcon/>
+
+                                                        <Tooltip
+                                                            title={
+                                                                <Typography variant='overline'>
+                                                                    Undo (CTRL + Z)
+                                                                </Typography>
+                                                            }
+                                                        >
+                                                            <Badge
+                                                                color='secondary'
+                                                                badgeContent={value.positions.length > 1 ? value.positions.length - 1 : 0}
+                                                                max={99}
+                                                            >
+                                                                <RestoreIcon/>
+                                                            </Badge>
+                                                        </Tooltip>
                                                     </IconButton>
-                                                </Tooltip>
+                                                </Box>
                                             )
                                         }
                                     </ImageConsumer>
@@ -313,22 +324,22 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                             </Typography>
                                         }
                                     >
-                                    <span>
-                                        {<ImageConsumer>
-                                            {
-                                                value => (
-                                                    <Button
-                                                        variant="outlined"
-                                                        color="secondary"
-                                                        size='small'
-                                                        onClick={value.validateLabels}
-                                                    >
-                                                        Save
-                                                    </Button>
-                                                )
-                                            }
-                                        </ImageConsumer>}
-                                    </span>
+                                        <span>
+                                            {<ImageConsumer>
+                                                {
+                                                    value => (
+                                                        <Button
+                                                            variant="outlined"
+                                                            color="secondary"
+                                                            size='small'
+                                                            onClick={value.validateLabels}
+                                                        >
+                                                            Save
+                                                        </Button>
+                                                    )
+                                                }
+                                            </ImageConsumer>}
+                                        </span>
                                     </Tooltip>
                                 </Box>
 
@@ -369,7 +380,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
 
                             <Grid
                                 item
-                                md={4}
+                                lg={4}
                                 xs={12}
                             >
                                 <DTCategories/>

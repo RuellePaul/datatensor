@@ -21,6 +21,7 @@ const SectionOverview: FC<SectionProps> = ({className}) => {
             <Grid
                 container
                 spacing={4}
+                justify='space-between'
             >
                 <Grid
                     item
@@ -33,7 +34,6 @@ const SectionOverview: FC<SectionProps> = ({className}) => {
                     item
                     md={4}
                     xs={12}
-                    justify='flex-end'
                 >
                     <ImagesSlideshow/>
                 </Grid>
