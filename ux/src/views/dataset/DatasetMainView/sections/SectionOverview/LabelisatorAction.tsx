@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
 import {Button, Card, CardActions, CardContent, makeStyles, Typography} from '@material-ui/core';
+import Categories from 'src/components/core/Dataset/Categories';
 import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
 import useImages from 'src/hooks/useImages';
@@ -49,6 +50,8 @@ const LabelisatorAction: FC<LabelisatorActionProps> = ({className}) => {
                 >
                     {totalLabelsCount > 0 ? 'Edit labels' : 'Start labeling'} with labelisator tool.
                 </Typography>
+
+                <Categories/>
             </CardContent>
             <CardActions
                 style={{justifyContent: 'flex-end'}}

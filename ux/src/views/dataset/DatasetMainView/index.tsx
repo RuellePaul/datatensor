@@ -101,8 +101,15 @@ const DatasetMainView: FC = () => {
                                                         scrollButtons="auto"
                                                         variant="scrollable"
                                                     >
-                                                        <DTTab label="Overview" icon={DashboardOutlined}/>
-                                                        <DTTab label="Images" icon={PhotoLibraryOutlined}/>
+                                                        <DTTab
+                                                            label="Overview"
+                                                            icon={DashboardOutlined}
+                                                        />
+                                                        <DTTab
+                                                            label="Images"
+                                                            icon={PhotoLibraryOutlined}
+                                                            id='dt-tab-images'
+                                                        />
                                                         <DTTab
                                                             label={
                                                                 value.images.length === 0

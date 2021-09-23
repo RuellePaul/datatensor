@@ -3,7 +3,6 @@ import clsx from 'clsx';
 import {Grid, makeStyles} from '@material-ui/core';
 import {Theme} from 'src/theme';
 import {SectionProps} from '../SectionProps';
-import Categories from 'src/components/core/Dataset/Categories';
 import ImagesSlideshow from 'src/components/core/Images/ImagesSlideshow';
 import LabelisatorAction from './LabelisatorAction';
 
@@ -28,7 +27,7 @@ const SectionOverview: FC<SectionProps> = ({className}) => {
                     md={8}
                     xs={12}
                 >
-
+                    <LabelisatorAction/>
                 </Grid>
                 <Grid
                     item
@@ -36,20 +35,6 @@ const SectionOverview: FC<SectionProps> = ({className}) => {
                     xs={12}
                 >
                     <ImagesSlideshow/>
-                </Grid>
-                <Grid
-                    item
-                    md={5}
-                    xs={12}
-                >
-                    <LabelisatorAction/>
-                </Grid>
-                <Grid
-                    item
-                    md={7}
-                    xs={12}
-                >
-                    <Categories/>
                 </Grid>
             </Grid>
         </div>

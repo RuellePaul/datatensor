@@ -17,8 +17,9 @@ const useStyles = makeStyles((theme) => ({
     header: {
         display: 'flex',
         alignItems: 'center',
+        justifyContent: 'space-between',
         height: 50,
-        paddingLeft: theme.spacing(4),
+        padding: theme.spacing(0, 2),
         backgroundColor: theme.palette.background.default,
     },
     img: {
@@ -28,6 +29,10 @@ const useStyles = makeStyles((theme) => ({
         overflow: 'hidden',
         width: '100%',
     },
+    button: {
+        minWidth: 75,
+        marginLeft: theme.spacing(1)
+    }
 }));
 
 function ImagesSlideshow() {
@@ -58,8 +63,24 @@ function ImagesSlideshow() {
             className={classes.root}
             variant='outlined'
         >
-            <Paper square elevation={0} className={classes.header}>
-                <Typography>{images[activeStep].name}</Typography>
+            <Paper
+                square
+                elevation={0}
+                className={classes.header}
+            >
+                <Typography
+                    variant='overline'
+                    noWrap
+                >
+                    {images[activeStep].name}
+                </Typography>
+                <Button
+                    className={classes.button}
+                    onClick={() => document.getElementById('tab-images').click()}
+                    size='small'
+                >
+                    View all
+                </Button>
             </Paper>
             <AutoPlaySwipeableViews
                 axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
