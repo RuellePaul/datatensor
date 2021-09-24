@@ -36,10 +36,12 @@ const FilterCategories: FC<FilterCategoriesProps> = ({className, ...rest}) => {
 
     const {currentCategory, saveCurrentCategory} = useCategory();
 
+    const categoriesCopy = categories;
+
     return (
         <Autocomplete
             className={classes.root}
-            options={categories
+            options={categoriesCopy
                 .sort((a, b) => -b.name.localeCompare(a.name))
                 .sort((a, b) => -b.supercategory.localeCompare(a.supercategory))
             }
@@ -67,6 +69,6 @@ const FilterCategories: FC<FilterCategoriesProps> = ({className, ...rest}) => {
             )}
         />
     );
-};
+}
 
 export default FilterCategories;
