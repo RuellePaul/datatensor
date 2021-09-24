@@ -26,6 +26,9 @@ const useStyles = makeStyles((theme: Theme) => ({
         alignItems: 'center',
         padding: `${theme.spacing(2, 2, 1, 2)} !important`,
     },
+    fullWidth: {
+        width: '100%',
+    },
     header: {
         borderBottom: `1px dashed ${theme.palette.divider}`,
         marginBottom: theme.spacing(1)
@@ -77,7 +80,7 @@ const ImagesStackPanel: FC<ImagesStackPanelProps> = ({
             <CardContent className={classes.content}>
                 {selected
                     ? (
-                        <div>
+                        <div className={classes.fullWidth}>
                             <Box
                                 display='flex'
                                 alignItems='center'
