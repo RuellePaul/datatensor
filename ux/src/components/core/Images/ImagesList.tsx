@@ -42,7 +42,7 @@ const DTImagesList: FC<ImagesListProps> = ({
     const theme = useTheme();
 
     const {dataset, pipelines} = useDataset();
-    const {images, saveOffset} = useImages();
+    const {images, saveOffset, totalImagesCount} = useImages();
 
     const [open, setOpen] = useState(false);
     const [selected, setSelected] = useState(0);
@@ -64,9 +64,12 @@ const DTImagesList: FC<ImagesListProps> = ({
                 dataLength={images.length}
                 next={() => saveOffset(offset => offset + LAZY_LOAD_BATCH)}
                 height={700}
-                hasMore={pipeline_id
-                    ? pipelines.find(pipeline => pipeline.id === pipeline_id).image_count > images.length
-                    : dataset.image_count > images.length
+                hasMore={
+                    totalImagesCount
+                        ? totalImagesCount > images.length
+                        : pipeline_id
+                        ? pipelines.find(pipeline => pipeline.id === pipeline_id).image_count > images.length
+                        : dataset.image_count > images.length
                 }
                 loader={<LinearProgress/>}
             >
