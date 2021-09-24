@@ -119,7 +119,6 @@ const DTImagesStack: FC<ImagesListProps> = ({
                     </div>
                 ))
             }
-
         </div>
     );
 };

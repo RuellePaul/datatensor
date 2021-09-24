@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Depends
 
 from api.dependencies import dataset_belongs_to_user
-from api.routers.categories.core import find_categories, find_category, remove_category, insert_category
+from api.routers.categories.core import find_categories, find_category, find_images_of_category, remove_category, \
+    insert_category
 from api.routers.categories.models import *
+from api.routers.images.models import ImagesResponse
 from api.utils import parse
 
 categories = APIRouter()
@@ -23,6 +25,15 @@ async def get_category(dataset_id, category_id):
     Fetch given category of given dataset.
     """
     response = {'category': find_category(dataset_id, category_id)}
+    return parse(response)
+
+
+@categories.get('/{category_id}/images', response_model=ImagesResponse)
+async def get_category(dataset_id, category_id, offset: int = 0, limit: int = 0):
+    """
+    Fetch images of a given category.
+    """
+    response = {'images': find_images_of_category(dataset_id, category_id, offset, limit)}
     return parse(response)
 
 

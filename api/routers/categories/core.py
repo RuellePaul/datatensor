@@ -4,6 +4,8 @@ from uuid import uuid4
 from api import errors
 from api.config import Config
 from api.routers.categories.models import Category, SuperCategory
+from api.routers.images.models import Image
+from api.routers.labels.core import find_labels_of_category
 
 db = Config.db
 
@@ -20,6 +22,15 @@ def find_category(dataset_id, category_id) -> Category:
     if category is None:
         raise errors.NotFound(errors.CATEGORY_NOT_FOUND)
     return Category.from_mongo(category)
+
+
+def find_images_of_category(dataset_id, category_id, offset=0, limit=0) -> List[Image]:
+    labels = find_labels_of_category(category_id)
+    images = db.images.find({'dataset_id': dataset_id,
+                             '_id': {'$in': [label.image_id for label in labels]}}
+                            ).skip(offset).limit(limit)
+    images = [Image.from_mongo(image) for image in images]
+    return images
 
 
 def insert_category(dataset_id, category) -> Category:

@@ -10,6 +10,7 @@ import UploadAction from './UploadAction';
 import ViewPipelineAction from './ViewPipelineAction';
 import DeletePipelineAction from './DeletePipelineAction';
 import useImages from 'src/hooks/useImages';
+import FilterCategories from './FilterCategories';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -87,6 +88,9 @@ const ImagesStackPanel: FC<ImagesStackPanelProps> = ({
                                 >
                                     Back
                                 </Button>
+
+                                {pipeline_id === null && <FilterCategories/>}
+
                                 <Typography
                                     variant='body2'
                                     color='textPrimary'

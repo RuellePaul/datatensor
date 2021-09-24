@@ -45,6 +45,11 @@ def find_label(image_id, label_id) -> Label:
     return Label.from_mongo(label)
 
 
+def find_labels_of_category(category_id) -> List[Label]:
+    labels = db.labels.find({'category_id': category_id})
+    return [Label.from_mongo(label) for label in labels]
+
+
 def replace_labels(image_id, labels) -> Dict[str, int]:
     # Find current image labels
     old_labels = find_labels(image_id)
