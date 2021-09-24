@@ -12,7 +12,7 @@ import DeletePipelineAction from './DeletePipelineAction';
 import useCategory from 'src/hooks/useCategory';
 import useImages from 'src/hooks/useImages';
 import FilterCategories from './FilterCategories';
-import {ImagesProvider} from '../../../../../store/ImagesContext';
+import {ImagesProvider} from 'src/store/ImagesContext';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -40,6 +40,56 @@ interface ImagesStackPanelProps {
     pipeline_id?: string;
 }
 
+interface ImagesStackPanelExpandedProps {
+    pipeline_id?: string;
+    setSelected: any;
+}
+
+
+const ImagesStackPanelExpanded: FC<ImagesStackPanelExpandedProps> = ({setSelected, pipeline_id}) => {
+
+    const classes = useStyles();
+
+    const {images, totalImagesCount} = useImages();
+    const {currentCategory} = useCategory();
+
+    const {dataset, pipelines} = useDataset();
+
+    return (
+        <div className={classes.fullWidth}>
+            <Box
+                display='flex'
+                alignItems='center'
+                justifyContent='space-between'
+                mb={2}
+            >
+                <Button
+                    onClick={() => setSelected(false)}
+                    size='small'
+                    startIcon={<BackIcon/>}
+                >
+                    Back
+                </Button>
+
+                <FilterCategories/>
+
+                <Typography
+                    variant='body2'
+                    color='textPrimary'
+                >
+                    {images.length} / {
+                    currentCategory
+                        ? totalImagesCount
+                        : pipeline_id
+                        ? pipelines.find(pipeline => pipeline.id === pipeline_id).image_count
+                        : dataset.image_count}
+                </Typography>
+            </Box>
+            <DTImagesList pipeline_id={pipeline_id}/>
+        </div>
+    )
+};
+
 
 const ImagesStackPanel: FC<ImagesStackPanelProps> = ({
                                                          title,
@@ -47,9 +97,8 @@ const ImagesStackPanel: FC<ImagesStackPanelProps> = ({
                                                      }) => {
 
     const classes = useStyles();
-    const {dataset, pipelines, savePipelines} = useDataset();
+    const {savePipelines} = useDataset();
     const {currentCategory} = useCategory();
-    const {images} = useImages();
     const [selected, setSelected] = useState<boolean>(false);
 
     return (
@@ -80,45 +129,24 @@ const ImagesStackPanel: FC<ImagesStackPanelProps> = ({
             <CardContent className={classes.content}>
                 {selected
                     ? (
-                        <div className={classes.fullWidth}>
-                            <Box
-                                display='flex'
-                                alignItems='center'
-                                justifyContent='space-between'
-                                mb={2}
-                            >
-                                <Button
-                                    onClick={() => setSelected(false)}
-                                    size='small'
-                                    startIcon={<BackIcon/>}
+                        currentCategory === null
+                            ? <ImagesStackPanelExpanded
+                                pipeline_id={pipeline_id}
+                                setSelected={setSelected}
+                            />
+                            : (
+                                <ImagesProvider
+                                    category_id={currentCategory.id}
+                                    pipeline_id={pipeline_id}
                                 >
-                                    Back
-                                </Button>
-
-                                <FilterCategories/>
-
-                                <Typography
-                                    variant='body2'
-                                    color='textPrimary'
-                                >
-                                    {images.length} / {pipeline_id
-                                    ? pipelines.find(pipeline => pipeline.id === pipeline_id).image_count
-                                    : dataset.image_count}
-                                </Typography>
-                            </Box>
-                            {currentCategory === null
-                                ? <DTImagesList pipeline_id={pipeline_id}/>
-                                : (
-                                    <ImagesProvider
-                                        category_id={currentCategory.id}
+                                    <ImagesStackPanelExpanded
+                                        setSelected={setSelected}
                                         pipeline_id={pipeline_id}
-                                    >
-                                        <DTImagesList pipeline_id={pipeline_id}/>
-                                    </ImagesProvider>
-                                )
-                            }
-                        </div>
-                    ) : (
+                                    />
+                                </ImagesProvider>
+                            )
+                    )
+                    : (
                         <Grid
                             container
                             spacing={1}

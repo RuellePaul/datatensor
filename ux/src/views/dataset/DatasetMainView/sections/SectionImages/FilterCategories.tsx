@@ -52,7 +52,7 @@ const FilterCategories: FC<FilterCategoriesProps> = ({className, ...rest}) => {
             renderInput={(params) => (
                 <TextField
                     {...params}
-                    label='Search for categories...'
+                    label='Filter by category...'
                     placeholder={`${categories.map(category => capitalize(category.name)).slice(0, 3).join(', ')}...`}
                     InputProps={{
                         ...params.InputProps,
