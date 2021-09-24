@@ -9,6 +9,7 @@ import {Theme} from 'src/theme';
 import UploadAction from './UploadAction';
 import ViewPipelineAction from './ViewPipelineAction';
 import DeletePipelineAction from './DeletePipelineAction';
+import useCategory from 'src/hooks/useCategory';
 import useImages from 'src/hooks/useImages';
 import FilterCategories from './FilterCategories';
 
@@ -39,10 +40,11 @@ interface ImagesStackPanelProps {
 const ImagesStackPanel: FC<ImagesStackPanelProps> = ({
                                                          title,
                                                          pipeline_id = null
-                                                    }) => {
+                                                     }) => {
 
     const classes = useStyles();
     const {dataset, pipelines, savePipelines} = useDataset();
+    const {currentCategory} = useCategory();
     const {images} = useImages();
     const [selected, setSelected] = useState<boolean>(false);
 
@@ -100,7 +102,10 @@ const ImagesStackPanel: FC<ImagesStackPanelProps> = ({
                                     : dataset.image_count}
                                 </Typography>
                             </Box>
-                            <DTImagesList pipeline_id={pipeline_id}/>
+                            {currentCategory === null
+                                ? <DTImagesList pipeline_id={pipeline_id}/>
+                                : '...'
+                            }
                         </div>
                     ) : (
                         <Grid

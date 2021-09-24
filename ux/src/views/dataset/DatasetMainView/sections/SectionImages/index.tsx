@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import {makeStyles, Typography} from '@material-ui/core';
 import FancyLabel from 'src/components/FancyLabel';
 import useDataset from 'src/hooks/useDataset';
+import {CategoryProvider} from 'src/store/CategoryContext';
 import {ImagesProvider} from 'src/store/ImagesContext';
 import {Theme} from 'src/theme';
 import ImagesStackPanel from './ImagesStackPanel';
@@ -48,9 +49,11 @@ const SectionImages: FC<SectionProps> = ({className}) => {
                 </FancyLabel>
             </Typography>
 
-            <ImagesStackPanel
-                title={`Original images (${dataset.image_count})`}
-            />
+            <CategoryProvider>
+                <ImagesStackPanel
+                    title={`Original images (${dataset.image_count})`}
+                />
+            </CategoryProvider>
 
             {pipelines.map(pipeline => (
                 <ImagesProvider

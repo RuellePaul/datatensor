@@ -103,7 +103,7 @@ const Filter: FC<FilterProps> = ({className, ...rest}) => {
                         <TextField
                             {...params}
                             label='Search for categories...'
-                            placeholder={categoriesSelected.length === 0 && `${categories.map(category => capitalize(category.name)).slice(0, 3).join(', ')}...`}
+                            placeholder={`${categories.map(category => capitalize(category.name)).slice(0, 3).join(', ')}...`}
                             InputProps={{
                                 ...params.InputProps,
                                 startAdornment: (

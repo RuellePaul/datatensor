@@ -1,12 +1,11 @@
-import React, {FC, useCallback, useEffect, useState} from 'react';
+import React, {FC} from 'react';
 import {capitalize, InputAdornment, makeStyles, TextField} from '@material-ui/core';
 import {Autocomplete} from '@material-ui/lab';
 import SearchIcon from '@material-ui/icons/Search';
 import {Theme} from 'src/theme';
 import {Category} from 'src/types/category';
 import useDataset from 'src/hooks/useDataset';
-import api from 'src/utils/api';
-import {Image} from 'src/types/image';
+import useCategory from 'src/hooks/useCategory';
 
 interface FilterCategoriesProps {
     className?: string;
@@ -33,26 +32,9 @@ const FilterCategories: FC<FilterCategoriesProps> = ({className, ...rest}) => {
 
     const classes = useStyles();
 
-    const {dataset, categories} = useDataset();
+    const {categories} = useDataset();
 
-    const [category, setCategory] = useState<Category>(null);
-
-    const fetchImagesCategory = useCallback(async () => {
-        if (!category)
-            return;
-
-        try {
-            const response = await api.get<{ images: Image[] }>(`/datasets/${dataset.id}/categories/${category.id}/images`);
-            console.log(response.data.images);
-        } catch (err) {
-            console.error(err);
-        }
-
-    }, [dataset.id, category]);
-
-    useEffect(() => {
-        fetchImagesCategory()
-    }, [fetchImagesCategory])
+    const {currentCategory, saveCurrentCategory} = useCategory();
 
     return (
         <Autocomplete
@@ -63,13 +45,13 @@ const FilterCategories: FC<FilterCategoriesProps> = ({className, ...rest}) => {
             }
             groupBy={(category) => capitalize(category.supercategory)}
             getOptionLabel={(category) => capitalize(category.name)}
-            onChange={(event, newCategory) => setCategory(newCategory as Category)}
-            value={category}
+            onChange={(event, newCategory) => saveCurrentCategory(newCategory as Category)}
+            value={currentCategory}
             renderInput={(params) => (
                 <TextField
                     {...params}
                     label='Search for categories...'
-                    placeholder={category && `${categories.map(category => capitalize(category.name)).slice(0, 3).join(', ')}...`}
+                    placeholder={`${categories.map(category => capitalize(category.name)).slice(0, 3).join(', ')}...`}
                     InputProps={{
                         ...params.InputProps,
                         startAdornment: (
