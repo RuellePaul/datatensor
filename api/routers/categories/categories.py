@@ -29,11 +29,11 @@ async def get_category(dataset_id, category_id):
 
 
 @categories.get('/{category_id}/images', response_model=ImagesResponse)
-async def get_category(dataset_id, category_id, offset: int = 0, limit: int = 0):
+async def get_category(dataset_id, category_id, pipeline_id=None, offset: int = 0, limit: int = 0):
     """
     Fetch images of a given category.
     """
-    response = {'images': find_images_of_category(dataset_id, category_id, offset, limit)}
+    response = {'images': find_images_of_category(dataset_id, category_id, pipeline_id, offset, limit)}
     return parse(response)
 
 

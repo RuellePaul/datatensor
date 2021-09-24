@@ -12,6 +12,7 @@ import DeletePipelineAction from './DeletePipelineAction';
 import useCategory from 'src/hooks/useCategory';
 import useImages from 'src/hooks/useImages';
 import FilterCategories from './FilterCategories';
+import {ImagesProvider} from '../../../../../store/ImagesContext';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -91,7 +92,7 @@ const ImagesStackPanel: FC<ImagesStackPanelProps> = ({
                                     Back
                                 </Button>
 
-                                {pipeline_id === null && <FilterCategories/>}
+                                <FilterCategories/>
 
                                 <Typography
                                     variant='body2'
@@ -104,7 +105,14 @@ const ImagesStackPanel: FC<ImagesStackPanelProps> = ({
                             </Box>
                             {currentCategory === null
                                 ? <DTImagesList pipeline_id={pipeline_id}/>
-                                : '...'
+                                : (
+                                    <ImagesProvider
+                                        category_id={currentCategory.id}
+                                        pipeline_id={pipeline_id}
+                                    >
+                                        <DTImagesList pipeline_id={pipeline_id}/>
+                                    </ImagesProvider>
+                                )
                             }
                         </div>
                     ) : (

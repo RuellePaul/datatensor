@@ -24,9 +24,10 @@ def find_category(dataset_id, category_id) -> Category:
     return Category.from_mongo(category)
 
 
-def find_images_of_category(dataset_id, category_id, offset=0, limit=0) -> List[Image]:
+def find_images_of_category(dataset_id, category_id, pipeline_id, offset=0, limit=0) -> List[Image]:
     labels = find_labels_of_category(category_id)
     images = db.images.find({'dataset_id': dataset_id,
+                             'pipeline_id': pipeline_id,
                              '_id': {'$in': [label.image_id for label in labels]}}
                             ).skip(offset).limit(limit)
     images = [Image.from_mongo(image) for image in images]
