@@ -55,17 +55,19 @@ const SectionImages: FC<SectionProps> = ({className}) => {
                 />
             </CategoryProvider>
 
-            {pipelines.map(pipeline => (
-                <ImagesProvider
-                    key={pipeline.id}
-                    pipeline_id={pipeline.id}
-                >
-                    <ImagesStackPanel
-                        title={`Augmented images (${pipeline.image_count})`}
+            <CategoryProvider>
+                {pipelines.map(pipeline => (
+                    <ImagesProvider
+                        key={pipeline.id}
                         pipeline_id={pipeline.id}
-                    />
-                </ImagesProvider>
-            ))}
+                    >
+                        <ImagesStackPanel
+                            title={`Augmented images (${pipeline.image_count})`}
+                            pipeline_id={pipeline.id}
+                        />
+                    </ImagesProvider>
+                ))}
+            </CategoryProvider>
         </div>
     )
 };
