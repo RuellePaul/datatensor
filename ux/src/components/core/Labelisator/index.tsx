@@ -9,6 +9,7 @@ import {
     CircularProgress,
     Container,
     Dialog,
+    Divider,
     FormControlLabel,
     Grid,
     IconButton,
@@ -25,6 +26,7 @@ import {TransitionProps} from '@material-ui/core/transitions';
 import {Close as CloseIcon, Restore as RestoreIcon} from '@material-ui/icons';
 import DTCategories from 'src/components/core/Labelisator/Categories';
 import DTImage from 'src/components/core/Images/Image';
+import CategoriesDistribution from 'src/components/charts/CategoriesDistribution';
 import KeyboardListener from './KeyboardListener';
 import KeyboardShortcuts from './KeyboardShortcuts';
 import ToolLabel from './ToolLabel';
@@ -211,7 +213,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                             >
                                 <Typography
                                     variant='overline'
-                                    color='textSecondary'
+                                    color='textPrimary'
                                 >
                                     Image {imageIds.indexOf(image_id) + 1} / {imageIds.length}
                                 </Typography>
@@ -387,6 +389,19 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                 xs={12}
                             >
                                 <DTCategories/>
+
+                                <Box my={2}>
+                                    <Divider/>
+                                </Box>
+
+                                <Typography
+                                    variant='overline'
+                                    color='textPrimary'
+                                >
+                                    Top 10 categories
+                                </Typography>
+
+                                <CategoriesDistribution/>
                             </Grid>
                         </Grid>
                     </Container>

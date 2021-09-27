@@ -9,7 +9,7 @@ import {capitalize} from '@material-ui/core';
 export const RESIZE_SIZE = 8;
 export const LABEL_MIN_WIDTH = 25;
 export const LABEL_MIN_HEIGHT = 25;
-export const CANVAS_OFFSET = 24;
+export const CANVAS_OFFSET = 20;
 export const MIN_FONT_SIZE = 16;
 export const MAX_FONT_SIZE = 24;
 

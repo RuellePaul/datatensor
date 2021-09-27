@@ -48,8 +48,10 @@ interface ChipsProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {},
-    categories: {
+    root: {
+        width: '100%'
+    },
+    wrapper: {
         marginTop: theme.spacing(1),
         display: 'flex',
         flexWrap: 'wrap'
@@ -146,7 +148,7 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
                 >
                     On this image
                 </Typography>
-                <div className={classes.categories}>
+                <div className={classes.wrapper}>
                     {
                         labeledCategories.map(category => (
                             <Box
@@ -176,7 +178,8 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
             >
                 Other categories
             </Typography>
-            <div className={classes.categories}>
+
+            <div className={classes.wrapper}>
                 {
                     unlabeledCategories.map(category => (
                         <Box
