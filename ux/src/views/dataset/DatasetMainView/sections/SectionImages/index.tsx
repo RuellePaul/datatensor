@@ -50,9 +50,7 @@ const SectionImages: FC<SectionProps> = ({className}) => {
             </Typography>
 
             <CategoryProvider>
-                <ImagesStackPanel
-                    title={`Original images (${dataset.image_count})`}
-                />
+                <ImagesStackPanel/>
             </CategoryProvider>
 
             <CategoryProvider>
@@ -62,8 +60,7 @@ const SectionImages: FC<SectionProps> = ({className}) => {
                         pipeline_id={pipeline.id}
                     >
                         <ImagesStackPanel
-                            title={`Augmented images (${pipeline.image_count})`}
-                            pipeline_id={pipeline.id}
+                            pipeline={pipeline}
                         />
                     </ImagesProvider>
                 ))}
