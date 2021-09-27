@@ -88,8 +88,8 @@ const DTImage: FC<DTImageProps> = ({
                 {...rest}
             >
                 <img
-                    src={image.path}
-                    alt={image.name}
+                    src={image?.path}
+                    alt={image?.name}
                     width="100%"
                     draggable={false}
                     onLoad={handleLoad}
@@ -108,8 +108,8 @@ const DTImage: FC<DTImageProps> = ({
                 <Skeleton
                     className={clsx(classes.skeleton, loaded && 'hidden')}
                     animation='wave'
-                    width={fullWidth ? '100%' : image.width}
-                    height={image.height}
+                    width={fullWidth ? '100%' : image?.width}
+                    height={image?.height}
                     variant='rect'
                 />
             )}
@@ -118,8 +118,8 @@ const DTImage: FC<DTImageProps> = ({
                 {...rest}
             >
                 <img
-                    src={image.path}
-                    alt={image.name}
+                    src={image?.path}
+                    alt={image?.name}
                     width="100%"
                     draggable={false}
                     onLoad={handleLoad}

@@ -2,7 +2,7 @@ import React, {FC, useState} from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Masonry from 'react-masonry-css';
 import clsx from 'clsx';
-import {LinearProgress, makeStyles, useTheme} from '@material-ui/core';
+import {LinearProgress, makeStyles, Typography, useTheme} from '@material-ui/core';
 import DTImage from 'src/components/core/Images/Image';
 import useImages from 'src/hooks/useImages';
 import {Theme} from 'src/theme';
@@ -53,6 +53,16 @@ const DTImagesList: FC<ImagesListProps> = ({
         setOpen(true);
         setSelected(index);
     };
+
+    if (images.length === 0)
+        return (
+            <Typography
+                color='textSecondary'
+                gutterBottom
+            >
+                No images found.
+            </Typography>
+        )
 
     return (
         <div

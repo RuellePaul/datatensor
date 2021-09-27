@@ -210,6 +210,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                             <Grid
                                 item
                                 xs={12}
+                                style={{paddingBottom: 0}}
                             >
                                 <Typography
                                     variant='overline'

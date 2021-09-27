@@ -15,6 +15,7 @@ import {
     Grid,
     IconButton,
     InputLabel,
+    Link,
     makeStyles,
     MenuItem,
     Select,
@@ -31,7 +32,7 @@ import useDataset from 'src/hooks/useDataset';
 import useImage from 'src/hooks/useImage';
 import useCategory from 'src/hooks/useCategory';
 import {currentCategoryCount} from 'src/utils/labeling';
-import {SUPERCATEGORIES} from 'src/config';
+import {MAX_CATEGORIES_DISPLAYED, SUPERCATEGORIES} from 'src/config';
 import {COLORS} from 'src/utils/colors';
 
 interface CategoriesProps {
@@ -55,6 +56,12 @@ const useStyles = makeStyles((theme: Theme) => ({
         marginTop: theme.spacing(1),
         display: 'flex',
         flexWrap: 'wrap'
+    },
+    link: {
+        display: 'flex',
+        alignItems: 'center',
+        marginLeft: theme.spacing(1),
+        cursor: 'pointer'
     },
     close: {
         position: 'absolute',
@@ -129,6 +136,8 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
     const classes = useStyles();
     const {labels} = useImage();
 
+    const [expand, setExpand] = useState<boolean>(false);
+
     let labeledCategories, unlabeledCategories;
 
     if (labels) {
@@ -180,7 +189,7 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
             </Typography>
 
             <div className={classes.wrapper}>
-                {
+                {expand ? (
                     unlabeledCategories.map(category => (
                         <Box
                             mr={1}
@@ -191,9 +200,33 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
                                 category={category}
                                 index={categories.indexOf(category)}
                             />
-                        </Box>
-                    ))
-                }
+                        </Box>))
+                ) : (
+                    <>
+                        {unlabeledCategories.slice(0, MAX_CATEGORIES_DISPLAYED).map(category => (
+                            <Box
+                                mr={1}
+                                mb={1}
+                                key={category.id}
+                            >
+                                <DTCategory
+                                    category={category}
+                                    index={categories.indexOf(category)}
+                                />
+                            </Box>
+                        ))}
+                        {unlabeledCategories.length > MAX_CATEGORIES_DISPLAYED && (
+                            <Link
+                                className={classes.link}
+                                onClick={() => {
+                                    setExpand(true)
+                                }}
+                            >
+                                and {unlabeledCategories.length - MAX_CATEGORIES_DISPLAYED} more...
+                            </Link>
+                        )}
+                    </>
+                )}
             </div>
         </div>
     )

@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, useEffect} from 'react';
 import {capitalize, InputAdornment, makeStyles, TextField} from '@material-ui/core';
 import {Autocomplete} from '@material-ui/lab';
 import SearchIcon from '@material-ui/icons/Search';
@@ -6,6 +6,7 @@ import {Theme} from 'src/theme';
 import {Category} from 'src/types/category';
 import useDataset from 'src/hooks/useDataset';
 import useCategory from 'src/hooks/useCategory';
+import useImages from '../../../../../hooks/useImages';
 
 interface FilterCategoriesProps {
     className?: string;
@@ -33,10 +34,20 @@ const FilterCategories: FC<FilterCategoriesProps> = ({className, ...rest}) => {
     const classes = useStyles();
 
     const {categories} = useDataset();
+    const {saveOffset} = useImages();
+
 
     const {currentCategory, saveCurrentCategory} = useCategory();
 
     const categoriesCopy = categories;
+
+    const handleCategoryChange = (category) => {
+        saveCurrentCategory(category as Category);
+
+        console.log(category)
+
+        saveOffset(0);
+    };
 
     return (
         <Autocomplete
@@ -47,7 +58,7 @@ const FilterCategories: FC<FilterCategoriesProps> = ({className, ...rest}) => {
             }
             groupBy={(category) => capitalize(category.supercategory)}
             getOptionLabel={(category) => capitalize(category.name)}
-            onChange={(event, newCategory) => saveCurrentCategory(newCategory as Category)}
+            onChange={(event, newCategory) => handleCategoryChange(newCategory)}
             value={currentCategory}
             renderInput={(params) => (
                 <TextField
