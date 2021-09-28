@@ -1,4 +1,4 @@
-import React, {FC, useEffect} from 'react';
+import React, {FC} from 'react';
 import {capitalize, InputAdornment, makeStyles, TextField} from '@material-ui/core';
 import {Autocomplete} from '@material-ui/lab';
 import SearchIcon from '@material-ui/icons/Search';
@@ -43,8 +43,6 @@ const FilterCategories: FC<FilterCategoriesProps> = ({className, ...rest}) => {
 
     const handleCategoryChange = (category) => {
         saveCurrentCategory(category as Category);
-
-        console.log(category)
 
         saveOffset(0);
     };
