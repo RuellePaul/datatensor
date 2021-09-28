@@ -31,7 +31,7 @@ def search_unlabeled_image_id(dataset_id, offset) -> Union[str, None]:
     labels = [Label.from_mongo(label) for label in labels]
     unlabeled_image_id = None
     try:
-        unlabeled_image_id = next(image_id for image_id in image_ids
+        unlabeled_image_id = next(image_id for image_id in image_ids[offset:]
                                   if image_id not in [label.image_id for label in labels]
                                   and image_ids.index(image_id) > offset)
     except StopIteration:

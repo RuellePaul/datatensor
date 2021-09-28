@@ -339,6 +339,7 @@ const DTCategories: FC<CategoriesProps> = ({className}) => {
                                                 name="name"
                                                 onBlur={handleBlur}
                                                 onChange={handleChange}
+                                                onKeyDown={event => event.stopPropagation()}
                                                 value={values.name}
                                                 variant="outlined"
                                                 size="small"
