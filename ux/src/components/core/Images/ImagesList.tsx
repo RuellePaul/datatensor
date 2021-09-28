@@ -2,7 +2,7 @@ import React, {FC, useState} from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Masonry from 'react-masonry-css';
 import clsx from 'clsx';
-import {IconButton, LinearProgress, makeStyles, Typography, useTheme} from '@material-ui/core';
+import {IconButton, LinearProgress, makeStyles, Tooltip, Typography, useTheme} from '@material-ui/core';
 import {Create as LabelisatorIcon} from '@material-ui/icons';
 import DTImage from 'src/components/core/Images/Image';
 import useImages from 'src/hooks/useImages';
@@ -39,7 +39,8 @@ const useStyles = makeStyles((theme: Theme) => ({
         position: 'absolute',
         bottom: theme.spacing(1),
         right: theme.spacing(1),
-        color: 'white'
+        color: 'white',
+        background: 'rgba(0, 0, 0, 0.25)'
     }
 }));
 
@@ -111,15 +112,23 @@ const DTImagesList: FC<ImagesListProps> = ({
                                 className={classes.image}
                                 clickable
                                 overlay={(
-                                    <IconButton
-                                        className={classes.icon}
-                                        onClick={event => {
-                                            event.stopPropagation();
-                                            window.location.hash = image.id;
-                                        }}
+                                    <Tooltip
+                                        title={
+                                            <Typography variant='overline'>
+                                                Edit labels
+                                            </Typography>
+                                        }
                                     >
-                                        <LabelisatorIcon/>
-                                    </IconButton>
+                                        <IconButton
+                                            className={classes.icon}
+                                            onClick={event => {
+                                                event.stopPropagation();
+                                                window.location.hash = image.id;
+                                            }}
+                                        >
+                                            <LabelisatorIcon/>
+                                        </IconButton>
+                                    </Tooltip>
                                 )}
                                 onClick={() => handleOpenImage(index)}
                             />

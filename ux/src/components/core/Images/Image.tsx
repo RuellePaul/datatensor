@@ -38,9 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
             zIndex: 1000
         },
         '&:hover img': {
-            boxShadow: theme.shadows[6],
-            opacity: 0.85,
-            background: 'rgba(0, 0, 0, 0.25)'
+            filter: 'brightness(0.75)',
         }
     },
     canvas: {
@@ -97,9 +95,8 @@ const DTImage: FC<DTImageProps> = ({
 
     if (clickable)
         return (
-            <div className={clsx(classes.root, className)}>
+            <div className={clsx(classes.root, classes.clickable, className)}>
                 <ButtonBase
-                    className={classes.clickable}
                     {...rest}
                 >
                     <img
