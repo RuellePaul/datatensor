@@ -1,5 +1,6 @@
 import React, {FC, forwardRef, useCallback, useEffect, useState} from 'react';
 import clsx from 'clsx';
+import {useSnackbar} from 'notistack';
 import {Maximize as LabelIcon, Move as MoveIcon} from 'react-feather';
 import {
     AppBar,
@@ -75,7 +76,9 @@ const Transition = forwardRef(function Transition(
 
 
 const DTLabelisator: FC<DTLabelisatorProps> = () => {
+
     const classes = useStyles();
+    const {enqueueSnackbar} = useSnackbar();
 
     const {dataset} = useDataset();
     const {pipeline, savePipeline} = usePipeline();
@@ -162,6 +165,24 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
         setIndex(imageIds.indexOf(image_id))
     }, [imageIds, image_id])
 
+    const handleNextUnlabeledImage = async () => {
+        try {
+            const response = await api.post<{ image_id: string }>(`/search/datasets/${dataset.id}/unlabeled-image-id`,
+                {},
+                {
+                    params: {
+                        offset: index,
+                    }
+                });
+            if (response.data.image_id) {
+                window.location.hash = response.data.image_id;
+            } else
+                enqueueSnackbar('All images have labels', {variant: 'success'});
+        } catch (error) {
+            enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
+        }
+    }
+
     return (
         <Dialog
             className={classes.root}
@@ -219,17 +240,29 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                     Image {imageIds.indexOf(image_id) + 1} / {imageIds.length}
                                 </Typography>
 
-                                <Slider
-                                    min={0}
-                                    max={imageIds.length - 1}
-                                    valueLabelDisplay='auto'
-                                    defaultValue={imageIds.indexOf(image_id)}
-                                    onClick={event => event.stopPropagation()}
-                                    onChangeCommitted={handleSliderChange}
-                                    valueLabelFormat={x => x + 1}
-                                    value={index}
-                                    onChange={(event, value) => setIndex(value as number)}
-                                />
+                                <Box
+                                    display='flex'
+                                    alignItems='center'
+                                >
+                                    <Slider
+                                        min={0}
+                                        max={imageIds.length - 1}
+                                        valueLabelDisplay='auto'
+                                        defaultValue={imageIds.indexOf(image_id)}
+                                        onClick={event => event.stopPropagation()}
+                                        onChangeCommitted={handleSliderChange}
+                                        valueLabelFormat={x => x + 1}
+                                        value={index}
+                                        onChange={(event, value) => setIndex(value as number)}
+                                    />
+
+                                    <Button
+                                        onClick={handleNextUnlabeledImage}
+                                        size='small'
+                                    >
+                                        Next unlabeled image
+                                    </Button>
+                                </Box>
                             </Grid>
                             <Grid
                                 item

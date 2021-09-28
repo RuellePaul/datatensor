@@ -1,8 +1,10 @@
-from typing import List
+from typing import List, Union
 
 from api.config import Config
 from api.routers.categories.models import Category
 from api.routers.datasets.core import find_datasets
+from api.routers.images.core import find_images
+from api.routers.labels.models import Label
 from api.utils import get_unique
 
 db = Config.db
@@ -21,3 +23,22 @@ def search_dataset_ids_from_category_names(category_names: List[str]):
                                                   {'supercategory': {'$regex': query, '$options': 'i'}}]}))
     matched_datasets_ids = [category['dataset_id'] for category in categories]
     return list(set(matched_datasets_ids))
+
+
+def search_unlabeled_image_id(dataset_id, offset) -> Union[str, None]:
+    image_ids = [image.id for image in find_images(dataset_id)]
+    labels = list(db.labels.find({'image_id': {'$in': image_ids}}))
+    labels = [Label.from_mongo(label) for label in labels]
+    unlabeled_image_id = None
+    try:
+        unlabeled_image_id = next(image_id for image_id in image_ids
+                                  if image_id not in [label.image_id for label in labels]
+                                  and image_ids.index(image_id) > offset)
+    except StopIteration:
+        try:
+            if not unlabeled_image_id:
+                unlabeled_image_id = next(image_id for image_id in image_ids
+                                          if image_id not in [label.image_id for label in labels])
+        except StopIteration:
+            pass
+    return unlabeled_image_id

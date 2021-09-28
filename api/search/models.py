@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 from pydantic import BaseModel
 
@@ -29,3 +29,7 @@ class SearchCategoriesResponse(BaseModel):
 
 class SearchDatasetsResponse(BaseModel):
     dataset_ids: List[str]
+
+
+class SearchUnlabeledImageIdResponse(BaseModel):
+    image_id: Union[str, None]
