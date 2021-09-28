@@ -27,12 +27,14 @@ const useStyles = makeStyles((theme: Theme) => ({
         alignItems: 'center',
         padding: `${theme.spacing(2, 2, 1, 2)} !important`,
     },
+    wrapper: {
+        margin: theme.spacing(3, 0, 0, 4),
+        [theme.breakpoints.down('sm')]: {
+            margin: theme.spacing(0, 0, 3)
+        }
+    },
     fullWidth: {
         width: '100%',
-    },
-    header: {
-        borderBottom: `1px dashed ${theme.palette.divider}`,
-        marginBottom: theme.spacing(1)
     }
 }));
 
@@ -135,6 +137,7 @@ const ImagesStackPanel: FC<ImagesStackPanelProps> = ({
                                 item
                                 md={5}
                                 xs={12}
+                                style={{justifyContent: 'center'}}
                             >
                                 <DTImagesStack
                                     onClick={() => setSelected(true)}
@@ -148,7 +151,7 @@ const ImagesStackPanel: FC<ImagesStackPanelProps> = ({
                                 {
                                     pipeline.id
                                         ? (
-                                            <>
+                                            <div className={classes.wrapper}>
                                                 <Typography
                                                     variant='h4'
                                                     color='textPrimary'
@@ -166,9 +169,9 @@ const ImagesStackPanel: FC<ImagesStackPanelProps> = ({
                                                     callback={() => savePipelines(pipelines => pipelines.filter(current => current.id !== pipeline.id))}
                                                 />
 
-                                            </>
+                                            </div>
                                         ) : (
-                                            <>
+                                            <div className={classes.wrapper}>
                                                 <Typography
                                                     variant='h4'
                                                     color='textPrimary'
@@ -205,7 +208,7 @@ const ImagesStackPanel: FC<ImagesStackPanelProps> = ({
                                                 </Typography>
 
                                                 <UploadAction/>
-                                            </>
+                                            </div>
                                         )
                                 }
                             </Grid>
