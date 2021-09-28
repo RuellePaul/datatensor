@@ -55,9 +55,9 @@ const CategoriesDistribution: FC<CategoriesDistributionProps> = ({className, ...
                 },
                 dataLabels: {
                     enabled: true,
-                    offsetY: -20,
+                    offsetY: -25,
                     style: {
-                        fontSize: '12px',
+                        fontSize: '13px',
                         colors: [theme.palette.text.secondary]
                     }
                 },
@@ -69,22 +69,44 @@ const CategoriesDistribution: FC<CategoriesDistributionProps> = ({className, ...
                 },
                 plotOptions: {
                     bar: {
-                        borderRadius: 10,
                         dataLabels: {
                             position: 'top',
                         },
-                        distributed: true
+                        distributed: true,
+                        borderRadius: 0,
+                        columnWidth: '13px'
                     }
                 },
                 tooltip: {
-                    enabled: false
+                    enabled: true,
+                    enabledOnSeries: undefined,
+                    theme: theme.palette.type,
+                    shared: true,
+                    intersect: false,
+                    onDatasetHover: {
+                        highlightDataSeries: true,
+                    },
+                    marker: {
+                        show: false
+                    },
+                    custom: function ({series, seriesIndex, dataPointIndex, w}) {
+
+                        return (
+                            `<div class="apex-tooltip" style="background: ${theme.palette.background.paper}">
+                                ${capitalize(top10categories[dataPointIndex].name)}
+                                <br/>
+                                ${series[seriesIndex][dataPointIndex]}
+                            </div>`
+                        )
+                    }
                 },
                 xaxis: {
                     categories: top10categories.map(category => capitalize(category.name)),
                     labels: {
                         style: {
                             colors: COLORS,
-                            fontSize: '12px'
+                            fontWeight: 'bold',
+                            fontSize: '13px'
                         }
                     }
                 },
