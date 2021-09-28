@@ -239,6 +239,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
 
                                     <NextUnlabeledImageAction
                                         index={index}
+                                        pipeline_id={pipeline?.id}
                                     />
                                 </Box>
                             </Grid>

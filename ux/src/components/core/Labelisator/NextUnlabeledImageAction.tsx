@@ -12,6 +12,7 @@ import api from 'src/utils/api';
 
 interface NextUnlabeledImageActionProps {
     index: number;
+    pipeline_id?: string;
     className?: string;
 }
 
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const NextUnlabeledImageAction: FC<NextUnlabeledImageActionProps> = ({index, className}) => {
+const NextUnlabeledImageAction: FC<NextUnlabeledImageActionProps> = ({index, pipeline_id = null, className}) => {
 
     const classes = useStyles();
 
@@ -54,7 +55,8 @@ const NextUnlabeledImageAction: FC<NextUnlabeledImageActionProps> = ({index, cla
                         {},
                         {
                             params: {
-                                offset: index,
+                                pipeline_id,
+                                offset: index
                             }
                         });
                     if (response.data.image_id)

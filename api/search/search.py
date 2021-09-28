@@ -1,3 +1,5 @@
+from typing import Optional
+
 from fastapi import APIRouter, Depends
 
 from api.dependencies import dataset_belongs_to_user, logged_user
@@ -26,9 +28,10 @@ async def search_datasets_from_category_names(payload: SearchDatasetsPayload):
 
 @search.post('/datasets/{dataset_id}/unlabeled-image-id', response_model=SearchUnlabeledImageIdResponse)
 async def search_next_unlabeled_image(dataset_id,
+                                      pipeline_id: Optional[str] = None,
                                       offset: int = 0,
                                       dataset=Depends(dataset_belongs_to_user)):
     response = {
-        'image_id': search_unlabeled_image_id(dataset_id, offset)
+        'image_id': search_unlabeled_image_id(dataset_id, pipeline_id, offset)
     }
     return parse(response)
