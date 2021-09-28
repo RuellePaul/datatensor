@@ -2,7 +2,8 @@ import React, {FC, useState} from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Masonry from 'react-masonry-css';
 import clsx from 'clsx';
-import {LinearProgress, makeStyles, Typography, useTheme} from '@material-ui/core';
+import {IconButton, LinearProgress, makeStyles, Typography, useTheme} from '@material-ui/core';
+import {Create as LabelisatorIcon} from '@material-ui/icons';
 import DTImage from 'src/components/core/Images/Image';
 import useImages from 'src/hooks/useImages';
 import {Theme} from 'src/theme';
@@ -30,6 +31,15 @@ const useStyles = makeStyles((theme: Theme) => ({
         '& > button': {
             margin: theme.spacing(0, 0, 1)
         }
+    },
+    image: {
+        marginBottom: theme.spacing(1)
+    },
+    icon: {
+        position: 'absolute',
+        bottom: theme.spacing(1),
+        right: theme.spacing(1),
+        color: 'white'
     }
 }));
 
@@ -98,13 +108,20 @@ const DTImagesList: FC<ImagesListProps> = ({
                             image={image}
                         >
                             <DTImage
+                                className={classes.image}
                                 clickable
+                                overlay={(
+                                    <IconButton
+                                        className={classes.icon}
+                                        onClick={event => {
+                                            event.stopPropagation();
+                                            window.location.hash = image.id;
+                                        }}
+                                    >
+                                        <LabelisatorIcon/>
+                                    </IconButton>
+                                )}
                                 onClick={() => handleOpenImage(index)}
-                                style={{
-                                    '& canvas': {
-                                        animationDelay: Math.floor(Math.random() * 1000 * index)
-                                    }
-                                }}
                             />
                         </ImageProvider>
                     ))}

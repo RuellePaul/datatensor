@@ -76,7 +76,7 @@ function ImagesSlideshow() {
                 </Typography>
                 <Button
                     className={classes.button}
-                    onClick={() => document.getElementById('tab-images').click()}
+                    onClick={() => document.getElementById('dt-tab-images').click()}
                     size='small'
                 >
                     View all
