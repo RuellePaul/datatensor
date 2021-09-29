@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
 import {Button, Card, CardActions, CardContent, makeStyles, Typography} from '@material-ui/core';
-import {Create as LabelisatorIcon} from '@material-ui/icons';
+import {CreateOutlined as LabelisatorIcon} from '@material-ui/icons';
 import Categories from 'src/components/core/Dataset/Categories';
 import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';

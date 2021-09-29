@@ -11,7 +11,7 @@ import {
     TextField
 } from '@material-ui/core';
 import {Autocomplete} from '@material-ui/lab';
-import SearchIcon from '@material-ui/icons/Search';
+import {Search as SearchIcon} from '@material-ui/icons';
 import {Theme} from 'src/theme';
 import api from 'src/utils/api';
 import {Category} from 'src/types/category';

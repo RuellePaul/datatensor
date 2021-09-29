@@ -1,8 +1,8 @@
 import React from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import {autoPlay} from 'react-swipeable-views-utils';
-import {Button, Card, makeStyles, MobileStepper, Paper, Typography, useTheme} from '@material-ui/core';
-import {KeyboardArrowLeft, KeyboardArrowRight} from '@material-ui/icons';
+import {Box, Button, Card, makeStyles, MobileStepper, Paper, Typography, useTheme} from '@material-ui/core';
+import {ImageOutlined as ImageIcon, KeyboardArrowLeft, KeyboardArrowRight} from '@material-ui/icons';
 import DTImage from 'src/components/core/Images/Image';
 import useImages from 'src/hooks/useImages';
 import {ImageProvider} from 'src/store/ImageContext';
@@ -68,12 +68,22 @@ function ImagesSlideshow() {
                 elevation={0}
                 className={classes.header}
             >
-                <Typography
-                    variant='overline'
-                    noWrap
+                <Box
+                    display='flex'
+                    alignItems='center'
                 >
-                    {images[activeStep].name}
-                </Typography>
+                    <Box
+                        mr={1}
+                    >
+                        <ImageIcon/>
+                    </Box>
+                    <Typography
+                        variant='overline'
+                        noWrap
+                    >
+                        {images[activeStep].name}
+                    </Typography>
+                </Box>
                 <Button
                     className={classes.button}
                     onClick={() => document.getElementById('dt-tab-images').click()}

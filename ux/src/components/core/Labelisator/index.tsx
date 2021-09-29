@@ -23,7 +23,7 @@ import {
 } from '@material-ui/core';
 import {ToggleButton, ToggleButtonGroup} from '@material-ui/lab';
 import {TransitionProps} from '@material-ui/core/transitions';
-import {Close as CloseIcon, Restore as RestoreIcon} from '@material-ui/icons';
+import {Close as CloseIcon, ImageOutlined as ImageIcon, Restore as RestoreIcon} from '@material-ui/icons';
 import DTCategories from 'src/components/core/Labelisator/Categories';
 import DTImage from 'src/components/core/Images/Image';
 import CategoriesDistribution from 'src/components/charts/CategoriesDistribution';
@@ -214,12 +214,22 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                 xs={12}
                                 style={{paddingBottom: 0}}
                             >
-                                <Typography
-                                    variant='overline'
-                                    color='textPrimary'
+                                <Box
+                                    display='flex'
+                                    alignItems='center'
                                 >
-                                    Image {imageIds.indexOf(image_id) + 1} / {imageIds.length}
-                                </Typography>
+                                    <Box
+                                        mr={1}
+                                    >
+                                        <ImageIcon/>
+                                    </Box>
+                                    <Typography
+                                        variant='overline'
+                                        color='textPrimary'
+                                    >
+                                        Image {imageIds.indexOf(image_id) + 1} / {imageIds.length}
+                                    </Typography>
+                                </Box>
 
                                 <Box
                                     display='flex'

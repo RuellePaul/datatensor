@@ -3,7 +3,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import Masonry from 'react-masonry-css';
 import clsx from 'clsx';
 import {IconButton, LinearProgress, makeStyles, Tooltip, Typography, useTheme} from '@material-ui/core';
-import {Create as LabelisatorIcon} from '@material-ui/icons';
+import {CreateOutlined as LabelisatorIcon} from '@material-ui/icons';
 import DTImage from 'src/components/core/Images/Image';
 import useImages from 'src/hooks/useImages';
 import {Theme} from 'src/theme';

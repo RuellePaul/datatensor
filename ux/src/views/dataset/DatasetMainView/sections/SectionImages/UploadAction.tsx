@@ -1,6 +1,6 @@
 import React, {FC, useState} from 'react';
 import {Box, Button, Dialog, DialogContent, DialogTitle, IconButton, makeStyles, Typography} from '@material-ui/core';
-import {Close as CloseIcon} from '@material-ui/icons';
+import {Close as CloseIcon, PublishOutlined as UploadIcon} from '@material-ui/icons';
 import ImagesDropzone from 'src/components/ImagesDropzone';
 import {Theme} from 'src/theme';
 
@@ -31,7 +31,13 @@ const UploadAction: FC = () => {
     return (
         <>
             <Box display='flex'>
-                <Button variant='contained' color="primary" onClick={handleUploadOpen} size="small">
+                <Button
+                    variant='contained'
+                    color='primary'
+                    endIcon={<UploadIcon/>}
+                    onClick={handleUploadOpen}
+                    size='small'
+                >
                     Upload images
                 </Button>
             </Box>

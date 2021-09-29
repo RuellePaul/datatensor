@@ -1,12 +1,12 @@
 import React, {FC} from 'react';
 import {capitalize, InputAdornment, makeStyles, TextField} from '@material-ui/core';
 import {Autocomplete} from '@material-ui/lab';
-import SearchIcon from '@material-ui/icons/Search';
+import {ImageSearch as SearchIcon} from '@material-ui/icons';
 import {Theme} from 'src/theme';
 import {Category} from 'src/types/category';
 import useDataset from 'src/hooks/useDataset';
 import useCategory from 'src/hooks/useCategory';
-import useImages from '../../../../../hooks/useImages';
+import useImages from 'src/hooks/useImages';
 
 interface FilterCategoriesProps {
     className?: string;
