@@ -30,12 +30,8 @@ const useStyles = makeStyles((theme: Theme) => ({
         marginLeft: 6
     },
     privacyAction: {
-        color: theme.palette.common.white,
-        backgroundColor: theme.palette.warning.main,
-        '&:hover': {
-            backgroundColor: theme.palette.warning.dark
-        }
-
+        color: theme.palette.warning.main,
+        borderColor: theme.palette.warning.main
     },
     close: {
         position: 'absolute',
@@ -93,7 +89,7 @@ const ChangePrivacyAction: FC<ChangePrivacyActionProps> = ({className}) => {
                 className={classes.privacyAction}
                 onClick={handleOpenChangePrivacy}
                 startIcon={<PrivacyIcon/>}
-                variant="contained"
+                variant='outlined'
             >
                 Change privacy
             </Button>
