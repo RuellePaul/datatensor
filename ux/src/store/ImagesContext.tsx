@@ -10,10 +10,12 @@ export interface ImagesContextValue {
     saveImages: (update: Image[] | ((images: Image[]) => Image[])) => void;
     offset: number;
     saveOffset: (update: number | ((offset: number) => number)) => void;
+    totalImagesCount: number | null;
 }
 
 interface ImagesProviderProps {
     pipeline_id?: string;
+    category_id?: string;
     children?: ReactNode;
 }
 
@@ -23,12 +25,14 @@ export const ImagesContext = createContext<ImagesContextValue>({
     },
     offset: LAZY_LOAD_BATCH,
     saveOffset: () => {
-    }
+    },
+    totalImagesCount: null
 });
 
-export const ImagesProvider: FC<ImagesProviderProps> = ({children, pipeline_id}) => {
+export const ImagesProvider: FC<ImagesProviderProps> = ({children, pipeline_id, category_id}) => {
     const [currentImages, setCurrentImages] = useState<Image[] | []>([]);
     const [currentOffset, setCurrentOffset] = useState<number>(0);
+    const [totalImagesCount, setTotalImagesCount] = useState<number | null>(null);
 
     const {dataset} = useDataset();
 
@@ -40,13 +44,28 @@ export const ImagesProvider: FC<ImagesProviderProps> = ({children, pipeline_id})
         try {
             if (currentImages.length >= dataset.image_count) return;
 
-            const response = await api.get<{ images: Image[] }>(`/datasets/${dataset.id}/images/`, {
-                params: {
-                    offset: currentOffset,
-                    limit: LAZY_LOAD_BATCH,
-                    pipeline_id
-                }
-            });
+            let response;
+
+            if (category_id) {
+                response = await api.get<{ images: Image[], total_count: number }>(`/datasets/${dataset.id}/categories/${category_id}/images`, {
+                    params: {
+                        offset: currentOffset,
+                        limit: LAZY_LOAD_BATCH,
+                        pipeline_id
+                    }
+                });
+                setTotalImagesCount(response.data.total_count);
+            } else {
+                response = await api.get<{ images: Image[] }>(`/datasets/${dataset.id}/images/`, {
+                    params: {
+                        offset: currentOffset,
+                        limit: LAZY_LOAD_BATCH,
+                        pipeline_id
+                    }
+                });
+                setTotalImagesCount(null);
+            }
+
             handleSaveImages(images => [...images, ...response.data.images]);
         } catch (err) {
             handleSaveImages([]);
@@ -54,7 +73,7 @@ export const ImagesProvider: FC<ImagesProviderProps> = ({children, pipeline_id})
         }
 
         // eslint-disable-next-line
-    }, [dataset.id, currentOffset, pipeline_id]);
+    }, [dataset.id, currentOffset, pipeline_id, category_id]);
 
     useEffect(() => {
         fetchImages();
@@ -71,7 +90,8 @@ export const ImagesProvider: FC<ImagesProviderProps> = ({children, pipeline_id})
                 images: currentImages,
                 saveImages: handleSaveImages,
                 offset: currentOffset,
-                saveOffset: setCurrentOffset
+                saveOffset: setCurrentOffset,
+                totalImagesCount: totalImagesCount
             }}
         >
             {children}

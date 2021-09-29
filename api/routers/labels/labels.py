@@ -26,9 +26,10 @@ async def get_label(image_id, label_id):
     return parse(response)
 
 
-@labels.post('/')
+@labels.post('/', response_model=Dict[str, int])
 async def post_labels(image_id, payload: LabelPostBody, dataset=Depends(dataset_belongs_to_user)):
     """
     Replace labels to a given image.
     """
-    replace_labels(image_id, payload.labels)
+    response = replace_labels(image_id, payload.labels)
+    return parse(response)

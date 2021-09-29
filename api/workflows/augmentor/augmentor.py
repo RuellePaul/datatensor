@@ -10,7 +10,7 @@ from PIL import Image as PILImage
 from api.config import Config
 from api.routers.images.core import find_images, upload_image
 from api.routers.images.models import Image
-from api.routers.labels.core import find_labels
+from api.routers.labels.core import find_labels, regroup_labels_by_category
 from api.routers.pipelines.core import from_image_path, draw_ellipsis, retrieve_label_from_ellipsis
 from api.routers.pipelines.models import Pipeline
 from api.routers.tasks.models import TaskAugmentorProperties
@@ -67,6 +67,12 @@ def process_augmentation(payload):
     db.images.insert_one(new_image.mongo())
     if new_labels:
         db.labels.insert_many([label.mongo() for label in new_labels])
+
+    for category_id, labels_count in regroup_labels_by_category(new_labels).items():
+        db.categories.find_one_and_update(
+            {'_id': category_id},
+            {'$inc': {'labels_count': labels_count}}
+        )
 
     increment_task_progress(task_id, 1 / image_count)
 

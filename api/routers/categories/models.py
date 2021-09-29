@@ -4,6 +4,7 @@ from typing import List, Optional
 from pydantic import BaseModel, Field
 
 from api.utils import MongoModel
+from api.routers.images.models import Image
 
 
 class SuperCategory(str, Enum):
@@ -27,6 +28,7 @@ class Category(MongoModel):
     dataset_id: str
     name: str
     supercategory: Optional[SuperCategory] = None
+    labels_count: Optional[int] = None
 
 
 class CategoriesResponse(BaseModel):
@@ -35,6 +37,11 @@ class CategoriesResponse(BaseModel):
 
 class CategoryResponse(BaseModel):
     category: Category
+
+
+class ImagesCategoryResponse(BaseModel):
+    images: List[Image]
+    total_count: int
 
 
 class CategoryPostBody(BaseModel):

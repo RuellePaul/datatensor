@@ -15,6 +15,8 @@ import {
 import {OperationType, Pipeline} from './types/pipeline';
 import {SuperCategory} from 'src/types/category';
 
+export const MAX_CATEGORIES_DISPLAYED = 24;
+
 export const SUPERCATEGORIES: SuperCategory[] = [
     'person',
     'vehicle',

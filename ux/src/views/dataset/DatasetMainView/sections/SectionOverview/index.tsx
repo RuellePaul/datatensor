@@ -1,9 +1,10 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
-import {Button, makeStyles} from '@material-ui/core';
+import {Grid, makeStyles} from '@material-ui/core';
 import {Theme} from 'src/theme';
 import {SectionProps} from '../SectionProps';
-import useImages from 'src/hooks/useImages';
+import ImagesSlideshow from 'src/components/core/Images/ImagesSlideshow';
+import LabelisatorAction from './LabelisatorAction';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {}
@@ -14,17 +15,28 @@ const SectionOverview: FC<SectionProps> = ({className}) => {
 
     const classes = useStyles();
 
-    const {images} = useImages();
-
     return (
         <div className={clsx(classes.root, className)}>
-            {images.length > 0 && (
-                <Button
-                    onClick={() => window.location.hash = images[0].id}
+            <Grid
+                container
+                spacing={4}
+                justify='space-between'
+            >
+                <Grid
+                    item
+                    md={8}
+                    xs={12}
                 >
-                    Labelisator
-                </Button>
-            )}
+                    <LabelisatorAction/>
+                </Grid>
+                <Grid
+                    item
+                    md={4}
+                    xs={12}
+                >
+                    <ImagesSlideshow/>
+                </Grid>
+            </Grid>
         </div>
     )
 };

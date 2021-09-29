@@ -1,4 +1,5 @@
 import React, {FC, useState} from 'react';
+import clsx from 'clsx';
 import {
     Box,
     capitalize,
@@ -20,11 +21,11 @@ import {TaskAugmentorProperties, TaskGeneratorProperties, TaskStatus} from 'src/
 import {UserConsumer, UserProvider} from 'src/store/UserContext';
 import {DatasetConsumer, DatasetProvider} from 'src/store/DatasetContext';
 import useTasks from 'src/hooks/useTasks';
+import DTDataset from 'src/components/core/Dataset';
 import FancyLabel from 'src/components/FancyLabel';
 import UserLabel from 'src/components/UserLabel';
 import getDateDiff from 'src/utils/getDateDiff';
-import DTDataset from './Dataset';
-import clsx from 'clsx';
+import {MAX_CATEGORIES_DISPLAYED} from 'src/config';
 
 interface TaskDetailsProps {
 
@@ -103,7 +104,7 @@ const GeneratorProperties: FC<GeneratorProperties> = ({properties}) => {
 
     const classes = useStyles();
 
-    const [expand, setExpand] = useState(false);
+    const [expand, setExpand] = useState<boolean>(false);
 
     return (
         <>
@@ -134,20 +135,20 @@ const GeneratorProperties: FC<GeneratorProperties> = ({properties}) => {
                         </>
                     ) : (
                         <>
-                            {properties.selected_categories.slice(0, 18).map(category => (
+                            {properties.selected_categories.slice(0, MAX_CATEGORIES_DISPLAYED).map(category => (
                                 <Chip
                                     label={capitalize(category)}
                                     variant='outlined'
                                 />
                             ))}
-                            {properties.selected_categories.length > 18 && (
+                            {properties.selected_categories.length > MAX_CATEGORIES_DISPLAYED && (
                                 <Link
                                     className={classes.link}
                                     onClick={() => {
                                         setExpand(true)
                                     }}
                                 >
-                                    and {properties.selected_categories.length - 18} more...
+                                    and {properties.selected_categories.length - MAX_CATEGORIES_DISPLAYED} more...
                                 </Link>
                             )}
                         </>

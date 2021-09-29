@@ -85,80 +85,86 @@ const DatasetMainView: FC = () => {
                     >
                         <ImagesProvider>
                             <PipelineProvider>
+                                <CategoryProvider>
+                                    <TabContext value={tab.toString()}>
+                                        <Container component='section' maxWidth='lg'>
+                                            <Header/>
 
-                                <TabContext value={tab.toString()}>
-                                    <Container component='section' maxWidth='lg'>
-                                        <Header/>
+                                            <WorkingAlert dataset_id={dataset_id}/>
 
-                                        <WorkingAlert dataset_id={dataset_id}/>
+                                            <Box mt={2}>
+                                                <ImagesConsumer>
+                                                    {value => (
+                                                        <Tabs
+                                                            value={tab}
+                                                            onChange={handleTabChange}
+                                                            scrollButtons="auto"
+                                                            variant="scrollable"
+                                                        >
+                                                            <DTTab
+                                                                label="Overview"
+                                                                icon={DashboardOutlined}
+                                                            />
+                                                            <DTTab
+                                                                label="Images"
+                                                                icon={PhotoLibraryOutlined}
+                                                                id='dt-tab-images'
+                                                            />
+                                                            <DTTab
+                                                                label={
+                                                                    value.images.length === 0
+                                                                        ? (
+                                                                            <Tooltip title={(
+                                                                                <Typography variant='h6'>
+                                                                                    You need to upload images first
+                                                                                </Typography>
+                                                                            )}>
+                                                                                <span>Augmentation</span>
+                                                                            </Tooltip>
+                                                                        )
+                                                                        : 'Augmentation'
 
-                                        <Box mt={2}>
-                                            <ImagesConsumer>
-                                                {value => (
-                                                    <Tabs
-                                                        value={tab}
-                                                        onChange={handleTabChange}
-                                                        scrollButtons="auto"
-                                                        variant="scrollable"
-                                                    >
-                                                        <DTTab label="Overview" icon={DashboardOutlined}/>
-                                                        <DTTab label="Images" icon={PhotoLibraryOutlined}/>
-                                                        <DTTab
-                                                            label={
-                                                                value.images.length === 0
-                                                                    ? (
-                                                                        <Tooltip title={(
-                                                                            <Typography variant='h6'>
-                                                                                You need to upload images first
-                                                                            </Typography>
-                                                                        )}>
-                                                                            <span>Augmentation</span>
-                                                                        </Tooltip>
-                                                                    )
-                                                                    : 'Augmentation'
+                                                                }
+                                                                disabled={value.images.length === 0}
+                                                                style={{pointerEvents: 'auto'}}
+                                                                icon={DynamicFeedOutlined}
+                                                            />
 
-                                                            }
-                                                            disabled={value.images.length === 0}
-                                                            style={{pointerEvents: 'auto'}}
-                                                            icon={DynamicFeedOutlined}
-                                                        />
+                                                            <DTTab label="Settings" icon={SettingsOutlined}/>
+                                                        </Tabs>
+                                                    )}
+                                                </ImagesConsumer>
+                                            </Box>
 
-                                                        <DTTab label="Settings" icon={SettingsOutlined}/>
-                                                    </Tabs>
-                                                )}
-                                            </ImagesConsumer>
-                                        </Box>
+                                            <Box mb={3}>
+                                                <Divider/>
+                                            </Box>
 
-                                        <Box mb={3}>
-                                            <Divider/>
-                                        </Box>
+                                            {openedTabs.includes(0) && (
+                                                <SectionOverview
+                                                    className={clsx(tab !== 0 && 'hidden')}
+                                                />
+                                            )}
+                                            {openedTabs.includes(1) && (
+                                                <SectionImages
+                                                    className={clsx(tab !== 1 && 'hidden')}
+                                                />
+                                            )}
+                                            {openedTabs.includes(2) && (
+                                                <SectionAugmentation
+                                                    className={clsx(tab !== 2 && 'hidden')}
+                                                />
+                                            )}
+                                            {openedTabs.includes(3) && (
+                                                <SectionSettings
+                                                    className={clsx(tab !== 3 && 'hidden')}
+                                                />
+                                            )}
+                                        </Container>
 
-                                        {openedTabs.includes(0) && (
-                                            <SectionOverview
-                                                className={clsx(tab !== 0 && 'hidden')}
-                                            />
-                                        )}
-                                        {openedTabs.includes(1) && (
-                                            <SectionImages
-                                                className={clsx(tab !== 1 && 'hidden')}
-                                            />
-                                        )}
-                                        {openedTabs.includes(2) && (
-                                            <SectionAugmentation
-                                                className={clsx(tab !== 2 && 'hidden')}
-                                            />
-                                        )}
-                                        {openedTabs.includes(3) && (
-                                            <SectionSettings
-                                                className={clsx(tab !== 3 && 'hidden')}
-                                            />
-                                        )}
-                                    </Container>
-
-                                    <CategoryProvider>
                                         <DTLabelisator/>
-                                    </CategoryProvider>
-                                </TabContext>
+                                    </TabContext>
+                                </CategoryProvider>
                             </PipelineProvider>
                         </ImagesProvider>
                     </Page>

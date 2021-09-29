@@ -2,12 +2,12 @@ import React, {FC, useState} from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Masonry from 'react-masonry-css';
 import clsx from 'clsx';
-import {LinearProgress, makeStyles, useTheme} from '@material-ui/core';
+import {IconButton, LinearProgress, makeStyles, Tooltip, Typography, useTheme} from '@material-ui/core';
+import {CreateOutlined as LabelisatorIcon} from '@material-ui/icons';
 import DTImage from 'src/components/core/Images/Image';
 import useImages from 'src/hooks/useImages';
 import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
-import {CategoryProvider} from 'src/store/CategoryContext';
 import {ImageProvider} from 'src/store/ImageContext';
 import {LAZY_LOAD_BATCH} from 'src/constants';
 import DTImagePreview from './ImagePreview';
@@ -31,6 +31,16 @@ const useStyles = makeStyles((theme: Theme) => ({
         '& > button': {
             margin: theme.spacing(0, 0, 1)
         }
+    },
+    image: {
+        marginBottom: theme.spacing(1)
+    },
+    icon: {
+        position: 'absolute',
+        bottom: theme.spacing(1),
+        right: theme.spacing(1),
+        color: 'white',
+        background: 'rgba(0, 0, 0, 0.25)'
     }
 }));
 
@@ -43,7 +53,7 @@ const DTImagesList: FC<ImagesListProps> = ({
     const theme = useTheme();
 
     const {dataset, pipelines} = useDataset();
-    const {images, saveOffset} = useImages();
+    const {images, saveOffset, totalImagesCount} = useImages();
 
     const [open, setOpen] = useState(false);
     const [selected, setSelected] = useState(0);
@@ -55,6 +65,16 @@ const DTImagesList: FC<ImagesListProps> = ({
         setSelected(index);
     };
 
+    if (images.length === 0)
+        return (
+            <Typography
+                color='textSecondary'
+                gutterBottom
+            >
+                No images found.
+            </Typography>
+        )
+
     return (
         <div
             className={clsx(classes.root, className)}
@@ -65,9 +85,12 @@ const DTImagesList: FC<ImagesListProps> = ({
                 dataLength={images.length}
                 next={() => saveOffset(offset => offset + LAZY_LOAD_BATCH)}
                 height={700}
-                hasMore={pipeline_id
-                    ? pipelines.find(pipeline => pipeline.id === pipeline_id).image_count > images.length
-                    : dataset.image_count > images.length
+                hasMore={
+                    totalImagesCount
+                        ? totalImagesCount > images.length
+                        : pipeline_id
+                        ? pipelines.find(pipeline => pipeline.id === pipeline_id).image_count > images.length
+                        : dataset.image_count > images.length
                 }
                 loader={<LinearProgress/>}
             >
@@ -86,29 +109,42 @@ const DTImagesList: FC<ImagesListProps> = ({
                             image={image}
                         >
                             <DTImage
+                                className={classes.image}
                                 clickable
+                                overlay={(
+                                    <Tooltip
+                                        title={
+                                            <Typography variant='overline'>
+                                                Edit labels
+                                            </Typography>
+                                        }
+                                    >
+                                        <IconButton
+                                            className={classes.icon}
+                                            onClick={event => {
+                                                event.stopPropagation();
+                                                window.location.hash = image.id;
+                                            }}
+                                        >
+                                            <LabelisatorIcon/>
+                                        </IconButton>
+                                    </Tooltip>
+                                )}
                                 onClick={() => handleOpenImage(index)}
-                                style={{
-                                    '& canvas': {
-                                        animationDelay: Math.floor(Math.random() * 1000 * index)
-                                    }
-                                }}
                             />
                         </ImageProvider>
                     ))}
                 </Masonry>
             </InfiniteScroll>
 
-            <CategoryProvider>
-                {imageSelected && (
-                    <DTImagePreview
-                        open={open}
-                        setOpen={setOpen}
-                        selected={selected}
-                        setSelected={setSelected}
-                    />
-                )}
-            </CategoryProvider>
+            {imageSelected && (
+                <DTImagePreview
+                    open={open}
+                    setOpen={setOpen}
+                    selected={selected}
+                    setSelected={setSelected}
+                />
+            )}
         </div>
     );
 };

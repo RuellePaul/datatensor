@@ -8,6 +8,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
             boxSizing: 'border-box',
             margin: 0,
             padding: 0,
+            fontFamily: theme.typography.fontFamily
         },
         html: {
             '-webkit-font-smoothing': 'antialiased',

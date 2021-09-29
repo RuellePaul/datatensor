@@ -1,7 +1,7 @@
 import React, {FC, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {Button, Dialog, DialogContent, DialogTitle, IconButton, makeStyles, Typography} from '@material-ui/core';
-import {Close as CloseIcon} from '@material-ui/icons';
+import {Close as CloseIcon, VisibilityOutlined as ViewIcon} from '@material-ui/icons';
 import {Theme} from 'src/theme';
 import Pipeline from 'src/components/core/Pipeline';
 import {setDefaultPipeline, setPipeline} from 'src/slices/pipeline';
@@ -51,11 +51,12 @@ const ViewPipelineAction: FC<ViewPipelineActionProps> = ({pipeline_id}) => {
         <>
             <Button
                 className={classes.button}
+                endIcon={<ViewIcon/>}
                 size='small'
                 onClick={handlePipelineOpen}
                 variant='outlined'
             >
-                View operations pipeline
+                Operations pipeline
             </Button>
 
             <Dialog

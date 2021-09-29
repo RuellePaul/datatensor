@@ -1,7 +1,5 @@
 import uuid
-from typing import List
-
-import boto3
+from typing import Dict, List
 
 from api import errors
 from api.config import Config
@@ -10,11 +8,26 @@ from api.routers.labels.models import Label
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 db = Config.db
-s3 = boto3.client(
-    "s3",
-    aws_access_key_id=Config.S3_KEY,
-    aws_secret_access_key=Config.S3_SECRET
-)
+
+
+def regroup_labels_by_category(labels: List[Label]) -> Dict[str, int]:
+    result = {}
+    for label in labels:
+        if label.category_id in result.keys():
+            result[label.category_id] += 1
+        else:
+            result[label.category_id] = 1
+    return result
+
+
+def merge_regrouped_labels(old, new) -> Dict[str, int]:
+    result = new
+    for category_id, labels_count in old.items():
+        if category_id in result.keys():
+            result[category_id] -= labels_count
+        else:
+            result[category_id] = -labels_count
+    return result
 
 
 def find_labels(image_id, offset=0, limit=0) -> List[Label]:
@@ -32,9 +45,32 @@ def find_label(image_id, label_id) -> Label:
     return Label.from_mongo(label)
 
 
-def replace_labels(image_id, labels):
+def find_labels_of_category(category_id) -> List[Label]:
+    labels = db.labels.find({'category_id': category_id})
+    return [Label.from_mongo(label) for label in labels]
+
+
+def replace_labels(image_id, labels) -> Dict[str, int]:
+    # Find current image labels
+    old_labels = find_labels(image_id)
+
+    # Delete these labels
     db.labels.delete_many({'image_id': image_id})
+
+    # Update labels_count on associated categories
+    old = regroup_labels_by_category(old_labels)
+    new = regroup_labels_by_category(labels)
+    merged = merge_regrouped_labels(old, new)
+    for category_id, labels_count in merged.items():
+        db.categories.find_one_and_update(
+            {'_id': category_id},
+            {'$inc': {'labels_count': labels_count}}
+        )
+
+    # Insert new labels
     if labels:
         db.labels.insert_many([{**label.dict(),
                                 'image_id': image_id,
                                 '_id': str(uuid.uuid4())} for label in labels])
+
+    return merged

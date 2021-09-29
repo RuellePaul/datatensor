@@ -5,7 +5,7 @@ from uuid import uuid4
 from api import errors
 from api.config import Config
 from api.routers.datasets.models import Dataset, DatasetPostBody, DatasetPatchPrivacyBody
-from api.routers.images.core import delete_images_from_s3, find_all_images
+from api.routers.images.core import find_all_images, remove_images
 
 db = Config.db
 
@@ -72,11 +72,8 @@ def remove_dataset(user_id, dataset_id):
         raise errors.Forbidden(errors.NOT_YOUR_DATASET)
 
     images = find_all_images(dataset_id)
-    if images:
-        image_ids_to_remove = [image.id for image in images]
-        delete_images_from_s3(image_ids_to_remove)
-        db.images.delete_many({'dataset_id': dataset_id})
-        db.labels.delete_many({'image_id': {'$in': image_ids_to_remove}})
+    image_ids = [image.id for image in images]
+    remove_images(dataset_id, image_ids)
 
     db.categories.delete_many({'dataset_id': dataset_id})
     db.tasks.delete_many({'dataset_id': dataset_id})

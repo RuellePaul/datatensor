@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useRef, useState} from 'react';
+import React, {FC, ReactNode, useEffect, useRef, useState} from 'react';
 import clsx from 'clsx';
 import {ButtonBase, makeStyles} from '@material-ui/core';
 import {Theme} from 'src/theme';
@@ -11,6 +11,7 @@ import {Skeleton, useTabContext} from '@material-ui/lab';
 interface DTImageProps {
     className?: string;
     clickable?: boolean;
+    overlay?: ReactNode;
     skeleton?: boolean;
     fullWidth?: boolean;
     onClick?: () => void;
@@ -19,15 +20,25 @@ interface DTImageProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        position: 'relative'
+        position: 'relative',
+        '& .overlay': {
+            display: 'none',
+            zIndex: 1100,
+            '& > *': {
+                zIndex: 1100
+            }
+        },
+        '&:hover .overlay': {
+            display: 'initial !important'
+        }
     },
     clickable: {
+        zIndex: 1000,
         '& .MuiTouchRipple-root': {
             zIndex: 1000
         },
         '&:hover img': {
-            boxShadow: theme.shadows[6],
-            opacity: 0.85,
+            filter: 'brightness(0.75)',
         }
     },
     canvas: {
@@ -48,6 +59,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const DTImage: FC<DTImageProps> = ({
                                        className,
                                        clickable = false,
+                                       overlay = null,
                                        skeleton = false,
                                        fullWidth = false,
                                        ...rest
@@ -83,23 +95,29 @@ const DTImage: FC<DTImageProps> = ({
 
     if (clickable)
         return (
-            <ButtonBase
-                className={clsx(classes.root, classes.clickable, className)}
-                {...rest}
-            >
-                <img
-                    src={image.path}
-                    alt={image.name}
-                    width="100%"
-                    draggable={false}
-                    onLoad={handleLoad}
-                    ref={imageRef}
-                />
-                <canvas
-                    className={clsx(classes.canvas)}
-                    ref={canvasRef}
-                />
-            </ButtonBase>
+            <div className={clsx(classes.root, classes.clickable, className)}>
+                <ButtonBase
+                    {...rest}
+                >
+                    <img
+                        src={image?.path}
+                        alt={image?.name}
+                        width="100%"
+                        draggable={false}
+                        onLoad={handleLoad}
+                        ref={imageRef}
+                    />
+                    <canvas
+                        className={classes.canvas}
+                        ref={canvasRef}
+                    />
+                </ButtonBase>
+                {overlay && (
+                    <div className='overlay'>
+                        {overlay}
+                    </div>
+                )}
+            </div>
         );
 
     return (
@@ -108,8 +126,8 @@ const DTImage: FC<DTImageProps> = ({
                 <Skeleton
                     className={clsx(classes.skeleton, loaded && 'hidden')}
                     animation='wave'
-                    width={fullWidth ? '100%' : image.width}
-                    height={image.height}
+                    width={fullWidth ? '100%' : image?.width}
+                    height={image?.height}
                     variant='rect'
                 />
             )}
@@ -118,8 +136,8 @@ const DTImage: FC<DTImageProps> = ({
                 {...rest}
             >
                 <img
-                    src={image.path}
-                    alt={image.name}
+                    src={image?.path}
+                    alt={image?.name}
                     width="100%"
                     draggable={false}
                     onLoad={handleLoad}

@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         width: '100%',
         maxWidth: 440,
         height: 300,
-        margin: theme.spacing(1, 0, 3),
+        margin: theme.spacing(1, 'auto', 2),
         '&:hover': {
             '& .layer-0': {
                 transform: 'scale(1.01)'
@@ -119,7 +119,6 @@ const DTImagesStack: FC<ImagesListProps> = ({
                     </div>
                 ))
             }
-
         </div>
     );
 };

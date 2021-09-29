@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import {makeStyles, Typography} from '@material-ui/core';
 import FancyLabel from 'src/components/FancyLabel';
 import useDataset from 'src/hooks/useDataset';
+import {CategoryProvider} from 'src/store/CategoryContext';
 import {ImagesProvider} from 'src/store/ImagesContext';
 import {Theme} from 'src/theme';
 import ImagesStackPanel from './ImagesStackPanel';
@@ -12,19 +13,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     root: {},
     label: {
         margin: theme.spacing(1, 2, 1, 0)
-    },
-    title: {
-        position: 'relative',
-        '&:after': {
-            position: 'absolute',
-            bottom: -8,
-            left: 0,
-            content: '" "',
-            height: 3,
-            width: 68,
-            backgroundColor: theme.palette.primary.main
-        }
-    },
+    }
 }));
 
 const SectionImages: FC<SectionProps> = ({className}) => {
@@ -35,14 +24,6 @@ const SectionImages: FC<SectionProps> = ({className}) => {
 
     return (
         <div className={clsx(classes.root, className)}>
-            <Typography
-                className={classes.title}
-                variant="h3"
-                color="textPrimary"
-                gutterBottom
-            >
-                All images
-            </Typography>
 
             <Typography
                 color="textPrimary"
@@ -68,21 +49,22 @@ const SectionImages: FC<SectionProps> = ({className}) => {
                 </FancyLabel>
             </Typography>
 
-            <ImagesStackPanel
-                title={`Original images (${dataset.image_count})`}
-            />
+            <CategoryProvider>
+                <ImagesStackPanel/>
+            </CategoryProvider>
 
-            {pipelines.map(pipeline => (
-                <ImagesProvider
-                    key={pipeline.id}
-                    pipeline_id={pipeline.id}
-                >
-                    <ImagesStackPanel
-                        title={`Augmented images (${pipeline.image_count})`}
+            <CategoryProvider>
+                {pipelines.map(pipeline => (
+                    <ImagesProvider
+                        key={pipeline.id}
                         pipeline_id={pipeline.id}
-                    />
-                </ImagesProvider>
-            ))}
+                    >
+                        <ImagesStackPanel
+                            pipeline={pipeline}
+                        />
+                    </ImagesProvider>
+                ))}
+            </CategoryProvider>
         </div>
     )
 };

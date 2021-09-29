@@ -34,23 +34,6 @@ import {Operation} from 'src/types/pipeline';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
-    header: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-    },
-    title: {
-        position: 'relative',
-        '&:after': {
-            position: 'absolute',
-            bottom: -8,
-            left: 0,
-            content: '""',
-            height: 3,
-            width: 48,
-            backgroundColor: theme.palette.primary.main
-        }
-    },
     wrapper: {
         border: `solid 1px ${theme.palette.divider}`,
         borderRadius: theme.spacing(0.5)
@@ -115,29 +98,6 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
 
     return (
         <div className={clsx(classes.root, className)}>
-            <div className={classes.header}>
-                <Typography
-                    className={classes.title}
-                    variant='h5'
-                    color='textPrimary'
-                >
-                    Images augmentation
-                </Typography>
-
-                <Box
-                    display='flex'
-                >
-                    <Button
-                        variant='contained'
-                        color='primary'
-                        size='small'
-                        onClick={handleOpen}
-                    >
-                        Augment images
-                    </Button>
-                </Box>
-            </div>
-
             <Box my={2}>
                 <Typography
                     color='textSecondary'
@@ -218,6 +178,14 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                     </Grid>
                 </Grid>
             </ImageProvider>
+
+            <Button
+                variant='contained'
+                color='primary'
+                onClick={handleOpen}
+            >
+                Augment images
+            </Button>
 
             <Dialog
                 closeAfterTransition

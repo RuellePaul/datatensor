@@ -2,7 +2,7 @@ import React, {FC, useState} from 'react';
 import clsx from 'clsx';
 import {useSnackbar} from 'notistack';
 import {Button, CircularProgress, makeStyles} from '@material-ui/core';
-import {Delete} from '@material-ui/icons';
+import {Delete as DeleteIcon} from '@material-ui/icons';
 import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
 import api from 'src/utils/api';
@@ -20,7 +20,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         width: '20px !important',
         height: '20px !important'
     }
-
 }));
 
 interface DeletePipelineActionProps {
@@ -71,13 +70,13 @@ const DeletePipelineAction: FC<DeletePipelineActionProps> = ({pipeline_id, callb
             <Button
                 className={clsx((activeTasksCount === 0 && !isDeleting) && classes.deleteAction)}
                 variant='outlined'
-                startIcon={<Delete/>}
-                endIcon={isDeleting && (
-                    <CircularProgress
+                endIcon={isDeleting
+                    ? <CircularProgress
                         className={classes.loader}
                         color="inherit"
                     />
-                )}
+                    : <DeleteIcon/>
+                }
                 onClick={handleDeletePipeline}
                 size='small'
                 disabled={isDeleting || activeTasksCount > 0}

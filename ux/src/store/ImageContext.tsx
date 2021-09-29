@@ -36,7 +36,7 @@ export const ImageContext = createContext<ImageContextValue>({
 
 export const ImageProvider: FC<ImageProviderProps> = ({image, children}) => {
 
-    const {dataset} = useDataset();
+    const {dataset, saveCategories} = useDataset();
     const {enqueueSnackbar} = useSnackbar();
 
     const [currentLabels, setCurrentLabels] = useState<Label[]>(null);
@@ -66,9 +66,14 @@ export const ImageProvider: FC<ImageProviderProps> = ({image, children}) => {
 
     const validateLabels = async () => {
         try {
-            await api.post(`/datasets/${dataset.id}/images/${image.id}/labels/`, {labels: currentLabels});
+            const response = await api.post<any>(`/datasets/${dataset.id}/images/${image.id}/labels/`, {labels: currentLabels});
+            saveCategories(categories => categories.map(category => (
+                {
+                    ...category,
+                    labels_count: category.labels_count + (response.data[category.id] ? response.data[category.id] : 0)
+                }
+            )))
             enqueueSnackbar('Labels updated', {variant: 'info'});
-            setPositions([currentLabels]);
 
         } catch (error) {
             enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
