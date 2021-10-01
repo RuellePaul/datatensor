@@ -1,7 +1,6 @@
 import os
 
 import uvicorn
-from apscheduler.schedulers.background import BackgroundScheduler
 from fastapi import FastAPI, Depends, Request, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
@@ -26,10 +25,12 @@ from api.routers.users.users import users
 from api.search.search import search
 from api.socket.socket import sockets
 
-app = FastAPI()
-
-scheduler = BackgroundScheduler()
-scheduler.start()
+app = FastAPI(
+    title='Datatensor API',
+    description='Datatensor API Documentation | With valid access token, interact with Datatensor collections such as '
+                'datasets, images, labels, categories and more...',
+    version='0.7.1'
+)
 
 config_name = os.getenv('FLASK_UI_CONFIGURATION', 'development')
 

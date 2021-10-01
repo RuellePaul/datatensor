@@ -1,5 +1,4 @@
 aiofiles==0.7.0
-apscheduler==3.7.0
 augmentor==0.2.8
 boto3==1.17.103
 celery==5.1.2
