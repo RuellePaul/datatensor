@@ -3,7 +3,7 @@ import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
 import {Breadcrumbs, Button, Grid, makeStyles, SvgIcon, Typography} from '@material-ui/core';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import {PlusCircle as PlusIcon} from 'react-feather';
+import {Plus as PlusIcon} from 'react-feather';
 
 interface HeaderProps {
     className?: string;

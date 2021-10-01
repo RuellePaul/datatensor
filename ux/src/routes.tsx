@@ -2,6 +2,7 @@ import React, {Fragment, lazy, Suspense} from 'react';
 import {Redirect, Route, Switch} from 'react-router-dom';
 import DashboardLayout from 'src/layouts/DashboardLayout';
 import MainLayout from 'src/layouts/MainLayout';
+import DocsLayout from 'src/layouts/DocsLayout';
 import HomeView from 'src/views/home/HomeView';
 import LoadingScreen from 'src/components/screens/LoadingScreen';
 import AuthGuard from 'src/components/guards/AuthGuard';
@@ -123,6 +124,25 @@ const routes: Routes = [
                 exact: true,
                 path: '/app',
                 component: () => <Redirect to="/app/dashboard"/>
+            },
+            {
+                component: () => <Redirect to="/404"/>
+            }
+        ]
+    },
+    {
+        path: '/docs',
+        layout: DocsLayout,
+        routes: [
+            {
+                exact: true,
+                path: '/docs',
+                component: () => <Redirect to="/docs/getting-started"/>
+            },
+            {
+                exact: true,
+                path: '/docs/getting-started',
+                component: lazy(() => import('src/views/docs/GettingStartedView'))
             },
             {
                 component: () => <Redirect to="/404"/>
