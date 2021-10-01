@@ -1,6 +1,6 @@
 import React, {FC, ReactNode} from 'react';
 import clsx from 'clsx';
-import {fade, makeStyles} from '@material-ui/core';
+import {alpha, makeStyles} from '@material-ui/core';
 import {Theme} from 'src/theme';
 
 interface FancyLabelProps {
@@ -31,31 +31,31 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     primary: {
         color: theme.palette.primary.main,
-        backgroundColor: fade(theme.palette.primary.main, 0.08)
+        backgroundColor: alpha(theme.palette.primary.main, 0.08)
     },
     secondary: {
         color: theme.palette.secondary.main,
-        backgroundColor: fade(theme.palette.secondary.main, 0.08)
+        backgroundColor: alpha(theme.palette.secondary.main, 0.08)
     },
     error: {
         color: theme.palette.error.main,
-        backgroundColor: fade(theme.palette.error.main, 0.08)
+        backgroundColor: alpha(theme.palette.error.main, 0.08)
     },
     success: {
         color: theme.palette.success.main,
-        backgroundColor: fade(theme.palette.success.main, 0.08)
+        backgroundColor: alpha(theme.palette.success.main, 0.08)
     },
     warning: {
         color: theme.palette.warning.main,
-        backgroundColor: fade(theme.palette.warning.main, 0.08)
+        backgroundColor: alpha(theme.palette.warning.main, 0.08)
     },
     info: {
         color: theme.palette.info.main,
-        backgroundColor: fade(theme.palette.info.main, 0.08)
+        backgroundColor: alpha(theme.palette.info.main, 0.08)
     },
     default: {
         color: theme.palette.text.primary,
-        backgroundColor: fade(theme.palette.text.primary, 0.08)
+        backgroundColor: alpha(theme.palette.text.primary, 0.08)
     },
 }));
 

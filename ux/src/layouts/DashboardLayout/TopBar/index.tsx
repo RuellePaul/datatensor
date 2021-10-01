@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
             boxShadow: 'none',
             backgroundColor: theme.palette.primary.main
         } : {},
-        ...theme.name === THEMES.ONE_DARK ? {
+        ...theme.name === THEMES.DARK ? {
             backgroundColor: theme.palette.background.default
         } : {}
     },

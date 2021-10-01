@@ -27,7 +27,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
         <Grid
             alignItems="center"
             container
-            justify="space-between"
+            justifyContent="space-between"
             spacing={3}
             className={clsx(classes.root, className)}
             {...rest}

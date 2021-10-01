@@ -20,7 +20,7 @@ const SectionOverview: FC<SectionProps> = ({className}) => {
             <Grid
                 container
                 spacing={4}
-                justify='space-between'
+                justifyContent='space-between'
             >
                 <Grid
                     item

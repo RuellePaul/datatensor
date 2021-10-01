@@ -24,7 +24,7 @@ const SettingsNotification: FC = () => {
     const {saveSettings} = useSettings();
 
     const handleSwitch = (): void => {
-        saveSettings({theme: THEMES.ONE_DARK});
+        saveSettings({theme: THEMES.DARK});
         Cookies.set('settingsUpdated', 'true');
         setOpen(false);
     };

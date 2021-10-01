@@ -20,7 +20,6 @@ const InnerSettingsProviders: FC = ({children}) => {
     const {settings} = useSettings();
 
     const theme = createTheme({
-        direction: settings.direction,
         theme: settings.theme
     });
 
