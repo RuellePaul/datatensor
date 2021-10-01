@@ -27,8 +27,6 @@ from api.socket.socket import sockets
 
 app = FastAPI(
     title='Datatensor API',
-    description='Datatensor API Documentation | With valid access token, interact with Datatensor collections such as '
-                'datasets, images, labels, categories and more...',
     version='0.7.1'
 )
 

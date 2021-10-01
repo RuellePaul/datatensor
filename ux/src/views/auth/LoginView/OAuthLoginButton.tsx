@@ -86,8 +86,9 @@ const OAuthLoginButton: FC<OAuthLoginButtonProps> = ({scope}) => {
                     });
                 }
             }}
+            color="inherit"
             size="large"
-            variant="contained"
+            variant="outlined"
         >
             {OAUTH_ICONS[scope]}
             &nbsp;
