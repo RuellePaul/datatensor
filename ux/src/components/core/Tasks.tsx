@@ -1,5 +1,6 @@
 import React, {FC} from 'react';
-import {Box, capitalize, LinearProgress, makeStyles, Typography} from '@material-ui/core';
+import {Box, capitalize, LinearProgress, Typography} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import {
     DataGrid,
     GridCellParams,
@@ -7,7 +8,7 @@ import {
     GridOverlay,
     GridRowParams,
     GridSortDirection
-} from '@material-ui/data-grid';
+} from '@mui/x-data-grid';
 import useTasks from 'src/hooks/useTasks';
 import {Theme} from 'src/theme';
 import {UserConsumer, UserProvider} from 'src/store/UserContext';
@@ -18,7 +19,7 @@ import UserLabel from 'src/components/UserLabel';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        background: theme.palette.background.paper,
+        background: theme.palette.background.default,
         borderColor: `${theme.palette.divider} !important`,
         '& *': {
             borderColor: `${theme.palette.divider} !important`
@@ -27,11 +28,10 @@ const useStyles = makeStyles((theme: Theme) => ({
             color: theme.palette.text.secondary
         },
         '& .Mui-even': {
-            background: theme.palette.background.dark,
+            background: theme.palette.background.paper
         }
     }
 }));
-
 
 const columns: GridColDef[] = [
     {
@@ -41,30 +41,26 @@ const columns: GridColDef[] = [
         renderCell: (params: GridCellParams) => (
             <UserProvider user_id={params.value.toString()}>
                 <UserConsumer>
-                    {
-                        value => <UserLabel user={value.user}/>
-                    }
+                    {value => <UserLabel user={value.user} />}
                 </UserConsumer>
             </UserProvider>
-        ),
+        )
     },
     {
         field: 'type',
         headerName: 'Name',
         width: 160,
         renderCell: (params: GridCellParams) => (
-            <strong>
-                {capitalize(params.value as TaskType)}
-            </strong>
-        ),
+            <strong>{capitalize(params.value as TaskType)}</strong>
+        )
     },
     {
         field: 'status',
         headerName: 'Status',
         width: 120,
         renderCell: (params: GridCellParams) => (
-            <TaskStatusLabel status={params.value as TaskStatus}/>
-        ),
+            <TaskStatusLabel status={params.value as TaskStatus} />
+        )
     },
     {
         field: 'progress',
@@ -73,82 +69,80 @@ const columns: GridColDef[] = [
         renderCell: (params: GridCellParams) => {
             if (params.row.status === 'failed')
                 return (
-                    <Typography variant='body2' color='error' noWrap>
+                    <Typography variant="body2" color="error" noWrap>
                         {params.row.error}
                     </Typography>
                 );
             if (params.row.status === 'pending')
                 return (
-                    <LinearProgress
-                        variant='query'
-                        style={{width: '100%'}}
-                    />
+                    <LinearProgress variant="query" style={{width: '100%'}} />
                 );
             if (params.row.status === 'success')
                 return (
-                    <Typography variant='body2' color='textSecondary' noWrap>
-                        Done in {' '}
-                        {getDateDiff(params.row.created_at, params.row.ended_at)}
+                    <Typography variant="body2" color="textSecondary" noWrap>
+                        Done in{' '}
+                        {getDateDiff(
+                            params.row.created_at,
+                            params.row.ended_at
+                        )}
                     </Typography>
                 );
             return (
                 <>
-                    <Box width='100%' mr={1}>
+                    <Box width="100%" mr={1}>
                         <LinearProgress
-                            variant={(params.row.progress <= 0 || params.row.progress) >= 1 ? 'query' : 'determinate'}
-                            value={params.row.status === 'success' ? 100 : 100 * (params.value as number)}
+                            variant={
+                                (params.row.progress <= 0 ||
+                                    params.row.progress) >= 1
+                                    ? 'query'
+                                    : 'determinate'
+                            }
+                            value={
+                                params.row.status === 'success'
+                                    ? 100
+                                    : 100 * (params.value as number)
+                            }
                         />
                     </Box>
                     <Box minWidth={35}>
-                        <Typography
-                            variant='body2'
-                            color='textSecondary'
-                        >
+                        <Typography variant="body2" color="textSecondary">
                             {`${(100 * params.row.progress).toFixed()}%`}
                         </Typography>
                     </Box>
                 </>
-
-            )
-        },
+            );
+        }
     },
     {
         field: 'created_at',
         headerName: 'Created',
         width: 180,
         renderCell: (params: GridCellParams) => (
-            <Typography
-                variant='body2'
-                color='textSecondary'
-            >
+            <Typography variant="body2" color="textSecondary">
                 {getDateDiff(new Date(), params.value, 'passed_event')}
             </Typography>
         )
     }
 ];
 
-
-interface TaskProps {
-
-}
+interface TaskProps {}
 
 const LoadingOverlay: FC = () => (
     <GridOverlay>
         <div style={{position: 'absolute', top: 0, width: '100%'}}>
-            <LinearProgress/>
+            <LinearProgress />
         </div>
     </GridOverlay>
 );
 
 const DTTasks: FC<TaskProps> = () => {
-
     const classes = useStyles();
 
     const {tasks, saveSelectedTask} = useTasks();
 
     const handleRowClick = (params: GridRowParams) => {
         saveSelectedTask(params.row as Task);
-    }
+    };
 
     return (
         <DataGrid
@@ -165,8 +159,8 @@ const DTTasks: FC<TaskProps> = () => {
             sortModel={[
                 {
                     field: 'created_at',
-                    sort: 'desc' as GridSortDirection,
-                },
+                    sort: 'desc' as GridSortDirection
+                }
             ]}
             components={{
                 LoadingOverlay

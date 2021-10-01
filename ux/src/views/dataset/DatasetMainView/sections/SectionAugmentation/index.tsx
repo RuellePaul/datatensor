@@ -4,6 +4,7 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {useSnackbar} from 'notistack';
 import {
+    Alert,
     Box,
     Button,
     Dialog,
@@ -12,12 +13,11 @@ import {
     FormHelperText,
     Grid,
     IconButton,
-    makeStyles,
     TextField,
     Typography
-} from '@material-ui/core';
-import {Close as CloseIcon, Refresh} from '@material-ui/icons';
-import {Alert} from '@material-ui/lab';
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {Close as CloseIcon, Refresh} from '@mui/icons-material';
 import {Theme} from 'src/theme';
 import Pipeline from 'src/components/core/Pipeline';
 import PipelineSample from 'src/components/core/PipelineSample';
@@ -53,9 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-
 const SectionAugmentation: FC<SectionProps> = ({className}) => {
-
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
 
@@ -69,11 +67,11 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
 
     const handleOpen = () => {
         setOpenAugmentation(true);
-    }
+    };
 
     const handleClose = () => {
         setOpenAugmentation(false);
-    }
+    };
 
     const pickRandomImage = useCallback(() => {
         if (images && images.length > 1) {
@@ -93,37 +91,27 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
         // eslint-disable-next-line
     }, [images]);
 
-    const pipeline = useSelector<any>((state) => state.pipeline);
-    const operations: Operation[] = pipeline.operations.allIds.map(id => pipeline.operations.byId[id]);
+    const pipeline = useSelector<any>(state => state.pipeline);
+    const operations: Operation[] = pipeline.operations.allIds.map(
+        id => pipeline.operations.byId[id]
+    );
 
     return (
         <div className={clsx(classes.root, className)}>
             <Box my={2}>
-                <Typography
-                    color='textSecondary'
-                    gutterBottom
-                >
-                    Choose operations pipeline that fit the best for your dataset.
+                <Typography color="textSecondary" gutterBottom>
+                    Choose operations pipeline that fit the best for your
+                    dataset.
                 </Typography>
             </Box>
 
-            <ImageProvider
-                image={images[randomIndex]}
-            >
-                <Grid
-                    container
-                    spacing={3}
-                >
-                    <Grid
-                        item
-                        md={3}
-                        sm={6}
-                        xs={12}
-                    >
+            <ImageProvider image={images[randomIndex]}>
+                <Grid container spacing={3}>
+                    <Grid item md={3} sm={6} xs={12}>
                         <Typography
-                            variant='overline'
-                            color='textPrimary'
-                            align='center'
+                            variant="overline"
+                            color="textPrimary"
+                            align="center"
                             gutterBottom
                         >
                             Input image
@@ -133,57 +121,44 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                             <Button
                                 className={classes.refresh}
                                 onClick={pickRandomImage}
-                                startIcon={<Refresh/>}
-                                size='small'
+                                startIcon={<Refresh />}
+                                size="small"
                                 disabled={images.length < 2}
                             >
                                 Random image
                             </Button>
 
-                            <DTImage/>
+                            <DTImage />
                         </div>
                     </Grid>
-                    <Grid
-                        item
-                        md={3}
-                        sm={6}
-                        xs={12}
-                    >
+                    <Grid item md={3} sm={6} xs={12}>
                         <Typography
-                            variant='overline'
-                            color='textPrimary'
-                            align='center'
+                            variant="overline"
+                            color="textPrimary"
+                            align="center"
                             gutterBottom
                         >
                             Operations pipeline
                         </Typography>
 
-                        <Pipeline/>
+                        <Pipeline />
                     </Grid>
-                    <Grid
-                        item
-                        md={6}
-                        xs={12}
-                    >
+                    <Grid item md={6} xs={12}>
                         <Typography
-                            variant='overline'
-                            color='textPrimary'
-                            align='center'
+                            variant="overline"
+                            color="textPrimary"
+                            align="center"
                             gutterBottom
                         >
                             Sample
                         </Typography>
 
-                        <PipelineSample/>
+                        <PipelineSample />
                     </Grid>
                 </Grid>
             </ImageProvider>
 
-            <Button
-                variant='contained'
-                color='primary'
-                onClick={handleOpen}
-            >
+            <Button variant="contained" color="primary" onClick={handleOpen}>
                 Augment images
             </Button>
 
@@ -194,63 +169,59 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                     className: classes.dialog
                 }}
                 fullWidth
-                maxWidth='sm'
+                maxWidth="sm"
                 open={openAugmentation}
                 onClose={handleClose}
             >
-                <DialogTitle
-                    className='flex'
-                    disableTypography
-                >
-                    <Typography variant='h4'>
-                        Augmentation
-                    </Typography>
+                <DialogTitle className="flex">
+                    <Typography variant="h4">Augmentation</Typography>
 
                     <IconButton
                         className={classes.close}
                         onClick={handleClose}
+                        size="large"
                     >
-                        <CloseIcon/>
+                        <CloseIcon />
                     </IconButton>
                 </DialogTitle>
-                <DialogContent
-                    className='scroll'
-                >
-                    <Grid
-                        container
-                        spacing={2}
-                    >
-                        <Grid
-                            item
-                            sm={6}
-                            xs={12}
-                        >
+                <DialogContent className="scroll">
+                    <Grid container spacing={2}>
+                        <Grid item sm={6} xs={12}>
                             <Formik
                                 initialValues={{
                                     image_count: dataset.image_count * 2,
                                     submit: null
                                 }}
                                 validationSchema={Yup.object().shape({
-                                    image_count: Yup.number().min(1).max(10 * dataset.image_count),
+                                    image_count: Yup.number()
+                                        .min(1)
+                                        .max(10 * dataset.image_count)
                                 })}
-                                onSubmit={async (values, {
-                                    setErrors,
-                                    setStatus,
-                                    setSubmitting
-                                }) => {
+                                onSubmit={async (
+                                    values,
+                                    {setErrors, setStatus, setSubmitting}
+                                ) => {
                                     try {
-                                        const response = await api.post<{ task: Task }>(`/datasets/${dataset.id}/tasks/`, {
+                                        const response = await api.post<{
+                                            task: Task;
+                                        }>(`/datasets/${dataset.id}/tasks/`, {
                                             type: 'augmentor',
                                             properties: {
                                                 operations,
                                                 image_count: values.image_count
                                             }
                                         });
-                                        saveTasks(tasks => [...tasks, response.data.task]);
+                                        saveTasks(tasks => [
+                                            ...tasks,
+                                            response.data.task
+                                        ]);
 
                                         setStatus({success: true});
                                         setSubmitting(false);
-                                        enqueueSnackbar('Augmentation task created', {variant: 'info'});
+                                        enqueueSnackbar(
+                                            'Augmentation task created',
+                                            {variant: 'info'}
+                                        );
                                         handleClose();
                                     } catch (err) {
                                         console.error(err);
@@ -261,22 +232,25 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                                 }}
                             >
                                 {({
-                                      errors,
-                                      handleBlur,
-                                      handleChange,
-                                      handleSubmit,
-                                      isSubmitting,
-                                      touched,
-                                      values
-                                  }) => (
+                                    errors,
+                                    handleBlur,
+                                    handleChange,
+                                    handleSubmit,
+                                    isSubmitting,
+                                    touched,
+                                    values
+                                }) => (
                                     <form
                                         onSubmit={handleSubmit}
-                                        className={clsx(classes.root, className)}
+                                        className={clsx(
+                                            classes.root,
+                                            className
+                                        )}
                                     >
                                         <Typography
-                                            variant='overline'
-                                            color='textPrimary'
-                                            align='center'
+                                            variant="overline"
+                                            color="textPrimary"
+                                            align="center"
                                             gutterBottom
                                         >
                                             Properties
@@ -284,33 +258,37 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
 
                                         <Box my={1}>
                                             <TextField
-                                                error={Boolean(touched.image_count && errors.image_count)}
-                                                helperText={touched.image_count && errors.image_count}
+                                                error={Boolean(
+                                                    touched.image_count &&
+                                                        errors.image_count
+                                                )}
+                                                helperText={
+                                                    touched.image_count &&
+                                                    errors.image_count
+                                                }
                                                 fullWidth
-                                                label='Image count'
-                                                name='image_count'
+                                                label="Image count"
+                                                name="image_count"
                                                 onBlur={handleBlur}
                                                 onChange={handleChange}
-                                                type='number'
+                                                type="number"
                                                 value={values.image_count}
-                                                variant='outlined'
+                                                variant="outlined"
                                             />
                                         </Box>
 
                                         <Box mt={2} mb={3}>
-                                            <Alert
-                                                severity='info'
-                                            >
-                                                There are
-                                                {' '}
+                                            <Alert severity="info">
+                                                There are{' '}
                                                 <strong>
-                                                    {dataset.image_count} original images
-                                                </strong>
-                                                {' '}
-                                                in your dataset, so you can generate up to
-                                                {' '}
+                                                    {dataset.image_count}{' '}
+                                                    original images
+                                                </strong>{' '}
+                                                in your dataset, so you can
+                                                generate up to{' '}
                                                 <strong>
-                                                    {dataset.image_count * 10} new images
+                                                    {dataset.image_count * 10}{' '}
+                                                    new images
                                                 </strong>
                                                 .
                                             </Alert>
@@ -326,9 +304,9 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
 
                                         <Box mt={2}>
                                             <Button
-                                                color='secondary'
-                                                variant='contained'
-                                                type='submit'
+                                                color="primary"
+                                                variant="contained"
+                                                type="submit"
                                                 disabled={isSubmitting}
                                             >
                                                 Create task
@@ -338,27 +316,23 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                                 )}
                             </Formik>
                         </Grid>
-                        <Grid
-                            item
-                            sm={6}
-                            xs={12}
-                        >
+                        <Grid item sm={6} xs={12}>
                             <Typography
-                                variant='overline'
-                                color='textPrimary'
-                                align='center'
+                                variant="overline"
+                                color="textPrimary"
+                                align="center"
                                 gutterBottom
                             >
                                 Operations pipeline
                             </Typography>
 
-                            <Pipeline readOnly/>
+                            <Pipeline readOnly />
                         </Grid>
                     </Grid>
                 </DialogContent>
             </Dialog>
         </div>
-    )
+    );
 };
 
 export default SectionAugmentation;

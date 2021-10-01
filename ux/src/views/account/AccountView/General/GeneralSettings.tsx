@@ -1,25 +1,25 @@
-import React, {FC} from 'react';
-import clsx from 'clsx';
-import * as Yup from 'yup';
-import {Formik} from 'formik';
-import {useSnackbar} from 'notistack';
+import React, { FC } from "react";
+import clsx from "clsx";
+import * as Yup from "yup";
+import { Formik } from "formik";
+import { useSnackbar } from "notistack";
 import {
-    Box,
-    Button,
-    Card,
-    CardContent,
-    CardHeader,
-    Divider,
-    Grid,
-    makeStyles,
-    Switch,
-    TextField,
-    Typography
-} from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import {User} from 'src/types/user';
-import api from 'src/utils/api';
-import countries, {Country} from './countries';
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Divider,
+  Grid,
+  Switch,
+  TextField,
+  Typography
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
+import Autocomplete from "@mui/material/Autocomplete";
+import { User } from "src/types/user";
+import api from "src/utils/api";
+import countries, { Country } from "./countries";
 
 interface GeneralSettingsProps {
     className?: string;
@@ -30,7 +30,11 @@ const useStyles = makeStyles(() => ({
     root: {}
 }));
 
-const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) => {
+const GeneralSettings: FC<GeneralSettingsProps> = ({
+    className,
+    user,
+    ...rest
+}) => {
     const classes = useStyles();
 
     const {enqueueSnackbar} = useSnackbar();
@@ -49,54 +53,47 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) =
                 city: Yup.string().max(255),
                 country: Yup.string().max(255),
                 is_public: Yup.bool(),
-                name: Yup.string().max(255).required('Name is required'),
+                name: Yup.string()
+                    .max(255)
+                    .required('Name is required'),
                 phone: Yup.string()
             })}
-            onSubmit={async (values, {
-                setStatus,
-                setSubmitting
-            }) => {
+            onSubmit={async (values, {setStatus, setSubmitting}) => {
                 try {
                     await api.patch(`/users/me`, values);
                     enqueueSnackbar(`Profile updated`, {variant: 'success'});
                     setStatus({success: true});
                     setSubmitting(false);
                 } catch (error) {
-                    enqueueSnackbar((error.message) || 'Something went wrong', {variant: 'error'});
+                    enqueueSnackbar(error.message || 'Something went wrong', {
+                        variant: 'error'
+                    });
                     setStatus({success: false});
                     setSubmitting(false);
                 }
             }}
         >
             {({
-                  errors,
-                  handleBlur,
-                  handleChange,
-                  handleSubmit,
-                  isSubmitting,
-                  setFieldValue,
-                  touched,
-                  values
-              }) => (
+                errors,
+                handleBlur,
+                handleChange,
+                handleSubmit,
+                isSubmitting,
+                setFieldValue,
+                touched,
+                values
+            }) => (
                 <form onSubmit={handleSubmit}>
-                    <Card
-                        className={clsx(classes.root, className)}
-                        {...rest}
-                    >
-                        <CardHeader title="Profile"/>
-                        <Divider/>
+                    <Card className={clsx(classes.root, className)} {...rest}>
+                        <CardHeader title="Profile" />
+                        <Divider />
                         <CardContent>
-                            <Grid
-                                container
-                                spacing={4}
-                            >
-                                <Grid
-                                    item
-                                    md={6}
-                                    xs={12}
-                                >
+                            <Grid container spacing={4}>
+                                <Grid item md={6} xs={12}>
                                     <TextField
-                                        error={Boolean(touched.name && errors.name)}
+                                        error={Boolean(
+                                            touched.name && errors.name
+                                        )}
                                         fullWidth
                                         helperText={touched.name && errors.name}
                                         label="Name"
@@ -107,14 +104,10 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) =
                                         variant="outlined"
                                     />
                                 </Grid>
-                                <Grid
-                                    item
-                                    md={6}
-                                    xs={12}
-                                >
+                                <Grid item md={6} xs={12}>
                                     <TextField
                                         fullWidth
-                                        helperText='We will use this email to contact you'
+                                        helperText="We will use this email to contact you"
                                         label="Email Address"
                                         type="email"
                                         value={user.email}
@@ -122,15 +115,15 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) =
                                         disabled
                                     />
                                 </Grid>
-                                <Grid
-                                    item
-                                    md={6}
-                                    xs={12}
-                                >
+                                <Grid item md={6} xs={12}>
                                     <TextField
-                                        error={Boolean(touched.phone && errors.phone)}
+                                        error={Boolean(
+                                            touched.phone && errors.phone
+                                        )}
                                         fullWidth
-                                        helperText={touched.phone && errors.phone}
+                                        helperText={
+                                            touched.phone && errors.phone
+                                        }
                                         label="Phone Number"
                                         name="phone"
                                         onBlur={handleBlur}
@@ -139,13 +132,11 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) =
                                         variant="outlined"
                                     />
                                 </Grid>
-                                <Grid
-                                    item
-                                    md={6}
-                                    xs={12}
-                                >
+                                <Grid item md={6} xs={12}>
                                     <TextField
-                                        error={Boolean(touched.city && errors.city)}
+                                        error={Boolean(
+                                            touched.city && errors.city
+                                        )}
                                         fullWidth
                                         helperText={touched.city && errors.city}
                                         label="City"
@@ -156,17 +147,21 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) =
                                         variant="outlined"
                                     />
                                 </Grid>
-                                <Grid
-                                    item
-                                    md={6}
-                                    xs={12}
-                                >
+                                <Grid item md={6} xs={12}>
                                     <Autocomplete
-                                        getOptionLabel={(option) => option.text}
+                                        getOptionLabel={option => option.text}
                                         options={countries}
-                                        defaultValue={countries.find(country => country.text === user.country)}
-                                        onChange={(event, country) => setFieldValue('country', (country as Country).text)}
-                                        renderInput={(params) => (
+                                        defaultValue={countries.find(
+                                            country =>
+                                                country.text === user.country
+                                        )}
+                                        onChange={(event, country) =>
+                                            setFieldValue(
+                                                'country',
+                                                (country as Country).text
+                                            )
+                                        }
+                                        renderInput={params => (
                                             <TextField
                                                 fullWidth
                                                 label="Country"
@@ -177,11 +172,7 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) =
                                         )}
                                     />
                                 </Grid>
-                                <Grid
-                                    item
-                                    md={6}
-                                    xs={12}
-                                >
+                                <Grid item md={6} xs={12}>
                                     <Typography
                                         variant="h6"
                                         color="textPrimary"
@@ -192,8 +183,9 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) =
                                         variant="body2"
                                         color="textSecondary"
                                     >
-                                        Means that anyone viewing your profile will be able to see your
-                                        contacts details
+                                        Means that anyone viewing your profile
+                                        will be able to see your contacts
+                                        details
                                     </Typography>
                                     <Switch
                                         checked={values.is_public}
@@ -204,14 +196,10 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) =
                                 </Grid>
                             </Grid>
                         </CardContent>
-                        <Divider/>
-                        <Box
-                            p={2}
-                            display="flex"
-                            justifyContent="flex-end"
-                        >
+                        <Divider />
+                        <Box p={2} display="flex" justifyContent="flex-end">
                             <Button
-                                color="secondary"
+                                color="primary"
                                 disabled={isSubmitting}
                                 type="submit"
                                 variant="contained"

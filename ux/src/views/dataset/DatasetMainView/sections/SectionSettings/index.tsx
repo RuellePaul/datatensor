@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
-import {Grid, makeStyles} from '@material-ui/core';
+import {Grid} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 import {SectionProps} from '../SectionProps';
 import ChangePrivacyAction from './ChangePrivacyAction';
@@ -10,25 +11,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     root: {}
 }));
 
-
 const SectionSettings: FC<SectionProps> = ({className}) => {
-
     const classes = useStyles();
 
     return (
-        <Grid
-            className={clsx(classes.root, className)}
-            container
-            spacing={2}>
+        <Grid className={clsx(classes.root, className)} container spacing={2}>
             <Grid item sm={6} xs={12}>
-                <ChangePrivacyAction/>
+                <ChangePrivacyAction />
             </Grid>
 
             <Grid item sm={6} xs={12}>
-                <DeleteDatasetAction/>
+                <DeleteDatasetAction />
             </Grid>
         </Grid>
-    )
+    );
 };
 
 export default SectionSettings;

@@ -1,9 +1,10 @@
-import React, {FC} from 'react';
-import {Link as RouterLink} from 'react-router-dom';
-import clsx from 'clsx';
-import {Breadcrumbs, Button, Grid, makeStyles, SvgIcon, Typography} from '@material-ui/core';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import {Plus as PlusIcon} from 'react-feather';
+import React, { FC } from "react";
+import { Link as RouterLink } from "react-router-dom";
+import clsx from "clsx";
+import { Breadcrumbs, Button, Grid, SvgIcon, Typography } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import { Plus as PlusIcon } from "react-feather";
 
 interface HeaderProps {
     className?: string;
@@ -27,32 +28,26 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
         >
             <Grid item>
                 <Breadcrumbs
-                    separator={<NavigateNextIcon fontSize="small"/>}
+                    separator={<NavigateNextIcon fontSize="small" />}
                     aria-label="breadcrumb"
                 >
-                    <Typography
-                        variant="body1"
-                        color="textPrimary"
-                    >
+                    <Typography variant="body1" color="textPrimary">
                         Datasets
                     </Typography>
                 </Breadcrumbs>
-                <Typography
-                    variant="h3"
-                    color="textPrimary"
-                >
+                <Typography variant="h3" color="textPrimary">
                     See the latest datasets
                 </Typography>
             </Grid>
             <Grid item>
                 <Button
-                    color="secondary"
+                    color="primary"
                     component={RouterLink}
                     to="/app/datasets/create"
                     variant="contained"
                     startIcon={
                         <SvgIcon fontSize="small">
-                            <PlusIcon/>
+                            <PlusIcon />
                         </SvgIcon>
                     }
                 >

@@ -1,10 +1,10 @@
-import React, {FC} from 'react';
-import clsx from 'clsx';
-import {makeStyles} from '@material-ui/core';
-import DTImage from 'src/components/core/Images/Image';
-import useImages from 'src/hooks/useImages';
-import {Theme} from 'src/theme';
-import {ImageProvider} from 'src/store/ImageContext';
+import React, { FC } from "react";
+import clsx from "clsx";
+import makeStyles from "@mui/styles/makeStyles";
+import DTImage from "src/components/core/Images/Image";
+import useImages from "src/hooks/useImages";
+import { Theme } from "src/theme";
+import { ImageProvider } from "src/store/ImageContext";
 
 interface ImagesListProps {
     className?: string;
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         position: 'absolute',
         top: theme.spacing(1),
         left: theme.spacing(1),
-        width: `calc(100% - ${theme.spacing(2)}px)`,
+        width: `calc(100% - ${theme.spacing(2)})`,
         maxHeight: 260,
         overflow: 'hidden',
         border: `solid 1px #000000cc`,
@@ -80,45 +80,29 @@ const useStyles = makeStyles((theme: Theme) => ({
             '& img, & canvas': {
                 zIndex: 0
             }
-
         }
     }
 }));
 
 const STACK_IMAGE_COUNT = 4;
 
-const DTImagesStack: FC<ImagesListProps> = ({
-                                                className,
-                                                ...rest
-                                            }) => {
-
+const DTImagesStack: FC<ImagesListProps> = ({className, ...rest}) => {
     const classes = useStyles();
 
     const {images} = useImages();
 
     return (
-        <div
-            className={clsx(classes.root, className)}
-            {...rest}
-        >
-            {images
-                .slice(0, STACK_IMAGE_COUNT)
-                .map((image, index) => (
-                    <div
-                        className={clsx(classes.stack, `layer-${index}`)}
-                        key={`layer-${index}`}
-                    >
-                        <ImageProvider
-                            key={image.id}
-                            image={image}
-                        >
-                            <DTImage
-                                clickable={index === 0}
-                            />
-                        </ImageProvider>
-                    </div>
-                ))
-            }
+        <div className={clsx(classes.root, className)} {...rest}>
+            {images.slice(0, STACK_IMAGE_COUNT).map((image, index) => (
+                <div
+                    className={clsx(classes.stack, `layer-${index}`)}
+                    key={`layer-${index}`}
+                >
+                    <ImageProvider key={image.id} image={image}>
+                        <DTImage clickable={index === 0} />
+                    </ImageProvider>
+                </div>
+            ))}
         </div>
     );
 };

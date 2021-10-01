@@ -1,22 +1,22 @@
-import React, {FC} from 'react';
-import {useHistory} from 'react-router';
-import Chart from 'react-apexcharts';
-import clsx from 'clsx';
+import React, { FC } from "react";
+import { useHistory } from "react-router";
+import Chart from "react-apexcharts";
+import clsx from "clsx";
 import {
-    Card,
-    CardContent,
-    CardHeader,
-    Divider,
-    ListItemIcon,
-    ListItemText,
-    makeStyles,
-    MenuItem,
-    Theme,
-    useTheme
-} from '@material-ui/core';
-import {Users as UsersIcon} from 'react-feather';
-import GenericMoreButton from 'src/components/utils/GenericMoreButton';
-import {User} from 'src/types/user';
+  Card,
+  CardContent,
+  CardHeader,
+  Divider,
+  ListItemIcon,
+  ListItemText,
+  MenuItem,
+  Theme,
+  useTheme
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
+import { Users as UsersIcon } from "react-feather";
+import GenericMoreButton from "src/components/utils/GenericMoreButton";
+import { User } from "src/types/user";
 
 interface UserScopesProps {
     className?: string;
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     shrink: {
         paddingBottom: 0,
-        [theme.breakpoints.down('xs')]: {
+        [theme.breakpoints.down('sm')]: {
             paddingLeft: 0,
             paddingRight: 0
         }
@@ -39,31 +39,29 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const UserScopes: FC<UserScopesProps> = ({className, users, ...rest}) => {
-
     const classes = useStyles();
     const theme = useTheme();
 
     const history = useHistory();
 
     return (
-        <Card
-            className={clsx(classes.root, className)}
-            {...rest}
-        >
+        <Card className={clsx(classes.root, className)} {...rest}>
             <CardHeader
-                action={(
+                action={
                     <GenericMoreButton>
-                        <MenuItem onClick={() => history.push('/app/admin/users')}>
+                        <MenuItem
+                            onClick={() => history.push('/app/admin/users')}
+                        >
                             <ListItemIcon>
-                                <UsersIcon/>
+                                <UsersIcon />
                             </ListItemIcon>
-                            <ListItemText primary='View all users'/>
+                            <ListItemText primary="View all users" />
                         </MenuItem>
                     </GenericMoreButton>
-                )}
-                title='Scopes Over Time'
+                }
+                title="Scopes Over Time"
             />
-            <Divider/>
+            <Divider />
             <CardContent className={classes.shrink}>
                 <Chart
                     options={{
@@ -73,16 +71,11 @@ const UserScopes: FC<UserScopesProps> = ({className, users, ...rest}) => {
                             theme.palette.warning.main,
                             theme.palette.error.main
                         ],
-                        labels: [
-                            'email',
-                            'github',
-                            'google',
-                            'stackoverflow'
-                        ],
+                        labels: ['email', 'github', 'google', 'stackoverflow'],
                         legend: {
                             fontFamily: theme.typography.fontFamily,
                             labels: {
-                                colors: theme.palette.text.secondary,
+                                colors: theme.palette.text.secondary
                             },
                             onItemClick: {
                                 toggleDataSeries: false
@@ -99,9 +92,10 @@ const UserScopes: FC<UserScopesProps> = ({className, users, ...rest}) => {
                         users.filter(user => user.scope === null).length,
                         users.filter(user => user.scope === 'github').length,
                         users.filter(user => user.scope === 'google').length,
-                        users.filter(user => user.scope === 'stackoverflow').length,
+                        users.filter(user => user.scope === 'stackoverflow')
+                            .length
                     ]}
-                    type='donut'
+                    type="donut"
                     height={350}
                 />
             </CardContent>

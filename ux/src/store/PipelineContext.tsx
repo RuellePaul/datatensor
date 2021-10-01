@@ -3,7 +3,9 @@ import {Pipeline} from 'src/types/pipeline';
 
 export interface PipelineContextValue {
     pipeline: Pipeline;
-    savePipeline: (update: Pipeline | ((pipeline: Pipeline) => Pipeline)) => void;
+    savePipeline: (
+        update: Pipeline | ((pipeline: Pipeline) => Pipeline)
+    ) => void;
 }
 
 interface PipelineProviderProps {
@@ -12,15 +14,15 @@ interface PipelineProviderProps {
 
 export const PipelineContext = createContext<PipelineContextValue>({
     pipeline: null,
-    savePipeline: () => {
-    }
+    savePipeline: () => {}
 });
 
 export const PipelineProvider: FC<PipelineProviderProps> = ({children}) => {
-
     const [currentPipeline, setCurrentPipeline] = useState<Pipeline>(null);
 
-    const handleSavePipeline = (update: Pipeline | ((pipeline: Pipeline) => Pipeline)): void => {
+    const handleSavePipeline = (
+        update: Pipeline | ((pipeline: Pipeline) => Pipeline)
+    ): void => {
         setCurrentPipeline(update);
     };
 
@@ -33,7 +35,7 @@ export const PipelineProvider: FC<PipelineProviderProps> = ({children}) => {
         >
             {children}
         </PipelineContext.Provider>
-    )
+    );
 };
 
 export const PipelineConsumer = PipelineContext.Consumer;

@@ -1,35 +1,34 @@
-import React, {FC, useEffect, useState} from 'react';
-import clsx from 'clsx';
-import useEventListener from 'use-typed-event-listener';
-import {useSnackbar} from 'notistack';
-import {ArrowLeft as BackIcon, MoreVertical as MoreIcon} from 'react-feather';
+import React, { FC, useEffect, useState } from "react";
+import clsx from "clsx";
+import useEventListener from "use-typed-event-listener";
+import { useSnackbar } from "notistack";
+import { ArrowLeft as BackIcon, MoreVertical as MoreIcon } from "react-feather";
 import {
-    Backdrop,
-    Box,
-    Button,
-    Chip,
-    Dialog,
-    Divider,
-    IconButton,
-    ListItemIcon,
-    ListItemText,
-    makeStyles,
-    Menu,
-    MenuItem,
-    Typography
-} from '@material-ui/core';
-import {CropSharp as LabelisatorIcon, DeleteOutline as DeleteIcon} from '@material-ui/icons';
-import {Pagination} from '@material-ui/lab';
-import {Theme} from 'src/theme';
-import api from 'src/utils/api';
-import DTImage from 'src/components/core/Images/Image';
-import bytesToSize from 'src/utils/bytesToSize';
-import useDataset from 'src/hooks/useDataset';
-import useImages from 'src/hooks/useImages';
-import usePipeline from 'src/hooks/usePipeline';
-import {ImageProvider} from 'src/store/ImageContext';
-import {LAZY_LOAD_BATCH} from 'src/constants';
-
+  Backdrop,
+  Box,
+  Button,
+  Chip,
+  Dialog,
+  Divider,
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Pagination,
+  Typography
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
+import { CropSharp as LabelisatorIcon, DeleteOutline as DeleteIcon } from "@mui/icons-material";
+import { Theme } from "src/theme";
+import api from "src/utils/api";
+import DTImage from "src/components/core/Images/Image";
+import bytesToSize from "src/utils/bytesToSize";
+import useDataset from "src/hooks/useDataset";
+import useImages from "src/hooks/useImages";
+import usePipeline from "src/hooks/usePipeline";
+import { ImageProvider } from "src/store/ImageContext";
+import { LAZY_LOAD_BATCH } from "src/constants";
 
 interface DTImagePreviewProps {
     open: boolean;
@@ -85,14 +84,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-
 const DTImagePreview: FC<DTImagePreviewProps> = ({
-                                                     open,
-                                                     setOpen,
-                                                     selected,
-                                                     setSelected
-                                                 }) => {
-
+    open,
+    setOpen,
+    selected,
+    setSelected
+}) => {
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
 
@@ -107,7 +104,7 @@ const DTImagePreview: FC<DTImagePreviewProps> = ({
 
     const handleClose = () => {
         setOpen(false);
-    }
+    };
 
     const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -121,19 +118,25 @@ const DTImagePreview: FC<DTImagePreviewProps> = ({
         event.stopPropagation();
 
         try {
-            await api.delete(`/datasets/${dataset.id}/images/${imageSelected.id}`);
+            await api.delete(
+                `/datasets/${dataset.id}/images/${imageSelected.id}`
+            );
             setSelected(Math.max(0, selected - 1));
             saveImages(images.filter(image => image.id !== imageSelected.id));
-            saveDataset({...dataset, image_count: dataset.image_count - 1})
+            saveDataset({...dataset, image_count: dataset.image_count - 1});
             handleCloseMenu();
             handleClose();
         } catch (error) {
-            enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
+            enqueueSnackbar(error.message || 'Something went wrong', {
+                variant: 'error'
+            });
         }
-
     };
 
-    const handlePaginationChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    const handlePaginationChange = (
+        event: React.ChangeEvent<unknown>,
+        value: number
+    ) => {
         setSelected(value - 1);
     };
 
@@ -149,7 +152,11 @@ const DTImagePreview: FC<DTImagePreviewProps> = ({
 
     const handleOpenLabelisator = () => {
         if (imageSelected.pipeline_id) {
-            savePipeline(pipelines.find(pipeline => pipeline.id === imageSelected.pipeline_id));
+            savePipeline(
+                pipelines.find(
+                    pipeline => pipeline.id === imageSelected.pipeline_id
+                )
+            );
         }
 
         handleCloseMenu();
@@ -183,47 +190,37 @@ const DTImagePreview: FC<DTImagePreviewProps> = ({
                 <div className={clsx(classes.header)}>
                     <Button
                         onClick={handleClose}
-                        size='small'
-                        startIcon={<BackIcon/>}
+                        size="small"
+                        startIcon={<BackIcon />}
                     >
                         Back
                     </Button>
 
-                    <Box
-                        display='flex'
-                        alignItems='center'
-                        px={1}>
+                    <Box display="flex" alignItems="center" px={1}>
                         <div>
-                            <Typography
-                                variant='h5'
-                                color='textPrimary'
-                            >
+                            <Typography variant="h5" color="textPrimary">
                                 {imageSelected.name}
                             </Typography>
-                            <Typography
-                                variant='h6'
-                                color='textSecondary'
-                            >
-                                {bytesToSize(imageSelected.size)} ({imageSelected.width} x {imageSelected.height})
+                            <Typography variant="h6" color="textSecondary">
+                                {bytesToSize(imageSelected.size)} (
+                                {imageSelected.width} x {imageSelected.height})
                             </Typography>
                         </div>
 
                         <Chip
                             className={classes.chip}
-                            label={imageSelected.pipeline_id ? 'Augmented image' : 'Original image'}
-                            size='small'
-                            variant='outlined'
+                            label={
+                                imageSelected.pipeline_id
+                                    ? 'Augmented image'
+                                    : 'Original image'
+                            }
+                            size="small"
+                            variant="outlined"
                         />
                     </Box>
 
-                    <IconButton
-                        onClick={handleOpenMenu}
-                    >
-                        <MoreIcon
-                            width={30}
-                            height={30}
-                            color='white'
-                        />
+                    <IconButton onClick={handleOpenMenu} size="large">
+                        <MoreIcon width={30} height={30} color="white" />
                     </IconButton>
                     <Menu
                         anchorEl={anchorEl}
@@ -238,39 +235,30 @@ const DTImagePreview: FC<DTImagePreviewProps> = ({
                     >
                         <MenuItem onClick={handleOpenLabelisator}>
                             <ListItemIcon>
-                                <LabelisatorIcon/>
+                                <LabelisatorIcon />
                             </ListItemIcon>
-                            <ListItemText>
-                                Labelize
-                            </ListItemText>
+                            <ListItemText>Labelize</ListItemText>
                         </MenuItem>
                         <MenuItem onClick={handleDeleteImage}>
                             <ListItemIcon>
-                                <DeleteIcon/>
+                                <DeleteIcon />
                             </ListItemIcon>
-                            <ListItemText>
-                                Delete
-                            </ListItemText>
+                            <ListItemText>Delete</ListItemText>
                         </MenuItem>
                     </Menu>
                 </div>
 
-                <Divider/>
+                <Divider />
 
-                <div
-                    className={clsx(classes.content)}
-                >
-                    <ImageProvider
-                        key={imageSelected.id}
-                        image={imageSelected}
-                    >
-                        <DTImage skeleton/>
+                <div className={clsx(classes.content)}>
+                    <ImageProvider key={imageSelected.id} image={imageSelected}>
+                        <DTImage skeleton />
                     </ImageProvider>
                 </div>
 
                 <div className={classes.footer}>
                     <Pagination
-                        color='primary'
+                        color="primary"
                         count={images.length}
                         page={selected + 1}
                         onChange={handlePaginationChange}

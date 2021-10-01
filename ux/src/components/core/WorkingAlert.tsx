@@ -1,9 +1,9 @@
-import React, {FC} from 'react';
-import clsx from 'clsx';
-import {Box, CircularProgress, Link, makeStyles} from '@material-ui/core';
-import {Theme} from 'src/theme';
-import {Alert} from '@material-ui/lab';
-import useTasks from 'src/hooks/useTasks';
+import React, { FC } from "react";
+import clsx from "clsx";
+import { Alert, Box, CircularProgress, Link } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
+import { Theme } from "src/theme";
+import useTasks from "src/hooks/useTasks";
 
 interface WorkingAlertProps {
     dataset_id: string;
@@ -20,50 +20,39 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-
-const WorkingAlert: FC<WorkingAlertProps> = ({
-                                                 dataset_id,
-                                                 className
-                                             }) => {
-
+const WorkingAlert: FC<WorkingAlertProps> = ({dataset_id, className}) => {
     const classes = useStyles();
 
     const {tasks, saveSelectedTask} = useTasks();
 
-    if (tasks === null)
-        return null;
+    if (tasks === null) return null;
 
-    const activeTask = tasks.find(task => task.status === 'active' && task.dataset_id === dataset_id);
-    const activeTasksCount = tasks.filter(task => task.status === 'active' && task.dataset_id === dataset_id).length;
+    const activeTask = tasks.find(
+        task => task.status === 'active' && task.dataset_id === dataset_id
+    );
+    const activeTasksCount = tasks.filter(
+        task => task.status === 'active' && task.dataset_id === dataset_id
+    ).length;
 
-    if (!activeTask)
-        return null;
+    if (!activeTask) return null;
 
-    const handleOpenTask = (event) => {
+    const handleOpenTask = event => {
         event.stopPropagation();
 
         saveSelectedTask(activeTask);
     };
 
-
     return (
-        <Box
-            className={clsx(classes.root, className)}
-            mt={2}
-        >
-            <Alert
-                severity='warning'
-            >
+        <Box className={clsx(classes.root, className)} mt={2}>
+            <Alert severity="warning">
                 <Link
                     className={classes.link}
-                    color='inherit'
+                    color="inherit"
                     onClick={handleOpenTask}
                 >
                     {activeTasksCount > 1
                         ? 'Some tasks are running'
-                        : 'A task is running'
-                    }
-
+                        : 'A task is running'}
                 </Link>
 
                 <CircularProgress
@@ -72,7 +61,7 @@ const WorkingAlert: FC<WorkingAlertProps> = ({
                     size={14}
                 />
 
-                <div className='flexGrow'/>
+                <div className="flexGrow" />
             </Alert>
         </Box>
     );

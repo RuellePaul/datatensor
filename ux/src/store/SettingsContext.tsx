@@ -1,6 +1,6 @@
-import React, {createContext, FC, ReactNode, useEffect, useState} from 'react';
-import _ from 'lodash';
-import {THEMES} from 'src/constants';
+import React, { createContext, FC, ReactNode, useEffect, useState } from "react";
+import _ from "lodash";
+import { THEMES } from "src/constants";
 
 interface Settings {
     theme?: string;
@@ -24,7 +24,9 @@ export const restoreSettings = (): Settings | null => {
     let settings = null;
 
     try {
-        const storedData: string | null = window.localStorage.getItem('settings');
+        const storedData: string | null = window.localStorage.getItem(
+            'settings'
+        );
 
         if (storedData) {
             settings = JSON.parse(storedData);
@@ -42,12 +44,16 @@ export const storeSettings = (settings: Settings): void => {
 
 const SettingsContext = createContext<SettingsContextValue>({
     settings: defaultSettings,
-    saveSettings: () => {
-    }
+    saveSettings: () => {}
 });
 
-export const SettingsProvider: FC<SettingsProviderProps> = ({settings, children}) => {
-    const [currentSettings, setCurrentSettings] = useState<Settings>(settings || defaultSettings);
+export const SettingsProvider: FC<SettingsProviderProps> = ({
+    settings,
+    children
+}) => {
+    const [currentSettings, setCurrentSettings] = useState<Settings>(
+        settings || defaultSettings
+    );
 
     const handleSaveSettings = (update: Settings = {}): void => {
         const mergedSettings = _.merge({}, currentSettings, update);

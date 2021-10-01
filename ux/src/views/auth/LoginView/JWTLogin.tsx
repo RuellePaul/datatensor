@@ -1,11 +1,11 @@
-import React, {FC} from 'react';
-import clsx from 'clsx';
-import * as Yup from 'yup';
-import {Formik} from 'formik';
-import {Box, Button, FormHelperText, makeStyles, TextField} from '@material-ui/core';
-import {Alert} from '@material-ui/lab';
-import useAuth from 'src/hooks/useAuth';
-import useIsMountedRef from 'src/hooks/useIsMountedRef';
+import React, { FC } from "react";
+import clsx from "clsx";
+import * as Yup from "yup";
+import { Formik } from "formik";
+import { Alert, Box, Button, FormHelperText, TextField } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
+import useAuth from "src/hooks/useAuth";
+import useIsMountedRef from "src/hooks/useIsMountedRef";
 
 interface JWTLoginProps {
     className?: string;
@@ -16,7 +16,6 @@ const useStyles = makeStyles(() => ({
 }));
 
 const JWTLogin: FC<JWTLoginProps> = ({className, ...rest}) => {
-
     const classes = useStyles();
 
     const {login} = useAuth();
@@ -30,14 +29,15 @@ const JWTLogin: FC<JWTLoginProps> = ({className, ...rest}) => {
                 submit: null
             }}
             validationSchema={Yup.object().shape({
-                email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-                password: Yup.string().max(255).required('Password is required')
+                email: Yup.string()
+                    .email('Must be a valid email')
+                    .max(255)
+                    .required('Email is required'),
+                password: Yup.string()
+                    .max(255)
+                    .required('Password is required')
             })}
-            onSubmit={async (values, {
-                setErrors,
-                setStatus,
-                setSubmitting
-            }) => {
+            onSubmit={async (values, {setErrors, setStatus, setSubmitting}) => {
                 try {
                     await login(values.email, values.password);
 
@@ -56,14 +56,14 @@ const JWTLogin: FC<JWTLoginProps> = ({className, ...rest}) => {
             }}
         >
             {({
-                  errors,
-                  handleBlur,
-                  handleChange,
-                  handleSubmit,
-                  isSubmitting,
-                  touched,
-                  values
-              }) => (
+                errors,
+                handleBlur,
+                handleChange,
+                handleSubmit,
+                isSubmitting,
+                touched,
+                values
+            }) => (
                 <form
                     noValidate
                     onSubmit={handleSubmit}
@@ -105,7 +105,7 @@ const JWTLogin: FC<JWTLoginProps> = ({className, ...rest}) => {
                     )}
                     <Box mt={2}>
                         <Button
-                            color="secondary"
+                            color="primary"
                             disabled={isSubmitting}
                             fullWidth
                             size="large"
@@ -116,16 +116,9 @@ const JWTLogin: FC<JWTLoginProps> = ({className, ...rest}) => {
                         </Button>
                     </Box>
                     <Box mt={2}>
-                        <Alert
-                            severity="info"
-                        >
+                        <Alert severity="info">
                             <div>
-                                Use
-                                {' '}
-                                <b>demo@datatensor.io</b>
-                                {' '}
-                                and password
-                                {' '}
+                                Use <b>demo@datatensor.io</b> and password{' '}
                                 <b>Password123</b>
                             </div>
                         </Alert>

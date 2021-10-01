@@ -8,16 +8,16 @@ import {
     Divider,
     Drawer,
     IconButton,
-    makeStyles,
     SvgIcon,
     Tooltip,
     Typography
-} from '@material-ui/core';
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import {Settings as SettingsIcon} from 'react-feather';
 import useSettings from 'src/hooks/useSettings';
 import {THEMES} from 'src/constants';
 import {Theme} from 'src/theme';
-import {Close as CloseIcon} from '@material-ui/icons';
+import {Close as CloseIcon} from '@mui/icons-material';
 
 const useStyles = makeStyles((theme: Theme) => ({
     badge: {
@@ -50,7 +50,7 @@ const Settings: FC = () => {
         <>
             <Tooltip title="Settings">
                 <Badge
-                    color="secondary"
+                    color="primary"
                     variant="dot"
                     classes={{badge: classes.badge}}
                 >
@@ -58,9 +58,10 @@ const Settings: FC = () => {
                         color="inherit"
                         onClick={handleOpen}
                         ref={ref}
+                        size="large"
                     >
                         <SvgIcon fontSize="small">
-                            <SettingsIcon/>
+                            <SettingsIcon />
                         </SvgIcon>
                     </IconButton>
                 </Badge>
@@ -73,47 +74,42 @@ const Settings: FC = () => {
                 variant="temporary"
             >
                 <Box
-                    display='flex'
-                    alignItems='center'
-                    justifyContent='space-between'
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="space-between"
                     p={2}
                 >
-                    <Typography
-                        variant="h4"
-                        color="textPrimary"
-                    >
+                    <Typography variant="h4" color="textPrimary">
                         Settings
                     </Typography>
 
-                    <IconButton
-                        onClick={handleClose}
-                    >
-                        <CloseIcon/>
+                    <IconButton onClick={handleClose} size="large">
+                        <CloseIcon />
                     </IconButton>
                 </Box>
 
-                <Divider/>
+                <Divider />
 
-                <Box
-                    p={2}
-                >
+                <Box p={2}>
                     <Typography
-                        variant='body1'
-                        color='textPrimary'
+                        variant="body1"
+                        color="textPrimary"
                         gutterBottom
                     >
                         Theme
                     </Typography>
-                    <ButtonGroup
-                        color='primary'
-                        fullWidth
-                        variant="outlined"
-                    >
-                        {Object.keys(THEMES).map((theme) => (
+                    <ButtonGroup color="primary" fullWidth variant="outlined">
+                        {Object.keys(THEMES).map(theme => (
                             <Button
                                 key={`theme-${theme}`}
-                                onClick={() => saveSettings({...settings, theme})}
-                                variant={settings.theme === theme ? 'contained' : 'outlined'}
+                                onClick={() =>
+                                    saveSettings({...settings, theme})
+                                }
+                                variant={
+                                    settings.theme === theme
+                                        ? 'contained'
+                                        : 'outlined'
+                                }
                             >
                                 {capitalCase(theme)}
                             </Button>

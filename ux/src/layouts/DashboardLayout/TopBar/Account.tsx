@@ -1,11 +1,19 @@
 import React, {FC, useRef, useState} from 'react';
 import {Link as RouterLink, useHistory} from 'react-router-dom';
 import {useSnackbar} from 'notistack';
-import {Box, ButtonBase, Hidden, makeStyles, Menu, MenuItem, Typography} from '@material-ui/core';
+import {
+    Box,
+    ButtonBase,
+    Hidden,
+    Menu,
+    MenuItem,
+    Typography
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import UserAvatar from 'src/components/UserAvatar';
 import useAuth from 'src/hooks/useAuth';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     avatar: {
         height: 32,
         width: 32,
@@ -60,10 +68,8 @@ const Account: FC = () => {
                 // @ts-ignore
                 ref={ref}
             >
-                <UserAvatar
-                    className={classes.avatar}
-                />
-                <Hidden smDown>
+                <UserAvatar className={classes.avatar} />
+                <Hidden mdDown>
                     <Typography
                         className={classes.username}
                         variant="h6"
@@ -81,19 +87,13 @@ const Account: FC = () => {
                 }}
                 keepMounted
                 PaperProps={{className: classes.popover}}
-                getContentAnchorEl={null}
                 anchorEl={ref.current}
                 open={isOpen}
             >
-                <MenuItem
-                    component={RouterLink}
-                    to="/app/account"
-                >
+                <MenuItem component={RouterLink} to="/app/account">
                     Account
                 </MenuItem>
-                <MenuItem onClick={handleLogout}>
-                    Logout
-                </MenuItem>
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
         </>
     );

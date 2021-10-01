@@ -1,4 +1,11 @@
-import React, {createContext, FC, ReactNode, useCallback, useEffect, useState} from 'react';
+import React, {
+    createContext,
+    FC,
+    ReactNode,
+    useCallback,
+    useEffect,
+    useState
+} from 'react';
 import {useSnackbar} from 'notistack';
 import {Label} from 'src/types/label';
 import {Image} from 'src/types/image';
@@ -12,7 +19,7 @@ export interface ImageContextValue {
     validateLabels: () => void;
     storePosition: (update: Label[]) => void;
     previousPosition: () => void;
-    positions: Label[][]
+    positions: Label[][];
 }
 
 interface ImageProviderProps {
@@ -23,25 +30,22 @@ interface ImageProviderProps {
 export const ImageContext = createContext<ImageContextValue>({
     image: null,
     labels: [],
-    saveLabels: () => {
-    },
-    validateLabels: () => {
-    },
+    saveLabels: () => {},
+    validateLabels: () => {},
     positions: [],
-    storePosition: () => {
-    },
-    previousPosition: () => {
-    },
+    storePosition: () => {},
+    previousPosition: () => {}
 });
 
 export const ImageProvider: FC<ImageProviderProps> = ({image, children}) => {
-
     const {dataset, saveCategories} = useDataset();
     const {enqueueSnackbar} = useSnackbar();
 
     const [currentLabels, setCurrentLabels] = useState<Label[]>(null);
 
-    const handleSaveLabels = (update: Label[] | ((labels: Label[]) => Label[])): void => {
+    const handleSaveLabels = (
+        update: Label[] | ((labels: Label[]) => Label[])
+    ): void => {
         setCurrentLabels(update);
     };
 
@@ -50,14 +54,15 @@ export const ImageProvider: FC<ImageProviderProps> = ({image, children}) => {
 
         if (image) {
             try {
-                const response = await api.get<{ labels: Label[] }>(`/datasets/${dataset.id}/images/${image.id}/labels/`);
+                const response = await api.get<{labels: Label[]}>(
+                    `/datasets/${dataset.id}/images/${image.id}/labels/`
+                );
                 handleSaveLabels(response.data.labels);
                 setPositions([response.data.labels]);
             } catch (err) {
                 console.error(err);
             }
         }
-
     }, [dataset.id, image]);
 
     useEffect(() => {
@@ -66,17 +71,25 @@ export const ImageProvider: FC<ImageProviderProps> = ({image, children}) => {
 
     const validateLabels = async () => {
         try {
-            const response = await api.post<any>(`/datasets/${dataset.id}/images/${image.id}/labels/`, {labels: currentLabels});
-            saveCategories(categories => categories.map(category => (
-                {
+            const response = await api.post<any>(
+                `/datasets/${dataset.id}/images/${image.id}/labels/`,
+                {labels: currentLabels}
+            );
+            saveCategories(categories =>
+                categories.map(category => ({
                     ...category,
-                    labels_count: category.labels_count + (response.data[category.id] ? response.data[category.id] : 0)
-                }
-            )))
+                    labels_count:
+                        category.labels_count +
+                        (response.data[category.id]
+                            ? response.data[category.id]
+                            : 0)
+                }))
+            );
             enqueueSnackbar('Labels updated', {variant: 'info'});
-
         } catch (error) {
-            enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
+            enqueueSnackbar(error.message || 'Something went wrong', {
+                variant: 'error'
+            });
         }
     };
 
@@ -92,7 +105,7 @@ export const ImageProvider: FC<ImageProviderProps> = ({image, children}) => {
             setCurrentLabels(positions[0]);
         } else {
             setCurrentLabels(positions[positions.length - 2]);
-            setPositions(positions.slice(0, positions.length - 1))
+            setPositions(positions.slice(0, positions.length - 1));
         }
     };
 
@@ -105,12 +118,12 @@ export const ImageProvider: FC<ImageProviderProps> = ({image, children}) => {
                 validateLabels: validateLabels,
                 positions: positions,
                 storePosition: handleSavePosition,
-                previousPosition: handlePreviousPosition,
+                previousPosition: handlePreviousPosition
             }}
         >
             {children}
         </ImageContext.Provider>
-    )
+    );
 };
 
 export const ImageConsumer = ImageContext.Consumer;

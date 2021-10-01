@@ -1,72 +1,72 @@
-import type {FC} from 'react';
-import React, {useEffect} from 'react';
-import type {DropResult} from 'react-beautiful-dnd';
-import {DragDropContext} from 'react-beautiful-dnd';
-import {makeStyles} from '@material-ui/core';
-import type {Theme} from 'src/theme';
-import {useDispatch} from 'src/store';
-import {moveOperation, setDefaultPipeline} from 'src/slices/pipeline';
-import OperationsPipeline from './OperationsPipeline';
+import type { FC } from "react";
+import React, { useEffect } from "react";
+import type { DropResult } from "react-beautiful-dnd";
+import { DragDropContext } from "react-beautiful-dnd";
+import makeStyles from "@mui/styles/makeStyles";
+import type { Theme } from "src/theme";
+import { useDispatch } from "src/store";
+import { moveOperation, setDefaultPipeline } from "src/slices/pipeline";
+import OperationsPipeline from "./OperationsPipeline";
 
 interface PipelineProps {
-    readOnly?: boolean;
+  readOnly?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    content: {
-        width: '100%',
-        flexGrow: 1,
-        flexShrink: 1,
-        display: 'flex',
-        overflow: 'hidden',
-    }
+  content: {
+    width: "100%",
+    flexGrow: 1,
+    flexShrink: 1,
+    display: "flex",
+    overflow: "hidden"
+  }
 }));
 
-const Pipeline: FC<PipelineProps> = ({readOnly = false}) => {
-    const classes = useStyles();
-    const dispatch = useDispatch();
+const Pipeline: FC<PipelineProps> = ({ readOnly = false }) => {
+  const classes = useStyles();
+  const dispatch = useDispatch();
 
-    const handleDragEnd = async ({source, destination, draggableId}: DropResult): Promise<void> => {
-        try {
-            // Dropped outside the list
-            if (!destination)
-                return;
+  const handleDragEnd = async ({ source, destination, draggableId }: DropResult): Promise<void> => {
+    try {
+      // Dropped outside the list
+      if (!destination)
+        return;
 
-            // Operation has not been moved
-            if (source.droppableId === destination.droppableId && source.index === destination.index)
-                return;
+      // Operation has not been moved
+      if (source.droppableId === destination.droppableId && source.index === destination.index)
+        return;
 
-            await dispatch(moveOperation(draggableId, destination.index));
-        } catch (err) {
-            console.error(err);
-            try {
-                // Dropped outside the list
-                if (!destination)
-                    return;
+      await dispatch(moveOperation(draggableId, destination.index));
+    } catch (err) {
+      console.error(err);
+      try {
+        // Dropped outside the list
+        if (!destination)
+          return;
 
-                // Operation has not been moved
-                if (source.droppableId === destination.droppableId && source.index === destination.index)
-                    return;
+        // Operation has not been moved
+        if (source.droppableId === destination.droppableId && source.index === destination.index)
+          return;
 
-                await dispatch(moveOperation(draggableId, destination.index));
-            } catch (err) {
-                console.error(err);
-            }
-        }
-    };
+        await dispatch(moveOperation(draggableId, destination.index));
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  };
 
-    useEffect(() => {
-        if (!readOnly)
-            dispatch(setDefaultPipeline());
-    }, [dispatch, readOnly]);
+  useEffect(() => {
+    if (!readOnly)
+      dispatch(setDefaultPipeline());
+  }, [dispatch, readOnly]);
 
-    return (
-        <DragDropContext onDragEnd={handleDragEnd}>
-            <div className={classes.content}>
-                <OperationsPipeline readOnly={readOnly}/>
-            </div>
-        </DragDropContext>
-    );
+  return (
+    <DragDropContext onDragEnd={handleDragEnd}>
+      <div className={classes.content}>
+        <OperationsPipeline readOnly={readOnly} />
+      </div>
+    </DragDropContext>
+  );
 };
 
 export default Pipeline;

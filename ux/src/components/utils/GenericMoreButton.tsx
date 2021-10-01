@@ -1,6 +1,7 @@
 import React, {FC, memo, ReactNode, useRef, useState} from 'react';
-import {IconButton, makeStyles, Menu, Tooltip} from '@material-ui/core';
-import MoreIcon from '@material-ui/icons/MoreVert';
+import {IconButton, Menu, Tooltip} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import MoreIcon from '@mui/icons-material/MoreVert';
 
 const useStyles = makeStyles(() => ({
     menu: {
@@ -33,8 +34,9 @@ const GenericMoreButton: FC<GenericMoreButtonProps> = ({children, ...rest}) => {
                     onClick={handleMenuOpen}
                     ref={moreRef}
                     {...rest}
+                    size="large"
                 >
-                    <MoreIcon fontSize="small"/>
+                    <MoreIcon fontSize="small" />
                 </IconButton>
             </Tooltip>
             <Menu

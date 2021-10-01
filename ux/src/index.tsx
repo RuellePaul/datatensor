@@ -19,9 +19,6 @@ import App from './App';
 
 enableES5();
 
-ReactDOM.render(
-    <App/>,
-    document.getElementById('root')
-);
+ReactDOM.render(<App />, document.getElementById('root'));
 
 serviceWorker.unregister();

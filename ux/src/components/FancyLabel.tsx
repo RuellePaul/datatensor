@@ -1,11 +1,19 @@
-import React, {FC, ReactNode} from 'react';
-import clsx from 'clsx';
-import {alpha, makeStyles} from '@material-ui/core';
-import {Theme} from 'src/theme';
+import React, { FC, ReactNode } from "react";
+import clsx from "clsx";
+import { alpha } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
+import { Theme } from "src/theme";
 
 interface FancyLabelProps {
     className?: string;
-    color?: 'primary' | 'secondary' | 'error' | 'warning' | 'success' | 'info' | 'default';
+    color?:
+        | 'primary'
+        | 'secondary'
+        | 'error'
+        | 'warning'
+        | 'success'
+        | 'info'
+        | 'default';
     children?: ReactNode;
     style?: {};
 }
@@ -56,29 +64,31 @@ const useStyles = makeStyles((theme: Theme) => ({
     default: {
         color: theme.palette.text.primary,
         backgroundColor: alpha(theme.palette.text.primary, 0.08)
-    },
+    }
 }));
 
 const FancyLabel: FC<FancyLabelProps> = ({
-                                             className = '',
-                                             color = 'secondary',
-                                             children,
-                                             style,
-                                             ...rest
-                                         }) => {
+    className = '',
+    color = 'primary',
+    children,
+    style,
+    ...rest
+}) => {
     const classes = useStyles();
 
     return (
         <span
-            className={
-                clsx(classes.root, {
+            className={clsx(
+                classes.root,
+                {
                     [classes[color]]: color
-                }, className)
-            }
+                },
+                className
+            )}
             {...rest}
         >
-      {children}
-    </span>
+            {children}
+        </span>
     );
 };
 

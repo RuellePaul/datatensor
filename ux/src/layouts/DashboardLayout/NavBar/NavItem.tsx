@@ -1,10 +1,11 @@
-import React, {FC, ReactNode, useState} from 'react';
-import {NavLink as RouterLink} from 'react-router-dom';
-import clsx from 'clsx';
-import {Button, Collapse, ListItem, makeStyles} from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import {Theme} from 'src/theme';
+import React, { FC, ReactNode, useState } from "react";
+import { NavLink as RouterLink } from "react-router-dom";
+import clsx from "clsx";
+import { Button, Collapse, ListItem } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import { Theme } from "src/theme";
 
 interface NavItemProps {
     children?: ReactNode;
@@ -59,32 +60,32 @@ const useStyles = makeStyles((theme: Theme) => ({
         marginRight: 'auto'
     },
     active: {
-        color: theme.palette.secondary.main,
+        color: theme.palette.primary.main,
         '& $title': {
             fontWeight: theme.typography.fontWeightMedium
         },
         '& $icon': {
-            color: theme.palette.secondary.main
+            color: theme.palette.primary.main
         }
     }
 }));
 
 const NavItem: FC<NavItemProps> = ({
-                                       children,
-                                       className,
-                                       depth,
-                                       href,
-                                       icon: Icon,
-                                       info: Info,
-                                       open: openProp,
-                                       title,
-                                       ...rest
-                                   }) => {
+    children,
+    className,
+    depth,
+    href,
+    icon: Icon,
+    info: Info,
+    open: openProp,
+    title,
+    ...rest
+}) => {
     const classes = useStyles();
     const [open, setOpen] = useState<boolean>(openProp);
 
     const handleToggle = (): void => {
-        setOpen((prevOpen) => !prevOpen);
+        setOpen(prevOpen => !prevOpen);
     };
 
     let paddingLeft = 8;
@@ -108,21 +109,12 @@ const NavItem: FC<NavItemProps> = ({
                     onClick={handleToggle}
                     style={style}
                 >
-                    {Icon && (
-                        <Icon
-                            className={classes.icon}
-                            size="20"
-                        />
-                    )}
-                    <span className={classes.title}>
-                        {title}
-                    </span>
-                    {Info && <Info/>}
-                    {open ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
+                    {Icon && <Icon className={classes.icon} size="20" />}
+                    <span className={classes.title}>{title}</span>
+                    {Info && <Info />}
+                    {open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                 </Button>
-                <Collapse in={open}>
-                    {children}
-                </Collapse>
+                <Collapse in={open}>{children}</Collapse>
             </ListItem>
         );
     }
@@ -141,16 +133,9 @@ const NavItem: FC<NavItemProps> = ({
                 style={style}
                 to={href}
             >
-                {Icon && (
-                    <Icon
-                        className={classes.icon}
-                        size="20"
-                    />
-                )}
-                <span className={classes.title}>
-                    {title}
-                </span>
-                {Info && <Info/>}
+                {Icon && <Icon className={classes.icon} size="20" />}
+                <span className={classes.title}>{title}</span>
+                {Info && <Info />}
             </Button>
         </ListItem>
     );

@@ -1,36 +1,36 @@
-import React, {ChangeEvent, FC, useState} from 'react';
-import {Link as RouterLink, useHistory} from 'react-router-dom';
-import clsx from 'clsx';
-import moment from 'moment';
-import PerfectScrollbar from 'react-perfect-scrollbar';
+import React, { ChangeEvent, FC, useState } from "react";
+import { Link as RouterLink, useHistory } from "react-router-dom";
+import clsx from "clsx";
+import moment from "moment";
+import PerfectScrollbar from "react-perfect-scrollbar";
 import {
-    Box,
-    Button,
-    Card,
-    Checkbox,
-    Divider,
-    InputAdornment,
-    Link,
-    makeStyles,
-    SvgIcon,
-    Tab,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TablePagination,
-    TableRow,
-    Tabs,
-    TextField,
-    Typography
-} from '@material-ui/core';
-import {Search as SearchIcon} from 'react-feather';
-import FancyLabel from 'src/components/FancyLabel';
-import UserAvatar from 'src/components/UserAvatar';
-import useAuth from 'src/hooks/useAuth';
-import {Theme} from 'src/theme';
-import {User} from 'src/types/user';
-import api from 'src/utils/api';
+  Box,
+  Button,
+  Card,
+  Checkbox,
+  Divider,
+  InputAdornment,
+  Link,
+  SvgIcon,
+  Tab,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TablePagination,
+  TableRow,
+  Tabs,
+  TextField,
+  Typography
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
+import { Search as SearchIcon } from "react-feather";
+import FancyLabel from "src/components/FancyLabel";
+import UserAvatar from "src/components/UserAvatar";
+import useAuth from "src/hooks/useAuth";
+import { Theme } from "src/theme";
+import { User } from "src/types/user";
+import api from "src/utils/api";
 
 interface ResultsProps {
     className?: string;
@@ -38,13 +38,11 @@ interface ResultsProps {
     setUsers: any;
 }
 
-type Sort =
-    | 'created_at|desc'
-    | 'created_at|asc'
+type Sort = 'created_at|desc' | 'created_at|asc';
 
 interface SortOption {
-    value: Sort,
-    label: string
+    value: Sort;
+    label: string;
 }
 
 const tabs = [
@@ -70,15 +68,18 @@ const sortOptions: SortOption[] = [
 ];
 
 const applyFilters = (users: User[], query: string, filters: any): User[] => {
-    return users.filter((user) => {
+    return users.filter(user => {
         let matches = true;
 
         if (query) {
             const properties = ['email', 'name'];
             let containsQuery = false;
 
-            properties.forEach((property) => {
-                if (user[property] && user[property].toLowerCase().includes(query.toLowerCase())) {
+            properties.forEach(property => {
+                if (
+                    user[property] &&
+                    user[property].toLowerCase().includes(query.toLowerCase())
+                ) {
                     containsQuery = true;
                 }
             });
@@ -88,7 +89,7 @@ const applyFilters = (users: User[], query: string, filters: any): User[] => {
             }
         }
 
-        Object.keys(filters).forEach((key) => {
+        Object.keys(filters).forEach(key => {
             const value = filters[key];
 
             if (value && user[key] !== value) {
@@ -100,7 +101,11 @@ const applyFilters = (users: User[], query: string, filters: any): User[] => {
     });
 };
 
-const applyPagination = (users: User[], page: number, limit: number): User[] => {
+const applyPagination = (
+    users: User[],
+    page: number,
+    limit: number
+): User[] => {
     return users.slice(page * limit, page * limit + limit);
 };
 
@@ -138,7 +143,7 @@ const applySort = (users: User[], sort: Sort): User[] => {
     });
 
     // @ts-ignore
-    return stabilizedThis.map((el) => el[0]);
+    return stabilizedThis.map(el => el[0]);
 };
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -166,8 +171,8 @@ const useStyles = makeStyles((theme: Theme) => ({
         borderColor: theme.palette.error.light,
         '&:hover': {
             color: theme.palette.error.main,
-            borderColor: theme.palette.error.main,
-        },
+            borderColor: theme.palette.error.main
+        }
     },
     row: {
         cursor: 'pointer'
@@ -179,12 +184,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const Results: FC<ResultsProps> = ({
-                                       className,
-                                       users,
-                                       setUsers,
-                                       ...rest
-                                   }) => {
+const Results: FC<ResultsProps> = ({className, users, setUsers, ...rest}) => {
     const classes = useStyles();
     const {user: admin} = useAuth();
     const history = useHistory();
@@ -223,25 +223,34 @@ const Results: FC<ResultsProps> = ({
         setSort(event.target.value as Sort);
     };
 
-    const handleSelectAllUsers = (event: ChangeEvent<HTMLInputElement>): void => {
-        setSelectedUsers(event.target.checked
-            ? users.filter(user => user.id !== admin.id).map((user) => user.id)
-            : []);
+    const handleSelectAllUsers = (
+        event: ChangeEvent<HTMLInputElement>
+    ): void => {
+        setSelectedUsers(
+            event.target.checked
+                ? users
+                      .filter(user => user.id !== admin.id)
+                      .map(user => user.id)
+                : []
+        );
     };
 
     const handleSelectOneUser = (event: any, customerId: string): void => {
-        if (customerId === admin.id)
-            return;
+        if (customerId === admin.id) return;
         if (!selectedUsers.includes(customerId)) {
-            setSelectedUsers((prevSelected) => [...prevSelected, customerId]);
+            setSelectedUsers(prevSelected => [...prevSelected, customerId]);
         } else {
-            setSelectedUsers((prevSelected) => prevSelected.filter((id) => id !== customerId));
+            setSelectedUsers(prevSelected =>
+                prevSelected.filter(id => id !== customerId)
+            );
         }
     };
 
     const handleDeleteSelectedUsers = async () => {
         await api.delete('/users/', {data: {user_ids: selectedUsers}});
-        setUsers(users => users.filter(user => !selectedUsers.includes(user.id)));
+        setUsers(users =>
+            users.filter(user => !selectedUsers.includes(user.id))
+        );
         setSelectedUsers([]);
     };
 
@@ -257,46 +266,32 @@ const Results: FC<ResultsProps> = ({
     const sortedUsers = applySort(filteredUsers, sort);
     const paginatedUsers = applyPagination(sortedUsers, page, limit);
     const enableBulkOperations = selectedUsers.length > 0;
-    const selectedSomeUsers = selectedUsers.length > 0 && selectedUsers.length < users.length - 1;
+    const selectedSomeUsers =
+        selectedUsers.length > 0 && selectedUsers.length < users.length - 1;
     const selectedAllUsers = selectedUsers.length === users.length - 1;
 
     return (
-        <Card
-            className={clsx(classes.root, className)}
-            {...rest}
-        >
+        <Card className={clsx(classes.root, className)} {...rest}>
             <Tabs
                 onChange={handleTabsChange}
                 scrollButtons="auto"
-                textColor="secondary"
+                textColor="primary"
                 value={currentTab}
                 variant="scrollable"
             >
-                {tabs.map((tab) => (
-                    <Tab
-                        key={tab.value}
-                        value={tab.value}
-                        label={tab.label}
-                    />
+                {tabs.map(tab => (
+                    <Tab key={tab.value} value={tab.value} label={tab.label} />
                 ))}
             </Tabs>
-            <Divider/>
-            <Box
-                p={2}
-                minHeight={56}
-                display="flex"
-                alignItems="center"
-            >
+            <Divider />
+            <Box p={2} minHeight={56} display="flex" alignItems="center">
                 <TextField
                     className={classes.queryField}
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">
-                                <SvgIcon
-                                    fontSize="small"
-                                    color="action"
-                                >
-                                    <SearchIcon/>
+                                <SvgIcon fontSize="small" color="action">
+                                    <SearchIcon />
                                 </SvgIcon>
                             </InputAdornment>
                         )
@@ -306,7 +301,7 @@ const Results: FC<ResultsProps> = ({
                     value={query}
                     variant="outlined"
                 />
-                <Box flexGrow={1}/>
+                <Box flexGrow={1} />
                 <TextField
                     label="Sort By"
                     name="sort"
@@ -316,11 +311,8 @@ const Results: FC<ResultsProps> = ({
                     value={sort}
                     variant="outlined"
                 >
-                    {sortOptions.map((option) => (
-                        <option
-                            key={option.value}
-                            value={option.value}
-                        >
+                    {sortOptions.map(option => (
+                        <option key={option.value} value={option.value}>
                             {option.label}
                         </option>
                     ))}
@@ -338,7 +330,11 @@ const Results: FC<ResultsProps> = ({
                             <Button
                                 className={classes.bulkAction}
                                 variant="outlined"
-                                onClick={() => history.push(`/app/admin/users/${selectedUsers[0]}/details`)}
+                                onClick={() =>
+                                    history.push(
+                                        `/app/admin/users/${selectedUsers[0]}/details`
+                                    )
+                                }
                             >
                                 View details
                             </Button>
@@ -349,7 +345,8 @@ const Results: FC<ResultsProps> = ({
                             onClick={handleDeleteSelectedUsers}
                         >
                             Delete
-                            {selectedUsers.length > 1 && ` ${selectedUsers.length} users`}
+                            {selectedUsers.length > 1 &&
+                                ` ${selectedUsers.length} users`}
                         </Button>
                     </div>
                 </div>
@@ -366,20 +363,16 @@ const Results: FC<ResultsProps> = ({
                                         onChange={handleSelectAllUsers}
                                     />
                                 </TableCell>
-                                <TableCell>
-                                    Name
-                                </TableCell>
-                                <TableCell>
-                                    Created at
-                                </TableCell>
-                                <TableCell>
-                                    Verified
-                                </TableCell>
+                                <TableCell>Name</TableCell>
+                                <TableCell>Created at</TableCell>
+                                <TableCell>Verified</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {paginatedUsers.map((user) => {
-                                const isUserSelected = selectedUsers.includes(user.id);
+                            {paginatedUsers.map(user => {
+                                const isUserSelected = selectedUsers.includes(
+                                    user.id
+                                );
 
                                 return (
                                     <TableRow
@@ -387,13 +380,22 @@ const Results: FC<ResultsProps> = ({
                                         hover
                                         key={user.id}
                                         selected={isUserSelected}
-                                        onClick={(event) => handleSelectOneUser(event, user.id)}
+                                        onClick={event =>
+                                            handleSelectOneUser(event, user.id)
+                                        }
                                     >
                                         <TableCell padding="checkbox">
                                             <Checkbox
                                                 checked={isUserSelected}
-                                                onChange={(event) => handleSelectOneUser(event, user.id)}
-                                                onClick={(event) => event.stopPropagation()}
+                                                onChange={event =>
+                                                    handleSelectOneUser(
+                                                        event,
+                                                        user.id
+                                                    )
+                                                }
+                                                onClick={event =>
+                                                    event.stopPropagation()
+                                                }
                                                 value={isUserSelected}
                                                 disabled={user.id === admin.id}
                                             />
@@ -426,12 +428,22 @@ const Results: FC<ResultsProps> = ({
                                             </Box>
                                         </TableCell>
                                         <TableCell>
-                                            <FancyLabel color={user.is_verified ? 'success' : 'error'}>
-                                                {user.is_verified ? 'Email verified' : 'Email not verified'}
+                                            <FancyLabel
+                                                color={
+                                                    user.is_verified
+                                                        ? 'success'
+                                                        : 'error'
+                                                }
+                                            >
+                                                {user.is_verified
+                                                    ? 'Email verified'
+                                                    : 'Email not verified'}
                                             </FancyLabel>
                                         </TableCell>
                                         <TableCell>
-                                            {moment(user.created_at).format('DD/MM/YYYY | HH:mm:ss')}
+                                            {moment(user.created_at).format(
+                                                'DD/MM/YYYY | HH:mm:ss'
+                                            )}
                                         </TableCell>
                                     </TableRow>
                                 );

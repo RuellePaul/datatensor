@@ -1,8 +1,9 @@
-import React, {FC} from 'react';
-import clsx from 'clsx';
-import {Breadcrumbs, Grid, makeStyles, Typography} from '@material-ui/core';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import {Theme} from 'src/theme';
+import React, { FC } from "react";
+import clsx from "clsx";
+import { Breadcrumbs, Grid, Typography } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import { Theme } from "src/theme";
 
 interface HeaderProps {
     className?: string;
@@ -30,20 +31,14 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
         >
             <Grid item>
                 <Breadcrumbs
-                    separator={<NavigateNextIcon fontSize="small"/>}
+                    separator={<NavigateNextIcon fontSize="small" />}
                     aria-label="breadcrumb"
                 >
-                    <Typography
-                        variant="body1"
-                        color="textPrimary"
-                    >
+                    <Typography variant="body1" color="textPrimary">
                         Users
                     </Typography>
                 </Breadcrumbs>
-                <Typography
-                    variant="h3"
-                    color="textPrimary"
-                >
+                <Typography variant="h3" color="textPrimary">
                     All Users
                 </Typography>
             </Grid>

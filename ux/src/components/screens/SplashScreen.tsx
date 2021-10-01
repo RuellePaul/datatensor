@@ -1,5 +1,6 @@
 import React, {FC} from 'react';
-import {Box, LinearProgress, makeStyles} from '@material-ui/core';
+import {Box, LinearProgress} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -25,7 +26,7 @@ const SlashScreen: FC = () => {
     return (
         <div className={classes.root}>
             <Box width={400}>
-                <LinearProgress/>
+                <LinearProgress />
             </Box>
         </div>
     );

@@ -7,7 +7,7 @@ const GettingStartedView = () => {
     return (
         <Page title="Getting Started">
             <Suspense fallback={null}>
-                <Content/>
+                <Content />
             </Suspense>
         </Page>
     );

@@ -1,8 +1,8 @@
-import React, {FC} from 'react';
-import clsx from 'clsx';
-import ReactQuill from 'react-quill';
-import {makeStyles} from '@material-ui/core';
-import {Theme} from 'src/theme';
+import React, { FC } from "react";
+import clsx from "clsx";
+import ReactQuill from "react-quill";
+import makeStyles from "@mui/styles/makeStyles";
+import { Theme } from "src/theme";
 
 // NOTE: At this moment, this ReactQuill does not export
 // the types for props and we cannot extend them
@@ -23,32 +23,32 @@ const useStyles = makeStyles((theme: Theme) => ({
             borderRight: 'none',
             borderBottom: `1px solid ${theme.palette.divider}`,
             '& .ql-picker-label:hover': {
-                color: theme.palette.secondary.main
+                color: theme.palette.primary.main
             },
             '& .ql-picker-label.ql-active': {
-                color: theme.palette.secondary.main
+                color: theme.palette.primary.main
             },
             '& .ql-picker-item:hover': {
-                color: theme.palette.secondary.main
+                color: theme.palette.primary.main
             },
             '& .ql-picker-item.ql-selected': {
-                color: theme.palette.secondary.main
+                color: theme.palette.primary.main
             },
             '& button:hover': {
-                color: theme.palette.secondary.main,
+                color: theme.palette.primary.main,
                 '& .ql-stroke': {
-                    stroke: theme.palette.secondary.main
+                    stroke: theme.palette.primary.main
                 }
             },
             '& button:focus': {
-                color: theme.palette.secondary.main,
+                color: theme.palette.primary.main,
                 '& .ql-stroke': {
-                    stroke: theme.palette.secondary.main
+                    stroke: theme.palette.primary.main
                 }
             },
             '& button.ql-active': {
                 '& .ql-stroke': {
-                    stroke: theme.palette.secondary.main
+                    stroke: theme.palette.primary.main
                 }
             },
             '& .ql-stroke': {
@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme: Theme) => ({
                 fontSize: 16,
                 color: theme.palette.text.primary,
                 '&.ql-blank::before': {
-                    color: theme.palette.text.secondary
+                    color: theme.palette.text.primary
                 }
             }
         }
@@ -84,10 +84,7 @@ const QuillEditor: FC<QuillEditorProps> = ({className, ...rest}) => {
 
     return (
         // @ts-ignore
-        <ReactQuill
-            className={clsx(classes.root, className)}
-            {...rest}
-        />
+        <ReactQuill className={clsx(classes.root, className)} {...rest} />
     );
 };
 

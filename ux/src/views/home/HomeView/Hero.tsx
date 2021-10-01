@@ -1,7 +1,8 @@
-import React, {FC} from 'react';
-import clsx from 'clsx';
-import {Box, Container, Grid, makeStyles, Typography} from '@material-ui/core';
-import {Theme} from 'src/theme';
+import React, { FC } from "react";
+import clsx from "clsx";
+import { Box, Container, Grid, Typography } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
+import { Theme } from "src/theme";
 
 interface HeroProps {
     className?: string;
@@ -9,10 +10,10 @@ interface HeroProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        backgroundColor: theme.palette.background.dark,
+        backgroundColor: theme.palette.background.paper,
         paddingTop: 200,
         paddingBottom: 200,
-        [theme.breakpoints.down('md')]: {
+        [theme.breakpoints.down('lg')]: {
             paddingTop: 60,
             paddingBottom: 60
         }
@@ -48,36 +49,20 @@ const Hero: FC<HeroProps> = ({className, ...rest}) => {
     const classes = useStyles();
 
     return (
-        <div
-            className={clsx(classes.root, className)}
-            {...rest}
-        >
-            <Container component='section' maxWidth="lg">
-                <Grid
-                    container
-                    spacing={3}
-                >
-                    <Grid
-                        item
-                        xs={12}
-                        md={5}
-                    >
+        <div className={clsx(classes.root, className)} {...rest}>
+            <Container component="section" maxWidth="lg">
+                <Grid container spacing={3}>
+                    <Grid item xs={12} md={5}>
                         <Box
                             display="flex"
                             flexDirection="column"
                             justifyContent="center"
                             height="100%"
                         >
-                            <Typography
-                                variant="overline"
-                                color="secondary"
-                            >
+                            <Typography variant="overline" color="primary">
                                 Introducing
                             </Typography>
-                            <Typography
-                                variant="h1"
-                                color="textPrimary"
-                            >
+                            <Typography variant="h1" color="textPrimary">
                                 Datatensor
                             </Typography>
                             <Box mt={3}>
@@ -85,19 +70,18 @@ const Hero: FC<HeroProps> = ({className, ...rest}) => {
                                     variant="body1"
                                     color="textSecondary"
                                 >
-                                    A professional web application that comes with ready-to-use object detection models,
-                                    developed with one goal in mind, help you build faster computer vision applications.
+                                    A professional web application that comes
+                                    with ready-to-use object detection models,
+                                    developed with one goal in mind, help you
+                                    build faster computer vision applications.
                                 </Typography>
                             </Box>
                             <Box mt={3}>
-                                <Grid
-                                    container
-                                    spacing={3}
-                                >
+                                <Grid container spacing={3}>
                                     <Grid item>
                                         <Typography
                                             variant="h1"
-                                            color="secondary"
+                                            color="primary"
                                         >
                                             30+
                                         </Typography>
@@ -111,7 +95,7 @@ const Hero: FC<HeroProps> = ({className, ...rest}) => {
                                     <Grid item>
                                         <Typography
                                             variant="h1"
-                                            color="secondary"
+                                            color="primary"
                                         >
                                             UX
                                         </Typography>
@@ -125,7 +109,7 @@ const Hero: FC<HeroProps> = ({className, ...rest}) => {
                                     <Grid item>
                                         <Typography
                                             variant="h1"
-                                            color="secondary"
+                                            color="primary"
                                         >
                                             10+
                                         </Typography>
@@ -140,11 +124,7 @@ const Hero: FC<HeroProps> = ({className, ...rest}) => {
                             </Box>
                         </Box>
                     </Grid>
-                    <Grid
-                        item
-                        xs={12}
-                        md={7}
-                    >
+                    <Grid item xs={12} md={7}>
                         <Box position="relative">
                             <div className={classes.shape}>
                                 <img

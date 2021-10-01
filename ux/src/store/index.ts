@@ -1,4 +1,8 @@
-import {TypedUseSelectorHook, useDispatch as useReduxDispatch, useSelector as useReduxSelector} from 'react-redux';
+import {
+    TypedUseSelectorHook,
+    useDispatch as useReduxDispatch,
+    useSelector as useReduxSelector
+} from 'react-redux';
 import {ThunkAction} from 'redux-thunk';
 import {Action, configureStore} from '@reduxjs/toolkit';
 import {ENABLE_REDUX_DEV_TOOLS} from 'src/constants';

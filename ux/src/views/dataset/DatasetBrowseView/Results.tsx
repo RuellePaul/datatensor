@@ -1,11 +1,11 @@
-import React, {FC, useRef, useState} from 'react';
-import clsx from 'clsx';
-import {Box, Button, Grid, ListItemText, makeStyles, Menu, MenuItem, Typography} from '@material-ui/core';
-import {Pagination} from '@material-ui/lab';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import {Theme} from 'src/theme';
-import DTDataset from 'src/components/core/Dataset';
-import useDatasets from 'src/hooks/useDatasets';
+import React, { FC, useRef, useState } from "react";
+import clsx from "clsx";
+import { Box, Button, Grid, ListItemText, Menu, MenuItem, Pagination, Typography } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { Theme } from "src/theme";
+import DTDataset from "src/components/core/Dataset";
+import useDatasets from "src/hooks/useDatasets";
 
 interface ResultsProps {
     className?: string;
@@ -33,7 +33,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const Results: FC<ResultsProps> = ({className, ...rest}) => {
-
     const classes = useStyles();
 
     const {displayedDatasets} = useDatasets();
@@ -41,7 +40,6 @@ const Results: FC<ResultsProps> = ({className, ...rest}) => {
     const sortRef = useRef<HTMLButtonElement | null>(null);
     const [openSort, setOpenSort] = useState<boolean>(false);
     const [selectedSort, setSelectedSort] = useState<string>('Most images');
-
 
     const handleSortOpen = (): void => {
         setOpenSort(true);
@@ -56,12 +54,8 @@ const Results: FC<ResultsProps> = ({className, ...rest}) => {
         setOpenSort(false);
     };
 
-
     return (
-        <div
-            className={clsx(classes.root, className)}
-            {...rest}
-        >
+        <div className={clsx(classes.root, className)} {...rest}>
             <Box
                 display="flex"
                 alignItems="center"
@@ -74,59 +68,46 @@ const Results: FC<ResultsProps> = ({className, ...rest}) => {
                     variant="h5"
                     color="textPrimary"
                 >
-                    Showing
-                    {' '}
-                    {displayedDatasets.length}
-                    {' '}
-                    dataset{displayedDatasets.length > 1 ? 's' : ''}
+                    Showing {displayedDatasets.length} dataset
+                    {displayedDatasets.length > 1 ? 's' : ''}
                 </Typography>
-                <Box
-                    display="flex"
-                    alignItems="center"
-                >
+                <Box display="flex" alignItems="center">
                     <Button
                         className={classes.sortButton}
                         onClick={handleSortOpen}
                         ref={sortRef}
                     >
                         {selectedSort}
-                        <ArrowDropDownIcon/>
+                        <ArrowDropDownIcon />
                     </Button>
                 </Box>
             </Box>
-            <Grid
-                container
-                spacing={3}
-            >
+            <Grid container spacing={3}>
                 {displayedDatasets
                     .sort((a, b) => {
                         if (selectedSort === 'Most images')
-                            return (b.image_count + (b.augmented_count || 0)) - (a.image_count + (a.augmented_count || 0))
+                            return (
+                                b.image_count +
+                                (b.augmented_count || 0) -
+                                (a.image_count + (a.augmented_count || 0))
+                            );
                         else if (selectedSort === 'Most original images')
-                            return b.image_count - a.image_count
+                            return b.image_count - a.image_count;
                         else if (selectedSort === 'Most recent')
-                            return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-                        else
-                            return 0
+                            return (
+                                new Date(b.created_at).getTime() -
+                                new Date(a.created_at).getTime()
+                            );
+                        else return 0;
                     })
-                    .map((dataset) => (
-                        <Grid
-                            item
-                            key={dataset.id}
-                            md={4}
-                            sm={6}
-                            xs={12}
-                        >
-                            <DTDataset dataset={dataset}/>
+                    .map(dataset => (
+                        <Grid item key={dataset.id} md={4} sm={6} xs={12}>
+                            <DTDataset dataset={dataset} />
                         </Grid>
                     ))}
             </Grid>
-            <Box
-                mt={6}
-                display="flex"
-                justifyContent="center"
-            >
-                <Pagination count={1}/>
+            <Box mt={6} display="flex" justifyContent="center">
+                <Pagination count={1} />
             </Box>
             <Menu
                 anchorEl={sortRef.current}
@@ -135,12 +116,12 @@ const Results: FC<ResultsProps> = ({className, ...rest}) => {
                 elevation={1}
             >
                 {['Most images', 'Most original images', 'Most recent'].map(
-                    (option) => (
+                    option => (
                         <MenuItem
                             key={option}
                             onClick={() => handleSortSelect(option)}
                         >
-                            <ListItemText primary={option}/>
+                            <ListItemText primary={option} />
                         </MenuItem>
                     )
                 )}

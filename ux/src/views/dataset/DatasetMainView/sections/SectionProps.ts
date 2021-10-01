@@ -1,3 +1,3 @@
 export interface SectionProps {
-    className?: string
+    className?: string;
 }

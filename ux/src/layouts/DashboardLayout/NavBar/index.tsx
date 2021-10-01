@@ -1,16 +1,17 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable react/prop-types */
-import React, {FC, ReactNode, useEffect} from 'react';
-import {Link as RouterLink, matchPath, useLocation} from 'react-router-dom';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import {Box, Chip, Divider, Drawer, Hidden, Link, List, ListSubheader, makeStyles, Typography} from '@material-ui/core';
-import {DeveloperBoard as AdminDashboardIcon} from '@material-ui/icons';
-import {Activity as ActivityIcon, Package as PackageIcon, Users as UsersIcon} from 'react-feather';
-import Logo from 'src/components/utils/Logo';
-import UserAvatar from 'src/components/UserAvatar';
-import useAuth from 'src/hooks/useAuth';
-import NavItem from './NavItem';
-import {User} from 'src/types/user';
+import React, { FC, ReactNode, useEffect } from "react";
+import { Link as RouterLink, matchPath, useLocation } from "react-router-dom";
+import PerfectScrollbar from "react-perfect-scrollbar";
+import { Box, Chip, Divider, Drawer, Hidden, Link, List, ListSubheader, Typography } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
+import { DeveloperBoard as AdminDashboardIcon } from "@mui/icons-material";
+import { Activity as ActivityIcon, Package as PackageIcon, Users as UsersIcon } from "react-feather";
+import Logo from "src/components/utils/Logo";
+import UserAvatar from "src/components/UserAvatar";
+import useAuth from "src/hooks/useAuth";
+import NavItem from "./NavItem";
+import { User } from "src/types/user";
 
 interface NavBarProps {
     openMobile: boolean;
@@ -34,18 +35,22 @@ const sections = (user: User): Section[] => [
     {
         subheader: 'Reports',
         items: [
-            ...(user.is_admin ? [{
-                title: 'App dashboard',
-                icon: AdminDashboardIcon,
-                href: '/app/admin/dashboard',
-                info: () => (
-                    <Chip
-                        size="small"
-                        label="Admin"
-                        variant="outlined"
-                    />
-                )
-            }] : []),
+            ...(user.is_admin
+                ? [
+                      {
+                          title: 'App dashboard',
+                          icon: AdminDashboardIcon,
+                          href: '/app/admin/dashboard',
+                          info: () => (
+                              <Chip
+                                  size="small"
+                                  label="Admin"
+                                  variant="outlined"
+                              />
+                          )
+                      }
+                  ]
+                : []),
             {
                 title: 'Dashboard',
                 icon: ActivityIcon,
@@ -56,18 +61,22 @@ const sections = (user: User): Section[] => [
     {
         subheader: 'Manage',
         items: [
-            ...(user.is_admin ? [{
-                title: 'Users',
-                icon: UsersIcon,
-                href: '/app/admin/users',
-                info: () => (
-                    <Chip
-                        size="small"
-                        label="Admin"
-                        variant="outlined"
-                    />
-                )
-            }] : []),
+            ...(user.is_admin
+                ? [
+                      {
+                          title: 'Users',
+                          icon: UsersIcon,
+                          href: '/app/admin/users',
+                          info: () => (
+                              <Chip
+                                  size="small"
+                                  label="Admin"
+                                  variant="outlined"
+                              />
+                          )
+                      }
+                  ]
+                : []),
             {
                 title: 'Datasets',
                 icon: PackageIcon,
@@ -78,10 +87,10 @@ const sections = (user: User): Section[] => [
 ];
 
 function renderNavItems({
-                            items,
-                            pathname,
-                            depth = 0
-                        }: {
+    items,
+    pathname,
+    depth = 0
+}: {
     items: Item[];
     pathname: string;
     depth?: number;
@@ -97,11 +106,11 @@ function renderNavItems({
 }
 
 function reduceChildRoutes({
-                               acc,
-                               pathname,
-                               item,
-                               depth
-                           }: {
+    acc,
+    pathname,
+    item,
+    depth
+}: {
     acc: any[];
     pathname: string;
     item: Item;
@@ -159,7 +168,7 @@ const useStyles = makeStyles(theme => ({
     avatar: {
         cursor: 'pointer',
         width: 64,
-        height: 64,
+        height: 64
     },
     list: {
         '& .MuiChip-outlined': {
@@ -182,38 +191,22 @@ const NavBar: FC<NavBarProps> = ({onMobileClose, openMobile}) => {
     }, [location.pathname]);
 
     const content = (
-        <Box
-            height="100%"
-            display="flex"
-            flexDirection="column"
-        >
+        <Box height="100%" display="flex" flexDirection="column">
             <PerfectScrollbar options={{suppressScrollX: true}}>
                 <Hidden lgUp>
-                    <Box
-                        p={2}
-                        display="flex"
-                        justifyContent="center"
-                    >
+                    <Box p={2} display="flex" justifyContent="center">
                         <RouterLink to="/">
-                            <Logo/>
+                            <Logo />
                         </RouterLink>
                     </Box>
                 </Hidden>
                 <Box p={2}>
-                    <Box
-                        display="flex"
-                        justifyContent="center"
-                    >
+                    <Box display="flex" justifyContent="center">
                         <RouterLink to="/app/account">
-                            <UserAvatar
-                                className={classes.avatar}
-                            />
+                            <UserAvatar className={classes.avatar} />
                         </RouterLink>
                     </Box>
-                    <Box
-                        mt={2}
-                        textAlign="center"
-                    >
+                    <Box mt={2} textAlign="center">
                         <Link
                             component={RouterLink}
                             to="/app/account"
@@ -223,35 +216,25 @@ const NavBar: FC<NavBarProps> = ({onMobileClose, openMobile}) => {
                         >
                             {user.name}
                         </Link>
-                        <Typography
-                            variant="body2"
-                            color="textSecondary"
-                        >
-                            Your tier:
-                            {' '}
-                            <Link
-                                component={RouterLink}
-                                to="/pricing"
-                            >
+                        <Typography variant="body2" color="textSecondary">
+                            Your tier:{' '}
+                            <Link component={RouterLink} to="/pricing">
                                 {user.tier}
                             </Link>
                         </Typography>
                     </Box>
                 </Box>
-                <Divider/>
+                <Divider />
                 <Box p={2}>
-                    {sections(user).map((section) => (
+                    {sections(user).map(section => (
                         <List
                             key={section.subheader}
                             className={classes.list}
-                            subheader={(
-                                <ListSubheader
-                                    disableGutters
-                                    disableSticky
-                                >
+                            subheader={
+                                <ListSubheader disableGutters disableSticky>
                                     {section.subheader}
                                 </ListSubheader>
-                            )}
+                            }
                         >
                             {renderNavItems({
                                 items: section.items,
@@ -260,22 +243,15 @@ const NavBar: FC<NavBarProps> = ({onMobileClose, openMobile}) => {
                         </List>
                     ))}
                 </Box>
-                <Divider/>
+                <Divider />
                 <Box p={2}>
-                    <Box
-                        p={2}
-                        borderRadius="borderRadius"
-                        bgcolor="background.dark"
-                    >
-                        <Typography
-                            variant="h6"
-                            color="textPrimary"
-                        >
+                    <Box p={2} borderRadius={1} bgcolor="background.paper">
+                        <Typography variant="h6" color="textPrimary">
                             Need Help?
                         </Typography>
                         <Link
                             variant="subtitle1"
-                            color="secondary"
+                            color="primary"
                             component={RouterLink}
                             to="/docs"
                         >
@@ -300,7 +276,7 @@ const NavBar: FC<NavBarProps> = ({onMobileClose, openMobile}) => {
                     {content}
                 </Drawer>
             </Hidden>
-            <Hidden mdDown>
+            <Hidden lgDown>
                 <Drawer
                     anchor="left"
                     classes={{paper: classes.desktopDrawer}}

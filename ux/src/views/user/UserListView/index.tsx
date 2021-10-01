@@ -1,5 +1,6 @@
 import React, {FC, useCallback, useEffect, useState} from 'react';
-import {Box, Container, makeStyles} from '@material-ui/core';
+import {Box, Container} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import api from 'src/utils/api';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
@@ -10,7 +11,7 @@ import Results from './Results';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        backgroundColor: theme.palette.background.dark,
+        backgroundColor: theme.palette.background.paper,
         minHeight: '100%',
         paddingTop: theme.spacing(3),
         paddingBottom: theme.spacing(3)
@@ -24,7 +25,7 @@ const UserListView: FC = () => {
 
     const getUsers = useCallback(async () => {
         try {
-            const response = await api.get<{ users: User[] }>('/users/');
+            const response = await api.get<{users: User[]}>('/users/');
 
             if (isMountedRef.current) {
                 setUsers(response.data.users);
@@ -39,17 +40,11 @@ const UserListView: FC = () => {
     }, [getUsers]);
 
     return (
-        <Page
-            className={classes.root}
-            title="Users | Admin"
-        >
-            <Container component='section' maxWidth="lg">
-                <Header/>
+        <Page className={classes.root} title="Users | Admin">
+            <Container component="section" maxWidth="lg">
+                <Header />
                 <Box mt={3}>
-                    <Results
-                        users={users}
-                        setUsers={setUsers}
-                    />
+                    <Results users={users} setUsers={setUsers} />
                 </Box>
             </Container>
         </Page>
