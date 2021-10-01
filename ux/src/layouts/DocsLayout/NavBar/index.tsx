@@ -21,56 +21,8 @@ interface Item {
 
 const items: Item[] = [
     {
-        title: 'Welcome',
-        href: '/docs/welcome'
-    },
-    {
         title: 'Getting Started',
         href: '/docs/getting-started'
-    },
-    {
-        title: 'Environment Variables',
-        href: '/docs/environment-variables'
-    },
-    {
-        title: 'Deployment',
-        href: '/docs/deployment'
-    },
-    {
-        title: 'Analytics',
-        href: '/docs/analytics'
-    },
-    {
-        title: 'API Calls',
-        href: '/docs/api-calls'
-    },
-    {
-        title: 'Authentication',
-        href: '/docs/authentication'
-    },
-    {
-        title: 'Routing',
-        href: '/docs/routing'
-    },
-    {
-        title: 'Settings',
-        href: '/docs/settings'
-    },
-    {
-        title: 'State Management',
-        href: '/docs/state-management'
-    },
-    {
-        title: 'Theming',
-        href: '/docs/theming'
-    },
-    {
-        title: 'Support',
-        href: '/docs/support'
-    },
-    {
-        title: 'Changelog',
-        href: '/docs/changelog'
     }
 ];
 
