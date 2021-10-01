@@ -10,7 +10,7 @@ import {
     InputAdornment,
     TextField
 } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import {makeStyles} from '@mui/styles';
 import {Search as SearchIcon} from '@mui/icons-material';
 import {Theme} from 'src/theme';
 import api from 'src/utils/api';

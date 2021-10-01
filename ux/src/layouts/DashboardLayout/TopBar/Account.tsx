@@ -9,7 +9,7 @@ import {
     MenuItem,
     Typography
 } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import {makeStyles} from '@mui/styles';
 import UserAvatar from 'src/components/UserAvatar';
 import useAuth from 'src/hooks/useAuth';
 

@@ -8,7 +8,7 @@ import {
     IconButton,
     Typography
 } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import {makeStyles} from '@mui/styles';
 import {
     Close as CloseIcon,
     PublishOutlined as UploadIcon

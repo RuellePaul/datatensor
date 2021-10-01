@@ -3,8 +3,12 @@ import {
     createTheme as createMuiTheme,
     responsiveFontSizes
 } from '@mui/material';
-import {Theme as MuiTheme} from '@mui/material/styles';
+import {
+    Theme as MuiTheme,
+    ThemeOptions as MuiThemeOptions
+} from '@mui/material/styles';
 import {THEMES} from 'src/constants';
+import components from './components';
 import typography from './typography';
 
 export interface Theme extends MuiTheme {
@@ -18,9 +22,14 @@ interface ThemeConfig {
     theme?: string;
 }
 
-const baseOptions: any = {
+interface ThemeOptions extends MuiThemeOptions {
+    name: string;
+}
+
+const baseOptions: MuiThemeOptions = {
     direction: 'ltr',
     typography,
+    components,
     breakpoints: {
         values: {
             xs: 0,
@@ -29,28 +38,10 @@ const baseOptions: any = {
             lg: 1320,
             xl: 1920
         }
-    },
-    overrides: {
-        MuiLinearProgress: {
-            root: {
-                borderRadius: 3,
-                overflow: 'hidden'
-            }
-        },
-        MuiListItemIcon: {
-            root: {
-                minWidth: 32
-            }
-        },
-        MuiChip: {
-            root: {
-                backgroundColor: 'rgba(0,0,0,0.075)'
-            }
-        }
     }
 };
 
-const themesOptions: any[] = [
+const themesOptions: ThemeOptions[] = [
     {
         name: THEMES.LIGHT
     },

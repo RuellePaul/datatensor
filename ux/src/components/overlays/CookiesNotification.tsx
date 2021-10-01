@@ -1,7 +1,7 @@
 import React, {FC, useEffect, useState} from 'react';
 import Cookies from 'js-cookie';
 import {Box, Button, Link, Portal, Typography} from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 
 const useStyles = makeStyles((theme: Theme) => ({

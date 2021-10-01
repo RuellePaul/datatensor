@@ -16,7 +16,7 @@ import {
     TextField,
     Typography
 } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import {makeStyles} from '@mui/styles';
 import {Close as CloseIcon, Refresh} from '@mui/icons-material';
 import {Theme} from 'src/theme';
 import Pipeline from 'src/components/core/Pipeline';

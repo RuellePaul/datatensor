@@ -12,7 +12,7 @@ import {
     Tooltip,
     Typography
 } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import {makeStyles} from '@mui/styles';
 import {Settings as SettingsIcon} from 'react-feather';
 import useSettings from 'src/hooks/useSettings';
 import {THEMES} from 'src/constants';

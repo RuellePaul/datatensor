@@ -10,7 +10,7 @@ import {
     Tooltip,
     Typography
 } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import {makeStyles} from '@mui/styles';
 import {TabContext} from '@mui/lab';
 import Header from './Header';
 import SectionOverview from './sections/SectionOverview';

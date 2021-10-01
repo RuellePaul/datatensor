@@ -9,7 +9,7 @@ import {
     Link,
     Typography
 } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import {makeStyles} from '@mui/styles';
 import {ArrowLeft as BackIcon} from 'react-feather';
 import DTImagesList from 'src/components/core/Images/ImagesList';
 import DTImagesStack from 'src/components/core/Images/ImagesStack';
@@ -108,7 +108,7 @@ const ImagesStackPanel: FC<ImagesStackPanelProps> = ({pipeline = {}}) => {
     const [selected, setSelected] = useState<boolean>(false);
 
     return (
-        <Card className={classes.root} elevation={5} variant="outlined">
+        <Card className={classes.root} variant="outlined">
             <CardContent className={classes.content}>
                 {selected ? (
                     currentCategory === null ? (

@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import {Container} from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import {makeStyles} from '@mui/styles';
 import Page from 'src/components/Page';
 import {Theme} from 'src/theme';
 import Header from './Header';

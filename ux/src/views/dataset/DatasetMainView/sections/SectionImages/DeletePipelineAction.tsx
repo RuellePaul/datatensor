@@ -2,7 +2,7 @@ import React, {FC, useState} from 'react';
 import clsx from 'clsx';
 import {useSnackbar} from 'notistack';
 import {Button, CircularProgress} from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import {makeStyles} from '@mui/styles';
 import {Delete as DeleteIcon} from '@mui/icons-material';
 import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';

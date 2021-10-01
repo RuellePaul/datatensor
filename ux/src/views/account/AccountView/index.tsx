@@ -1,7 +1,7 @@
 import React, {ChangeEvent, FC, useState} from 'react';
 import {Box, Container, Divider, Tab, Tabs} from '@mui/material';
 
-import makeStyles from '@mui/styles/makeStyles';
+import {makeStyles} from '@mui/styles';
 
 import Header from './Header';
 import General from './General';

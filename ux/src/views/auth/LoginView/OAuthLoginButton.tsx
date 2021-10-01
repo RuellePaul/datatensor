@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import {Button, SvgIcon} from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import {makeStyles} from '@mui/styles';
 import api from 'src/utils/api';
 import {useSnackbar} from 'notistack';
 

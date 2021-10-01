@@ -1,7 +1,7 @@
 import React, {ChangeEvent, FC, useState} from 'react';
 import {useParams} from 'react-router';
 import {Box, Container, Divider, Tab, Tabs, Typography} from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
 import UserAvatar from 'src/components/UserAvatar';

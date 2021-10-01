@@ -7,7 +7,7 @@ import {
     CardContent,
     Typography
 } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import {makeStyles} from '@mui/styles';
 import {CreateOutlined as LabelisatorIcon} from '@mui/icons-material';
 import Categories from 'src/components/core/Dataset/Categories';
 import {Theme} from 'src/theme';

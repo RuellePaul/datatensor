@@ -8,7 +8,7 @@ import {
     useMediaQuery,
     useTheme
 } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
 import {ArrowLeft as BackIcon} from 'react-feather';

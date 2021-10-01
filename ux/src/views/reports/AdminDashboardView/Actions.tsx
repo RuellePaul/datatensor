@@ -12,7 +12,7 @@ import {
     TextField,
     Typography
 } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import {makeStyles} from '@mui/styles';
 
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import {Theme} from 'src/theme';

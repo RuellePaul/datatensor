@@ -1,7 +1,7 @@
 import React, {FC, useEffect} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import {Box, Button, Container, Typography} from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import {makeStyles} from '@mui/styles';
 import Page from 'src/components/Page';
 import SplashScreen from 'src/components/screens/SplashScreen';
 import useAuth from 'src/hooks/useAuth';

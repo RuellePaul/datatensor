@@ -1,7 +1,7 @@
 import React, {FC, useEffect} from 'react';
 import NProgress from 'nprogress';
 import {Box, LinearProgress} from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 
 const useStyles = makeStyles((theme: Theme) => ({

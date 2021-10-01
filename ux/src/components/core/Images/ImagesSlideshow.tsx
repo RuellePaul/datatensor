@@ -10,7 +10,7 @@ import {
     Typography,
     useTheme
 } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import {makeStyles} from '@mui/styles';
 import {
     ImageOutlined as ImageIcon,
     KeyboardArrowLeft,

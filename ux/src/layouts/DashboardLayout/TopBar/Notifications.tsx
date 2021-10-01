@@ -16,7 +16,7 @@ import {
     Typography,
     useTheme
 } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import {makeStyles} from '@mui/styles';
 import {FiberManualRecord} from '@mui/icons-material';
 import {Bell as BellIcon} from 'react-feather';
 import {Theme} from 'src/theme';

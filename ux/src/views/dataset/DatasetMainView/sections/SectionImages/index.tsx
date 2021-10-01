@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
 import {Typography} from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import {makeStyles} from '@mui/styles';
 import FancyLabel from 'src/components/FancyLabel';
 import useDataset from 'src/hooks/useDataset';
 import {CategoryProvider} from 'src/store/CategoryContext';

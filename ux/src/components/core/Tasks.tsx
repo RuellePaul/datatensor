@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import {Box, capitalize, LinearProgress, Typography} from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import {makeStyles} from '@mui/styles';
 import {
     DataGrid,
     GridCellParams,

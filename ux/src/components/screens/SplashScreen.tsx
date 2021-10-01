@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import {Box, LinearProgress} from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 
 const useStyles = makeStyles((theme: Theme) => ({

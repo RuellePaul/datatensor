@@ -1,6 +1,6 @@
 import React, {FC, memo, ReactNode, useRef, useState} from 'react';
 import {IconButton, Menu, Tooltip} from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import {makeStyles} from '@mui/styles';
 import MoreIcon from '@mui/icons-material/MoreVert';
 
 const useStyles = makeStyles(() => ({
