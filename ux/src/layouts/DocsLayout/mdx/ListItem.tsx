@@ -5,21 +5,21 @@ import { Typography } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 
 const useStyles = makeStyles(() => ({
-  root: {}
+    root: {}
 }));
 
 const Paragraph: FC = (props) => {
-  const classes = useStyles();
+    const classes = useStyles();
 
-  return (
-    <Typography
-      variant="body1"
-      color="textPrimary"
-      component="li"
-      className={classes.root}
-      {...props}
-    />
-  );
+    return (
+        <Typography
+            variant="body1"
+            color="textPrimary"
+            component="li"
+            className={classes.root}
+            {...props}
+        />
+    );
 };
 
 export default Paragraph;

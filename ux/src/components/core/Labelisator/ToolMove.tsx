@@ -7,14 +7,14 @@ import { Direction } from "src/types/direction";
 import { Label } from "src/types/label";
 import { Point } from "src/types/point";
 import {
-  CANVAS_OFFSET,
-  currentLabelsHoverIds,
-  currentLabelsResized,
-  currentLabelsTranslated,
-  currentPoint,
-  drawLabels,
-  renderCursor,
-  reset
+    CANVAS_OFFSET,
+    currentLabelsHoverIds,
+    currentLabelsResized,
+    currentLabelsTranslated,
+    currentPoint,
+    drawLabels,
+    renderCursor,
+    reset
 } from "src/utils/labeling";
 import useImage from "src/hooks/useImage";
 

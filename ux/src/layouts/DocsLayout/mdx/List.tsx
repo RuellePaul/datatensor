@@ -5,41 +5,41 @@ import makeStyles from "@mui/styles/makeStyles";
 import type { Theme } from "src/theme";
 
 interface ListProps {
-  children?: ReactNode;
-  variant: "ul" | "ol";
+    children?: ReactNode;
+    variant: "ul" | "ol";
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginLeft: theme.spacing(4),
-    marginBottom: theme.spacing(2)
-  }
+    root: {
+        marginLeft: theme.spacing(4),
+        marginBottom: theme.spacing(2)
+    }
 }));
 
 const List: FC<ListProps> = ({
-                               variant: Component,
-                               children,
-                               ...rest
+                                 variant: Component,
+                                 children,
+                                 ...rest
                              }) => {
-  const classes = useStyles();
+    const classes = useStyles();
 
-  return (
-    <Component
-      className={classes.root}
-      {...rest}
-    >
-      {children}
-    </Component>
-  );
+    return (
+        <Component
+            className={classes.root}
+            {...rest}
+        >
+            {children}
+        </Component>
+    );
 };
 
 List.propTypes = {
-  children: PropTypes.node,
-  variant: PropTypes.oneOf(["ul", "ol"])
+    children: PropTypes.node,
+    variant: PropTypes.oneOf(["ul", "ol"])
 };
 
 List.defaultProps = {
-  variant: "ul"
+    variant: "ul"
 };
 
 export default List;

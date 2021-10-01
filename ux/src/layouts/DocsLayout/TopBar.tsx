@@ -8,67 +8,67 @@ import { Menu as MenuIcon } from "react-feather";
 import Logo from "src/components/utils/Logo";
 
 interface TopBarProps {
-  onMobileNavOpen?: () => void;
+    onMobileNavOpen?: () => void;
 }
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    backgroundColor: theme.palette.background.default,
-    color: theme.palette.text.primary,
-    boxShadow: "none",
-    borderBottom: `1px solid ${theme.palette.divider}`,
-    zIndex: theme.zIndex.drawer + 100
-  },
-  toolbar: {
-    height: 64
-  },
-  link: {
-    fontWeight: theme.typography.fontWeightMedium
-  }
+    root: {
+        backgroundColor: theme.palette.background.default,
+        color: theme.palette.text.primary,
+        boxShadow: "none",
+        borderBottom: `1px solid ${theme.palette.divider}`,
+        zIndex: theme.zIndex.drawer + 100
+    },
+    toolbar: {
+        height: 64
+    },
+    link: {
+        fontWeight: theme.typography.fontWeightMedium
+    }
 }));
 
 const TopBar: FC<TopBarProps> = ({ onMobileNavOpen }) => {
-  const classes = useStyles();
+    const classes = useStyles();
 
-  return (
-    <AppBar className={classes.root}>
-      <Toolbar className={classes.toolbar}>
-        <Hidden lgUp>
-          <IconButton color="inherit" onClick={onMobileNavOpen} size="large">
-            <MenuIcon />
-          </IconButton>
-        </Hidden>
-        <Hidden lgDown>
-          <RouterLink to="/">
-            <Logo />
-          </RouterLink>
-        </Hidden>
-        <Box
-          ml={2}
-          flexGrow={1}
-        />
-        <Link
-          className={classes.link}
-          color="textSecondary"
-          component={RouterLink}
-          to="/app"
-          underline="none"
-          variant="body2"
-        >
-          Dashboard
-        </Link>
-      </Toolbar>
-    </AppBar>
-  );
+    return (
+        <AppBar className={classes.root}>
+            <Toolbar className={classes.toolbar}>
+                <Hidden lgUp>
+                    <IconButton color="inherit" onClick={onMobileNavOpen} size="large">
+                        <MenuIcon />
+                    </IconButton>
+                </Hidden>
+                <Hidden lgDown>
+                    <RouterLink to="/">
+                        <Logo />
+                    </RouterLink>
+                </Hidden>
+                <Box
+                    ml={2}
+                    flexGrow={1}
+                />
+                <Link
+                    className={classes.link}
+                    color="textSecondary"
+                    component={RouterLink}
+                    to="/app"
+                    underline="none"
+                    variant="body2"
+                >
+                    Dashboard
+                </Link>
+            </Toolbar>
+        </AppBar>
+    );
 };
 
 TopBar.propTypes = {
-  onMobileNavOpen: PropTypes.func
+    onMobileNavOpen: PropTypes.func
 };
 
 TopBar.defaultProps = {
-  onMobileNavOpen: () => {
-  }
+    onMobileNavOpen: () => {
+    }
 };
 
 export default TopBar;

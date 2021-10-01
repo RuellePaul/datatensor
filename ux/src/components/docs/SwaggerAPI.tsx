@@ -3,14 +3,13 @@ import makeStyles from "@mui/styles/makeStyles";
 import { Theme } from "src/theme";
 import { API_HOSTNAME } from "src/utils/api";
 
-interface SwaggerAPIlProps {
-}
+interface SwaggerAPIlProps {}
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        width: "100%",
-        minHeight: "calc(100vh - 340px)",
-        background: "white"
+        width: '100%',
+        minHeight: 'calc(100vh - 340px)',
+        background: 'white'
     }
 }));
 

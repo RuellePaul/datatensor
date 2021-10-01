@@ -1,16 +1,16 @@
 import React, { FC, FormEvent } from "react";
 import clsx from "clsx";
 import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  Checkbox,
-  Divider,
-  FormControlLabel,
-  Grid,
-  Typography
+    Box,
+    Button,
+    Card,
+    CardContent,
+    CardHeader,
+    Checkbox,
+    Divider,
+    FormControlLabel,
+    Grid,
+    Typography
 } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 import wait from "src/utils/wait";
@@ -127,11 +127,7 @@ const Notifications: FC<NotificationProps> = ({className, ...rest}) => {
                 </CardContent>
                 <Divider />
                 <Box p={2} display="flex" justifyContent="flex-end">
-                    <Button
-                      color="primary"
-                      type="submit"
-                      variant="contained"
-                    >
+                    <Button color="primary" type="submit" variant="contained">
                         Save Settings
                     </Button>
                 </Box>

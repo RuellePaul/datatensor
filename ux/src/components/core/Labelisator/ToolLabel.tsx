@@ -4,16 +4,16 @@ import { Point } from "src/types/point";
 import makeStyles from "@mui/styles/makeStyles";
 import { Theme } from "src/theme";
 import {
-  CANVAS_OFFSET,
-  currentLabelsHoverIds,
-  currentPoint,
-  drawCursorLines,
-  drawRect,
-  formatRatio,
-  LABEL_MIN_HEIGHT,
-  LABEL_MIN_WIDTH,
-  pointIsOutside,
-  reset
+    CANVAS_OFFSET,
+    currentLabelsHoverIds,
+    currentPoint,
+    drawCursorLines,
+    drawRect,
+    formatRatio,
+    LABEL_MIN_HEIGHT,
+    LABEL_MIN_WIDTH,
+    pointIsOutside,
+    reset
 } from "src/utils/labeling";
 import useCategory from "src/hooks/useCategory";
 import useImage from "src/hooks/useImage";

@@ -28,7 +28,7 @@ const items: Item[] = [
     {
         title: "Swagger API",
         href: "/docs/swagger-api"
-    },
+    }
 ];
 
 function renderNavItems({ items, depth = 0 }: { items: Item[], depth?: number }) {

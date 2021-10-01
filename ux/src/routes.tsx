@@ -159,9 +159,7 @@ const routes: Routes = [
             {
                 exact: true,
                 path: '/docs/swagger-api',
-                component: lazy(() =>
-                    import('src/views/docs/SwaggerAPI')
-                )
+                component: lazy(() => import('src/views/docs/SwaggerAPI'))
             },
             {
                 component: () => <Redirect to="/404" />

@@ -4,19 +4,19 @@ import useEventListener from "use-typed-event-listener";
 import { useSnackbar } from "notistack";
 import { ArrowLeft as BackIcon, MoreVertical as MoreIcon } from "react-feather";
 import {
-  Backdrop,
-  Box,
-  Button,
-  Chip,
-  Dialog,
-  Divider,
-  IconButton,
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem,
-  Pagination,
-  Typography
+    Backdrop,
+    Box,
+    Button,
+    Chip,
+    Dialog,
+    Divider,
+    IconButton,
+    ListItemIcon,
+    ListItemText,
+    Menu,
+    MenuItem,
+    Pagination,
+    Typography
 } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 import { CropSharp as LabelisatorIcon, DeleteOutline as DeleteIcon } from "@mui/icons-material";

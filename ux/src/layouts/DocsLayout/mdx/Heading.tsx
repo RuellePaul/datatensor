@@ -6,59 +6,59 @@ import makeStyles from "@mui/styles/makeStyles";
 import type { Theme } from "src/theme";
 
 interface HeadingProps {
-  children?: ReactNode;
-  variant: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+    children?: ReactNode;
+    variant: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  h1: {
-    marginTop: theme.spacing(6),
-    marginBottom: theme.spacing(2)
-  },
-  h2: {
-    marginTop: theme.spacing(6),
-    marginBottom: theme.spacing(2)
-  },
-  h3: {
-    marginTop: theme.spacing(6),
-    marginBottom: theme.spacing(2)
-  },
-  h4: {
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(2)
-  },
-  h5: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2)
-  },
-  h6: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2)
-  }
+    h1: {
+        marginTop: theme.spacing(6),
+        marginBottom: theme.spacing(2)
+    },
+    h2: {
+        marginTop: theme.spacing(6),
+        marginBottom: theme.spacing(2)
+    },
+    h3: {
+        marginTop: theme.spacing(6),
+        marginBottom: theme.spacing(2)
+    },
+    h4: {
+        marginTop: theme.spacing(4),
+        marginBottom: theme.spacing(2)
+    },
+    h5: {
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2)
+    },
+    h6: {
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2)
+    }
 }));
 
 const Heading: FC<HeadingProps> = ({
-                                     children,
-                                     variant,
-                                     ...rest
+                                       children,
+                                       variant,
+                                       ...rest
                                    }) => {
-  const classes = useStyles();
+    const classes = useStyles();
 
-  return (
-    <Typography
-      className={classes[variant]}
-      variant={variant}
-      color="textPrimary"
-      {...rest}
-    >
-      {children}
-    </Typography>
-  );
+    return (
+        <Typography
+            className={classes[variant]}
+            variant={variant}
+            color="textPrimary"
+            {...rest}
+        >
+            {children}
+        </Typography>
+    );
 };
 
 Heading.propTypes = {
-  children: PropTypes.node,
-  variant: PropTypes.oneOf(["h1", "h2", "h3", "h4", "h5", "h6"])
+    children: PropTypes.node,
+    variant: PropTypes.oneOf(["h1", "h2", "h3", "h4", "h5", "h6"])
 };
 
 export default Heading;

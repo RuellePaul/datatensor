@@ -2,25 +2,25 @@ import React, { FC, forwardRef, useCallback, useEffect, useState } from "react";
 import clsx from "clsx";
 import { Maximize as LabelIcon, Move as MoveIcon } from "react-feather";
 import {
-  AppBar,
-  Badge,
-  Box,
-  Button,
-  CircularProgress,
-  Container,
-  Dialog,
-  Divider,
-  FormControlLabel,
-  Grid,
-  IconButton,
-  Slide,
-  Slider,
-  Switch,
-  ToggleButton,
-  ToggleButtonGroup,
-  Toolbar,
-  Tooltip,
-  Typography
+    AppBar,
+    Badge,
+    Box,
+    Button,
+    CircularProgress,
+    Container,
+    Dialog,
+    Divider,
+    FormControlLabel,
+    Grid,
+    IconButton,
+    Slide,
+    Slider,
+    Switch,
+    ToggleButton,
+    ToggleButtonGroup,
+    Toolbar,
+    Tooltip,
+    Typography
 } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 import { TransitionProps } from "@mui/material/transitions";

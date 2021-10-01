@@ -1,18 +1,18 @@
 import React, { FC, useState } from "react";
 import clsx from "clsx";
 import {
-  Box,
-  capitalize,
-  Chip,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Divider,
-  Grid,
-  IconButton,
-  LinearProgress,
-  Link,
-  Typography
+    Box,
+    capitalize,
+    Chip,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    Divider,
+    Grid,
+    IconButton,
+    LinearProgress,
+    Link,
+    Typography
 } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 import { Close as CloseIcon } from "@mui/icons-material";

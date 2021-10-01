@@ -2,15 +2,15 @@ import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router";
 import clsx from "clsx";
 import {
-  Box,
-  capitalize,
-  Card,
-  CardActionArea,
-  CardContent,
-  CardHeader,
-  CardMedia,
-  Chip,
-  Typography
+    Box,
+    capitalize,
+    Card,
+    CardActionArea,
+    CardContent,
+    CardHeader,
+    CardMedia,
+    Chip,
+    Typography
 } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 import { Lock as PrivateIcon, PhotoLibrary, Public as PublicIcon } from "@mui/icons-material";
