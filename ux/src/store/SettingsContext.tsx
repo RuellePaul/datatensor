@@ -3,7 +3,6 @@ import _ from 'lodash';
 import {THEMES} from 'src/constants';
 
 interface Settings {
-    direction?: 'ltr' | 'rtl';
     theme?: string;
 }
 
@@ -18,8 +17,7 @@ interface SettingsProviderProps {
 }
 
 const defaultSettings: Settings = {
-    direction: 'ltr',
-    theme: THEMES.ONE_DARK
+    theme: THEMES.DARK
 };
 
 export const restoreSettings = (): Settings | null => {
@@ -65,10 +63,6 @@ export const SettingsProvider: FC<SettingsProviderProps> = ({settings, children}
             setCurrentSettings(restoredSettings);
         }
     }, []);
-
-    useEffect(() => {
-        document.dir = currentSettings.direction;
-    }, [currentSettings]);
 
     return (
         <SettingsContext.Provider

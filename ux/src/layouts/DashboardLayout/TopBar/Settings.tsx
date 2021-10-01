@@ -4,13 +4,12 @@ import {
     Badge,
     Box,
     Button,
-    FormControlLabel,
+    ButtonGroup,
+    Divider,
+    Drawer,
     IconButton,
     makeStyles,
-    Popover,
     SvgIcon,
-    Switch,
-    TextField,
     Tooltip,
     Typography
 } from '@material-ui/core';
@@ -18,6 +17,7 @@ import {Settings as SettingsIcon} from 'react-feather';
 import useSettings from 'src/hooks/useSettings';
 import {THEMES} from 'src/constants';
 import {Theme} from 'src/theme';
+import {Close as CloseIcon} from '@material-ui/icons';
 
 const useStyles = makeStyles((theme: Theme) => ({
     badge: {
@@ -27,9 +27,8 @@ const useStyles = makeStyles((theme: Theme) => ({
         marginTop: 10,
         marginRight: 5
     },
-    popover: {
-        width: 320,
-        padding: theme.spacing(2)
+    drawer: {
+        width: 360
     }
 }));
 
@@ -38,28 +37,12 @@ const Settings: FC = () => {
     const ref = useRef<any>(null);
     const {settings, saveSettings} = useSettings();
     const [isOpen, setOpen] = useState<boolean>(false);
-    const [values, setValues] = useState({
-        direction: settings.direction,
-        theme: settings.theme
-    });
 
     const handleOpen = (): void => {
         setOpen(true);
     };
 
     const handleClose = (): void => {
-        setOpen(false);
-    };
-
-    const handleChange = (field, value): void => {
-        setValues({
-            ...values,
-            [field]: value
-        });
-    };
-
-    const handleSave = (): void => {
-        saveSettings(values);
         setOpen(false);
     };
 
@@ -82,70 +65,62 @@ const Settings: FC = () => {
                     </IconButton>
                 </Badge>
             </Tooltip>
-            <Popover
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'center'
-                }}
-                classes={{paper: classes.popover}}
-                anchorEl={ref.current}
+            <Drawer
+                anchor="right"
+                classes={{paper: classes.drawer}}
                 onClose={handleClose}
                 open={isOpen}
+                variant="temporary"
             >
-                <Typography
-                    variant="h4"
-                    color="textPrimary"
-                >
-                    Settings
-                </Typography>
                 <Box
-                    mt={2}
-                    px={1}
+                    display='flex'
+                    alignItems='center'
+                    justifyContent='space-between'
+                    p={2}
                 >
-                    <FormControlLabel
-                        control={(
-                            <Switch
-                                checked={values.direction === 'rtl'}
-                                edge="start"
-                                name="direction"
-                                onChange={(event) => handleChange('direction', event.target.checked ? 'rtl' : 'ltr')}
-                            />
-                        )}
-                        label="RTL"
-                    />
+                    <Typography
+                        variant="h4"
+                        color="textPrimary"
+                    >
+                        Settings
+                    </Typography>
+
+                    <IconButton
+                        onClick={handleClose}
+                    >
+                        <CloseIcon/>
+                    </IconButton>
                 </Box>
-                <Box mt={2}>
-                    <TextField
+
+                <Divider/>
+
+                <Box
+                    p={2}
+                >
+                    <Typography
+                        variant='body1'
+                        color='textPrimary'
+                        gutterBottom
+                    >
+                        Theme
+                    </Typography>
+                    <ButtonGroup
+                        color='primary'
                         fullWidth
-                        label="Theme"
-                        name="theme"
-                        onChange={(event) => handleChange('theme', event.target.value)}
-                        select
-                        SelectProps={{native: true}}
-                        value={values.theme}
                         variant="outlined"
                     >
                         {Object.keys(THEMES).map((theme) => (
-                            <option
-                                key={theme}
-                                value={theme}
+                            <Button
+                                key={`theme-${theme}`}
+                                onClick={() => saveSettings({...settings, theme})}
+                                variant={settings.theme === theme ? 'contained' : 'outlined'}
                             >
                                 {capitalCase(theme)}
-                            </option>
+                            </Button>
                         ))}
-                    </TextField>
+                    </ButtonGroup>
                 </Box>
-                <Box mt={2}>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        fullWidth
-                        onClick={handleSave}
-                    >
-                        Save Settings
-                    </Button>
-                </Box>
-            </Popover>
+            </Drawer>
         </>
     );
 };

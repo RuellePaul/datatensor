@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {colors, createMuiTheme, responsiveFontSizes} from '@material-ui/core';
+import {colors, createTheme as createMuiTheme, responsiveFontSizes} from '@material-ui/core';
 import {Theme as MuiTheme} from '@material-ui/core/styles';
 import {Shadows as MuiShadows} from '@material-ui/core/styles/shadows';
 import {Palette as MuiPalette, TypeBackground as MuiTypeBackground} from '@material-ui/core/styles/createPalette';
@@ -106,7 +106,7 @@ const themesOptions: ThemeOptions[] = [
         shadows: softShadows
     },
     {
-        name: THEMES.ONE_DARK,
+        name: THEMES.DARK,
         palette: {
             type: 'dark',
             action: {

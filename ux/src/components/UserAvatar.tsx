@@ -60,7 +60,7 @@ const UserAvatar: FC<UserAvatarProps> = ({
             ? (
                 <Badge
                     className={classes.badge}
-                    overlap="circle"
+                    overlap="circular"
                     anchorOrigin={{
                         vertical: 'bottom',
                         horizontal: 'right',
