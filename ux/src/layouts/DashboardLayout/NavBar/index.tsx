@@ -1,17 +1,17 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable react/prop-types */
-import React, { FC, ReactNode, useEffect } from "react";
-import { Link as RouterLink, matchPath, useLocation } from "react-router-dom";
-import PerfectScrollbar from "react-perfect-scrollbar";
-import { Box, Chip, Divider, Drawer, Hidden, Link, List, ListSubheader, Typography } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import { DeveloperBoard as AdminDashboardIcon } from "@mui/icons-material";
-import { Activity as ActivityIcon, Package as PackageIcon, Users as UsersIcon } from "react-feather";
-import Logo from "src/components/utils/Logo";
-import UserAvatar from "src/components/UserAvatar";
-import useAuth from "src/hooks/useAuth";
-import NavItem from "./NavItem";
-import { User } from "src/types/user";
+import React, {FC, ReactNode, useEffect} from 'react';
+import {Link as RouterLink, matchPath, useLocation} from 'react-router-dom';
+import PerfectScrollbar from 'react-perfect-scrollbar';
+import {Box, Chip, Divider, Drawer, Hidden, Link, List, ListSubheader, Typography} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {DeveloperBoard as AdminDashboardIcon} from '@mui/icons-material';
+import {Activity as ActivityIcon, Package as PackageIcon, Users as UsersIcon} from 'react-feather';
+import Logo from 'src/components/utils/Logo';
+import UserAvatar from 'src/components/UserAvatar';
+import useAuth from 'src/hooks/useAuth';
+import NavItem from './NavItem';
+import {User} from 'src/types/user';
 
 interface NavBarProps {
     openMobile: boolean;

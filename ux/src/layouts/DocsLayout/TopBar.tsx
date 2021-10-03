@@ -1,11 +1,11 @@
-import type { FC } from "react";
-import React from "react";
-import { Link as RouterLink, useHistory } from "react-router-dom";
-import PropTypes from "prop-types";
-import { AppBar, Box, Button, Hidden, IconButton, Toolbar } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import { Menu as MenuIcon } from "react-feather";
-import Logo from "src/components/utils/Logo";
+import type {FC} from 'react';
+import React from 'react';
+import {Link as RouterLink, useHistory} from 'react-router-dom';
+import PropTypes from 'prop-types';
+import {AppBar, Box, Button, Hidden, IconButton, Toolbar} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {Menu as MenuIcon} from 'react-feather';
+import Logo from 'src/components/utils/Logo';
 
 interface TopBarProps {
     onMobileNavOpen?: () => void;
@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
     root: {
         backgroundColor: theme.palette.background.default,
         color: theme.palette.text.primary,
-        boxShadow: "none",
+        boxShadow: 'none',
         borderBottom: `1px solid ${theme.palette.divider}`,
         zIndex: theme.zIndex.drawer + 100
     },
@@ -51,7 +51,7 @@ const TopBar: FC<TopBarProps> = ({ onMobileNavOpen }) => {
                     component="a"
                     variant="contained"
                     size="small"
-                    onClick={() => history.push("/app")}
+                    onClick={() => history.push('/app')}
                 >
                     Dashboard
                 </Button>

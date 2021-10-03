@@ -1,12 +1,12 @@
-import type { FC } from "react";
-import React, { useEffect } from "react";
-import type { DropResult } from "react-beautiful-dnd";
-import { DragDropContext } from "react-beautiful-dnd";
-import makeStyles from "@mui/styles/makeStyles";
-import type { Theme } from "src/theme";
-import { useDispatch } from "src/store";
-import { moveOperation, setDefaultPipeline } from "src/slices/pipeline";
-import OperationsPipeline from "./OperationsPipeline";
+import type {FC} from 'react';
+import React, {useEffect} from 'react';
+import type {DropResult} from 'react-beautiful-dnd';
+import {DragDropContext} from 'react-beautiful-dnd';
+import makeStyles from '@mui/styles/makeStyles';
+import type {Theme} from 'src/theme';
+import {useDispatch} from 'src/store';
+import {moveOperation, setDefaultPipeline} from 'src/slices/pipeline';
+import OperationsPipeline from './OperationsPipeline';
 
 interface PipelineProps {
     readOnly?: boolean;
@@ -14,11 +14,11 @@ interface PipelineProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     content: {
-        width: "100%",
+        width: '100%',
         flexGrow: 1,
         flexShrink: 1,
-        display: "flex",
-        overflow: "hidden"
+        display: 'flex',
+        overflow: 'hidden'
     }
 }));
 

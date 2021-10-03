@@ -1,10 +1,10 @@
-import React, { FC } from "react";
-import { Link as RouterLink, useHistory } from "react-router-dom";
-import clsx from "clsx";
-import { AppBar, Box, Button, Divider, Hidden, Link, Toolbar, Typography } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import { APP_VERSION } from "src/constants";
-import Logo from "src/components/utils/Logo";
+import React, {FC} from 'react';
+import {Link as RouterLink, useHistory} from 'react-router-dom';
+import clsx from 'clsx';
+import {AppBar, Box, Button, Divider, Hidden, Link, Toolbar, Typography} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {APP_VERSION} from 'src/constants';
+import Logo from 'src/components/utils/Logo';
 
 interface TopBarProps {
     className?: string;

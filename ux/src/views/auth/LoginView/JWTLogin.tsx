@@ -1,11 +1,11 @@
-import React, { FC } from "react";
-import clsx from "clsx";
-import * as Yup from "yup";
-import { Formik } from "formik";
-import { Alert, Box, Button, FormHelperText, TextField } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import useAuth from "src/hooks/useAuth";
-import useIsMountedRef from "src/hooks/useIsMountedRef";
+import React, {FC} from 'react';
+import clsx from 'clsx';
+import * as Yup from 'yup';
+import {Formik} from 'formik';
+import {Alert, Box, Button, FormHelperText, TextField} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import useAuth from 'src/hooks/useAuth';
+import useIsMountedRef from 'src/hooks/useIsMountedRef';
 
 interface JWTLoginProps {
     className?: string;

@@ -1,11 +1,11 @@
-import React, { FC, useEffect, useRef, useState } from "react";
-import makeStyles from "@mui/styles/makeStyles";
-import ContextMenu from "./ContextMenu";
-import useDataset from "src/hooks/useDataset";
-import { Theme } from "src/theme";
-import { Direction } from "src/types/direction";
-import { Label } from "src/types/label";
-import { Point } from "src/types/point";
+import React, {FC, useEffect, useRef, useState} from 'react';
+import makeStyles from '@mui/styles/makeStyles';
+import ContextMenu from './ContextMenu';
+import useDataset from 'src/hooks/useDataset';
+import {Theme} from 'src/theme';
+import {Direction} from 'src/types/direction';
+import {Label} from 'src/types/label';
+import {Point} from 'src/types/point';
 import {
     CANVAS_OFFSET,
     currentLabelsHoverIds,
@@ -15,8 +15,8 @@ import {
     drawLabels,
     renderCursor,
     reset
-} from "src/utils/labeling";
-import useImage from "src/hooks/useImage";
+} from 'src/utils/labeling';
+import useImage from 'src/hooks/useImage';
 
 interface ToolMoveProps {
     setTool: any;

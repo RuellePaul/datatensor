@@ -1,7 +1,7 @@
-import type { FC } from "react";
-import React from "react";
-import { Formik } from "formik";
-import * as Yup from "yup";
+import type {FC} from 'react';
+import React from 'react';
+import {Formik} from 'formik';
+import * as Yup from 'yup';
 import {
     Alert,
     Box,
@@ -14,11 +14,11 @@ import {
     Slider,
     TextField,
     Typography
-} from "@mui/material";
-import { useDispatch } from "src/store";
-import type { Operation } from "src/types/pipeline";
-import { updateOperation } from "src/slices/pipeline";
-import { OPERATIONS_INITIAL_PROPERTIES, OPERATIONS_SHAPES } from "src/config";
+} from '@mui/material';
+import {useDispatch} from 'src/store';
+import type {Operation} from 'src/types/pipeline';
+import {updateOperation} from 'src/slices/pipeline';
+import {OPERATIONS_INITIAL_PROPERTIES, OPERATIONS_SHAPES} from 'src/config';
 
 interface OperationPropertiesProps {
     operation: Operation,
@@ -80,7 +80,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                         container
                         spacing={4}
                     >
-                        {operation.type === "rotate" && (
+                        {operation.type === 'rotate' && (
                             <>
                                 <Grid
                                     item
@@ -122,7 +122,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                                 </Grid>
                             </>
                         )}
-                        {operation.type === "skew" && (
+                        {operation.type === 'skew' && (
                             <>
                                 <Grid
                                     item
@@ -138,7 +138,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                                     <Slider
                                         name="magnitude"
                                         onBlur={handleBlur}
-                                        onChange={(event, value) => setFieldValue("magnitude", value)}
+                                        onChange={(event, value) => setFieldValue('magnitude', value)}
                                         value={values.magnitude}
                                         min={0.05}
                                         max={1}
@@ -149,7 +149,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                                 </Grid>
                             </>
                         )}
-                        {operation.type === "crop_random" && (
+                        {operation.type === 'crop_random' && (
                             <>
                                 <Grid
                                     item
@@ -165,7 +165,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                                     <Slider
                                         name="percentage_area"
                                         onBlur={handleBlur}
-                                        onChange={(event, value) => setFieldValue("percentage_area", value)}
+                                        onChange={(event, value) => setFieldValue('percentage_area', value)}
                                         value={values.percentage_area}
                                         min={0.05}
                                         max={1}
@@ -176,7 +176,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                                 </Grid>
                             </>
                         )}
-                        {operation.type === "shear" && (
+                        {operation.type === 'shear' && (
                             <>
                                 <Grid
                                     item
@@ -218,7 +218,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                                 </Grid>
                             </>
                         )}
-                        {operation.type === "random_distortion" && (
+                        {operation.type === 'random_distortion' && (
                             <>
                                 <Grid
                                     item
@@ -271,7 +271,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                                     <Slider
                                         name="magnitude"
                                         onBlur={handleBlur}
-                                        onChange={(event, value) => setFieldValue("magnitude", value)}
+                                        onChange={(event, value) => setFieldValue('magnitude', value)}
                                         value={values.magnitude}
                                         min={1}
                                         max={20}
@@ -282,7 +282,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                                 </Grid>
                             </>
                         )}
-                        {operation.type === "gaussian_distortion" && (
+                        {operation.type === 'gaussian_distortion' && (
                             <>
                                 <Grid
                                     item
@@ -335,7 +335,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                                     <Slider
                                         name="magnitude"
                                         onBlur={handleBlur}
-                                        onChange={(event, value) => setFieldValue("magnitude", value)}
+                                        onChange={(event, value) => setFieldValue('magnitude', value)}
                                         value={values.magnitude}
                                         min={1}
                                         max={20}
@@ -354,10 +354,10 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                                         fullWidth
                                         name="corner"
                                         onChange={handleChange}
-                                        value={values.corner || "bell"}
+                                        value={values.corner || 'bell'}
                                         variant="outlined"
                                     >
-                                        {["bell", "ul", "ur", "dl", "dr"].map(corner => (
+                                        {['bell', 'ul', 'ur', 'dl', 'dr'].map(corner => (
                                             <MenuItem
                                                 key={corner}
                                                 value={corner}
@@ -377,10 +377,10 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                                         fullWidth
                                         name="method"
                                         onChange={handleChange}
-                                        value={values.method || "in"}
+                                        value={values.method || 'in'}
                                         variant="outlined"
                                     >
-                                        {["in", "out"].map(method => (
+                                        {['in', 'out'].map(method => (
                                             <MenuItem
                                                 key={method}
                                                 value={method}
@@ -393,7 +393,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                             </>
                         )}
 
-                        {["random_brightness", "random_color", "random_contrast"].includes(operation.type) && (
+                        {['random_brightness', 'random_color', 'random_contrast'].includes(operation.type) && (
                             <>
                                 <Grid
                                     item
@@ -409,7 +409,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                                     <Slider
                                         name="min_factor"
                                         onBlur={handleBlur}
-                                        onChange={(event, value) => setFieldValue("min_factor", value)}
+                                        onChange={(event, value) => setFieldValue('min_factor', value)}
                                         value={values.min_factor}
                                         min={1}
                                         max={4}
@@ -432,7 +432,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                                     <Slider
                                         name="max_factor"
                                         onBlur={handleBlur}
-                                        onChange={(event, value) => setFieldValue("max_factor", value)}
+                                        onChange={(event, value) => setFieldValue('max_factor', value)}
                                         value={values.max_factor}
                                         min={1}
                                         max={4}

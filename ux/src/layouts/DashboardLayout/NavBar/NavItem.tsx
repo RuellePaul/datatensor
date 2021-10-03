@@ -1,11 +1,11 @@
-import React, { FC, ReactNode, useState } from "react";
-import { NavLink as RouterLink } from "react-router-dom";
-import clsx from "clsx";
-import { Button, Collapse, ListItem } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import { Theme } from "src/theme";
+import React, {FC, ReactNode, useState} from 'react';
+import {NavLink as RouterLink} from 'react-router-dom';
+import clsx from 'clsx';
+import {Button, Collapse, ListItem} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import {Theme} from 'src/theme';
 
 interface NavItemProps {
     children?: ReactNode;

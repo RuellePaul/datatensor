@@ -1,11 +1,11 @@
-import React, { FC } from "react";
-import { Link as RouterLink } from "react-router-dom";
-import clsx from "clsx";
-import { Box, Breadcrumbs, capitalize, Chip, Grid, Link, Typography } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import { Lock as PrivateIcon, NavigateNext as NavigateNextIcon, Public as PublicIcon } from "@mui/icons-material";
-import useDataset from "src/hooks/useDataset";
-import { Theme } from "src/theme";
+import React, {FC} from 'react';
+import {Link as RouterLink} from 'react-router-dom';
+import clsx from 'clsx';
+import {Box, Breadcrumbs, capitalize, Chip, Grid, Link, Typography} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {Lock as PrivateIcon, NavigateNext as NavigateNextIcon, Public as PublicIcon} from '@mui/icons-material';
+import useDataset from 'src/hooks/useDataset';
+import {Theme} from 'src/theme';
 
 interface HeaderProps {
     className?: string;

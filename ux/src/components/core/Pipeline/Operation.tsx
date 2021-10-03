@@ -1,15 +1,15 @@
-import type { FC } from "react";
-import React, { forwardRef, useState } from "react";
-import clsx from "clsx";
-import { Box, capitalize, Card, CardContent, Typography } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import type { Theme } from "src/theme";
-import type { RootState } from "src/store";
-import { useSelector } from "src/store";
-import type { Operation as OperationType } from "src/types/pipeline";
-import OperationEditModal from "./OperationEditModal";
-import { OPERATIONS_ICONS } from "src/config";
-import ProbabilitySlider from "./OperationEditModal/ProbabilitySlider";
+import type {FC} from 'react';
+import React, {forwardRef, useState} from 'react';
+import clsx from 'clsx';
+import {Box, capitalize, Card, CardContent, Typography} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import type {Theme} from 'src/theme';
+import type {RootState} from 'src/store';
+import {useSelector} from 'src/store';
+import type {Operation as OperationType} from 'src/types/pipeline';
+import OperationEditModal from './OperationEditModal';
+import {OPERATIONS_ICONS} from 'src/config';
+import ProbabilitySlider from './OperationEditModal/ProbabilitySlider';
 
 interface OperationProps {
     className?: string;
@@ -32,11 +32,11 @@ const operationSelector = (state: RootState, operationId: string): PopulatedOper
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        outline: "none",
+        outline: 'none',
         padding: theme.spacing(1, 0)
     },
     operation: {
-        "&:hover": {
+        '&:hover': {
             backgroundColor: theme.palette.background.paper
         }
     },
@@ -88,7 +88,7 @@ const Operation: FC<OperationProps> = forwardRef(({
                     { [classes.dragging]: dragging }
                 )}
                 raised={dragging}
-                variant={dragging ? "elevation" : "outlined"}
+                variant={dragging ? 'elevation' : 'outlined'}
                 onClick={handleOpen}
             >
                 <CardContent
@@ -106,7 +106,7 @@ const Operation: FC<OperationProps> = forwardRef(({
                             variant="h5"
                             color="textPrimary"
                         >
-                            {capitalize(operation.type).replaceAll("_", " ")}
+                            {capitalize(operation.type).replaceAll('_', ' ')}
                         </Typography>
                     </Box>
 

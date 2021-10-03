@@ -1,12 +1,12 @@
-import type { FC, ReactNode } from "react";
-import React from "react";
-import PropTypes from "prop-types";
-import makeStyles from "@mui/styles/makeStyles";
-import type { Theme } from "src/theme";
+import type {FC, ReactNode} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import makeStyles from '@mui/styles/makeStyles';
+import type {Theme} from 'src/theme';
 
 interface ListProps {
     children?: ReactNode;
-    variant: "ul" | "ol";
+    variant: 'ul' | 'ol';
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -35,11 +35,11 @@ const List: FC<ListProps> = ({
 
 List.propTypes = {
     children: PropTypes.node,
-    variant: PropTypes.oneOf(["ul", "ol"])
+    variant: PropTypes.oneOf(['ul', 'ol'])
 };
 
 List.defaultProps = {
-    variant: "ul"
+    variant: 'ul'
 };
 
 export default List;

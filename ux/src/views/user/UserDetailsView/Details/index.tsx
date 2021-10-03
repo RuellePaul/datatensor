@@ -1,10 +1,10 @@
-import React, { FC } from "react";
-import clsx from "clsx";
-import { Grid } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import UserInfo from "./UserInfo";
-import OtherActions from "./OtherActions";
-import useUser from "src/hooks/useUser";
+import React, {FC} from 'react';
+import clsx from 'clsx';
+import {Grid} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import UserInfo from './UserInfo';
+import OtherActions from './OtherActions';
+import useUser from 'src/hooks/useUser';
 
 interface DetailsProps {
     className?: string;

@@ -1,15 +1,15 @@
-import React, { FC } from "react";
-import { Link as RouterLink } from "react-router-dom";
-import clsx from "clsx";
-import { AppBar, Box, Hidden, IconButton, SvgIcon, Toolbar } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import { Menu as MenuIcon } from "react-feather";
-import Logo from "src/components/utils/Logo";
-import { THEMES } from "src/constants";
-import { Theme } from "src/theme";
-import Account from "./Account";
-import Notifications from "./Notifications";
-import Settings from "./Settings";
+import React, {FC} from 'react';
+import {Link as RouterLink} from 'react-router-dom';
+import clsx from 'clsx';
+import {AppBar, Box, Hidden, IconButton, SvgIcon, Toolbar} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {Menu as MenuIcon} from 'react-feather';
+import Logo from 'src/components/utils/Logo';
+import {THEMES} from 'src/constants';
+import {Theme} from 'src/theme';
+import Account from './Account';
+import Notifications from './Notifications';
+import Settings from './Settings';
 
 interface TopBarProps {
     className?: string;

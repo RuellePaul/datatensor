@@ -1,8 +1,8 @@
-import React, { FC, ReactNode, useState } from "react";
-import makeStyles from "@mui/styles/makeStyles";
-import { Theme } from "src/theme";
-import NavBar from "./NavBar";
-import TopBar from "./TopBar";
+import React, {FC, ReactNode, useState} from 'react';
+import makeStyles from '@mui/styles/makeStyles';
+import {Theme} from 'src/theme';
+import NavBar from './NavBar';
+import TopBar from './TopBar';
 
 interface DashboardLayoutProps {
     children?: ReactNode;

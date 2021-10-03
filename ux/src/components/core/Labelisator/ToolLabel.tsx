@@ -1,8 +1,8 @@
-import React, { FC, useRef, useState } from "react";
-import { v4 as uuid } from "uuid";
-import { Point } from "src/types/point";
-import makeStyles from "@mui/styles/makeStyles";
-import { Theme } from "src/theme";
+import React, {FC, useRef, useState} from 'react';
+import {v4 as uuid} from 'uuid';
+import {Point} from 'src/types/point';
+import makeStyles from '@mui/styles/makeStyles';
+import {Theme} from 'src/theme';
 import {
     CANVAS_OFFSET,
     currentLabelsHoverIds,
@@ -14,9 +14,9 @@ import {
     LABEL_MIN_WIDTH,
     pointIsOutside,
     reset
-} from "src/utils/labeling";
-import useCategory from "src/hooks/useCategory";
-import useImage from "src/hooks/useImage";
+} from 'src/utils/labeling';
+import useCategory from 'src/hooks/useCategory';
+import useImage from 'src/hooks/useImage';
 
 interface ToolLabelProps {
     setTool: any;

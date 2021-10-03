@@ -1,5 +1,5 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
-import clsx from "clsx";
+import React, {FC, useCallback, useEffect, useState} from 'react';
+import clsx from 'clsx';
 import {
     Autocomplete,
     Box,
@@ -9,13 +9,13 @@ import {
     FormControlLabel,
     InputAdornment,
     TextField
-} from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import { Search as SearchIcon } from "@mui/icons-material";
-import { Theme } from "src/theme";
-import api from "src/utils/api";
-import { Category } from "src/types/category";
-import useDatasets from "src/hooks/useDatasets";
+} from '@mui/material';
+import {makeStyles} from '@mui/styles';
+import {Search as SearchIcon} from '@mui/icons-material';
+import {Theme} from 'src/theme';
+import api from 'src/utils/api';
+import {Category} from 'src/types/category';
+import useDatasets from 'src/hooks/useDatasets';
 
 interface FilterProps {
     className?: string;

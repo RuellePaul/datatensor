@@ -1,13 +1,13 @@
-import React, { FC, useState } from "react";
-import clsx from "clsx";
-import { Box, capitalize, Chip, Link, Typography, useTheme } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import { Theme } from "src/theme";
-import { Category } from "src/types/category";
-import useCategory from "src/hooks/useCategory";
-import useDataset from "src/hooks/useDataset";
-import { COLORS } from "src/utils/colors";
-import { MAX_CATEGORIES_DISPLAYED } from "src/config";
+import React, {FC, useState} from 'react';
+import clsx from 'clsx';
+import {Box, capitalize, Chip, Link, Typography, useTheme} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {Theme} from 'src/theme';
+import {Category} from 'src/types/category';
+import useCategory from 'src/hooks/useCategory';
+import useDataset from 'src/hooks/useDataset';
+import {COLORS} from 'src/utils/colors';
+import {MAX_CATEGORIES_DISPLAYED} from 'src/config';
 
 interface CategoriesProps {
     className?: string;

@@ -1,10 +1,10 @@
-import React, { FC, useRef, useState } from "react";
-import clsx from "clsx";
-import { Breadcrumbs, Button, Grid, Menu, MenuItem, SvgIcon, Typography } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import { Calendar as CalendarIcon } from "react-feather";
-import { TimeRange } from "src/types/timeRange";
+import React, {FC, useRef, useState} from 'react';
+import clsx from 'clsx';
+import {Breadcrumbs, Button, Grid, Menu, MenuItem, SvgIcon, Typography} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import {Calendar as CalendarIcon} from 'react-feather';
+import {TimeRange} from 'src/types/timeRange';
 
 interface HeaderProps {
     className?: string;

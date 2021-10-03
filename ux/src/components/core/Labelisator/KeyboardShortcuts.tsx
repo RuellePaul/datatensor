@@ -1,10 +1,10 @@
-import React, { FC, useState } from "react";
-import { Box, Button, Dialog, DialogContent, DialogTitle, Divider, Grid, IconButton, Typography } from "@mui/material";
+import React, {FC, useState} from 'react';
+import {Box, Button, Dialog, DialogContent, DialogTitle, Divider, Grid, IconButton, Typography} from '@mui/material';
 
-import makeStyles from "@mui/styles/makeStyles";
+import makeStyles from '@mui/styles/makeStyles';
 
-import { Close as CloseIcon, Keyboard as KeyboardIcon } from "@mui/icons-material";
-import { Theme } from "src/theme";
+import {Close as CloseIcon, Keyboard as KeyboardIcon} from '@mui/icons-material';
+import {Theme} from 'src/theme';
 
 interface ShortcutProps {
     keyDesc: string;

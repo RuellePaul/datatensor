@@ -1,8 +1,8 @@
-import React, { FC } from "react";
-import clsx from "clsx";
-import { Avatar, Box, Container, Typography } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import { Theme } from "src/theme";
+import React, {FC} from 'react';
+import clsx from 'clsx';
+import {Avatar, Box, Container, Typography} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {Theme} from 'src/theme';
 
 interface TestimonialsProps {
     className?: string;

@@ -1,5 +1,5 @@
-import React, { FC, FormEvent } from "react";
-import clsx from "clsx";
+import React, {FC, FormEvent} from 'react';
+import clsx from 'clsx';
 import {
     Box,
     Button,
@@ -11,9 +11,9 @@ import {
     FormControlLabel,
     Grid,
     Typography
-} from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import wait from "src/utils/wait";
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import wait from 'src/utils/wait';
 
 interface NotificationProps {
     className?: string;

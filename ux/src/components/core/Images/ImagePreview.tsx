@@ -1,8 +1,8 @@
-import React, { FC, useEffect, useState } from "react";
-import clsx from "clsx";
-import useEventListener from "use-typed-event-listener";
-import { useSnackbar } from "notistack";
-import { ArrowLeft as BackIcon, MoreVertical as MoreIcon } from "react-feather";
+import React, {FC, useEffect, useState} from 'react';
+import clsx from 'clsx';
+import useEventListener from 'use-typed-event-listener';
+import {useSnackbar} from 'notistack';
+import {ArrowLeft as BackIcon, MoreVertical as MoreIcon} from 'react-feather';
 import {
     Backdrop,
     Box,
@@ -17,18 +17,18 @@ import {
     MenuItem,
     Pagination,
     Typography
-} from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import { CropSharp as LabelisatorIcon, DeleteOutline as DeleteIcon } from "@mui/icons-material";
-import { Theme } from "src/theme";
-import api from "src/utils/api";
-import DTImage from "src/components/core/Images/Image";
-import bytesToSize from "src/utils/bytesToSize";
-import useDataset from "src/hooks/useDataset";
-import useImages from "src/hooks/useImages";
-import usePipeline from "src/hooks/usePipeline";
-import { ImageProvider } from "src/store/ImageContext";
-import { LAZY_LOAD_BATCH } from "src/constants";
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {CropSharp as LabelisatorIcon, DeleteOutline as DeleteIcon} from '@mui/icons-material';
+import {Theme} from 'src/theme';
+import api from 'src/utils/api';
+import DTImage from 'src/components/core/Images/Image';
+import bytesToSize from 'src/utils/bytesToSize';
+import useDataset from 'src/hooks/useDataset';
+import useImages from 'src/hooks/useImages';
+import usePipeline from 'src/hooks/usePipeline';
+import {ImageProvider} from 'src/store/ImageContext';
+import {LAZY_LOAD_BATCH} from 'src/constants';
 
 interface DTImagePreviewProps {
     open: boolean;

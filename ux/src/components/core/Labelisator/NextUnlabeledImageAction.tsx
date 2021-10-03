@@ -1,15 +1,15 @@
-import React, { FC } from "react";
-import { useSnackbar } from "notistack";
-import clsx from "clsx";
+import React, {FC} from 'react';
+import {useSnackbar} from 'notistack';
+import clsx from 'clsx';
 
-import { Formik } from "formik";
-import * as Yup from "yup";
-import { Button, CircularProgress } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import { ArrowRight } from "react-feather";
-import { Theme } from "src/theme";
-import useDataset from "src/hooks/useDataset";
-import api from "src/utils/api";
+import {Formik} from 'formik';
+import * as Yup from 'yup';
+import {Button, CircularProgress} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {ArrowRight} from 'react-feather';
+import {Theme} from 'src/theme';
+import useDataset from 'src/hooks/useDataset';
+import api from 'src/utils/api';
 
 interface NextUnlabeledImageActionProps {
     index: number;

@@ -1,7 +1,7 @@
-import React, { FC } from "react";
-import { useHistory } from "react-router";
-import Chart from "react-apexcharts";
-import clsx from "clsx";
+import React, {FC} from 'react';
+import {useHistory} from 'react-router';
+import Chart from 'react-apexcharts';
+import clsx from 'clsx';
 import {
     Card,
     CardContent,
@@ -12,11 +12,11 @@ import {
     MenuItem,
     Theme,
     useTheme
-} from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import { Users as UsersIcon } from "react-feather";
-import GenericMoreButton from "src/components/utils/GenericMoreButton";
-import { User } from "src/types/user";
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {Users as UsersIcon} from 'react-feather';
+import GenericMoreButton from 'src/components/utils/GenericMoreButton';
+import {User} from 'src/types/user';
 
 interface UserScopesProps {
     className?: string;

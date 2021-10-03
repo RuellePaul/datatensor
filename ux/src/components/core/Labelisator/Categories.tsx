@@ -1,9 +1,9 @@
-import React, { FC, useState } from "react";
-import { useSnackbar } from "notistack";
-import clsx from "clsx";
+import React, {FC, useState} from 'react';
+import {useSnackbar} from 'notistack';
+import clsx from 'clsx';
 
-import { Formik } from "formik";
-import * as Yup from "yup";
+import {Formik} from 'formik';
+import * as Yup from 'yup';
 import {
     Box,
     Button,
@@ -21,19 +21,19 @@ import {
     TextField,
     Typography,
     useTheme
-} from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import { Add as AddIcon, Close as CloseIcon } from "@mui/icons-material";
-import useIsMountedRef from "src/hooks/useIsMountedRef";
-import api from "src/utils/api";
-import { Theme } from "src/theme";
-import { Category } from "src/types/category";
-import useDataset from "src/hooks/useDataset";
-import useImage from "src/hooks/useImage";
-import useCategory from "src/hooks/useCategory";
-import { currentCategoryCount } from "src/utils/labeling";
-import { MAX_CATEGORIES_DISPLAYED, SUPERCATEGORIES } from "src/config";
-import { COLORS } from "src/utils/colors";
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {Add as AddIcon, Close as CloseIcon} from '@mui/icons-material';
+import useIsMountedRef from 'src/hooks/useIsMountedRef';
+import api from 'src/utils/api';
+import {Theme} from 'src/theme';
+import {Category} from 'src/types/category';
+import useDataset from 'src/hooks/useDataset';
+import useImage from 'src/hooks/useImage';
+import useCategory from 'src/hooks/useCategory';
+import {currentCategoryCount} from 'src/utils/labeling';
+import {MAX_CATEGORIES_DISPLAYED, SUPERCATEGORIES} from 'src/config';
+import {COLORS} from 'src/utils/colors';
 
 interface CategoriesProps {
     className?: string;

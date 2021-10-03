@@ -1,10 +1,10 @@
-import React, { createContext, FC, ReactNode, useEffect, useReducer } from "react";
-import jwtDecode from "jwt-decode";
-import { User } from "src/types/user";
-import SplashScreen from "src/components/screens/SplashScreen";
-import api from "src/utils/api";
-import { useHistory } from "react-router-dom";
-import { useSnackbar } from "notistack";
+import React, {createContext, FC, ReactNode, useEffect, useReducer} from 'react';
+import jwtDecode from 'jwt-decode';
+import {User} from 'src/types/user';
+import SplashScreen from 'src/components/screens/SplashScreen';
+import api from 'src/utils/api';
+import {useHistory} from 'react-router-dom';
+import {useSnackbar} from 'notistack';
 
 interface AuthState {
     isInitialised: boolean;

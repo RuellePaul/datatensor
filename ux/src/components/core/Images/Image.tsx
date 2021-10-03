@@ -1,12 +1,12 @@
-import React, { FC, ReactNode, useEffect, useRef, useState } from "react";
-import clsx from "clsx";
-import { ButtonBase, Skeleton } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import { Theme } from "src/theme";
-import { drawLabels, reset } from "src/utils/labeling";
-import useDataset from "src/hooks/useDataset";
-import useImage from "src/hooks/useImage";
-import { useTabContext } from "@mui/lab";
+import React, {FC, ReactNode, useEffect, useRef, useState} from 'react';
+import clsx from 'clsx';
+import {ButtonBase, Skeleton} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {Theme} from 'src/theme';
+import {drawLabels, reset} from 'src/utils/labeling';
+import useDataset from 'src/hooks/useDataset';
+import useImage from 'src/hooks/useImage';
+import {useTabContext} from '@mui/lab';
 
 interface DTImageProps {
     className?: string;

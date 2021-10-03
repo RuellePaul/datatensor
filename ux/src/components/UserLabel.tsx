@@ -1,11 +1,11 @@
-import React, { FC } from "react";
-import { Link as RouterLink } from "react-router-dom";
-import clsx from "clsx";
-import { Box, Link } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import { User } from "src/types/user";
-import { Theme } from "src/theme";
-import UserAvatar from "src/components/UserAvatar";
+import React, {FC} from 'react';
+import {Link as RouterLink} from 'react-router-dom';
+import clsx from 'clsx';
+import {Box, Link} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {User} from 'src/types/user';
+import {Theme} from 'src/theme';
+import UserAvatar from 'src/components/UserAvatar';
 
 interface UserLabelProps {
     className?: string;

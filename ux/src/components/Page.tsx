@@ -1,8 +1,8 @@
-import React, { forwardRef, HTMLProps, ReactNode, useCallback, useEffect } from "react";
-import { Helmet } from "react-helmet";
-import { useLocation } from "react-router-dom";
-import track from "src/utils/analytics";
-import { useSelector } from "src/store";
+import React, {forwardRef, HTMLProps, ReactNode, useCallback, useEffect} from 'react';
+import {Helmet} from 'react-helmet';
+import {useLocation} from 'react-router-dom';
+import track from 'src/utils/analytics';
+import {useSelector} from 'src/store';
 
 interface PageProps extends HTMLProps<HTMLDivElement> {
     children?: ReactNode;

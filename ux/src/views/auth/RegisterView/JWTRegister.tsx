@@ -1,12 +1,12 @@
-import React, { FC, useState } from "react";
-import clsx from "clsx";
-import * as Yup from "yup";
-import { Formik } from "formik";
-import { Box, Button, Checkbox, FormHelperText, Link, TextField, Typography } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import GoogleCaptcha from "src/components/utils/GoogleCaptcha";
-import useAuth from "src/hooks/useAuth";
-import useIsMountedRef from "src/hooks/useIsMountedRef";
+import React, {FC, useState} from 'react';
+import clsx from 'clsx';
+import * as Yup from 'yup';
+import {Formik} from 'formik';
+import {Box, Button, Checkbox, FormHelperText, Link, TextField, Typography} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import GoogleCaptcha from 'src/components/utils/GoogleCaptcha';
+import useAuth from 'src/hooks/useAuth';
+import useIsMountedRef from 'src/hooks/useIsMountedRef';
 
 interface JWTRegisterProps {
     className?: string;

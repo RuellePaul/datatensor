@@ -1,13 +1,5 @@
 import React, {FC} from 'react';
-import {
-    Box,
-    capitalize,
-    Divider,
-    ListItemIcon,
-    Menu,
-    MenuItem,
-    Typography
-} from '@mui/material';
+import {Box, capitalize, Divider, ListItemIcon, Menu, MenuItem, Typography} from '@mui/material';
 import NestedMenuItem from 'src/components/utils/NestedMenuItem';
 import makeStyles from '@mui/styles/makeStyles';
 import {Tag as CategoryIcon, Trash as DeleteIcon} from 'react-feather';

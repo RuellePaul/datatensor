@@ -1,8 +1,8 @@
-import React, { ChangeEvent, FC, useState } from "react";
-import { Link as RouterLink, useHistory } from "react-router-dom";
-import clsx from "clsx";
-import moment from "moment";
-import PerfectScrollbar from "react-perfect-scrollbar";
+import React, {ChangeEvent, FC, useState} from 'react';
+import {Link as RouterLink, useHistory} from 'react-router-dom';
+import clsx from 'clsx';
+import moment from 'moment';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
     Box,
     Button,
@@ -22,15 +22,15 @@ import {
     Tabs,
     TextField,
     Typography
-} from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import { Search as SearchIcon } from "react-feather";
-import FancyLabel from "src/components/FancyLabel";
-import UserAvatar from "src/components/UserAvatar";
-import useAuth from "src/hooks/useAuth";
-import { Theme } from "src/theme";
-import { User } from "src/types/user";
-import api from "src/utils/api";
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {Search as SearchIcon} from 'react-feather';
+import FancyLabel from 'src/components/FancyLabel';
+import UserAvatar from 'src/components/UserAvatar';
+import useAuth from 'src/hooks/useAuth';
+import {Theme} from 'src/theme';
+import {User} from 'src/types/user';
+import api from 'src/utils/api';
 
 interface ResultsProps {
     className?: string;

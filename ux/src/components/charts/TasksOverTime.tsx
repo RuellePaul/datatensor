@@ -1,11 +1,11 @@
-import React, { FC } from "react";
-import Chart from "react-apexcharts";
-import clsx from "clsx";
-import { Card, CardContent, CardHeader, Divider, LinearProgress, Theme, useTheme } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import { Task } from "src/types/task";
-import moment from "moment";
-import { TimeRange } from "src/types/timeRange";
+import React, {FC} from 'react';
+import Chart from 'react-apexcharts';
+import clsx from 'clsx';
+import {Card, CardContent, CardHeader, Divider, LinearProgress, Theme, useTheme} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {Task} from 'src/types/task';
+import moment from 'moment';
+import {TimeRange} from 'src/types/timeRange';
 
 interface TasksOverTimeProps {
     className?: string;

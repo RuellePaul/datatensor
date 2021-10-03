@@ -1,11 +1,11 @@
-import React, { FC } from "react";
-import { Link as RouterLink } from "react-router-dom";
-import clsx from "clsx";
-import { Box, Button, Card, CardActions, CardContent, Link, Typography } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import UserAvatar from "src/components/UserAvatar";
-import { Theme } from "src/theme";
-import { User } from "src/types/user";
+import React, {FC} from 'react';
+import {Link as RouterLink} from 'react-router-dom';
+import clsx from 'clsx';
+import {Box, Button, Card, CardActions, CardContent, Link, Typography} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import UserAvatar from 'src/components/UserAvatar';
+import {Theme} from 'src/theme';
+import {User} from 'src/types/user';
 
 interface ProfileDetailsProps {
     className?: string;

@@ -1,6 +1,6 @@
-import React, { FC } from "react";
-import ReCAPTCHA from "react-google-recaptcha";
-import { FormHelperText } from "@mui/material";
+import React, {FC} from 'react';
+import ReCAPTCHA from 'react-google-recaptcha';
+import {FormHelperText} from '@mui/material';
 
 interface GoogleCaptchaProps {
     name: string;

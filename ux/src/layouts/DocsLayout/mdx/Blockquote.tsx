@@ -1,7 +1,7 @@
-import type { FC } from "react";
-import React from "react";
-import makeStyles from "@mui/styles/makeStyles";
-import type { Theme } from "src/theme";
+import type {FC} from 'react';
+import React from 'react';
+import makeStyles from '@mui/styles/makeStyles';
+import type {Theme} from 'src/theme';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         paddingTop: theme.spacing(1),
         marginBottom: theme.spacing(2),
         borderLeft: `4px solid ${theme.palette.text.primary}`,
-        "& > p": {
+        '& > p': {
             color: theme.palette.text.primary,
             marginBottom: 0
         }

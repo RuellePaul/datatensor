@@ -1,6 +1,6 @@
-import React, { FC, forwardRef, useCallback, useEffect, useState } from "react";
-import clsx from "clsx";
-import { Maximize as LabelIcon, Move as MoveIcon } from "react-feather";
+import React, {FC, forwardRef, useCallback, useEffect, useState} from 'react';
+import clsx from 'clsx';
+import {Maximize as LabelIcon, Move as MoveIcon} from 'react-feather';
 import {
     AppBar,
     Badge,
@@ -21,26 +21,26 @@ import {
     Toolbar,
     Tooltip,
     Typography
-} from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import { TransitionProps } from "@mui/material/transitions";
-import { Close as CloseIcon, ImageOutlined as ImageIcon, Restore as RestoreIcon } from "@mui/icons-material";
-import DTCategories from "src/components/core/Labelisator/Categories";
-import DTImage from "src/components/core/Images/Image";
-import CategoriesDistribution from "src/components/charts/CategoriesDistribution";
-import KeyboardListener from "./KeyboardListener";
-import KeyboardShortcuts from "./KeyboardShortcuts";
-import NextUnlabeledImageAction from "./NextUnlabeledImageAction";
-import ToolLabel from "./ToolLabel";
-import ToolMove from "./ToolMove";
-import { Theme } from "src/theme";
-import useDataset from "src/hooks/useDataset";
-import useCategory from "src/hooks/useCategory";
-import usePipeline from "src/hooks/usePipeline";
-import { Image } from "src/types/image";
-import api from "src/utils/api";
-import { ImageConsumer, ImageProvider } from "src/store/ImageContext";
-import { CANVAS_OFFSET } from "src/utils/labeling";
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {TransitionProps} from '@mui/material/transitions';
+import {Close as CloseIcon, ImageOutlined as ImageIcon, Restore as RestoreIcon} from '@mui/icons-material';
+import DTCategories from 'src/components/core/Labelisator/Categories';
+import DTImage from 'src/components/core/Images/Image';
+import CategoriesDistribution from 'src/components/charts/CategoriesDistribution';
+import KeyboardListener from './KeyboardListener';
+import KeyboardShortcuts from './KeyboardShortcuts';
+import NextUnlabeledImageAction from './NextUnlabeledImageAction';
+import ToolLabel from './ToolLabel';
+import ToolMove from './ToolMove';
+import {Theme} from 'src/theme';
+import useDataset from 'src/hooks/useDataset';
+import useCategory from 'src/hooks/useCategory';
+import usePipeline from 'src/hooks/usePipeline';
+import {Image} from 'src/types/image';
+import api from 'src/utils/api';
+import {ImageConsumer, ImageProvider} from 'src/store/ImageContext';
+import {CANVAS_OFFSET} from 'src/utils/labeling';
 
 interface DTLabelisatorProps {}
 

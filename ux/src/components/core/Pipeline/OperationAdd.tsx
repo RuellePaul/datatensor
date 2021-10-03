@@ -1,13 +1,13 @@
-import type { ChangeEvent, FC } from "react";
-import React, { useState } from "react";
-import clsx from "clsx";
-import { Box, Button, capitalize, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import { Theme } from "src/theme";
-import { useDispatch } from "src/store";
-import { createOperation } from "src/slices/pipeline";
-import { OperationType } from "src/types/pipeline";
-import { OPERATIONS_ICONS, OPERATIONS_TYPES } from "src/config";
+import type {ChangeEvent, FC} from 'react';
+import React, {useState} from 'react';
+import clsx from 'clsx';
+import {Box, Button, capitalize, FormControl, InputLabel, MenuItem, Select} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {Theme} from 'src/theme';
+import {useDispatch} from 'src/store';
+import {createOperation} from 'src/slices/pipeline';
+import {OperationType} from 'src/types/pipeline';
+import {OPERATIONS_ICONS, OPERATIONS_TYPES} from 'src/config';
 
 interface OperationAddProps {
     className?: string;
@@ -75,7 +75,7 @@ const OperationAdd: FC<OperationAddProps> = ({
                             value={operationType || OPERATIONS_TYPES[0]}
                             variant="filled"
                             startAdornment={OPERATIONS_ICONS[operationType]}
-                            renderValue={() => capitalize(operationType).replaceAll("_", " ")}
+                            renderValue={() => capitalize(operationType).replaceAll('_', ' ')}
                         >
                             {OPERATIONS_TYPES.map(type => (
                                 <MenuItem
@@ -86,7 +86,7 @@ const OperationAdd: FC<OperationAddProps> = ({
                                         {OPERATIONS_ICONS[type]}
                                     </Box>
 
-                                    {capitalize(type).replaceAll("_", " ")}
+                                    {capitalize(type).replaceAll('_', ' ')}
                                 </MenuItem>
                             ))}
                         </Select>

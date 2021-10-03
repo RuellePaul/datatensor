@@ -1,11 +1,11 @@
-import type { FC, ReactNode } from "react";
-import React from "react";
-import { NavLink as RouterLink } from "react-router-dom";
-import clsx from "clsx";
-import PropTypes from "prop-types";
-import { Button, ListItem } from "@mui/material";
+import type {FC, ReactNode} from 'react';
+import React from 'react';
+import {NavLink as RouterLink} from 'react-router-dom';
+import clsx from 'clsx';
+import PropTypes from 'prop-types';
+import {Button, ListItem} from '@mui/material';
 
-import makeStyles from "@mui/styles/makeStyles";
+import makeStyles from '@mui/styles/makeStyles';
 
 interface NavItemProps {
     children?: ReactNode;
@@ -17,40 +17,40 @@ interface NavItemProps {
 
 const useStyles = makeStyles((theme) => ({
     item: {
-        display: "block",
+        display: 'block',
         paddingTop: 0,
         paddingBottom: 0
     },
     itemLeaf: {
-        display: "flex",
+        display: 'flex',
         paddingTop: 0,
         paddingBottom: 0,
         color: theme.palette.text.primary
     },
     button: {
-        padding: "10px 8px",
-        justifyContent: "flex-start",
-        textTransform: "none",
+        padding: '10px 8px',
+        justifyContent: 'flex-start',
+        textTransform: 'none',
         letterSpacing: 0,
-        width: "100%"
+        width: '100%'
     },
     title: {
-        marginRight: "auto"
+        marginRight: 'auto'
     },
     buttonLeaf: {
-        padding: "10px 8px",
-        justifyContent: "flex-start",
-        textTransform: "none",
+        padding: '10px 8px',
+        justifyContent: 'flex-start',
+        textTransform: 'none',
         letterSpacing: 0,
-        width: "100%",
+        width: '100%',
         fontWeight: theme.typography.fontWeightRegular,
-        "&.depth-0": {
+        '&.depth-0': {
             fontWeight: theme.typography.fontWeightRegular
         }
     },
     active: {
         color: theme.palette.primary.main,
-        "& $title": {
+        '& $title': {
             fontWeight: `${theme.typography.fontWeightBold} !important`
         }
     }

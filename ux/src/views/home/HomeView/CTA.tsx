@@ -1,9 +1,9 @@
-import React, { FC } from "react";
-import clsx from "clsx";
-import { Container, Link, Typography } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import { Theme } from "src/theme";
-import { Link as RouterLink } from "react-router-dom";
+import React, {FC} from 'react';
+import clsx from 'clsx';
+import {Container, Link, Typography} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {Theme} from 'src/theme';
+import {Link as RouterLink} from 'react-router-dom';
 
 interface CTAProps {
     className?: string;

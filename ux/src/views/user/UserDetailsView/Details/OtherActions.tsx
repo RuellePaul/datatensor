@@ -1,14 +1,14 @@
-import React, { FC } from "react";
-import { useParams } from "react-router";
-import { useHistory } from "react-router-dom";
-import clsx from "clsx";
-import { Box, Button, Card, CardContent, CardHeader, Divider, Typography } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import NotInterestedIcon from "@mui/icons-material/NotInterested";
-import GetAppIcon from "@mui/icons-material/GetApp";
-import DeleteIcon from "@mui/icons-material/DeleteOutline";
-import { Theme } from "src/theme";
-import api from "src/utils/api";
+import React, {FC} from 'react';
+import {useParams} from 'react-router';
+import {useHistory} from 'react-router-dom';
+import clsx from 'clsx';
+import {Box, Button, Card, CardContent, CardHeader, Divider, Typography} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import NotInterestedIcon from '@mui/icons-material/NotInterested';
+import GetAppIcon from '@mui/icons-material/GetApp';
+import DeleteIcon from '@mui/icons-material/DeleteOutline';
+import {Theme} from 'src/theme';
+import api from 'src/utils/api';
 
 interface OtherActionsProps {
     className?: string;

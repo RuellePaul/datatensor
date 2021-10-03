@@ -1,10 +1,10 @@
-import React, { FC } from "react";
-import clsx from "clsx";
-import { Grid } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import useAuth from "src/hooks/useAuth";
-import ProfileDetails from "./ProfileDetails";
-import GeneralSettings from "./GeneralSettings";
+import React, {FC} from 'react';
+import clsx from 'clsx';
+import {Grid} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import useAuth from 'src/hooks/useAuth';
+import ProfileDetails from './ProfileDetails';
+import GeneralSettings from './GeneralSettings';
 
 interface GeneralProps {
     className?: string;

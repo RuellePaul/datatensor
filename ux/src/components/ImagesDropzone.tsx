@@ -1,8 +1,8 @@
-import React, { FC, useCallback, useState } from "react";
-import clsx from "clsx";
-import { useDropzone } from "react-dropzone";
-import PerfectScrollbar from "react-perfect-scrollbar";
-import { useSnackbar } from "notistack";
+import React, {FC, useCallback, useState} from 'react';
+import clsx from 'clsx';
+import {useDropzone} from 'react-dropzone';
+import PerfectScrollbar from 'react-perfect-scrollbar';
+import {useSnackbar} from 'notistack';
 import {
     Box,
     Button,
@@ -15,16 +15,16 @@ import {
     ListItemText,
     Tooltip,
     Typography
-} from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import FileCopyIcon from "@mui/icons-material/FileCopy";
-import MoreIcon from "@mui/icons-material/MoreVert";
-import { Theme } from "src/theme";
-import useDataset from "src/hooks/useDataset";
-import useImages from "src/hooks/useImages";
-import api from "src/utils/api";
-import bytesToSize from "src/utils/bytesToSize";
-import { Image } from "src/types/image";
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
+import MoreIcon from '@mui/icons-material/MoreVert';
+import {Theme} from 'src/theme';
+import useDataset from 'src/hooks/useDataset';
+import useImages from 'src/hooks/useImages';
+import api from 'src/utils/api';
+import bytesToSize from 'src/utils/bytesToSize';
+import {Image} from 'src/types/image';
 
 interface ImagesDropzoneProps {
     callback?: () => void;

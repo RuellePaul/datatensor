@@ -1,6 +1,6 @@
-import { FC } from "react";
-import useImage from "src/hooks/useImage";
-import useEventListener from "use-typed-event-listener";
+import {FC} from 'react';
+import useImage from 'src/hooks/useImage';
+import useEventListener from 'use-typed-event-listener';
 
 interface KeyboardListenerProps {
     index: number;

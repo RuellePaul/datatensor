@@ -1,13 +1,13 @@
-import type { FC, ReactNode } from "react";
-import React from "react";
-import PropTypes from "prop-types";
-import { Typography } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import type { Theme } from "src/theme";
+import type {FC, ReactNode} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import {Typography} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import type {Theme} from 'src/theme';
 
 interface HeadingProps {
     children?: ReactNode;
-    variant: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+    variant: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -58,7 +58,7 @@ const Heading: FC<HeadingProps> = ({
 
 Heading.propTypes = {
     children: PropTypes.node,
-    variant: PropTypes.oneOf(["h1", "h2", "h3", "h4", "h5", "h6"])
+    variant: PropTypes.oneOf(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])
 };
 
 export default Heading;

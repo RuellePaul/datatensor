@@ -1,9 +1,9 @@
-import React, { FC } from "react";
-import { useHistory } from "react-router-dom";
-import clsx from "clsx";
-import * as Yup from "yup";
-import { Formik } from "formik";
-import { useSnackbar } from "notistack";
+import React, {FC} from 'react';
+import {useHistory} from 'react-router-dom';
+import clsx from 'clsx';
+import * as Yup from 'yup';
+import {Formik} from 'formik';
+import {useSnackbar} from 'notistack';
 import {
     Box,
     Button,
@@ -18,11 +18,11 @@ import {
     Paper,
     TextField,
     Typography
-} from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import QuillEditor from "src/components/QuillEditor";
-import api from "src/utils/api";
-import { Dataset } from "src/types/dataset";
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import QuillEditor from 'src/components/QuillEditor';
+import api from 'src/utils/api';
+import {Dataset} from 'src/types/dataset';
 
 interface ProductCreateFormProps {
     className?: string;

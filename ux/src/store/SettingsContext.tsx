@@ -1,6 +1,6 @@
-import React, { createContext, FC, ReactNode, useEffect, useState } from "react";
-import _ from "lodash";
-import { THEMES } from "src/constants";
+import React, {createContext, FC, ReactNode, useEffect, useState} from 'react';
+import _ from 'lodash';
+import {THEMES} from 'src/constants';
 
 interface Settings {
     theme?: string;

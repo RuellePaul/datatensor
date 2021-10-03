@@ -1,9 +1,9 @@
-import type { FC } from "react";
-import React from "react";
-import { Slider, Typography } from "@mui/material";
-import { useDispatch } from "src/store";
-import type { Operation } from "src/types/pipeline";
-import { updateOperation } from "src/slices/pipeline";
+import type {FC} from 'react';
+import React from 'react';
+import {Slider, Typography} from '@mui/material';
+import {useDispatch} from 'src/store';
+import type {Operation} from 'src/types/pipeline';
+import {updateOperation} from 'src/slices/pipeline';
 
 interface ProbabilitySliderProps {
     operation: Operation,

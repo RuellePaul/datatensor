@@ -1,9 +1,9 @@
-import React, { FC } from "react";
-import clsx from "clsx";
-import { Breadcrumbs, Grid, Typography } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import { Theme } from "src/theme";
+import React, {FC} from 'react';
+import clsx from 'clsx';
+import {Breadcrumbs, Grid, Typography} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import {Theme} from 'src/theme';
 
 interface HeaderProps {
     className?: string;

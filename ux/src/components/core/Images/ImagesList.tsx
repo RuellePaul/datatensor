@@ -1,17 +1,17 @@
-import React, { FC, useState } from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
-import Masonry from "react-masonry-css";
-import clsx from "clsx";
-import { IconButton, LinearProgress, Tooltip, Typography, useTheme } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import { CreateOutlined as LabelisatorIcon } from "@mui/icons-material";
-import DTImage from "src/components/core/Images/Image";
-import useImages from "src/hooks/useImages";
-import { Theme } from "src/theme";
-import useDataset from "src/hooks/useDataset";
-import { ImageProvider } from "src/store/ImageContext";
-import { LAZY_LOAD_BATCH } from "src/constants";
-import DTImagePreview from "./ImagePreview";
+import React, {FC, useState} from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import Masonry from 'react-masonry-css';
+import clsx from 'clsx';
+import {IconButton, LinearProgress, Tooltip, Typography, useTheme} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {CreateOutlined as LabelisatorIcon} from '@mui/icons-material';
+import DTImage from 'src/components/core/Images/Image';
+import useImages from 'src/hooks/useImages';
+import {Theme} from 'src/theme';
+import useDataset from 'src/hooks/useDataset';
+import {ImageProvider} from 'src/store/ImageContext';
+import {LAZY_LOAD_BATCH} from 'src/constants';
+import DTImagePreview from './ImagePreview';
 
 interface ImagesListProps {
     pipeline_id?: string;

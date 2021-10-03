@@ -1,12 +1,12 @@
-import type { FC, ReactNode } from "react";
-import React, { useState } from "react";
-import PropTypes from "prop-types";
-import { MDXProvider } from "@mdx-js/react";
-import { Container } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import NavBar from "./NavBar";
-import TopBar from "./TopBar";
-import components from "./mdx";
+import type {FC, ReactNode} from 'react';
+import React, {useState} from 'react';
+import PropTypes from 'prop-types';
+import {MDXProvider} from '@mdx-js/react';
+import {Container} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import NavBar from './NavBar';
+import TopBar from './TopBar';
+import components from './mdx';
 
 interface DocsLayoutProps {
     children?: ReactNode;
@@ -15,17 +15,17 @@ interface DocsLayoutProps {
 const useStyles = makeStyles((theme) => ({
     wrapper: {
         backgroundColor: theme.palette.background.default,
-        display: "flex",
-        height: "100%",
-        overflow: "hidden",
+        display: 'flex',
+        height: '100%',
+        overflow: 'hidden',
         paddingTop: 64,
-        [theme.breakpoints.up("lg")]: {
+        [theme.breakpoints.up('lg')]: {
             paddingLeft: 256
         }
     },
     contentContainer: {
-        flex: "1 1 auto",
-        overflow: "auto"
+        flex: '1 1 auto',
+        overflow: 'auto'
     },
     content: {
         paddingBottom: 120

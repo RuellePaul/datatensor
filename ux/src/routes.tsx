@@ -1,12 +1,12 @@
-import React, { Fragment, lazy, Suspense } from "react";
-import { Redirect, Route, Switch } from "react-router-dom";
-import DashboardLayout from "src/layouts/DashboardLayout";
-import MainLayout from "src/layouts/MainLayout";
-import DocsLayout from "src/layouts/DocsLayout";
-import HomeView from "src/views/home/HomeView";
-import LoadingScreen from "src/components/screens/LoadingScreen";
-import AuthGuard from "src/components/guards/AuthGuard";
-import GuestGuard from "src/components/guards/GuestGuard";
+import React, {Fragment, lazy, Suspense} from 'react';
+import {Redirect, Route, Switch} from 'react-router-dom';
+import DashboardLayout from 'src/layouts/DashboardLayout';
+import MainLayout from 'src/layouts/MainLayout';
+import DocsLayout from 'src/layouts/DocsLayout';
+import HomeView from 'src/views/home/HomeView';
+import LoadingScreen from 'src/components/screens/LoadingScreen';
+import AuthGuard from 'src/components/guards/AuthGuard';
+import GuestGuard from 'src/components/guards/GuestGuard';
 
 type Routes = {
     exact?: boolean;

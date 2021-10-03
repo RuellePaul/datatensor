@@ -1,12 +1,12 @@
-import React, { FC } from "react";
-import clsx from "clsx";
-import { Avatar, Badge } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import { User } from "src/types/user";
-import getInitials from "src/utils/getInitials";
-import { Theme } from "src/theme";
-import { GithubIcon, GoogleIcon, StackoverflowIcon } from "src/views/auth/LoginView/OAuthLoginButton";
-import useAuth from "src/hooks/useAuth";
+import React, {FC} from 'react';
+import clsx from 'clsx';
+import {Avatar, Badge} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {User} from 'src/types/user';
+import getInitials from 'src/utils/getInitials';
+import {Theme} from 'src/theme';
+import {GithubIcon, GoogleIcon, StackoverflowIcon} from 'src/views/auth/LoginView/OAuthLoginButton';
+import useAuth from 'src/hooks/useAuth';
 
 interface UserAvatarProps {
     className?: string;

@@ -1,8 +1,8 @@
-import React, { FC } from "react";
-import clsx from "clsx";
-import { Box, Container, Divider, Grid, Typography } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import { Theme } from "src/theme";
+import React, {FC} from 'react';
+import clsx from 'clsx';
+import {Box, Container, Divider, Grid, Typography} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {Theme} from 'src/theme';
 
 interface FAQSProps {
     className?: string;

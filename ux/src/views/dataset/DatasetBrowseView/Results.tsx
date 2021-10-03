@@ -1,11 +1,11 @@
-import React, { FC, useRef, useState } from "react";
-import clsx from "clsx";
-import { Box, Button, Grid, ListItemText, Menu, MenuItem, Pagination, Typography } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import { Theme } from "src/theme";
-import DTDataset from "src/components/core/Dataset";
-import useDatasets from "src/hooks/useDatasets";
+import React, {FC, useRef, useState} from 'react';
+import clsx from 'clsx';
+import {Box, Button, Grid, ListItemText, Menu, MenuItem, Pagination, Typography} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import {Theme} from 'src/theme';
+import DTDataset from 'src/components/core/Dataset';
+import useDatasets from 'src/hooks/useDatasets';
 
 interface ResultsProps {
     className?: string;

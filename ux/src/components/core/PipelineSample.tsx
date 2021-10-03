@@ -1,18 +1,18 @@
-import React, { FC, useCallback, useState } from "react";
-import { useParams } from "react-router";
-import { useSnackbar } from "notistack";
-import { Formik } from "formik";
-import clsx from "clsx";
-import { Box, Button, CircularProgress, FormHelperText, Grid } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import type { Theme } from "src/theme";
-import { useSelector } from "src/store";
-import { Operation } from "src/types/pipeline";
-import useImage from "src/hooks/useImage";
-import api from "src/utils/api";
-import ImageBase64 from "src/components/utils/ImageBase64";
-import { Label } from "src/types/label";
-import wait from "src/utils/wait";
+import React, {FC, useCallback, useState} from 'react';
+import {useParams} from 'react-router';
+import {useSnackbar} from 'notistack';
+import {Formik} from 'formik';
+import clsx from 'clsx';
+import {Box, Button, CircularProgress, FormHelperText, Grid} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import type {Theme} from 'src/theme';
+import {useSelector} from 'src/store';
+import {Operation} from 'src/types/pipeline';
+import useImage from 'src/hooks/useImage';
+import api from 'src/utils/api';
+import ImageBase64 from 'src/components/utils/ImageBase64';
+import {Label} from 'src/types/label';
+import wait from 'src/utils/wait';
 
 interface PipelineSampleProps {
     className?: string;
@@ -21,8 +21,8 @@ interface PipelineSampleProps {
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
     loader: {
-        width: "20px !important",
-        height: "20px !important"
+        width: '20px !important',
+        height: '20px !important'
     }
 }));
 
@@ -56,7 +56,7 @@ const PipelineSample: FC<PipelineSampleProps> = ({ className }) => {
 
             } catch (error) {
                 console.error(error);
-                enqueueSnackbar((error.message) || "Something went wrong", { variant: "error" });
+                enqueueSnackbar((error.message) || 'Something went wrong', { variant: 'error' });
             }
         }
 
@@ -117,7 +117,7 @@ const PipelineSample: FC<PipelineSampleProps> = ({ className }) => {
                                             />
                                         )}
                                     >
-                                        {isSubmitting ? "Computing..." : "Compute sample"}
+                                        {isSubmitting ? 'Computing...' : 'Compute sample'}
                                     </Button>
                                 </Box>
 

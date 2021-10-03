@@ -1,13 +1,13 @@
 /* eslint-disable no-use-before-define */
-import type { FC } from "react";
+import type {FC} from 'react';
 /* eslint-disable react/prop-types */
-import React, { useEffect } from "react";
-import { Link as RouterLink, useLocation } from "react-router-dom";
-import PropTypes from "prop-types";
-import { Box, Drawer, Hidden, List } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import Logo from "src/components/utils/Logo";
-import NavItem from "./NavItem";
+import React, {useEffect} from 'react';
+import {Link as RouterLink, useLocation} from 'react-router-dom';
+import PropTypes from 'prop-types';
+import {Box, Drawer, Hidden, List} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import Logo from 'src/components/utils/Logo';
+import NavItem from './NavItem';
 
 interface NavBarProps {
     onMobileClose: () => void;
@@ -22,12 +22,12 @@ interface Item {
 
 const items: Item[] = [
     {
-        title: "Getting Started",
-        href: "/docs/getting-started"
+        title: 'Getting Started',
+        href: '/docs/getting-started'
     },
     {
-        title: "Swagger API",
-        href: "/docs/swagger-api"
+        title: 'Swagger API',
+        href: '/docs/swagger-api'
     }
 ];
 
@@ -85,7 +85,7 @@ const useStyles = makeStyles(() => ({
     desktopDrawer: {
         width: 256,
         top: 64,
-        height: "calc(100% - 64px)"
+        height: 'calc(100% - 64px)'
     }
 }));
 

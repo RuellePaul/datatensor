@@ -1,13 +1,13 @@
-import type { FC } from "react";
-import React, { useState } from "react";
-import clsx from "clsx";
-import { Draggable, Droppable } from "react-beautiful-dnd";
-import { Box, Divider, Paper } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import { useSelector } from "src/store";
-import type { Theme } from "src/theme";
-import Operation from "./Operation";
-import OperationAdd from "./OperationAdd";
+import type {FC} from 'react';
+import React, {useState} from 'react';
+import clsx from 'clsx';
+import {Draggable, Droppable} from 'react-beautiful-dnd';
+import {Box, Divider, Paper} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {useSelector} from 'src/store';
+import type {Theme} from 'src/theme';
+import Operation from './Operation';
+import OperationAdd from './OperationAdd';
 
 interface ListProps {
     className?: string;
@@ -17,20 +17,20 @@ interface ListProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        width: "100%"
+        width: '100%'
     },
     inner: {
-        display: "flex",
-        flexDirection: "column",
-        maxHeight: "100%",
-        overflowY: "hidden",
-        overflowX: "hidden"
+        display: 'flex',
+        flexDirection: 'column',
+        maxHeight: '100%',
+        overflowY: 'hidden',
+        overflowX: 'hidden'
     },
     droppableArea: {
         minHeight: 80,
         maxHeight: 500,
         flexGrow: 1,
-        overflowY: "auto",
+        overflowY: 'auto',
         padding: theme.spacing(1, 2)
     }
 }));
@@ -54,7 +54,7 @@ const OperationsPipeline: FC<ListProps> = ({ className, readOnly, ...rest }) => 
                     {(provided) => (
                         <div
                             ref={provided.innerRef}
-                            className={clsx(classes.droppableArea, "scroll")}
+                            className={clsx(classes.droppableArea, 'scroll')}
                         >
                             {pipeline.operations.allIds.map((operationId, index) => (
                                 <Draggable

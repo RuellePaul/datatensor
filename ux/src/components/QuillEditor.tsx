@@ -1,8 +1,8 @@
-import React, { FC } from "react";
-import clsx from "clsx";
-import ReactQuill from "react-quill";
-import makeStyles from "@mui/styles/makeStyles";
-import { Theme } from "src/theme";
+import React, {FC} from 'react';
+import clsx from 'clsx';
+import ReactQuill from 'react-quill';
+import makeStyles from '@mui/styles/makeStyles';
+import {Theme} from 'src/theme';
 
 // NOTE: At this moment, this ReactQuill does not export
 // the types for props and we cannot extend them

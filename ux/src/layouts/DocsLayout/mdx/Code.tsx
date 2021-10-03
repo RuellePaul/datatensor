@@ -1,8 +1,8 @@
-import type { FC } from "react";
-import React from "react";
-import clsx from "clsx";
-import PropTypes from "prop-types";
-import makeStyles from "@mui/styles/makeStyles";
+import type {FC} from 'react';
+import React from 'react';
+import clsx from 'clsx';
+import PropTypes from 'prop-types';
+import makeStyles from '@mui/styles/makeStyles';
 
 interface CodeProps {
     className?: string;

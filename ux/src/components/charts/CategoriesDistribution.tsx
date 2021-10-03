@@ -1,10 +1,10 @@
-import React, { FC } from "react";
-import Chart from "react-apexcharts";
-import { capitalize, useTheme } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import { Theme } from "src/theme";
-import useDataset from "src/hooks/useDataset";
-import { COLORS } from "src/utils/colors";
+import React, {FC} from 'react';
+import Chart from 'react-apexcharts';
+import {capitalize, useTheme} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {Theme} from 'src/theme';
+import useDataset from 'src/hooks/useDataset';
+import {COLORS} from 'src/utils/colors';
 
 interface CategoriesDistributionProps {
     className?: string;

@@ -1,12 +1,12 @@
-import React, { FC } from "react";
-import { Autocomplete, capitalize, InputAdornment, TextField } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import { ImageSearch as SearchIcon } from "@mui/icons-material";
-import { Theme } from "src/theme";
-import { Category } from "src/types/category";
-import useDataset from "src/hooks/useDataset";
-import useCategory from "src/hooks/useCategory";
-import useImages from "src/hooks/useImages";
+import React, {FC} from 'react';
+import {Autocomplete, capitalize, InputAdornment, TextField} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {ImageSearch as SearchIcon} from '@mui/icons-material';
+import {Theme} from 'src/theme';
+import {Category} from 'src/types/category';
+import useDataset from 'src/hooks/useDataset';
+import useCategory from 'src/hooks/useCategory';
+import useImages from 'src/hooks/useImages';
 
 interface FilterCategoriesProps {
     className?: string;

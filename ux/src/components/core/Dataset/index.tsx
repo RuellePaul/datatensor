@@ -1,6 +1,6 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from "react";
-import { useHistory } from "react-router";
-import clsx from "clsx";
+import React, {FC, useCallback, useEffect, useRef, useState} from 'react';
+import {useHistory} from 'react-router';
+import clsx from 'clsx';
 import {
     Box,
     capitalize,
@@ -11,16 +11,16 @@ import {
     CardMedia,
     Chip,
     Typography
-} from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import { Lock as PrivateIcon, PhotoLibrary, Public as PublicIcon } from "@mui/icons-material";
-import { Theme } from "src/theme";
-import { Dataset } from "src/types/dataset";
-import api from "src/utils/api";
-import { Image } from "src/types/image";
-import UserAvatar from "src/components/UserAvatar";
-import WorkingAlert from "src/components/core/WorkingAlert";
-import { UserConsumer, UserProvider } from "src/store/UserContext";
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {Lock as PrivateIcon, PhotoLibrary, Public as PublicIcon} from '@mui/icons-material';
+import {Theme} from 'src/theme';
+import {Dataset} from 'src/types/dataset';
+import api from 'src/utils/api';
+import {Image} from 'src/types/image';
+import UserAvatar from 'src/components/UserAvatar';
+import WorkingAlert from 'src/components/core/WorkingAlert';
+import {UserConsumer, UserProvider} from 'src/store/UserContext';
 
 interface DatasetProps {
     dataset: Dataset;

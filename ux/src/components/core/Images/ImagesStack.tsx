@@ -1,10 +1,10 @@
-import React, { FC } from "react";
-import clsx from "clsx";
-import makeStyles from "@mui/styles/makeStyles";
-import DTImage from "src/components/core/Images/Image";
-import useImages from "src/hooks/useImages";
-import { Theme } from "src/theme";
-import { ImageProvider } from "src/store/ImageContext";
+import React, {FC} from 'react';
+import clsx from 'clsx';
+import makeStyles from '@mui/styles/makeStyles';
+import DTImage from 'src/components/core/Images/Image';
+import useImages from 'src/hooks/useImages';
+import {Theme} from 'src/theme';
+import {ImageProvider} from 'src/store/ImageContext';
 
 interface ImagesListProps {
     className?: string;

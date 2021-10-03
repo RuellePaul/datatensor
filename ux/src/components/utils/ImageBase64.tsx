@@ -1,11 +1,11 @@
-import React, { FC, useEffect, useRef } from "react";
-import clsx from "clsx";
-import { ButtonBase } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import { Theme } from "src/theme";
-import { Label } from "src/types/label";
-import { drawLabels, reset } from "src/utils/labeling";
-import useDataset from "src/hooks/useDataset";
+import React, {FC, useEffect, useRef} from 'react';
+import clsx from 'clsx';
+import {ButtonBase} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {Theme} from 'src/theme';
+import {Label} from 'src/types/label';
+import {drawLabels, reset} from 'src/utils/labeling';
+import useDataset from 'src/hooks/useDataset';
 
 interface ImageBase64Props {
     imageBase64: string;

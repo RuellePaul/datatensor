@@ -1,8 +1,8 @@
-import React, { FC, ReactNode } from "react";
-import clsx from "clsx";
-import { alpha } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import { Theme } from "src/theme";
+import React, {FC, ReactNode} from 'react';
+import clsx from 'clsx';
+import {alpha} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {Theme} from 'src/theme';
 
 interface FancyLabelProps {
     className?: string;
