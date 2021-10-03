@@ -1,8 +1,8 @@
 import type { FC } from "react";
 import React from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
-import { AppBar, Box, Hidden, IconButton, Link, Toolbar } from "@mui/material";
+import { AppBar, Box, Button, Hidden, IconButton, Toolbar } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 import { Menu as MenuIcon } from "react-feather";
 import Logo from "src/components/utils/Logo";
@@ -21,14 +21,13 @@ const useStyles = makeStyles((theme) => ({
     },
     toolbar: {
         height: 64
-    },
-    link: {
-        fontWeight: theme.typography.fontWeightMedium
     }
 }));
 
 const TopBar: FC<TopBarProps> = ({ onMobileNavOpen }) => {
+
     const classes = useStyles();
+    const history = useHistory();
 
     return (
         <AppBar className={classes.root}>
@@ -47,16 +46,15 @@ const TopBar: FC<TopBarProps> = ({ onMobileNavOpen }) => {
                     ml={2}
                     flexGrow={1}
                 />
-                <Link
-                    className={classes.link}
-                    color="textSecondary"
-                    component={RouterLink}
-                    to="/app"
-                    underline="none"
-                    variant="body2"
+                <Button
+                    color="primary"
+                    component="a"
+                    variant="contained"
+                    size="small"
+                    onClick={() => history.push("/app")}
                 >
                     Dashboard
-                </Link>
+                </Button>
             </Toolbar>
         </AppBar>
     );

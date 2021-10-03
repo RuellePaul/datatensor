@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         fontWeight: theme.typography.fontWeightRegular,
         '&.depth-0': {
             '& $title': {
-                fontWeight: theme.typography.fontWeightMedium
+                fontWeight: theme.typography.fontWeightRegular
             }
         }
     },
@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     active: {
         color: theme.palette.primary.main,
         '& $title': {
-            fontWeight: theme.typography.fontWeightMedium
+            fontWeight: `${theme.typography.fontWeightBold} !important`
         },
         '& $icon': {
             color: theme.palette.primary.main

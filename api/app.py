@@ -25,14 +25,15 @@ from api.routers.users.users import users
 from api.search.search import search
 from api.socket.socket import sockets
 
+PREFIX = '/api/v2'
+
 app = FastAPI(
     title='Datatensor API',
-    version='0.7.1'
+    version='0.7.1',
+    docs_url=f'{PREFIX}/docs'
 )
 
 config_name = os.getenv('FLASK_UI_CONFIGURATION', 'development')
-
-PREFIX = '/api/v2'
 
 app.add_middleware(
     CORSMiddleware,

@@ -7,7 +7,7 @@ export const API_HOSTNAME =
         ? '127.0.0.1:4069'
         : window.location.hostname;
 
-const API_URI =
+export const API_URI =
     process.env.REACT_APP_ENVIRONMENT === 'development'
         ? `http://${API_HOSTNAME}${PREFIX}`
         : `https://${API_HOSTNAME}${PREFIX}`;
