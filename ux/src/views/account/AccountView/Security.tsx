@@ -3,7 +3,8 @@ import clsx from 'clsx';
 import * as Yup from 'yup';
 import {Formik} from 'formik';
 import {useSnackbar} from 'notistack';
-import {Box, Button, Card, CardContent, CardHeader, Divider, Grid, makeStyles, TextField} from '@material-ui/core';
+import {Box, Button, Card, CardContent, CardHeader, Divider, Grid, TextField} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import api from 'src/utils/api';
 
 interface SecurityProps {
@@ -15,7 +16,6 @@ const useStyles = makeStyles(() => ({
 }));
 
 const Security: FC<SecurityProps> = ({className, ...rest}) => {
-
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
 
@@ -36,15 +36,13 @@ const Security: FC<SecurityProps> = ({className, ...rest}) => {
                     .max(255)
                     .required('Required'),
                 password_confirm: Yup.string()
-                    .oneOf([Yup.ref('new_password'), null], 'Passwords must match')
-                    .required('Required'),
-
+                    .oneOf(
+                        [Yup.ref('new_password'), null],
+                        'Passwords must match'
+                    )
+                    .required('Required')
             })}
-            onSubmit={async (values, {
-                resetForm,
-                setStatus,
-                setSubmitting
-            }) => {
+            onSubmit={async (values, {resetForm, setStatus, setSubmitting}) => {
                 try {
                     await api.patch(`/users/me/password`, values);
                     resetForm();
@@ -52,43 +50,38 @@ const Security: FC<SecurityProps> = ({className, ...rest}) => {
                     setSubmitting(false);
                     enqueueSnackbar('Password updated', {variant: 'success'});
                 } catch (error) {
-                    enqueueSnackbar((error.message) || 'Something went wrong', {variant: 'error'});
+                    enqueueSnackbar(error.message || 'Something went wrong', {
+                        variant: 'error'
+                    });
                     setStatus({success: false});
                     setSubmitting(false);
                 }
             }}
         >
             {({
-                  errors,
-                  handleBlur,
-                  handleChange,
-                  handleSubmit,
-                  isSubmitting,
-                  touched,
-                  values
-              }) => (
+                errors,
+                handleBlur,
+                handleChange,
+                handleSubmit,
+                isSubmitting,
+                touched,
+                values
+            }) => (
                 <form onSubmit={handleSubmit}>
-                    <Card
-                        className={clsx(classes.root, className)}
-                        {...rest}
-                    >
-                        <CardHeader title="Change Password"/>
-                        <Divider/>
+                    <Card className={clsx(classes.root, className)} {...rest}>
+                        <CardHeader title="Change Password" />
+                        <Divider />
                         <CardContent>
-                            <Grid
-                                container
-                                spacing={3}
-                            >
-                                <Grid
-                                    item
-                                    md={4}
-                                    sm={6}
-                                    xs={12}
-                                >
+                            <Grid container spacing={3}>
+                                <Grid item md={4} sm={6} xs={12}>
                                     <TextField
-                                        error={Boolean(touched.password && errors.password)}
+                                        error={Boolean(
+                                            touched.password && errors.password
+                                        )}
                                         fullWidth
-                                        helperText={touched.password && errors.password}
+                                        helperText={
+                                            touched.password && errors.password
+                                        }
                                         label="Password"
                                         name="password"
                                         onBlur={handleBlur}
@@ -98,16 +91,17 @@ const Security: FC<SecurityProps> = ({className, ...rest}) => {
                                         variant="outlined"
                                     />
                                 </Grid>
-                                <Grid
-                                    item
-                                    md={4}
-                                    sm={6}
-                                    xs={12}
-                                >
+                                <Grid item md={4} sm={6} xs={12}>
                                     <TextField
-                                        error={Boolean(touched.new_password && errors.new_password)}
+                                        error={Boolean(
+                                            touched.new_password &&
+                                                errors.new_password
+                                        )}
                                         fullWidth
-                                        helperText={touched.new_password && errors.new_password}
+                                        helperText={
+                                            touched.new_password &&
+                                            errors.new_password
+                                        }
                                         label="New Password"
                                         name="new_password"
                                         onBlur={handleBlur}
@@ -117,16 +111,17 @@ const Security: FC<SecurityProps> = ({className, ...rest}) => {
                                         variant="outlined"
                                     />
                                 </Grid>
-                                <Grid
-                                    item
-                                    md={4}
-                                    sm={6}
-                                    xs={12}
-                                >
+                                <Grid item md={4} sm={6} xs={12}>
                                     <TextField
-                                        error={Boolean(touched.password_confirm && errors.password_confirm)}
+                                        error={Boolean(
+                                            touched.password_confirm &&
+                                                errors.password_confirm
+                                        )}
                                         fullWidth
-                                        helperText={touched.password_confirm && errors.password_confirm}
+                                        helperText={
+                                            touched.password_confirm &&
+                                            errors.password_confirm
+                                        }
                                         label="Password Confirmation"
                                         name="password_confirm"
                                         onBlur={handleBlur}
@@ -138,14 +133,10 @@ const Security: FC<SecurityProps> = ({className, ...rest}) => {
                                 </Grid>
                             </Grid>
                         </CardContent>
-                        <Divider/>
-                        <Box
-                            p={2}
-                            display="flex"
-                            justifyContent="flex-end"
-                        >
+                        <Divider />
+                        <Box p={2} display="flex" justifyContent="flex-end">
                             <Button
-                                color="secondary"
+                                color="primary"
                                 disabled={isSubmitting}
                                 type="submit"
                                 variant="contained"

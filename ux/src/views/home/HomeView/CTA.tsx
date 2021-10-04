@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
-import {Container, Link, makeStyles, Typography} from '@material-ui/core';
+import {Container, Link, Typography} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 import {Link as RouterLink} from 'react-router-dom';
 
@@ -21,21 +22,14 @@ const CTA: FC<CTAProps> = ({className, ...rest}) => {
     const classes = useStyles();
 
     return (
-        <div
-            className={clsx(classes.root, className)}
-            {...rest}
-        >
-            <Container component='section' maxWidth="lg">
-                <Typography
-                    variant="h1"
-                    align="center"
-                    color="textPrimary"
-                >
+        <div className={clsx(classes.root, className)} {...rest}>
+            <Container component="section" maxWidth="lg">
+                <Typography variant="h1" align="center" color="textPrimary">
                     Ready to start building?
                 </Typography>
                 <Link
                     variant="h2"
-                    color="secondary"
+                    color="primary"
                     component={RouterLink}
                     to="/app"
                 >

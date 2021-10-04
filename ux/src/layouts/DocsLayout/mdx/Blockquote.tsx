@@ -1,6 +1,6 @@
 import type {FC} from 'react';
 import React from 'react';
-import {makeStyles} from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 import type {Theme} from 'src/theme';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -9,9 +9,9 @@ const useStyles = makeStyles((theme: Theme) => ({
         paddingBottom: theme.spacing(1),
         paddingTop: theme.spacing(1),
         marginBottom: theme.spacing(2),
-        borderLeft: `4px solid ${theme.palette.text.secondary}`,
+        borderLeft: `4px solid ${theme.palette.text.primary}`,
         '& > p': {
-            color: theme.palette.text.secondary,
+            color: theme.palette.text.primary,
             marginBottom: 0
         }
     }

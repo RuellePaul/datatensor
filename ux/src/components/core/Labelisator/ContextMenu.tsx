@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
-import {Box, capitalize, Divider, ListItemIcon, makeStyles, Menu, MenuItem, Typography} from '@material-ui/core';
-import Nesteditem from 'material-ui-nested-menu-item';
+import {Box, capitalize, Divider, ListItemIcon, Menu, MenuItem, Typography} from '@mui/material';
+import NestedMenuItem from 'src/components/utils/NestedMenuItem';
+import makeStyles from '@mui/styles/makeStyles';
 import {Tag as CategoryIcon, Trash as DeleteIcon} from 'react-feather';
 import {Label} from 'src/types/label';
 import {Point} from 'src/types/point';
@@ -10,7 +11,7 @@ import useDataset from 'src/hooks/useDataset';
 import useImage from 'src/hooks/useImage';
 
 interface ContextMenuProps {
-    canvas: HTMLCanvasElement;  // ToolMove's canvas
+    canvas: HTMLCanvasElement; // ToolMove's canvas
     selectedLabels: Label[];
     point: Point;
     handleClose: () => void;
@@ -22,19 +23,27 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const ContextMenu: FC<ContextMenuProps> = ({canvas, selectedLabels, point, handleClose}) => {
-
+const ContextMenu: FC<ContextMenuProps> = ({
+    canvas,
+    selectedLabels,
+    point,
+    handleClose
+}) => {
     const classes = useStyles();
 
     const {categories} = useDataset();
     const {labels, saveLabels, storePosition} = useImage();
 
-    const handleUpdateLabelCategory = (category) => {
+    const handleUpdateLabelCategory = category => {
         handleClose();
         reset(canvas);
-        let newLabels = labels.map(label => selectedLabels.map(selectedLabel => selectedLabel.id).includes(label.id)
-            ? {...label, category_id: category.id}
-            : label);
+        let newLabels = labels.map(label =>
+            selectedLabels
+                .map(selectedLabel => selectedLabel.id)
+                .includes(label.id)
+                ? {...label, category_id: category.id}
+                : label
+        );
         saveLabels(newLabels);
         storePosition(newLabels);
     };
@@ -42,7 +51,9 @@ const ContextMenu: FC<ContextMenuProps> = ({canvas, selectedLabels, point, handl
     const handleDeleteLabel = () => {
         handleClose();
         reset(canvas);
-        const newLabels = labels.filter(label => !selectedLabels.map(label => label.id).includes(label.id));
+        const newLabels = labels.filter(
+            label => !selectedLabels.map(label => label.id).includes(label.id)
+        );
         saveLabels(newLabels);
         storePosition(newLabels);
     };
@@ -54,23 +65,21 @@ const ContextMenu: FC<ContextMenuProps> = ({canvas, selectedLabels, point, handl
             onClose={handleClose}
             anchorReference="anchorPosition"
             anchorPosition={
-                point[0] !== null
-                    ? {top: point[1], left: point[0]}
-                    : undefined
+                point[0] !== null ? {top: point[1], left: point[0]} : undefined
             }
         >
-            <Nesteditem
+            <NestedMenuItem
                 parentMenuOpen={point[0] !== null}
-                label={(
+                label={
                     <>
                         <ListItemIcon>
-                            <CategoryIcon/>
+                            <CategoryIcon />
                         </ListItemIcon>
                         <Typography variant="inherit" noWrap>
                             Category
                         </Typography>
                     </>
-                )}
+                }
             >
                 {categories.map(category => (
                     <MenuItem
@@ -79,30 +88,30 @@ const ContextMenu: FC<ContextMenuProps> = ({canvas, selectedLabels, point, handl
                         onClick={() => handleUpdateLabelCategory(category)}
                     >
                         <Typography variant="inherit" noWrap>
-                            {selectedLabels.map(selectedLabel => selectedLabel.category_id).includes(category.id)
-                                ? <strong>{capitalize(category.name)}</strong>
-                                : capitalize(category.name)
-                            }
+                            {selectedLabels
+                                .map(selectedLabel => selectedLabel.category_id)
+                                .includes(category.id) ? (
+                                <strong>{capitalize(category.name)}</strong>
+                            ) : (
+                                capitalize(category.name)
+                            )}
                         </Typography>
                     </MenuItem>
                 ))}
-            </Nesteditem>
+            </NestedMenuItem>
             <Box my={0.5}>
-                <Divider/>
+                <Divider />
             </Box>
-            <MenuItem
-                className={classes.item}
-                onClick={handleDeleteLabel}
-            >
+            <MenuItem className={classes.item} onClick={handleDeleteLabel}>
                 <ListItemIcon>
-                    <DeleteIcon/>
+                    <DeleteIcon />
                 </ListItemIcon>
                 <Typography variant="inherit" noWrap>
                     Delete
                 </Typography>
             </MenuItem>
         </Menu>
-    )
+    );
 };
 
 export default ContextMenu;

@@ -1,11 +1,23 @@
 import React, {FC, useRef, useState} from 'react';
 import {Link as RouterLink, useHistory} from 'react-router-dom';
 import {useSnackbar} from 'notistack';
-import {Box, ButtonBase, Hidden, makeStyles, Menu, MenuItem, Typography} from '@material-ui/core';
+import {
+    Box,
+    ButtonBase,
+    Divider,
+    Hidden,
+    ListItemIcon,
+    ListItemText,
+    Menu,
+    MenuItem,
+    Typography
+} from '@mui/material';
+import {AccountBox as AccountIcon, Logout as LogoutIcon} from '@mui/icons-material';
+import {makeStyles} from '@mui/styles';
 import UserAvatar from 'src/components/UserAvatar';
 import useAuth from 'src/hooks/useAuth';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     avatar: {
         height: 32,
         width: 32,
@@ -60,10 +72,8 @@ const Account: FC = () => {
                 // @ts-ignore
                 ref={ref}
             >
-                <UserAvatar
-                    className={classes.avatar}
-                />
-                <Hidden smDown>
+                <UserAvatar className={classes.avatar} />
+                <Hidden mdDown>
                     <Typography
                         className={classes.username}
                         variant="h6"
@@ -81,18 +91,21 @@ const Account: FC = () => {
                 }}
                 keepMounted
                 PaperProps={{className: classes.popover}}
-                getContentAnchorEl={null}
                 anchorEl={ref.current}
                 open={isOpen}
             >
-                <MenuItem
-                    component={RouterLink}
-                    to="/app/account"
-                >
-                    Account
+                <MenuItem component={RouterLink} to="/app/account">
+                    <ListItemIcon>
+                        <AccountIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Account</ListItemText>
                 </MenuItem>
+                <Divider />
                 <MenuItem onClick={handleLogout}>
-                    Logout
+                    <ListItemIcon>
+                        <LogoutIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Logout</ListItemText>
                 </MenuItem>
             </Menu>
         </>

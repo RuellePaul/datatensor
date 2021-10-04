@@ -12,10 +12,10 @@ import {
     IconButton,
     LinearProgress,
     Link,
-    makeStyles,
     Typography
-} from '@material-ui/core';
-import {Close as CloseIcon} from '@material-ui/icons';
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {Close as CloseIcon} from '@mui/icons-material';
 import {Theme} from 'src/theme';
 import {TaskAugmentorProperties, TaskGeneratorProperties, TaskStatus} from 'src/types/task';
 import {UserConsumer, UserProvider} from 'src/store/UserContext';
@@ -27,20 +27,18 @@ import UserLabel from 'src/components/UserLabel';
 import getDateDiff from 'src/utils/getDateDiff';
 import {MAX_CATEGORIES_DISPLAYED} from 'src/config';
 
-interface TaskDetailsProps {
-
-}
+interface TaskDetailsProps {}
 
 interface TaskStatusProps {
-    status: TaskStatus
+    status: TaskStatus;
 }
 
 interface GeneratorProperties {
-    properties: TaskGeneratorProperties
+    properties: TaskGeneratorProperties;
 }
 
 interface AugmentorProperties {
-    properties: TaskAugmentorProperties
+    properties: TaskAugmentorProperties;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -58,7 +56,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         display: 'flex',
         flexWrap: 'wrap',
         '& > *': {
-            margin: theme.spacing(0.5, 0.5, 0.5, 0),
+            margin: theme.spacing(0.5, 0.5, 0.5, 0)
         }
     },
     link: {
@@ -76,112 +74,108 @@ const useStyles = makeStyles((theme: Theme) => ({
 function colorReducer(status) {
     switch (status) {
         case 'pending':
-            return 'default'
+            return 'default';
         case 'success':
-            return 'success'
+            return 'success';
         case 'active':
-            return 'info'
+            return 'info';
         case 'failed':
-            return 'error'
+            return 'error';
         default:
-            throw new Error('Invalid status')
+            throw new Error('Invalid status');
     }
 }
 
 export const TaskStatusLabel: FC<TaskStatusProps> = ({status}) => {
-
     return (
         <FancyLabel
-            className={clsx(['pending', 'active'].includes(status) && 'blinking')}
+            className={clsx(
+                ['pending', 'active'].includes(status) && 'blinking'
+            )}
             color={colorReducer(status)}
         >
             {status}
         </FancyLabel>
-    )
-}
+    );
+};
 
 const GeneratorProperties: FC<GeneratorProperties> = ({properties}) => {
-
     const classes = useStyles();
 
     const [expand, setExpand] = useState<boolean>(false);
 
     return (
         <>
-            <Typography
-                color='textPrimary'
-                gutterBottom
-            >
-                Generate <strong>{properties.image_count}</strong> images from
-                {' '}
+            <Typography color="textPrimary" gutterBottom>
+                Generate <strong>{properties.image_count}</strong> images from{' '}
                 <strong>
                     {properties.selected_categories.length}
                     {properties.selected_categories.length > 1
                         ? ' categories'
-                        : ' category'
-                    }
-                </strong> (datasource <strong>{properties.datasource_key}</strong>) :
+                        : ' category'}
+                </strong>{' '}
+                (datasource <strong>{properties.datasource_key}</strong>) :
             </Typography>
             <div className={classes.chips}>
-                {expand
-                    ? (
-                        <>
-                            {properties.selected_categories.map(category => (
+                {expand ? (
+                    <>
+                        {properties.selected_categories.map(category => (
+                            <Chip
+                                label={capitalize(category)}
+                                variant="outlined"
+                            />
+                        ))}
+                    </>
+                ) : (
+                    <>
+                        {properties.selected_categories
+                            .slice(0, MAX_CATEGORIES_DISPLAYED)
+                            .map(category => (
                                 <Chip
                                     label={capitalize(category)}
-                                    variant='outlined'
+                                    variant="outlined"
                                 />
                             ))}
-                        </>
-                    ) : (
-                        <>
-                            {properties.selected_categories.slice(0, MAX_CATEGORIES_DISPLAYED).map(category => (
-                                <Chip
-                                    label={capitalize(category)}
-                                    variant='outlined'
-                                />
-                            ))}
-                            {properties.selected_categories.length > MAX_CATEGORIES_DISPLAYED && (
-                                <Link
-                                    className={classes.link}
-                                    onClick={() => {
-                                        setExpand(true)
-                                    }}
-                                >
-                                    and {properties.selected_categories.length - MAX_CATEGORIES_DISPLAYED} more...
-                                </Link>
-                            )}
-                        </>
-                    )}
+                        {properties.selected_categories.length >
+                            MAX_CATEGORIES_DISPLAYED && (
+                            <Link
+                                className={classes.link}
+                                onClick={() => {
+                                    setExpand(true);
+                                }}
+                            >
+                                and{' '}
+                                {properties.selected_categories.length -
+                                    MAX_CATEGORIES_DISPLAYED}{' '}
+                                more...
+                            </Link>
+                        )}
+                    </>
+                )}
             </div>
         </>
-    )
+    );
 };
 
-
 const AugmentorProperties: FC<AugmentorProperties> = ({properties}) => {
-
     return (
         <>
-            <Typography
-                color='textPrimary'
-                gutterBottom
-            >
-                Augmentation up to <strong>{properties.image_count}</strong> images
+            <Typography color="textPrimary" gutterBottom>
+                Augmentation up to <strong>{properties.image_count}</strong>{' '}
+                images
             </Typography>
         </>
-    )
+    );
 };
 
 const TaskDetails: FC<TaskDetailsProps> = () => {
-
     const classes = useStyles();
 
     const {selectedTask: task, saveSelectedTask} = useTasks();
 
     const handleClose = () => {
         saveSelectedTask(null);
-    }
+    };
 
     return (
         <UserProvider user_id={task?.user_id}>
@@ -192,57 +186,50 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                     className: classes.dialog
                 }}
                 fullWidth
-                maxWidth='sm'
+                maxWidth="sm"
                 open={task !== null}
                 onClose={handleClose}
             >
                 {task && (
                     <>
-                        <DialogTitle
-                            className='flex'
-                            disableTypography
-                        >
-                            <Typography variant='h4'>
+                        <DialogTitle className="flex">
+                            <Typography variant="h4">
                                 {capitalize(task.type)}
                             </Typography>
 
                             <IconButton
                                 className={classes.close}
                                 onClick={handleClose}
+                                size="large"
                             >
-                                <CloseIcon/>
+                                <CloseIcon />
                             </IconButton>
                         </DialogTitle>
-                        <DialogContent
-                            className='scroll'
-                        >
-                            {(task.status === 'pending' || task.status === 'active') && (
-                                <Box
-                                    display='flex'
-                                    alignItems='center'
-                                >
-                                    <Box width='100%' mr={1}>
+                        <DialogContent className="scroll">
+                            {(task.status === 'pending' ||
+                                task.status === 'active') && (
+                                <Box display="flex" alignItems="center">
+                                    <Box width="100%" mr={1}>
                                         <LinearProgress
-                                            variant={(task.progress <= 0 || task.progress) >= 1 ? 'query' : 'determinate'}
+                                            variant={
+                                                (task.progress <= 0 ||
+                                                    task.progress) >= 1
+                                                    ? 'query'
+                                                    : 'determinate'
+                                            }
                                             value={100 * task.progress}
                                         />
                                     </Box>
                                     <Typography
-                                        variant='body2'
-                                        color='textSecondary'
+                                        variant="body2"
+                                        color="textSecondary"
                                     >
                                         {`${(100 * task.progress).toFixed(2)}%`}
                                     </Typography>
                                 </Box>
                             )}
-                            <Grid
-                                container
-                                spacing={2}
-                            >
-                                <Grid
-                                    item
-                                    xs={12}
-                                >
+                            <Grid container spacing={2}>
+                                <Grid item xs={12}>
                                     <Typography
                                         variant="overline"
                                         color="inherit"
@@ -250,29 +237,25 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                                     >
                                         Task
                                     </Typography>
-                                    {
-                                        task.type === 'generator' && (
-                                            <GeneratorProperties
-                                                properties={task.properties as TaskGeneratorProperties}
-                                            />
-                                        )
-                                    }
-                                    {
-                                        task.type === 'augmentor' && (
-                                            <AugmentorProperties
-                                                properties={task.properties as TaskAugmentorProperties}
-                                            />
-                                        )
-                                    }
+                                    {task.type === 'generator' && (
+                                        <GeneratorProperties
+                                            properties={
+                                                task.properties as TaskGeneratorProperties
+                                            }
+                                        />
+                                    )}
+                                    {task.type === 'augmentor' && (
+                                        <AugmentorProperties
+                                            properties={
+                                                task.properties as TaskAugmentorProperties
+                                            }
+                                        />
+                                    )}
                                     <Box mt={2}>
-                                        <Divider/>
+                                        <Divider />
                                     </Box>
                                 </Grid>
-                                <Grid
-                                    item
-                                    sm={5}
-                                    xs={12}
-                                >
+                                <Grid item sm={5} xs={12}>
                                     <Typography
                                         variant="overline"
                                         color="inherit"
@@ -281,16 +264,20 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                                         Created by
                                     </Typography>
                                     <UserConsumer>
-                                        {
-                                            value => <UserLabel user={value.user}>
+                                        {value => (
+                                            <UserLabel user={value.user}>
                                                 <Typography
-                                                    variant='caption'
-                                                    color='textSecondary'
+                                                    variant="caption"
+                                                    color="textSecondary"
                                                 >
-                                                    {getDateDiff(new Date(), task.created_at, 'passed_event')}
+                                                    {getDateDiff(
+                                                        new Date(),
+                                                        task.created_at,
+                                                        'passed_event'
+                                                    )}
                                                 </Typography>
                                             </UserLabel>
-                                        }
+                                        )}
                                     </UserConsumer>
 
                                     <Typography
@@ -301,15 +288,9 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                                     >
                                         Status
                                     </Typography>
-                                    <TaskStatusLabel
-                                        status={task.status}
-                                    />
+                                    <TaskStatusLabel status={task.status} />
                                 </Grid>
-                                <Grid
-                                    item
-                                    sm={7}
-                                    xs={12}
-                                >
+                                <Grid item sm={7} xs={12}>
                                     <Typography
                                         variant="overline"
                                         color="inherit"
@@ -318,7 +299,9 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                                         Dataset
                                     </Typography>
 
-                                    <DatasetProvider dataset_id={task?.dataset_id}>
+                                    <DatasetProvider
+                                        dataset_id={task?.dataset_id}
+                                    >
                                         <DatasetConsumer>
                                             {value => (
                                                 <DTDataset
@@ -334,7 +317,7 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                 )}
             </Dialog>
         </UserProvider>
-    )
+    );
 };
 
 export default TaskDetails;

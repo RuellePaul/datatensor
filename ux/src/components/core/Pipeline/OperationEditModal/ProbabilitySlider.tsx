@@ -1,6 +1,6 @@
 import type {FC} from 'react';
 import React from 'react';
-import {Slider, Typography} from '@material-ui/core';
+import {Slider, Typography} from '@mui/material';
 import {useDispatch} from 'src/store';
 import type {Operation} from 'src/types/pipeline';
 import {updateOperation} from 'src/slices/pipeline';
@@ -11,12 +11,12 @@ interface ProbabilitySliderProps {
     disabled?: boolean
 }
 
-const ProbabilitySlider: FC<ProbabilitySliderProps> = ({operation, setDragDisabled, ...rest}) => {
+const ProbabilitySlider: FC<ProbabilitySliderProps> = ({ operation, setDragDisabled, ...rest }) => {
     const dispatch = useDispatch();
 
     const handleProbabilityChange = async (event, value): Promise<void> => {
         try {
-            await dispatch(updateOperation(operation.id, {probability: value}));
+            await dispatch(updateOperation(operation.id, { probability: value }));
         } catch (err) {
             console.error(err);
         }
@@ -25,8 +25,8 @@ const ProbabilitySlider: FC<ProbabilitySliderProps> = ({operation, setDragDisabl
     return (
         <>
             <Typography
-                variant='overline'
-                color='textSecondary'
+                variant="overline"
+                color="textSecondary"
             >
                 Probability
             </Typography>
@@ -36,7 +36,7 @@ const ProbabilitySlider: FC<ProbabilitySliderProps> = ({operation, setDragDisabl
                 max={1}
                 step={0.05}
                 marks
-                valueLabelDisplay='auto'
+                valueLabelDisplay="auto"
                 defaultValue={operation.probability}
                 onClick={event => event.stopPropagation()}
                 onChangeCommitted={handleProbabilityChange}
@@ -46,6 +46,6 @@ const ProbabilitySlider: FC<ProbabilitySliderProps> = ({operation, setDragDisabl
             />
         </>
     );
-}
+};
 
 export default ProbabilitySlider;

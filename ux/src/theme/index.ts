@@ -1,23 +1,18 @@
 import _ from 'lodash';
-import {colors, createTheme as createMuiTheme, responsiveFontSizes} from '@material-ui/core';
-import {Theme as MuiTheme} from '@material-ui/core/styles';
-import {Shadows as MuiShadows} from '@material-ui/core/styles/shadows';
-import {Palette as MuiPalette, TypeBackground as MuiTypeBackground} from '@material-ui/core/styles/createPalette';
+import {
+    createTheme as createMuiTheme,
+    responsiveFontSizes
+} from '@mui/material';
+import {
+    Theme as MuiTheme,
+    ThemeOptions as MuiThemeOptions
+} from '@mui/material/styles';
 import {THEMES} from 'src/constants';
-import {softShadows, strongShadows} from './shadows';
+import components from './components';
 import typography from './typography';
-
-interface TypeBackground extends MuiTypeBackground {
-    dark: string;
-}
-
-interface Palette extends MuiPalette {
-    background: TypeBackground;
-}
 
 export interface Theme extends MuiTheme {
     name: string;
-    palette: Palette;
 }
 
 type Direction = 'ltr' | 'rtl';
@@ -27,149 +22,39 @@ interface ThemeConfig {
     theme?: string;
 }
 
-interface ThemeOptions {
-    name?: string;
-    direction?: Direction;
-    breakpoints?: Record<string, any>;
-    typography?: Record<string, any>;
-    overrides?: Record<string, any>;
-    palette?: Record<string, any>;
-    shadows?: MuiShadows;
+interface ThemeOptions extends MuiThemeOptions {
+    name: string;
 }
 
-const baseOptions: ThemeOptions = {
+const baseOptions: MuiThemeOptions = {
     direction: 'ltr',
     typography,
+    components,
     breakpoints: {
         values: {
             xs: 0,
             sm: 600,
             md: 960,
             lg: 1320,
-            xl: 1920,
-        },
-    },
-    overrides: {
-        MuiLinearProgress: {
-            root: {
-                borderRadius: 3,
-                overflow: 'hidden'
-            }
-        },
-        MuiListItemIcon: {
-            root: {
-                minWidth: 32
-            }
-        },
-        MuiChip: {
-            root: {
-                backgroundColor: 'rgba(0,0,0,0.075)'
-            }
+            xl: 1920
         }
     }
 };
 
 const themesOptions: ThemeOptions[] = [
     {
-        name: THEMES.LIGHT,
-        overrides: {
-            MuiInputBase: {
-                input: {
-                    '&::placeholder': {
-                        opacity: 1,
-                        color: colors.blueGrey[600]
-                    }
-                }
-            }
-        },
-        palette: {
-            type: 'light',
-            action: {
-                active: colors.blueGrey[600]
-            },
-            background: {
-                default: colors.common.white,
-                dark: '#f4f6f8',
-                paper: colors.common.white
-            },
-            primary: {
-                main: colors.indigo[600]
-            },
-            secondary: {
-                main: '#5850EC'
-            },
-            text: {
-                primary: colors.blueGrey[900],
-                secondary: colors.blueGrey[600]
-            }
-        },
-        shadows: softShadows
+        name: THEMES.LIGHT
     },
     {
         name: THEMES.DARK,
         palette: {
-            type: 'dark',
-            action: {
-                active: 'rgba(255, 255, 255, 0.54)',
-                hover: 'rgba(255, 255, 255, 0.04)',
-                selected: 'rgba(255, 255, 255, 0.08)',
-                disabled: 'rgba(255, 255, 255, 0.26)',
-                disabledBackground: 'rgba(255, 255, 255, 0.12)',
-                focus: 'rgba(255, 255, 255, 0.12)'
-            },
-            background: {
-                default: '#282C34',
-                dark: '#1c2025',
-                paper: '#282C34'
-            },
-            primary: {
-                main: '#8a85ff'
-            },
-            secondary: {
-                main: '#8a85ff'
-            },
-            text: {
-                primary: '#e6e5e8',
-                secondary: '#adb0bb'
-            }
-        },
-        shadows: strongShadows
-    },
-    {
-        name: THEMES.UNICORN,
-        palette: {
-            type: 'dark',
-            action: {
-                active: 'rgba(255, 255, 255, 0.54)',
-                hover: 'rgba(255, 255, 255, 0.04)',
-                selected: 'rgba(255, 255, 255, 0.08)',
-                disabled: 'rgba(255, 255, 255, 0.26)',
-                disabledBackground: 'rgba(255, 255, 255, 0.12)',
-                focus: 'rgba(255, 255, 255, 0.12)'
-            },
-            background: {
-                default: '#2a2d3d',
-                dark: '#212330',
-                paper: '#2a2d3d'
-            },
-            primary: {
-                main: '#a67dff'
-            },
-            secondary: {
-                main: '#a67dff'
-            },
-            text: {
-                primary: '#f6f5f8',
-                secondary: '#9699a4'
-            },
-            divider: '#4a4c5b'
-        },
-        shadows: strongShadows
+            mode: 'dark'
+        }
     }
 ];
 
 export const createTheme = (config: ThemeConfig = {}): Theme => {
-    let themeOptions = themesOptions.find((theme) => theme.name === config.theme);
+    let themeOptions = themesOptions.find(theme => theme.name === config.theme);
 
     if (!themeOptions) {
         console.warn(new Error(`The theme ${config.theme} is not valid`));
@@ -177,12 +62,7 @@ export const createTheme = (config: ThemeConfig = {}): Theme => {
     }
 
     let theme = createMuiTheme(
-        _.merge(
-            {},
-            baseOptions,
-            themeOptions,
-            {direction: config.direction}
-        )
+        _.merge({}, baseOptions, themeOptions, {direction: config.direction})
     );
 
     theme = responsiveFontSizes(theme);

@@ -8,25 +8,28 @@ interface KeyboardListenerProps {
     setTool: any;
 }
 
-const KeyboardListener: FC<KeyboardListenerProps> = ({index, imageIds, setTool}) => {
-
+const KeyboardListener: FC<KeyboardListenerProps> = ({
+    index,
+    imageIds,
+    setTool
+}) => {
     const {validateLabels, previousPosition} = useImage();
 
     const handleKeyDown = async (event: KeyboardEvent) => {
         if (event.key === 'ArrowLeft') {
             if (index === 0) return;
-            window.location.hash = imageIds[index - 1]
+            window.location.hash = imageIds[index - 1];
         } else if (event.key === 'ArrowRight') {
             if (index === imageIds.length - 1) return;
-            window.location.hash = imageIds[index + 1]
+            window.location.hash = imageIds[index + 1];
         } else if (event.key === 'a') {
-            setTool('label')
+            setTool('label');
         } else if (!event.ctrlKey && event.key === 'z') {
-            setTool('move')
+            setTool('move');
         } else if (event.key === 's') {
             validateLabels();
         } else if (event.ctrlKey && event.key === 'z') {
-            previousPosition()
+            previousPosition();
         }
     };
 

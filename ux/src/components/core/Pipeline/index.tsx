@@ -2,7 +2,7 @@ import type {FC} from 'react';
 import React, {useEffect} from 'react';
 import type {DropResult} from 'react-beautiful-dnd';
 import {DragDropContext} from 'react-beautiful-dnd';
-import {makeStyles} from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 import type {Theme} from 'src/theme';
 import {useDispatch} from 'src/store';
 import {moveOperation, setDefaultPipeline} from 'src/slices/pipeline';
@@ -18,15 +18,15 @@ const useStyles = makeStyles((theme: Theme) => ({
         flexGrow: 1,
         flexShrink: 1,
         display: 'flex',
-        overflow: 'hidden',
+        overflow: 'hidden'
     }
 }));
 
-const Pipeline: FC<PipelineProps> = ({readOnly = false}) => {
+const Pipeline: FC<PipelineProps> = ({ readOnly = false }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
-    const handleDragEnd = async ({source, destination, draggableId}: DropResult): Promise<void> => {
+    const handleDragEnd = async ({ source, destination, draggableId }: DropResult): Promise<void> => {
         try {
             // Dropped outside the list
             if (!destination)
@@ -63,7 +63,7 @@ const Pipeline: FC<PipelineProps> = ({readOnly = false}) => {
     return (
         <DragDropContext onDragEnd={handleDragEnd}>
             <div className={classes.content}>
-                <OperationsPipeline readOnly={readOnly}/>
+                <OperationsPipeline readOnly={readOnly} />
             </div>
         </DragDropContext>
     );

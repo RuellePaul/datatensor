@@ -4,7 +4,8 @@ import type {FC} from 'react';
 import React, {useEffect} from 'react';
 import {Link as RouterLink, useLocation} from 'react-router-dom';
 import PropTypes from 'prop-types';
-import {Box, Drawer, Hidden, List, makeStyles} from '@material-ui/core';
+import {Box, Drawer, Hidden, List} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import Logo from 'src/components/utils/Logo';
 import NavItem from './NavItem';
 
@@ -23,14 +24,18 @@ const items: Item[] = [
     {
         title: 'Getting Started',
         href: '/docs/getting-started'
+    },
+    {
+        title: 'Swagger API',
+        href: '/docs/swagger-api'
     }
 ];
 
-function renderNavItems({items, depth = 0}: { items: Item[], depth?: number }) {
+function renderNavItems({ items, depth = 0 }: { items: Item[], depth?: number }) {
     return (
         <List disablePadding>
             {items.reduce(
-                (acc, item) => reduceChildRoutes({acc, item, depth}),
+                (acc, item) => reduceChildRoutes({ acc, item, depth }),
                 []
             )}
         </List>
@@ -84,7 +89,7 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-const NavBar: FC<NavBarProps> = ({onMobileClose, openMobile}) => {
+const NavBar: FC<NavBarProps> = ({ onMobileClose, openMobile }) => {
     const classes = useStyles();
     const location = useLocation();
 
@@ -104,41 +109,39 @@ const NavBar: FC<NavBarProps> = ({onMobileClose, openMobile}) => {
             <Hidden lgUp>
                 <Box p={2}>
                     <RouterLink to="/">
-                        <Logo/>
+                        <Logo />
                     </RouterLink>
                 </Box>
             </Hidden>
             <Box p={2}>
-                {renderNavItems({items})}
+                {renderNavItems({ items })}
             </Box>
         </Box>
     );
 
-    return (
-        <>
-            <Hidden lgUp>
-                <Drawer
-                    anchor="left"
-                    classes={{paper: classes.mobileDrawer}}
-                    onClose={onMobileClose}
-                    open={openMobile}
-                    variant="temporary"
-                >
-                    {content}
-                </Drawer>
-            </Hidden>
-            <Hidden mdDown>
-                <Drawer
-                    anchor="left"
-                    classes={{paper: classes.desktopDrawer}}
-                    open
-                    variant="persistent"
-                >
-                    {content}
-                </Drawer>
-            </Hidden>
-        </>
-    );
+    return <>
+        <Hidden lgUp>
+            <Drawer
+                anchor="left"
+                classes={{ paper: classes.mobileDrawer }}
+                onClose={onMobileClose}
+                open={openMobile}
+                variant="temporary"
+            >
+                {content}
+            </Drawer>
+        </Hidden>
+        <Hidden lgDown>
+            <Drawer
+                anchor="left"
+                classes={{ paper: classes.desktopDrawer }}
+                open
+                variant="persistent"
+            >
+                {content}
+            </Drawer>
+        </Hidden>
+    </>;
 };
 
 NavBar.propTypes = {

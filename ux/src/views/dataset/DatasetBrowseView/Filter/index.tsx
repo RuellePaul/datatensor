@@ -1,17 +1,17 @@
 import React, {FC, useCallback, useEffect, useState} from 'react';
 import clsx from 'clsx';
 import {
+    Autocomplete,
     Box,
     capitalize,
     Card,
     Checkbox,
     FormControlLabel,
     InputAdornment,
-    makeStyles,
     TextField
-} from '@material-ui/core';
-import {Autocomplete} from '@material-ui/lab';
-import {Search as SearchIcon} from '@material-ui/icons';
+} from '@mui/material';
+import {makeStyles} from '@mui/styles';
+import {Search as SearchIcon} from '@mui/icons-material';
 import {Theme} from 'src/theme';
 import api from 'src/utils/api';
 import {Category} from 'src/types/category';
@@ -39,7 +39,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const Filter: FC<FilterProps> = ({className, ...rest}) => {
-
     const classes = useStyles();
 
     const {datasets, saveDisplayedDatasets} = useDatasets();
@@ -47,83 +46,91 @@ const Filter: FC<FilterProps> = ({className, ...rest}) => {
     const [categories, setCategories] = useState<Category[]>([]);
     const fetchCategories = useCallback(async () => {
         try {
-            const response = await api.get<{ categories: Category[] }>(`/search/categories`);
+            const response = await api.get<{categories: Category[]}>(
+                `/search/categories`
+            );
             setCategories(response.data.categories);
         } catch (err) {
             console.error(err);
         }
-
     }, []);
 
     useEffect(() => {
         fetchCategories();
     }, [fetchCategories]);
 
+    const [categoriesSelected, setCategoriesSelected] = useState<Category[]>(
+        []
+    );
 
-    const [categoriesSelected, setCategoriesSelected] = useState<Category[]>([]);
+    const searchDatasets = useCallback(
+        async category_names => {
+            if (category_names.length === 0) {
+                saveDisplayedDatasets(datasets);
+                return;
+            }
 
-    const searchDatasets = useCallback(async (category_names) => {
-        if (category_names.length === 0) {
-            saveDisplayedDatasets(datasets);
-            return;
-        }
-
-        const response = await api.post<{ dataset_ids: string[] }>('/search/datasets', {category_names});
-        saveDisplayedDatasets(datasets.filter(dataset => response.data.dataset_ids.includes(dataset.id)));
-
-        // eslint-disable-next-line
-    }, [datasets]);
+            const response = await api.post<{dataset_ids: string[]}>(
+                '/search/datasets',
+                {category_names}
+            );
+            saveDisplayedDatasets(
+                datasets.filter(dataset =>
+                    response.data.dataset_ids.includes(dataset.id)
+                )
+            );
+        }, // eslint-disable-next-line
+        [datasets]
+    );
 
     useEffect(() => {
         searchDatasets(categoriesSelected.map(category => category.name));
-    }, [searchDatasets, categoriesSelected])
+    }, [searchDatasets, categoriesSelected]);
 
     return (
-        <Card
-            className={clsx(classes.root, className)}
-            {...rest}
-        >
-            <Box
-                p={2}
-                display="flex"
-                alignItems="center"
-            >
+        <Card className={clsx(classes.root, className)} {...rest}>
+            <Box p={2} display="flex" alignItems="center">
                 <Autocomplete
                     className={classes.searchInput}
                     options={categories
                         .sort((a, b) => -b.name.localeCompare(a.name))
-                        .sort((a, b) => -b.supercategory.localeCompare(a.supercategory))
-                    }
-                    groupBy={(category) => capitalize(category.supercategory)}
-                    getOptionLabel={(category) => capitalize(category.name)}
+                        .sort(
+                            (a, b) =>
+                                -b.supercategory.localeCompare(a.supercategory)
+                        )}
+                    groupBy={category => capitalize(category.supercategory)}
+                    getOptionLabel={category => capitalize(category.name)}
                     multiple
-                    onChange={(event, newCategories) => setCategoriesSelected(newCategories as Category[])}
+                    onChange={(event, newCategories) =>
+                        setCategoriesSelected(newCategories as Category[])
+                    }
                     value={categoriesSelected}
-                    renderInput={(params) => (
+                    renderInput={params => (
                         <TextField
                             {...params}
-                            label='Search for categories...'
-                            placeholder={`${categories.map(category => capitalize(category.name)).slice(0, 3).join(', ')}...`}
+                            label="Search for categories..."
+                            placeholder={`${categories
+                                .map(category => capitalize(category.name))
+                                .slice(0, 3)
+                                .join(', ')}...`}
                             InputProps={{
                                 ...params.InputProps,
                                 startAdornment: (
                                     <>
-                                        <InputAdornment position='start'>
-                                            <SearchIcon/>
+                                        <InputAdornment position="start">
+                                            <SearchIcon />
                                         </InputAdornment>
                                         {params.InputProps.startAdornment}
                                     </>
-                                ),
+                                )
                             }}
                         />
                     )}
                 />
-                <Box flexGrow={1}/>
+                <Box flexGrow={1} />
                 <FormControlLabel
                     className={classes.toggle}
-                    control={(
-                        <Checkbox defaultChecked/>
-                    )}
+                    control={<Checkbox defaultChecked />}
                     label="Show public datasets"
                 />
             </Box>

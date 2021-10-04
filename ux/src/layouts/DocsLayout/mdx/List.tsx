@@ -1,7 +1,7 @@
 import type {FC, ReactNode} from 'react';
 import React from 'react';
 import PropTypes from 'prop-types';
-import {makeStyles} from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 import type {Theme} from 'src/theme';
 
 interface ListProps {
@@ -31,7 +31,7 @@ const List: FC<ListProps> = ({
             {children}
         </Component>
     );
-}
+};
 
 List.propTypes = {
     children: PropTypes.node,

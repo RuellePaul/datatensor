@@ -1,5 +1,5 @@
 export type OperationType =
-    'rotate'
+    | 'rotate'
     | 'flip_random'
     | 'skew'
     | 'crop_random'
@@ -65,7 +65,7 @@ export interface RandomContrastProperties {
 }
 
 export type OperationProperties =
-    RotateProperties
+    | RotateProperties
     | SkewProperties
     | CropRandomProperties
     | ShearProperties
@@ -73,8 +73,7 @@ export type OperationProperties =
     | GaussianDistortionProperties
     | RandomBrightnessProperties
     | RandomColorProperties
-    | RandomContrastProperties
-
+    | RandomContrastProperties;
 
 export interface Operation {
     id: string;

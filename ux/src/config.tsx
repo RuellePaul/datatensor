@@ -11,7 +11,7 @@ import {
     InvertColors as InvertIcon,
     PaletteOutlined as ColorIcon,
     PhotoSizeSelectLarge as CropIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import {OperationType, Pipeline} from './types/pipeline';
 import {SuperCategory} from 'src/types/category';
 
@@ -50,19 +50,19 @@ export const OPERATIONS_TYPES: OperationType[] = [
 ];
 
 export const OPERATIONS_ICONS = {
-    rotate: <RotateIcon/>,
-    flip_random: <FlipIcon/>,
-    skew: <SkewIcon/>,
-    crop_random: <CropIcon/>,
-    shear: <RotateIcon/>,
-    random_distortion: <DistortionIcon/>,
-    gaussian_distortion: <DistortionIcon/>,
-    random_brightness: <BrightnessIcon/>,
-    random_color: <ColorIcon/>,
-    random_contrast: <RotateIcon/>,
-    histogram_equalisation: <HistogramIcon/>,
-    invert: <InvertIcon/>,
-    greyscale: <GreyScaleIcon/>
+    rotate: <RotateIcon />,
+    flip_random: <FlipIcon />,
+    skew: <SkewIcon />,
+    crop_random: <CropIcon />,
+    shear: <RotateIcon />,
+    random_distortion: <DistortionIcon />,
+    gaussian_distortion: <DistortionIcon />,
+    random_brightness: <BrightnessIcon />,
+    random_color: <ColorIcon />,
+    random_contrast: <RotateIcon />,
+    histogram_equalisation: <HistogramIcon />,
+    invert: <InvertIcon />,
+    greyscale: <GreyScaleIcon />
 };
 
 export const OPERATIONS_DESCRIPTION = {
@@ -128,45 +128,102 @@ export const OPERATIONS_INITIAL_PROPERTIES = {
         min_factor: 1,
         max_factor: 2
     }
-}
+};
 
 export const OPERATIONS_SHAPES = {
     rotate: {
-        max_left_rotation: Yup.number().min(0).max(25).required('Field required'),
-        max_right_rotation: Yup.number().min(0).max(25).required('Field required')
+        max_left_rotation: Yup.number()
+            .min(0)
+            .max(25)
+            .required('Field required'),
+        max_right_rotation: Yup.number()
+            .min(0)
+            .max(25)
+            .required('Field required')
     },
     skew: {
-        magnitude: Yup.number().min(0).max(1).required('Field required')
+        magnitude: Yup.number()
+            .min(0)
+            .max(1)
+            .required('Field required')
     },
     crop_random: {
-        percentage_area: Yup.number().min(0).max(1).required('Field required'),
+        percentage_area: Yup.number()
+            .min(0)
+            .max(1)
+            .required('Field required'),
         randomise_percentage_area: Yup.boolean()
     },
     shear: {
-        max_shear_left: Yup.number().min(1).max(25).required('Field required'),
-        max_shear_right: Yup.number().min(1).max(25).required('Field required')
+        max_shear_left: Yup.number()
+            .min(1)
+            .max(25)
+            .required('Field required'),
+        max_shear_right: Yup.number()
+            .min(1)
+            .max(25)
+            .required('Field required')
     },
     random_distortion: {
-        grid_width: Yup.number().min(1).max(20).required('Field required'),
-        grid_height: Yup.number().min(1).max(20).required('Field required'),
-        magnitude: Yup.number().min(1).max(20).required('Field required')
+        grid_width: Yup.number()
+            .min(1)
+            .max(20)
+            .required('Field required'),
+        grid_height: Yup.number()
+            .min(1)
+            .max(20)
+            .required('Field required'),
+        magnitude: Yup.number()
+            .min(1)
+            .max(20)
+            .required('Field required')
     },
     gaussian_distortion: {
-        grid_width: Yup.number().min(1).max(20).required('Field required'),
-        grid_height: Yup.number().min(1).max(20).required('Field required'),
-        magnitude: Yup.number().min(1).max(20).required('Field required')
+        grid_width: Yup.number()
+            .min(1)
+            .max(20)
+            .required('Field required'),
+        grid_height: Yup.number()
+            .min(1)
+            .max(20)
+            .required('Field required'),
+        magnitude: Yup.number()
+            .min(1)
+            .max(20)
+            .required('Field required')
     },
     random_brightness: {
-        min_factor: Yup.number().min(1).max(4).required('Field required'),
-        max_factor: Yup.number().min(1).max(4).required('Field required').moreThan(Yup.ref('min_factor'))
+        min_factor: Yup.number()
+            .min(1)
+            .max(4)
+            .required('Field required'),
+        max_factor: Yup.number()
+            .min(1)
+            .max(4)
+            .required('Field required')
+            .moreThan(Yup.ref('min_factor'))
     },
     random_contrast: {
-        min_factor: Yup.number().min(1).max(4).required('Field required'),
-        max_factor: Yup.number().min(1).max(4).required('Field required').moreThan(Yup.ref('min_factor'))
+        min_factor: Yup.number()
+            .min(1)
+            .max(4)
+            .required('Field required'),
+        max_factor: Yup.number()
+            .min(1)
+            .max(4)
+            .required('Field required')
+            .moreThan(Yup.ref('min_factor'))
     },
     random_color: {
-        min_factor: Yup.number().min(1).max(4).required('Field required'),
-        max_factor: Yup.number().min(1).max(4).required('Field required').moreThan(Yup.ref('min_factor'))
+        min_factor: Yup.number()
+            .min(1)
+            .max(4)
+            .required('Field required'),
+        max_factor: Yup.number()
+            .min(1)
+            .max(4)
+            .required('Field required')
+            .moreThan(Yup.ref('min_factor'))
     }
 };
 
@@ -183,6 +240,6 @@ export const DEFAULT_PIPELINE: Pipeline = {
             type: 'random_distortion',
             probability: 0.65,
             properties: OPERATIONS_INITIAL_PROPERTIES.random_distortion
-        },
+        }
     ]
 };

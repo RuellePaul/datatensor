@@ -2,7 +2,8 @@ import type {FC, ReactNode} from 'react';
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {MDXProvider} from '@mdx-js/react';
-import {Container, makeStyles} from '@material-ui/core';
+import {Container} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import NavBar from './NavBar';
 import TopBar from './TopBar';
 import components from './mdx';
@@ -31,13 +32,13 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const DocsLayout: FC<DocsLayoutProps> = ({children}) => {
+const DocsLayout: FC<DocsLayoutProps> = ({ children }) => {
     const classes = useStyles();
     const [isMobileNavOpen, setMobileNavOpen] = useState<boolean>(false);
 
     return (
         <>
-            <TopBar onMobileNavOpen={() => setMobileNavOpen(true)}/>
+            <TopBar onMobileNavOpen={() => setMobileNavOpen(true)} />
             <NavBar
                 onMobileClose={() => setMobileNavOpen(false)}
                 openMobile={isMobileNavOpen}

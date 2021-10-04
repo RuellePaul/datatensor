@@ -1,6 +1,7 @@
 import React, {FC, useEffect, useState} from 'react';
 import Cookies from 'js-cookie';
-import {Box, Button, makeStyles, Paper, Portal, Typography} from '@material-ui/core';
+import {Box, Button, Paper, Portal, Typography} from '@mui/material';
+import {makeStyles} from '@mui/styles';
 import useSettings from 'src/hooks/useSettings';
 import {Theme} from 'src/theme';
 import {THEMES} from 'src/constants';
@@ -48,34 +49,18 @@ const SettingsNotification: FC = () => {
 
     return (
         <Portal>
-            <Paper
-                className={classes.root}
-                elevation={3}
-            >
-                <Typography
-                    variant="h4"
-                    color="textPrimary"
-                    gutterBottom
-                >
+            <Paper className={classes.root} elevation={3}>
+                <Typography variant="h4" color="textPrimary" gutterBottom>
                     Settings Updated
                 </Typography>
-                <Typography
-                    variant="body2"
-                    color="textSecondary"
-                >
-                    We automatically updated your settings.
-                    You change the settings any time from your dashboard settings.
+                <Typography variant="body2" color="textSecondary">
+                    We automatically updated your settings. You change the
+                    settings any time from your dashboard settings.
                 </Typography>
-                <Box
-                    mt={2}
-                    display="flex"
-                    justifyContent="space-between"
-                >
-                    <Button onClick={handleClose}>
-                        Close
-                    </Button>
+                <Box mt={2} display="flex" justifyContent="space-between">
+                    <Button onClick={handleClose}>Close</Button>
                     <Button
-                        color="secondary"
+                        color="primary"
                         variant="contained"
                         onClick={handleSwitch}
                     >

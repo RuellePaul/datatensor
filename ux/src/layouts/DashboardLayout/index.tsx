@@ -1,16 +1,16 @@
 import React, {FC, ReactNode, useState} from 'react';
-import {makeStyles} from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 import NavBar from './NavBar';
 import TopBar from './TopBar';
 
 interface DashboardLayoutProps {
-    children?: ReactNode
+    children?: ReactNode;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        backgroundColor: theme.palette.background.dark,
+        backgroundColor: theme.palette.background.paper,
         display: 'flex',
         height: '100%',
         overflow: 'hidden',
@@ -43,16 +43,14 @@ const DashboardLayout: FC<DashboardLayoutProps> = ({children}) => {
 
     return (
         <div className={classes.root}>
-            <TopBar onMobileNavOpen={() => setMobileNavOpen(true)}/>
+            <TopBar onMobileNavOpen={() => setMobileNavOpen(true)} />
             <NavBar
                 onMobileClose={() => setMobileNavOpen(false)}
                 openMobile={isMobileNavOpen}
             />
             <div className={classes.wrapper}>
                 <div className={classes.contentContainer}>
-                    <div className={classes.content}>
-                        {children}
-                    </div>
+                    <div className={classes.content}>{children}</div>
                 </div>
             </div>
         </div>

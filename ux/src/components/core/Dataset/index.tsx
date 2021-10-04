@@ -10,10 +10,10 @@ import {
     CardHeader,
     CardMedia,
     Chip,
-    makeStyles,
     Typography
-} from '@material-ui/core';
-import {Lock as PrivateIcon, PhotoLibrary, Public as PublicIcon} from '@material-ui/icons';
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {Lock as PrivateIcon, PhotoLibrary, Public as PublicIcon} from '@mui/icons-material';
 import {Theme} from 'src/theme';
 import {Dataset} from 'src/types/dataset';
 import api from 'src/utils/api';
@@ -40,11 +40,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const DTDataset: FC<DatasetProps> = ({
-                                         className,
-                                         dataset,
-                                         ...rest
-                                     }) => {
+const DTDataset: FC<DatasetProps> = ({className, dataset, ...rest}) => {
     const classes = useStyles();
     const history = useHistory();
 
@@ -54,16 +50,18 @@ const DTDataset: FC<DatasetProps> = ({
 
     const fetchImage = useCallback(async () => {
         try {
-            const response = await api.get<{ images: Image[] }>(`/datasets/${dataset.id}/images/`, {
-                params: {
-                    limit: 1
+            const response = await api.get<{images: Image[]}>(
+                `/datasets/${dataset.id}/images/`,
+                {
+                    params: {
+                        limit: 1
+                    }
                 }
-            });
+            );
             setImagePreview(response.data.images[0]);
         } catch (err) {
             console.error(err);
         }
-
     }, [dataset.id]);
 
     useEffect(() => {
@@ -79,70 +77,76 @@ const DTDataset: FC<DatasetProps> = ({
         >
             <UserProvider user_id={dataset.user_id}>
                 <UserConsumer>
-                    {value =>
+                    {value => (
                         <CardHeader
-                            avatar={
-                                <UserAvatar
-                                    user={value.user}
-                                />
-                            }
-                            title={(
-                                <Typography variant='h6'>
+                            avatar={<UserAvatar user={value.user} />}
+                            title={
+                                <Typography variant="h6">
                                     {dataset.name && capitalize(dataset.name)}
                                 </Typography>
-                            )}
+                            }
                             subheader={
                                 <Box mt={'2px'}>
                                     {value.user.name}
-                                    &nbsp;
-                                    •
+                                    &nbsp; •
                                     <Chip
                                         className={classes.chip}
-                                        label={dataset.is_public ? 'Public' : 'Private'}
-                                        icon={dataset.is_public ? <PublicIcon/> : <PrivateIcon/>}
-                                        size='small'
-                                        variant='outlined'
+                                        label={
+                                            dataset.is_public
+                                                ? 'Public'
+                                                : 'Private'
+                                        }
+                                        icon={
+                                            dataset.is_public ? (
+                                                <PublicIcon />
+                                            ) : (
+                                                <PrivateIcon />
+                                            )
+                                        }
+                                        size="small"
+                                        variant="outlined"
                                     />
                                 </Box>
                             }
                         />
-                    }
+                    )}
                 </UserConsumer>
             </UserProvider>
-
 
             <CardActionArea
                 onClick={() => history.push(`/app/datasets/${dataset.id}`)}
             >
                 <CardMedia
                     className={classes.media}
-                    component='span'
+                    component="span"
                     image={imagePreview?.path}
                 />
                 <CardContent>
-                    <Box display='flex' alignItems='center' mb={1}>
-                        <Typography variant='h5'>
+                    <Box display="flex" alignItems="center" mb={1}>
+                        <Typography variant="h5">
                             {dataset.name && capitalize(dataset.name)}
                         </Typography>
 
-                        <div className='flexGrow'/>
+                        <div className="flexGrow" />
 
-                        <PhotoLibrary/>
-                        <Box width={2}/>
-                        <Typography variant='overline' noWrap>
+                        <PhotoLibrary />
+                        <Box width={2} />
+                        <Typography variant="overline" noWrap>
                             {dataset.image_count} (+{dataset.augmented_count})
                         </Typography>
                     </Box>
                     <Typography
-                        color='textSecondary'
+                        color="textSecondary"
                         variant="body2"
                         component="p"
-                        dangerouslySetInnerHTML={{__html: dataset.description || '<i>No description provided</i>'}}
+                        dangerouslySetInnerHTML={{
+                            __html:
+                                dataset.description ||
+                                '<i>No description provided</i>'
+                        }}
                     />
 
-                    <WorkingAlert
-                        dataset_id={dataset.id}
-                    />
+                    <WorkingAlert dataset_id={dataset.id} />
                 </CardContent>
             </CardActionArea>
         </Card>

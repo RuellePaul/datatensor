@@ -2,7 +2,8 @@ import React, {FC, useState} from 'react';
 import clsx from 'clsx';
 import * as Yup from 'yup';
 import {Formik} from 'formik';
-import {Box, Button, Checkbox, FormHelperText, Link, makeStyles, TextField, Typography} from '@material-ui/core';
+import {Box, Button, Checkbox, FormHelperText, Link, TextField, Typography} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import GoogleCaptcha from 'src/components/utils/GoogleCaptcha';
 import useAuth from 'src/hooks/useAuth';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
@@ -33,19 +34,31 @@ const JWTRegister: FC<JWTRegisterProps> = ({className, ...rest}) => {
                 submit: null
             }}
             validationSchema={Yup.object().shape({
-                email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-                name: Yup.string().max(255).required('Name is required'),
-                password: Yup.string().min(7).max(255).required('Password is required'),
+                email: Yup.string()
+                    .email('Must be a valid email')
+                    .max(255)
+                    .required('Email is required'),
+                name: Yup.string()
+                    .max(255)
+                    .required('Name is required'),
+                password: Yup.string()
+                    .min(7)
+                    .max(255)
+                    .required('Password is required'),
                 recaptcha: Yup.string().required('Captcha is required'),
-                policy: Yup.boolean().oneOf([true], 'This field must be checked')
+                policy: Yup.boolean().oneOf(
+                    [true],
+                    'This field must be checked'
+                )
             })}
-            onSubmit={async (values, {
-                setErrors,
-                setStatus,
-                setSubmitting
-            }) => {
+            onSubmit={async (values, {setErrors, setStatus, setSubmitting}) => {
                 try {
-                    await register(values.email, values.name, values.password, values.recaptcha);
+                    await register(
+                        values.email,
+                        values.name,
+                        values.password,
+                        values.recaptcha
+                    );
 
                     if (isMountedRef.current) {
                         setStatus({success: true});
@@ -56,20 +69,24 @@ const JWTRegister: FC<JWTRegisterProps> = ({className, ...rest}) => {
                     setStatus({success: false});
                     setErrors({submit: err.message});
                     setSubmitting(false);
-                    setReload(Math.random().toString(36).substring(7))
+                    setReload(
+                        Math.random()
+                            .toString(36)
+                            .substring(7)
+                    );
                 }
             }}
         >
             {({
-                  errors,
-                  handleBlur,
-                  handleChange,
-                  handleSubmit,
-                  isSubmitting,
-                  touched,
-                  values,
-                  setFieldValue
-              }) => (
+                errors,
+                handleBlur,
+                handleChange,
+                handleSubmit,
+                isSubmitting,
+                touched,
+                values,
+                setFieldValue
+            }) => (
                 <form
                     noValidate
                     className={clsx(classes.root, className)}
@@ -114,46 +131,31 @@ const JWTRegister: FC<JWTRegisterProps> = ({className, ...rest}) => {
                         value={values.password}
                         variant="outlined"
                     />
-                    <Box
-                        mt={2}
-                    >
+                    <Box mt={2}>
                         <GoogleCaptcha
-                            name='recaptcha'
-                            onChange={value => setFieldValue('recaptcha', value)}
+                            name="recaptcha"
+                            onChange={value =>
+                                setFieldValue('recaptcha', value)
+                            }
                             helperText={touched.recaptcha && errors.recaptcha}
                             key={reload}
                         />
                     </Box>
-                    <Box
-                        alignItems="center"
-                        display="flex"
-                        mt={2}
-                        ml={-1}
-                    >
+                    <Box alignItems="center" display="flex" mt={2} ml={-1}>
                         <Checkbox
                             checked={values.policy}
                             name="policy"
                             onChange={handleChange}
                         />
-                        <Typography
-                            variant="body2"
-                            color="textSecondary"
-                        >
-                            I have read the
-                            {' '}
-                            <Link
-                                component="a"
-                                href="#"
-                                color="secondary"
-                            >
+                        <Typography variant="body2" color="textSecondary">
+                            I have read the{' '}
+                            <Link component="a" href="#" color="primary">
                                 Terms and Conditions
                             </Link>
                         </Typography>
                     </Box>
                     {Boolean(touched.policy && errors.policy) && (
-                        <FormHelperText error>
-                            {errors.policy}
-                        </FormHelperText>
+                        <FormHelperText error>{errors.policy}</FormHelperText>
                     )}
                     {errors.submit && (
                         <Box mt={3}>
@@ -164,7 +166,7 @@ const JWTRegister: FC<JWTRegisterProps> = ({className, ...rest}) => {
                     )}
                     <Box mt={2}>
                         <Button
-                            color="secondary"
+                            color="primary"
                             disabled={isSubmitting}
                             fullWidth
                             size="large"

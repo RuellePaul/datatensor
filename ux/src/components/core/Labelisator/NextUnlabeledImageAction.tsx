@@ -4,7 +4,8 @@ import clsx from 'clsx';
 
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-import {Button, CircularProgress, makeStyles} from '@material-ui/core';
+import {Button, CircularProgress} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import {ArrowRight} from 'react-feather';
 import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
@@ -28,8 +29,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const NextUnlabeledImageAction: FC<NextUnlabeledImageActionProps> = ({index, pipeline_id = null, className}) => {
-
+const NextUnlabeledImageAction: FC<NextUnlabeledImageActionProps> = ({
+    index,
+    pipeline_id = null,
+    className
+}) => {
     const classes = useStyles();
 
     const {enqueueSnackbar} = useSnackbar();
@@ -43,27 +47,28 @@ const NextUnlabeledImageAction: FC<NextUnlabeledImageActionProps> = ({index, pip
                 submit: null
             }}
             validationSchema={Yup.object().shape({
-                image_count: Yup.number().min(1).max(10 * dataset.image_count),
+                image_count: Yup.number()
+                    .min(1)
+                    .max(10 * dataset.image_count)
             })}
-            onSubmit={async (values, {
-                setErrors,
-                setStatus,
-                setSubmitting
-            }) => {
+            onSubmit={async (values, {setErrors, setStatus, setSubmitting}) => {
                 try {
-                    const response = await api.post<{ image_id: string }>(`/search/datasets/${dataset.id}/unlabeled-image-id`,
+                    const response = await api.post<{image_id: string}>(
+                        `/search/datasets/${dataset.id}/unlabeled-image-id`,
                         {},
                         {
                             params: {
                                 pipeline_id,
                                 offset: index
                             }
-                        });
+                        }
+                    );
                     if (response.data.image_id)
                         window.location.hash = response.data.image_id;
                     else
-                        enqueueSnackbar('All images have labels', {variant: 'success'});
-
+                        enqueueSnackbar('All images have labels', {
+                            variant: 'success'
+                        });
                 } catch (err) {
                     console.error(err);
                     setStatus({success: false});
@@ -72,26 +77,26 @@ const NextUnlabeledImageAction: FC<NextUnlabeledImageActionProps> = ({index, pip
                 }
             }}
         >
-            {({
-                  handleSubmit,
-                  isSubmitting,
-              }) => (
+            {({handleSubmit, isSubmitting}) => (
                 <form
                     onSubmit={handleSubmit}
                     className={clsx(classes.root, className)}
                 >
                     <Button
                         className={classes.button}
-                        size='small'
-                        variant='outlined'
-                        type='submit'
+                        size="small"
+                        variant="outlined"
+                        type="submit"
                         disabled={isSubmitting}
-                        endIcon={isSubmitting
-                            ? <CircularProgress
-                                className={classes.loader}
-                                color="inherit"
-                            />
-                            : <ArrowRight/>
+                        endIcon={
+                            isSubmitting ? (
+                                <CircularProgress
+                                    className={classes.loader}
+                                    color="inherit"
+                                />
+                            ) : (
+                                <ArrowRight />
+                            )
                         }
                     >
                         Next unlabeled
@@ -99,7 +104,7 @@ const NextUnlabeledImageAction: FC<NextUnlabeledImageActionProps> = ({index, pip
                 </form>
             )}
         </Formik>
-    )
+    );
 };
 
 export default NextUnlabeledImageAction;

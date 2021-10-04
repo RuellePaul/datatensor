@@ -1,7 +1,8 @@
 import React, {FC} from 'react';
 import {Link as RouterLink, useHistory} from 'react-router-dom';
 import clsx from 'clsx';
-import {AppBar, Box, Button, Divider, Hidden, Link, makeStyles, Toolbar, Typography} from '@material-ui/core';
+import {AppBar, Box, Button, Divider, Hidden, Link, Toolbar, Typography} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import {APP_VERSION} from 'src/constants';
 import Logo from 'src/components/utils/Logo';
 
@@ -9,7 +10,7 @@ interface TopBarProps {
     className?: string;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     root: {
         backgroundColor: theme.palette.background.default
     },
@@ -45,19 +46,14 @@ const TopBar: FC<TopBarProps> = ({className, ...rest}) => {
         >
             <Toolbar className={classes.toolbar}>
                 <RouterLink to="/">
-                    <Logo className={classes.logo}/>
+                    <Logo className={classes.logo} />
                 </RouterLink>
-                <Hidden mdDown>
-                    <Typography
-                        variant="caption"
-                        color="textSecondary"
-                    >
-                        Version
-                        {' '}
-                        {APP_VERSION}
+                <Hidden lgDown>
+                    <Typography variant="caption" color="textSecondary">
+                        Version {APP_VERSION}
                     </Typography>
                 </Hidden>
-                <Box flexGrow={1}/>
+                <Box flexGrow={1} />
                 <Link
                     className={classes.link}
                     color="textSecondary"
@@ -78,9 +74,9 @@ const TopBar: FC<TopBarProps> = ({className, ...rest}) => {
                 >
                     Documentation
                 </Link>
-                <Divider className={classes.divider}/>
+                <Divider className={classes.divider} />
                 <Button
-                    color="secondary"
+                    color="primary"
                     component="a"
                     variant="contained"
                     size="small"

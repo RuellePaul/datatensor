@@ -10,14 +10,14 @@ import {
     List,
     ListItem,
     ListItemText,
-    makeStyles,
     Popover,
     SvgIcon,
     Tooltip,
     Typography,
     useTheme
-} from '@material-ui/core';
-import {FiberManualRecord} from '@material-ui/icons';
+} from '@mui/material';
+import {makeStyles} from '@mui/styles';
+import {FiberManualRecord} from '@mui/icons-material';
 import {Bell as BellIcon} from 'react-feather';
 import {Theme} from 'src/theme';
 import {useDispatch, useSelector} from 'src/store';
@@ -33,15 +33,17 @@ const titlesMap = {
     TASK_FAILED: 'Task failed ❌',
     REGISTRATION: 'Welcome to datatensor 👋',
     EMAIL_CONFIRM_REQUIRED: 'Security 🔒',
-    EMAIL_CONFIRM_DONE: 'Verified ✅',
+    EMAIL_CONFIRM_DONE: 'Verified ✅'
 };
 
 const descriptionsMap = (user: User) => ({
     TASK_SUCCEED: ' task completed successfully.',
     TASK_FAILED: ' task has failed.',
-    REGISTRATION: 'We\'re glad to see you as one of our members. Happy hacking on Datatensor !',
-    EMAIL_CONFIRM_REQUIRED: 'Please confirm your email address to access all datatensor features.',
-    EMAIL_CONFIRM_DONE: `Your email address ${user.email} has been verified !`,
+    REGISTRATION:
+        "We're glad to see you as one of our members. Happy hacking on Datatensor !",
+    EMAIL_CONFIRM_REQUIRED:
+        'Please confirm your email address to access all datatensor features.',
+    EMAIL_CONFIRM_DONE: `Your email address ${user.email} has been verified !`
 });
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -69,7 +71,7 @@ const Notifications: FC = () => {
     const {user} = useAuth();
     const {tasks, saveSelectedTask} = useTasks();
 
-    const {notifications} = useSelector((state) => state.notifications);
+    const {notifications} = useSelector(state => state.notifications);
     const ref = useRef<any>(null);
     const dispatch = useDispatch();
     const [isOpen, setOpen] = useState<boolean>(false);
@@ -79,7 +81,9 @@ const Notifications: FC = () => {
         try {
             dispatch(readNotifications());
         } catch (error) {
-            enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
+            enqueueSnackbar(error.message || 'Something went wrong', {
+                variant: 'error'
+            });
         }
     };
 
@@ -87,7 +91,9 @@ const Notifications: FC = () => {
         try {
             dispatch(deleteNotifications());
         } catch (error) {
-            enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
+            enqueueSnackbar(error.message || 'Something went wrong', {
+                variant: 'error'
+            });
         }
     };
 
@@ -107,28 +113,30 @@ const Notifications: FC = () => {
             // @ts-ignore
             const task = tasks.find(task => task.id === notification.task_id);
 
-            if (task)
-                saveSelectedTask(task);
+            if (task) saveSelectedTask(task);
         }
     };
 
     return (
         <>
-            <Tooltip
-                title='Notifications'
-            >
+            <Tooltip title="Notifications">
                 <IconButton
-                    color='inherit'
+                    color="inherit"
                     ref={ref}
                     onClick={handleOpen}
+                    size="large"
                 >
                     <Badge
-                        badgeContent={notifications.filter(notification => !notification.opened).length}
-                        color='error'
+                        badgeContent={
+                            notifications.filter(
+                                notification => !notification.opened
+                            ).length
+                        }
+                        color="error"
                         max={9}
                     >
                         <SvgIcon>
-                            <BellIcon/>
+                            <BellIcon />
                         </SvgIcon>
                     </Badge>
                 </IconButton>
@@ -144,18 +152,18 @@ const Notifications: FC = () => {
                 open={isOpen}
             >
                 <Typography
-                    variant='h4'
-                    color='textPrimary'
-                    align='center'
+                    variant="h4"
+                    color="textPrimary"
+                    align="center"
                     gutterBottom
                 >
                     Notifications
                 </Typography>
                 {notifications.length === 0 ? (
                     <Typography
-                        variant='h6'
-                        color='textSecondary'
-                        align='center'
+                        variant="h6"
+                        color="textSecondary"
+                        align="center"
                     >
                         You don't have any notification
                     </Typography>
@@ -164,46 +172,89 @@ const Notifications: FC = () => {
                         <List disablePadding>
                             {notifications
                                 .slice()
-                                .sort((a, b) => (new Date(b.created_at).getTime()) - (new Date(a.created_at).getTime()) ? -1 : 1)
-                                .map((notification) => {
+                                .sort((a, b) =>
+                                    new Date(b.created_at).getTime() -
+                                    new Date(a.created_at).getTime()
+                                        ? -1
+                                        : 1
+                                )
+                                .map(notification => {
                                     return (
                                         <ListItem
                                             button
-                                            className={clsx(classes.notification, notification.opened === false && classes.highlight)}
+                                            className={clsx(
+                                                classes.notification,
+                                                notification.opened === false &&
+                                                    classes.highlight
+                                            )}
                                             divider
                                             key={notification.id}
-                                            onClick={() => handleNotificationClick(notification)}
+                                            onClick={() =>
+                                                handleNotificationClick(
+                                                    notification
+                                                )
+                                            }
                                         >
                                             <ListItemText
-                                                primary={titlesMap[notification.type]}
-                                                primaryTypographyProps={{variant: 'subtitle2', color: 'textPrimary'}}
+                                                primary={
+                                                    titlesMap[notification.type]
+                                                }
+                                                primaryTypographyProps={{
+                                                    variant: 'subtitle2',
+                                                    color: 'textPrimary'
+                                                }}
                                                 secondary={
                                                     <>
-                                                        {['TASK_SUCCEED', 'TASK_FAILED'].includes(notification.type) && tasks && capitalize(tasks.find(task => task.id === notification.task_id)?.type || '')}
-                                                        {descriptionsMap(user)[notification.type]}
-                                                        <br/>
-                                                        <Typography component='span' variant='caption'>
-                                                            {getDateDiff(new Date(), notification.created_at, 'passed_event')}
+                                                        {[
+                                                            'TASK_SUCCEED',
+                                                            'TASK_FAILED'
+                                                        ].includes(
+                                                            notification.type
+                                                        ) &&
+                                                            tasks &&
+                                                            capitalize(
+                                                                tasks.find(
+                                                                    task =>
+                                                                        task.id ===
+                                                                        notification.task_id
+                                                                )?.type || ''
+                                                            )}
+                                                        {
+                                                            descriptionsMap(
+                                                                user
+                                                            )[notification.type]
+                                                        }
+                                                        <br />
+                                                        <Typography
+                                                            component="span"
+                                                            variant="caption"
+                                                        >
+                                                            {getDateDiff(
+                                                                new Date(),
+                                                                notification.created_at,
+                                                                'passed_event'
+                                                            )}
                                                         </Typography>
                                                     </>
                                                 }
                                             />
                                             {notification.opened === false && (
-                                                <SvgIcon htmlColor={theme.palette.info.main} fontSize='small'>
-                                                    <FiberManualRecord color='inherit'/>
+                                                <SvgIcon
+                                                    htmlColor={
+                                                        theme.palette.info.main
+                                                    }
+                                                    fontSize="small"
+                                                >
+                                                    <FiberManualRecord color="inherit" />
                                                 </SvgIcon>
                                             )}
                                         </ListItem>
                                     );
                                 })}
                         </List>
-                        <Box
-                            p={1}
-                            display='flex'
-                            justifyContent='center'
-                        >
+                        <Box p={1} display="flex" justifyContent="center">
                             <Button
-                                size='small'
+                                size="small"
                                 onClick={handleDeleteNotifications}
                             >
                                 Delete all

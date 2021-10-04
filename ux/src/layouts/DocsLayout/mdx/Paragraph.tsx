@@ -1,13 +1,14 @@
 import type {FC} from 'react';
 import React from 'react';
-import {makeStyles, Typography} from '@material-ui/core';
+import {Typography} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import type {Theme} from 'src/theme';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         marginBottom: theme.spacing(2),
         '& > a': {
-            color: theme.palette.secondary.main
+            color: theme.palette.primary.main
         }
     }
 }));
@@ -23,6 +24,6 @@ const Paragraph: FC = (props) => {
             {...props}
         />
     );
-}
+};
 
 export default Paragraph;

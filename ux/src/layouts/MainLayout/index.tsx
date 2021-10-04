@@ -1,12 +1,12 @@
 import React, {FC, ReactNode} from 'react';
-import {makeStyles} from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 import TopBar from './TopBar';
 
 interface MainLayoutProps {
     children?: ReactNode;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     root: {
         backgroundColor: theme.palette.background.default,
         display: 'flex',
@@ -37,12 +37,10 @@ const MainLayout: FC<MainLayoutProps> = ({children}) => {
 
     return (
         <div className={classes.root}>
-            <TopBar/>
+            <TopBar />
             <div className={classes.wrapper}>
                 <div className={classes.contentContainer}>
-                    <div className={classes.content}>
-                        {children}
-                    </div>
+                    <div className={classes.content}>{children}</div>
                 </div>
             </div>
         </div>

@@ -1,7 +1,8 @@
 import type {ChangeEvent, FC} from 'react';
 import React, {useState} from 'react';
 import clsx from 'clsx';
-import {Box, Button, capitalize, FormControl, InputLabel, makeStyles, MenuItem, Select} from '@material-ui/core';
+import {Box, Button, capitalize, FormControl, InputLabel, MenuItem, Select} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 import {useDispatch} from 'src/store';
 import {createOperation} from 'src/slices/pipeline';
@@ -61,18 +62,18 @@ const OperationAdd: FC<OperationAddProps> = ({
                 <>
                     <FormControl
                         fullWidth
-                        variant='filled'
+                        variant="filled"
                     >
                         <InputLabel className={classes.adornment}>
                             Operation type
                         </InputLabel>
                         <Select
-                            classes={{select: classes.select}}
+                            classes={{ select: classes.select }}
                             fullWidth
-                            name='type'
+                            name="type"
                             onChange={handleChange}
                             value={operationType || OPERATIONS_TYPES[0]}
-                            variant='filled'
+                            variant="filled"
                             startAdornment={OPERATIONS_ICONS[operationType]}
                             renderValue={() => capitalize(operationType).replaceAll('_', ' ')}
                         >
@@ -93,19 +94,19 @@ const OperationAdd: FC<OperationAddProps> = ({
 
                     <Box
                         mt={2}
-                        display='flex'
-                        justifyContent='space-between'
+                        display="flex"
+                        justifyContent="space-between"
                     >
                         <Button
                             onClick={handleAddCancel}
-                            variant='text'
+                            variant="text"
                         >
                             Cancel
                         </Button>
                         <Button
                             onClick={handleAddConfirm}
-                            variant='contained'
-                            color='secondary'
+                            variant="contained"
+                            color="primary"
                         >
                             Add
                         </Button>
@@ -113,8 +114,8 @@ const OperationAdd: FC<OperationAddProps> = ({
                 </>
             ) : (
                 <Box
-                    display='flex'
-                    justifyContent='center'
+                    display="flex"
+                    justifyContent="center"
                 >
                     <Button onClick={handleAddInit}>
                         Add another operation

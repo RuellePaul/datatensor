@@ -1,19 +1,8 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
-import {
-    Box,
-    Button,
-    Card,
-    CardHeader,
-    Divider,
-    makeStyles,
-    Table,
-    TableBody,
-    TableCell,
-    TableRow,
-    Typography
-} from '@material-ui/core';
-import {LockOutlined} from '@material-ui/icons';
+import {Box, Button, Card, CardHeader, Divider, Table, TableBody, TableCell, TableRow, Typography} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {LockOutlined} from '@mui/icons-material';
 import {Theme} from 'src/theme';
 import {User} from 'src/types/user';
 import FancyLabel from 'src/components/FancyLabel';
@@ -30,20 +19,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const UserInfo: FC<UserInfoProps> = ({
-                                         user,
-                                         className,
-                                         ...rest
-                                     }) => {
+const UserInfo: FC<UserInfoProps> = ({user, className, ...rest}) => {
     const classes = useStyles();
 
     return (
-        <Card
-            className={clsx(classes.root, className)}
-            {...rest}
-        >
-            <CardHeader title="User info"/>
-            <Divider/>
+        <Card className={clsx(classes.root, className)} {...rest}>
+            <CardHeader title="User info" />
+            <Divider />
             <Table>
                 <TableBody>
                     <TableRow>
@@ -51,10 +33,7 @@ const UserInfo: FC<UserInfoProps> = ({
                             Name
                         </TableCell>
                         <TableCell>
-                            <Typography
-                                variant="body2"
-                                color="textSecondary"
-                            >
+                            <Typography variant="body2" color="textSecondary">
                                 {user.name}
                             </Typography>
                         </TableCell>
@@ -64,14 +43,15 @@ const UserInfo: FC<UserInfoProps> = ({
                             Email
                         </TableCell>
                         <TableCell>
-                            <Typography
-                                variant="body2"
-                                color="textSecondary"
-                            >
+                            <Typography variant="body2" color="textSecondary">
                                 {user.email}
                             </Typography>
-                            <FancyLabel color={user.is_verified ? 'success' : 'error'}>
-                                {user.is_verified ? 'Email verified' : 'Email not verified'}
+                            <FancyLabel
+                                color={user.is_verified ? 'success' : 'error'}
+                            >
+                                {user.is_verified
+                                    ? 'Email verified'
+                                    : 'Email not verified'}
                             </FancyLabel>
                         </TableCell>
                     </TableRow>
@@ -80,10 +60,7 @@ const UserInfo: FC<UserInfoProps> = ({
                             Phone
                         </TableCell>
                         <TableCell>
-                            <Typography
-                                variant="body2"
-                                color="textSecondary"
-                            >
+                            <Typography variant="body2" color="textSecondary">
                                 {user.phone}
                             </Typography>
                         </TableCell>
@@ -93,10 +70,7 @@ const UserInfo: FC<UserInfoProps> = ({
                             Country
                         </TableCell>
                         <TableCell>
-                            <Typography
-                                variant="body2"
-                                color="textSecondary"
-                            >
+                            <Typography variant="body2" color="textSecondary">
                                 {user.country}
                             </Typography>
                         </TableCell>
@@ -106,10 +80,7 @@ const UserInfo: FC<UserInfoProps> = ({
                             State/Region
                         </TableCell>
                         <TableCell>
-                            <Typography
-                                variant="body2"
-                                color="textSecondary"
-                            >
+                            <Typography variant="body2" color="textSecondary">
                                 {user.state}
                             </Typography>
                         </TableCell>
@@ -122,13 +93,12 @@ const UserInfo: FC<UserInfoProps> = ({
                 flexDirection="column"
                 alignItems="flex-start"
             >
-                <Button startIcon={<LockOutlined/>}>
+                <Button startIcon={<LockOutlined />}>
                     Reset &amp; Send Password
                 </Button>
             </Box>
         </Card>
     );
 };
-
 
 export default UserInfo;

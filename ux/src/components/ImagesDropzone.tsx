@@ -13,12 +13,12 @@ import {
     ListItem,
     ListItemIcon,
     ListItemText,
-    makeStyles,
     Tooltip,
     Typography
-} from '@material-ui/core';
-import FileCopyIcon from '@material-ui/icons/FileCopy';
-import MoreIcon from '@material-ui/icons/MoreVert';
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
+import MoreIcon from '@mui/icons-material/MoreVert';
 import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
 import useImages from 'src/hooks/useImages';
@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         '& > * + *': {
             marginLeft: theme.spacing(2)
         },
-        color: theme.palette.background.dark
+        color: theme.palette.background.paper
     },
     loader: {
         width: '20px !important',
@@ -76,7 +76,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const ImagesDropzone: FC<ImagesDropzoneProps> = ({callback, className, ...rest}) => {
+const ImagesDropzone: FC<ImagesDropzoneProps> = ({
+    callback,
+    className,
+    ...rest
+}) => {
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
 
@@ -86,8 +90,8 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({callback, className, ...rest})
     const [isUploading, setIsUploading] = useState<boolean>(false);
     const [files, setFiles] = useState([]);
 
-    const handleDrop = useCallback((acceptedImages) => {
-        setFiles((prevImages) => [...prevImages].concat(acceptedImages));
+    const handleDrop = useCallback(acceptedImages => {
+        setFiles(prevImages => [...prevImages].concat(acceptedImages));
     }, []);
 
     const handleRemoveAll = () => {
@@ -107,14 +111,29 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({callback, className, ...rest})
             let formData = new FormData();
             files.map(image => formData.append('files', image));
             try {
-                const response = await api.post<{ images: Image[] }>(`/datasets/${dataset.id}/images/`, formData, {
-                    headers: {'Content-Type': 'multipart/form-data'}
+                const response = await api.post<{images: Image[]}>(
+                    `/datasets/${dataset.id}/images/`,
+                    formData,
+                    {
+                        headers: {'Content-Type': 'multipart/form-data'}
+                    }
+                );
+                saveImages((images: Image[]) => [
+                    ...images,
+                    ...response.data.images
+                ]);
+                saveDataset({
+                    ...dataset,
+                    image_count:
+                        dataset.image_count + response.data.images.length
                 });
-                saveImages((images: Image[]) => [...images, ...response.data.images]);
-                saveDataset({...dataset, image_count: dataset.image_count + response.data.images.length})
-                enqueueSnackbar(`${files.length} images uploaded`, {variant: 'success'});
+                enqueueSnackbar(`${files.length} images uploaded`, {
+                    variant: 'success'
+                });
             } catch (error) {
-                enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
+                enqueueSnackbar(error.message || 'Something went wrong', {
+                    variant: 'error'
+                });
             } finally {
                 setIsUploading(false);
                 setFiles([]);
@@ -124,10 +143,7 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({callback, className, ...rest})
     };
 
     return (
-        <div
-            className={clsx(classes.root, className)}
-            {...rest}
-        >
+        <div className={clsx(classes.root, className)} {...rest}>
             <div
                 className={clsx({
                     [classes.dropZone]: true,
@@ -145,15 +161,10 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({callback, className, ...rest})
                 </div>
                 <div>
                     <Box mt={2}>
-                        <Typography
-                            color="textPrimary"
-                            variant="body1"
-                        >
-                            Drop images here or click
-                            {' '}
-                            <Link underline="always">browse</Link>
-                            {' '}
-                            through your machine
+                        <Typography color="textPrimary" variant="body1">
+                            Drop images here or click{' '}
+                            <Link underline="always">browse</Link> through your
+                            machine
                         </Typography>
                     </Box>
                 </div>
@@ -161,12 +172,9 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({callback, className, ...rest})
             <PerfectScrollbar options={{suppressScrollX: true}}>
                 <List className={classes.list}>
                     {files.map((file, i) => (
-                        <ListItem
-                            divider={i < files.length - 1}
-                            key={i}
-                        >
+                        <ListItem divider={i < files.length - 1} key={i}>
                             <ListItemIcon>
-                                <FileCopyIcon/>
+                                <FileCopyIcon />
                             </ListItemIcon>
                             <ListItemText
                                 primary={file.name}
@@ -174,8 +182,8 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({callback, className, ...rest})
                                 secondary={bytesToSize(file.size)}
                             />
                             <Tooltip title="More options">
-                                <IconButton edge="end">
-                                    <MoreIcon/>
+                                <IconButton edge="end" size="large">
+                                    <MoreIcon />
                                 </IconButton>
                             </Tooltip>
                         </ListItem>
@@ -183,23 +191,24 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({callback, className, ...rest})
                 </List>
             </PerfectScrollbar>
             <div className={classes.actions}>
-                {files.length > 0 && <Button
-                    onClick={handleRemoveAll}
-                    size="small"
-                >
-                    Remove all
-                </Button>}
+                {files.length > 0 && (
+                    <Button onClick={handleRemoveAll} size="small">
+                        Remove all
+                    </Button>
+                )}
                 <Button
-                    color="secondary"
+                    color="primary"
                     size="small"
                     variant="contained"
                     onClick={handleUpload}
-                    endIcon={isUploading && (
-                        <CircularProgress
-                            className={classes.loader}
-                            color="inherit"
-                        />
-                    )}
+                    endIcon={
+                        isUploading && (
+                            <CircularProgress
+                                className={classes.loader}
+                                color="inherit"
+                            />
+                        )
+                    }
                     disabled={files.length === 0 || isUploading}
                 >
                     Upload images
@@ -208,6 +217,5 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({callback, className, ...rest})
         </div>
     );
 };
-
 
 export default ImagesDropzone;

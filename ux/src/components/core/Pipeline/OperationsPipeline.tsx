@@ -2,7 +2,8 @@ import type {FC} from 'react';
 import React, {useState} from 'react';
 import clsx from 'clsx';
 import {Draggable, Droppable} from 'react-beautiful-dnd';
-import {Box, Divider, makeStyles, Paper} from '@material-ui/core';
+import {Box, Divider, Paper} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import {useSelector} from 'src/store';
 import type {Theme} from 'src/theme';
 import Operation from './Operation';
@@ -23,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         flexDirection: 'column',
         maxHeight: '100%',
         overflowY: 'hidden',
-        overflowX: 'hidden',
+        overflowX: 'hidden'
     },
     droppableArea: {
         minHeight: 80,
@@ -34,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const OperationsPipeline: FC<ListProps> = ({className, readOnly, ...rest}) => {
+const OperationsPipeline: FC<ListProps> = ({ className, readOnly, ...rest }) => {
     const classes = useStyles();
 
     const [dragDisabled, setDragDisabled] = useState<boolean>(false);
@@ -48,7 +49,7 @@ const OperationsPipeline: FC<ListProps> = ({className, readOnly, ...rest}) => {
         >
             <Paper className={classes.inner}>
                 <Droppable
-                    droppableId='operationsPipeline'
+                    droppableId="operationsPipeline"
                 >
                     {(provided) => (
                         <div
@@ -72,7 +73,7 @@ const OperationsPipeline: FC<ListProps> = ({className, readOnly, ...rest}) => {
                                             // @ts-ignore
                                             ref={provided.innerRef}
                                             readOnly={readOnly}
-                                            style={{...provided.draggableProps.style}}
+                                            style={{ ...provided.draggableProps.style }}
                                             {...provided.draggableProps}
                                             {...provided.dragHandleProps}
                                         />
@@ -85,9 +86,9 @@ const OperationsPipeline: FC<ListProps> = ({className, readOnly, ...rest}) => {
                 </Droppable>
                 {!readOnly && (
                     <>
-                        <Divider/>
+                        <Divider />
                         <Box p={2}>
-                            <OperationAdd/>
+                            <OperationAdd />
                         </Box>
                     </>
                 )}

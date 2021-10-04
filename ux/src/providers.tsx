@@ -2,21 +2,24 @@ import React, {createRef, FC} from 'react';
 import {Provider} from 'react-redux';
 import store from 'src/store';
 import {SettingsProvider} from 'src/store/SettingsContext';
-import {IconButton, jssPreset, StylesProvider, ThemeProvider} from '@material-ui/core';
-import {MuiPickersUtilsProvider} from '@material-ui/pickers';
-import {Close as CloseIcon} from '@material-ui/icons';
-import MomentUtils from '@date-io/moment';
+import {IconButton, StyledEngineProvider, Theme, ThemeProvider} from '@mui/material';
+import jssPreset from '@mui/styles/jssPreset';
+import StylesProvider from '@mui/styles/StylesProvider';
+import {Close as CloseIcon} from '@mui/icons-material';
 import {SnackbarProvider} from 'notistack';
 import useSettings from './hooks/useSettings';
 import {createTheme} from './theme';
 import {create} from 'jss';
 import rtl from 'jss-rtl';
 
+declare module '@mui/styles/defaultTheme' {
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    interface DefaultTheme extends Theme {}
+}
+
 const jss = create({plugins: [...jssPreset().plugins, rtl()]});
 
-
 const InnerSettingsProviders: FC = ({children}) => {
-
     const {settings} = useSettings();
 
     const theme = createTheme({
@@ -27,43 +30,40 @@ const InnerSettingsProviders: FC = ({children}) => {
     const onCloseSnackbar = key => () => snackbarRef.current.closeSnackbar(key);
 
     return (
-        <ThemeProvider theme={theme}>
-            <StylesProvider jss={jss}>
-                <MuiPickersUtilsProvider utils={MomentUtils}>
+        <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={theme}>
+                <StylesProvider jss={jss}>
                     <SnackbarProvider
                         autoHideDuration={3000}
                         disableWindowBlurListener
                         preventDuplicate
                         maxSnack={3}
                         ref={snackbarRef}
-                        action={(key) => (
+                        action={key => (
                             <IconButton
                                 onClick={onCloseSnackbar(key)}
+                                size="large"
                             >
-                                <CloseIcon/>
+                                <CloseIcon />
                             </IconButton>
                         )}
                     >
                         {children}
                     </SnackbarProvider>
-                </MuiPickersUtilsProvider>
-            </StylesProvider>
-        </ThemeProvider>
-    )
+                </StylesProvider>
+            </ThemeProvider>
+        </StyledEngineProvider>
+    );
 };
 
-
 const Providers: FC = ({children}) => {
-
     return (
         <Provider store={store}>
             <SettingsProvider>
-                <InnerSettingsProviders>
-                    {children}
-                </InnerSettingsProviders>
+                <InnerSettingsProviders>{children}</InnerSettingsProviders>
             </SettingsProvider>
         </Provider>
-    )
+    );
 };
 
 export default Providers;

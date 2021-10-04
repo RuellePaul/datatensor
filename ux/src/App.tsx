@@ -12,24 +12,27 @@ import Providers from './providers';
 const history = createBrowserHistory();
 
 const App: FC = () => {
-
-    useEffect(() => {  // Remove hash on refresh
-        window.location.replace("#");
+    useEffect(() => {
+        // Remove hash on refresh
+        window.location.replace('#');
 
         if (typeof window.history.replaceState === 'function') {
-            window.history.replaceState({}, '', window.location.href.slice(0, -1));
+            window.history.replaceState(
+                {},
+                '',
+                window.location.href.slice(0, -1)
+            );
         }
     });
-
 
     return (
         <Providers>
             <Router history={history}>
                 <AuthProvider>
-                    <GlobalStyles/>
-                    <ScrollReset/>
-                    <CookiesNotification/>
-                    <SettingsNotification/>
+                    <GlobalStyles />
+                    <ScrollReset />
+                    <CookiesNotification />
+                    <SettingsNotification />
                     {renderRoutes(routes)}
                 </AuthProvider>
             </Router>

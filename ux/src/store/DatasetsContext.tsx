@@ -1,12 +1,23 @@
-import React, {createContext, FC, ReactNode, useCallback, useEffect, useState} from 'react';
+import React, {
+    createContext,
+    FC,
+    ReactNode,
+    useCallback,
+    useEffect,
+    useState
+} from 'react';
 import {Dataset} from 'src/types/dataset';
 import api from 'src/utils/api';
 
 export interface DatasetsContextValue {
     datasets: Dataset[];
-    saveDatasets: (update: Dataset[] | ((datasets: Dataset[]) => Dataset[])) => void;
+    saveDatasets: (
+        update: Dataset[] | ((datasets: Dataset[]) => Dataset[])
+    ) => void;
     displayedDatasets: Dataset[] | null;
-    saveDisplayedDatasets: (update: Dataset[] | ((datasets: Dataset[]) => Dataset[])) => void;
+    saveDisplayedDatasets: (
+        update: Dataset[] | ((datasets: Dataset[]) => Dataset[])
+    ) => void;
 }
 
 interface DatasetsProviderProps {
@@ -15,40 +26,41 @@ interface DatasetsProviderProps {
 
 export const DatasetsContext = createContext<DatasetsContextValue>({
     datasets: [],
-    saveDatasets: () => {
-    },
+    saveDatasets: () => {},
     displayedDatasets: null,
-    saveDisplayedDatasets: () => {
-    }
+    saveDisplayedDatasets: () => {}
 });
 
 export const DatasetsProvider: FC<DatasetsProviderProps> = ({children}) => {
-
     const [currentDatasets, setCurrentDatasets] = useState<Dataset[]>([]);
-    const [displayedDatasets, setDisplayedDatasets] = useState<Dataset[] | null>(null);
+    const [displayedDatasets, setDisplayedDatasets] = useState<
+        Dataset[] | null
+    >(null);
 
-    const handleSaveDatasets = (update: Dataset[] | ((datasets: Dataset[]) => Dataset[])): void => {
+    const handleSaveDatasets = (
+        update: Dataset[] | ((datasets: Dataset[]) => Dataset[])
+    ): void => {
         setCurrentDatasets(update);
     };
 
-    const handleSaveDisplayedDatasets = (update: Dataset[] | ((datasets: Dataset[]) => Dataset[])): void => {
+    const handleSaveDisplayedDatasets = (
+        update: Dataset[] | ((datasets: Dataset[]) => Dataset[])
+    ): void => {
         setDisplayedDatasets(update);
     };
 
     const fetchDatasets = useCallback(async () => {
         try {
-            const response = await api.get<{ datasets: Dataset[] }>(`/datasets/`);
+            const response = await api.get<{datasets: Dataset[]}>(`/datasets/`);
             handleSaveDatasets(response.data.datasets);
         } catch (err) {
             console.error(err);
         }
-
     }, []);
 
     useEffect(() => {
         fetchDatasets();
     }, [fetchDatasets]);
-
 
     return (
         <DatasetsContext.Provider
@@ -61,7 +73,7 @@ export const DatasetsProvider: FC<DatasetsProviderProps> = ({children}) => {
         >
             {children}
         </DatasetsContext.Provider>
-    )
+    );
 };
 
 export const DatasetsConsumer = DatasetsContext.Consumer;

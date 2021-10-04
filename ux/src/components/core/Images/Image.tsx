@@ -1,12 +1,12 @@
 import React, {FC, ReactNode, useEffect, useRef, useState} from 'react';
 import clsx from 'clsx';
-import {ButtonBase, makeStyles} from '@material-ui/core';
+import {ButtonBase, Skeleton} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 import {drawLabels, reset} from 'src/utils/labeling';
 import useDataset from 'src/hooks/useDataset';
 import useImage from 'src/hooks/useImage';
-import {Skeleton, useTabContext} from '@material-ui/lab';
-
+import {useTabContext} from '@mui/lab';
 
 interface DTImageProps {
     className?: string;
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
             zIndex: 1000
         },
         '&:hover img': {
-            filter: 'brightness(0.75)',
+            filter: 'brightness(0.75)'
         }
     },
     canvas: {
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         left: 0,
         width: '100%',
         height: '100%',
-        zIndex: 1,
+        zIndex: 1
     },
     skeleton: {
         maxWidth: '100% !important',
@@ -55,15 +55,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-
 const DTImage: FC<DTImageProps> = ({
-                                       className,
-                                       clickable = false,
-                                       overlay = null,
-                                       skeleton = false,
-                                       fullWidth = false,
-                                       ...rest
-                                   }) => {
+    className,
+    clickable = false,
+    overlay = null,
+    skeleton = false,
+    fullWidth = false,
+    ...rest
+}) => {
     const classes = useStyles();
 
     const {categories} = useDataset();
@@ -77,8 +76,7 @@ const DTImage: FC<DTImageProps> = ({
     const [loaded, setLoaded] = useState<boolean>(false);
 
     const handleLoad = () => {
-        if (imageRef.current?.complete)
-            setLoaded(true);
+        if (imageRef.current?.complete) setLoaded(true);
 
         if (canvasRef.current && imageRef.current?.complete) {
             reset(canvasRef.current);
@@ -96,9 +94,7 @@ const DTImage: FC<DTImageProps> = ({
     if (clickable)
         return (
             <div className={clsx(classes.root, classes.clickable, className)}>
-                <ButtonBase
-                    {...rest}
-                >
+                <ButtonBase {...rest}>
                     <img
                         src={image?.path}
                         alt={image?.name}
@@ -107,16 +103,9 @@ const DTImage: FC<DTImageProps> = ({
                         onLoad={handleLoad}
                         ref={imageRef}
                     />
-                    <canvas
-                        className={classes.canvas}
-                        ref={canvasRef}
-                    />
+                    <canvas className={classes.canvas} ref={canvasRef} />
                 </ButtonBase>
-                {overlay && (
-                    <div className='overlay'>
-                        {overlay}
-                    </div>
-                )}
+                {overlay && <div className="overlay">{overlay}</div>}
             </div>
         );
 
@@ -125,14 +114,18 @@ const DTImage: FC<DTImageProps> = ({
             {skeleton && (
                 <Skeleton
                     className={clsx(classes.skeleton, loaded && 'hidden')}
-                    animation='wave'
+                    animation="wave"
                     width={fullWidth ? '100%' : image?.width}
                     height={image?.height}
-                    variant='rect'
+                    variant="rectangular"
                 />
             )}
             <div
-                className={clsx(classes.root, className, skeleton && !loaded && 'hidden')}
+                className={clsx(
+                    classes.root,
+                    className,
+                    skeleton && !loaded && 'hidden'
+                )}
                 {...rest}
             >
                 <img
@@ -143,10 +136,7 @@ const DTImage: FC<DTImageProps> = ({
                     onLoad={handleLoad}
                     ref={imageRef}
                 />
-                <canvas
-                    className={clsx(classes.canvas)}
-                    ref={canvasRef}
-                />
+                <canvas className={clsx(classes.canvas)} ref={canvasRef} />
             </div>
         </>
     );

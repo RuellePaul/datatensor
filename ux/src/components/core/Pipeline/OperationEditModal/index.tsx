@@ -2,6 +2,8 @@ import type {FC} from 'react';
 import React from 'react';
 import {useSnackbar} from 'notistack';
 import {
+    Alert,
+    AlertTitle,
     Box,
     Button,
     capitalize,
@@ -9,12 +11,11 @@ import {
     DialogActions,
     DialogContent,
     IconButton,
-    makeStyles,
     SvgIcon,
     Typography
-} from '@material-ui/core';
-import {Close, Delete} from '@material-ui/icons';
-import {Alert, AlertTitle} from '@material-ui/lab';
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {Close, Delete} from '@mui/icons-material';
 import type {Theme} from 'src/theme';
 import {useDispatch} from 'src/store';
 import {deleteOperation} from 'src/slices/pipeline';
@@ -49,7 +50,7 @@ const OperationEditModal: FC<OperationEditModalProps> = ({
                                                          }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const {enqueueSnackbar} = useSnackbar();
+    const { enqueueSnackbar } = useSnackbar();
 
     const handleDelete = async (): Promise<void> => {
         try {
@@ -67,27 +68,27 @@ const OperationEditModal: FC<OperationEditModalProps> = ({
         <Dialog
             onClose={onClose}
             open={open}
-            maxWidth='xs'
+            maxWidth="xs"
             fullWidth
             {...rest}
         >
             <DialogContent>
                 <Box
-                    display='flex'
+                    display="flex"
                     mb={2}
                 >
                     <Box mr={2}>
                         {OPERATIONS_ICONS[operation.type]}
                     </Box>
                     <Typography
-                        variant='h5'
+                        variant="h5"
                     >
                         {capitalize(operation.type).replaceAll('_', ' ')}
                     </Typography>
-                    <Box flexGrow={1}/>
-                    <IconButton size='small' onClick={onClose}>
+                    <Box flexGrow={1} />
+                    <IconButton size="small" onClick={onClose}>
                         <SvgIcon>
-                            <Close/>
+                            <Close />
                         </SvgIcon>
                     </IconButton>
                 </Box>
@@ -100,8 +101,8 @@ const OperationEditModal: FC<OperationEditModalProps> = ({
                     my={1}
                 >
                     <Alert
-                        severity='info'
-                        variant='filled'
+                        severity="info"
+                        variant="filled"
                     >
                         <AlertTitle>
                             Informations
@@ -118,10 +119,10 @@ const OperationEditModal: FC<OperationEditModalProps> = ({
             <DialogActions>
                 <Button
                     className={classes.deleteAction}
-                    variant='outlined'
-                    startIcon={<Delete/>}
+                    variant="outlined"
+                    startIcon={<Delete />}
                     onClick={handleDelete}
-                    size='small'
+                    size="small"
                 >
                     Delete operation
                 </Button>

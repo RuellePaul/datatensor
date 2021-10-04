@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
-import {Avatar, Box, Container, makeStyles, Typography} from '@material-ui/core';
+import {Avatar, Box, Container, Typography} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 
 interface TestimonialsProps {
@@ -9,7 +10,7 @@ interface TestimonialsProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        backgroundColor: theme.palette.background.dark,
+        backgroundColor: theme.palette.background.paper,
         paddingTop: 128,
         paddingBottom: 128
     },
@@ -32,19 +33,17 @@ const Testimonials: FC<TestimonialsProps> = ({className, ...rest}) => {
     const classes = useStyles();
 
     return (
-        <div
-            className={clsx(classes.root, className)}
-            {...rest}
-        >
-            <Container component='section' maxWidth="lg">
+        <div className={clsx(classes.root, className)} {...rest}>
+            <Container component="section" maxWidth="lg">
                 <Typography
                     variant="h2"
                     align="center"
                     color="textPrimary"
                     className={classes.title}
                 >
-                    &quot;Datatensor builds some of the best tools for Object Detection Vision tasks.
-                    <br/>
+                    &quot;Datatensor builds some of the best tools for Object
+                    Detection Vision tasks.
+                    <br />
                     It will save you time.&quot;
                 </Typography>
                 <Box
@@ -59,14 +58,14 @@ const Testimonials: FC<TestimonialsProps> = ({className, ...rest}) => {
                         alt="Creator"
                     />
                     <Box ml={2}>
-                        <Typography
-                            variant="body1"
-                            color="textPrimary"
-                        >
+                        <Typography variant="body1" color="textPrimary">
                             <span
                                 className={classes.creator}
-                                title='LinkedIn profile'
-                                onClick={() => window.location.href = 'https://www.linkedin.com/in/paulruelle'}
+                                title="LinkedIn profile"
+                                onClick={() =>
+                                    (window.location.href =
+                                        'https://www.linkedin.com/in/paulruelle')
+                                }
                             >
                                 Paul Ruelle
                             </span>

@@ -2,8 +2,9 @@ import React, {FC, useState} from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Masonry from 'react-masonry-css';
 import clsx from 'clsx';
-import {IconButton, LinearProgress, makeStyles, Tooltip, Typography, useTheme} from '@material-ui/core';
-import {CreateOutlined as LabelisatorIcon} from '@material-ui/icons';
+import {IconButton, LinearProgress, Tooltip, Typography, useTheme} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import {CreateOutlined as LabelisatorIcon} from '@mui/icons-material';
 import DTImage from 'src/components/core/Images/Image';
 import useImages from 'src/hooks/useImages';
 import {Theme} from 'src/theme';
@@ -45,10 +46,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const DTImagesList: FC<ImagesListProps> = ({
-                                               className,
-                                               pipeline_id,
-                                               ...rest
-                                           }) => {
+    className,
+    pipeline_id,
+    ...rest
+}) => {
     const classes = useStyles();
     const theme = useTheme();
 
@@ -60,28 +61,22 @@ const DTImagesList: FC<ImagesListProps> = ({
 
     const imageSelected = images[selected];
 
-    const handleOpenImage = (index) => {
+    const handleOpenImage = index => {
         setOpen(true);
         setSelected(index);
     };
 
     if (images.length === 0)
         return (
-            <Typography
-                color='textSecondary'
-                gutterBottom
-            >
+            <Typography color="textSecondary" gutterBottom>
                 No images found.
             </Typography>
-        )
+        );
 
     return (
-        <div
-            className={clsx(classes.root, className)}
-            {...rest}
-        >
+        <div className={clsx(classes.root, className)} {...rest}>
             <InfiniteScroll
-                className='scroll'
+                className="scroll"
                 dataLength={images.length}
                 next={() => saveOffset(offset => offset + LAZY_LOAD_BATCH)}
                 height={700}
@@ -89,10 +84,12 @@ const DTImagesList: FC<ImagesListProps> = ({
                     totalImagesCount
                         ? totalImagesCount > images.length
                         : pipeline_id
-                        ? pipelines.find(pipeline => pipeline.id === pipeline_id).image_count > images.length
+                        ? pipelines.find(
+                              pipeline => pipeline.id === pipeline_id
+                          ).image_count > images.length
                         : dataset.image_count > images.length
                 }
-                loader={<LinearProgress/>}
+                loader={<LinearProgress />}
             >
                 <Masonry
                     breakpointCols={{
@@ -104,17 +101,14 @@ const DTImagesList: FC<ImagesListProps> = ({
                     columnClassName={classes.column}
                 >
                     {images.map((image, index) => (
-                        <ImageProvider
-                            key={image.id}
-                            image={image}
-                        >
+                        <ImageProvider key={image.id} image={image}>
                             <DTImage
                                 className={classes.image}
                                 clickable
-                                overlay={(
+                                overlay={
                                     <Tooltip
                                         title={
-                                            <Typography variant='overline'>
+                                            <Typography variant="overline">
                                                 Edit labels
                                             </Typography>
                                         }
@@ -125,11 +119,12 @@ const DTImagesList: FC<ImagesListProps> = ({
                                                 event.stopPropagation();
                                                 window.location.hash = image.id;
                                             }}
+                                            size="large"
                                         >
-                                            <LabelisatorIcon/>
+                                            <LabelisatorIcon />
                                         </IconButton>
                                     </Tooltip>
-                                )}
+                                }
                                 onClick={() => handleOpenImage(index)}
                             />
                         </ImageProvider>

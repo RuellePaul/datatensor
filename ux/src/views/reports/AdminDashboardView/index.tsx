@@ -1,5 +1,6 @@
 import React, {FC, useCallback, useEffect, useState} from 'react';
-import {Container, Grid, makeStyles} from '@material-ui/core';
+import {Container, Grid} from '@mui/material';
+import {makeStyles} from '@mui/styles';
 import Page from 'src/components/Page';
 import {Theme} from 'src/theme';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
@@ -12,9 +13,8 @@ import TasksOverTime from 'src/components/charts/TasksOverTime';
 import UsersOverTime from 'src/components/charts/UsersOverTime';
 import UserScopes from 'src/components/charts/UserScopes';
 import DTTasks from 'src/components/core/Tasks';
-import {TimeRange} from 'src/types/timeRange'
+import {TimeRange} from 'src/types/timeRange';
 import useTasks from 'src/hooks/useTasks';
-
 
 const timeRanges: TimeRange[] = [
     {
@@ -41,16 +41,14 @@ const timeRanges: TimeRange[] = [
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        backgroundColor: theme.palette.background.dark,
+        backgroundColor: theme.palette.background.paper,
         minHeight: '100%',
         paddingTop: theme.spacing(3),
         paddingBottom: theme.spacing(3)
     }
 }));
 
-
 const AdminDashboardView: FC = () => {
-
     const classes = useStyles();
 
     const isMountedRef = useIsMountedRef();
@@ -60,7 +58,7 @@ const AdminDashboardView: FC = () => {
 
     const getUsers = useCallback(async () => {
         try {
-            const response = await api.get<{ users: User[] }>('/users/');
+            const response = await api.get<{users: User[]}>('/users/');
 
             if (isMountedRef.current) {
                 setUsers(response.data.users);
@@ -77,69 +75,31 @@ const AdminDashboardView: FC = () => {
     const [timeRange, setTimeRange] = useState<TimeRange>(timeRanges[2]);
 
     return (
-        <Page
-            className={classes.root}
-            title='Dashboard | Admin'
-        >
-            <Container component='section' maxWidth='lg'>
+        <Page className={classes.root} title="Dashboard | Admin">
+            <Container component="section" maxWidth="lg">
                 <Header
                     timeRange={timeRange}
                     setTimeRange={setTimeRange}
                     timeRanges={timeRanges}
                 />
-                <Grid
-                    container
-                    spacing={3}
-                >
-                    <Grid
-                        item
-                        md={7}
-                        xs={12}
-                    >
-                        <TasksOverTime
-                            tasks={tasks}
-                            timeRange={timeRange}
-                        />
+                <Grid container spacing={3}>
+                    <Grid item md={7} xs={12}>
+                        <TasksOverTime tasks={tasks} timeRange={timeRange} />
                     </Grid>
-                    <Grid
-                        item
-                        md={5}
-                        xs={12}
-                    >
-                        <Generator/>
+                    <Grid item md={5} xs={12}>
+                        <Generator />
                     </Grid>
-                    <Grid
-                        item
-                        lg={3}
-                        xs={12}
-                    >
-                        <Actions/>
+                    <Grid item lg={3} xs={12}>
+                        <Actions />
                     </Grid>
-                    <Grid
-                        item
-                        lg={9}
-                        xs={12}
-                    >
-                        <DTTasks/>
+                    <Grid item lg={9} xs={12}>
+                        <DTTasks />
                     </Grid>
-                    <Grid
-                        item
-                        md={7}
-                        xs={12}
-                    >
-                        <UsersOverTime
-                            users={users}
-                            timeRange={timeRange}
-                        />
+                    <Grid item md={7} xs={12}>
+                        <UsersOverTime users={users} timeRange={timeRange} />
                     </Grid>
-                    <Grid
-                        item
-                        md={5}
-                        xs={12}
-                    >
-                        <UserScopes
-                            users={users}
-                        />
+                    <Grid item md={5} xs={12}>
+                        <UserScopes users={users} />
                     </Grid>
                 </Grid>
             </Container>

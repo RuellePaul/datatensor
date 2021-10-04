@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
-import {Avatar, Box, Button, Container, Grid, makeStyles, Typography} from '@material-ui/core';
+import {Avatar, Box, Button, Container, Grid, Typography} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 
 interface FeaturesProps {
@@ -14,8 +15,8 @@ const useStyles = makeStyles((theme: Theme) => ({
         paddingBottom: 128
     },
     avatar: {
-        backgroundColor: theme.palette.secondary.main,
-        color: theme.palette.secondary.contrastText
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.contrastText
     }
 }));
 
@@ -23,40 +24,24 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
     const classes = useStyles();
 
     return (
-        <div
-            className={clsx(classes.root, className)}
-            {...rest}
-        >
-            <Container component='section' maxWidth="lg">
+        <div className={clsx(classes.root, className)} {...rest}>
+            <Container component="section" maxWidth="lg">
                 <Typography
                     component="p"
                     variant="overline"
-                    color="secondary"
+                    color="primary"
                     align="center"
                 >
                     Explore Datatensor
                 </Typography>
-                <Typography
-                    variant="h1"
-                    align="center"
-                    color="textPrimary"
-                >
+                <Typography variant="h1" align="center" color="textPrimary">
                     Not just a pretty face
                 </Typography>
                 <Box mt={8}>
-                    <Grid
-                        container
-                        spacing={3}
-                    >
-                        <Grid
-                            item
-                            xs={12}
-                            md={4}
-                        >
+                    <Grid container spacing={3}>
+                        <Grid item xs={12} md={4}>
                             <Box display="flex">
-                                <Avatar className={classes.avatar}>
-                                    01
-                                </Avatar>
+                                <Avatar className={classes.avatar}>01</Avatar>
                                 <Box ml={2}>
                                     <Typography
                                         variant="h4"
@@ -69,21 +54,18 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
                                         variant="body1"
                                         color="textPrimary"
                                     >
-                                        Not just a set of tools, the application includes the most common use cases of
-                                        image dataset flows like object labeling, web scraping, image augmentation...
+                                        Not just a set of tools, the application
+                                        includes the most common use cases of
+                                        image dataset flows like object
+                                        labeling, web scraping, image
+                                        augmentation...
                                     </Typography>
                                 </Box>
                             </Box>
                         </Grid>
-                        <Grid
-                            item
-                            xs={12}
-                            md={4}
-                        >
+                        <Grid item xs={12} md={4}>
                             <Box display="flex">
-                                <Avatar className={classes.avatar}>
-                                    02
-                                </Avatar>
+                                <Avatar className={classes.avatar}>02</Avatar>
                                 <Box ml={2}>
                                     <Typography
                                         variant="h4"
@@ -96,7 +78,8 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
                                         variant="body1"
                                         color="textPrimary"
                                     >
-                                        Once you have trained models, you can use Datatensor API to make real-time
+                                        Once you have trained models, you can
+                                        use Datatensor API to make real-time
                                         inference.
                                     </Typography>
                                     <Box mt={2}>
@@ -112,15 +95,9 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
                                 </Box>
                             </Box>
                         </Grid>
-                        <Grid
-                            item
-                            xs={12}
-                            md={4}
-                        >
+                        <Grid item xs={12} md={4}>
                             <Box display="flex">
-                                <Avatar className={classes.avatar}>
-                                    03
-                                </Avatar>
+                                <Avatar className={classes.avatar}>03</Avatar>
                                 <Box ml={2}>
                                     <Typography
                                         variant="h4"
@@ -134,8 +111,9 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
                                         color="textPrimary"
                                         gutterBottom
                                     >
-                                        We&apos;ve included the feature to export dataset state.
-                                        Check our docs to use Datatensor in combination of your
+                                        We&apos;ve included the feature to
+                                        export dataset state. Check our docs to
+                                        use Datatensor in combination of your
                                         existing backend Python code !
                                     </Typography>
                                 </Box>

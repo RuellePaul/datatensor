@@ -1,7 +1,16 @@
 import React, {FC, useEffect} from 'react';
 import {Link as RouterLink, useHistory} from 'react-router-dom';
 import {useSnackbar} from 'notistack';
-import {Box, Card, CardContent, Container, Divider, Link, makeStyles, Typography} from '@material-ui/core';
+import {
+    Box,
+    Card,
+    CardContent,
+    Container,
+    Divider,
+    Link,
+    Typography
+} from '@mui/material';
+import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
 import Logo from 'src/components/utils/Logo';
@@ -11,14 +20,14 @@ import parseQueryArgs from 'src/utils/parseQueryArgs';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        backgroundColor: theme.palette.background.dark,
+        backgroundColor: theme.palette.background.paper,
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100vh'
     },
     cardContainer: {
         paddingBottom: 80,
-        paddingTop: 80,
+        paddingTop: 80
     },
     cardContent: {
         padding: theme.spacing(4),
@@ -27,14 +36,13 @@ const useStyles = makeStyles((theme: Theme) => ({
         minHeight: 400
     },
     auth0buttons: {
-        [theme.breakpoints.down('xs')]: {
+        [theme.breakpoints.down('sm')]: {
             flexDirection: 'column'
         }
     }
 }));
 
 const LoginView: FC = () => {
-
     const classes = useStyles();
     const history = useHistory();
     const {enqueueSnackbar} = useSnackbar();
@@ -46,25 +54,18 @@ const LoginView: FC = () => {
         }
 
         // eslint-disable-next-line
-    }, [])
+    }, []);
 
     return (
-        <Page
-            className={classes.root}
-            title="Login"
-        >
+        <Page className={classes.root} title="Login">
             <Container
-                component='section'
+                component="section"
                 className={classes.cardContainer}
                 maxWidth="sm"
             >
-                <Box
-                    mb={8}
-                    display="flex"
-                    justifyContent="center"
-                >
+                <Box mb={8} display="flex" justifyContent="center">
                     <RouterLink to="/">
-                        <Logo/>
+                        <Logo />
                     </RouterLink>
                 </Box>
                 <Card>
@@ -93,27 +94,22 @@ const LoginView: FC = () => {
                         </Box>
 
                         <Box
-                            display='flex'
+                            display="flex"
                             className={classes.auth0buttons}
                             mt={2}
                         >
-                            <OAuthLoginButton scope='github'/>
-                            <OAuthLoginButton scope='google'/>
-                            <OAuthLoginButton scope='stackoverflow'/>
+                            <OAuthLoginButton scope="github" />
+                            <OAuthLoginButton scope="google" />
+                            <OAuthLoginButton scope="stackoverflow" />
                         </Box>
-                        <Box
-                            mt={3}
-                        >
-                            <Divider/>
+                        <Box mt={3}>
+                            <Divider />
                         </Box>
-                        <Box
-                            flexGrow={1}
-                            mt={3}
-                        >
-                            <JWTLogin/>
+                        <Box flexGrow={1} mt={3}>
+                            <JWTLogin />
                         </Box>
                         <Box my={3}>
-                            <Divider/>
+                            <Divider />
                         </Box>
                         <Link
                             component={RouterLink}

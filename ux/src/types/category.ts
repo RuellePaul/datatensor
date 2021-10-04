@@ -1,5 +1,5 @@
 export type SuperCategory =
-    'person'
+    | 'person'
     | 'vehicle'
     | 'electronic'
     | 'indoor'
@@ -11,13 +11,12 @@ export type SuperCategory =
     | 'animal'
     | 'appliance'
     | 'food'
-    | 'miscellaneous'
+    | 'miscellaneous';
 
 export interface Category {
     id: string;
     dataset_id: string;
     name: string;
-    supercategory: SuperCategory
-        | null;
+    supercategory: SuperCategory | null;
     labels_count?: number;
 }

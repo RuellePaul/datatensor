@@ -3,7 +3,8 @@ import {useParams} from 'react-router';
 import {useSnackbar} from 'notistack';
 import {Formik} from 'formik';
 import clsx from 'clsx';
-import {Box, Button, CircularProgress, FormHelperText, Grid, makeStyles} from '@material-ui/core';
+import {Box, Button, CircularProgress, FormHelperText, Grid} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import type {Theme} from 'src/theme';
 import {useSelector} from 'src/store';
 import {Operation} from 'src/types/pipeline';
@@ -25,12 +26,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
+const PipelineSample: FC<PipelineSampleProps> = ({ className }) => {
     const classes = useStyles();
-    const {enqueueSnackbar} = useSnackbar();
+    const { enqueueSnackbar } = useSnackbar();
 
-    const {dataset_id} = useParams();
-    const {image} = useImage();
+    const { dataset_id } = useParams();
+    const { image } = useImage();
 
     const pipeline = useSelector<any>((state) => state.pipeline);
     const image_id = image.id;
@@ -40,7 +41,7 @@ const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
 
     const doSample = useCallback(async () => {
         if (dataset_id && image_id && pipeline.isLoaded) {
-            const operations: Operation[] = pipeline.operations.allIds.map(id => pipeline.operations.byId[id])
+            const operations: Operation[] = pipeline.operations.allIds.map(id => pipeline.operations.byId[id]);
 
             try {
                 await wait(10);
@@ -48,19 +49,19 @@ const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
                 const response = await api.post<{ images: string[], images_labels: Label[][] }>(`/datasets/${dataset_id}/pipelines/sample`, {
                     image_id,
                     operations
-                })
+                });
 
                 setImagesBase64(response.data.images);
-                setImagesLabels(response.data.images_labels)
+                setImagesLabels(response.data.images_labels);
 
             } catch (error) {
                 console.error(error);
-                enqueueSnackbar((error.message) || 'Something went wrong', {variant: 'error'});
+                enqueueSnackbar((error.message) || 'Something went wrong', { variant: 'error' });
             }
         }
 
         // eslint-disable-next-line
-    }, [pipeline.isLoaded, dataset_id, image_id, pipeline.operations])
+    }, [pipeline.isLoaded, dataset_id, image_id, pipeline.operations]);
 
     return (
         <div className={clsx(classes.root, className)}>
@@ -74,7 +75,7 @@ const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
                 >
                     <Formik
                         initialValues={{
-                            submit: null,
+                            submit: null
                         }}
                         onSubmit={async (values, {
                             setErrors,
@@ -84,12 +85,12 @@ const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
                             try {
                                 await doSample();
 
-                                setStatus({success: true});
+                                setStatus({ success: true });
                                 setSubmitting(false);
                             } catch (err) {
                                 console.error(err);
-                                setStatus({success: false});
-                                setErrors({submit: err.message});
+                                setStatus({ success: false });
+                                setErrors({ submit: err.message });
                                 setSubmitting(false);
                             }
                         }}
@@ -97,7 +98,7 @@ const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
                         {({
                               errors,
                               handleSubmit,
-                              isSubmitting,
+                              isSubmitting
                           }) => (
                             <form
                                 onSubmit={handleSubmit}
@@ -105,14 +106,14 @@ const PipelineSample: FC<PipelineSampleProps> = ({className}) => {
 
                                 <Box mb={1}>
                                     <Button
-                                        size='small'
-                                        variant='outlined'
-                                        type='submit'
+                                        size="small"
+                                        variant="outlined"
+                                        type="submit"
                                         disabled={isSubmitting}
                                         endIcon={isSubmitting && (
                                             <CircularProgress
                                                 className={classes.loader}
-                                                color='inherit'
+                                                color="inherit"
                                             />
                                         )}
                                     >

@@ -1,12 +1,21 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
-import {Box, Button, Container, Divider, Grid, makeStyles, Paper, Typography} from '@material-ui/core';
+import {
+    Box,
+    Button,
+    Container,
+    Divider,
+    Grid,
+    Paper,
+    Typography
+} from '@mui/material';
+import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        backgroundColor: theme.palette.background.dark,
+        backgroundColor: theme.palette.background.paper,
         minHeight: '100%',
         height: '100%',
         paddingTop: 120,
@@ -34,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         fontSize: 24
     },
     recommendedProduct: {
-        backgroundColor: theme.palette.secondary.main,
+        backgroundColor: theme.palette.primary.main,
         color: theme.palette.common.white
     },
     chooseButton: {
@@ -46,16 +55,9 @@ const PricingView: FC = () => {
     const classes = useStyles();
 
     return (
-        <Page
-            className={classes.root}
-            title="Pricing"
-        >
-            <Container component='section' maxWidth="sm">
-                <Typography
-                    align="center"
-                    variant="h1"
-                    color="textPrimary"
-                >
+        <Page className={classes.root} title="Pricing">
+            <Container component="section" maxWidth="sm">
+                <Typography align="center" variant="h1" color="textPrimary">
                     Start today. Boost up your services!
                 </Typography>
                 <Box mt={3}>
@@ -64,27 +66,17 @@ const PricingView: FC = () => {
                         variant="subtitle1"
                         color="textSecondary"
                     >
-                        Welcome to the first platform created for freelancers and agencies
-                        for showcasing and finding the best clinets in the market.
-                        30% of our income goes into Whale Charity
+                        Welcome to the first platform created for freelancers
+                        and agencies for showcasing and finding the best clinets
+                        in the market. 30% of our income goes into Whale Charity
                     </Typography>
                 </Box>
             </Container>
             <Box mt="160px">
-                <Container component='section' maxWidth="lg">
-                    <Grid
-                        container
-                        spacing={4}
-                    >
-                        <Grid
-                            item
-                            md={4}
-                            xs={12}
-                        >
-                            <Paper
-                                className={classes.dataset}
-                                elevation={1}
-                            >
+                <Container component="section" maxWidth="lg">
+                    <Grid container spacing={4}>
+                        <Grid item md={4} xs={12}>
+                            <Paper className={classes.dataset} elevation={1}>
                                 <img
                                     className={classes.datasetImage}
                                     src="/static/images/datasets/product_standard.svg"
@@ -123,22 +115,19 @@ const PricingView: FC = () => {
                                     Max 1 user
                                 </Typography>
                                 <Box my={2}>
-                                    <Divider/>
+                                    <Divider />
                                 </Box>
-                                <Typography
-                                    variant="body2"
-                                    color="textPrimary"
-                                >
+                                <Typography variant="body2" color="textPrimary">
                                     20 proposals/month
-                                    <br/>
+                                    <br />
                                     10 templates
-                                    <br/>
+                                    <br />
                                     Analytics dashboard
-                                    <br/>
+                                    <br />
                                     Email alerts
                                 </Typography>
                                 <Box my={2}>
-                                    <Divider/>
+                                    <Divider />
                                 </Box>
                                 <Button
                                     variant="contained"
@@ -149,13 +138,12 @@ const PricingView: FC = () => {
                                 </Button>
                             </Paper>
                         </Grid>
-                        <Grid
-                            item
-                            md={4}
-                            xs={12}
-                        >
+                        <Grid item md={4} xs={12}>
                             <Paper
-                                className={clsx(classes.dataset, classes.recommendedProduct)}
+                                className={clsx(
+                                    classes.dataset,
+                                    classes.recommendedProduct
+                                )}
                                 elevation={1}
                             >
                                 <img
@@ -189,29 +177,23 @@ const PricingView: FC = () => {
                                         /month
                                     </Typography>
                                 </div>
-                                <Typography
-                                    variant="overline"
-                                    color="inherit"
-                                >
+                                <Typography variant="overline" color="inherit">
                                     Max 3 user
                                 </Typography>
                                 <Box my={2}>
-                                    <Divider/>
+                                    <Divider />
                                 </Box>
-                                <Typography
-                                    variant="body2"
-                                    color="inherit"
-                                >
+                                <Typography variant="body2" color="inherit">
                                     20 proposals/month
-                                    <br/>
+                                    <br />
                                     10 templates
-                                    <br/>
+                                    <br />
                                     Analytics dashboard
-                                    <br/>
+                                    <br />
                                     Email alerts
                                 </Typography>
                                 <Box my={2}>
-                                    <Divider/>
+                                    <Divider />
                                 </Box>
                                 <Button
                                     variant="contained"
@@ -222,15 +204,8 @@ const PricingView: FC = () => {
                                 </Button>
                             </Paper>
                         </Grid>
-                        <Grid
-                            item
-                            md={4}
-                            xs={12}
-                        >
-                            <Paper
-                                className={classes.dataset}
-                                elevation={1}
-                            >
+                        <Grid item md={4} xs={12}>
+                            <Paper className={classes.dataset} elevation={1}>
                                 <img
                                     alt="Dataset"
                                     className={classes.datasetImage}
@@ -269,22 +244,19 @@ const PricingView: FC = () => {
                                     Company
                                 </Typography>
                                 <Box my={2}>
-                                    <Divider/>
+                                    <Divider />
                                 </Box>
-                                <Typography
-                                    variant="body2"
-                                    color="textPrimary"
-                                >
+                                <Typography variant="body2" color="textPrimary">
                                     All from above
-                                    <br/>
+                                    <br />
                                     Unlimited 24/7 support
-                                    <br/>
+                                    <br />
                                     Personalised Page
-                                    <br/>
+                                    <br />
                                     Advertise your profile
                                 </Typography>
                                 <Box my={2}>
-                                    <Divider/>
+                                    <Divider />
                                 </Box>
                                 <Button
                                     variant="contained"

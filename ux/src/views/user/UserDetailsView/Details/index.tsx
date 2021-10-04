@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
-import {Grid, makeStyles} from '@material-ui/core';
+import {Grid} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import UserInfo from './UserInfo';
 import OtherActions from './OtherActions';
 import useUser from 'src/hooks/useUser';
@@ -13,10 +14,7 @@ const useStyles = makeStyles(() => ({
     root: {}
 }));
 
-const Details: FC<DetailsProps> = ({
-                                       className,
-                                       ...rest
-                                   }) => {
+const Details: FC<DetailsProps> = ({className, ...rest}) => {
     const classes = useStyles();
     const {user} = useUser();
 
@@ -27,25 +25,14 @@ const Details: FC<DetailsProps> = ({
             spacing={3}
             {...rest}
         >
-            <Grid
-                item
-                md={6}
-                xs={12}
-            >
-                <UserInfo
-                    user={user}
-                />
+            <Grid item md={6} xs={12}>
+                <UserInfo user={user} />
             </Grid>
-            <Grid
-                item
-                md={6}
-                xs={12}
-            >
-                <OtherActions/>
+            <Grid item md={6} xs={12}>
+                <OtherActions />
             </Grid>
         </Grid>
     );
 };
-
 
 export default Details;

@@ -3,7 +3,9 @@ import React from 'react';
 import {NavLink as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import {Button, ListItem, makeStyles, Typography} from '@material-ui/core';
+import {Button, ListItem} from '@mui/material';
+
+import makeStyles from '@mui/styles/makeStyles';
 
 interface NavItemProps {
     children?: ReactNode;
@@ -22,7 +24,8 @@ const useStyles = makeStyles((theme) => ({
     itemLeaf: {
         display: 'flex',
         paddingTop: 0,
-        paddingBottom: 0
+        paddingBottom: 0,
+        color: theme.palette.text.primary
     },
     button: {
         padding: '10px 8px',
@@ -30,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
         textTransform: 'none',
         letterSpacing: 0,
         width: '100%'
+    },
+    title: {
+        marginRight: 'auto'
     },
     buttonLeaf: {
         padding: '10px 8px',
@@ -39,12 +45,14 @@ const useStyles = makeStyles((theme) => ({
         width: '100%',
         fontWeight: theme.typography.fontWeightRegular,
         '&.depth-0': {
-            fontWeight: theme.typography.fontWeightMedium
+            fontWeight: theme.typography.fontWeightRegular
         }
     },
     active: {
-        color: theme.palette.secondary.main,
-        fontWeight: theme.typography.fontWeightMedium,
+        color: theme.palette.primary.main,
+        '& $title': {
+            fontWeight: `${theme.typography.fontWeightBold} !important`
+        }
     }
 }));
 
@@ -63,7 +71,7 @@ const NavItem: FC<NavItemProps> = ({
         paddingLeft = 32 + 8 * depth;
     }
 
-    const style = {paddingLeft};
+    const style = { paddingLeft };
 
     if (children) {
         return (
@@ -72,24 +80,13 @@ const NavItem: FC<NavItemProps> = ({
                 disableGutters
                 {...rest}
             >
-                {depth === 0
-                    ? (
-                        <Typography
-                            variant='body2'
-                        >
-                            {title}
-                        </Typography>
-                    )
-                    : (
-                        <Button
-                            className={classes.button}
-                            style={style}
-                        >
-                            {title}
-                        </Button>
+                <Button
+                    className={classes.button}
+                    style={style}
+                >
+                    <span className={classes.title}>{title}</span>
+                </Button>
 
-                    )
-                }
                 {children}
             </ListItem>
         );
@@ -105,11 +102,12 @@ const NavItem: FC<NavItemProps> = ({
                 activeClassName={classes.active}
                 className={clsx(classes.buttonLeaf, `depth-${depth}`)}
                 component={RouterLink}
+                color="inherit"
                 exact
                 style={style}
                 to={href}
             >
-                {title}
+                <span className={classes.title}>{title}</span>
             </Button>
         </ListItem>
     );

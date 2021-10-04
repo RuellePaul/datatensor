@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
 import Chart from 'react-apexcharts';
-import {capitalize, makeStyles, useTheme} from '@material-ui/core';
+import {capitalize, useTheme} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
 import {COLORS} from 'src/utils/colors';
@@ -13,21 +14,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     root: {
         width: '100%',
         marginTop: -10
-    },
+    }
 }));
 
-
-const CategoriesDistribution: FC<CategoriesDistributionProps> = ({className, ...rest}) => {
-
+const CategoriesDistribution: FC<CategoriesDistributionProps> = ({
+    className,
+    ...rest
+}) => {
     const classes = useStyles();
     const theme = useTheme();
 
     const {categories} = useDataset();
 
-    if (categories === null || categories.length === 0)
-        return null;
+    if (categories === null || categories.length === 0) return null;
 
-    const top10categories = categories.sort((a, b) => a.labels_count > b.labels_count ? -1 : 1).slice(0, 9)
+    const top10categories = categories
+        .sort((a, b) => (a.labels_count > b.labels_count ? -1 : 1))
+        .slice(0, 9);
 
     return (
         <Chart
@@ -70,7 +73,7 @@ const CategoriesDistribution: FC<CategoriesDistributionProps> = ({className, ...
                 plotOptions: {
                     bar: {
                         dataLabels: {
-                            position: 'top',
+                            position: 'top'
                         },
                         distributed: true,
                         borderRadius: 0,
@@ -80,28 +83,31 @@ const CategoriesDistribution: FC<CategoriesDistributionProps> = ({className, ...
                 tooltip: {
                     enabled: true,
                     enabledOnSeries: undefined,
-                    theme: theme.palette.type,
+                    theme: theme.palette.mode,
                     shared: true,
                     intersect: false,
                     onDatasetHover: {
-                        highlightDataSeries: true,
+                        highlightDataSeries: true
                     },
                     marker: {
                         show: false
                     },
-                    custom: function ({series, seriesIndex, dataPointIndex, w}) {
-
-                        return (
-                            `<div class="apex-tooltip" style="background: ${theme.palette.background.paper}">
-                                ${capitalize(top10categories[dataPointIndex].name)}
+                    custom: function({series, seriesIndex, dataPointIndex, w}) {
+                        return `<div class="apex-tooltip" style="background: ${
+                            theme.palette.background.default
+                        }">
+                                ${capitalize(
+                                    top10categories[dataPointIndex].name
+                                )}
                                 <br/>
                                 ${series[seriesIndex][dataPointIndex]}
-                            </div>`
-                        )
+                            </div>`;
                     }
                 },
                 xaxis: {
-                    categories: top10categories.map(category => capitalize(category.name)),
+                    categories: top10categories.map(category =>
+                        capitalize(category.name)
+                    ),
                     labels: {
                         style: {
                             colors: COLORS,
@@ -120,7 +126,7 @@ const CategoriesDistribution: FC<CategoriesDistributionProps> = ({className, ...
                     data: top10categories.map(category => category.labels_count)
                 }
             ]}
-            type='bar'
+            type="bar"
             height={350}
         />
     );
