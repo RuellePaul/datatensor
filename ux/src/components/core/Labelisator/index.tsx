@@ -259,8 +259,11 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                         >
                                             <Tooltip
                                                 title={
-                                                    <Typography variant="overline">
-                                                        Draw (a)
+                                                    <Typography
+                                                        variant="overline"
+                                                    >
+                                                        Draw
+                                                        <kbd>A</kbd>
                                                     </Typography>
                                                 }
                                             >
@@ -273,8 +276,11 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                         >
                                             <Tooltip
                                                 title={
-                                                    <Typography variant="overline">
-                                                        Move (z)
+                                                    <Typography
+                                                        variant="overline"
+                                                    >
+                                                        Move
+                                                        <kbd>Z</kbd>
                                                     </Typography>
                                                 }
                                             >
@@ -319,8 +325,11 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                                 >
                                                     <Tooltip
                                                         title={
-                                                            <Typography variant="overline">
-                                                                Undo (CTRL + Z)
+                                                            <Typography
+                                                                variant="overline"
+                                                            >
+                                                                Undo
+                                                                <kbd>CTRL</kbd>+<kbd>Z</kbd>
                                                             </Typography>
                                                         }
                                                     >
@@ -348,7 +357,8 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                     <Tooltip
                                         title={
                                             <Typography variant="overline">
-                                                Save (S)
+                                                Save
+                                                <kbd>S</kbd>
                                             </Typography>
                                         }
                                     >

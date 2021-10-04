@@ -1,23 +1,25 @@
 import React, {FC, useState} from 'react';
+import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
 import {useSnackbar} from 'notistack';
+import {Formik} from 'formik';
+import * as Yup from 'yup';
 import {
+    Alert,
     Button,
     Card,
     CardActions,
     CardContent,
     CircularProgress,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
+    InputAdornment,
+    Link,
     TextField,
     Typography
 } from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
+import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import api from 'src/utils/api';
 import download from 'src/utils/download';
 import {Download} from '@mui/icons-material';
@@ -40,19 +42,10 @@ interface ExportProps {
 
 const Export: FC<ExportProps> = ({className}) => {
     const classes = useStyles();
+    const isMountedRef = useIsMountedRef();
     const {enqueueSnackbar} = useSnackbar();
 
     const {dataset} = useDataset();
-
-    const [open, setOpen] = useState<boolean>(false);
-
-    const handleOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
 
     const [isExporting, setIsExporting] = useState<boolean>(false);
 
@@ -73,104 +66,145 @@ const Export: FC<ExportProps> = ({className}) => {
         }
     };
 
-    const handleDownload = () => {
+    const handleDownload = filename => {
         if (datasetJSON === null) return;
 
-        download(datasetJSON, `${dataset.name}.json`, 'application/json');
-        handleClose();
+        download(
+            datasetJSON,
+            `${filename || 'export'}.json`,
+            'application/json'
+        );
     };
 
     if (!dataset) return null;
 
     return (
-        <Card className={clsx(classes.root, className)} variant="outlined">
-            <CardContent>
-                <Typography color="textPrimary" gutterBottom>
-                    Export your dataset to .json
-                </Typography>
-            </CardContent>
+        <Formik
+            initialValues={{
+                filename: `export_${dataset.name.replaceAll(' ', '-').replaceAll(',', '').toLocaleLowerCase()}`
+            }}
+            validationSchema={Yup.object().shape({
+                filename: Yup.string()
+                    .max(255)
+                    .required('Filename is required')
+            })}
+            onSubmit={async (values, {resetForm, setStatus, setSubmitting}) => {
+                try {
+                    await handleDownload(values.filename);
 
-            <CardActions style={{justifyContent: 'flex-end'}}>
-                <Button
-                    color="primary"
-                    onClick={handleOpen}
-                    variant="contained"
-                >
-                    Export
-                </Button>
-            </CardActions>
+                    if (isMountedRef.current) {
+                        setStatus({success: true});
+                        setSubmitting(false);
+                        resetForm();
+                        setDatasetJSON(null);
+                    }
+                } catch (error) {
+                    enqueueSnackbar(error.message || 'Something went wrong', {
+                        variant: 'error'
+                    });
 
-            <Dialog
-                open={open}
-                onClose={handleClose}
-                maxWidth={datasetJSON === null ? 'sm': 'lg'}
-            >
-                <DialogTitle>Export</DialogTitle>
-                <DialogContent>
-                    {datasetJSON === null ? (
-                        <>
-                            <DialogContentText>
-                                To subscribe to this website, please enter your
-                                email address here. We will send updates
-                                occasionally.
-                            </DialogContentText>
-                        </>
-                    ) : (
-                        <>
-                            <pre className={clsx(classes.wrapper, 'scroll')}>
-                                <code className="language-sh">
-                                    {JSON.stringify(JSON.parse(datasetJSON), null, 4)}
-                                </code>
-                            </pre>
-                            <DialogContentText>
-                                To subscribe to this website, please enter your
-                                email address here. We will send updates
-                                occasionally.
-                            </DialogContentText>
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                id="name"
-                                label="Email Address"
-                                type="email"
-                                fullWidth
-                                variant="standard"
-                            />
-                        </>
-                    )}
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    {datasetJSON === null ? (
-                        <Button
-                            color="primary"
-                            disabled={isExporting}
-                            endIcon={
-                                isExporting && (
-                                    <CircularProgress
-                                        className={classes.loader}
-                                        color="inherit"
+                    if (isMountedRef.current) {
+                        setStatus({success: false});
+                        setSubmitting(false);
+                    }
+                }
+            }}
+        >
+            {({
+                errors,
+                handleBlur,
+                handleChange,
+                handleSubmit,
+                touched,
+                values
+            }) => (
+                <form noValidate onSubmit={handleSubmit}>
+                    <Card
+                        className={clsx(classes.root, className)}
+                        variant="outlined"
+                    >
+                        <CardContent>
+                            <Typography>
+                                Export your dataset to{' '}
+                                <Link
+                                    variant="subtitle1"
+                                    color="primary"
+                                    component={RouterLink}
+                                    to="/docs"
+                                >
+                                    use it in your code
+                                </Link>
+                                .
+                            </Typography>
+
+                            {datasetJSON === null ? (
+                                <>
+                                    {isExporting && (
+                                        <Alert severity="warning">
+                                            This might take a while...
+                                        </Alert>
+                                    )}
+                                </>
+                            ) : (
+                                <>
+                                    <TextField
+                                        error={Boolean(
+                                            touched.filename && errors.filename
+                                        )}
+                                        name="filename"
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        value={values.filename}
+                                        autoFocus
+                                        margin="dense"
+                                        label="Filename"
+                                        fullWidth
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    .json
+                                                </InputAdornment>
+                                            )
+                                        }}
+                                        variant="standard"
                                     />
-                                )
-                            }
-                            onClick={handleExport}
-                            variant="contained"
-                        >
-                            Export
-                        </Button>
-                    ) : (
-                        <Button
-                            color="primary"
-                            endIcon={<Download />}
-                            onClick={handleDownload}
-                            variant="contained"
-                        >
-                            Download
-                        </Button>
-                    )}
-                </DialogActions>
-            </Dialog>
-        </Card>
+                                </>
+                            )}
+                        </CardContent>
+
+                        <CardActions style={{justifyContent: 'flex-end'}}>
+                            {datasetJSON === null ? (
+                                <Button
+                                    color="primary"
+                                    disabled={isExporting}
+                                    endIcon={
+                                        isExporting && (
+                                            <CircularProgress
+                                                className={classes.loader}
+                                                color="inherit"
+                                            />
+                                        )
+                                    }
+                                    onClick={handleExport}
+                                    variant="contained"
+                                >
+                                    Export
+                                </Button>
+                            ) : (
+                                <Button
+                                    color="primary"
+                                    endIcon={<Download />}
+                                    type="submit"
+                                    variant="contained"
+                                >
+                                    Download
+                                </Button>
+                            )}
+                        </CardActions>
+                    </Card>
+                </form>
+            )}
+        </Formik>
     );
 };
 

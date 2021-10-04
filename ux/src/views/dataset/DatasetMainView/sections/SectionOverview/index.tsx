@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
-import {Grid} from '@mui/material';
+import {Grid, Stack} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import {SectionProps} from '../SectionProps';
@@ -22,10 +22,11 @@ const SectionOverview: FC<SectionProps> = ({className}) => {
                     <LabelisatorAction />
                 </Grid>
                 <Grid item md={4} xs={12}>
-                    <ImagesSlideshow />
-                </Grid>
-                <Grid item md={4} xs={12}>
-                    <ExportAction />
+                    <Stack spacing={4}>
+                        <ImagesSlideshow />
+
+                        <ExportAction />
+                    </Stack>
                 </Grid>
             </Grid>
         </div>
