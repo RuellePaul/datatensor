@@ -5,6 +5,7 @@ import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import {SectionProps} from '../SectionProps';
 import ImagesSlideshow from 'src/components/core/Images/ImagesSlideshow';
+import ExportAction from './ExportAction';
 import LabelisatorAction from './LabelisatorAction';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -22,6 +23,9 @@ const SectionOverview: FC<SectionProps> = ({className}) => {
                 </Grid>
                 <Grid item md={4} xs={12}>
                     <ImagesSlideshow />
+                </Grid>
+                <Grid item md={4} xs={12}>
+                    <ExportAction />
                 </Grid>
             </Grid>
         </div>
