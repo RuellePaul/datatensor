@@ -157,6 +157,9 @@ function reduceChildRoutes({
 }
 
 const useStyles = makeStyles(theme => ({
+    drawer: {
+        zIndex: 1400
+    },
     mobileDrawer: {
         width: 256
     },
@@ -267,6 +270,7 @@ const NavBar: FC<NavBarProps> = ({onMobileClose, openMobile}) => {
         <>
             <Hidden lgUp>
                 <Drawer
+                    className={classes.drawer}
                     anchor="left"
                     classes={{paper: classes.mobileDrawer}}
                     onClose={onMobileClose}

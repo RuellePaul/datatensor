@@ -111,6 +111,7 @@ function ImagesSlideshow() {
                 activeStep={activeStep}
                 nextButton={
                     <Button
+                        color="inherit"
                         size="small"
                         onClick={handleNext}
                         disabled={activeStep === images.length - 1}
@@ -125,6 +126,7 @@ function ImagesSlideshow() {
                 }
                 backButton={
                     <Button
+                        color="inherit"
                         size="small"
                         onClick={handleBack}
                         disabled={activeStep === 0}

@@ -4,11 +4,15 @@ import {useSnackbar} from 'notistack';
 import {
     Box,
     ButtonBase,
+    Divider,
     Hidden,
+    ListItemIcon,
+    ListItemText,
     Menu,
     MenuItem,
     Typography
 } from '@mui/material';
+import {AccountBox as AccountIcon, Logout as LogoutIcon} from '@mui/icons-material';
 import {makeStyles} from '@mui/styles';
 import UserAvatar from 'src/components/UserAvatar';
 import useAuth from 'src/hooks/useAuth';
@@ -91,9 +95,18 @@ const Account: FC = () => {
                 open={isOpen}
             >
                 <MenuItem component={RouterLink} to="/app/account">
-                    Account
+                    <ListItemIcon>
+                        <AccountIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Account</ListItemText>
                 </MenuItem>
-                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                <Divider />
+                <MenuItem onClick={handleLogout}>
+                    <ListItemIcon>
+                        <LogoutIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Logout</ListItemText>
+                </MenuItem>
             </Menu>
         </>
     );

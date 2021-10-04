@@ -24,7 +24,11 @@ import {
 } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {TransitionProps} from '@mui/material/transitions';
-import {Close as CloseIcon, ImageOutlined as ImageIcon, Restore as RestoreIcon} from '@mui/icons-material';
+import {
+    Close as CloseIcon,
+    ImageOutlined as ImageIcon,
+    Restore as RestoreIcon
+} from '@mui/icons-material';
 import DTCategories from 'src/components/core/Labelisator/Categories';
 import DTImage from 'src/components/core/Images/Image';
 import CategoriesDistribution from 'src/components/charts/CategoriesDistribution';
@@ -57,10 +61,12 @@ const useStyles = makeStyles((theme: Theme) => ({
         padding: theme.spacing(2, 0)
     },
     header: {
-        position: 'relative'
+        position: 'relative',
+        background: theme.palette.primary.main
     },
     toolbar: {
-        alignItems: 'center'
+        alignItems: 'center',
+        color: theme.palette.getContrastText(theme.palette.text.primary)
     },
     switch: {
         marginLeft: theme.spacing(2)
@@ -179,7 +185,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
             <ImageProvider image={image}>
                 <AppBar className={classes.header}>
                     <Toolbar className={classes.toolbar}>
-                        <Typography variant="h4" color="textPrimary">
+                        <Typography variant="h4" color="inherit">
                             Labelisator
                         </Typography>
                         <Box flexGrow={1} />

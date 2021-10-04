@@ -28,6 +28,9 @@ const useStyles = makeStyles((theme: Theme) => ({
         marginRight: 5
     },
     drawer: {
+        zIndex: 1400
+    },
+    paper: {
         width: 360
     }
 }));
@@ -67,8 +70,9 @@ const Settings: FC = () => {
                 </Badge>
             </Tooltip>
             <Drawer
+                className={classes.drawer}
                 anchor="right"
-                classes={{paper: classes.drawer}}
+                classes={{paper: classes.paper}}
                 onClose={handleClose}
                 open={isOpen}
                 variant="temporary"

@@ -189,6 +189,7 @@ const DTImagePreview: FC<DTImagePreviewProps> = ({
             <>
                 <div className={clsx(classes.header)}>
                     <Button
+                        color="inherit"
                         onClick={handleClose}
                         size="small"
                         startIcon={<BackIcon />}

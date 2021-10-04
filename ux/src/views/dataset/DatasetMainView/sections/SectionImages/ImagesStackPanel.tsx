@@ -76,6 +76,7 @@ const ImagesStackPanelExpanded: FC<ImagesStackPanelExpandedProps> = ({
                 mb={2}
             >
                 <Button
+                    color="inherit"
                     onClick={() => setSelected(false)}
                     size="small"
                     startIcon={<BackIcon />}
