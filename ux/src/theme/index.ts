@@ -50,12 +50,6 @@ const themesOptions: ThemeOptions[] = [
         palette: {
             mode: 'dark'
         }
-    },
-    {
-        name: THEMES.UNICORN,
-        palette: {
-            mode: 'dark'
-        }
     }
 ];
 

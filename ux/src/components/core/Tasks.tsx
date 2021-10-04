@@ -19,7 +19,6 @@ import UserLabel from 'src/components/UserLabel';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        background: theme.palette.background.default,
         borderColor: `${theme.palette.divider} !important`,
         '& *': {
             borderColor: `${theme.palette.divider} !important`

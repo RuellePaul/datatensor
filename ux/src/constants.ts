@@ -8,6 +8,5 @@ export const HEARTBEAT_DELAY = 1000; // in ms
 
 export const THEMES = {
     LIGHT: 'LIGHT',
-    DARK: 'DARK',
-    UNICORN: 'UNICORN'
+    DARK: 'DARK'
 };

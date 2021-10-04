@@ -32,8 +32,7 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center',
         justifyContent: 'space-between',
         height: 50,
-        padding: theme.spacing(0, 2),
-        backgroundColor: theme.palette.background.default
+        padding: theme.spacing(0, 2)
     },
     img: {
         height: 255,
