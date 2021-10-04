@@ -34,9 +34,21 @@ const Export: FC<ExportProps> = ({className}) => {
 
     const [isExporting, setIsExporting] = useState<boolean>(false);
 
+    function download(content, fileName, contentType) {
+        var a = document.createElement("a");
+        var file = new Blob([content], {type: contentType});
+        a.href = URL.createObjectURL(file);
+        a.download = fileName;
+        a.click();
+    }
+
     const handleExport = async () => {
+        setIsExporting(true);
+
         try {
-            const response = await api.post(`/datasets/${dataset.id}/export/`);
+            const response = await api.get(`/datasets/${dataset.id}/export/`);
+            download(response.data, `${dataset.name}.json`, 'application/json');
+
         } catch (error) {
             enqueueSnackbar(error.message || 'Something went wrong', {
                 variant: 'error'
