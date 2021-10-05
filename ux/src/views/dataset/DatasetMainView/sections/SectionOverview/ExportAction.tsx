@@ -10,6 +10,7 @@ import {
     Card,
     CardActions,
     CardContent,
+    CardHeader,
     CircularProgress,
     InputAdornment,
     Link,
@@ -81,7 +82,10 @@ const Export: FC<ExportProps> = ({className}) => {
     return (
         <Formik
             initialValues={{
-                filename: `export_${dataset.name.replaceAll(' ', '-').replaceAll(',', '').toLocaleLowerCase()}`
+                filename: `export_${dataset.name
+                    .replaceAll(' ', '-')
+                    .replaceAll(',', '')
+                    .toLocaleLowerCase()}`
             }}
             validationSchema={Yup.object().shape({
                 filename: Yup.string()
@@ -123,27 +127,36 @@ const Export: FC<ExportProps> = ({className}) => {
                         className={clsx(classes.root, className)}
                         variant="outlined"
                     >
+                        <CardHeader title="Export" />
                         <CardContent>
-                            <Typography>
-                                Export your dataset to{' '}
+                            <Typography
+                                gutterBottom
+                            >
+                                Download your dataset in JSON format.
+                            </Typography>
+                            <Typography
+                                color="textSecondary"
+                                gutterBottom
+                            >
+                                An exported dataset allows you to use it in your
+                                own computer vision pipeline. See the
+                                {' '}
                                 <Link
                                     variant="subtitle1"
                                     color="primary"
                                     component={RouterLink}
                                     to="/docs"
                                 >
-                                    use it in your code
+                                    dedicated section
                                 </Link>
-                                .
+                                {' '}
+                                on documentation.
                             </Typography>
 
                             {datasetJSON === null ? (
                                 <>
                                     {isExporting && (
-                                        <Alert
-                                            severity="warning"
-                                            sx={{my: 1}}
-                                        >
+                                        <Alert severity="warning" sx={{my: 1}}>
                                             This might take a while...
                                         </Alert>
                                     )}
