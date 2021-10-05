@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends
 from api import errors
 from api.dependencies import logged_admin, logged_user
 from api.routers.datasets.core import find_datasets, find_dataset, remove_dataset, remove_datasets, insert_dataset, \
-    update_dataset_privacy
+    update_dataset
 from api.routers.datasets.models import *
 from api.routers.users.models import User
 from api.utils import parse
@@ -41,12 +41,12 @@ async def post_dataset(payload: DatasetPostBody, user: User = Depends(logged_use
     insert_dataset(user.id, payload)
 
 
-@datasets.patch('/{dataset_id}/privacy')
-async def patch_dataset_privacy(dataset_id, payload: DatasetPatchPrivacyBody, user: User = Depends(logged_user)):
+@datasets.patch('/{dataset_id}')
+async def patch_dataset(dataset_id, payload: DatasetPatchBody, user: User = Depends(logged_user)):
     """
-    Update dataset privacy.
+    Update dataset (name, description & privacy)..
     """
-    update_dataset_privacy(user.id, dataset_id, payload)
+    update_dataset(user.id, dataset_id, payload)
 
 
 @datasets.delete('/')

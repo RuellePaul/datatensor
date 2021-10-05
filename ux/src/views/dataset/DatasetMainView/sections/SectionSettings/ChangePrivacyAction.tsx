@@ -63,14 +63,14 @@ const ChangePrivacyAction: FC<ChangePrivacyActionProps> = ({className}) => {
     const handleChangeDatasetPrivacy = async () => {
         try {
             handleCloseChangePrivacy();
-            await api.patch(`/datasets/${dataset.id}/privacy`, {
+            await api.patch(`/datasets/${dataset.id}`, {
                 is_public: !dataset.is_public
             });
 
-            saveDataset({
+            saveDataset(dataset => ({
                 ...dataset,
                 is_public: !dataset.is_public
-            });
+            }));
         } catch (error) {
             enqueueSnackbar(error.message || 'Something went wrong', {
                 variant: 'error'
