@@ -24,11 +24,12 @@ import {Download, VisibilityOutlined as ViewIcon} from '@mui/icons-material';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
+import useExports from 'src/hooks/useExports';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
+import useTasks from 'src/hooks/useTasks';
 import api from 'src/utils/api';
 import {Task} from 'src/types/task';
-import useTasks from 'src/hooks/useTasks';
-
+import download from 'src/utils/download';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
@@ -50,13 +51,14 @@ const DEFAULT_INPUT_WIDTH = 200;
 const MAX_INPUT_WIDTH = 300;
 const FONT_SIZE = 8;
 
-const Export: FC<ExportProps> = ({ className }) => {
+const Export: FC<ExportProps> = ({className}) => {
     const classes = useStyles();
     const isMountedRef = useIsMountedRef();
-    const { enqueueSnackbar } = useSnackbar();
+    const {enqueueSnackbar} = useSnackbar();
 
-    const { tasks, saveTasks } = useTasks();
-    const { dataset } = useDataset();
+    const {tasks, saveTasks} = useTasks();
+    const {dataset} = useDataset();
+    const {exports} = useExports();
 
     const [open, setOpen] = useState<boolean>(false);
 
@@ -69,7 +71,7 @@ const Export: FC<ExportProps> = ({ className }) => {
     };
     const handleExport = async () => {
         try {
-            const response = await api.post<{ task: Task }>(`/datasets/${dataset.id}/tasks/`, {
+            const response = await api.post<{task: Task}>(`/datasets/${dataset.id}/tasks/`, {
                 type: 'export',
                 properties: {}
             });
@@ -82,20 +84,19 @@ const Export: FC<ExportProps> = ({ className }) => {
     };
 
     const handleDownload = filename => {
-        // download(
-        //     datasetJSON,
-        //     `${filename || 'export'}.json`,
-        //     'application/json'
-        // );
+        if (exports.length === 0) return;
+
+        download(exports[0].export_data, `${filename || 'export'}.json`, 'application/json');
     };
 
     if (!dataset || tasks === null) return null;
 
     const activeExportTask = tasks.find(
-        task => (task.status === 'pending' || task.status === 'active')
-            && task.dataset_id === dataset.id && task.type === 'export'
-    )
-
+        task =>
+            (task.status === 'pending' || task.status === 'active') &&
+            task.dataset_id === dataset.id &&
+            task.type === 'export'
+    );
 
     return (
         <Formik
@@ -110,12 +111,12 @@ const Export: FC<ExportProps> = ({ className }) => {
                     .max(255)
                     .required('Filename is required')
             })}
-            onSubmit={async (values, { resetForm, setStatus, setSubmitting }) => {
+            onSubmit={async (values, {resetForm, setStatus, setSubmitting}) => {
                 try {
                     await handleDownload(values.filename);
 
                     if (isMountedRef.current) {
-                        setStatus({ success: true });
+                        setStatus({success: true});
                         setSubmitting(false);
                         resetForm();
                     }
@@ -125,140 +126,96 @@ const Export: FC<ExportProps> = ({ className }) => {
                     });
 
                     if (isMountedRef.current) {
-                        setStatus({ success: false });
+                        setStatus({success: false});
                         setSubmitting(false);
                     }
                 }
             }}
         >
-            {({
-                  errors,
-                  handleBlur,
-                  handleChange,
-                  handleSubmit,
-                  touched,
-                  values
-              }) => (
+            {({errors, handleBlur, handleChange, handleSubmit, touched, values}) => (
                 <form noValidate onSubmit={handleSubmit}>
-                    <Card
-                        className={clsx(classes.root, className)}
-                        variant="outlined"
-                    >
+                    <Card className={clsx(classes.root, className)} variant="outlined">
                         <CardHeader title="Export" />
                         <CardContent>
-                            <Typography gutterBottom>
-                                Download your dataset in JSON format.
-                            </Typography>
+                            <Typography gutterBottom>Download your dataset in JSON format.</Typography>
                             <Typography color="textSecondary" gutterBottom>
-                                An exported dataset allows you to use it in your
-                                own computer vision pipeline. See the{' '}
-                                <Link
-                                    variant="subtitle1"
-                                    color="primary"
-                                    component={RouterLink}
-                                    to="/docs"
-                                >
+                                An exported dataset allows you to use it in your own computer vision pipeline. See the{' '}
+                                <Link variant="subtitle1" color="primary" component={RouterLink} to="/docs">
                                     dedicated section
                                 </Link>{' '}
                                 on documentation.
                             </Typography>
 
-                            {activeExportTask
-                                ? (
-                                    <Box display="flex" alignItems="center">
-                                        <Box width="100%" mr={1}>
-                                            <LinearProgress
-                                                variant={
-                                                    (activeExportTask.progress <= 0 || activeExportTask.progress >= 1)
-                                                        ? 'query'
-                                                        : 'determinate'
-                                                }
-                                                value={100 * activeExportTask.progress}
-                                            />
-                                        </Box>
-                                        <Typography
-                                            variant="body2"
-                                            color="textSecondary"
-                                        >
-                                            {`${(100 * activeExportTask.progress).toFixed(2)}%`}
-                                        </Typography>
+                            {activeExportTask ? (
+                                <Box display="flex" alignItems="center">
+                                    <Box width="100%" mr={1}>
+                                        <LinearProgress
+                                            variant={
+                                                activeExportTask.progress <= 0 || activeExportTask.progress >= 1
+                                                    ? 'query'
+                                                    : 'determinate'
+                                            }
+                                            value={100 * activeExportTask.progress}
+                                        />
                                     </Box>
-                                ) : (
-                                    <CardActions style={{ justifyContent: 'flex-end' }}>
-                                        <Button
-                                            color="primary"
-                                            onClick={handleExport}
-                                            variant="contained"
-                                        >
-                                            Export
-                                        </Button>
-                                    </CardActions>
-                                )
-                            }
+                                    <Typography variant="body2" color="textSecondary">
+                                        {`${(100 * activeExportTask.progress).toFixed(2)}%`}
+                                    </Typography>
+                                </Box>
+                            ) : (
+                                <CardActions style={{justifyContent: 'flex-end'}}>
+                                    <Button color="primary" onClick={handleExport} variant="contained">
+                                        Export
+                                    </Button>
+                                </CardActions>
+                            )}
 
-                            <Divider />
-
-                            <>
-                                <TextField
-                                    error={Boolean(
-                                        touched.filename && errors.filename
-                                    )}
-                                    name="filename"
-                                    onBlur={handleBlur}
-                                    onChange={handleChange}
-                                    value={values.filename}
-                                    autoFocus
-                                    margin="dense"
-                                    label="Filename"
-                                    fullWidth
-                                    InputProps={{
-                                        endAdornment: (
-                                            <InputAdornment position="end">
-                                                .json
-                                            </InputAdornment>
-                                        ),
-                                        style: {
-                                            width: `${(values.filename.length * FONT_SIZE > DEFAULT_INPUT_WIDTH)
-                                                ? Math.min((values.filename.length) * FONT_SIZE, MAX_INPUT_WIDTH)
-                                                : DEFAULT_INPUT_WIDTH}px`
-                                        }
-                                    }}
-                                    variant="standard"
-                                />
-                            </>
+                            {exports.length > 0 && (
+                                <>
+                                    <Divider />
+                                    <TextField
+                                        error={Boolean(touched.filename && errors.filename)}
+                                        name="filename"
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        value={values.filename}
+                                        autoFocus
+                                        margin="dense"
+                                        label="Filename"
+                                        fullWidth
+                                        InputProps={{
+                                            endAdornment: <InputAdornment position="end">.json</InputAdornment>,
+                                            style: {
+                                                width: `${
+                                                    values.filename.length * FONT_SIZE > DEFAULT_INPUT_WIDTH
+                                                        ? Math.min(values.filename.length * FONT_SIZE, MAX_INPUT_WIDTH)
+                                                        : DEFAULT_INPUT_WIDTH
+                                                }px`
+                                            }
+                                        }}
+                                        variant="standard"
+                                    />
+                                </>
+                            )}
                         </CardContent>
 
-                        <CardActions style={{ justifyContent: 'flex-end' }}>
-                            <Button
-                                color="primary"
-                                endIcon={<ViewIcon />}
-                                onClick={handleOpen}
-                                variant="outlined"
-                            >
-                                Inspect
-                            </Button>
-                            <Button
-                                color="primary"
-                                endIcon={<Download />}
-                                type="submit"
-                                variant="contained"
-                            >
-                                Download
-                            </Button>
-                        </CardActions>
+                        {exports.length > 0 && (
+                            <CardActions style={{justifyContent: 'flex-end'}}>
+                                <Button color="primary" endIcon={<ViewIcon />} onClick={handleOpen} variant="outlined">
+                                    Inspect
+                                </Button>
+                                <Button color="primary" endIcon={<Download />} type="submit" variant="contained">
+                                    Download
+                                </Button>
+                            </CardActions>
+                        )}
                     </Card>
 
-                    <Dialog
-                        open={open}
-                        onClose={handleClose}
-                        maxWidth="md"
-                    >
-                        <DialogContent
-                            className='scroll'
-                        >
+                    <Dialog open={open} onClose={handleClose} maxWidth="md">
+                        <DialogContent className="scroll">
                             <pre>
-                                <code className='language-'>
-                                    {JSON.stringify('e', null, 4)}
+                                <code className="language-">
+                                    {exports.length > 0 && JSON.stringify(exports[0].export_data, null, 4)}
                                 </code>
                             </pre>
                         </DialogContent>

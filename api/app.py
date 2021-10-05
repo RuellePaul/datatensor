@@ -16,7 +16,7 @@ from api.logger import logger
 from api.routers.categories.categories import categories
 from api.routers.datasets.datasets import datasets
 from api.routers.datasources.datasources import datasources
-from api.routers.export.export import export
+from api.routers.exports.exports import exports
 from api.routers.images.images import images
 from api.routers.labels.labels import labels
 from api.routers.notifications.notifications import notifications
@@ -86,8 +86,8 @@ datasets.include_router(images, prefix='/{dataset_id}/images', tags=['images'])
 # Dataset ➤ Tasks
 datasets.include_router(tasks, prefix='/{dataset_id}/tasks', tags=['tasks'])
 
-# Dataset ➤ Export
-datasets.include_router(export, prefix='/{dataset_id}/export', tags=['export'])
+# Dataset ➤ Exports
+datasets.include_router(exports, prefix='/{dataset_id}/exports', tags=['exports'])
 
 # Users ➤ Tasks 🔒 Admin partially
 app.include_router(tasks, prefix=f'{PREFIX}/tasks', tags=['tasks'], dependencies=[Depends(logged_user)])
