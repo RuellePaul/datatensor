@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 
 from pydantic import Field, BaseModel
 
@@ -31,5 +31,7 @@ class DatasetPostBody(BaseModel):
     is_public: bool = False
 
 
-class DatasetPatchPrivacyBody(BaseModel):
-    is_public: bool
+class DatasetPatchBody(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    is_public: Optional[bool] = None

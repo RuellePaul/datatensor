@@ -4,7 +4,7 @@ from uuid import uuid4
 
 from api import errors
 from api.config import Config
-from api.routers.datasets.models import Dataset, DatasetPostBody, DatasetPatchPrivacyBody
+from api.routers.datasets.models import Dataset, DatasetPostBody, DatasetPatchBody
 from api.routers.images.core import find_all_images, remove_images
 
 db = Config.db
@@ -35,7 +35,7 @@ def find_dataset(dataset_id) -> Dataset:
     return Dataset.from_mongo(dataset)
 
 
-def update_dataset_privacy(user_id, dataset_id, payload: DatasetPatchPrivacyBody):
+def update_dataset(user_id, dataset_id, payload: DatasetPatchBody):
     dataset_to_update = db.datasets.find_one({'_id': dataset_id})
 
     if not dataset_to_update:
@@ -45,7 +45,7 @@ def update_dataset_privacy(user_id, dataset_id, payload: DatasetPatchPrivacyBody
         raise errors.Forbidden(errors.NOT_YOUR_DATASET)
 
     db.datasets.find_one_and_update({'_id': dataset_id},
-                                    {'$set': {'is_public': payload.is_public}})
+                                    {'$set': {k: v for k, v in payload.dict().items() if v is not None}})
 
 
 def insert_dataset(user_id, payload: DatasetPostBody):
