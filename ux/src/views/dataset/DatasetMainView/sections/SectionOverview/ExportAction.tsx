@@ -19,13 +19,13 @@ import {
     TextField,
     Typography
 } from '@mui/material';
+import {Download, VisibilityOutlined as ViewIcon} from '@mui/icons-material';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import api from 'src/utils/api';
 import download from 'src/utils/download';
-import {Download} from '@mui/icons-material';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -43,6 +43,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface ExportProps {
     className?: string;
 }
+
+const DEFAULT_INPUT_WIDTH = 200;
+const MAX_INPUT_WIDTH = 300;
+const FONT_SIZE = 8;
 
 const Export: FC<ExportProps> = ({ className }) => {
     const classes = useStyles();
@@ -185,7 +189,12 @@ const Export: FC<ExportProps> = ({ className }) => {
                                                 <InputAdornment position="end">
                                                     .json
                                                 </InputAdornment>
-                                            )
+                                            ),
+                                            style: {
+                                                width: `${(values.filename.length * FONT_SIZE > DEFAULT_INPUT_WIDTH)
+                                                    ? Math.min((values.filename.length) * FONT_SIZE, MAX_INPUT_WIDTH)
+                                                    : DEFAULT_INPUT_WIDTH}px`
+                                            }
                                         }}
                                         variant="standard"
                                     />
@@ -215,6 +224,7 @@ const Export: FC<ExportProps> = ({ className }) => {
                                 <>
                                     <Button
                                         color="primary"
+                                        endIcon={<ViewIcon />}
                                         onClick={handleOpen}
                                         variant="outlined"
                                     >
