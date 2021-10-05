@@ -140,7 +140,10 @@ const Export: FC<ExportProps> = ({className}) => {
                             {datasetJSON === null ? (
                                 <>
                                     {isExporting && (
-                                        <Alert severity="warning">
+                                        <Alert
+                                            severity="warning"
+                                            sx={{my: 1}}
+                                        >
                                             This might take a while...
                                         </Alert>
                                     )}
