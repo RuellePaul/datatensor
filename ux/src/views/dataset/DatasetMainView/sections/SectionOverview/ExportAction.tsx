@@ -129,18 +129,12 @@ const Export: FC<ExportProps> = ({className}) => {
                     >
                         <CardHeader title="Export" />
                         <CardContent>
-                            <Typography
-                                gutterBottom
-                            >
+                            <Typography gutterBottom>
                                 Download your dataset in JSON format.
                             </Typography>
-                            <Typography
-                                color="textSecondary"
-                                gutterBottom
-                            >
+                            <Typography color="textSecondary" gutterBottom>
                                 An exported dataset allows you to use it in your
-                                own computer vision pipeline. See the
-                                {' '}
+                                own computer vision pipeline. See the{' '}
                                 <Link
                                     variant="subtitle1"
                                     color="primary"
@@ -148,8 +142,7 @@ const Export: FC<ExportProps> = ({className}) => {
                                     to="/docs"
                                 >
                                     dedicated section
-                                </Link>
-                                {' '}
+                                </Link>{' '}
                                 on documentation.
                             </Typography>
 
