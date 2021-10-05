@@ -1,9 +1,22 @@
 import React, {FC} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
-import {Box, Breadcrumbs, capitalize, Chip, Grid, Link, Typography} from '@mui/material';
+import {
+    Box,
+    Breadcrumbs,
+    capitalize,
+    Chip,
+    Grid,
+    Link,
+    Typography
+} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import {Lock as PrivateIcon, NavigateNext as NavigateNextIcon, Public as PublicIcon} from '@mui/icons-material';
+import {
+    Lock as PrivateIcon,
+    NavigateNext as NavigateNextIcon,
+    Public as PublicIcon
+} from '@mui/icons-material';
+import WorkingAlert from 'src/components/core/WorkingAlert';
 import useDataset from 'src/hooks/useDataset';
 import {Theme} from 'src/theme';
 
@@ -12,7 +25,15 @@ interface HeaderProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {},
+    root: {
+        position: 'relative'
+    },
+    alert: {
+        position: 'absolute',
+        top: theme.spacing(1),
+        right: 0,
+        margin: 0
+    },
     chip: {
         marginLeft: theme.spacing(1)
     }
@@ -25,11 +46,11 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
 
     return (
         <Grid
+            className={clsx(classes.root, className)}
             alignItems="center"
             container
             justifyContent="space-between"
-            spacing={3}
-            className={clsx(classes.root, className)}
+            spacing={2}
             {...rest}
         >
             <Grid item>
@@ -65,6 +86,13 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                     </Box>
                 </Breadcrumbs>
             </Grid>
+
+            <Box flexGrow={1} />
+
+            <WorkingAlert
+                className={classes.alert}
+                dataset_id={dataset.id}
+            />
         </Grid>
     );
 };

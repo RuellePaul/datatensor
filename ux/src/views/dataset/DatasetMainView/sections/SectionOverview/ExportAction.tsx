@@ -5,16 +5,17 @@ import {useSnackbar} from 'notistack';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {
-    Alert,
+    Box,
     Button,
     Card,
     CardActions,
     CardContent,
     CardHeader,
-    CircularProgress,
     Dialog,
     DialogContent,
+    Divider,
     InputAdornment,
+    LinearProgress,
     Link,
     TextField,
     Typography
@@ -25,7 +26,8 @@ import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import api from 'src/utils/api';
-import download from 'src/utils/download';
+import {Task} from 'src/types/task';
+import useTasks from 'src/hooks/useTasks';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -53,11 +55,8 @@ const Export: FC<ExportProps> = ({ className }) => {
     const isMountedRef = useIsMountedRef();
     const { enqueueSnackbar } = useSnackbar();
 
+    const { tasks, saveTasks } = useTasks();
     const { dataset } = useDataset();
-
-    const [isExporting, setIsExporting] = useState<boolean>(false);
-
-    const [datasetJSON, setDatasetJSON] = useState<string | null>(null);
 
     const [open, setOpen] = useState<boolean>(false);
 
@@ -69,31 +68,34 @@ const Export: FC<ExportProps> = ({ className }) => {
         setOpen(false);
     };
     const handleExport = async () => {
-        setIsExporting(true);
-
         try {
-            const response = await api.get(`/datasets/${dataset.id}/export/`);
-            setDatasetJSON(response.data);
+            const response = await api.post<{ task: Task }>(`/datasets/${dataset.id}/tasks/`, {
+                type: 'export',
+                properties: {}
+            });
+            saveTasks(tasks => [...tasks, response.data.task]);
         } catch (error) {
             enqueueSnackbar(error.message || 'Something went wrong', {
                 variant: 'error'
             });
-        } finally {
-            setIsExporting(false);
         }
     };
 
     const handleDownload = filename => {
-        if (datasetJSON === null) return;
-
-        download(
-            datasetJSON,
-            `${filename || 'export'}.json`,
-            'application/json'
-        );
+        // download(
+        //     datasetJSON,
+        //     `${filename || 'export'}.json`,
+        //     'application/json'
+        // );
     };
 
-    if (!dataset) return null;
+    if (!dataset || tasks === null) return null;
+
+    const activeExportTask = tasks.find(
+        task => (task.status === 'pending' || task.status === 'active')
+            && task.dataset_id === dataset.id && task.type === 'export'
+    )
+
 
     return (
         <Formik
@@ -116,7 +118,6 @@ const Export: FC<ExportProps> = ({ className }) => {
                         setStatus({ success: true });
                         setSubmitting(false);
                         resetForm();
-                        setDatasetJSON(null);
                     }
                 } catch (error) {
                     enqueueSnackbar(error.message || 'Something went wrong', {
@@ -162,84 +163,88 @@ const Export: FC<ExportProps> = ({ className }) => {
                                 on documentation.
                             </Typography>
 
-                            {datasetJSON === null ? (
-                                <>
-                                    {isExporting && (
-                                        <Alert severity="warning" sx={{ my: 1 }}>
-                                            This might take a while...
-                                        </Alert>
+                            {activeExportTask
+                                ? (
+                                    <Box display="flex" alignItems="center">
+                                        <Box width="100%" mr={1}>
+                                            <LinearProgress
+                                                variant={
+                                                    (activeExportTask.progress <= 0 || activeExportTask.progress >= 1)
+                                                        ? 'query'
+                                                        : 'determinate'
+                                                }
+                                                value={100 * activeExportTask.progress}
+                                            />
+                                        </Box>
+                                        <Typography
+                                            variant="body2"
+                                            color="textSecondary"
+                                        >
+                                            {`${(100 * activeExportTask.progress).toFixed(2)}%`}
+                                        </Typography>
+                                    </Box>
+                                ) : (
+                                    <CardActions style={{ justifyContent: 'flex-end' }}>
+                                        <Button
+                                            color="primary"
+                                            onClick={handleExport}
+                                            variant="contained"
+                                        >
+                                            Export
+                                        </Button>
+                                    </CardActions>
+                                )
+                            }
+
+                            <Divider />
+
+                            <>
+                                <TextField
+                                    error={Boolean(
+                                        touched.filename && errors.filename
                                     )}
-                                </>
-                            ) : (
-                                <>
-                                    <TextField
-                                        error={Boolean(
-                                            touched.filename && errors.filename
-                                        )}
-                                        name="filename"
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        value={values.filename}
-                                        autoFocus
-                                        margin="dense"
-                                        label="Filename"
-                                        fullWidth
-                                        InputProps={{
-                                            endAdornment: (
-                                                <InputAdornment position="end">
-                                                    .json
-                                                </InputAdornment>
-                                            ),
-                                            style: {
-                                                width: `${(values.filename.length * FONT_SIZE > DEFAULT_INPUT_WIDTH)
-                                                    ? Math.min((values.filename.length) * FONT_SIZE, MAX_INPUT_WIDTH)
-                                                    : DEFAULT_INPUT_WIDTH}px`
-                                            }
-                                        }}
-                                        variant="standard"
-                                    />
-                                </>
-                            )}
+                                    name="filename"
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                    value={values.filename}
+                                    autoFocus
+                                    margin="dense"
+                                    label="Filename"
+                                    fullWidth
+                                    InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                .json
+                                            </InputAdornment>
+                                        ),
+                                        style: {
+                                            width: `${(values.filename.length * FONT_SIZE > DEFAULT_INPUT_WIDTH)
+                                                ? Math.min((values.filename.length) * FONT_SIZE, MAX_INPUT_WIDTH)
+                                                : DEFAULT_INPUT_WIDTH}px`
+                                        }
+                                    }}
+                                    variant="standard"
+                                />
+                            </>
                         </CardContent>
 
                         <CardActions style={{ justifyContent: 'flex-end' }}>
-                            {datasetJSON === null ? (
-                                <Button
-                                    color="primary"
-                                    disabled={isExporting}
-                                    endIcon={
-                                        isExporting && (
-                                            <CircularProgress
-                                                className={classes.loader}
-                                                color="inherit"
-                                            />
-                                        )
-                                    }
-                                    onClick={handleExport}
-                                    variant="contained"
-                                >
-                                    Export
-                                </Button>
-                            ) : (
-                                <>
-                                    <Button
-                                        color="primary"
-                                        endIcon={<ViewIcon />}
-                                        onClick={handleOpen}
-                                        variant="outlined"
-                                    >
-                                        Inspect
-                                    </Button>
-                                    <Button
-                                        color="primary"
-                                        endIcon={<Download />}
-                                        type="submit"
-                                        variant="contained"
-                                    >
-                                        Download
-                                    </Button>
-                                </>
-                            )}
+                            <Button
+                                color="primary"
+                                endIcon={<ViewIcon />}
+                                onClick={handleOpen}
+                                variant="outlined"
+                            >
+                                Inspect
+                            </Button>
+                            <Button
+                                color="primary"
+                                endIcon={<Download />}
+                                type="submit"
+                                variant="contained"
+                            >
+                                Download
+                            </Button>
                         </CardActions>
                     </Card>
 
@@ -253,7 +258,7 @@ const Export: FC<ExportProps> = ({ className }) => {
                         >
                             <pre>
                                 <code className='language-'>
-                                    {JSON.stringify(JSON.parse(datasetJSON), null, 4)}
+                                    {JSON.stringify('e', null, 4)}
                                 </code>
                             </pre>
                         </DialogContent>

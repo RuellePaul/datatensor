@@ -10,6 +10,7 @@ from api.routers.notifications.models import NotificationPostBody, NotificationT
 from api.utils import update_task
 from api.workflows.augmentor import augmentor
 from api.workflows.generator import generator
+from api.workflows.export import export
 
 app = Celery('worker', broker='pyamqp://', backend='rpc://')
 
@@ -65,3 +66,9 @@ def run_generator(user_id, task_id, properties):
 @handle_task_error
 def run_augmentor(user_id, task_id, dataset_id, properties):
     augmentor.main(user_id, task_id, dataset_id, properties)
+
+
+@app.task
+@handle_task_error
+def run_export(user_id, task_id, dataset_id, properties):
+    export.main(user_id, task_id, dataset_id, properties)

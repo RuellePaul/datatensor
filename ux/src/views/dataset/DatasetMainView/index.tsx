@@ -26,7 +26,6 @@ import {
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
 import DTLabelisator from 'src/components/core/Labelisator';
-import WorkingAlert from 'src/components/core/WorkingAlert';
 import {ImagesConsumer, ImagesProvider} from 'src/store/ImagesContext';
 import {DatasetConsumer, DatasetProvider} from 'src/store/DatasetContext';
 import {CategoryProvider} from 'src/store/CategoryContext';
@@ -97,10 +96,6 @@ const DatasetMainView: FC = () => {
                                             maxWidth="lg"
                                         >
                                             <Header />
-
-                                            <WorkingAlert
-                                                dataset_id={dataset_id}
-                                            />
 
                                             <Box mt={2}>
                                                 <ImagesConsumer>
