@@ -19,10 +19,10 @@ const SectionOverview: FC<SectionProps> = ({ className }) => {
 
     return (
         <div className={clsx(classes.root, className)}>
-            <Grid container spacing={4} justifyContent="space-between">
+            <Grid container spacing={5} justifyContent="space-between">
 
                 <Grid item md={8} xs={12}>
-                    <Stack spacing={4}>
+                    <Stack spacing={5}>
                         <EditAction />
 
                         <LabelisatorAction />
@@ -30,7 +30,7 @@ const SectionOverview: FC<SectionProps> = ({ className }) => {
                 </Grid>
 
                 <Grid item md={4} xs={12}>
-                    <Stack spacing={4}>
+                    <Stack spacing={5}>
                         <ImagesSlideshow />
 
                         <ExportAction />

@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, useState} from 'react';
 import clsx from 'clsx';
 import {useSnackbar} from 'notistack';
 import {Formik} from 'formik';
@@ -7,10 +7,12 @@ import {
     Box,
     Button,
     CircularProgress,
+    IconButton,
     Paper,
     TextField,
     Typography
 } from '@mui/material';
+import {CreateOutlined as EditIcon} from '@mui/icons-material';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import QuillEditor from 'src/components/QuillEditor';
@@ -42,9 +44,39 @@ const EditAction: FC<EditProps> = ({className}) => {
     const isMountedRef = useIsMountedRef();
     const {enqueueSnackbar} = useSnackbar();
 
+    const [editing, setEditing] = useState<boolean>(false);
+
     const {dataset, saveDataset} = useDataset();
 
     if (!dataset) return null;
+
+    if (!editing) {
+        return (
+            <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+            >
+                <div>
+                    <Typography variant="h1" color="textPrimary" gutterBottom>
+                        {dataset.name}
+                    </Typography>
+                    <Typography
+                        color="textSecondary"
+                        variant="h4"
+                        dangerouslySetInnerHTML={{
+                            __html:
+                                dataset.description ||
+                                '<i>No description provided</i>'
+                        }}
+                    />
+                </div>
+                <IconButton onClick={() => setEditing(true)}>
+                    <EditIcon />
+                </IconButton>
+            </Box>
+        );
+    }
 
     return (
         <Formik
@@ -58,7 +90,7 @@ const EditAction: FC<EditProps> = ({className}) => {
                     .required('Filename is required'),
                 description: Yup.string().max(5000)
             })}
-            onSubmit={async (values, {resetForm, setStatus, setSubmitting}) => {
+            onSubmit={async (values, {setStatus, setSubmitting}) => {
                 try {
                     try {
                         await api.patch(`/datasets/${dataset.id}`, {
@@ -69,12 +101,12 @@ const EditAction: FC<EditProps> = ({className}) => {
                             ...dataset,
                             ...values
                         }));
+                        setEditing(false);
+                        enqueueSnackbar('Edited dataset', {variant: 'success'});
                     } catch (error) {
                         enqueueSnackbar(
                             error.message || 'Something went wrong',
-                            {
-                                variant: 'error'
-                            }
+                            {variant: 'error'}
                         );
                     }
 
@@ -140,22 +172,41 @@ const EditAction: FC<EditProps> = ({className}) => {
                             />
                         </Paper>
 
-                        <Button
-                            color="primary"
-                            disabled={isSubmitting}
-                            endIcon={
-                                isSubmitting && (
-                                    <CircularProgress
-                                        className={classes.loader}
-                                        color="inherit"
-                                    />
-                                )
-                            }
-                            type="submit"
-                            variant="contained"
+                        <Box
+                            mt={2}
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="flex-end"
                         >
-                            Edit
-                        </Button>
+                            <Box mr={1}>
+                                <Button
+                                    onClick={() => setEditing(false)}
+                                    size="small"
+                                >
+                                    Cancel
+                                </Button>
+                            </Box>
+
+                            <Button
+                                color="primary"
+                                disabled={isSubmitting}
+                                endIcon={
+                                    isSubmitting ? (
+                                        <CircularProgress
+                                            className={classes.loader}
+                                            color="inherit"
+                                        />
+                                    ) : (
+                                        <EditIcon />
+                                    )
+                                }
+                                size="small"
+                                type="submit"
+                                variant="contained"
+                            >
+                                Edit
+                            </Button>
+                        </Box>
                     </div>
                 </form>
             )}
