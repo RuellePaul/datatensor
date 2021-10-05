@@ -12,6 +12,8 @@ import {
     CardContent,
     CardHeader,
     CircularProgress,
+    Dialog,
+    DialogContent,
     InputAdornment,
     Link,
     TextField,
@@ -24,6 +26,7 @@ import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import api from 'src/utils/api';
 import download from 'src/utils/download';
 import {Download} from '@mui/icons-material';
+
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
@@ -41,17 +44,26 @@ interface ExportProps {
     className?: string;
 }
 
-const Export: FC<ExportProps> = ({className}) => {
+const Export: FC<ExportProps> = ({ className }) => {
     const classes = useStyles();
     const isMountedRef = useIsMountedRef();
-    const {enqueueSnackbar} = useSnackbar();
+    const { enqueueSnackbar } = useSnackbar();
 
-    const {dataset} = useDataset();
+    const { dataset } = useDataset();
 
     const [isExporting, setIsExporting] = useState<boolean>(false);
 
     const [datasetJSON, setDatasetJSON] = useState<string | null>(null);
 
+    const [open, setOpen] = useState<boolean>(false);
+
+    const handleOpen = (): void => {
+        setOpen(true);
+    };
+
+    const handleClose = (): void => {
+        setOpen(false);
+    };
     const handleExport = async () => {
         setIsExporting(true);
 
@@ -92,12 +104,12 @@ const Export: FC<ExportProps> = ({className}) => {
                     .max(255)
                     .required('Filename is required')
             })}
-            onSubmit={async (values, {resetForm, setStatus, setSubmitting}) => {
+            onSubmit={async (values, { resetForm, setStatus, setSubmitting }) => {
                 try {
                     await handleDownload(values.filename);
 
                     if (isMountedRef.current) {
-                        setStatus({success: true});
+                        setStatus({ success: true });
                         setSubmitting(false);
                         resetForm();
                         setDatasetJSON(null);
@@ -108,20 +120,20 @@ const Export: FC<ExportProps> = ({className}) => {
                     });
 
                     if (isMountedRef.current) {
-                        setStatus({success: false});
+                        setStatus({ success: false });
                         setSubmitting(false);
                     }
                 }
             }}
         >
             {({
-                errors,
-                handleBlur,
-                handleChange,
-                handleSubmit,
-                touched,
-                values
-            }) => (
+                  errors,
+                  handleBlur,
+                  handleChange,
+                  handleSubmit,
+                  touched,
+                  values
+              }) => (
                 <form noValidate onSubmit={handleSubmit}>
                     <Card
                         className={clsx(classes.root, className)}
@@ -149,7 +161,7 @@ const Export: FC<ExportProps> = ({className}) => {
                             {datasetJSON === null ? (
                                 <>
                                     {isExporting && (
-                                        <Alert severity="warning" sx={{my: 1}}>
+                                        <Alert severity="warning" sx={{ my: 1 }}>
                                             This might take a while...
                                         </Alert>
                                     )}
@@ -181,7 +193,7 @@ const Export: FC<ExportProps> = ({className}) => {
                             )}
                         </CardContent>
 
-                        <CardActions style={{justifyContent: 'flex-end'}}>
+                        <CardActions style={{ justifyContent: 'flex-end' }}>
                             {datasetJSON === null ? (
                                 <Button
                                     color="primary"
@@ -200,17 +212,42 @@ const Export: FC<ExportProps> = ({className}) => {
                                     Export
                                 </Button>
                             ) : (
-                                <Button
-                                    color="primary"
-                                    endIcon={<Download />}
-                                    type="submit"
-                                    variant="contained"
-                                >
-                                    Download
-                                </Button>
+                                <>
+                                    <Button
+                                        color="primary"
+                                        onClick={handleOpen}
+                                        variant="outlined"
+                                    >
+                                        Inspect
+                                    </Button>
+                                    <Button
+                                        color="primary"
+                                        endIcon={<Download />}
+                                        type="submit"
+                                        variant="contained"
+                                    >
+                                        Download
+                                    </Button>
+                                </>
                             )}
                         </CardActions>
                     </Card>
+
+                    <Dialog
+                        open={open}
+                        onClose={handleClose}
+                        maxWidth="md"
+                    >
+                        <DialogContent
+                            className='scroll'
+                        >
+                            <pre>
+                                <code className='language-'>
+                                    {JSON.stringify(JSON.parse(datasetJSON), null, 4)}
+                                </code>
+                            </pre>
+                        </DialogContent>
+                    </Dialog>
                 </form>
             )}
         </Formik>
