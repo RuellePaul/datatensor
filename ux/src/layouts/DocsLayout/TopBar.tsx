@@ -13,7 +13,6 @@ interface TopBarProps {
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        backgroundColor: theme.palette.background.default,
         color: theme.palette.text.primary,
         boxShadow: 'none',
         borderBottom: `1px solid ${theme.palette.divider}`,

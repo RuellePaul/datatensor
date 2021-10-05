@@ -10,7 +10,7 @@ import {DatasetsProvider} from 'src/store/DatasetsContext';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        backgroundColor: theme.palette.background.paper,
+        backgroundColor: theme.palette.background.default,
         minHeight: '100%',
         padding: theme.spacing(3, 0)
     }

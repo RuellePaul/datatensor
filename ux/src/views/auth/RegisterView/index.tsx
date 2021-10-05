@@ -17,7 +17,7 @@ import JWTRegister from './JWTRegister';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        backgroundColor: theme.palette.background.paper,
+        backgroundColor: theme.palette.background.default,
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100vh'
