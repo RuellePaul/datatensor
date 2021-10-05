@@ -43,12 +43,36 @@ const baseOptions: MuiThemeOptions = {
 
 const themesOptions: ThemeOptions[] = [
     {
-        name: THEMES.LIGHT
+        name: THEMES.LIGHT,
+        palette: {
+            background: {
+                default: '#FAFAFA'
+            }
+        },
+        components: {
+            MuiPaper: {
+                styleOverrides: {
+                    root: {
+                        background: '#FFFFFF',
+                        boxShadow: '0px 0px 5px #00000029'
+                    }
+                }
+            }
+        }
     },
     {
         name: THEMES.DARK,
         palette: {
             mode: 'dark'
+        },
+        components: {
+            MuiPaper: {
+                styleOverrides: {
+                    root: {
+                        background: '#272727'
+                    }
+                }
+            }
         }
     }
 ];

@@ -14,7 +14,7 @@ import {Theme} from 'src/theme';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        backgroundColor: theme.palette.background.paper,
+        backgroundColor: theme.palette.background.default,
         minHeight: '100%',
         paddingTop: theme.spacing(3),
         paddingBottom: theme.spacing(3)

@@ -37,14 +37,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     operation: {
         '&:hover': {
-            backgroundColor: theme.palette.background.paper
+            backgroundColor: theme.palette.background.default
         }
     },
     content: {
         padding: `${theme.spacing(1.5)} !important`
     },
     dragging: {
-        backgroundColor: theme.palette.background.paper
+        backgroundColor: theme.palette.background.default
     }
 }));
 

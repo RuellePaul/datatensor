@@ -1,9 +1,22 @@
 import React, {FC, useState} from 'react';
-import {Box, Button, Dialog, DialogContent, DialogTitle, Divider, Grid, IconButton, Typography} from '@mui/material';
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    Divider,
+    Grid,
+    IconButton,
+    Typography
+} from '@mui/material';
 
 import makeStyles from '@mui/styles/makeStyles';
 
-import {Close as CloseIcon, Keyboard as KeyboardIcon} from '@mui/icons-material';
+import {
+    Close as CloseIcon,
+    Keyboard as KeyboardIcon
+} from '@mui/icons-material';
 import {Theme} from 'src/theme';
 
 interface ShortcutProps {
@@ -38,7 +51,7 @@ const Shortcut: FC<ShortcutProps> = ({keyDesc, children}) => (
             </Grid>
             <Grid item xs={3}>
                 <Typography variant="button" color="textPrimary">
-                    {keyDesc.toUpperCase()}
+                    <kbd>{keyDesc.toUpperCase()}</kbd>
                 </Typography>
             </Grid>
         </Grid>
@@ -61,6 +74,7 @@ const KeyboardShortcuts: FC = () => {
     return (
         <>
             <Button
+                color="inherit"
                 variant="outlined"
                 startIcon={<KeyboardIcon />}
                 onClick={handleOpen}

@@ -15,7 +15,7 @@ import {ArrowLeft as BackIcon} from 'react-feather';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        backgroundColor: theme.palette.background.paper,
+        backgroundColor: theme.palette.background.default,
         minHeight: '100%',
         display: 'flex',
         alignItems: 'center',

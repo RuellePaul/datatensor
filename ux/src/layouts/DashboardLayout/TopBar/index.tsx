@@ -5,7 +5,6 @@ import {AppBar, Box, Hidden, IconButton, SvgIcon, Toolbar} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Menu as MenuIcon} from 'react-feather';
 import Logo from 'src/components/utils/Logo';
-import {THEMES} from 'src/constants';
 import {Theme} from 'src/theme';
 import Account from './Account';
 import Notifications from './Notifications';
@@ -18,18 +17,7 @@ interface TopBarProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        zIndex: theme.zIndex.drawer + 100,
-        ...(theme.name === THEMES.LIGHT
-            ? {
-                  boxShadow: 'none',
-                  backgroundColor: theme.palette.primary.main
-              }
-            : {}),
-        ...(theme.name === THEMES.DARK
-            ? {
-                  backgroundColor: theme.palette.background.default
-              }
-            : {})
+        zIndex: theme.zIndex.drawer + 100
     },
     toolbar: {
         minHeight: 64

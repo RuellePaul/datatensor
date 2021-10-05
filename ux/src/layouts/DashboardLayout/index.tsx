@@ -10,7 +10,7 @@ interface DashboardLayoutProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        backgroundColor: theme.palette.background.paper,
+        backgroundColor: theme.palette.background.default,
         display: 'flex',
         height: '100%',
         overflow: 'hidden',

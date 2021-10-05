@@ -10,7 +10,7 @@ interface HeroProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        backgroundColor: theme.palette.background.paper,
+        backgroundColor: theme.palette.background.default,
         paddingTop: 200,
         paddingBottom: 200,
         [theme.breakpoints.down('lg')]: {
