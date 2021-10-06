@@ -1,15 +1,7 @@
 import React, {FC, useEffect} from 'react';
 import {Link as RouterLink, useHistory} from 'react-router-dom';
 import {useSnackbar} from 'notistack';
-import {
-    Box,
-    Card,
-    CardContent,
-    Container,
-    Divider,
-    Link,
-    Typography
-} from '@mui/material';
+import {Box, Card, CardContent, Container, Divider, Link, Typography} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
@@ -58,11 +50,7 @@ const LoginView: FC = () => {
 
     return (
         <Page className={classes.root} title="Login">
-            <Container
-                component="section"
-                className={classes.cardContainer}
-                maxWidth="sm"
-            >
+            <Container component="section" className={classes.cardContainer} maxWidth="sm">
                 <Box mb={8} display="flex" justifyContent="center">
                     <RouterLink to="/">
                         <Logo />
@@ -70,34 +58,18 @@ const LoginView: FC = () => {
                 </Box>
                 <Card>
                     <CardContent className={classes.cardContent}>
-                        <Box
-                            alignItems="center"
-                            display="flex"
-                            justifyContent="space-between"
-                            mb={3}
-                        >
+                        <Box alignItems="center" display="flex" justifyContent="space-between" mb={3}>
                             <div>
-                                <Typography
-                                    color="textPrimary"
-                                    gutterBottom
-                                    variant="h2"
-                                >
+                                <Typography color="textPrimary" gutterBottom variant="h2">
                                     Sign in
                                 </Typography>
-                                <Typography
-                                    variant="body2"
-                                    color="textSecondary"
-                                >
+                                <Typography variant="body2" color="textSecondary">
                                     Sign in on Datatensor App
                                 </Typography>
                             </div>
                         </Box>
 
-                        <Box
-                            display="flex"
-                            className={classes.auth0buttons}
-                            mt={2}
-                        >
+                        <Box display="flex" className={classes.auth0buttons} mt={2}>
                             <OAuthLoginButton scope="github" />
                             <OAuthLoginButton scope="google" />
                             <OAuthLoginButton scope="stackoverflow" />
@@ -111,12 +83,7 @@ const LoginView: FC = () => {
                         <Box my={3}>
                             <Divider />
                         </Box>
-                        <Link
-                            component={RouterLink}
-                            to="/register"
-                            variant="body2"
-                            color="textSecondary"
-                        >
+                        <Link component={RouterLink} to="/register" variant="body2" color="textSecondary">
                             Create new account
                         </Link>
                     </CardContent>

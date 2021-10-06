@@ -3,9 +3,7 @@ import {Category} from 'src/types/category';
 
 export interface CategoryContextValue {
     currentCategory: Category;
-    saveCurrentCategory: (
-        update: Category | ((category: Category) => Category)
-    ) => void;
+    saveCurrentCategory: (update: Category | ((category: Category) => Category)) => void;
 }
 
 interface CategoryProviderProps {
@@ -20,9 +18,7 @@ export const CategoryContext = createContext<CategoryContextValue>({
 export const CategoryProvider: FC<CategoryProviderProps> = ({children}) => {
     const [currentCategory, setCurrentCategory] = useState<Category>(null);
 
-    const handleSaveCategory = (
-        update: Category | ((category: Category) => Category)
-    ): void => {
+    const handleSaveCategory = (update: Category | ((category: Category) => Category)): void => {
         setCurrentCategory(update);
     };
 

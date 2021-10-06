@@ -17,11 +17,7 @@ const App: FC = () => {
         window.location.replace('#');
 
         if (typeof window.history.replaceState === 'function') {
-            window.history.replaceState(
-                {},
-                '',
-                window.location.href.slice(0, -1)
-            );
+            window.history.replaceState({}, '', window.location.href.slice(0, -1));
         }
     });
 

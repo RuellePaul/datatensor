@@ -3,15 +3,7 @@ import clsx from 'clsx';
 import {useSnackbar} from 'notistack';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-import {
-    Box,
-    Button,
-    CircularProgress,
-    IconButton,
-    Paper,
-    TextField,
-    Typography
-} from '@mui/material';
+import {Box, Button, CircularProgress, IconButton, Paper, TextField, Typography} from '@mui/material';
 import {CreateOutlined as EditIcon} from '@mui/icons-material';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
@@ -52,11 +44,7 @@ const EditAction: FC<EditProps> = ({className}) => {
 
     if (!editing) {
         return (
-            <Box
-                display="flex"
-                alignItems="center"
-                justifyContent="space-between"
-            >
+            <Box display="flex" alignItems="center" justifyContent="space-between">
                 <div>
                     <Typography variant="h1" color="textPrimary" gutterBottom>
                         {dataset.name}
@@ -65,9 +53,7 @@ const EditAction: FC<EditProps> = ({className}) => {
                         color="textSecondary"
                         variant="h4"
                         dangerouslySetInnerHTML={{
-                            __html:
-                                dataset.description ||
-                                '<i>No description provided</i>'
+                            __html: dataset.description || '<i>No description provided</i>'
                         }}
                     />
                 </div>
@@ -104,10 +90,7 @@ const EditAction: FC<EditProps> = ({className}) => {
                         setEditing(false);
                         enqueueSnackbar('Edited dataset', {variant: 'success'});
                     } catch (error) {
-                        enqueueSnackbar(
-                            error.message || 'Something went wrong',
-                            {variant: 'error'}
-                        );
+                        enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
                     }
 
                     if (isMountedRef.current) {
@@ -126,16 +109,7 @@ const EditAction: FC<EditProps> = ({className}) => {
                 }
             }}
         >
-            {({
-                errors,
-                handleBlur,
-                handleChange,
-                handleSubmit,
-                touched,
-                isSubmitting,
-                values,
-                setFieldValue
-            }) => (
+            {({errors, handleBlur, handleChange, handleSubmit, touched, isSubmitting, values, setFieldValue}) => (
                 <form noValidate onSubmit={handleSubmit}>
                     <div className={clsx(classes.root, className)}>
                         <Typography variant="subtitle2" color="textSecondary">
@@ -155,10 +129,7 @@ const EditAction: FC<EditProps> = ({className}) => {
                             hiddenLabel
                         />
                         <Box my={2}>
-                            <Typography
-                                variant="subtitle2"
-                                color="textSecondary"
-                            >
+                            <Typography variant="subtitle2" color="textSecondary">
                                 Description
                             </Typography>
                         </Box>
@@ -166,23 +137,13 @@ const EditAction: FC<EditProps> = ({className}) => {
                             <QuillEditor
                                 className={classes.editor}
                                 value={values.description}
-                                onChange={(value: string) =>
-                                    setFieldValue('description', value)
-                                }
+                                onChange={(value: string) => setFieldValue('description', value)}
                             />
                         </Paper>
 
-                        <Box
-                            mt={2}
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="flex-end"
-                        >
+                        <Box mt={2} display="flex" alignItems="center" justifyContent="flex-end">
                             <Box mr={1}>
-                                <Button
-                                    onClick={() => setEditing(false)}
-                                    size="small"
-                                >
+                                <Button onClick={() => setEditing(false)} size="small">
                                     Cancel
                                 </Button>
                             </Box>
@@ -192,10 +153,7 @@ const EditAction: FC<EditProps> = ({className}) => {
                                 disabled={isSubmitting}
                                 endIcon={
                                     isSubmitting ? (
-                                        <CircularProgress
-                                            className={classes.loader}
-                                            color="inherit"
-                                        />
+                                        <CircularProgress className={classes.loader} color="inherit" />
                                     ) : (
                                         <EditIcon />
                                     )

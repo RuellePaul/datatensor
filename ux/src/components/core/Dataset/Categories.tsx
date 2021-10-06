@@ -9,6 +9,7 @@ import useDataset from 'src/hooks/useDataset';
 import {COLORS} from 'src/utils/colors';
 import {MAX_CATEGORIES_DISPLAYED} from 'src/config';
 
+
 interface CategoriesProps {
     className?: string;
 }
@@ -51,17 +52,13 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
                         </strong>
                     </Typography>
                 }
-                onClick={() =>
-                    saveCurrentCategory(isSelected ? null : category)
-                }
+                onClick={() => saveCurrentCategory(isSelected ? null : category)}
                 title={`${category.name} | ${category.supercategory}`}
                 size="medium"
                 style={
                     isSelected
                         ? {
-                              color: theme.palette.getContrastText(
-                                  COLORS[index]
-                              ),
+                              color: theme.palette.getContrastText(COLORS[index]),
                               background: COLORS[index]
                           }
                         : {color: COLORS[index]}
@@ -84,34 +81,20 @@ const DTCategories: FC<CategoriesProps> = ({className}) => {
             {expand ? (
                 <>
                     {categories.map(category => (
-                        <DTCategory
-                            category={category}
-                            key={category.id}
-                            index={categories.indexOf(category)}
-                        />
+                        <DTCategory category={category} key={category.id} index={categories.indexOf(category)} />
                     ))}
                 </>
             ) : (
                 <>
                     {categories
-                        .sort((a, b) =>
-                            a.labels_count > b.labels_count ? -1 : 1
-                        )
+                        .sort((a, b) => (a.labels_count > b.labels_count ? -1 : 1))
                         .slice(0, MAX_CATEGORIES_DISPLAYED)
                         .map(category => (
-                            <DTCategory
-                                category={category}
-                                key={category.id}
-                                index={categories.indexOf(category)}
-                            />
+                            <DTCategory category={category} key={category.id} index={categories.indexOf(category)} />
                         ))}
                     {categories.length > MAX_CATEGORIES_DISPLAYED && (
-                        <Link
-                            className={classes.link}
-                            onClick={() => setExpand(true)}
-                        >
-                            and {categories.length - MAX_CATEGORIES_DISPLAYED}{' '}
-                            more...
+                        <Link className={classes.link} onClick={() => setExpand(true)}>
+                            and {categories.length - MAX_CATEGORIES_DISPLAYED} more...
                         </Link>
                     )}
                 </>

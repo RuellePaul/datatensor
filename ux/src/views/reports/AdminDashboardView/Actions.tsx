@@ -2,16 +2,7 @@ import React, {FC} from 'react';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {useSnackbar} from 'notistack';
-import {
-    Alert,
-    Box,
-    Button,
-    Divider,
-    InputLabel,
-    Paper,
-    TextField,
-    Typography
-} from '@mui/material';
+import {Alert, Box, Button, Divider, InputLabel, Paper, TextField, Typography} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
@@ -52,10 +43,7 @@ const Actions: FC = () => {
                         test: value => value === 'Confirm'
                     })
                 })}
-                onSubmit={async (
-                    values,
-                    {setStatus, setSubmitting, resetForm}
-                ) => {
+                onSubmit={async (values, {setStatus, setSubmitting, resetForm}) => {
                     try {
                         await api.delete(`/datasets/`);
                         resetForm();
@@ -71,10 +59,7 @@ const Actions: FC = () => {
                         if (isMountedRef.current) {
                             setStatus({success: false});
                             setSubmitting(false);
-                            enqueueSnackbar(
-                                error.message || 'Something went wrong',
-                                {variant: 'error'}
-                            );
+                            enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
                         }
                     }
                 }}
@@ -91,42 +76,27 @@ const Actions: FC = () => {
                     isValid
                 }) => (
                     <form noValidate onSubmit={handleSubmit}>
-                        <Typography
-                            variant="h4"
-                            color="textPrimary"
-                            gutterBottom
-                        >
+                        <Typography variant="h4" color="textPrimary" gutterBottom>
                             Admin actions
                         </Typography>
                         <Divider />
                         <Box my={2}>
                             {!values.clicked && (
-                                <Button
-                                    onClick={() =>
-                                        setFieldValue('clicked', true)
-                                    }
-                                >
-                                    Delete your datasets
-                                </Button>
+                                <Button onClick={() => setFieldValue('clicked', true)}>Delete your datasets</Button>
                             )}
                             {values.clicked && (
                                 <>
                                     <Typography gutterBottom>
-                                        <strong>
-                                            Delete all your datasets
-                                        </strong>
+                                        <strong>Delete all your datasets</strong>
                                     </Typography>
                                     <Box mb={1}>
                                         <InputLabel>
-                                            Type <strong>Confirm</strong> to
-                                            proceed
+                                            Type <strong>Confirm</strong> to proceed
                                         </InputLabel>
                                     </Box>
                                     <TextField
                                         autoFocus
-                                        error={Boolean(
-                                            touched.confirm && errors.confirm
-                                        )}
+                                        error={Boolean(touched.confirm && errors.confirm)}
                                         fullWidth
                                         name="confirm"
                                         onBlur={handleBlur}
@@ -147,10 +117,8 @@ const Actions: FC = () => {
                                     </Box>
                                     <Alert severity="warning">
                                         <div>
-                                            This will delete all your datasets,
-                                            and associated data (images, labels,
-                                            categories...){' '}
-                                            <strong>forever</strong>
+                                            This will delete all your datasets, and associated data (images, labels,
+                                            categories...) <strong>forever</strong>
                                         </div>
                                     </Alert>
                                 </>

@@ -6,6 +6,7 @@ import useImages from 'src/hooks/useImages';
 import {Theme} from 'src/theme';
 import {ImageProvider} from 'src/store/ImageContext';
 
+
 interface ImagesListProps {
     className?: string;
     onClick?: any;
@@ -94,10 +95,7 @@ const DTImagesStack: FC<ImagesListProps> = ({className, ...rest}) => {
     return (
         <div className={clsx(classes.root, className)} {...rest}>
             {images.slice(0, STACK_IMAGE_COUNT).map((image, index) => (
-                <div
-                    className={clsx(classes.stack, `layer-${index}`)}
-                    key={`layer-${index}`}
-                >
+                <div className={clsx(classes.stack, `layer-${index}`)} key={`layer-${index}`}>
                     <ImageProvider key={image.id} image={image}>
                         <DTImage clickable={index === 0} />
                     </ImageProvider>

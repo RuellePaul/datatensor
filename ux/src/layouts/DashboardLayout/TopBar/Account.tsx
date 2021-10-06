@@ -1,17 +1,7 @@
 import React, {FC, useRef, useState} from 'react';
 import {Link as RouterLink, useHistory} from 'react-router-dom';
 import {useSnackbar} from 'notistack';
-import {
-    Box,
-    ButtonBase,
-    Divider,
-    Hidden,
-    ListItemIcon,
-    ListItemText,
-    Menu,
-    MenuItem,
-    Typography
-} from '@mui/material';
+import {Box, ButtonBase, Divider, Hidden, ListItemIcon, ListItemText, Menu, MenuItem, Typography} from '@mui/material';
 import {AccountBox as AccountIcon, Logout as LogoutIcon} from '@mui/icons-material';
 import {makeStyles} from '@mui/styles';
 import UserAvatar from 'src/components/UserAvatar';
@@ -74,11 +64,7 @@ const Account: FC = () => {
             >
                 <UserAvatar className={classes.avatar} />
                 <Hidden mdDown>
-                    <Typography
-                        className={classes.username}
-                        variant="h6"
-                        color="inherit"
-                    >
+                    <Typography className={classes.username} variant="h6" color="inherit">
                         {user.name}
                     </Typography>
                 </Hidden>

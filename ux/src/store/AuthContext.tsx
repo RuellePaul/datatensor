@@ -6,6 +6,7 @@ import api from 'src/utils/api';
 import {useHistory} from 'react-router-dom';
 import {useSnackbar} from 'notistack';
 
+
 interface AuthState {
     isInitialised: boolean;
     isAuthenticated: boolean;
@@ -17,12 +18,7 @@ interface AuthContextValue extends AuthState {
     login: (email: string, password: string) => Promise<void>;
     loginOAuth: (code: string, scope: string) => Promise<void>;
     logout: () => void;
-    register: (
-        email: string,
-        name: string,
-        password: string,
-        recaptcha: string
-    ) => Promise<void>;
+    register: (email: string, name: string, password: string, recaptcha: string) => Promise<void>;
     confirmEmail: (activation_code: string) => Promise<void>;
 }
 
@@ -151,10 +147,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
     const {enqueueSnackbar} = useSnackbar();
 
     const login = async (email: string, password: string) => {
-        const response = await api.post<{accessToken: string; user: User}>(
-            '/auth/login',
-            {email, password}
-        );
+        const response = await api.post<{accessToken: string; user: User}>('/auth/login', {email, password});
         const {accessToken, user} = response.data;
 
         setSession(accessToken);
@@ -168,10 +161,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
     };
 
     const loginOAuth = async (code: string, scope: string) => {
-        const response = await api.post<{accessToken: string; user: User}>(
-            `/oauth/callback`,
-            {code, scope}
-        );
+        const response = await api.post<{accessToken: string; user: User}>(`/oauth/callback`, {code, scope});
         const {accessToken, user} = response.data;
 
         setSession(accessToken);
@@ -189,21 +179,13 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         dispatch({type: 'LOGOUT'});
     };
 
-    const register = async (
-        email: string,
-        name: string,
-        password: string,
-        recaptcha: string
-    ) => {
-        const response = await api.post<{accessToken: string; user: User}>(
-            '/auth/register',
-            {
-                email,
-                name,
-                password,
-                recaptcha
-            }
-        );
+    const register = async (email: string, name: string, password: string, recaptcha: string) => {
+        const response = await api.post<{accessToken: string; user: User}>('/auth/register', {
+            email,
+            name,
+            password,
+            recaptcha
+        });
         const {accessToken, user} = response.data;
 
         setSession(accessToken);
@@ -219,12 +201,9 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
 
     const confirmEmail = async (activation_code: string) => {
         try {
-            const response = await api.post<{accessToken: string; user: User}>(
-                '/auth/email-confirmation',
-                {
-                    activation_code
-                }
-            );
+            const response = await api.post<{accessToken: string; user: User}>('/auth/email-confirmation', {
+                activation_code
+            });
 
             const {accessToken, user} = response.data;
 

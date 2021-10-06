@@ -54,16 +54,12 @@ const SettingsNotification: FC = () => {
                     Settings Updated
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
-                    We automatically updated your settings. You change the
-                    settings any time from your dashboard settings.
+                    We automatically updated your settings. You change the settings any time from your dashboard
+                    settings.
                 </Typography>
                 <Box mt={2} display="flex" justifyContent="space-between">
                     <Button onClick={handleClose}>Close</Button>
-                    <Button
-                        color="primary"
-                        variant="contained"
-                        onClick={handleSwitch}
-                    >
+                    <Button color="primary" variant="contained" onClick={handleSwitch}>
                         Switch
                     </Button>
                 </Box>

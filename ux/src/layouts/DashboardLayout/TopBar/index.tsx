@@ -10,6 +10,7 @@ import Account from './Account';
 import Notifications from './Notifications';
 import Settings from './Settings';
 
+
 interface TopBarProps {
     className?: string;
     onMobileNavOpen?: () => void;
@@ -31,11 +32,7 @@ const TopBar: FC<TopBarProps> = ({className, onMobileNavOpen, ...rest}) => {
         <AppBar className={clsx(classes.root, className)} {...rest}>
             <Toolbar className={classes.toolbar}>
                 <Hidden lgUp>
-                    <IconButton
-                        color="inherit"
-                        onClick={onMobileNavOpen}
-                        size="large"
-                    >
+                    <IconButton color="inherit" onClick={onMobileNavOpen} size="large">
                         <SvgIcon fontSize="small">
                             <MenuIcon />
                         </SvgIcon>

@@ -5,6 +5,7 @@ import {Breadcrumbs, Link, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
+
 interface HeaderProps {
     className?: string;
 }
@@ -18,10 +19,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
 
     return (
         <div className={clsx(classes.root, className)} {...rest}>
-            <Breadcrumbs
-                separator={<NavigateNextIcon fontSize="small" />}
-                aria-label="breadcrumb"
-            >
+            <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
                 <Link color="inherit" to="/app" component={RouterLink}>
                     Dashboard
                 </Link>

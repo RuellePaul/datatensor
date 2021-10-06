@@ -4,6 +4,7 @@ import {Avatar, Box, Button, Container, Grid, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 
+
 interface FeaturesProps {
     className?: string;
 }
@@ -26,12 +27,7 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
     return (
         <div className={clsx(classes.root, className)} {...rest}>
             <Container component="section" maxWidth="lg">
-                <Typography
-                    component="p"
-                    variant="overline"
-                    color="primary"
-                    align="center"
-                >
+                <Typography component="p" variant="overline" color="primary" align="center">
                     Explore Datatensor
                 </Typography>
                 <Typography variant="h1" align="center" color="textPrimary">
@@ -43,22 +39,12 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
                             <Box display="flex">
                                 <Avatar className={classes.avatar}>01</Avatar>
                                 <Box ml={2}>
-                                    <Typography
-                                        variant="h4"
-                                        gutterBottom
-                                        color="textPrimary"
-                                    >
+                                    <Typography variant="h4" gutterBottom color="textPrimary">
                                         Complete Dataset Flows
                                     </Typography>
-                                    <Typography
-                                        variant="body1"
-                                        color="textPrimary"
-                                    >
-                                        Not just a set of tools, the application
-                                        includes the most common use cases of
-                                        image dataset flows like object
-                                        labeling, web scraping, image
-                                        augmentation...
+                                    <Typography variant="body1" color="textPrimary">
+                                        Not just a set of tools, the application includes the most common use cases of
+                                        image dataset flows like object labeling, web scraping, image augmentation...
                                     </Typography>
                                 </Box>
                             </Box>
@@ -67,19 +53,11 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
                             <Box display="flex">
                                 <Avatar className={classes.avatar}>02</Avatar>
                                 <Box ml={2}>
-                                    <Typography
-                                        variant="h4"
-                                        gutterBottom
-                                        color="textPrimary"
-                                    >
+                                    <Typography variant="h4" gutterBottom color="textPrimary">
                                         On-board integration support
                                     </Typography>
-                                    <Typography
-                                        variant="body1"
-                                        color="textPrimary"
-                                    >
-                                        Once you have trained models, you can
-                                        use Datatensor API to make real-time
+                                    <Typography variant="body1" color="textPrimary">
+                                        Once you have trained models, you can use Datatensor API to make real-time
                                         inference.
                                     </Typography>
                                     <Box mt={2}>
@@ -99,22 +77,12 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
                             <Box display="flex">
                                 <Avatar className={classes.avatar}>03</Avatar>
                                 <Box ml={2}>
-                                    <Typography
-                                        variant="h4"
-                                        gutterBottom
-                                        color="textPrimary"
-                                    >
+                                    <Typography variant="h4" gutterBottom color="textPrimary">
                                         Developers, we got you
                                     </Typography>
-                                    <Typography
-                                        variant="body1"
-                                        color="textPrimary"
-                                        gutterBottom
-                                    >
-                                        We&apos;ve included the feature to
-                                        export dataset state. Check our docs to
-                                        use Datatensor in combination of your
-                                        existing backend Python code !
+                                    <Typography variant="body1" color="textPrimary" gutterBottom>
+                                        We&apos;ve included the feature to export dataset state. Check our docs to use
+                                        Datatensor in combination of your existing backend Python code !
                                     </Typography>
                                 </Box>
                             </Box>

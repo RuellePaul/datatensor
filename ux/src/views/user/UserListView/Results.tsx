@@ -32,6 +32,7 @@ import {Theme} from 'src/theme';
 import {User} from 'src/types/user';
 import api from 'src/utils/api';
 
+
 interface ResultsProps {
     className?: string;
     users: User[];
@@ -76,10 +77,7 @@ const applyFilters = (users: User[], query: string, filters: any): User[] => {
             let containsQuery = false;
 
             properties.forEach(property => {
-                if (
-                    user[property] &&
-                    user[property].toLowerCase().includes(query.toLowerCase())
-                ) {
+                if (user[property] && user[property].toLowerCase().includes(query.toLowerCase())) {
                     containsQuery = true;
                 }
             });
@@ -101,11 +99,7 @@ const applyFilters = (users: User[], query: string, filters: any): User[] => {
     });
 };
 
-const applyPagination = (
-    users: User[],
-    page: number,
-    limit: number
-): User[] => {
+const applyPagination = (users: User[], page: number, limit: number): User[] => {
     return users.slice(page * limit, page * limit + limit);
 };
 
@@ -223,16 +217,8 @@ const Results: FC<ResultsProps> = ({className, users, setUsers, ...rest}) => {
         setSort(event.target.value as Sort);
     };
 
-    const handleSelectAllUsers = (
-        event: ChangeEvent<HTMLInputElement>
-    ): void => {
-        setSelectedUsers(
-            event.target.checked
-                ? users
-                      .filter(user => user.id !== admin.id)
-                      .map(user => user.id)
-                : []
-        );
+    const handleSelectAllUsers = (event: ChangeEvent<HTMLInputElement>): void => {
+        setSelectedUsers(event.target.checked ? users.filter(user => user.id !== admin.id).map(user => user.id) : []);
     };
 
     const handleSelectOneUser = (event: any, customerId: string): void => {
@@ -240,17 +226,13 @@ const Results: FC<ResultsProps> = ({className, users, setUsers, ...rest}) => {
         if (!selectedUsers.includes(customerId)) {
             setSelectedUsers(prevSelected => [...prevSelected, customerId]);
         } else {
-            setSelectedUsers(prevSelected =>
-                prevSelected.filter(id => id !== customerId)
-            );
+            setSelectedUsers(prevSelected => prevSelected.filter(id => id !== customerId));
         }
     };
 
     const handleDeleteSelectedUsers = async () => {
         await api.delete('/users/', {data: {user_ids: selectedUsers}});
-        setUsers(users =>
-            users.filter(user => !selectedUsers.includes(user.id))
-        );
+        setUsers(users => users.filter(user => !selectedUsers.includes(user.id)));
         setSelectedUsers([]);
     };
 
@@ -266,8 +248,7 @@ const Results: FC<ResultsProps> = ({className, users, setUsers, ...rest}) => {
     const sortedUsers = applySort(filteredUsers, sort);
     const paginatedUsers = applyPagination(sortedUsers, page, limit);
     const enableBulkOperations = selectedUsers.length > 0;
-    const selectedSomeUsers =
-        selectedUsers.length > 0 && selectedUsers.length < users.length - 1;
+    const selectedSomeUsers = selectedUsers.length > 0 && selectedUsers.length < users.length - 1;
     const selectedAllUsers = selectedUsers.length === users.length - 1;
 
     return (
@@ -330,11 +311,7 @@ const Results: FC<ResultsProps> = ({className, users, setUsers, ...rest}) => {
                             <Button
                                 className={classes.bulkAction}
                                 variant="outlined"
-                                onClick={() =>
-                                    history.push(
-                                        `/app/admin/users/${selectedUsers[0]}/details`
-                                    )
-                                }
+                                onClick={() => history.push(`/app/admin/users/${selectedUsers[0]}/details`)}
                             >
                                 View details
                             </Button>
@@ -345,8 +322,7 @@ const Results: FC<ResultsProps> = ({className, users, setUsers, ...rest}) => {
                             onClick={handleDeleteSelectedUsers}
                         >
                             Delete
-                            {selectedUsers.length > 1 &&
-                                ` ${selectedUsers.length} users`}
+                            {selectedUsers.length > 1 && ` ${selectedUsers.length} users`}
                         </Button>
                     </div>
                 </div>
@@ -370,9 +346,7 @@ const Results: FC<ResultsProps> = ({className, users, setUsers, ...rest}) => {
                         </TableHead>
                         <TableBody>
                             {paginatedUsers.map(user => {
-                                const isUserSelected = selectedUsers.includes(
-                                    user.id
-                                );
+                                const isUserSelected = selectedUsers.includes(user.id);
 
                                 return (
                                     <TableRow
@@ -380,35 +354,20 @@ const Results: FC<ResultsProps> = ({className, users, setUsers, ...rest}) => {
                                         hover
                                         key={user.id}
                                         selected={isUserSelected}
-                                        onClick={event =>
-                                            handleSelectOneUser(event, user.id)
-                                        }
+                                        onClick={event => handleSelectOneUser(event, user.id)}
                                     >
                                         <TableCell padding="checkbox">
                                             <Checkbox
                                                 checked={isUserSelected}
-                                                onChange={event =>
-                                                    handleSelectOneUser(
-                                                        event,
-                                                        user.id
-                                                    )
-                                                }
-                                                onClick={event =>
-                                                    event.stopPropagation()
-                                                }
+                                                onChange={event => handleSelectOneUser(event, user.id)}
+                                                onClick={event => event.stopPropagation()}
                                                 value={isUserSelected}
                                                 disabled={user.id === admin.id}
                                             />
                                         </TableCell>
                                         <TableCell>
-                                            <Box
-                                                display="flex"
-                                                alignItems="center"
-                                            >
-                                                <UserAvatar
-                                                    user={user}
-                                                    className={classes.avatar}
-                                                />
+                                            <Box display="flex" alignItems="center">
+                                                <UserAvatar user={user} className={classes.avatar} />
                                                 <Box ml={1}>
                                                     <Link
                                                         color="inherit"
@@ -418,33 +377,18 @@ const Results: FC<ResultsProps> = ({className, users, setUsers, ...rest}) => {
                                                     >
                                                         {user.name}
                                                     </Link>
-                                                    <Typography
-                                                        variant="body2"
-                                                        color="textSecondary"
-                                                    >
+                                                    <Typography variant="body2" color="textSecondary">
                                                         {user.email}
                                                     </Typography>
                                                 </Box>
                                             </Box>
                                         </TableCell>
                                         <TableCell>
-                                            <FancyLabel
-                                                color={
-                                                    user.is_verified
-                                                        ? 'success'
-                                                        : 'error'
-                                                }
-                                            >
-                                                {user.is_verified
-                                                    ? 'Email verified'
-                                                    : 'Email not verified'}
+                                            <FancyLabel color={user.is_verified ? 'success' : 'error'}>
+                                                {user.is_verified ? 'Email verified' : 'Email not verified'}
                                             </FancyLabel>
                                         </TableCell>
-                                        <TableCell>
-                                            {moment(user.created_at).format(
-                                                'DD/MM/YYYY | HH:mm:ss'
-                                            )}
-                                        </TableCell>
+                                        <TableCell>{moment(user.created_at).format('DD/MM/YYYY | HH:mm:ss')}</TableCell>
                                     </TableRow>
                                 );
                             })}

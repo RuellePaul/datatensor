@@ -52,17 +52,13 @@ const Generator: FC = () => {
 
     const [datasources, setDatasources] = useState<DataSource[]>([]);
 
-    const [eligibleCategories, setEligibleCategories] = useState<
-        Category[] | null
-    >([]);
+    const [eligibleCategories, setEligibleCategories] = useState<Category[] | null>([]);
 
     const [maxImageCount, setMaxImageCount] = useState<number>(null);
 
     const fetchDatasources = useCallback(async () => {
         try {
-            const response = await api.get<{datasources: DataSource[]}>(
-                `/datasources/`
-            );
+            const response = await api.get<{datasources: DataSource[]}>(`/datasources/`);
             setDatasources(response.data.datasources);
         } catch (err) {
             console.error(err);
@@ -71,26 +67,16 @@ const Generator: FC = () => {
 
     const handleDatasourceChange = async datasource_key => {
         setEligibleCategories(null);
-        const response = await api.get<{categories: Category[]}>(
-            `/datasources/categories`,
-            {params: {datasource_key}}
-        );
+        const response = await api.get<{categories: Category[]}>(`/datasources/categories`, {params: {datasource_key}});
         setEligibleCategories(response.data.categories);
     };
 
-    const handleSelectedCategoriesChange = async (
-        datasource_key,
-        selected_categories,
-        callback
-    ) => {
+    const handleSelectedCategoriesChange = async (datasource_key, selected_categories, callback) => {
         setMaxImageCount(null);
-        const response = await api.post<{max_image_count: number}>(
-            `/datasources/max-image-count`,
-            {
-                datasource_key,
-                selected_categories: selected_categories
-            }
-        );
+        const response = await api.post<{max_image_count: number}>(`/datasources/max-image-count`, {
+            datasource_key,
+            selected_categories: selected_categories
+        });
         setMaxImageCount(response.data.max_image_count);
         callback(response.data.max_image_count);
     };
@@ -117,18 +103,12 @@ const Generator: FC = () => {
                         test: arr => arr.length > 0
                     })
                 })}
-                onSubmit={async (
-                    values,
-                    {setStatus, setSubmitting, resetForm}
-                ) => {
+                onSubmit={async (values, {setStatus, setSubmitting, resetForm}) => {
                     try {
-                        const response = await api.post<{task: Task}>(
-                            '/tasks/',
-                            {
-                                type: 'generator',
-                                properties: values
-                            }
-                        );
+                        const response = await api.post<{task: Task}>('/tasks/', {
+                            type: 'generator',
+                            properties: values
+                        });
                         saveTasks(tasks => [...tasks, response.data.task]);
                         resetForm();
                         setEligibleCategories([]);
@@ -143,33 +123,20 @@ const Generator: FC = () => {
                         if (isMountedRef.current) {
                             setStatus({success: false});
                             setSubmitting(false);
-                            enqueueSnackbar(
-                                error.message || 'Something went wrong',
-                                {variant: 'error'}
-                            );
+                            enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
                         }
                     }
                 }}
             >
-                {({
-                    errors,
-                    handleBlur,
-                    handleChange,
-                    handleSubmit,
-                    setFieldValue,
-                    isSubmitting,
-                    touched,
-                    values
-                }) => (
+                {({errors, handleBlur, handleChange, handleSubmit, setFieldValue, isSubmitting, touched, values}) => (
                     <form noValidate onSubmit={handleSubmit}>
                         <Box mb={3}>
                             <Typography variant="h4" gutterBottom>
                                 Generate a dataset
                             </Typography>
                             <Typography color="textSecondary" gutterBottom>
-                                This automatically download annotations, and
-                                then inject images, categories and labels into a
-                                new dataset.
+                                This automatically download annotations, and then inject images, categories and labels
+                                into a new dataset.
                             </Typography>
                         </Box>
                         <FormControl fullWidth>
@@ -180,18 +147,12 @@ const Generator: FC = () => {
                                 value={values.datasource_key}
                                 disabled={eligibleCategories === null}
                                 displayEmpty
-                                error={Boolean(
-                                    touched.datasource_key &&
-                                        errors.datasource_key
-                                )}
+                                error={Boolean(touched.datasource_key && errors.datasource_key)}
                                 fullWidth
                                 onBlur={handleBlur}
                                 onChange={event => {
                                     handleDatasourceChange(event.target.value);
-                                    setFieldValue(
-                                        'datasource_key',
-                                        event.target.value
-                                    );
+                                    setFieldValue('datasource_key', event.target.value);
                                     setFieldValue('selected_categories', []);
                                 }}
                             >
@@ -199,10 +160,7 @@ const Generator: FC = () => {
                                     <em>Pickup a datasource</em>
                                 </MenuItem>
                                 {datasources.map(datasource => (
-                                    <MenuItem
-                                        key={datasource.key}
-                                        value={datasource.key}
-                                    >
+                                    <MenuItem key={datasource.key} value={datasource.key}>
                                         {datasource.name}
                                     </MenuItem>
                                 ))}
@@ -221,59 +179,34 @@ const Generator: FC = () => {
                                 <>
                                     <Box mt={2}>
                                         <Typography color="textSecondary">
-                                            Selected{' '}
-                                            {values.selected_categories.length}{' '}
-                                            / {eligibleCategories.length}{' '}
+                                            Selected {values.selected_categories.length} / {eligibleCategories.length}{' '}
                                             categories
                                         </Typography>
                                     </Box>
-                                    <Box
-                                        display="flex"
-                                        alignItems="center"
-                                        mt={1}
-                                        mb={2}
-                                    >
+                                    <Box display="flex" alignItems="center" mt={1} mb={2}>
                                         <FormControl fullWidth>
                                             <Select
-                                                error={Boolean(
-                                                    errors.selected_categories
-                                                )}
+                                                error={Boolean(errors.selected_categories)}
                                                 multiple
-                                                value={
-                                                    values.selected_categories
-                                                }
+                                                value={values.selected_categories}
                                                 onChange={event => {
                                                     setFieldValue(
                                                         'selected_categories',
-                                                        event.target
-                                                            .value as string[]
+                                                        event.target.value as string[]
                                                     );
-                                                    setFieldValue(
-                                                        'image_count',
-                                                        null
-                                                    );
+                                                    setFieldValue('image_count', null);
                                                 }}
                                                 MenuProps={{
                                                     onClose: () => {
                                                         handleSelectedCategoriesChange(
                                                             values.datasource_key,
                                                             values.selected_categories,
-                                                            maxImageCount =>
-                                                                setFieldValue(
-                                                                    'image_count',
-                                                                    maxImageCount
-                                                                )
+                                                            maxImageCount => setFieldValue('image_count', maxImageCount)
                                                         );
                                                     }
                                                 }}
-                                                renderValue={(
-                                                    selected: string[]
-                                                ) =>
-                                                    selected
-                                                        .map(value =>
-                                                            capitalize(value)
-                                                        )
-                                                        .join(', ')
+                                                renderValue={(selected: string[]) =>
+                                                    selected.map(value => capitalize(value)).join(', ')
                                                 }
                                                 variant="filled"
                                                 SelectDisplayProps={{
@@ -281,27 +214,10 @@ const Generator: FC = () => {
                                                 }}
                                             >
                                                 {eligibleCategories
-                                                    .sort((a, b) =>
-                                                        a.labels_count >
-                                                        b.labels_count
-                                                            ? -1
-                                                            : 1
-                                                    )
+                                                    .sort((a, b) => (a.labels_count > b.labels_count ? -1 : 1))
                                                     .map(category => (
-                                                        <MenuItem
-                                                            value={
-                                                                category.name
-                                                            }
-                                                            key={category.name}
-                                                        >
-                                                            {capitalize(
-                                                                category.name
-                                                            )}{' '}
-                                                            (
-                                                            {
-                                                                category.labels_count
-                                                            }
-                                                            )
+                                                        <MenuItem value={category.name} key={category.name}>
+                                                            {capitalize(category.name)} ({category.labels_count})
                                                         </MenuItem>
                                                     ))}
                                             </Select>
@@ -311,27 +227,14 @@ const Generator: FC = () => {
                                             onClick={() => {
                                                 handleSelectedCategoriesChange(
                                                     values.datasource_key,
-                                                    eligibleCategories.map(
-                                                        category =>
-                                                            category.name
-                                                    ),
-                                                    maxImageCount =>
-                                                        setFieldValue(
-                                                            'image_count',
-                                                            maxImageCount
-                                                        )
+                                                    eligibleCategories.map(category => category.name),
+                                                    maxImageCount => setFieldValue('image_count', maxImageCount)
                                                 );
                                                 setFieldValue(
                                                     'selected_categories',
-                                                    eligibleCategories.map(
-                                                        category =>
-                                                            category.name
-                                                    )
+                                                    eligibleCategories.map(category => category.name)
                                                 );
-                                                setFieldValue(
-                                                    'image_count',
-                                                    null
-                                                );
+                                                setFieldValue('image_count', null);
                                             }}
                                             size="small"
                                         >
@@ -341,10 +244,7 @@ const Generator: FC = () => {
                                     {values.selected_categories?.length > 0 && (
                                         <>
                                             <TextField
-                                                error={Boolean(
-                                                    touched.image_count &&
-                                                        errors.image_count
-                                                )}
+                                                error={Boolean(touched.image_count && errors.image_count)}
                                                 label="Image count"
                                                 fullWidth
                                                 name="image_count"
@@ -352,9 +252,7 @@ const Generator: FC = () => {
                                                 onChange={handleChange}
                                                 value={values.image_count}
                                                 size="small"
-                                                disabled={
-                                                    maxImageCount === null
-                                                }
+                                                disabled={maxImageCount === null}
                                                 InputProps={{
                                                     startAdornment: (
                                                         <InputAdornment position="start">
@@ -365,38 +263,21 @@ const Generator: FC = () => {
                                             />
                                             {maxImageCount === null ? (
                                                 <Box mt={1}>
-                                                    <Typography
-                                                        color="textSecondary"
-                                                        gutterBottom
-                                                    >
-                                                        Searching available
-                                                        images...
+                                                    <Typography color="textSecondary" gutterBottom>
+                                                        Searching available images...
                                                     </Typography>
                                                     <LinearProgress variant="query" />
                                                 </Box>
                                             ) : (
                                                 <Box mt={1}>
-                                                    <Typography
-                                                        color="textSecondary"
-                                                        gutterBottom
-                                                    >
-                                                        {maxImageCount} images
-                                                        available (
+                                                    <Typography color="textSecondary" gutterBottom>
+                                                        {maxImageCount} images available (
                                                         {eligibleCategories
                                                             .filter(category =>
-                                                                values.selected_categories.includes(
-                                                                    category.name
-                                                                )
+                                                                values.selected_categories.includes(category.name)
                                                             )
-                                                            .map(
-                                                                category =>
-                                                                    category.labels_count
-                                                            )
-                                                            .reduce(
-                                                                (acc, val) =>
-                                                                    acc + val,
-                                                                0
-                                                            )}{' '}
+                                                            .map(category => category.labels_count)
+                                                            .reduce((acc, val) => acc + val, 0)}{' '}
                                                         labels)
                                                     </Typography>
                                                 </Box>
@@ -409,9 +290,7 @@ const Generator: FC = () => {
                         <Box mt={2}>
                             <Button
                                 color="primary"
-                                disabled={
-                                    isSubmitting || values.image_count === null
-                                }
+                                disabled={isSubmitting || values.image_count === null}
                                 fullWidth
                                 type="submit"
                                 variant="contained"
@@ -422,8 +301,7 @@ const Generator: FC = () => {
                         <Box mt={2}>
                             <Alert severity="info">
                                 <div>
-                                    Use <b>carefully</b>. It uses a lot{' '}
-                                    <b>AWS S3 storage</b>
+                                    Use <b>carefully</b>. It uses a lot <b>AWS S3 storage</b>
                                 </div>
                             </Alert>
                         </Box>

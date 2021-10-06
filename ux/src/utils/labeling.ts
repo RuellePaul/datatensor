@@ -13,10 +13,7 @@ export const CANVAS_OFFSET = 20;
 export const MIN_FONT_SIZE = 16;
 export const MAX_FONT_SIZE = 24;
 
-export const currentPoint = nativeEvent => [
-    nativeEvent.offsetX,
-    nativeEvent.offsetY
-];
+export const currentPoint = nativeEvent => [nativeEvent.offsetX, nativeEvent.offsetY];
 
 export const reset = (canvas: HTMLCanvasElement) => {
     canvas.width = canvas.clientWidth;
@@ -25,21 +22,12 @@ export const reset = (canvas: HTMLCanvasElement) => {
 };
 
 export const pointIsOutside = (canvas: HTMLCanvasElement, point: Point) => {
-    if (point[0] < CANVAS_OFFSET || point[0] > canvas.width - CANVAS_OFFSET)
-        return true;
-    else if (
-        point[1] < CANVAS_OFFSET ||
-        point[1] > canvas.height - CANVAS_OFFSET
-    )
-        return true;
+    if (point[0] < CANVAS_OFFSET || point[0] > canvas.width - CANVAS_OFFSET) return true;
+    else if (point[1] < CANVAS_OFFSET || point[1] > canvas.height - CANVAS_OFFSET) return true;
     return false;
 };
 
-export const currentDelta = (
-    canvas: HTMLCanvasElement,
-    pointA: Point,
-    pointB: Point
-) => {
+export const currentDelta = (canvas: HTMLCanvasElement, pointA: Point, pointB: Point) => {
     if (!pointA || !pointB) return [0, 0];
     let delta: Point = [
         (pointA[0] - pointB[0]) / (canvas.width - 2 * CANVAS_OFFSET),
@@ -48,11 +36,7 @@ export const currentDelta = (
     return delta;
 };
 
-export const convertLabel = (
-    canvas: HTMLCanvasElement,
-    label: Label,
-    offset = CANVAS_OFFSET
-) => {
+export const convertLabel = (canvas: HTMLCanvasElement, label: Label, offset = CANVAS_OFFSET) => {
     let x = offset + label.x * (canvas.width - 2 * offset);
     let y = offset + label.y * (canvas.height - 2 * offset);
     let w = label.w * (canvas.width - 2 * offset);
@@ -75,22 +59,14 @@ export const drawCursorLines = (canvas: HTMLCanvasElement, point: Point) => {
     canvas.style.cursor = 'crosshair';
 };
 
-export const drawRect = (
-    canvas: HTMLCanvasElement,
-    pointA: Point,
-    pointB: Point
-) => {
+export const drawRect = (canvas: HTMLCanvasElement, pointA: Point, pointB: Point) => {
     if (!pointA || !pointB) return;
-    if (pointIsOutside(canvas, pointA) || pointIsOutside(canvas, pointB))
-        return;
+    if (pointIsOutside(canvas, pointA) || pointIsOutside(canvas, pointB)) return;
     let x = pointA[0];
     let y = pointA[1];
     let w = pointB[0] - pointA[0];
     let h = pointB[1] - pointA[1];
-    let color =
-        Math.abs(w) < LABEL_MIN_WIDTH || Math.abs(h) < LABEL_MIN_HEIGHT
-            ? '#FF0000'
-            : '#FFFFFF';
+    let color = Math.abs(w) < LABEL_MIN_WIDTH || Math.abs(h) < LABEL_MIN_HEIGHT ? '#FF0000' : '#FFFFFF';
     let context = canvas.getContext('2d');
     context.lineWidth = 2;
     context.setLineDash([5]);
@@ -116,9 +92,7 @@ export const drawLabels = (
     context.setLineDash([dash]);
 
     for (const label of labels) {
-        const category = categories.find(
-            category => label.category_id === category.id
-        );
+        const category = categories.find(category => label.category_id === category.id);
 
         const {x, y, w, h} = convertLabel(canvas, label, offset);
 
@@ -139,23 +113,11 @@ export const drawLabels = (
             context.fillRect(x, y, RESIZE_SIZE, RESIZE_SIZE);
             context.fillRect(x + w - RESIZE_SIZE, y, RESIZE_SIZE, RESIZE_SIZE);
             context.fillRect(x, y + h - RESIZE_SIZE, RESIZE_SIZE, RESIZE_SIZE);
-            context.fillRect(
-                x + w - RESIZE_SIZE,
-                y + h - RESIZE_SIZE,
-                RESIZE_SIZE,
-                RESIZE_SIZE
-            );
+            context.fillRect(x + w - RESIZE_SIZE, y + h - RESIZE_SIZE, RESIZE_SIZE, RESIZE_SIZE);
         }
 
-        if (
-            category &&
-            w > category.name.length * 8 &&
-            h > LABEL_MIN_HEIGHT * 2
-        ) {
-            let fontSize = Math.max(
-                Math.min(w / 10, MAX_FONT_SIZE),
-                MIN_FONT_SIZE
-            );
+        if (category && w > category.name.length * 8 && h > LABEL_MIN_HEIGHT * 2) {
+            let fontSize = Math.max(Math.min(w / 10, MAX_FONT_SIZE), MIN_FONT_SIZE);
             context.font = `${fontSize}px Roboto, Helvetica, Arial, sans-serif`;
             context.fillStyle = color;
             context.fillText(capitalize(category.name), x + 5, y + fontSize);
@@ -198,11 +160,7 @@ export const renderCursor = (
     callback(null, null);
 };
 
-export const currentLabelsHoverIds = (
-    canvas: HTMLCanvasElement,
-    point: Point,
-    labels: Label[]
-) => {
+export const currentLabelsHoverIds = (canvas: HTMLCanvasElement, point: Point, labels: Label[]) => {
     if (!point || !labels) return [];
 
     let labelsHoverIds = [];
@@ -222,12 +180,7 @@ export const currentLabelsHoverIds = (
     return labelsHoverIds;
 };
 
-export const currentLabelsTranslated = (
-    canvas: HTMLCanvasElement,
-    labels: Label[],
-    pointA: Point,
-    pointB: Point
-) => {
+export const currentLabelsTranslated = (canvas: HTMLCanvasElement, labels: Label[], pointA: Point, pointB: Point) => {
     return labels.map(label => {
         let delta = currentDelta(canvas, pointA, pointB);
         return {
@@ -294,9 +247,7 @@ export const currentLabelsResized = (
             if (w * (canvas.width - 2 * CANVAS_OFFSET) < LABEL_MIN_WIDTH)
                 w = (3 + LABEL_MIN_WIDTH) / (canvas.width - 2 * CANVAS_OFFSET);
             if (h * (canvas.height - 2 * CANVAS_OFFSET) < LABEL_MIN_HEIGHT)
-                h =
-                    (3 + LABEL_MIN_HEIGHT) /
-                    (canvas.height - 2 * CANVAS_OFFSET);
+                h = (3 + LABEL_MIN_HEIGHT) / (canvas.height - 2 * CANVAS_OFFSET);
         }
 
         return {
@@ -309,8 +260,7 @@ export const currentLabelsResized = (
     });
 };
 
-export const checkLabelsEquality = (labels: Label[], newLabels: Label[]) =>
-    _.isEqual(labels, newLabels);
+export const checkLabelsEquality = (labels: Label[], newLabels: Label[]) => _.isEqual(labels, newLabels);
 
 export const formatRatio = ratio => Math.abs(Math.round(ratio * 1e6) / 1e6);
 

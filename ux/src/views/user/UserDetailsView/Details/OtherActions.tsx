@@ -10,6 +10,7 @@ import DeleteIcon from '@mui/icons-material/DeleteOutline';
 import {Theme} from 'src/theme';
 import api from 'src/utils/api';
 
+
 interface OtherActionsProps {
     className?: string;
 }
@@ -41,28 +42,17 @@ const OtherActions: FC<OtherActionsProps> = ({className, ...rest}) => {
             <CardHeader title="Other actions" />
             <Divider />
             <CardContent>
-                <Box
-                    display="flex"
-                    flexDirection="column"
-                    alignItems="flex-start"
-                >
-                    <Button startIcon={<NotInterestedIcon />}>
-                        Close Account
-                    </Button>
+                <Box display="flex" flexDirection="column" alignItems="flex-start">
+                    <Button startIcon={<NotInterestedIcon />}>Close Account</Button>
                     <Button startIcon={<GetAppIcon />}>Export Data</Button>
                 </Box>
                 <Box mt={1} mb={2}>
                     <Typography variant="body2" color="textSecondary">
-                        Remove this user’s data if he requested that, if not
-                        please be aware that what has been deleted can never
-                        brough back
+                        Remove this user’s data if he requested that, if not please be aware that what has been deleted
+                        can never brough back
                     </Typography>
                 </Box>
-                <Button
-                    className={classes.deleteAction}
-                    startIcon={<DeleteIcon />}
-                    onClick={handleDeleteUser}
-                >
+                <Button className={classes.deleteAction} startIcon={<DeleteIcon />} onClick={handleDeleteUser}>
                     Delete Account
                 </Button>
             </CardContent>

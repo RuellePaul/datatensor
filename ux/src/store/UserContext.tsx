@@ -1,11 +1,4 @@
-import React, {
-    createContext,
-    FC,
-    ReactNode,
-    useCallback,
-    useEffect,
-    useState
-} from 'react';
+import React, {createContext, FC, ReactNode, useCallback, useEffect, useState} from 'react';
 import api from 'src/utils/api';
 import {User} from 'src/types/user';
 
@@ -24,10 +17,7 @@ export const UserContext = createContext<UserContextValue>({
     saveUser: () => {}
 });
 
-export const UserProvider: FC<UserProviderProps> = ({
-    user_id = null,
-    children
-}) => {
+export const UserProvider: FC<UserProviderProps> = ({user_id = null, children}) => {
     const [currentUser, setCurrentUser] = useState<User>(null);
 
     const handleSaveUser = (update: User | ((user: User) => User)): void => {
@@ -37,9 +27,7 @@ export const UserProvider: FC<UserProviderProps> = ({
     const fetchUser = useCallback(async () => {
         if (user_id) {
             try {
-                const response = await api.get<{user: User}>(
-                    `/users/${user_id}`
-                );
+                const response = await api.get<{user: User}>(`/users/${user_id}`);
                 handleSaveUser(response.data.user);
             } catch (err) {
                 console.error(err);

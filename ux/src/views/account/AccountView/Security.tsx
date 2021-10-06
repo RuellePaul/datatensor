@@ -7,6 +7,7 @@ import {Box, Button, Card, CardContent, CardHeader, Divider, Grid, TextField} fr
 import makeStyles from '@mui/styles/makeStyles';
 import api from 'src/utils/api';
 
+
 interface SecurityProps {
     className?: string;
 }
@@ -36,10 +37,7 @@ const Security: FC<SecurityProps> = ({className, ...rest}) => {
                     .max(255)
                     .required('Required'),
                 password_confirm: Yup.string()
-                    .oneOf(
-                        [Yup.ref('new_password'), null],
-                        'Passwords must match'
-                    )
+                    .oneOf([Yup.ref('new_password'), null], 'Passwords must match')
                     .required('Required')
             })}
             onSubmit={async (values, {resetForm, setStatus, setSubmitting}) => {
@@ -58,15 +56,7 @@ const Security: FC<SecurityProps> = ({className, ...rest}) => {
                 }
             }}
         >
-            {({
-                errors,
-                handleBlur,
-                handleChange,
-                handleSubmit,
-                isSubmitting,
-                touched,
-                values
-            }) => (
+            {({errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values}) => (
                 <form onSubmit={handleSubmit}>
                     <Card className={clsx(classes.root, className)} {...rest}>
                         <CardHeader title="Change Password" />
@@ -75,13 +65,9 @@ const Security: FC<SecurityProps> = ({className, ...rest}) => {
                             <Grid container spacing={3}>
                                 <Grid item md={4} sm={6} xs={12}>
                                     <TextField
-                                        error={Boolean(
-                                            touched.password && errors.password
-                                        )}
+                                        error={Boolean(touched.password && errors.password)}
                                         fullWidth
-                                        helperText={
-                                            touched.password && errors.password
-                                        }
+                                        helperText={touched.password && errors.password}
                                         label="Password"
                                         name="password"
                                         onBlur={handleBlur}
@@ -93,15 +79,9 @@ const Security: FC<SecurityProps> = ({className, ...rest}) => {
                                 </Grid>
                                 <Grid item md={4} sm={6} xs={12}>
                                     <TextField
-                                        error={Boolean(
-                                            touched.new_password &&
-                                                errors.new_password
-                                        )}
+                                        error={Boolean(touched.new_password && errors.new_password)}
                                         fullWidth
-                                        helperText={
-                                            touched.new_password &&
-                                            errors.new_password
-                                        }
+                                        helperText={touched.new_password && errors.new_password}
                                         label="New Password"
                                         name="new_password"
                                         onBlur={handleBlur}
@@ -113,15 +93,9 @@ const Security: FC<SecurityProps> = ({className, ...rest}) => {
                                 </Grid>
                                 <Grid item md={4} sm={6} xs={12}>
                                     <TextField
-                                        error={Boolean(
-                                            touched.password_confirm &&
-                                                errors.password_confirm
-                                        )}
+                                        error={Boolean(touched.password_confirm && errors.password_confirm)}
                                         fullWidth
-                                        helperText={
-                                            touched.password_confirm &&
-                                            errors.password_confirm
-                                        }
+                                        helperText={touched.password_confirm && errors.password_confirm}
                                         label="Password Confirmation"
                                         name="password_confirm"
                                         onBlur={handleBlur}
@@ -135,12 +109,7 @@ const Security: FC<SecurityProps> = ({className, ...rest}) => {
                         </CardContent>
                         <Divider />
                         <Box p={2} display="flex" justifyContent="flex-end">
-                            <Button
-                                color="primary"
-                                disabled={isSubmitting}
-                                type="submit"
-                                variant="contained"
-                            >
+                            <Button color="primary" disabled={isSubmitting} type="submit" variant="contained">
                                 Change Password
                             </Button>
                         </Box>

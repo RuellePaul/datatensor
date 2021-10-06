@@ -22,6 +22,7 @@ import UserAvatar from 'src/components/UserAvatar';
 import WorkingAlert from 'src/components/core/WorkingAlert';
 import {UserConsumer, UserProvider} from 'src/store/UserContext';
 
+
 interface DatasetProps {
     dataset: Dataset;
     className?: string;
@@ -50,14 +51,11 @@ const DTDataset: FC<DatasetProps> = ({className, dataset, ...rest}) => {
 
     const fetchImage = useCallback(async () => {
         try {
-            const response = await api.get<{images: Image[]}>(
-                `/datasets/${dataset.id}/images/`,
-                {
-                    params: {
-                        limit: 1
-                    }
+            const response = await api.get<{images: Image[]}>(`/datasets/${dataset.id}/images/`, {
+                params: {
+                    limit: 1
                 }
-            );
+            });
             setImagePreview(response.data.images[0]);
         } catch (err) {
             console.error(err);
@@ -69,40 +67,21 @@ const DTDataset: FC<DatasetProps> = ({className, dataset, ...rest}) => {
     }, [fetchImage]);
 
     return (
-        <Card
-            className={clsx(classes.root, className)}
-            ref={datasetRef}
-            variant="outlined"
-            {...rest}
-        >
+        <Card className={clsx(classes.root, className)} ref={datasetRef} variant="outlined" {...rest}>
             <UserProvider user_id={dataset.user_id}>
                 <UserConsumer>
                     {value => (
                         <CardHeader
                             avatar={<UserAvatar user={value.user} />}
-                            title={
-                                <Typography variant="h6">
-                                    {dataset.name && capitalize(dataset.name)}
-                                </Typography>
-                            }
+                            title={<Typography variant="h6">{dataset.name && capitalize(dataset.name)}</Typography>}
                             subheader={
                                 <Box mt={'2px'}>
                                     {value.user.name}
                                     &nbsp; •
                                     <Chip
                                         className={classes.chip}
-                                        label={
-                                            dataset.is_public
-                                                ? 'Public'
-                                                : 'Private'
-                                        }
-                                        icon={
-                                            dataset.is_public ? (
-                                                <PublicIcon />
-                                            ) : (
-                                                <PrivateIcon />
-                                            )
-                                        }
+                                        label={dataset.is_public ? 'Public' : 'Private'}
+                                        icon={dataset.is_public ? <PublicIcon /> : <PrivateIcon />}
                                         size="small"
                                         variant="outlined"
                                     />
@@ -113,19 +92,11 @@ const DTDataset: FC<DatasetProps> = ({className, dataset, ...rest}) => {
                 </UserConsumer>
             </UserProvider>
 
-            <CardActionArea
-                onClick={() => history.push(`/app/datasets/${dataset.id}`)}
-            >
-                <CardMedia
-                    className={classes.media}
-                    component="span"
-                    image={imagePreview?.path}
-                />
+            <CardActionArea onClick={() => history.push(`/app/datasets/${dataset.id}`)}>
+                <CardMedia className={classes.media} component="span" image={imagePreview?.path} />
                 <CardContent>
                     <Box display="flex" alignItems="center" mb={1}>
-                        <Typography variant="h5">
-                            {dataset.name && capitalize(dataset.name)}
-                        </Typography>
+                        <Typography variant="h5">{dataset.name && capitalize(dataset.name)}</Typography>
 
                         <div className="flexGrow" />
 
@@ -140,9 +111,7 @@ const DTDataset: FC<DatasetProps> = ({className, dataset, ...rest}) => {
                         variant="body2"
                         component="p"
                         dangerouslySetInnerHTML={{
-                            __html:
-                                dataset.description ||
-                                '<i>No description provided</i>'
+                            __html: dataset.description || '<i>No description provided</i>'
                         }}
                     />
 

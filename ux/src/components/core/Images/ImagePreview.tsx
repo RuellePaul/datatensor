@@ -30,6 +30,7 @@ import usePipeline from 'src/hooks/usePipeline';
 import {ImageProvider} from 'src/store/ImageContext';
 import {LAZY_LOAD_BATCH} from 'src/constants';
 
+
 interface DTImagePreviewProps {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -84,12 +85,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const DTImagePreview: FC<DTImagePreviewProps> = ({
-    open,
-    setOpen,
-    selected,
-    setSelected
-}) => {
+const DTImagePreview: FC<DTImagePreviewProps> = ({open, setOpen, selected, setSelected}) => {
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
 
@@ -118,9 +114,7 @@ const DTImagePreview: FC<DTImagePreviewProps> = ({
         event.stopPropagation();
 
         try {
-            await api.delete(
-                `/datasets/${dataset.id}/images/${imageSelected.id}`
-            );
+            await api.delete(`/datasets/${dataset.id}/images/${imageSelected.id}`);
             setSelected(Math.max(0, selected - 1));
             saveImages(images.filter(image => image.id !== imageSelected.id));
             saveDataset({...dataset, image_count: dataset.image_count - 1});
@@ -133,10 +127,7 @@ const DTImagePreview: FC<DTImagePreviewProps> = ({
         }
     };
 
-    const handlePaginationChange = (
-        event: React.ChangeEvent<unknown>,
-        value: number
-    ) => {
+    const handlePaginationChange = (event: React.ChangeEvent<unknown>, value: number) => {
         setSelected(value - 1);
     };
 
@@ -152,11 +143,7 @@ const DTImagePreview: FC<DTImagePreviewProps> = ({
 
     const handleOpenLabelisator = () => {
         if (imageSelected.pipeline_id) {
-            savePipeline(
-                pipelines.find(
-                    pipeline => pipeline.id === imageSelected.pipeline_id
-                )
-            );
+            savePipeline(pipelines.find(pipeline => pipeline.id === imageSelected.pipeline_id));
         }
 
         handleCloseMenu();
@@ -164,8 +151,7 @@ const DTImagePreview: FC<DTImagePreviewProps> = ({
     };
 
     useEffect(() => {
-        if (selected === images.length - 1)
-            saveOffset(offset => offset + LAZY_LOAD_BATCH);
+        if (selected === images.length - 1) saveOffset(offset => offset + LAZY_LOAD_BATCH);
 
         // eslint-disable-next-line
     }, [selected]);
@@ -188,12 +174,7 @@ const DTImagePreview: FC<DTImagePreviewProps> = ({
         >
             <>
                 <div className={clsx(classes.header)}>
-                    <Button
-                        color="inherit"
-                        onClick={handleClose}
-                        size="small"
-                        startIcon={<BackIcon />}
-                    >
+                    <Button color="inherit" onClick={handleClose} size="small" startIcon={<BackIcon />}>
                         Back
                     </Button>
 
@@ -203,18 +184,13 @@ const DTImagePreview: FC<DTImagePreviewProps> = ({
                                 {imageSelected.name}
                             </Typography>
                             <Typography variant="h6" color="textSecondary">
-                                {bytesToSize(imageSelected.size)} (
-                                {imageSelected.width} x {imageSelected.height})
+                                {bytesToSize(imageSelected.size)} ({imageSelected.width} x {imageSelected.height})
                             </Typography>
                         </div>
 
                         <Chip
                             className={classes.chip}
-                            label={
-                                imageSelected.pipeline_id
-                                    ? 'Augmented image'
-                                    : 'Original image'
-                            }
+                            label={imageSelected.pipeline_id ? 'Augmented image' : 'Original image'}
                             size="small"
                             variant="outlined"
                         />

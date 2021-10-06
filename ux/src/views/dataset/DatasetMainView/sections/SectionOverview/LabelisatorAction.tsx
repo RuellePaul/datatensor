@@ -1,12 +1,6 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
-import {
-    Button,
-    Card,
-    CardActions,
-    CardContent,
-    Typography
-} from '@mui/material';
+import {Button, Card, CardActions, CardContent, Typography} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import {CreateOutlined as LabelisatorIcon} from '@mui/icons-material';
 import Categories from 'src/components/core/Dataset/Categories';
@@ -28,9 +22,7 @@ const LabelisatorAction: FC<LabelisatorActionProps> = ({className}) => {
     const {categories} = useDataset();
     const {images} = useImages();
 
-    const totalLabelsCount = categories
-        .map(category => category.labels_count || 0)
-        .reduce((acc, val) => acc + val, 0);
+    const totalLabelsCount = categories.map(category => category.labels_count || 0).reduce((acc, val) => acc + val, 0);
 
     if (images.length === 0) return null;
 
@@ -38,12 +30,10 @@ const LabelisatorAction: FC<LabelisatorActionProps> = ({className}) => {
         <Card className={clsx(classes.root, className)} variant="outlined">
             <CardContent>
                 <Typography color="textPrimary" gutterBottom>
-                    This dataset currently contains{' '}
-                    <strong>{totalLabelsCount} labels.</strong>
+                    This dataset currently contains <strong>{totalLabelsCount} labels.</strong>
                 </Typography>
                 <Typography color="textSecondary" gutterBottom>
-                    {totalLabelsCount > 0 ? 'Edit labels' : 'Start labeling'}{' '}
-                    with labelisator tool.
+                    {totalLabelsCount > 0 ? 'Edit labels' : 'Start labeling'} with labelisator tool.
                 </Typography>
 
                 <Categories />

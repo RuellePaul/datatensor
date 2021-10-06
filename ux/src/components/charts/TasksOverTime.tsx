@@ -7,6 +7,7 @@ import {Task} from 'src/types/task';
 import moment from 'moment';
 import {TimeRange} from 'src/types/timeRange';
 
+
 interface TasksOverTimeProps {
     className?: string;
     tasks: Task[] | null;
@@ -33,21 +34,11 @@ const buildArray = (size: number) =>
         .map((_, i) => i)
         .reverse();
 
-const TasksOverTime: FC<TasksOverTimeProps> = ({
-    className,
-    tasks,
-    timeRange,
-    ...rest
-}) => {
+const TasksOverTime: FC<TasksOverTimeProps> = ({className, tasks, timeRange, ...rest}) => {
     const classes = useStyles();
     const theme = useTheme();
 
-    const generateChartData = (
-        size: number,
-        interval: string,
-        format: string,
-        status: string
-    ) => ({
+    const generateChartData = (size: number, interval: string, format: string, status: string) => ({
         data: buildArray(size + 1).map(index =>
             tasks
                 ? tasks
@@ -139,9 +130,7 @@ const TasksOverTime: FC<TasksOverTimeProps> = ({
                                 }
                             },
                             xaxis: {
-                                categories:
-                                    tasksOverTime[timeRange.value].success
-                                        .labels
+                                categories: tasksOverTime[timeRange.value].success.labels
                             },
                             yaxis: [
                                 {
@@ -154,8 +143,7 @@ const TasksOverTime: FC<TasksOverTimeProps> = ({
                         series={[
                             {
                                 name: 'Pending',
-                                data:
-                                    tasksOverTime[timeRange.value].pending.data
+                                data: tasksOverTime[timeRange.value].pending.data
                             },
                             {
                                 name: 'Active',
@@ -163,8 +151,7 @@ const TasksOverTime: FC<TasksOverTimeProps> = ({
                             },
                             {
                                 name: 'Completed',
-                                data:
-                                    tasksOverTime[timeRange.value].success.data
+                                data: tasksOverTime[timeRange.value].success.data
                             },
                             {
                                 name: 'Failed',

@@ -1,24 +1,13 @@
 import React, {FC} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
-import {
-    Box,
-    Breadcrumbs,
-    capitalize,
-    Chip,
-    Grid,
-    Link,
-    Typography
-} from '@mui/material';
+import {Box, Breadcrumbs, capitalize, Chip, Grid, Link, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import {
-    Lock as PrivateIcon,
-    NavigateNext as NavigateNextIcon,
-    Public as PublicIcon
-} from '@mui/icons-material';
+import {Lock as PrivateIcon, NavigateNext as NavigateNextIcon, Public as PublicIcon} from '@mui/icons-material';
 import WorkingAlert from 'src/components/core/WorkingAlert';
 import useDataset from 'src/hooks/useDataset';
 import {Theme} from 'src/theme';
+
 
 interface HeaderProps {
     className?: string;
@@ -54,16 +43,8 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
             {...rest}
         >
             <Grid item>
-                <Breadcrumbs
-                    separator={<NavigateNextIcon fontSize="small" />}
-                    aria-label="breadcrumb"
-                >
-                    <Link
-                        variant="body1"
-                        color="inherit"
-                        to="/app/datasets"
-                        component={RouterLink}
-                    >
+                <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
+                    <Link variant="body1" color="inherit" to="/app/datasets" component={RouterLink}>
                         Datasets
                     </Link>
                     <Box display="flex">
@@ -73,13 +54,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                         <Chip
                             className={classes.chip}
                             label={dataset.is_public ? 'Public' : 'Private'}
-                            icon={
-                                dataset.is_public ? (
-                                    <PublicIcon />
-                                ) : (
-                                    <PrivateIcon />
-                                )
-                            }
+                            icon={dataset.is_public ? <PublicIcon /> : <PrivateIcon />}
                             size="small"
                             variant="outlined"
                         />
@@ -89,10 +64,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
 
             <Box flexGrow={1} />
 
-            <WorkingAlert
-                className={classes.alert}
-                dataset_id={dataset.id}
-            />
+            <WorkingAlert className={classes.alert} dataset_id={dataset.id} />
         </Grid>
     );
 };

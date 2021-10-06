@@ -16,10 +16,7 @@ import {
     Typography
 } from '@mui/material';
 import {makeStyles} from '@mui/styles';
-import {
-    Close as CloseIcon,
-    DeleteOutline as DeleteIcon
-} from '@mui/icons-material';
+import {Close as CloseIcon, DeleteOutline as DeleteIcon} from '@mui/icons-material';
 import api from 'src/utils/api';
 import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
@@ -74,9 +71,7 @@ const ChangeNameAction: FC<ChangeNameActionProps> = ({className}) => {
         try {
             handleCloseDeleteDataset();
             await api.delete(`/datasets/${dataset.id}`);
-            saveDatasets(datasets =>
-                datasets.filter((current: Dataset) => current.id !== dataset.id)
-            );
+            saveDatasets(datasets => datasets.filter((current: Dataset) => current.id !== dataset.id));
             enqueueSnackbar(`Deleted dataset ${dataset.name}`, {
                 variant: 'info'
             });
@@ -95,8 +90,7 @@ const ChangeNameAction: FC<ChangeNameActionProps> = ({className}) => {
             <Box mb={2}>
                 <Alert severity="error">
                     <AlertTitle>Delete dataset</AlertTitle>
-                    Be careful, once deleted, there is no going back.{' '}
-                    <strong>It will be lost forever</strong>
+                    Be careful, once deleted, there is no going back. <strong>It will be lost forever</strong>
                 </Alert>
             </Box>
 
@@ -104,67 +98,39 @@ const ChangeNameAction: FC<ChangeNameActionProps> = ({className}) => {
                 className={classes.deleteAction}
                 onClick={handleOpenDeleteDataset}
                 startIcon={<DeleteIcon />}
-                endIcon={
-                    isDeleting && (
-                        <CircularProgress
-                            className={classes.loader}
-                            color="inherit"
-                        />
-                    )
-                }
+                endIcon={isDeleting && <CircularProgress className={classes.loader} color="inherit" />}
                 disabled={isDeleting}
                 variant="contained"
             >
                 Delete dataset
             </Button>
 
-            <Dialog
-                disableRestoreFocus
-                fullWidth
-                open={openDeleteDataset}
-                onClose={handleCloseDeleteDataset}
-            >
+            <Dialog disableRestoreFocus fullWidth open={openDeleteDataset} onClose={handleCloseDeleteDataset}>
                 <DialogTitle className="flex">
                     <Typography variant="h4">Delete dataset</Typography>
 
-                    <IconButton
-                        className={classes.close}
-                        onClick={handleCloseDeleteDataset}
-                        size="large"
-                    >
+                    <IconButton className={classes.close} onClick={handleCloseDeleteDataset} size="large">
                         <CloseIcon />
                     </IconButton>
                 </DialogTitle>
                 <DialogContent>
                     <Typography color="textPrimary" gutterBottom>
-                        You're about to delete, <strong>definitely</strong> this
-                        dataset.
+                        You're about to delete, <strong>definitely</strong> this dataset.
                     </Typography>
                     <Box mb={2}>
                         <Alert severity="warning">
                             This will also delete{' '}
-                            <Typography
-                                component="span"
-                                style={{fontWeight: 'bold'}}
-                            >
-                                {dataset.image_count + dataset.augmented_count}{' '}
-                                image{dataset.image_count > 1 ? 's' : ''}
+                            <Typography component="span" style={{fontWeight: 'bold'}}>
+                                {dataset.image_count + dataset.augmented_count} image
+                                {dataset.image_count > 1 ? 's' : ''}
                             </Typography>
                             ,{' '}
-                            <Typography
-                                component="span"
-                                style={{fontWeight: 'bold'}}
-                            >
+                            <Typography component="span" style={{fontWeight: 'bold'}}>
                                 {categories.length} categories
                             </Typography>
                             , and{' '}
-                            <Typography
-                                component="span"
-                                style={{fontWeight: 'bold'}}
-                            >
-                                {categories
-                                    .map(category => category.labels_count)
-                                    .reduce((acc, val) => acc + val, 0)}{' '}
+                            <Typography component="span" style={{fontWeight: 'bold'}}>
+                                {categories.map(category => category.labels_count).reduce((acc, val) => acc + val, 0)}{' '}
                                 labels
                             </Typography>
                         </Alert>
@@ -176,14 +142,7 @@ const ChangeNameAction: FC<ChangeNameActionProps> = ({className}) => {
                             className={classes.deleteAction}
                             onClick={handleDeleteDataset}
                             startIcon={<DeleteIcon />}
-                            endIcon={
-                                isDeleting && (
-                                    <CircularProgress
-                                        className={classes.loader}
-                                        color="inherit"
-                                    />
-                                )
-                            }
+                            endIcon={isDeleting && <CircularProgress className={classes.loader} color="inherit" />}
                             disabled={isDeleting}
                             variant="contained"
                         >

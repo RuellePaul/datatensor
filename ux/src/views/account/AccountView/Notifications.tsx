@@ -15,6 +15,7 @@ import {
 import makeStyles from '@mui/styles/makeStyles';
 import wait from 'src/utils/wait';
 
+
 interface NotificationProps {
     className?: string;
 }
@@ -26,9 +27,7 @@ const useStyles = makeStyles(() => ({
 const Notifications: FC<NotificationProps> = ({className, ...rest}) => {
     const classes = useStyles();
 
-    const handleSubmit = async (
-        event: FormEvent<HTMLFormElement>
-    ): Promise<void> => {
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
         event.preventDefault();
         // NOTE: Make API request
         await wait(500);
@@ -42,85 +41,47 @@ const Notifications: FC<NotificationProps> = ({className, ...rest}) => {
                 <CardContent>
                     <Grid container spacing={6} wrap="wrap">
                         <Grid item md={4} sm={6} xs={12}>
-                            <Typography
-                                gutterBottom
-                                variant="h6"
-                                color="textPrimary"
-                            >
+                            <Typography gutterBottom variant="h6" color="textPrimary">
                                 System
                             </Typography>
-                            <Typography
-                                gutterBottom
-                                variant="body2"
-                                color="textSecondary"
-                            >
-                                You will recieve emails in your business email
-                                address
+                            <Typography gutterBottom variant="body2" color="textSecondary">
+                                You will recieve emails in your business email address
                             </Typography>
                             <div>
-                                <FormControlLabel
-                                    control={<Checkbox defaultChecked />}
-                                    label="Email alerts"
-                                />
+                                <FormControlLabel control={<Checkbox defaultChecked />} label="Email alerts" />
                             </div>
                             <div>
-                                <FormControlLabel
-                                    control={<Checkbox />}
-                                    label="Push Notifications"
-                                />
+                                <FormControlLabel control={<Checkbox />} label="Push Notifications" />
                             </div>
                             <div>
-                                <FormControlLabel
-                                    control={<Checkbox defaultChecked />}
-                                    label="Text message"
-                                />
+                                <FormControlLabel control={<Checkbox defaultChecked />} label="Text message" />
                             </div>
                             <div>
                                 <FormControlLabel
                                     control={<Checkbox defaultChecked />}
                                     label={
                                         <>
-                                            <Typography
-                                                variant="body1"
-                                                color="textPrimary"
-                                            >
+                                            <Typography variant="body1" color="textPrimary">
                                                 Phone calls
                                             </Typography>
-                                            <Typography variant="caption">
-                                                Short voice phone updating you
-                                            </Typography>
+                                            <Typography variant="caption">Short voice phone updating you</Typography>
                                         </>
                                     }
                                 />
                             </div>
                         </Grid>
                         <Grid item md={4} sm={6} xs={12}>
-                            <Typography
-                                gutterBottom
-                                variant="h6"
-                                color="textPrimary"
-                            >
+                            <Typography gutterBottom variant="h6" color="textPrimary">
                                 Chat App
                             </Typography>
-                            <Typography
-                                gutterBottom
-                                variant="body2"
-                                color="textSecondary"
-                            >
-                                You will recieve emails in your business email
-                                address
+                            <Typography gutterBottom variant="body2" color="textSecondary">
+                                You will recieve emails in your business email address
                             </Typography>
                             <div>
-                                <FormControlLabel
-                                    control={<Checkbox defaultChecked />}
-                                    label="Email"
-                                />
+                                <FormControlLabel control={<Checkbox defaultChecked />} label="Email" />
                             </div>
                             <div>
-                                <FormControlLabel
-                                    control={<Checkbox defaultChecked />}
-                                    label="Push notifications"
-                                />
+                                <FormControlLabel control={<Checkbox defaultChecked />} label="Push notifications" />
                             </div>
                         </Grid>
                     </Grid>

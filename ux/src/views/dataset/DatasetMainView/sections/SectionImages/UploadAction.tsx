@@ -1,18 +1,7 @@
 import React, {FC, useState} from 'react';
-import {
-    Box,
-    Button,
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    IconButton,
-    Typography
-} from '@mui/material';
+import {Box, Button, Dialog, DialogContent, DialogTitle, IconButton, Typography} from '@mui/material';
 import {makeStyles} from '@mui/styles';
-import {
-    Close as CloseIcon,
-    PublishOutlined as UploadIcon
-} from '@mui/icons-material';
+import {Close as CloseIcon, PublishOutlined as UploadIcon} from '@mui/icons-material';
 import ImagesDropzone from 'src/components/ImagesDropzone';
 import {Theme} from 'src/theme';
 
@@ -55,11 +44,7 @@ const UploadAction: FC = () => {
             <Dialog open={openUpload} onClose={handleCloseUpload}>
                 <DialogTitle>
                     <Typography variant="h4">Upload Images</Typography>
-                    <IconButton
-                        className={classes.close}
-                        onClick={handleCloseUpload}
-                        size="large"
-                    >
+                    <IconButton className={classes.close} onClick={handleCloseUpload} size="large">
                         <CloseIcon />
                     </IconButton>
                 </DialogTitle>

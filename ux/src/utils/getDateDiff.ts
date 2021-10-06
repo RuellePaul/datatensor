@@ -1,8 +1,4 @@
-const getDateDiff = (
-    date1,
-    date2,
-    format: 'duration' | 'passed_event' = 'duration'
-) => {
+const getDateDiff = (date1, date2, format: 'duration' | 'passed_event' = 'duration') => {
     let diff = Math.abs(new Date(date2).getTime() - new Date(date1).getTime());
     diff = Math.abs(Math.floor(diff / 1000));
 

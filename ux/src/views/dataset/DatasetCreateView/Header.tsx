@@ -5,6 +5,7 @@ import {Breadcrumbs, Button, Grid, Link, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
+
 interface HeaderProps {
     className?: string;
 }
@@ -17,24 +18,10 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
     const classes = useStyles();
 
     return (
-        <Grid
-            className={clsx(classes.root, className)}
-            container
-            justifyContent="space-between"
-            spacing={3}
-            {...rest}
-        >
+        <Grid className={clsx(classes.root, className)} container justifyContent="space-between" spacing={3} {...rest}>
             <Grid item>
-                <Breadcrumbs
-                    separator={<NavigateNextIcon fontSize="small" />}
-                    aria-label="breadcrumb"
-                >
-                    <Link
-                        variant="body1"
-                        color="inherit"
-                        to="/app/datasets"
-                        component={RouterLink}
-                    >
+                <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
+                    <Link variant="body1" color="inherit" to="/app/datasets" component={RouterLink}>
                         Datasets
                     </Link>
                     <Typography variant="body1" color="textPrimary">

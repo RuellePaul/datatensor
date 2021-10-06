@@ -5,6 +5,7 @@ import {Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import type {Theme} from 'src/theme';
 
+
 interface HeadingProps {
     children?: ReactNode;
     variant: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';

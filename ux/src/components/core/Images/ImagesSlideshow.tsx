@@ -1,21 +1,9 @@
 import React from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import {autoPlay} from 'react-swipeable-views-utils';
-import {
-    Box,
-    Button,
-    Card,
-    MobileStepper,
-    Paper,
-    Typography,
-    useTheme
-} from '@mui/material';
+import {Box, Button, Card, MobileStepper, Paper, Typography, useTheme} from '@mui/material';
 import {makeStyles} from '@mui/styles';
-import {
-    ImageOutlined as ImageIcon,
-    KeyboardArrowLeft,
-    KeyboardArrowRight
-} from '@mui/icons-material';
+import {ImageOutlined as ImageIcon, KeyboardArrowLeft, KeyboardArrowRight} from '@mui/icons-material';
 import DTImage from 'src/components/core/Images/Image';
 import useImages from 'src/hooks/useImages';
 import {ImageProvider} from 'src/store/ImageContext';
@@ -81,9 +69,7 @@ function ImagesSlideshow() {
                 </Box>
                 <Button
                     className={classes.button}
-                    onClick={() =>
-                        document.getElementById('dt-tab-images').click()
-                    }
+                    onClick={() => document.getElementById('dt-tab-images').click()}
                     size="small"
                 >
                     View all
@@ -97,9 +83,7 @@ function ImagesSlideshow() {
             >
                 {images.map((image, index) => (
                     <ImageProvider image={image} key={image.id}>
-                        {Math.abs(activeStep - index) <= 2 ? (
-                            <DTImage className={classes.img} />
-                        ) : null}
+                        {Math.abs(activeStep - index) <= 2 ? <DTImage className={classes.img} /> : null}
                     </ImageProvider>
                 ))}
             </AutoPlaySwipeableViews>
@@ -116,25 +100,12 @@ function ImagesSlideshow() {
                         disabled={activeStep === images.length - 1}
                     >
                         Next
-                        {theme.direction === 'rtl' ? (
-                            <KeyboardArrowLeft />
-                        ) : (
-                            <KeyboardArrowRight />
-                        )}
+                        {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
                     </Button>
                 }
                 backButton={
-                    <Button
-                        color="inherit"
-                        size="small"
-                        onClick={handleBack}
-                        disabled={activeStep === 0}
-                    >
-                        {theme.direction === 'rtl' ? (
-                            <KeyboardArrowRight />
-                        ) : (
-                            <KeyboardArrowLeft />
-                        )}
+                    <Button color="inherit" size="small" onClick={handleBack} disabled={activeStep === 0}>
+                        {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
                         Back
                     </Button>
                 }

@@ -6,6 +6,7 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import {Calendar as CalendarIcon} from 'react-feather';
 import {TimeRange} from 'src/types/timeRange';
 
+
 interface HeaderProps {
     className?: string;
     timeRange: TimeRange;
@@ -17,30 +18,15 @@ const useStyles = makeStyles(() => ({
     root: {}
 }));
 
-const Header: FC<HeaderProps> = ({
-    className,
-    timeRange,
-    setTimeRange,
-    timeRanges,
-    ...rest
-}) => {
+const Header: FC<HeaderProps> = ({className, timeRange, setTimeRange, timeRanges, ...rest}) => {
     const classes = useStyles();
     const actionRef = useRef<any>(null);
     const [isMenuOpen, setMenuOpen] = useState<boolean>(false);
 
     return (
-        <Grid
-            container
-            spacing={3}
-            justifyContent="space-between"
-            className={clsx(classes.root, className)}
-            {...rest}
-        >
+        <Grid container spacing={3} justifyContent="space-between" className={clsx(classes.root, className)} {...rest}>
             <Grid item>
-                <Breadcrumbs
-                    separator={<NavigateNextIcon fontSize="small" />}
-                    aria-label="breadcrumb"
-                >
+                <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
                     <Typography variant="body1" color="textPrimary">
                         App dashboard
                     </Typography>
@@ -75,10 +61,7 @@ const Header: FC<HeaderProps> = ({
                     }}
                 >
                     {timeRanges.map(_timeRange => (
-                        <MenuItem
-                            key={_timeRange.value}
-                            onClick={() => setTimeRange(_timeRange)}
-                        >
+                        <MenuItem key={_timeRange.value} onClick={() => setTimeRange(_timeRange)}>
                             {_timeRange.text}
                         </MenuItem>
                     ))}

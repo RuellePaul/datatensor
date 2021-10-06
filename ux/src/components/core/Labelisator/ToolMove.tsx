@@ -18,6 +18,7 @@ import {
 } from 'src/utils/labeling';
 import useImage from 'src/hooks/useImage';
 
+
 interface ToolMoveProps {
     setTool: any;
     autoSwitch: boolean;
@@ -48,8 +49,7 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
     const [storedLabels, setStoredLabels] = useState<Label[]>([]);
 
     useEffect(() => {
-        if (direction === 'top-left' || direction === 'bottom-right')
-            canvasRef.current.style.cursor = 'nwse-resize';
+        if (direction === 'top-left' || direction === 'bottom-right') canvasRef.current.style.cursor = 'nwse-resize';
         else if (direction === 'top-right' || direction === 'bottom-left')
             canvasRef.current.style.cursor = 'nesw-resize';
     }, [direction]);
@@ -65,77 +65,42 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
         reset(canvas);
 
         if (event.nativeEvent.which === 1) {
-            let labelsHoverIds = currentLabelsHoverIds(
-                canvasRef.current,
-                point,
-                labels
-            );
+            let labelsHoverIds = currentLabelsHoverIds(canvasRef.current, point, labels);
             if (labelsHoverIds.length > 0) {
                 setStoredPoint(point);
-                renderCursor(
-                    canvas,
-                    point,
-                    labels,
-                    (resizeLabel, direction) => {
-                        setDirection(direction);
-                        if (resizeLabel === null && direction === null) {
-                            saveLabels(
-                                labels.filter(
-                                    label => !labelsHoverIds.includes(label.id)
-                                )
-                            );
-                            setStoredLabels(
-                                labels.filter(label =>
-                                    labelsHoverIds.includes(label.id)
-                                )
-                            );
-                            drawLabels(
-                                canvas,
-                                labels.filter(label =>
-                                    labelsHoverIds.includes(label.id)
-                                ),
-                                categories,
-                                CANVAS_OFFSET,
-                                5,
-                                true,
-                                true
-                            );
-                        } else {
-                            saveLabels(
-                                labels.filter(
-                                    label => label.id !== resizeLabel.id
-                                )
-                            );
-                            setStoredLabels(
-                                labels.filter(
-                                    label => label.id === resizeLabel.id
-                                )
-                            );
-                            drawLabels(
-                                canvas,
-                                labels.filter(
-                                    label => label.id === resizeLabel.id
-                                ),
-                                categories,
-                                CANVAS_OFFSET,
-                                5,
-                                true,
-                                true
-                            );
-                        }
+                renderCursor(canvas, point, labels, (resizeLabel, direction) => {
+                    setDirection(direction);
+                    if (resizeLabel === null && direction === null) {
+                        saveLabels(labels.filter(label => !labelsHoverIds.includes(label.id)));
+                        setStoredLabels(labels.filter(label => labelsHoverIds.includes(label.id)));
+                        drawLabels(
+                            canvas,
+                            labels.filter(label => labelsHoverIds.includes(label.id)),
+                            categories,
+                            CANVAS_OFFSET,
+                            5,
+                            true,
+                            true
+                        );
+                    } else {
+                        saveLabels(labels.filter(label => label.id !== resizeLabel.id));
+                        setStoredLabels(labels.filter(label => label.id === resizeLabel.id));
+                        drawLabels(
+                            canvas,
+                            labels.filter(label => label.id === resizeLabel.id),
+                            categories,
+                            CANVAS_OFFSET,
+                            5,
+                            true,
+                            true
+                        );
                     }
-                );
+                });
             }
         }
         if (event.nativeEvent.which === 3) {
-            let labelsHoverIds = currentLabelsHoverIds(
-                canvasRef.current,
-                point,
-                labels
-            );
-            setStoredLabels(
-                labels.filter(label => labelsHoverIds.includes(label.id))
-            );
+            let labelsHoverIds = currentLabelsHoverIds(canvasRef.current, point, labels);
+            setStoredLabels(labels.filter(label => labelsHoverIds.includes(label.id)));
         }
     };
 
@@ -160,12 +125,9 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
                 true,
                 true
             );
-            renderCursor(canvas, point, labels, (label, direction) =>
-                setDirection(direction)
-            );
+            renderCursor(canvas, point, labels, (label, direction) => setDirection(direction));
             if (direction === null)
-                if (labelsHoverIds.length === 0)
-                    canvas.style.cursor = 'initial';
+                if (labelsHoverIds.length === 0) canvas.style.cursor = 'initial';
                 else canvas.style.cursor = 'move';
         }
 
@@ -173,38 +135,11 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
             // START MOVE
             if (storedLabels.length === 0) return;
             if (direction === null) {
-                let labelsTranslated = currentLabelsTranslated(
-                    canvas,
-                    storedLabels,
-                    point,
-                    storedPoint
-                );
-                drawLabels(
-                    canvas,
-                    labelsTranslated,
-                    categories,
-                    CANVAS_OFFSET,
-                    5,
-                    true,
-                    true
-                );
+                let labelsTranslated = currentLabelsTranslated(canvas, storedLabels, point, storedPoint);
+                drawLabels(canvas, labelsTranslated, categories, CANVAS_OFFSET, 5, true, true);
             } else {
-                let labelsResized = currentLabelsResized(
-                    canvas,
-                    storedLabels,
-                    point,
-                    storedPoint,
-                    direction
-                );
-                drawLabels(
-                    canvas,
-                    labelsResized,
-                    categories,
-                    CANVAS_OFFSET,
-                    5,
-                    true,
-                    true
-                );
+                let labelsResized = currentLabelsResized(canvas, storedLabels, point, storedPoint, direction);
+                drawLabels(canvas, labelsResized, categories, CANVAS_OFFSET, 5, true, true);
             }
         }
     };
@@ -219,23 +154,11 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
             if (storedLabels.length === 0) return;
 
             if (direction === null) {
-                let labelsTranslated = currentLabelsTranslated(
-                    canvas,
-                    storedLabels,
-                    point,
-                    storedPoint
-                );
+                let labelsTranslated = currentLabelsTranslated(canvas, storedLabels, point, storedPoint);
                 saveLabels([...labels, ...labelsTranslated]);
                 storePosition([...labels, ...labelsTranslated]);
             } else {
-                let labelsResized = currentLabelsResized(
-                    canvas,
-                    storedLabels,
-                    point,
-                    storedPoint,
-                    direction,
-                    true
-                );
+                let labelsResized = currentLabelsResized(canvas, storedLabels, point, storedPoint, direction, true);
                 saveLabels([...labels, ...labelsResized]);
                 storePosition([...labels, ...labelsResized]);
             }
@@ -245,10 +168,7 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
         }
     };
 
-    const [contextMenuPoint, setContextMenuPoint] = useState<Point>([
-        null,
-        null
-    ]);
+    const [contextMenuPoint, setContextMenuPoint] = useState<Point>([null, null]);
     const handleContextMenu = (event: React.MouseEvent<HTMLElement>) => {
         event.preventDefault();
         setContextMenuPoint([event.clientX, event.clientY]);

@@ -7,6 +7,7 @@ import {User} from 'src/types/user';
 import {Theme} from 'src/theme';
 import UserAvatar from 'src/components/UserAvatar';
 
+
 interface UserLabelProps {
     className?: string;
     user: User;

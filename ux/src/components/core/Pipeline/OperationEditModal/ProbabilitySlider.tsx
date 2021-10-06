@@ -5,6 +5,7 @@ import {useDispatch} from 'src/store';
 import type {Operation} from 'src/types/pipeline';
 import {updateOperation} from 'src/slices/pipeline';
 
+
 interface ProbabilitySliderProps {
     operation: Operation,
     setDragDisabled?: (update: boolean) => void

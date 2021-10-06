@@ -13,6 +13,7 @@ import {ImageProvider} from 'src/store/ImageContext';
 import {LAZY_LOAD_BATCH} from 'src/constants';
 import DTImagePreview from './ImagePreview';
 
+
 interface ImagesListProps {
     pipeline_id?: string;
     className?: string;
@@ -45,11 +46,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const DTImagesList: FC<ImagesListProps> = ({
-    className,
-    pipeline_id,
-    ...rest
-}) => {
+const DTImagesList: FC<ImagesListProps> = ({className, pipeline_id, ...rest}) => {
     const classes = useStyles();
     const theme = useTheme();
 
@@ -84,9 +81,7 @@ const DTImagesList: FC<ImagesListProps> = ({
                     totalImagesCount
                         ? totalImagesCount > images.length
                         : pipeline_id
-                        ? pipelines.find(
-                              pipeline => pipeline.id === pipeline_id
-                          ).image_count > images.length
+                        ? pipelines.find(pipeline => pipeline.id === pipeline_id).image_count > images.length
                         : dataset.image_count > images.length
                 }
                 loader={<LinearProgress />}
@@ -106,13 +101,7 @@ const DTImagesList: FC<ImagesListProps> = ({
                                 className={classes.image}
                                 clickable
                                 overlay={
-                                    <Tooltip
-                                        title={
-                                            <Typography variant="overline">
-                                                Edit labels
-                                            </Typography>
-                                        }
-                                    >
+                                    <Tooltip title={<Typography variant="overline">Edit labels</Typography>}>
                                         <IconButton
                                             className={classes.icon}
                                             onClick={event => {
@@ -133,12 +122,7 @@ const DTImagesList: FC<ImagesListProps> = ({
             </InfiniteScroll>
 
             {imageSelected && (
-                <DTImagePreview
-                    open={open}
-                    setOpen={setOpen}
-                    selected={selected}
-                    setSelected={setSelected}
-                />
+                <DTImagePreview open={open} setOpen={setOpen} selected={selected} setSelected={setSelected} />
             )}
         </div>
     );

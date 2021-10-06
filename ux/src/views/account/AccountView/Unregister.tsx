@@ -10,6 +10,7 @@ import {Theme} from 'src/theme';
 import api from 'src/utils/api';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 
+
 interface UnregisterProps {
     className?: string;
 }
@@ -40,8 +41,7 @@ const Unregister: FC<UnregisterProps> = ({className, ...rest}) => {
             <Box mb={2}>
                 <Alert severity="error">
                     <AlertTitle>Delete account</AlertTitle>
-                    Be careful, once deleted, there is no going back.{' '}
-                    <strong>Your account will be lost forever</strong>
+                    Be careful, once deleted, there is no going back. <strong>Your account will be lost forever</strong>
                 </Alert>
             </Box>
 
@@ -72,10 +72,7 @@ const Unregister: FC<UnregisterProps> = ({className, ...rest}) => {
                         if (isMountedRef.current) {
                             setStatus({success: false});
                             setSubmitting(false);
-                            enqueueSnackbar(
-                                error.message || 'Something went wrong',
-                                {variant: 'error'}
-                            );
+                            enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
                         }
                     }
                 }}
@@ -96,9 +93,7 @@ const Unregister: FC<UnregisterProps> = ({className, ...rest}) => {
                             {!values.clicked && (
                                 <Button
                                     className={classes.deleteAction}
-                                    onClick={() =>
-                                        setFieldValue('clicked', true)
-                                    }
+                                    onClick={() => setFieldValue('clicked', true)}
                                     startIcon={<DeleteIcon />}
                                     variant="contained"
                                 >
@@ -107,24 +102,17 @@ const Unregister: FC<UnregisterProps> = ({className, ...rest}) => {
                             )}
                             {values.clicked && (
                                 <>
-                                    <Typography
-                                        color="textPrimary"
-                                        gutterBottom
-                                    >
+                                    <Typography color="textPrimary" gutterBottom>
                                         <strong>Unregister your account</strong>
                                     </Typography>
                                     <Box mb={1}>
                                         <InputLabel>
-                                            Type{' '}
-                                            <strong>delete definitely</strong>{' '}
-                                            to proceed
+                                            Type <strong>delete definitely</strong> to proceed
                                         </InputLabel>
                                     </Box>
                                     <TextField
                                         autoFocus
-                                        error={Boolean(
-                                            touched.confirm && errors.confirm
-                                        )}
+                                        error={Boolean(touched.confirm && errors.confirm)}
                                         name="confirm"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
@@ -139,12 +127,7 @@ const Unregister: FC<UnregisterProps> = ({className, ...rest}) => {
                                             startIcon={<DeleteIcon />}
                                             endIcon={
                                                 isSubmitting && (
-                                                    <CircularProgress
-                                                        className={
-                                                            classes.loader
-                                                        }
-                                                        color="inherit"
-                                                    />
+                                                    <CircularProgress className={classes.loader} color="inherit" />
                                                 )
                                             }
                                             type="submit"

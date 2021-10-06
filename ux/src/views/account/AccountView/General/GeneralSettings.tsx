@@ -10,6 +10,7 @@ import {User} from 'src/types/user';
 import api from 'src/utils/api';
 import countries, {Country} from './countries';
 
+
 interface GeneralSettingsProps {
     className?: string;
     user: User;
@@ -19,11 +20,7 @@ const useStyles = makeStyles(() => ({
     root: {}
 }));
 
-const GeneralSettings: FC<GeneralSettingsProps> = ({
-    className,
-    user,
-    ...rest
-}) => {
+const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) => {
     const classes = useStyles();
 
     const {enqueueSnackbar} = useSnackbar();
@@ -62,16 +59,7 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({
                 }
             }}
         >
-            {({
-                errors,
-                handleBlur,
-                handleChange,
-                handleSubmit,
-                isSubmitting,
-                setFieldValue,
-                touched,
-                values
-            }) => (
+            {({errors, handleBlur, handleChange, handleSubmit, isSubmitting, setFieldValue, touched, values}) => (
                 <form onSubmit={handleSubmit}>
                     <Card className={clsx(classes.root, className)} {...rest}>
                         <CardHeader title="Profile" />
@@ -80,9 +68,7 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({
                             <Grid container spacing={4}>
                                 <Grid item md={6} xs={12}>
                                     <TextField
-                                        error={Boolean(
-                                            touched.name && errors.name
-                                        )}
+                                        error={Boolean(touched.name && errors.name)}
                                         fullWidth
                                         helperText={touched.name && errors.name}
                                         label="Name"
@@ -106,13 +92,9 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({
                                 </Grid>
                                 <Grid item md={6} xs={12}>
                                     <TextField
-                                        error={Boolean(
-                                            touched.phone && errors.phone
-                                        )}
+                                        error={Boolean(touched.phone && errors.phone)}
                                         fullWidth
-                                        helperText={
-                                            touched.phone && errors.phone
-                                        }
+                                        helperText={touched.phone && errors.phone}
                                         label="Phone Number"
                                         name="phone"
                                         onBlur={handleBlur}
@@ -123,9 +105,7 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({
                                 </Grid>
                                 <Grid item md={6} xs={12}>
                                     <TextField
-                                        error={Boolean(
-                                            touched.city && errors.city
-                                        )}
+                                        error={Boolean(touched.city && errors.city)}
                                         fullWidth
                                         helperText={touched.city && errors.city}
                                         label="City"
@@ -140,15 +120,9 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({
                                     <Autocomplete
                                         getOptionLabel={option => option.text}
                                         options={countries}
-                                        defaultValue={countries.find(
-                                            country =>
-                                                country.text === user.country
-                                        )}
+                                        defaultValue={countries.find(country => country.text === user.country)}
                                         onChange={(event, country) =>
-                                            setFieldValue(
-                                                'country',
-                                                (country as Country).text
-                                            )
+                                            setFieldValue('country', (country as Country).text)
                                         }
                                         renderInput={params => (
                                             <TextField
@@ -162,19 +136,11 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({
                                     />
                                 </Grid>
                                 <Grid item md={6} xs={12}>
-                                    <Typography
-                                        variant="h6"
-                                        color="textPrimary"
-                                    >
+                                    <Typography variant="h6" color="textPrimary">
                                         Make Contact Info Public
                                     </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        color="textSecondary"
-                                    >
-                                        Means that anyone viewing your profile
-                                        will be able to see your contacts
-                                        details
+                                    <Typography variant="body2" color="textSecondary">
+                                        Means that anyone viewing your profile will be able to see your contacts details
                                     </Typography>
                                     <Switch
                                         checked={values.is_public}
@@ -187,12 +153,7 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({
                         </CardContent>
                         <Divider />
                         <Box p={2} display="flex" justifyContent="flex-end">
-                            <Button
-                                color="primary"
-                                disabled={isSubmitting}
-                                type="submit"
-                                variant="contained"
-                            >
+                            <Button color="primary" disabled={isSubmitting} type="submit" variant="contained">
                                 Save Changes
                             </Button>
                         </Box>

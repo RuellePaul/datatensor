@@ -7,6 +7,7 @@ import {Label} from 'src/types/label';
 import {drawLabels, reset} from 'src/utils/labeling';
 import useDataset from 'src/hooks/useDataset';
 
+
 interface ImageBase64Props {
     imageBase64: string;
     labels: Label[];
@@ -34,12 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const ImageBase64: FC<ImageBase64Props> = ({
-    imageBase64,
-    labels,
-    className,
-    ...props
-}) => {
+const ImageBase64: FC<ImageBase64Props> = ({imageBase64, labels, className, ...props}) => {
     const classes = useStyles();
 
     const {categories} = useDataset();

@@ -12,6 +12,7 @@ import {createTheme} from './theme';
 import {create} from 'jss';
 import rtl from 'jss-rtl';
 
+
 declare module '@mui/styles/defaultTheme' {
     // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface DefaultTheme extends Theme {}
@@ -40,10 +41,7 @@ const InnerSettingsProviders: FC = ({children}) => {
                         maxSnack={3}
                         ref={snackbarRef}
                         action={key => (
-                            <IconButton
-                                onClick={onCloseSnackbar(key)}
-                                size="large"
-                            >
+                            <IconButton onClick={onCloseSnackbar(key)} size="large">
                                 <CloseIcon />
                             </IconButton>
                         )}

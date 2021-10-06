@@ -26,6 +26,7 @@ import api from 'src/utils/api';
 import bytesToSize from 'src/utils/bytesToSize';
 import {Image} from 'src/types/image';
 
+
 interface ImagesDropzoneProps {
     callback?: () => void;
     className?: string;
@@ -76,11 +77,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const ImagesDropzone: FC<ImagesDropzoneProps> = ({
-    callback,
-    className,
-    ...rest
-}) => {
+const ImagesDropzone: FC<ImagesDropzoneProps> = ({callback, className, ...rest}) => {
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
 
@@ -111,21 +108,13 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({
             let formData = new FormData();
             files.map(image => formData.append('files', image));
             try {
-                const response = await api.post<{images: Image[]}>(
-                    `/datasets/${dataset.id}/images/`,
-                    formData,
-                    {
-                        headers: {'Content-Type': 'multipart/form-data'}
-                    }
-                );
-                saveImages((images: Image[]) => [
-                    ...images,
-                    ...response.data.images
-                ]);
+                const response = await api.post<{images: Image[]}>(`/datasets/${dataset.id}/images/`, formData, {
+                    headers: {'Content-Type': 'multipart/form-data'}
+                });
+                saveImages((images: Image[]) => [...images, ...response.data.images]);
                 saveDataset({
                     ...dataset,
-                    image_count:
-                        dataset.image_count + response.data.images.length
+                    image_count: dataset.image_count + response.data.images.length
                 });
                 enqueueSnackbar(`${files.length} images uploaded`, {
                     variant: 'success'
@@ -153,18 +142,12 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({
             >
                 <input {...getInputProps()} />
                 <div>
-                    <img
-                        className={classes.image}
-                        src="/static/images/undraw_add_file2_gvbb.svg"
-                        alt="Select Images"
-                    />
+                    <img className={classes.image} src="/static/images/undraw_add_file2_gvbb.svg" alt="Select Images" />
                 </div>
                 <div>
                     <Box mt={2}>
                         <Typography color="textPrimary" variant="body1">
-                            Drop images here or click{' '}
-                            <Link underline="always">browse</Link> through your
-                            machine
+                            Drop images here or click <Link underline="always">browse</Link> through your machine
                         </Typography>
                     </Box>
                 </div>
@@ -201,14 +184,7 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({
                     size="small"
                     variant="contained"
                     onClick={handleUpload}
-                    endIcon={
-                        isUploading && (
-                            <CircularProgress
-                                className={classes.loader}
-                                color="inherit"
-                            />
-                        )
-                    }
+                    endIcon={isUploading && <CircularProgress className={classes.loader} color="inherit" />}
                     disabled={files.length === 0 || isUploading}
                 >
                     Upload images

@@ -10,6 +10,7 @@ import {reset} from 'src/utils/labeling';
 import useDataset from 'src/hooks/useDataset';
 import useImage from 'src/hooks/useImage';
 
+
 interface ContextMenuProps {
     canvas: HTMLCanvasElement; // ToolMove's canvas
     selectedLabels: Label[];
@@ -23,12 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const ContextMenu: FC<ContextMenuProps> = ({
-    canvas,
-    selectedLabels,
-    point,
-    handleClose
-}) => {
+const ContextMenu: FC<ContextMenuProps> = ({canvas, selectedLabels, point, handleClose}) => {
     const classes = useStyles();
 
     const {categories} = useDataset();
@@ -38,9 +34,7 @@ const ContextMenu: FC<ContextMenuProps> = ({
         handleClose();
         reset(canvas);
         let newLabels = labels.map(label =>
-            selectedLabels
-                .map(selectedLabel => selectedLabel.id)
-                .includes(label.id)
+            selectedLabels.map(selectedLabel => selectedLabel.id).includes(label.id)
                 ? {...label, category_id: category.id}
                 : label
         );
@@ -51,9 +45,7 @@ const ContextMenu: FC<ContextMenuProps> = ({
     const handleDeleteLabel = () => {
         handleClose();
         reset(canvas);
-        const newLabels = labels.filter(
-            label => !selectedLabels.map(label => label.id).includes(label.id)
-        );
+        const newLabels = labels.filter(label => !selectedLabels.map(label => label.id).includes(label.id));
         saveLabels(newLabels);
         storePosition(newLabels);
     };
@@ -64,9 +56,7 @@ const ContextMenu: FC<ContextMenuProps> = ({
             open={point[0] !== null}
             onClose={handleClose}
             anchorReference="anchorPosition"
-            anchorPosition={
-                point[0] !== null ? {top: point[1], left: point[0]} : undefined
-            }
+            anchorPosition={point[0] !== null ? {top: point[1], left: point[0]} : undefined}
         >
             <NestedMenuItem
                 parentMenuOpen={point[0] !== null}
@@ -88,9 +78,7 @@ const ContextMenu: FC<ContextMenuProps> = ({
                         onClick={() => handleUpdateLabelCategory(category)}
                     >
                         <Typography variant="inherit" noWrap>
-                            {selectedLabels
-                                .map(selectedLabel => selectedLabel.category_id)
-                                .includes(category.id) ? (
+                            {selectedLabels.map(selectedLabel => selectedLabel.category_id).includes(category.id) ? (
                                 <strong>{capitalize(category.name)}</strong>
                             ) : (
                                 capitalize(category.name)

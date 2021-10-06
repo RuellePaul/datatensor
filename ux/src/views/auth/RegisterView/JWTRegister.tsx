@@ -8,6 +8,7 @@ import GoogleCaptcha from 'src/components/utils/GoogleCaptcha';
 import useAuth from 'src/hooks/useAuth';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 
+
 interface JWTRegisterProps {
     className?: string;
 }
@@ -46,19 +47,11 @@ const JWTRegister: FC<JWTRegisterProps> = ({className, ...rest}) => {
                     .max(255)
                     .required('Password is required'),
                 recaptcha: Yup.string().required('Captcha is required'),
-                policy: Yup.boolean().oneOf(
-                    [true],
-                    'This field must be checked'
-                )
+                policy: Yup.boolean().oneOf([true], 'This field must be checked')
             })}
             onSubmit={async (values, {setErrors, setStatus, setSubmitting}) => {
                 try {
-                    await register(
-                        values.email,
-                        values.name,
-                        values.password,
-                        values.recaptcha
-                    );
+                    await register(values.email, values.name, values.password, values.recaptcha);
 
                     if (isMountedRef.current) {
                         setStatus({success: true});
@@ -77,22 +70,8 @@ const JWTRegister: FC<JWTRegisterProps> = ({className, ...rest}) => {
                 }
             }}
         >
-            {({
-                errors,
-                handleBlur,
-                handleChange,
-                handleSubmit,
-                isSubmitting,
-                touched,
-                values,
-                setFieldValue
-            }) => (
-                <form
-                    noValidate
-                    className={clsx(classes.root, className)}
-                    onSubmit={handleSubmit}
-                    {...rest}
-                >
+            {({errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values, setFieldValue}) => (
+                <form noValidate className={clsx(classes.root, className)} onSubmit={handleSubmit} {...rest}>
                     <TextField
                         error={Boolean(touched.name && errors.name)}
                         fullWidth
@@ -134,19 +113,13 @@ const JWTRegister: FC<JWTRegisterProps> = ({className, ...rest}) => {
                     <Box mt={2}>
                         <GoogleCaptcha
                             name="recaptcha"
-                            onChange={value =>
-                                setFieldValue('recaptcha', value)
-                            }
+                            onChange={value => setFieldValue('recaptcha', value)}
                             helperText={touched.recaptcha && errors.recaptcha}
                             key={reload}
                         />
                     </Box>
                     <Box alignItems="center" display="flex" mt={2} ml={-1}>
-                        <Checkbox
-                            checked={values.policy}
-                            name="policy"
-                            onChange={handleChange}
-                        />
+                        <Checkbox checked={values.policy} name="policy" onChange={handleChange} />
                         <Typography variant="body2" color="textSecondary">
                             I have read the{' '}
                             <Link component="a" href="#" color="primary">
@@ -154,14 +127,10 @@ const JWTRegister: FC<JWTRegisterProps> = ({className, ...rest}) => {
                             </Link>
                         </Typography>
                     </Box>
-                    {Boolean(touched.policy && errors.policy) && (
-                        <FormHelperText error>{errors.policy}</FormHelperText>
-                    )}
+                    {Boolean(touched.policy && errors.policy) && <FormHelperText error>{errors.policy}</FormHelperText>}
                     {errors.submit && (
                         <Box mt={3}>
-                            <FormHelperText error>
-                                {errors.submit}
-                            </FormHelperText>
+                            <FormHelperText error>{errors.submit}</FormHelperText>
                         </Box>
                     )}
                     <Box mt={2}>

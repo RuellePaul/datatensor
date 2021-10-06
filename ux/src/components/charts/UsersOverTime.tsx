@@ -20,6 +20,7 @@ import {User} from 'src/types/user';
 import moment from 'moment';
 import {TimeRange} from 'src/types/timeRange';
 
+
 interface UsersOverTimeProps {
     className?: string;
     users: User[];
@@ -46,22 +47,13 @@ const buildArray = (size: number) =>
         .map((_, i) => i)
         .reverse();
 
-const UsersOverTime: FC<UsersOverTimeProps> = ({
-    className,
-    users,
-    timeRange,
-    ...rest
-}) => {
+const UsersOverTime: FC<UsersOverTimeProps> = ({className, users, timeRange, ...rest}) => {
     const classes = useStyles();
     const theme = useTheme();
 
     const history = useHistory();
 
-    const generateChartData = (
-        size: number,
-        interval: string,
-        format: string
-    ) => ({
+    const generateChartData = (size: number, interval: string, format: string) => ({
         data: buildArray(size + 1).map(
             index =>
                 users.filter(user =>
@@ -91,9 +83,7 @@ const UsersOverTime: FC<UsersOverTimeProps> = ({
             <CardHeader
                 action={
                     <GenericMoreButton>
-                        <MenuItem
-                            onClick={() => history.push('/app/admin/users')}
-                        >
+                        <MenuItem onClick={() => history.push('/app/admin/users')}>
                             <ListItemIcon>
                                 <UsersIcon />
                             </ListItemIcon>

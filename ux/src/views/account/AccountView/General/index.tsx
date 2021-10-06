@@ -6,6 +6,7 @@ import useAuth from 'src/hooks/useAuth';
 import ProfileDetails from './ProfileDetails';
 import GeneralSettings from './GeneralSettings';
 
+
 interface GeneralProps {
     className?: string;
 }
@@ -19,12 +20,7 @@ const General: FC<GeneralProps> = ({className, ...rest}) => {
     const {user} = useAuth();
 
     return (
-        <Grid
-            className={clsx(classes.root, className)}
-            container
-            spacing={3}
-            {...rest}
-        >
+        <Grid className={clsx(classes.root, className)} container spacing={3} {...rest}>
             <Grid item lg={4} md={6} xl={3} xs={12}>
                 <ProfileDetails user={user} />
             </Grid>

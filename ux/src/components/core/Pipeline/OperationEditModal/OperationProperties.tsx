@@ -20,6 +20,7 @@ import type {Operation} from 'src/types/pipeline';
 import {updateOperation} from 'src/slices/pipeline';
 import {OPERATIONS_INITIAL_PROPERTIES, OPERATIONS_SHAPES} from 'src/config';
 
+
 interface OperationPropertiesProps {
     operation: Operation,
 }

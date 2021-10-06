@@ -83,11 +83,9 @@ const ChangePrivacyAction: FC<ChangePrivacyActionProps> = ({className}) => {
             <Box mb={2}>
                 <Alert severity="warning">
                     <AlertTitle>Change privacy</AlertTitle>
-                    Be careful, a public dataset is visible by any user of
-                    Datatensor.
+                    Be careful, a public dataset is visible by any user of Datatensor.
                     <br />
-                    This dataset is currently{' '}
-                    <strong>{dataset.is_public ? 'public' : 'private'}</strong>
+                    This dataset is currently <strong>{dataset.is_public ? 'public' : 'private'}</strong>
                 </Alert>
             </Box>
 
@@ -100,20 +98,11 @@ const ChangePrivacyAction: FC<ChangePrivacyActionProps> = ({className}) => {
                 Change privacy
             </Button>
 
-            <Dialog
-                disableRestoreFocus
-                fullWidth
-                open={openChangePrivacy}
-                onClose={handleCloseChangePrivacy}
-            >
+            <Dialog disableRestoreFocus fullWidth open={openChangePrivacy} onClose={handleCloseChangePrivacy}>
                 <DialogTitle className="flex">
                     <Typography variant="h4">Change privacy</Typography>
 
-                    <IconButton
-                        className={classes.close}
-                        onClick={handleCloseChangePrivacy}
-                        size="large"
-                    >
+                    <IconButton className={classes.close} onClick={handleCloseChangePrivacy} size="large">
                         <CloseIcon />
                     </IconButton>
                 </DialogTitle>
@@ -124,24 +113,14 @@ const ChangePrivacyAction: FC<ChangePrivacyActionProps> = ({className}) => {
                             <Chip
                                 className={classes.chip}
                                 label={dataset.is_public ? 'Public' : 'Private'}
-                                icon={
-                                    dataset.is_public ? (
-                                        <PublicIcon />
-                                    ) : (
-                                        <PrivateIcon />
-                                    )
-                                }
+                                icon={dataset.is_public ? <PublicIcon /> : <PrivateIcon />}
                                 variant="outlined"
                             />
                         </Typography>
                     </Box>
                 </DialogContent>
                 <DialogActions>
-                    <Button
-                        color="primary"
-                        onClick={handleChangeDatasetPrivacy}
-                        variant="contained"
-                    >
+                    <Button color="primary" onClick={handleChangeDatasetPrivacy} variant="contained">
                         {dataset.is_public ? 'Make private' : 'Make public'}
                     </Button>
                 </DialogActions>

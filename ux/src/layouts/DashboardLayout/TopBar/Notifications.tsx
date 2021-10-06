@@ -39,10 +39,8 @@ const titlesMap = {
 const descriptionsMap = (user: User) => ({
     TASK_SUCCEED: ' task completed successfully.',
     TASK_FAILED: ' task has failed.',
-    REGISTRATION:
-        "We're glad to see you as one of our members. Happy hacking on Datatensor !",
-    EMAIL_CONFIRM_REQUIRED:
-        'Please confirm your email address to access all datatensor features.',
+    REGISTRATION: "We're glad to see you as one of our members. Happy hacking on Datatensor !",
+    EMAIL_CONFIRM_REQUIRED: 'Please confirm your email address to access all datatensor features.',
     EMAIL_CONFIRM_DONE: `Your email address ${user.email} has been verified !`
 });
 
@@ -120,18 +118,9 @@ const Notifications: FC = () => {
     return (
         <>
             <Tooltip title="Notifications">
-                <IconButton
-                    color="inherit"
-                    ref={ref}
-                    onClick={handleOpen}
-                    size="large"
-                >
+                <IconButton color="inherit" ref={ref} onClick={handleOpen} size="large">
                     <Badge
-                        badgeContent={
-                            notifications.filter(
-                                notification => !notification.opened
-                            ).length
-                        }
+                        badgeContent={notifications.filter(notification => !notification.opened).length}
                         color="error"
                         max={9}
                     >
@@ -151,20 +140,11 @@ const Notifications: FC = () => {
                 onClose={handleClose}
                 open={isOpen}
             >
-                <Typography
-                    variant="h4"
-                    color="textPrimary"
-                    align="center"
-                    gutterBottom
-                >
+                <Typography variant="h4" color="textPrimary" align="center" gutterBottom>
                     Notifications
                 </Typography>
                 {notifications.length === 0 ? (
-                    <Typography
-                        variant="h6"
-                        color="textSecondary"
-                        align="center"
-                    >
+                    <Typography variant="h6" color="textSecondary" align="center">
                         You don't have any notification
                     </Typography>
                 ) : (
@@ -173,10 +153,7 @@ const Notifications: FC = () => {
                             {notifications
                                 .slice()
                                 .sort((a, b) =>
-                                    new Date(b.created_at).getTime() -
-                                    new Date(a.created_at).getTime()
-                                        ? -1
-                                        : 1
+                                    new Date(b.created_at).getTime() - new Date(a.created_at).getTime() ? -1 : 1
                                 )
                                 .map(notification => {
                                     return (
@@ -184,51 +161,29 @@ const Notifications: FC = () => {
                                             button
                                             className={clsx(
                                                 classes.notification,
-                                                notification.opened === false &&
-                                                    classes.highlight
+                                                notification.opened === false && classes.highlight
                                             )}
                                             divider
                                             key={notification.id}
-                                            onClick={() =>
-                                                handleNotificationClick(
-                                                    notification
-                                                )
-                                            }
+                                            onClick={() => handleNotificationClick(notification)}
                                         >
                                             <ListItemText
-                                                primary={
-                                                    titlesMap[notification.type]
-                                                }
+                                                primary={titlesMap[notification.type]}
                                                 primaryTypographyProps={{
                                                     variant: 'subtitle2',
                                                     color: 'textPrimary'
                                                 }}
                                                 secondary={
                                                     <>
-                                                        {[
-                                                            'TASK_SUCCEED',
-                                                            'TASK_FAILED'
-                                                        ].includes(
-                                                            notification.type
-                                                        ) &&
+                                                        {['TASK_SUCCEED', 'TASK_FAILED'].includes(notification.type) &&
                                                             tasks &&
                                                             capitalize(
-                                                                tasks.find(
-                                                                    task =>
-                                                                        task.id ===
-                                                                        notification.task_id
-                                                                )?.type || ''
+                                                                tasks.find(task => task.id === notification.task_id)
+                                                                    ?.type || ''
                                                             )}
-                                                        {
-                                                            descriptionsMap(
-                                                                user
-                                                            )[notification.type]
-                                                        }
+                                                        {descriptionsMap(user)[notification.type]}
                                                         <br />
-                                                        <Typography
-                                                            component="span"
-                                                            variant="caption"
-                                                        >
+                                                        <Typography component="span" variant="caption">
                                                             {getDateDiff(
                                                                 new Date(),
                                                                 notification.created_at,
@@ -239,12 +194,7 @@ const Notifications: FC = () => {
                                                 }
                                             />
                                             {notification.opened === false && (
-                                                <SvgIcon
-                                                    htmlColor={
-                                                        theme.palette.info.main
-                                                    }
-                                                    fontSize="small"
-                                                >
+                                                <SvgIcon htmlColor={theme.palette.info.main} fontSize="small">
                                                     <FiberManualRecord color="inherit" />
                                                 </SvgIcon>
                                             )}
@@ -253,10 +203,7 @@ const Notifications: FC = () => {
                                 })}
                         </List>
                         <Box p={1} display="flex" justifyContent="center">
-                            <Button
-                                size="small"
-                                onClick={handleDeleteNotifications}
-                            >
+                            <Button size="small" onClick={handleDeleteNotifications}>
                                 Delete all
                             </Button>
                         </Box>

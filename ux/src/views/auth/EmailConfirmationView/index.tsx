@@ -36,27 +36,14 @@ const EmailConfirmationView: FC = () => {
             ) : (
                 <Page className={classes.root} title="Confirmation">
                     <Container component="section" maxWidth="lg">
-                        <Typography
-                            align="center"
-                            variant="h2"
-                            color="textPrimary"
-                        >
+                        <Typography align="center" variant="h2" color="textPrimary">
                             Confirm your email
                         </Typography>
-                        <Typography
-                            align="center"
-                            variant="subtitle2"
-                            color="textSecondary"
-                        >
+                        <Typography align="center" variant="subtitle2" color="textSecondary">
                             Please confirm your email to access Datatensor App.
                         </Typography>
                         <Box mt={6} display="flex" justifyContent="center">
-                            <Button
-                                color="primary"
-                                component={RouterLink}
-                                to="/"
-                                variant="outlined"
-                            >
+                            <Button color="primary" component={RouterLink} to="/" variant="outlined">
                                 Back to home
                             </Button>
                         </Box>

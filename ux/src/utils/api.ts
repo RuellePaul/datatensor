@@ -3,9 +3,7 @@ import axios from 'axios';
 const PREFIX = '/api/v2';
 
 export const API_HOSTNAME =
-    process.env.REACT_APP_ENVIRONMENT === 'development'
-        ? '127.0.0.1:4069'
-        : window.location.hostname;
+    process.env.REACT_APP_ENVIRONMENT === 'development' ? '127.0.0.1:4069' : window.location.hostname;
 
 export const API_URI =
     process.env.REACT_APP_ENVIRONMENT === 'development'
@@ -26,17 +24,14 @@ api.interceptors.response.use(
     response => response,
     error => {
         if (error.response?.data?.data === 'ERR_VERIFY') {
-            if (window.location.pathname !== '/email-confirmation')
-                window.location.replace('/email-confirmation');
+            if (window.location.pathname !== '/email-confirmation') window.location.replace('/email-confirmation');
         }
 
         if (error.response?.data?.data === 'ERR_EXPIRED') {
             window.location.href = '/login?expired';
         }
 
-        return Promise.reject(
-            (error.response && error.response.data) || 'Something went wrong'
-        );
+        return Promise.reject((error.response && error.response.data) || 'Something went wrong');
     }
 );
 

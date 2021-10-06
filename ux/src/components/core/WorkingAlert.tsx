@@ -5,6 +5,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 import useTasks from 'src/hooks/useTasks';
 
+
 interface WorkingAlertProps {
     dataset_id: string;
     className?: string;
@@ -27,12 +28,8 @@ const WorkingAlert: FC<WorkingAlertProps> = ({dataset_id, className}) => {
 
     if (tasks === null) return null;
 
-    const activeTask = tasks.find(
-        task => task.status === 'active' && task.dataset_id === dataset_id
-    );
-    const activeTasksCount = tasks.filter(
-        task => task.status === 'active' && task.dataset_id === dataset_id
-    ).length;
+    const activeTask = tasks.find(task => task.status === 'active' && task.dataset_id === dataset_id);
+    const activeTasksCount = tasks.filter(task => task.status === 'active' && task.dataset_id === dataset_id).length;
 
     if (!activeTask) return null;
 
@@ -45,21 +42,11 @@ const WorkingAlert: FC<WorkingAlertProps> = ({dataset_id, className}) => {
     return (
         <Box className={clsx(classes.root, className)} mt={2}>
             <Alert severity="warning">
-                <Link
-                    className={classes.link}
-                    color="inherit"
-                    onClick={handleOpenTask}
-                >
-                    {activeTasksCount > 1
-                        ? 'Some tasks are running'
-                        : 'A task is running'}
+                <Link className={classes.link} color="inherit" onClick={handleOpenTask}>
+                    {activeTasksCount > 1 ? 'Some tasks are running' : 'A task is running'}
                 </Link>
 
-                <CircularProgress
-                    className={classes.loader}
-                    color="inherit"
-                    size={14}
-                />
+                <CircularProgress className={classes.loader} color="inherit" size={14} />
 
                 <div className="flexGrow" />
             </Alert>

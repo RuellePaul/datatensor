@@ -6,6 +6,7 @@ import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
 import {COLORS} from 'src/utils/colors';
 
+
 interface CategoriesDistributionProps {
     className?: string;
 }
@@ -17,10 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const CategoriesDistribution: FC<CategoriesDistributionProps> = ({
-    className,
-    ...rest
-}) => {
+const CategoriesDistribution: FC<CategoriesDistributionProps> = ({className, ...rest}) => {
     const classes = useStyles();
     const theme = useTheme();
 
@@ -28,9 +26,7 @@ const CategoriesDistribution: FC<CategoriesDistributionProps> = ({
 
     if (categories === null || categories.length === 0) return null;
 
-    const top10categories = categories
-        .sort((a, b) => (a.labels_count > b.labels_count ? -1 : 1))
-        .slice(0, 9);
+    const top10categories = categories.sort((a, b) => (a.labels_count > b.labels_count ? -1 : 1)).slice(0, 9);
 
     return (
         <Chart
@@ -93,21 +89,15 @@ const CategoriesDistribution: FC<CategoriesDistributionProps> = ({
                         show: false
                     },
                     custom: function({series, seriesIndex, dataPointIndex, w}) {
-                        return `<div class="apex-tooltip" style="background: ${
-                            theme.palette.background.default
-                        }">
-                                ${capitalize(
-                                    top10categories[dataPointIndex].name
-                                )}
+                        return `<div class="apex-tooltip" style="background: ${theme.palette.background.default}">
+                                ${capitalize(top10categories[dataPointIndex].name)}
                                 <br/>
                                 ${series[seriesIndex][dataPointIndex]}
                             </div>`;
                     }
                 },
                 xaxis: {
-                    categories: top10categories.map(category =>
-                        capitalize(category.name)
-                    ),
+                    categories: top10categories.map(category => capitalize(category.name)),
                     labels: {
                         style: {
                             colors: COLORS,

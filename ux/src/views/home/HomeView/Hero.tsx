@@ -4,6 +4,7 @@ import {Box, Container, Grid, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 
+
 interface HeroProps {
     className?: string;
 }
@@ -53,12 +54,7 @@ const Hero: FC<HeroProps> = ({className, ...rest}) => {
             <Container component="section" maxWidth="lg">
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={5}>
-                        <Box
-                            display="flex"
-                            flexDirection="column"
-                            justifyContent="center"
-                            height="100%"
-                        >
+                        <Box display="flex" flexDirection="column" justifyContent="center" height="100%">
                             <Typography variant="overline" color="primary">
                                 Introducing
                             </Typography>
@@ -66,57 +62,34 @@ const Hero: FC<HeroProps> = ({className, ...rest}) => {
                                 Datatensor
                             </Typography>
                             <Box mt={3}>
-                                <Typography
-                                    variant="body1"
-                                    color="textSecondary"
-                                >
-                                    A professional web application that comes
-                                    with ready-to-use object detection models,
-                                    developed with one goal in mind, help you
-                                    build faster computer vision applications.
+                                <Typography variant="body1" color="textSecondary">
+                                    A professional web application that comes with ready-to-use object detection models,
+                                    developed with one goal in mind, help you build faster computer vision applications.
                                 </Typography>
                             </Box>
                             <Box mt={3}>
                                 <Grid container spacing={3}>
                                     <Grid item>
-                                        <Typography
-                                            variant="h1"
-                                            color="primary"
-                                        >
+                                        <Typography variant="h1" color="primary">
                                             30+
                                         </Typography>
-                                        <Typography
-                                            variant="overline"
-                                            color="textSecondary"
-                                        >
+                                        <Typography variant="overline" color="textSecondary">
                                             Demo Pages
                                         </Typography>
                                     </Grid>
                                     <Grid item>
-                                        <Typography
-                                            variant="h1"
-                                            color="primary"
-                                        >
+                                        <Typography variant="h1" color="primary">
                                             UX
                                         </Typography>
-                                        <Typography
-                                            variant="overline"
-                                            color="textSecondary"
-                                        >
+                                        <Typography variant="overline" color="textSecondary">
                                             Complete Flows
                                         </Typography>
                                     </Grid>
                                     <Grid item>
-                                        <Typography
-                                            variant="h1"
-                                            color="primary"
-                                        >
+                                        <Typography variant="h1" color="primary">
                                             10+
                                         </Typography>
-                                        <Typography
-                                            variant="overline"
-                                            color="textSecondary"
-                                        >
+                                        <Typography variant="overline" color="textSecondary">
                                             Dataset Tools
                                         </Typography>
                                     </Grid>
@@ -127,17 +100,10 @@ const Hero: FC<HeroProps> = ({className, ...rest}) => {
                     <Grid item xs={12} md={7}>
                         <Box position="relative">
                             <div className={classes.shape}>
-                                <img
-                                    alt="Shapes"
-                                    src="/static/home/shapes.svg"
-                                />
+                                <img alt="Shapes" src="/static/home/shapes.svg" />
                             </div>
                             <div className={classes.image}>
-                                <img
-                                    alt="Presentation"
-                                    src="/static/images/yolov4.gif"
-                                    draggable={false}
-                                />
+                                <img alt="Presentation" src="/static/images/yolov4.gif" draggable={false} />
                             </div>
                         </Box>
                     </Grid>

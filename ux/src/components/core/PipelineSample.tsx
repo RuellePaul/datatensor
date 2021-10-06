@@ -14,6 +14,7 @@ import ImageBase64 from 'src/components/utils/ImageBase64';
 import {Label} from 'src/types/label';
 import wait from 'src/utils/wait';
 
+
 interface PipelineSampleProps {
     className?: string;
 }

@@ -6,6 +6,7 @@ import {Breadcrumbs, Button, Grid, SvgIcon, Typography} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
+
 interface HeaderProps {
     className?: string;
 }
@@ -27,10 +28,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
             {...rest}
         >
             <Grid item>
-                <Breadcrumbs
-                    separator={<NavigateNextIcon fontSize="small" />}
-                    aria-label="breadcrumb"
-                >
+                <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
                     <Typography variant="body1" color="textPrimary">
                         Datasets
                     </Typography>

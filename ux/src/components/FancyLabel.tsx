@@ -4,16 +4,10 @@ import {alpha} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 
+
 interface FancyLabelProps {
     className?: string;
-    color?:
-        | 'primary'
-        | 'secondary'
-        | 'error'
-        | 'warning'
-        | 'success'
-        | 'info'
-        | 'default';
+    color?: 'primary' | 'secondary' | 'error' | 'warning' | 'success' | 'info' | 'default';
     children?: ReactNode;
     style?: {};
 }
@@ -67,13 +61,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const FancyLabel: FC<FancyLabelProps> = ({
-    className = '',
-    color = 'primary',
-    children,
-    style,
-    ...rest
-}) => {
+const FancyLabel: FC<FancyLabelProps> = ({className = '', color = 'primary', children, style, ...rest}) => {
     const classes = useStyles();
 
     return (

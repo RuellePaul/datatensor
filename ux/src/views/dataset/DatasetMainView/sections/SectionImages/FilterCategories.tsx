@@ -8,6 +8,7 @@ import useDataset from 'src/hooks/useDataset';
 import useCategory from 'src/hooks/useCategory';
 import useImages from 'src/hooks/useImages';
 
+
 interface FilterCategoriesProps {
     className?: string;
 }
@@ -50,9 +51,7 @@ const FilterCategories: FC<FilterCategoriesProps> = ({className, ...rest}) => {
             className={classes.root}
             options={categoriesCopy
                 .sort((a, b) => -b.name.localeCompare(a.name))
-                .sort(
-                    (a, b) => -b.supercategory.localeCompare(a.supercategory)
-                )}
+                .sort((a, b) => -b.supercategory.localeCompare(a.supercategory))}
             groupBy={category => capitalize(category.supercategory)}
             getOptionLabel={category => capitalize(category.name)}
             onChange={(event, newCategory) => handleCategoryChange(newCategory)}

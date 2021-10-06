@@ -5,6 +5,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 import {Link as RouterLink} from 'react-router-dom';
 
+
 interface CTAProps {
     className?: string;
 }
@@ -27,12 +28,7 @@ const CTA: FC<CTAProps> = ({className, ...rest}) => {
                 <Typography variant="h1" align="center" color="textPrimary">
                     Ready to start building?
                 </Typography>
-                <Link
-                    variant="h2"
-                    color="primary"
-                    component={RouterLink}
-                    to="/app"
-                >
+                <Link variant="h2" color="primary" component={RouterLink} to="/app">
                     Login to Datatensor
                 </Link>
             </Container>

@@ -1,11 +1,4 @@
-import React, {
-    createContext,
-    FC,
-    ReactNode,
-    useCallback,
-    useEffect,
-    useState
-} from 'react';
+import React, {createContext, FC, ReactNode, useCallback, useEffect, useState} from 'react';
 import {Export} from 'src/types/export';
 import api from 'src/utils/api';
 import useDataset from 'src/hooks/useDataset';
@@ -25,24 +18,18 @@ export const ExportsContext = createContext<ExportsContextValue>({
     saveExports: () => {}
 });
 
-export const ExportsProvider: FC<ExportsProviderProps> = ({
-    children
-}) => {
+export const ExportsProvider: FC<ExportsProviderProps> = ({children}) => {
     const [currentExports, setCurrentExports] = useState<Export[] | []>([]);
 
     const {dataset} = useDataset();
 
-    const handleSaveExports = (
-        update: Export[] | ((exports: Export[]) => Export[])
-    ): void => {
+    const handleSaveExports = (update: Export[] | ((exports: Export[]) => Export[])): void => {
         setCurrentExports(update);
     };
 
     const fetchExports = useCallback(async () => {
         try {
-            const response = await api.get<{exports: Export[]}>(
-                `/datasets/${dataset.id}/exports`
-            );
+            const response = await api.get<{exports: Export[]}>(`/datasets/${dataset.id}/exports`);
             handleSaveExports(response.data.exports);
         } catch (err) {
             handleSaveExports([]);

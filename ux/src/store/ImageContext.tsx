@@ -1,11 +1,4 @@
-import React, {
-    createContext,
-    FC,
-    ReactNode,
-    useCallback,
-    useEffect,
-    useState
-} from 'react';
+import React, {createContext, FC, ReactNode, useCallback, useEffect, useState} from 'react';
 import {useSnackbar} from 'notistack';
 import {Label} from 'src/types/label';
 import {Image} from 'src/types/image';
@@ -43,9 +36,7 @@ export const ImageProvider: FC<ImageProviderProps> = ({image, children}) => {
 
     const [currentLabels, setCurrentLabels] = useState<Label[]>(null);
 
-    const handleSaveLabels = (
-        update: Label[] | ((labels: Label[]) => Label[])
-    ): void => {
+    const handleSaveLabels = (update: Label[] | ((labels: Label[]) => Label[])): void => {
         setCurrentLabels(update);
     };
 
@@ -54,9 +45,7 @@ export const ImageProvider: FC<ImageProviderProps> = ({image, children}) => {
 
         if (image) {
             try {
-                const response = await api.get<{labels: Label[]}>(
-                    `/datasets/${dataset.id}/images/${image.id}/labels/`
-                );
+                const response = await api.get<{labels: Label[]}>(`/datasets/${dataset.id}/images/${image.id}/labels/`);
                 handleSaveLabels(response.data.labels);
                 setPositions([response.data.labels]);
             } catch (err) {
@@ -71,18 +60,13 @@ export const ImageProvider: FC<ImageProviderProps> = ({image, children}) => {
 
     const validateLabels = async () => {
         try {
-            const response = await api.post<any>(
-                `/datasets/${dataset.id}/images/${image.id}/labels/`,
-                {labels: currentLabels}
-            );
+            const response = await api.post<any>(`/datasets/${dataset.id}/images/${image.id}/labels/`, {
+                labels: currentLabels
+            });
             saveCategories(categories =>
                 categories.map(category => ({
                     ...category,
-                    labels_count:
-                        category.labels_count +
-                        (response.data[category.id]
-                            ? response.data[category.id]
-                            : 0)
+                    labels_count: category.labels_count + (response.data[category.id] ? response.data[category.id] : 0)
                 }))
             );
             enqueueSnackbar('Labels updated', {variant: 'info'});

@@ -24,11 +24,7 @@ import {
 } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {TransitionProps} from '@mui/material/transitions';
-import {
-    Close as CloseIcon,
-    ImageOutlined as ImageIcon,
-    Restore as RestoreIcon
-} from '@mui/icons-material';
+import {Close as CloseIcon, ImageOutlined as ImageIcon, Restore as RestoreIcon} from '@mui/icons-material';
 import DTCategories from 'src/components/core/Labelisator/Categories';
 import DTImage from 'src/components/core/Images/Image';
 import CategoriesDistribution from 'src/components/charts/CategoriesDistribution';
@@ -45,6 +41,7 @@ import {Image} from 'src/types/image';
 import api from 'src/utils/api';
 import {ImageConsumer, ImageProvider} from 'src/store/ImageContext';
 import {CANVAS_OFFSET} from 'src/utils/labeling';
+
 
 interface DTLabelisatorProps {}
 
@@ -90,10 +87,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
     const [autoSwitch, setAutoSwitch] = useState<boolean>(true);
 
     const [tool, setTool] = useState<'label' | 'move'>('label');
-    const handleToolChange = (
-        event: React.MouseEvent<HTMLElement>,
-        newTool: 'label' | 'move' | null
-    ) => {
+    const handleToolChange = (event: React.MouseEvent<HTMLElement>, newTool: 'label' | 'move' | null) => {
         if (newTool !== null) setTool(newTool);
     };
 
@@ -102,14 +96,11 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
     const fetchImageIds = useCallback(async () => {
         setImageIds([]);
         try {
-            const response = await api.get<{image_ids: string[]}>(
-                `/datasets/${dataset.id}/images/ids`,
-                {
-                    params: {
-                        pipeline_id: pipeline?.id
-                    }
+            const response = await api.get<{image_ids: string[]}>(`/datasets/${dataset.id}/images/ids`, {
+                params: {
+                    pipeline_id: pipeline?.id
                 }
-            );
+            });
             setImageIds(response.data.image_ids);
         } catch (err) {
             console.error(err);
@@ -130,9 +121,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
         setImage(null);
 
         try {
-            const response = await api.get<{image: Image}>(
-                `/datasets/${dataset.id}/images/${image_id}`
-            );
+            const response = await api.get<{image: Image}>(`/datasets/${dataset.id}/images/${image_id}`);
             setImage(response.data.image);
         } catch (err) {
             console.error(err);
@@ -192,12 +181,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                         <Box mr={2}>
                             <KeyboardShortcuts />
                         </Box>
-                        <IconButton
-                            edge="start"
-                            color="inherit"
-                            onClick={handleClose}
-                            size="large"
-                        >
+                        <IconButton edge="start" color="inherit" onClick={handleClose} size="large">
                             <CloseIcon />
                         </IconButton>
                     </Toolbar>
@@ -211,12 +195,8 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                     <Box mr={1}>
                                         <ImageIcon />
                                     </Box>
-                                    <Typography
-                                        variant="overline"
-                                        color="textPrimary"
-                                    >
-                                        Image {imageIds.indexOf(image_id) + 1} /{' '}
-                                        {imageIds.length}
+                                    <Typography variant="overline" color="textPrimary">
+                                        Image {imageIds.indexOf(image_id) + 1} / {imageIds.length}
                                     </Typography>
                                 </Box>
 
@@ -225,43 +205,24 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                         min={0}
                                         max={imageIds.length - 1}
                                         valueLabelDisplay="auto"
-                                        defaultValue={imageIds.indexOf(
-                                            image_id
-                                        )}
-                                        onClick={event =>
-                                            event.stopPropagation()
-                                        }
+                                        defaultValue={imageIds.indexOf(image_id)}
+                                        onClick={event => event.stopPropagation()}
                                         onChangeCommitted={handleSliderChange}
                                         valueLabelFormat={x => x + 1}
                                         value={index}
-                                        onChange={(event, value) =>
-                                            setIndex(value as number)
-                                        }
+                                        onChange={(event, value) => setIndex(value as number)}
                                     />
 
-                                    <NextUnlabeledImageAction
-                                        index={index}
-                                        pipeline_id={pipeline?.id}
-                                    />
+                                    <NextUnlabeledImageAction index={index} pipeline_id={pipeline?.id} />
                                 </Box>
                             </Grid>
                             <Grid item lg={8} xs={12}>
                                 <Box display="flex" alignItems="center">
-                                    <ToggleButtonGroup
-                                        value={tool}
-                                        exclusive
-                                        onChange={handleToolChange}
-                                        size="small"
-                                    >
-                                        <ToggleButton
-                                            value="label"
-                                            disabled={autoSwitch}
-                                        >
+                                    <ToggleButtonGroup value={tool} exclusive onChange={handleToolChange} size="small">
+                                        <ToggleButton value="label" disabled={autoSwitch}>
                                             <Tooltip
                                                 title={
-                                                    <Typography
-                                                        variant="overline"
-                                                    >
+                                                    <Typography variant="overline">
                                                         Draw
                                                         <kbd>A</kbd>
                                                     </Typography>
@@ -270,15 +231,10 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                                 <LabelIcon />
                                             </Tooltip>
                                         </ToggleButton>
-                                        <ToggleButton
-                                            value="move"
-                                            disabled={autoSwitch}
-                                        >
+                                        <ToggleButton value="move" disabled={autoSwitch}>
                                             <Tooltip
                                                 title={
-                                                    <Typography
-                                                        variant="overline"
-                                                    >
+                                                    <Typography variant="overline">
                                                         Move
                                                         <kbd>Z</kbd>
                                                     </Typography>
@@ -296,16 +252,10 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                                 color="primary"
                                                 size="small"
                                                 checked={autoSwitch}
-                                                onChange={() =>
-                                                    setAutoSwitch(!autoSwitch)
-                                                }
+                                                onChange={() => setAutoSwitch(!autoSwitch)}
                                             />
                                         }
-                                        label={
-                                            <Typography color="textSecondary">
-                                                Auto switch
-                                            </Typography>
-                                        }
+                                        label={<Typography color="textSecondary">Auto switch</Typography>}
                                     />
 
                                     <div className="flexGrow" />
@@ -314,20 +264,13 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                         {value => (
                                             <Box mr={1}>
                                                 <IconButton
-                                                    disabled={
-                                                        value.positions
-                                                            .length <= 1
-                                                    }
-                                                    onClick={
-                                                        value.previousPosition
-                                                    }
+                                                    disabled={value.positions.length <= 1}
+                                                    onClick={value.previousPosition}
                                                     size="large"
                                                 >
                                                     <Tooltip
                                                         title={
-                                                            <Typography
-                                                                variant="overline"
-                                                            >
+                                                            <Typography variant="overline">
                                                                 Undo
                                                                 <kbd>CTRL</kbd>+<kbd>Z</kbd>
                                                             </Typography>
@@ -336,12 +279,8 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                                         <Badge
                                                             color="primary"
                                                             badgeContent={
-                                                                value.positions
-                                                                    .length > 1
-                                                                    ? value
-                                                                          .positions
-                                                                          .length -
-                                                                      1
+                                                                value.positions.length > 1
+                                                                    ? value.positions.length - 1
                                                                     : 0
                                                             }
                                                             max={99}
@@ -370,9 +309,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                                             variant="outlined"
                                                             color="primary"
                                                             size="small"
-                                                            onClick={
-                                                                value.validateLabels
-                                                            }
+                                                            onClick={value.validateLabels}
                                                         >
                                                             Save
                                                         </Button>
@@ -384,38 +321,17 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                 </Box>
 
                                 {image ? (
-                                    <Box
-                                        position="relative"
-                                        my={`${CANVAS_OFFSET}px`}
-                                    >
-                                        <div
-                                            className={clsx(
-                                                tool !== 'label' && 'hidden'
-                                            )}
-                                        >
-                                            <ToolLabel
-                                                setTool={setTool}
-                                                autoSwitch={autoSwitch}
-                                            />
+                                    <Box position="relative" my={`${CANVAS_OFFSET}px`}>
+                                        <div className={clsx(tool !== 'label' && 'hidden')}>
+                                            <ToolLabel setTool={setTool} autoSwitch={autoSwitch} />
                                         </div>
-                                        <div
-                                            className={clsx(
-                                                tool !== 'move' && 'hidden'
-                                            )}
-                                        >
-                                            <ToolMove
-                                                setTool={setTool}
-                                                autoSwitch={autoSwitch}
-                                            />
+                                        <div className={clsx(tool !== 'move' && 'hidden')}>
+                                            <ToolMove setTool={setTool} autoSwitch={autoSwitch} />
                                         </div>
 
                                         <DTImage skeleton fullWidth />
 
-                                        <KeyboardListener
-                                            index={index}
-                                            imageIds={imageIds}
-                                            setTool={setTool}
-                                        />
+                                        <KeyboardListener index={index} imageIds={imageIds} setTool={setTool} />
                                     </Box>
                                 ) : (
                                     <CircularProgress />
@@ -429,10 +345,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                     <Divider />
                                 </Box>
 
-                                <Typography
-                                    variant="overline"
-                                    color="textPrimary"
-                                >
+                                <Typography variant="overline" color="textPrimary">
                                     Top 10 categories
                                 </Typography>
 

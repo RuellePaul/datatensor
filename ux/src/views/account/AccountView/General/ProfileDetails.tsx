@@ -7,6 +7,7 @@ import UserAvatar from 'src/components/UserAvatar';
 import {Theme} from 'src/theme';
 import {User} from 'src/types/user';
 
+
 interface ProfileDetailsProps {
     className?: string;
     user: User;
@@ -23,29 +24,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const ProfileDetails: FC<ProfileDetailsProps> = ({
-    className,
-    user,
-    ...rest
-}) => {
+const ProfileDetails: FC<ProfileDetailsProps> = ({className, user, ...rest}) => {
     const classes = useStyles();
 
     return (
         <Card className={clsx(classes.root, className)} {...rest}>
             <CardContent>
-                <Box
-                    display="flex"
-                    alignItems="center"
-                    flexDirection="column"
-                    textAlign="center"
-                >
+                <Box display="flex" alignItems="center" flexDirection="column" textAlign="center">
                     <UserAvatar className={classes.avatar} />
-                    <Typography
-                        className={classes.name}
-                        color="textPrimary"
-                        gutterBottom
-                        variant="h3"
-                    >
+                    <Typography className={classes.name} color="textPrimary" gutterBottom variant="h3">
                         {user.name}
                     </Typography>
                     <Typography color="textPrimary" variant="body1">

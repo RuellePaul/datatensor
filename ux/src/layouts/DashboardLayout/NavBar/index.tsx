@@ -13,6 +13,7 @@ import useAuth from 'src/hooks/useAuth';
 import NavItem from './NavItem';
 import {User} from 'src/types/user';
 
+
 interface NavBarProps {
     openMobile: boolean;
     onMobileClose: () => void;
@@ -41,13 +42,7 @@ const sections = (user: User): Section[] => [
                           title: 'App dashboard',
                           icon: AdminDashboardIcon,
                           href: '/app/admin/dashboard',
-                          info: () => (
-                              <Chip
-                                  size="small"
-                                  label="Admin"
-                                  variant="outlined"
-                              />
-                          )
+                          info: () => <Chip size="small" label="Admin" variant="outlined" />
                       }
                   ]
                 : []),
@@ -67,13 +62,7 @@ const sections = (user: User): Section[] => [
                           title: 'Users',
                           icon: UsersIcon,
                           href: '/app/admin/users',
-                          info: () => (
-                              <Chip
-                                  size="small"
-                                  label="Admin"
-                                  variant="outlined"
-                              />
-                          )
+                          info: () => <Chip size="small" label="Admin" variant="outlined" />
                       }
                   ]
                 : []),
@@ -86,36 +75,13 @@ const sections = (user: User): Section[] => [
     }
 ];
 
-function renderNavItems({
-    items,
-    pathname,
-    depth = 0
-}: {
-    items: Item[];
-    pathname: string;
-    depth?: number;
-}) {
+function renderNavItems({items, pathname, depth = 0}: {items: Item[]; pathname: string; depth?: number}) {
     return (
-        <List disablePadding>
-            {items.reduce(
-                (acc, item) => reduceChildRoutes({acc, item, pathname, depth}),
-                []
-            )}
-        </List>
+        <List disablePadding>{items.reduce((acc, item) => reduceChildRoutes({acc, item, pathname, depth}), [])}</List>
     );
 }
 
-function reduceChildRoutes({
-    acc,
-    pathname,
-    item,
-    depth
-}: {
-    acc: any[];
-    pathname: string;
-    item: Item;
-    depth: number;
-}) {
+function reduceChildRoutes({acc, pathname, item, depth}: {acc: any[]; pathname: string; item: Item; depth: number}) {
     const key = item.title + depth;
 
     if (item.items) {
@@ -125,14 +91,7 @@ function reduceChildRoutes({
         });
 
         acc.push(
-            <NavItem
-                depth={depth}
-                icon={item.icon}
-                info={item.info}
-                key={key}
-                open={Boolean(open)}
-                title={item.title}
-            >
+            <NavItem depth={depth} icon={item.icon} info={item.info} key={key} open={Boolean(open)} title={item.title}>
                 {renderNavItems({
                     depth: depth + 1,
                     pathname,
@@ -142,14 +101,7 @@ function reduceChildRoutes({
         );
     } else {
         acc.push(
-            <NavItem
-                depth={depth}
-                href={item.href}
-                icon={item.icon}
-                info={item.info}
-                key={key}
-                title={item.title}
-            />
+            <NavItem depth={depth} href={item.href} icon={item.icon} info={item.info} key={key} title={item.title} />
         );
     }
 
@@ -252,12 +204,7 @@ const NavBar: FC<NavBarProps> = ({onMobileClose, openMobile}) => {
                         <Typography variant="h6" color="textPrimary">
                             Need Help?
                         </Typography>
-                        <Link
-                            variant="subtitle1"
-                            color="primary"
-                            component={RouterLink}
-                            to="/docs"
-                        >
+                        <Link variant="subtitle1" color="primary" component={RouterLink} to="/docs">
                             Check our docs
                         </Link>
                     </Box>
@@ -281,12 +228,7 @@ const NavBar: FC<NavBarProps> = ({onMobileClose, openMobile}) => {
                 </Drawer>
             </Hidden>
             <Hidden lgDown>
-                <Drawer
-                    anchor="left"
-                    classes={{paper: classes.desktopDrawer}}
-                    open
-                    variant="persistent"
-                >
+                <Drawer anchor="left" classes={{paper: classes.desktopDrawer}} open variant="persistent">
                     {content}
                 </Drawer>
             </Hidden>
