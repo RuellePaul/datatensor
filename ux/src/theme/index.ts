@@ -5,6 +5,7 @@ import {THEMES} from 'src/constants';
 import components from './components';
 import typography from './typography';
 
+
 export interface Theme extends MuiTheme {
     name: string;
 }
@@ -40,7 +41,8 @@ const themesOptions: ThemeOptions[] = [
         name: THEMES.LIGHT,
         palette: {
             background: {
-                default: '#FAFAFA'
+                default: '#FAFAFA',
+                paper: '#FFFFFF'
             }
         },
         components: {
@@ -57,7 +59,10 @@ const themesOptions: ThemeOptions[] = [
     {
         name: THEMES.DARK,
         palette: {
-            mode: 'dark'
+            mode: 'dark',
+            background: {
+                paper: '#272727'
+            }
         },
         components: {
             MuiPaper: {
@@ -79,7 +84,7 @@ export const createTheme = (config: ThemeConfig = {}): Theme => {
         [themeOptions] = themesOptions;
     }
 
-    let theme = createMuiTheme(_.merge({}, baseOptions, themeOptions, {direction: config.direction}));
+    let theme = createMuiTheme(_.merge({}, baseOptions, themeOptions, { direction: config.direction }));
 
     theme = responsiveFontSizes(theme);
 

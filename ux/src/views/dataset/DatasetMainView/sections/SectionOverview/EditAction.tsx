@@ -20,11 +20,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     loader: {
         width: '20px !important',
         height: '20px !important'
-    },
-    editor: {
-        '& .ql-editor': {
-            height: 400
-        }
     }
 }));
 
@@ -92,7 +87,7 @@ const EditAction: FC<EditProps> = ({ className }) => {
                             ...values
                         }));
                         setEditing(false);
-                        enqueueSnackbar('Edited dataset', { variant: 'success' });
+                        enqueueSnackbar('Edited dataset');
                     } catch (error) {
                         enqueueSnackbar(error.message || 'Something went wrong', { variant: 'error' });
                     }
@@ -139,7 +134,6 @@ const EditAction: FC<EditProps> = ({ className }) => {
                         </Box>
                         <Paper variant="outlined">
                             <QuillEditor
-                                className={classes.editor}
                                 value={values.description}
                                 onChange={(value: string) => setFieldValue('description', value)}
                             />

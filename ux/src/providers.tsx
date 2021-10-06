@@ -35,14 +35,14 @@ const InnerSettingsProviders: FC = ({children}) => {
             <ThemeProvider theme={theme}>
                 <StylesProvider jss={jss}>
                     <SnackbarProvider
-                        autoHideDuration={3000}
+                        autoHideDuration={30000}
                         disableWindowBlurListener
                         preventDuplicate
                         maxSnack={3}
                         ref={snackbarRef}
                         action={key => (
-                            <IconButton onClick={onCloseSnackbar(key)} size="large">
-                                <CloseIcon />
+                            <IconButton onClick={onCloseSnackbar(key)} size="large" style={{color: theme.palette.background.default}}>
+                                <CloseIcon color='inherit'/>
                             </IconButton>
                         )}
                     >

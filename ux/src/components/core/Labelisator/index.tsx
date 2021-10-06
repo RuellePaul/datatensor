@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     root: {},
     paper: {
         overflow: 'hidden',
-        background: theme.palette.background.paper
+        background: theme.palette.background.default
     },
     scroll: {
         overflowY: 'auto'
