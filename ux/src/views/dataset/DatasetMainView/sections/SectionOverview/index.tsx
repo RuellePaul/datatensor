@@ -20,7 +20,7 @@ const SectionOverview: FC<SectionProps> = ({className}) => {
         <div className={clsx(classes.root, className)}>
             <Grid container spacing={5} justifyContent="space-between">
                 <Grid item md={8} xs={12}>
-                    <Stack spacing={5}>
+                    <Stack spacing={2}>
                         <EditAction />
 
                         <LabelisatorAction />

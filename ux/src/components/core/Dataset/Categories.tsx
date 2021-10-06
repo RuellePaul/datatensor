@@ -9,7 +9,6 @@ import useDataset from 'src/hooks/useDataset';
 import {COLORS} from 'src/utils/colors';
 import {MAX_CATEGORIES_DISPLAYED} from 'src/config';
 
-
 interface CategoriesProps {
     className?: string;
 }
@@ -42,7 +41,7 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
     const isSelected = currentCategory?.name === category.name;
 
     return (
-        <Box m={0.5}>
+        <Box mb={1.5} mr={1.5}>
             <Chip
                 clickable
                 label={
@@ -59,9 +58,13 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
                     isSelected
                         ? {
                               color: theme.palette.getContrastText(COLORS[index]),
-                              background: COLORS[index]
+                              background: COLORS[index],
+                              borderColor: COLORS[index]
                           }
-                        : {color: COLORS[index]}
+                        : {
+                              color: COLORS[index],
+                              borderColor: COLORS[index]
+                          }
                 }
                 variant="outlined"
             />

@@ -22,6 +22,9 @@ const useStyles = makeStyles(theme => ({
         height: 50,
         padding: theme.spacing(0, 2)
     },
+    mobileStepper: {
+        background: theme.palette.background.paper
+    },
     img: {
         height: 255,
         display: 'block',
@@ -88,6 +91,7 @@ function ImagesSlideshow() {
                 ))}
             </AutoPlaySwipeableViews>
             <MobileStepper
+                className={classes.mobileStepper}
                 steps={images.length}
                 position="static"
                 variant="text"

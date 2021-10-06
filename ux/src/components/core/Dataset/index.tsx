@@ -111,7 +111,9 @@ const DTDataset: FC<DatasetProps> = ({className, dataset, ...rest}) => {
                         variant="body2"
                         component="p"
                         dangerouslySetInnerHTML={{
-                            __html: dataset.description || '<i>No description provided</i>'
+                            __html: (dataset.description !== '<p><br></p>')
+                                ? dataset.description
+                                : '<i>No description provided</i>'
                         }}
                     />
 

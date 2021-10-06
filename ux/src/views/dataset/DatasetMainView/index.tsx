@@ -17,13 +17,21 @@ import {ImagesConsumer, ImagesProvider} from 'src/store/ImagesContext';
 import {DatasetConsumer, DatasetProvider} from 'src/store/DatasetContext';
 import {CategoryProvider} from 'src/store/CategoryContext';
 import {PipelineProvider} from 'src/store/PipelineContext';
-import {ExportsProvider} from '../../../store/ExportsContext';
+import {ExportsProvider} from 'src/store/ExportsContext';
+
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         backgroundColor: theme.palette.background.default,
         minHeight: '100%',
         padding: theme.spacing(3, 0)
+    },
+    sticky: {
+        position: 'sticky',
+        top: 0,
+        background: theme.palette.background.default,
+        zIndex: 1100,
+        boxShadow: theme.palette.mode === 'dark' && theme.shadows[2]
     },
     tab: {
         color: theme.palette.text.primary,
@@ -33,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const DTTab = ({label, icon: Icon, ...rest}) => {
+const DTTab = ({ label, icon: Icon, ...rest }) => {
     const classes = useStyles();
 
     const TabLabel = (
@@ -57,7 +65,7 @@ const DatasetMainView: FC = () => {
         setTab(newTab);
     };
 
-    const {dataset_id} = useParams();
+    const { dataset_id } = useParams();
 
     useEffect(() => {
         setOpenedTabs(openedTabs => (openedTabs.includes(tab) ? openedTabs : [...openedTabs, tab]));
@@ -78,7 +86,7 @@ const DatasetMainView: FC = () => {
                                             <Container component="section" maxWidth="lg">
                                                 <Header />
 
-                                                <Box mt={2}>
+                                                <Box className={classes.sticky} mt={2}>
                                                     <ImagesConsumer>
                                                         {value => (
                                                             <Tabs
@@ -120,11 +128,11 @@ const DatasetMainView: FC = () => {
                                                             </Tabs>
                                                         )}
                                                     </ImagesConsumer>
-                                                </Box>
 
-                                                <Box mb={3}>
                                                     <Divider />
                                                 </Box>
+
+                                                <Box mb={3} />
 
                                                 {openedTabs.includes(0) && (
                                                     <SectionOverview className={clsx(tab !== 0 && 'hidden')} />

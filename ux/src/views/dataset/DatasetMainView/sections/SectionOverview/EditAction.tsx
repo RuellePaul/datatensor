@@ -53,7 +53,7 @@ const EditAction: FC<EditProps> = ({ className }) => {
 
                     <Typography
                         color="textSecondary"
-                        variant="body2"
+                        variant="body1"
                         dangerouslySetInnerHTML={{
                             __html: (dataset.description !== '<p><br></p>')
                                 ? dataset.description
