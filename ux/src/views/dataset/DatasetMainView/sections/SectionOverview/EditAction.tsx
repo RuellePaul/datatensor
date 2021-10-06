@@ -12,6 +12,7 @@ import useDataset from 'src/hooks/useDataset';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import api from 'src/utils/api';
 
+
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         background: theme.palette.background.default
@@ -31,14 +32,14 @@ interface EditProps {
     className?: string;
 }
 
-const EditAction: FC<EditProps> = ({className}) => {
+const EditAction: FC<EditProps> = ({ className }) => {
     const classes = useStyles();
     const isMountedRef = useIsMountedRef();
-    const {enqueueSnackbar} = useSnackbar();
+    const { enqueueSnackbar } = useSnackbar();
 
     const [editing, setEditing] = useState<boolean>(false);
 
-    const {dataset, saveDataset} = useDataset();
+    const { dataset, saveDataset } = useDataset();
 
     if (!dataset) return null;
 
@@ -49,11 +50,14 @@ const EditAction: FC<EditProps> = ({className}) => {
                     <Typography variant="h1" color="textPrimary" gutterBottom>
                         {dataset.name}
                     </Typography>
+
                     <Typography
                         color="textSecondary"
-                        variant="h4"
+                        variant="body2"
                         dangerouslySetInnerHTML={{
-                            __html: dataset.description || '<i>No description provided</i>'
+                            __html: (dataset.description !== '<p><br></p>')
+                                ? dataset.description
+                                : '<i>No description provided</i>'
                         }}
                     />
                 </div>
@@ -76,7 +80,7 @@ const EditAction: FC<EditProps> = ({className}) => {
                     .required('Filename is required'),
                 description: Yup.string().max(5000)
             })}
-            onSubmit={async (values, {setStatus, setSubmitting}) => {
+            onSubmit={async (values, { setStatus, setSubmitting }) => {
                 try {
                     try {
                         await api.patch(`/datasets/${dataset.id}`, {
@@ -88,13 +92,13 @@ const EditAction: FC<EditProps> = ({className}) => {
                             ...values
                         }));
                         setEditing(false);
-                        enqueueSnackbar('Edited dataset', {variant: 'success'});
+                        enqueueSnackbar('Edited dataset', { variant: 'success' });
                     } catch (error) {
-                        enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
+                        enqueueSnackbar(error.message || 'Something went wrong', { variant: 'error' });
                     }
 
                     if (isMountedRef.current) {
-                        setStatus({success: true});
+                        setStatus({ success: true });
                         setSubmitting(false);
                     }
                 } catch (error) {
@@ -103,13 +107,13 @@ const EditAction: FC<EditProps> = ({className}) => {
                     });
 
                     if (isMountedRef.current) {
-                        setStatus({success: false});
+                        setStatus({ success: false });
                         setSubmitting(false);
                     }
                 }
             }}
         >
-            {({errors, handleBlur, handleChange, handleSubmit, touched, isSubmitting, values, setFieldValue}) => (
+            {({ errors, handleBlur, handleChange, handleSubmit, touched, isSubmitting, values, setFieldValue }) => (
                 <form noValidate onSubmit={handleSubmit}>
                     <div className={clsx(classes.root, className)}>
                         <Typography variant="subtitle2" color="textSecondary">
