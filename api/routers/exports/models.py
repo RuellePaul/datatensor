@@ -20,7 +20,6 @@ class ExportData(Dataset):
 class Export(MongoModel):
     id: str = Field()
     dataset_id: str
-    date: datetime
     export_data: ExportData
 
 

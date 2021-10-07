@@ -1,10 +1,12 @@
 import React, {FC, useState} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
+import moment from 'moment';
 import {useSnackbar} from 'notistack';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {
+    Alert,
     Box,
     Button,
     Card,
@@ -13,7 +15,6 @@ import {
     CardHeader,
     Dialog,
     DialogContent,
-    Divider,
     InputAdornment,
     LinearProgress,
     Link,
@@ -33,6 +34,12 @@ import download from 'src/utils/download';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
+    alert: {
+        marginBottom: theme.spacing(2),
+        '& .MuiAlert-message': {
+            width: '100%'
+        }
+    },
     loader: {
         width: '20px !important',
         height: '20px !important'
@@ -43,22 +50,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-interface ExportProps {
+interface ExportActionProps {
     className?: string;
 }
 
-const DEFAULT_INPUT_WIDTH = 200;
-const MAX_INPUT_WIDTH = 300;
-const FONT_SIZE = 8;
-
-const Export: FC<ExportProps> = ({className}) => {
+const ExportAction: FC<ExportActionProps> = ({className}) => {
     const classes = useStyles();
     const isMountedRef = useIsMountedRef();
     const {enqueueSnackbar} = useSnackbar();
 
     const {tasks, saveTasks} = useTasks();
-    const {dataset} = useDataset();
-    const {exports} = useExports();
+    const {dataset, saveDataset} = useDataset();
+    const {exports, saveExports, trigger} = useExports();
 
     const [open, setOpen] = useState<boolean>(false);
 
@@ -69,6 +72,7 @@ const Export: FC<ExportProps> = ({className}) => {
     const handleClose = (): void => {
         setOpen(false);
     };
+
     const handleExport = async () => {
         try {
             const response = await api.post<{task: Task}>(`/datasets/${dataset.id}/tasks/`, {
@@ -76,6 +80,11 @@ const Export: FC<ExportProps> = ({className}) => {
                 properties: {}
             });
             saveTasks(tasks => [...tasks, response.data.task]);
+            saveExports([]);
+            saveDataset(dataset => ({
+                ...dataset,
+                exported_at: new Date().toISOString()
+            }));
         } catch (error) {
             enqueueSnackbar(error.message || 'Something went wrong', {
                 variant: 'error'
@@ -137,6 +146,61 @@ const Export: FC<ExportProps> = ({className}) => {
                     <Card className={clsx(classes.root, className)} variant="outlined">
                         <CardHeader title="Export" />
                         <CardContent>
+                            {dataset.exported_at && !activeExportTask && (
+                                <Alert className={classes.alert}>
+                                    <Typography variant="body2">
+                                        Last export : {moment(dataset.exported_at).format('DD MMM, HH:mm')}
+                                        <br />
+                                        {exports.length === 0 && (
+                                            <Link variant="subtitle1" color="primary" onClick={trigger}>
+                                                View details
+                                            </Link>
+                                        )}
+                                    </Typography>
+
+                                    {exports.length > 0 && (
+                                        <>
+                                            <TextField
+                                                error={Boolean(touched.filename && errors.filename)}
+                                                name="filename"
+                                                onBlur={handleBlur}
+                                                onChange={handleChange}
+                                                value={values.filename}
+                                                autoFocus
+                                                margin="dense"
+                                                label="Filename"
+                                                fullWidth
+                                                InputProps={{
+                                                    endAdornment: <InputAdornment position="end">.json</InputAdornment>
+                                                }}
+                                                variant="standard"
+                                            />
+                                            <Box display="flex" justifyContent="flex-end" mt={1}>
+                                                <Box mr={1}>
+                                                    <Button
+                                                        color="inherit"
+                                                        endIcon={<ViewIcon />}
+                                                        onClick={handleOpen}
+                                                        size="small"
+                                                    >
+                                                        Inspect
+                                                    </Button>
+                                                </Box>
+                                                <Button
+                                                    color="inherit"
+                                                    endIcon={<Download />}
+                                                    type="submit"
+                                                    variant="outlined"
+                                                    size="small"
+                                                >
+                                                    Download
+                                                </Button>
+                                            </Box>
+                                        </>
+                                    )}
+                                </Alert>
+                            )}
+
                             <Typography gutterBottom>Download your dataset in JSON format.</Typography>
                             <Typography color="textSecondary" gutterBottom>
                                 An exported dataset allows you to use it in your own computer vision pipeline. See the{' '}
@@ -169,46 +233,7 @@ const Export: FC<ExportProps> = ({className}) => {
                                     </Button>
                                 </CardActions>
                             )}
-
-                            {exports.length > 0 && (
-                                <>
-                                    <Divider />
-                                    <TextField
-                                        error={Boolean(touched.filename && errors.filename)}
-                                        name="filename"
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        value={values.filename}
-                                        autoFocus
-                                        margin="dense"
-                                        label="Filename"
-                                        fullWidth
-                                        InputProps={{
-                                            endAdornment: <InputAdornment position="end">.json</InputAdornment>,
-                                            style: {
-                                                width: `${
-                                                    values.filename.length * FONT_SIZE > DEFAULT_INPUT_WIDTH
-                                                        ? Math.min(values.filename.length * FONT_SIZE, MAX_INPUT_WIDTH)
-                                                        : DEFAULT_INPUT_WIDTH
-                                                }px`
-                                            }
-                                        }}
-                                        variant="standard"
-                                    />
-                                </>
-                            )}
                         </CardContent>
-
-                        {exports.length > 0 && (
-                            <CardActions style={{justifyContent: 'flex-end'}}>
-                                <Button color="primary" endIcon={<ViewIcon />} onClick={handleOpen} variant="outlined">
-                                    Inspect
-                                </Button>
-                                <Button color="primary" endIcon={<Download />} type="submit" variant="contained">
-                                    Download
-                                </Button>
-                            </CardActions>
-                        )}
                     </Card>
 
                     <Dialog open={open} onClose={handleClose} maxWidth="md">
@@ -226,4 +251,4 @@ const Export: FC<ExportProps> = ({className}) => {
     );
 };
 
-export default Export;
+export default ExportAction;

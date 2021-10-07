@@ -7,4 +7,5 @@ export interface Dataset {
     image_count: number;
     augmented_count: number;
     is_public: boolean;
+    exported_at?: string;
 }

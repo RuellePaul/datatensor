@@ -7,6 +7,7 @@ import SplashScreen from 'src/components/screens/SplashScreen';
 export interface ExportsContextValue {
     exports: Export[];
     saveExports: (update: Export[] | ((exports: Export[]) => Export[])) => void;
+    trigger: () => void
 }
 
 interface ExportsProviderProps {
@@ -15,7 +16,8 @@ interface ExportsProviderProps {
 
 export const ExportsContext = createContext<ExportsContextValue>({
     exports: [],
-    saveExports: () => {}
+    saveExports: () => {},
+    trigger: () => {}
 });
 
 export const ExportsProvider: FC<ExportsProviderProps> = ({children}) => {
@@ -23,13 +25,17 @@ export const ExportsProvider: FC<ExportsProviderProps> = ({children}) => {
 
     const {dataset} = useDataset();
 
+    const [triggered, setTriggered] = useState<boolean>(false);
+
+    const trigger = () => setTriggered(true);
+
     const handleSaveExports = (update: Export[] | ((exports: Export[]) => Export[])): void => {
         setCurrentExports(update);
     };
 
     const fetchExports = useCallback(async () => {
         try {
-            const response = await api.get<{exports: Export[]}>(`/datasets/${dataset.id}/exports`);
+            const response = await api.get<{exports: Export[]}>(`/datasets/${dataset.id}/exports/`);
             handleSaveExports(response.data.exports);
         } catch (err) {
             handleSaveExports([]);
@@ -40,8 +46,10 @@ export const ExportsProvider: FC<ExportsProviderProps> = ({children}) => {
     }, [dataset.id]);
 
     useEffect(() => {
-        fetchExports();
-    }, [fetchExports]);
+        if (triggered) {
+            fetchExports();
+        }
+    }, [triggered, fetchExports]);
 
     if (currentExports === null) return <SplashScreen />;
 
@@ -49,7 +57,8 @@ export const ExportsProvider: FC<ExportsProviderProps> = ({children}) => {
         <ExportsContext.Provider
             value={{
                 exports: currentExports,
-                saveExports: handleSaveExports
+                saveExports: handleSaveExports,
+                trigger: trigger
             }}
         >
             {children}

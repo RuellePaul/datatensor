@@ -63,8 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     link: {
         display: 'flex',
         alignItems: 'center',
-        marginLeft: theme.spacing(1),
-        cursor: 'pointer'
+        marginLeft: theme.spacing(1)
     },
     block: {
         display: 'block',

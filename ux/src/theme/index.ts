@@ -53,6 +53,13 @@ const themesOptions: ThemeOptions[] = [
                         boxShadow: '0px 0px 5px #00000029'
                     }
                 }
+            },
+            MuiLink: {
+                styleOverrides: {
+                    root: {
+                        cursor: 'pointer'
+                    }
+                }
             }
         }
     },
@@ -69,6 +76,13 @@ const themesOptions: ThemeOptions[] = [
                 styleOverrides: {
                     root: {
                         background: '#272727'
+                    }
+                }
+            },
+            MuiLink: {
+                styleOverrides: {
+                    root: {
+                        cursor: 'pointer'
                     }
                 }
             }

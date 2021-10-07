@@ -15,9 +15,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     root: {},
     loader: {
         marginLeft: theme.spacing(1)
-    },
-    link: {
-        cursor: 'pointer'
     }
 }));
 
@@ -42,7 +39,7 @@ const WorkingAlert: FC<WorkingAlertProps> = ({dataset_id, className}) => {
     return (
         <Box className={clsx(classes.root, className)} mt={2}>
             <Alert severity="warning">
-                <Link className={classes.link} color="inherit" onClick={handleOpenTask}>
+                <Link color="inherit" onClick={handleOpenTask}>
                     {activeTasksCount > 1 ? 'Some tasks are running' : 'A task is running'}
                 </Link>
 

@@ -32,12 +32,13 @@ def process_export(task_id, dataset_id):
     export = Export(
         id=str(uuid4()),
         dataset_id=dataset_id,
-        date=datetime.now(),
         export_data=export_data,
     )
 
     db.exports.delete_many({'dataset_id': dataset_id})
     db.exports.insert_one(export.mongo())
+    db.datasets.find_one_and_update({'_id': dataset_id},
+                                    {'$set': {'exported_at': datetime.now()}})
 
     return export_data
 
