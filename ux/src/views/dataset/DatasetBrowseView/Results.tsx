@@ -7,6 +7,7 @@ import {Theme} from 'src/theme';
 import DTDataset from 'src/components/core/Dataset';
 import useDatasets from 'src/hooks/useDatasets';
 
+
 interface ResultsProps {
     className?: string;
 }
@@ -56,27 +57,13 @@ const Results: FC<ResultsProps> = ({className, ...rest}) => {
 
     return (
         <div className={clsx(classes.root, className)} {...rest}>
-            <Box
-                display="flex"
-                alignItems="center"
-                justifyContent="space-between"
-                flexWrap="wrap"
-                mb={2}
-            >
-                <Typography
-                    className={classes.title}
-                    variant="h5"
-                    color="textPrimary"
-                >
+            <Box display="flex" alignItems="center" justifyContent="space-between" flexWrap="wrap" mb={2}>
+                <Typography className={classes.title} variant="h5" color="textPrimary">
                     Showing {displayedDatasets.length} dataset
                     {displayedDatasets.length > 1 ? 's' : ''}
                 </Typography>
                 <Box display="flex" alignItems="center">
-                    <Button
-                        className={classes.sortButton}
-                        onClick={handleSortOpen}
-                        ref={sortRef}
-                    >
+                    <Button className={classes.sortButton} onClick={handleSortOpen} ref={sortRef}>
                         {selectedSort}
                         <ArrowDropDownIcon />
                     </Button>
@@ -87,17 +74,11 @@ const Results: FC<ResultsProps> = ({className, ...rest}) => {
                     .sort((a, b) => {
                         if (selectedSort === 'Most images')
                             return (
-                                b.image_count +
-                                (b.augmented_count || 0) -
-                                (a.image_count + (a.augmented_count || 0))
+                                b.image_count + (b.augmented_count || 0) - (a.image_count + (a.augmented_count || 0))
                             );
-                        else if (selectedSort === 'Most original images')
-                            return b.image_count - a.image_count;
+                        else if (selectedSort === 'Most original images') return b.image_count - a.image_count;
                         else if (selectedSort === 'Most recent')
-                            return (
-                                new Date(b.created_at).getTime() -
-                                new Date(a.created_at).getTime()
-                            );
+                            return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
                         else return 0;
                     })
                     .map(dataset => (
@@ -109,22 +90,12 @@ const Results: FC<ResultsProps> = ({className, ...rest}) => {
             <Box mt={6} display="flex" justifyContent="center">
                 <Pagination count={1} />
             </Box>
-            <Menu
-                anchorEl={sortRef.current}
-                onClose={handleSortClose}
-                open={openSort}
-                elevation={1}
-            >
-                {['Most images', 'Most original images', 'Most recent'].map(
-                    option => (
-                        <MenuItem
-                            key={option}
-                            onClick={() => handleSortSelect(option)}
-                        >
-                            <ListItemText primary={option} />
-                        </MenuItem>
-                    )
-                )}
+            <Menu anchorEl={sortRef.current} onClose={handleSortClose} open={openSort} elevation={1}>
+                {['Most images', 'Most original images', 'Most recent'].map(option => (
+                    <MenuItem key={option} onClick={() => handleSortSelect(option)}>
+                        <ListItemText primary={option} />
+                    </MenuItem>
+                ))}
             </Menu>
         </div>
     );

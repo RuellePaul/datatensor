@@ -6,6 +6,7 @@ import UserInfo from './UserInfo';
 import OtherActions from './OtherActions';
 import useUser from 'src/hooks/useUser';
 
+
 interface DetailsProps {
     className?: string;
 }
@@ -19,12 +20,7 @@ const Details: FC<DetailsProps> = ({className, ...rest}) => {
     const {user} = useUser();
 
     return (
-        <Grid
-            className={clsx(classes.root, className)}
-            container
-            spacing={3}
-            {...rest}
-        >
+        <Grid className={clsx(classes.root, className)} container spacing={3} {...rest}>
             <Grid item md={6} xs={12}>
                 <UserInfo user={user} />
             </Grid>

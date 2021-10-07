@@ -11,6 +11,7 @@ import OperationEditModal from './OperationEditModal';
 import {OPERATIONS_ICONS} from 'src/config';
 import ProbabilitySlider from './OperationEditModal/ProbabilitySlider';
 
+
 interface OperationProps {
     className?: string;
     operationId: string;

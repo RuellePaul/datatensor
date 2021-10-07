@@ -8,6 +8,7 @@ import {Theme} from 'src/theme';
 import {GithubIcon, GoogleIcon, StackoverflowIcon} from 'src/views/auth/LoginView/OAuthLoginButton';
 import useAuth from 'src/hooks/useAuth';
 
+
 interface UserAvatarProps {
     className?: string;
     style?: object;
@@ -60,37 +61,22 @@ const UserAvatar: FC<UserAvatarProps> = ({user = null, className, ...rest}) => {
             }}
             badgeContent={
                 <Avatar
-                    className={clsx(
-                        classes.smallAvatar,
-                        displayedUser.scope === 'github' && classes.border
-                    )}
+                    className={clsx(classes.smallAvatar, displayedUser.scope === 'github' && classes.border)}
                     alt={displayedUser.scope}
                     title={`Logged with ${displayedUser.scope}`}
                 >
                     {displayedUser.scope === 'github' && <GithubIcon />}
                     {displayedUser.scope === 'google' && <GoogleIcon />}
-                    {displayedUser.scope === 'stackoverflow' && (
-                        <StackoverflowIcon />
-                    )}
+                    {displayedUser.scope === 'stackoverflow' && <StackoverflowIcon />}
                 </Avatar>
             }
         >
-            <Avatar
-                className={clsx(className)}
-                src={displayedUser.avatar}
-                alt="User"
-                {...rest}
-            >
+            <Avatar className={clsx(className)} src={displayedUser.avatar} alt="User" {...rest}>
                 {getInitials(displayedUser.name)}
             </Avatar>
         </Badge>
     ) : (
-        <Avatar
-            className={clsx(className)}
-            src={displayedUser.avatar}
-            alt="User"
-            {...rest}
-        >
+        <Avatar className={clsx(className)} src={displayedUser.avatar} alt="User" {...rest}>
             {getInitials(displayedUser.name)}
         </Avatar>
     );

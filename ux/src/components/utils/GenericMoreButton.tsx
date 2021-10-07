@@ -30,12 +30,7 @@ const GenericMoreButton: FC<GenericMoreButtonProps> = ({children, ...rest}) => {
     return (
         <>
             <Tooltip title="More options">
-                <IconButton
-                    onClick={handleMenuOpen}
-                    ref={moreRef}
-                    {...rest}
-                    size="large"
-                >
+                <IconButton onClick={handleMenuOpen} ref={moreRef} {...rest} size="large">
                     <MoreIcon fontSize="small" />
                 </IconButton>
             </Tooltip>

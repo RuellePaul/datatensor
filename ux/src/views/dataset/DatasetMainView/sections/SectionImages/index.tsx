@@ -26,9 +26,7 @@ const SectionImages: FC<SectionProps> = ({className}) => {
         <div className={clsx(classes.root, className)}>
             <Typography color="textPrimary" gutterBottom>
                 Currently, this dataset contains{' '}
-                <strong>
-                    {dataset.image_count + dataset.augmented_count} images :
-                </strong>{' '}
+                <strong>{dataset.image_count + dataset.augmented_count} images :</strong>{' '}
                 <FancyLabel className={classes.label} color="info">
                     {dataset.image_count} original
                 </FancyLabel>

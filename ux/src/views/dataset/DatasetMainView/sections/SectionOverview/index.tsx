@@ -9,20 +9,18 @@ import ExportAction from './ExportAction';
 import LabelisatorAction from './LabelisatorAction';
 import EditAction from './EditAction';
 
-
 const useStyles = makeStyles((theme: Theme) => ({
     root: {}
 }));
 
-const SectionOverview: FC<SectionProps> = ({ className }) => {
+const SectionOverview: FC<SectionProps> = ({className}) => {
     const classes = useStyles();
 
     return (
         <div className={clsx(classes.root, className)}>
             <Grid container spacing={5} justifyContent="space-between">
-
                 <Grid item md={8} xs={12}>
-                    <Stack spacing={5}>
+                    <Stack spacing={2}>
                         <EditAction />
 
                         <LabelisatorAction />
@@ -36,7 +34,6 @@ const SectionOverview: FC<SectionProps> = ({ className }) => {
                         <ExportAction />
                     </Stack>
                 </Grid>
-
             </Grid>
         </div>
     );

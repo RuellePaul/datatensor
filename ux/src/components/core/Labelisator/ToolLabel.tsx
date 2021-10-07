@@ -18,6 +18,7 @@ import {
 import useCategory from 'src/hooks/useCategory';
 import useImage from 'src/hooks/useImage';
 
+
 interface ToolLabelProps {
     setTool: any;
     autoSwitch: boolean;
@@ -89,27 +90,15 @@ const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
             let newLabel = {
                 id: uuid(),
                 x: formatRatio(
-                    Math.min(
-                        point[0] - CANVAS_OFFSET,
-                        storedPoint[0] - CANVAS_OFFSET
-                    ) /
+                    Math.min(point[0] - CANVAS_OFFSET, storedPoint[0] - CANVAS_OFFSET) /
                         (canvas.width - 2 * CANVAS_OFFSET)
                 ),
                 y: formatRatio(
-                    Math.min(
-                        point[1] - CANVAS_OFFSET,
-                        storedPoint[1] - CANVAS_OFFSET
-                    ) /
+                    Math.min(point[1] - CANVAS_OFFSET, storedPoint[1] - CANVAS_OFFSET) /
                         (canvas.height - 2 * CANVAS_OFFSET)
                 ),
-                w: formatRatio(
-                    (point[0] - storedPoint[0]) /
-                        (canvas.width - 2 * CANVAS_OFFSET)
-                ),
-                h: formatRatio(
-                    (point[1] - storedPoint[1]) /
-                        (canvas.height - 2 * CANVAS_OFFSET)
-                ),
+                w: formatRatio((point[0] - storedPoint[0]) / (canvas.width - 2 * CANVAS_OFFSET)),
+                h: formatRatio((point[1] - storedPoint[1]) / (canvas.height - 2 * CANVAS_OFFSET)),
                 category_id: currentCategory?.id || null
             };
             let newLabels = [...labels, newLabel];

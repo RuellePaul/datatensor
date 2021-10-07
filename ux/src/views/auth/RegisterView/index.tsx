@@ -1,14 +1,6 @@
 import React, {FC} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
-import {
-    Box,
-    Card,
-    CardContent,
-    Container,
-    Divider,
-    Link,
-    Typography
-} from '@mui/material';
+import {Box, Card, CardContent, Container, Divider, Link, Typography} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
@@ -39,11 +31,7 @@ const RegisterView: FC = () => {
 
     return (
         <Page className={classes.root} title="Register">
-            <Container
-                component="section"
-                className={classes.cardContainer}
-                maxWidth="sm"
-            >
+            <Container component="section" className={classes.cardContainer} maxWidth="sm">
                 <Box mb={8} display="flex" justifyContent="center">
                     <RouterLink to="/">
                         <Logo />
@@ -51,24 +39,12 @@ const RegisterView: FC = () => {
                 </Box>
                 <Card>
                     <CardContent className={classes.cardContent}>
-                        <Box
-                            alignItems="center"
-                            display="flex"
-                            justifyContent="space-between"
-                            mb={3}
-                        >
+                        <Box alignItems="center" display="flex" justifyContent="space-between" mb={3}>
                             <div>
-                                <Typography
-                                    color="textPrimary"
-                                    gutterBottom
-                                    variant="h2"
-                                >
+                                <Typography color="textPrimary" gutterBottom variant="h2">
                                     Register
                                 </Typography>
-                                <Typography
-                                    variant="body2"
-                                    color="textSecondary"
-                                >
+                                <Typography variant="body2" color="textSecondary">
                                     Register on the internal platform
                                 </Typography>
                             </div>
@@ -79,12 +55,7 @@ const RegisterView: FC = () => {
                         <Box my={3}>
                             <Divider />
                         </Box>
-                        <Link
-                            component={RouterLink}
-                            to="/login"
-                            variant="body2"
-                            color="textSecondary"
-                        >
+                        <Link component={RouterLink} to="/login" variant="body2" color="textSecondary">
                             Having an account
                         </Link>
                     </CardContent>

@@ -8,6 +8,7 @@ import useDataset from 'src/hooks/useDataset';
 import useImage from 'src/hooks/useImage';
 import {useTabContext} from '@mui/lab';
 
+
 interface DTImageProps {
     className?: string;
     clickable?: boolean;
@@ -120,14 +121,7 @@ const DTImage: FC<DTImageProps> = ({
                     variant="rectangular"
                 />
             )}
-            <div
-                className={clsx(
-                    classes.root,
-                    className,
-                    skeleton && !loaded && 'hidden'
-                )}
-                {...rest}
-            >
+            <div className={clsx(classes.root, className, skeleton && !loaded && 'hidden')} {...rest}>
                 <img
                     src={image?.path}
                     alt={image?.name}

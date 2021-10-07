@@ -8,6 +8,7 @@ import LoadingScreen from 'src/components/screens/LoadingScreen';
 import AuthGuard from 'src/components/guards/AuthGuard';
 import GuestGuard from 'src/components/guards/GuestGuard';
 
+
 type Routes = {
     exact?: boolean;
     path?: string | string[];
@@ -32,13 +33,7 @@ export const renderRoutes = (routes: Routes = []): JSX.Element => (
                         exact={route.exact}
                         render={props => (
                             <Guard>
-                                <Layout>
-                                    {route.routes ? (
-                                        renderRoutes(route.routes)
-                                    ) : (
-                                        <Component {...props} />
-                                    )}
-                                </Layout>
+                                <Layout>{route.routes ? renderRoutes(route.routes) : <Component {...props} />}</Layout>
                             </Guard>
                         )}
                     />
@@ -100,23 +95,17 @@ const routes: Routes = [
             {
                 exact: true,
                 path: '/app/datasets',
-                component: lazy(() =>
-                    import('src/views/dataset/DatasetBrowseView')
-                )
+                component: lazy(() => import('src/views/dataset/DatasetBrowseView'))
             },
             {
                 exact: true,
                 path: '/app/datasets/create',
-                component: lazy(() =>
-                    import('src/views/dataset/DatasetCreateView')
-                )
+                component: lazy(() => import('src/views/dataset/DatasetCreateView'))
             },
             {
                 exact: true,
                 path: '/app/datasets/:dataset_id',
-                component: lazy(() =>
-                    import('src/views/dataset/DatasetMainView')
-                )
+                component: lazy(() => import('src/views/dataset/DatasetMainView'))
             },
             {
                 exact: true,
@@ -126,9 +115,7 @@ const routes: Routes = [
             {
                 exact: true,
                 path: '/app/admin/dashboard',
-                component: lazy(() =>
-                    import('src/views/reports/AdminDashboardView')
-                )
+                component: lazy(() => import('src/views/reports/AdminDashboardView'))
             },
             {
                 exact: true,
@@ -152,9 +139,7 @@ const routes: Routes = [
             {
                 exact: true,
                 path: '/docs/getting-started',
-                component: lazy(() =>
-                    import('src/views/docs/GettingStartedView')
-                )
+                component: lazy(() => import('src/views/docs/GettingStartedView'))
             },
             {
                 exact: true,

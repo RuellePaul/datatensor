@@ -2,6 +2,7 @@ import React, {FC, ReactNode} from 'react';
 import makeStyles from '@mui/styles/makeStyles';
 import TopBar from './TopBar';
 
+
 interface MainLayoutProps {
     children?: ReactNode;
 }

@@ -10,21 +10,13 @@ const Settings: FC = () => {
 
     return (
         <>
-            <Tooltip
-                title={settings.theme === THEMES.DARK
-                    ? 'Switch to light theme'
-                    : 'Switch to dark theme'
-                }
-            >
+            <Tooltip title={settings.theme === THEMES.DARK ? 'Switch to light theme' : 'Switch to dark theme'}>
                 <IconButton
                     color="inherit"
                     onClick={() =>
                         saveSettings({
                             ...settings,
-                            theme:
-                                settings.theme === THEMES.DARK
-                                    ? THEMES.LIGHT
-                                    : THEMES.DARK
+                            theme: settings.theme === THEMES.DARK ? THEMES.LIGHT : THEMES.DARK
                         })
                     }
                     ref={ref}

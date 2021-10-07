@@ -7,6 +7,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import useAuth from 'src/hooks/useAuth';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 
+
 interface JWTLoginProps {
     className?: string;
 }
@@ -55,21 +56,8 @@ const JWTLogin: FC<JWTLoginProps> = ({className, ...rest}) => {
                 }
             }}
         >
-            {({
-                errors,
-                handleBlur,
-                handleChange,
-                handleSubmit,
-                isSubmitting,
-                touched,
-                values
-            }) => (
-                <form
-                    noValidate
-                    onSubmit={handleSubmit}
-                    className={clsx(classes.root, className)}
-                    {...rest}
-                >
+            {({errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values}) => (
+                <form noValidate onSubmit={handleSubmit} className={clsx(classes.root, className)} {...rest}>
                     <TextField
                         error={Boolean(touched.email && errors.email)}
                         fullWidth
@@ -98,9 +86,7 @@ const JWTLogin: FC<JWTLoginProps> = ({className, ...rest}) => {
                     />
                     {errors.submit && (
                         <Box mt={1}>
-                            <FormHelperText error>
-                                {errors.submit}
-                            </FormHelperText>
+                            <FormHelperText error>{errors.submit}</FormHelperText>
                         </Box>
                     )}
                     <Box mt={2}>
@@ -118,8 +104,7 @@ const JWTLogin: FC<JWTLoginProps> = ({className, ...rest}) => {
                     <Box mt={2}>
                         <Alert severity="info">
                             <div>
-                                Use <b>demo@datatensor.io</b> and password{' '}
-                                <b>Password123</b>
+                                Use <b>demo@datatensor.io</b> and password <b>Password123</b>
                             </div>
                         </Alert>
                     </Box>

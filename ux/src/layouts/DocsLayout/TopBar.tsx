@@ -7,6 +7,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import {Menu as MenuIcon} from 'react-feather';
 import Logo from 'src/components/utils/Logo';
 
+
 interface TopBarProps {
     onMobileNavOpen?: () => void;
 }

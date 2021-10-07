@@ -1,11 +1,4 @@
-import React, {
-    createContext,
-    FC,
-    ReactNode,
-    useEffect,
-    useRef,
-    useState
-} from 'react';
+import React, {createContext, FC, ReactNode, useEffect, useRef, useState} from 'react';
 import {useLocation} from 'react-router-dom';
 import {Task} from 'src/types/task';
 import {setNotifications} from 'src/slices/notification';
@@ -49,15 +42,11 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
     const [currentTasks, setCurrentTasks] = useState<Task[]>(null);
     const [selectedTask, setSelectedTask] = useState<Task>(null);
 
-    const handleSaveTasks = (
-        update: Task[] | ((tasks: Task[]) => Task[])
-    ): void => {
+    const handleSaveTasks = (update: Task[] | ((tasks: Task[]) => Task[])): void => {
         setCurrentTasks(update);
     };
 
-    const handleSaveSelectedTask = (
-        update: Task | ((tasks: Task) => Task)
-    ): void => {
+    const handleSaveSelectedTask = (update: Task | ((tasks: Task) => Task)): void => {
         setSelectedTask(update);
     };
 
@@ -72,9 +61,7 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
             console.info('Task websocket closed.');
         };
 
-        wsNotifications.current = new WebSocket(
-            `ws://${API_HOSTNAME}/ws/notifications`
-        );
+        wsNotifications.current = new WebSocket(`ws://${API_HOSTNAME}/ws/notifications`);
         wsNotifications.current.onopen = () => {
             console.info('Notifications websocket opened.');
             setPaused(false);
@@ -98,10 +85,7 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
 
         function sendTaskMessage() {
             console.log('Send tasks poll...');
-            if (
-                wsTask.current &&
-                wsTask.current.readyState === WebSocket.OPEN
-            ) {
+            if (wsTask.current && wsTask.current.readyState === WebSocket.OPEN) {
                 wsTask.current.send(accessToken);
             }
         }
@@ -120,20 +104,13 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
 
         function sendNotificationsMessage() {
             console.log('Send notifications poll...');
-            if (
-                wsNotifications.current &&
-                wsNotifications.current.readyState === WebSocket.OPEN
-            ) {
+            if (wsNotifications.current && wsNotifications.current.readyState === WebSocket.OPEN) {
                 wsNotifications.current.send(accessToken);
             }
         }
 
         if (isPaused) clearInterval(notificationsIntervalID);
-        else
-            notificationsIntervalID = setInterval(
-                sendNotificationsMessage,
-                HEARTBEAT_DELAY
-            );
+        else notificationsIntervalID = setInterval(sendNotificationsMessage, HEARTBEAT_DELAY);
 
         wsNotifications.current.onmessage = event => {
             dispatch(setNotifications(JSON.parse(event.data)));
@@ -143,18 +120,13 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
     useEffect(() => {
         if (currentTasks && accessToken) {
             let hasPendingOrActiveTasks =
-                currentTasks.filter(task =>
-                    ['pending', 'active'].includes(task.status)
-                ).length > 0;
+                currentTasks.filter(task => ['pending', 'active'].includes(task.status)).length > 0;
             setPaused(!hasPendingOrActiveTasks);
         }
     }, [currentTasks, accessToken]);
 
     useEffect(() => {
-        if (selectedTask)
-            setSelectedTask(
-                currentTasks.find(task => task.id === selectedTask.id)
-            );
+        if (selectedTask) setSelectedTask(currentTasks.find(task => task.id === selectedTask.id));
 
         // eslint-disable-next-line
     }, [currentTasks]);

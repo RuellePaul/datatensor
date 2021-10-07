@@ -1,13 +1,6 @@
 import React, {FC} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
-import {
-    Box,
-    Button,
-    Container,
-    Typography,
-    useMediaQuery,
-    useTheme
-} from '@mui/material';
+import {Box, Button, Container, Typography, useMediaQuery, useTheme} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
@@ -39,20 +32,12 @@ const NotFoundView: FC = () => {
     return (
         <Page className={classes.root} title="404: Not found">
             <Container component="section" maxWidth="lg">
-                <Typography
-                    align="center"
-                    variant={mobileDevice ? 'h4' : 'h1'}
-                    color="textPrimary"
-                >
+                <Typography align="center" variant={mobileDevice ? 'h4' : 'h1'} color="textPrimary">
                     404: The page you are looking for isn’t here
                 </Typography>
-                <Typography
-                    align="center"
-                    variant="subtitle2"
-                    color="textSecondary"
-                >
-                    You either tried some shady route or you came here by
-                    mistake. Whichever it is, try using the navigation.
+                <Typography align="center" variant="subtitle2" color="textSecondary">
+                    You either tried some shady route or you came here by mistake. Whichever it is, try using the
+                    navigation.
                 </Typography>
                 <Box mt={6} display="flex" justifyContent="center">
                     <img
@@ -72,12 +57,7 @@ const NotFoundView: FC = () => {
                             Back to previous page
                         </Button>
                     </Box>
-                    <Button
-                        color="primary"
-                        component={RouterLink}
-                        to="/app/dashboard"
-                        variant="contained"
-                    >
+                    <Button color="primary" component={RouterLink} to="/app/dashboard" variant="contained">
                         Back to home
                     </Button>
                 </Box>

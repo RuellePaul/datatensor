@@ -77,11 +77,7 @@ const AdminDashboardView: FC = () => {
     return (
         <Page className={classes.root} title="Dashboard | Admin">
             <Container component="section" maxWidth="lg">
-                <Header
-                    timeRange={timeRange}
-                    setTimeRange={setTimeRange}
-                    timeRanges={timeRanges}
-                />
+                <Header timeRange={timeRange} setTimeRange={setTimeRange} timeRanges={timeRanges} />
                 <Grid container spacing={3}>
                     <Grid item md={7} xs={12}>
                         <TasksOverTime tasks={tasks} timeRange={timeRange} />

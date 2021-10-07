@@ -9,6 +9,7 @@ import {createOperation} from 'src/slices/pipeline';
 import {OperationType} from 'src/types/pipeline';
 import {OPERATIONS_ICONS, OPERATIONS_TYPES} from 'src/config';
 
+
 interface OperationAddProps {
     className?: string;
 }

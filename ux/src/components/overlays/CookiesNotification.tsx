@@ -48,25 +48,14 @@ const CookiesNotification: FC = () => {
         <Portal>
             <div className={classes.root}>
                 <Typography variant="body1" color="inherit">
-                    We use Cookies to ensure that we give you the best
-                    experience on our website. Read our{' '}
-                    <Link
-                        component="a"
-                        color="inherit"
-                        underline="always"
-                        href="/privacy-policy"
-                        target="_blank"
-                    >
+                    We use Cookies to ensure that we give you the best experience on our website. Read our{' '}
+                    <Link component="a" color="inherit" underline="always" href="/privacy-policy" target="_blank">
                         Privacy Policy
                     </Link>
                     .
                 </Typography>
                 <Box mt={2} display="flex" justifyContent="flex-end">
-                    <Button
-                        onClick={handleClose}
-                        variant="contained"
-                        className={classes.action}
-                    >
+                    <Button onClick={handleClose} variant="contained" className={classes.action}>
                         I Agree
                     </Button>
                 </Box>

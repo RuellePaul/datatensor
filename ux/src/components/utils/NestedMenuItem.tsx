@@ -27,8 +27,7 @@ export interface NestedMenuItemProps extends Omit<MenuItemProps, 'button'> {
     /**
      * Props passed to container element.
      */
-    ContainerProps?: React.HTMLAttributes<HTMLElement> &
-        React.RefAttributes<HTMLElement | null>;
+    ContainerProps?: React.HTMLAttributes<HTMLElement> & React.RefAttributes<HTMLElement | null>;
     /**
      * Props passed to sub `<Menu/>` element
      */
@@ -50,10 +49,7 @@ const useMenuItemStyles = makeStyles(theme => ({
  * Use as a drop-in replacement for `<MenuItem>` when you need to add cascading
  * menu elements as children to this component.
  */
-const NestedMenuItem = React.forwardRef<
-    HTMLLIElement | null,
-    NestedMenuItemProps
->(function NestedMenuItem(props, ref) {
+const NestedMenuItem = React.forwardRef<HTMLLIElement | null, NestedMenuItemProps>(function NestedMenuItem(props, ref) {
     const {
         parentMenuOpen,
         label,
@@ -129,14 +125,8 @@ const NestedMenuItem = React.forwardRef<
             containerRef.current?.focus();
         }
 
-        if (
-            event.key === 'ArrowRight' &&
-            event.target === containerRef.current &&
-            event.target === active
-        ) {
-            const firstChild = menuContainerRef.current?.children[0] as
-                | HTMLElement
-                | undefined;
+        if (event.key === 'ArrowRight' && event.target === containerRef.current && event.target === active) {
+            const firstChild = menuContainerRef.current?.children[0] as HTMLElement | undefined;
             firstChild?.focus();
         }
     };
@@ -160,11 +150,7 @@ const NestedMenuItem = React.forwardRef<
             onMouseLeave={handleMouseLeave}
             onKeyDown={handleKeyDown}
         >
-            <MenuItem
-                {...MenuItemProps}
-                className={clsx(menuItemClasses.root, className)}
-                ref={menuItemRef}
-            >
+            <MenuItem {...MenuItemProps} className={clsx(menuItemClasses.root, className)} ref={menuItemRef}>
                 {label}
                 {rightIcon}
             </MenuItem>

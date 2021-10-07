@@ -40,14 +40,10 @@ const UserDetailsView: FC = () => {
                     <Header />
 
                     <Box display="flex" alignItems="center" mt={2}>
-                        <UserConsumer>
-                            {value => <UserAvatar user={value.user} />}
-                        </UserConsumer>
+                        <UserConsumer>{value => <UserAvatar user={value.user} />}</UserConsumer>
                         <Box ml={2}>
                             <Typography variant="h4" color="textPrimary">
-                                <UserConsumer>
-                                    {value => value.user.name}
-                                </UserConsumer>
+                                <UserConsumer>{value => value.user.name}</UserConsumer>
                             </Typography>
                         </Box>
                     </Box>
@@ -61,11 +57,7 @@ const UserDetailsView: FC = () => {
                             textColor="primary"
                         >
                             {tabs.map(tab => (
-                                <Tab
-                                    key={tab.value}
-                                    label={tab.label}
-                                    value={tab.value}
-                                />
+                                <Tab key={tab.value} label={tab.label} value={tab.value} />
                             ))}
                         </Tabs>
                     </Box>

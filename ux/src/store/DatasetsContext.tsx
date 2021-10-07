@@ -1,23 +1,12 @@
-import React, {
-    createContext,
-    FC,
-    ReactNode,
-    useCallback,
-    useEffect,
-    useState
-} from 'react';
+import React, {createContext, FC, ReactNode, useCallback, useEffect, useState} from 'react';
 import {Dataset} from 'src/types/dataset';
 import api from 'src/utils/api';
 
 export interface DatasetsContextValue {
     datasets: Dataset[];
-    saveDatasets: (
-        update: Dataset[] | ((datasets: Dataset[]) => Dataset[])
-    ) => void;
+    saveDatasets: (update: Dataset[] | ((datasets: Dataset[]) => Dataset[])) => void;
     displayedDatasets: Dataset[] | null;
-    saveDisplayedDatasets: (
-        update: Dataset[] | ((datasets: Dataset[]) => Dataset[])
-    ) => void;
+    saveDisplayedDatasets: (update: Dataset[] | ((datasets: Dataset[]) => Dataset[])) => void;
 }
 
 interface DatasetsProviderProps {
@@ -33,19 +22,13 @@ export const DatasetsContext = createContext<DatasetsContextValue>({
 
 export const DatasetsProvider: FC<DatasetsProviderProps> = ({children}) => {
     const [currentDatasets, setCurrentDatasets] = useState<Dataset[]>([]);
-    const [displayedDatasets, setDisplayedDatasets] = useState<
-        Dataset[] | null
-    >(null);
+    const [displayedDatasets, setDisplayedDatasets] = useState<Dataset[] | null>(null);
 
-    const handleSaveDatasets = (
-        update: Dataset[] | ((datasets: Dataset[]) => Dataset[])
-    ): void => {
+    const handleSaveDatasets = (update: Dataset[] | ((datasets: Dataset[]) => Dataset[])): void => {
         setCurrentDatasets(update);
     };
 
-    const handleSaveDisplayedDatasets = (
-        update: Dataset[] | ((datasets: Dataset[]) => Dataset[])
-    ): void => {
+    const handleSaveDisplayedDatasets = (update: Dataset[] | ((datasets: Dataset[]) => Dataset[])): void => {
         setDisplayedDatasets(update);
     };
 

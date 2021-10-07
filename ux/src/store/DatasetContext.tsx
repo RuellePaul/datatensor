@@ -1,11 +1,4 @@
-import React, {
-    createContext,
-    FC,
-    ReactNode,
-    useCallback,
-    useEffect,
-    useState
-} from 'react';
+import React, {createContext, FC, ReactNode, useCallback, useEffect, useState} from 'react';
 import {Category} from 'src/types/category';
 import {Dataset} from 'src/types/dataset';
 import api from 'src/utils/api';
@@ -16,13 +9,9 @@ export interface DatasetContextValue {
     dataset: Dataset;
     saveDataset: (update: Dataset | ((dataset: Dataset) => Dataset)) => void;
     categories: Category[];
-    saveCategories: (
-        update: Category[] | ((update: Category[]) => Category[])
-    ) => void;
+    saveCategories: (update: Category[] | ((update: Category[]) => Category[])) => void;
     pipelines: Pipeline[];
-    savePipelines: (
-        update: Pipeline[] | ((update: Pipeline[]) => Pipeline[])
-    ) => void;
+    savePipelines: (update: Pipeline[] | ((update: Pipeline[]) => Pipeline[])) => void;
 }
 
 interface DatasetProviderProps {
@@ -39,59 +28,44 @@ export const DatasetContext = createContext<DatasetContextValue>({
     savePipelines: () => {}
 });
 
-export const DatasetProvider: FC<DatasetProviderProps> = ({
-    dataset_id,
-    children
-}) => {
+export const DatasetProvider: FC<DatasetProviderProps> = ({dataset_id, children}) => {
     const [currentDataset, setCurrentDataset] = useState<Dataset>(null);
     const [currentCategories, setCurrentCategories] = useState<Category[]>([]);
     const [currentPipelines, setCurrentPipelines] = useState<Pipeline[]>([]);
 
-    const handleSaveDataset = (
-        update: Dataset | ((dataset: Dataset) => Dataset)
-    ): void => {
+    const handleSaveDataset = (update: Dataset | ((dataset: Dataset) => Dataset)): void => {
         setCurrentDataset(update);
     };
 
     const fetchDataset = useCallback(async () => {
         try {
-            const response = await api.get<{dataset: Dataset}>(
-                `/datasets/${dataset_id}`
-            );
+            const response = await api.get<{dataset: Dataset}>(`/datasets/${dataset_id}`);
             handleSaveDataset(response.data.dataset);
         } catch (err) {
             console.error(err);
         }
     }, [dataset_id]);
 
-    const handleSaveCategories = (
-        update: Category[] | ((update: Category[]) => Category[])
-    ): void => {
+    const handleSaveCategories = (update: Category[] | ((update: Category[]) => Category[])): void => {
         setCurrentCategories(update);
     };
 
     const fetchCategories = useCallback(async () => {
         try {
-            const response = await api.get<{categories: Category[]}>(
-                `/datasets/${dataset_id}/categories/`
-            );
+            const response = await api.get<{categories: Category[]}>(`/datasets/${dataset_id}/categories/`);
             handleSaveCategories(response.data.categories);
         } catch (err) {
             console.error(err);
         }
     }, [dataset_id]);
 
-    const handleSavePipelines = (
-        update: Pipeline[] | ((update: Pipeline[]) => Pipeline[])
-    ): void => {
+    const handleSavePipelines = (update: Pipeline[] | ((update: Pipeline[]) => Pipeline[])): void => {
         setCurrentPipelines(update);
     };
 
     const fetchPipelines = useCallback(async () => {
         try {
-            const response = await api.get<{pipelines: Pipeline[]}>(
-                `/datasets/${dataset_id}/pipelines/`
-            );
+            const response = await api.get<{pipelines: Pipeline[]}>(`/datasets/${dataset_id}/pipelines/`);
             handleSavePipelines(response.data.pipelines);
         } catch (err) {
             console.error(err);

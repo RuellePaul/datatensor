@@ -4,6 +4,7 @@ import {Avatar, Box, Container, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 
+
 interface TestimonialsProps {
     className?: string;
 }
@@ -35,45 +36,23 @@ const Testimonials: FC<TestimonialsProps> = ({className, ...rest}) => {
     return (
         <div className={clsx(classes.root, className)} {...rest}>
             <Container component="section" maxWidth="lg">
-                <Typography
-                    variant="h2"
-                    align="center"
-                    color="textPrimary"
-                    className={classes.title}
-                >
-                    &quot;Datatensor builds some of the best tools for Object
-                    Detection Vision tasks.
+                <Typography variant="h2" align="center" color="textPrimary" className={classes.title}>
+                    &quot;Datatensor builds some of the best tools for Object Detection Vision tasks.
                     <br />
                     It will save you time.&quot;
                 </Typography>
-                <Box
-                    mt={6}
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                >
-                    <Avatar
-                        className={classes.avatar}
-                        src="/static/home/paul.jpg"
-                        alt="Creator"
-                    />
+                <Box mt={6} display="flex" justifyContent="center" alignItems="center">
+                    <Avatar className={classes.avatar} src="/static/home/paul.jpg" alt="Creator" />
                     <Box ml={2}>
                         <Typography variant="body1" color="textPrimary">
                             <span
                                 className={classes.creator}
                                 title="LinkedIn profile"
-                                onClick={() =>
-                                    (window.location.href =
-                                        'https://www.linkedin.com/in/paulruelle')
-                                }
+                                onClick={() => (window.location.href = 'https://www.linkedin.com/in/paulruelle')}
                             >
                                 Paul Ruelle
                             </span>
-                            <Typography
-                                color="textSecondary"
-                                display="inline"
-                                component="span"
-                            >
+                            <Typography color="textSecondary" display="inline" component="span">
                                 , co-creator of @Datatensor
                             </Typography>
                         </Typography>

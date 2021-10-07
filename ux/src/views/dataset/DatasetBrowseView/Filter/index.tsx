@@ -17,6 +17,7 @@ import api from 'src/utils/api';
 import {Category} from 'src/types/category';
 import useDatasets from 'src/hooks/useDatasets';
 
+
 interface FilterProps {
     className?: string;
 }
@@ -46,9 +47,7 @@ const Filter: FC<FilterProps> = ({className, ...rest}) => {
     const [categories, setCategories] = useState<Category[]>([]);
     const fetchCategories = useCallback(async () => {
         try {
-            const response = await api.get<{categories: Category[]}>(
-                `/search/categories`
-            );
+            const response = await api.get<{categories: Category[]}>(`/search/categories`);
             setCategories(response.data.categories);
         } catch (err) {
             console.error(err);
@@ -59,9 +58,7 @@ const Filter: FC<FilterProps> = ({className, ...rest}) => {
         fetchCategories();
     }, [fetchCategories]);
 
-    const [categoriesSelected, setCategoriesSelected] = useState<Category[]>(
-        []
-    );
+    const [categoriesSelected, setCategoriesSelected] = useState<Category[]>([]);
 
     const searchDatasets = useCallback(
         async category_names => {
@@ -70,15 +67,8 @@ const Filter: FC<FilterProps> = ({className, ...rest}) => {
                 return;
             }
 
-            const response = await api.post<{dataset_ids: string[]}>(
-                '/search/datasets',
-                {category_names}
-            );
-            saveDisplayedDatasets(
-                datasets.filter(dataset =>
-                    response.data.dataset_ids.includes(dataset.id)
-                )
-            );
+            const response = await api.post<{dataset_ids: string[]}>('/search/datasets', {category_names});
+            saveDisplayedDatasets(datasets.filter(dataset => response.data.dataset_ids.includes(dataset.id)));
         }, // eslint-disable-next-line
         [datasets]
     );
@@ -94,16 +84,11 @@ const Filter: FC<FilterProps> = ({className, ...rest}) => {
                     className={classes.searchInput}
                     options={categories
                         .sort((a, b) => -b.name.localeCompare(a.name))
-                        .sort(
-                            (a, b) =>
-                                -b.supercategory.localeCompare(a.supercategory)
-                        )}
+                        .sort((a, b) => -b.supercategory.localeCompare(a.supercategory))}
                     groupBy={category => capitalize(category.supercategory)}
                     getOptionLabel={category => capitalize(category.name)}
                     multiple
-                    onChange={(event, newCategories) =>
-                        setCategoriesSelected(newCategories as Category[])
-                    }
+                    onChange={(event, newCategories) => setCategoriesSelected(newCategories as Category[])}
                     value={categoriesSelected}
                     renderInput={params => (
                         <TextField

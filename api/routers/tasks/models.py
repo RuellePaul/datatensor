@@ -12,6 +12,7 @@ from api.utils import MongoModel
 class TaskType(str, Enum):
     generator = 'generator'
     augmentor = 'augmentor'
+    export = 'export'
 
 
 class TaskStatus(str, Enum):
@@ -32,7 +33,11 @@ class TaskAugmentorProperties(BaseModel):
     operations: List[Operation]
 
 
-TaskProperties = Union[TaskGeneratorProperties, TaskAugmentorProperties]
+class TaskExportProperties(BaseModel):
+    pass
+
+
+TaskProperties = Union[TaskGeneratorProperties, TaskAugmentorProperties, TaskExportProperties]
 
 
 class Task(MongoModel):

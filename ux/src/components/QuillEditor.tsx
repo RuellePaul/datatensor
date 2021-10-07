@@ -15,7 +15,18 @@ interface QuillEditorProps {
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         '& .ql-editor': {
-            maxHeight: 180
+            maxHeight: 150,
+            '&::-webkit-scrollbar': {
+                width: '0.4em'
+            },
+            '&::-webkit-scrollbar-track': {
+                boxShadow: `inset 0 0 6px ${theme.palette.primary.main}`,
+                webkitBoxShadow: `inset 0 0 6px ${theme.palette.primary.main}`
+            },
+            '&::-webkit-scrollbar-thumb': {
+                backgroundColor: `${theme.palette.primary.main}`,
+                outline: '1px solid slategrey'
+            }
         },
         '& .ql-toolbar': {
             borderLeft: 'none',
@@ -84,7 +95,11 @@ const QuillEditor: FC<QuillEditorProps> = ({className, ...rest}) => {
 
     return (
         // @ts-ignore
-        <ReactQuill className={clsx(classes.root, className)} {...rest} />
+        <ReactQuill
+            className={clsx(classes.root, className)}
+            placeholder='Enter a description...'
+            {...rest}
+        />
     );
 };
 

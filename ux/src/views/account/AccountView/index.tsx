@@ -52,11 +52,7 @@ const AccountView: FC = () => {
                         textColor="primary"
                     >
                         {tabs.map(tab => (
-                            <Tab
-                                key={tab.value}
-                                label={tab.label}
-                                value={tab.value}
-                            />
+                            <Tab key={tab.value} label={tab.label} value={tab.value} />
                         ))}
                     </Tabs>
                 </Box>

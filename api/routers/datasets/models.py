@@ -15,6 +15,7 @@ class Dataset(MongoModel):
     created_at: datetime
     image_count: int
     augmented_count: int = 0
+    exported_at: Optional[datetime] = None
 
 
 class DatasetsResponse(BaseModel):

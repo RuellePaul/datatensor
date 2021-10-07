@@ -18,6 +18,7 @@ import {Users as UsersIcon} from 'react-feather';
 import GenericMoreButton from 'src/components/utils/GenericMoreButton';
 import {User} from 'src/types/user';
 
+
 interface UserScopesProps {
     className?: string;
     users: User[];
@@ -49,9 +50,7 @@ const UserScopes: FC<UserScopesProps> = ({className, users, ...rest}) => {
             <CardHeader
                 action={
                     <GenericMoreButton>
-                        <MenuItem
-                            onClick={() => history.push('/app/admin/users')}
-                        >
+                        <MenuItem onClick={() => history.push('/app/admin/users')}>
                             <ListItemIcon>
                                 <UsersIcon />
                             </ListItemIcon>
@@ -92,8 +91,7 @@ const UserScopes: FC<UserScopesProps> = ({className, users, ...rest}) => {
                         users.filter(user => user.scope === null).length,
                         users.filter(user => user.scope === 'github').length,
                         users.filter(user => user.scope === 'google').length,
-                        users.filter(user => user.scope === 'stackoverflow')
-                            .length
+                        users.filter(user => user.scope === 'stackoverflow').length
                     ]}
                     type="donut"
                     height={350}

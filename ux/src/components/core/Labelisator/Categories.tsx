@@ -35,6 +35,7 @@ import {currentCategoryCount} from 'src/utils/labeling';
 import {MAX_CATEGORIES_DISPLAYED, SUPERCATEGORIES} from 'src/config';
 import {COLORS} from 'src/utils/colors';
 
+
 interface CategoriesProps {
     className?: string;
 }
@@ -60,8 +61,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     link: {
         display: 'flex',
         alignItems: 'center',
-        marginLeft: theme.spacing(1),
-        cursor: 'pointer'
+        marginLeft: theme.spacing(1)
     },
     close: {
         position: 'absolute',
@@ -83,19 +83,12 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
 
     const handleDeleteCategory = async (category_id: string) => {
         try {
-            await api.delete(
-                `/datasets/${dataset.id}/categories/${category_id}`
-            );
+            await api.delete(`/datasets/${dataset.id}/categories/${category_id}`);
 
-            saveCategories(categories =>
-                categories.filter(category => category.id !== category_id)
-            );
-            saveLabels(labels =>
-                labels.filter(label => label.category_id !== category_id)
-            );
+            saveCategories(categories => categories.filter(category => category.id !== category_id));
+            saveLabels(labels => labels.filter(label => label.category_id !== category_id));
 
-            if (currentCategory && currentCategory.id === category_id)
-                saveCurrentCategory(null);
+            if (currentCategory && currentCategory.id === category_id) saveCurrentCategory(null);
         } catch (error) {
             enqueueSnackbar(error.message || 'Something went wrong', {
                 variant: 'error'
@@ -153,12 +146,8 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
     let labeledCategories, unlabeledCategories;
 
     if (labels) {
-        labeledCategories = categories.filter(
-            category => currentCategoryCount(labels, category) > 0
-        );
-        unlabeledCategories = categories.filter(
-            category => currentCategoryCount(labels, category) === 0
-        );
+        labeledCategories = categories.filter(category => currentCategoryCount(labels, category) > 0);
+        unlabeledCategories = categories.filter(category => currentCategoryCount(labels, category) === 0);
     } else {
         labeledCategories = [];
         unlabeledCategories = categories;
@@ -173,10 +162,7 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
                 <div className={classes.wrapper}>
                     {labeledCategories.map(category => (
                         <Box mr={1} mb={1} key={category.id}>
-                            <DTCategory
-                                category={category}
-                                index={categories.indexOf(category)}
-                            />
+                            <DTCategory category={category} index={categories.indexOf(category)} />
                         </Box>
                     ))}
                     <Box mr={1} mb={1}>
@@ -193,36 +179,24 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
                 {expand ? (
                     unlabeledCategories.map(category => (
                         <Box mr={1} mb={1} key={category.id}>
-                            <DTCategory
-                                category={category}
-                                index={categories.indexOf(category)}
-                            />
+                            <DTCategory category={category} index={categories.indexOf(category)} />
                         </Box>
                     ))
                 ) : (
                     <>
-                        {unlabeledCategories
-                            .slice(0, MAX_CATEGORIES_DISPLAYED)
-                            .map(category => (
-                                <Box mr={1} mb={1} key={category.id}>
-                                    <DTCategory
-                                        category={category}
-                                        index={categories.indexOf(category)}
-                                    />
-                                </Box>
-                            ))}
-                        {unlabeledCategories.length >
-                            MAX_CATEGORIES_DISPLAYED && (
+                        {unlabeledCategories.slice(0, MAX_CATEGORIES_DISPLAYED).map(category => (
+                            <Box mr={1} mb={1} key={category.id}>
+                                <DTCategory category={category} index={categories.indexOf(category)} />
+                            </Box>
+                        ))}
+                        {unlabeledCategories.length > MAX_CATEGORIES_DISPLAYED && (
                             <Link
                                 className={classes.link}
                                 onClick={() => {
                                     setExpand(true);
                                 }}
                             >
-                                and{' '}
-                                {unlabeledCategories.length -
-                                    MAX_CATEGORIES_DISPLAYED}{' '}
-                                more...
+                                and {unlabeledCategories.length - MAX_CATEGORIES_DISPLAYED} more...
                             </Link>
                         )}
                     </>
@@ -257,20 +231,11 @@ const DTCategories: FC<CategoriesProps> = ({className}) => {
                 />
             </Chips>
 
-            <Dialog
-                fullWidth
-                maxWidth="sm"
-                open={openCategoryCreation}
-                onClose={handleCloseCategoryCreation}
-            >
+            <Dialog fullWidth maxWidth="sm" open={openCategoryCreation} onClose={handleCloseCategoryCreation}>
                 <DialogTitle className="flex">
                     <Typography variant="h4">Add a new category</Typography>
 
-                    <IconButton
-                        className={classes.close}
-                        onClick={handleCloseCategoryCreation}
-                        size="large"
-                    >
+                    <IconButton className={classes.close} onClick={handleCloseCategoryCreation} size="large">
                         <CloseIcon />
                     </IconButton>
                 </DialogTitle>
@@ -286,21 +251,12 @@ const DTCategories: FC<CategoriesProps> = ({className}) => {
                                     .max(255)
                                     .required('Name is required')
                             })}
-                            onSubmit={async (
-                                values,
-                                {setStatus, setSubmitting}
-                            ) => {
+                            onSubmit={async (values, {setStatus, setSubmitting}) => {
                                 try {
                                     const response = await api.post<{
                                         category: Category;
-                                    }>(
-                                        `/datasets/${dataset.id}/categories/`,
-                                        values
-                                    );
-                                    saveCategories([
-                                        ...categories,
-                                        response.data.category
-                                    ]);
+                                    }>(`/datasets/${dataset.id}/categories/`, values);
+                                    saveCategories([...categories, response.data.category]);
                                     setOpenCategoryCreation(false);
 
                                     if (isMountedRef.current) {
@@ -308,10 +264,7 @@ const DTCategories: FC<CategoriesProps> = ({className}) => {
                                         setSubmitting(false);
                                     }
                                 } catch (error) {
-                                    enqueueSnackbar(
-                                        error.message || 'Something went wrong',
-                                        {variant: 'error'}
-                                    );
+                                    enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
 
                                     if (isMountedRef.current) {
                                         setStatus({success: false});
@@ -320,49 +273,30 @@ const DTCategories: FC<CategoriesProps> = ({className}) => {
                                 }
                             }}
                         >
-                            {({
-                                errors,
-                                handleBlur,
-                                handleChange,
-                                handleSubmit,
-                                isSubmitting,
-                                touched,
-                                values
-                            }) => (
+                            {({errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values}) => (
                                 <form noValidate onSubmit={handleSubmit}>
                                     <Grid container spacing={2}>
                                         <Grid item sm={6} xs={12}>
                                             <TextField
                                                 autoFocus
-                                                error={Boolean(
-                                                    touched.name && errors.name
-                                                )}
+                                                error={Boolean(touched.name && errors.name)}
                                                 fullWidth
-                                                helperText={
-                                                    touched.name && errors.name
-                                                }
+                                                helperText={touched.name && errors.name}
                                                 label="Name *"
                                                 margin="normal"
                                                 name="name"
                                                 onBlur={handleBlur}
                                                 onChange={handleChange}
-                                                onKeyDown={event =>
-                                                    event.stopPropagation()
-                                                }
+                                                onKeyDown={event => event.stopPropagation()}
                                                 value={values.name}
                                                 variant="outlined"
                                                 size="small"
                                             />
                                         </Grid>
                                         <Grid item sm={6} xs={12}>
-                                            <InputLabel>
-                                                Supercategory
-                                            </InputLabel>
+                                            <InputLabel>Supercategory</InputLabel>
                                             <Select
-                                                error={Boolean(
-                                                    touched.supercategory &&
-                                                        errors.supercategory
-                                                )}
+                                                error={Boolean(touched.supercategory && errors.supercategory)}
                                                 fullWidth
                                                 label="Supercategory"
                                                 name="supercategory"
@@ -374,20 +308,11 @@ const DTCategories: FC<CategoriesProps> = ({className}) => {
                                                 <MenuItem value={null}>
                                                     <em>Pick one</em>
                                                 </MenuItem>
-                                                {SUPERCATEGORIES.map(
-                                                    supercategory => (
-                                                        <MenuItem
-                                                            key={supercategory}
-                                                            value={
-                                                                supercategory
-                                                            }
-                                                        >
-                                                            {capitalize(
-                                                                supercategory
-                                                            )}
-                                                        </MenuItem>
-                                                    )
-                                                )}
+                                                {SUPERCATEGORIES.map(supercategory => (
+                                                    <MenuItem key={supercategory} value={supercategory}>
+                                                        {capitalize(supercategory)}
+                                                    </MenuItem>
+                                                ))}
                                             </Select>
                                         </Grid>
                                     </Grid>

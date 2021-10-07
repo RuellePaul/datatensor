@@ -6,6 +6,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import {APP_VERSION} from 'src/constants';
 import Logo from 'src/components/utils/Logo';
 
+
 interface TopBarProps {
     className?: string;
 }
@@ -39,11 +40,7 @@ const TopBar: FC<TopBarProps> = ({className, ...rest}) => {
     const history = useHistory();
 
     return (
-        <AppBar
-            className={clsx(classes.root, className)}
-            color="default"
-            {...rest}
-        >
+        <AppBar className={clsx(classes.root, className)} color="default" {...rest}>
             <Toolbar className={classes.toolbar}>
                 <RouterLink to="/">
                     <Logo className={classes.logo} />

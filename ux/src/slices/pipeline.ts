@@ -7,6 +7,7 @@ import type {AppThunk} from 'src/store';
 import type {Operation, OperationType, Pipeline} from 'src/types/pipeline';
 import {DEFAULT_PIPELINE, OPERATIONS_INITIAL_PROPERTIES} from 'src/config';
 
+
 interface PipelineState {
     isLoaded: boolean;
     operations: {

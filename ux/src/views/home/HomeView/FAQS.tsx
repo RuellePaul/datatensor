@@ -4,6 +4,7 @@ import {Box, Container, Divider, Grid, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 
+
 interface FAQSProps {
     className?: string;
 }
@@ -43,15 +44,10 @@ const FAQS: FC<FAQSProps> = ({className, ...rest}) => {
                                 </Typography>
                             </dt>
                             <dd>
-                                <Typography
-                                    variant="body1"
-                                    color="textSecondary"
-                                >
-                                    Use Datatensor tools for creating and
-                                    labeling images database (called `dataset`).
-                                    These datasets can be used for training AI
-                                    models, such as YOLOv3, to perform complex
-                                    object detection tasks.
+                                <Typography variant="body1" color="textSecondary">
+                                    Use Datatensor tools for creating and labeling images database (called `dataset`).
+                                    These datasets can be used for training AI models, such as YOLOv3, to perform
+                                    complex object detection tasks.
                                 </Typography>
                             </dd>
                         </Box>
@@ -62,29 +58,20 @@ const FAQS: FC<FAQSProps> = ({className, ...rest}) => {
                                 </Typography>
                             </dt>
                             <dd>
-                                <Typography
-                                    variant="body1"
-                                    color="textSecondary"
-                                >
-                                    Yes, you can use Datatensor freely upon a
-                                    certain limit.
+                                <Typography variant="body1" color="textSecondary">
+                                    Yes, you can use Datatensor freely upon a certain limit.
                                 </Typography>
                             </dd>
                         </Box>
                         <Box mt={6}>
                             <dt>
                                 <Typography variant="h4" color="textPrimary">
-                                    Are you providing support for setting up my
-                                    project?
+                                    Are you providing support for setting up my project?
                                 </Typography>
                             </dt>
                             <dd>
-                                <Typography
-                                    variant="body1"
-                                    color="textSecondary"
-                                >
-                                    Yes, we offer email support for all our
-                                    customers &amp; even skype meetings for our
+                                <Typography variant="body1" color="textSecondary">
+                                    Yes, we offer email support for all our customers &amp; even skype meetings for our
                                     extended license customers.
                                 </Typography>
                             </dd>
@@ -97,39 +84,27 @@ const FAQS: FC<FAQSProps> = ({className, ...rest}) => {
                         <Box mt={6}>
                             <dt>
                                 <Typography variant="h4" color="textPrimary">
-                                    Can I use Datatensor API to perform object
-                                    detection on cats ?
+                                    Can I use Datatensor API to perform object detection on cats ?
                                 </Typography>
                             </dt>
                             <dd>
-                                <Typography
-                                    variant="body1"
-                                    color="textSecondary"
-                                >
-                                    Yes, for common objects you can browse
-                                    existing public datasets, or create your own
-                                    using our web scraping tool to begins with a
-                                    dataset filled up with thousands of images
-                                    of `cat` object.
+                                <Typography variant="body1" color="textSecondary">
+                                    Yes, for common objects you can browse existing public datasets, or create your own
+                                    using our web scraping tool to begins with a dataset filled up with thousands of
+                                    images of `cat` object.
                                 </Typography>
                             </dd>
                         </Box>
                         <Box mt={6}>
                             <dt>
                                 <Typography variant="h4" color="textPrimary">
-                                    Can I use Datatensor API to perform object
-                                    detection on custom objects ?
+                                    Can I use Datatensor API to perform object detection on custom objects ?
                                 </Typography>
                             </dt>
                             <dd>
-                                <Typography
-                                    variant="body1"
-                                    color="textSecondary"
-                                >
-                                    Yes, take several hundred pictures of your
-                                    objects, upload them to a Datatensor
-                                    dataset. Use Datatensor tools for labeling
-                                    and augmenting images, then launch a
+                                <Typography variant="body1" color="textSecondary">
+                                    Yes, take several hundred pictures of your objects, upload them to a Datatensor
+                                    dataset. Use Datatensor tools for labeling and augmenting images, then launch a
                                     training task on a model.
                                 </Typography>
                             </dd>

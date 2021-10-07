@@ -11,6 +11,7 @@ import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
 import api from 'src/utils/api';
 
+
 interface NextUnlabeledImageActionProps {
     index: number;
     pipeline_id?: string;
@@ -29,11 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const NextUnlabeledImageAction: FC<NextUnlabeledImageActionProps> = ({
-    index,
-    pipeline_id = null,
-    className
-}) => {
+const NextUnlabeledImageAction: FC<NextUnlabeledImageActionProps> = ({index, pipeline_id = null, className}) => {
     const classes = useStyles();
 
     const {enqueueSnackbar} = useSnackbar();
@@ -63,8 +60,7 @@ const NextUnlabeledImageAction: FC<NextUnlabeledImageActionProps> = ({
                             }
                         }
                     );
-                    if (response.data.image_id)
-                        window.location.hash = response.data.image_id;
+                    if (response.data.image_id) window.location.hash = response.data.image_id;
                     else
                         enqueueSnackbar('All images have labels', {
                             variant: 'success'
@@ -78,10 +74,7 @@ const NextUnlabeledImageAction: FC<NextUnlabeledImageActionProps> = ({
             }}
         >
             {({handleSubmit, isSubmitting}) => (
-                <form
-                    onSubmit={handleSubmit}
-                    className={clsx(classes.root, className)}
-                >
+                <form onSubmit={handleSubmit} className={clsx(classes.root, className)}>
                     <Button
                         className={classes.button}
                         size="small"
@@ -90,10 +83,7 @@ const NextUnlabeledImageAction: FC<NextUnlabeledImageActionProps> = ({
                         disabled={isSubmitting}
                         endIcon={
                             isSubmitting ? (
-                                <CircularProgress
-                                    className={classes.loader}
-                                    color="inherit"
-                                />
+                                <CircularProgress className={classes.loader} color="inherit" />
                             ) : (
                                 <ArrowRight />
                             )

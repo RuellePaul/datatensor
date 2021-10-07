@@ -92,28 +92,20 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
     }, [images]);
 
     const pipeline = useSelector<any>(state => state.pipeline);
-    const operations: Operation[] = pipeline.operations.allIds.map(
-        id => pipeline.operations.byId[id]
-    );
+    const operations: Operation[] = pipeline.operations.allIds.map(id => pipeline.operations.byId[id]);
 
     return (
         <div className={clsx(classes.root, className)}>
             <Box my={2}>
                 <Typography color="textSecondary" gutterBottom>
-                    Choose operations pipeline that fit the best for your
-                    dataset.
+                    Choose operations pipeline that fit the best for your dataset.
                 </Typography>
             </Box>
 
             <ImageProvider image={images[randomIndex]}>
                 <Grid container spacing={3}>
                     <Grid item md={3} sm={6} xs={12}>
-                        <Typography
-                            variant="overline"
-                            color="textPrimary"
-                            align="center"
-                            gutterBottom
-                        >
+                        <Typography variant="overline" color="textPrimary" align="center" gutterBottom>
                             Input image
                         </Typography>
 
@@ -132,24 +124,14 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                         </div>
                     </Grid>
                     <Grid item md={3} sm={6} xs={12}>
-                        <Typography
-                            variant="overline"
-                            color="textPrimary"
-                            align="center"
-                            gutterBottom
-                        >
+                        <Typography variant="overline" color="textPrimary" align="center" gutterBottom>
                             Operations pipeline
                         </Typography>
 
                         <Pipeline />
                     </Grid>
                     <Grid item md={6} xs={12}>
-                        <Typography
-                            variant="overline"
-                            color="textPrimary"
-                            align="center"
-                            gutterBottom
-                        >
+                        <Typography variant="overline" color="textPrimary" align="center" gutterBottom>
                             Sample
                         </Typography>
 
@@ -176,11 +158,7 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                 <DialogTitle className="flex">
                     <Typography variant="h4">Augmentation</Typography>
 
-                    <IconButton
-                        className={classes.close}
-                        onClick={handleClose}
-                        size="large"
-                    >
+                    <IconButton className={classes.close} onClick={handleClose} size="large">
                         <CloseIcon />
                     </IconButton>
                 </DialogTitle>
@@ -197,10 +175,7 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                                         .min(1)
                                         .max(10 * dataset.image_count)
                                 })}
-                                onSubmit={async (
-                                    values,
-                                    {setErrors, setStatus, setSubmitting}
-                                ) => {
+                                onSubmit={async (values, {setErrors, setStatus, setSubmitting}) => {
                                     try {
                                         const response = await api.post<{
                                             task: Task;
@@ -211,17 +186,11 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                                                 image_count: values.image_count
                                             }
                                         });
-                                        saveTasks(tasks => [
-                                            ...tasks,
-                                            response.data.task
-                                        ]);
+                                        saveTasks(tasks => [...tasks, response.data.task]);
 
                                         setStatus({success: true});
                                         setSubmitting(false);
-                                        enqueueSnackbar(
-                                            'Augmentation task created',
-                                            {variant: 'info'}
-                                        );
+                                        enqueueSnackbar('Augmentation task created', {variant: 'info'});
                                         handleClose();
                                     } catch (err) {
                                         console.error(err);
@@ -231,41 +200,16 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                                     }
                                 }}
                             >
-                                {({
-                                    errors,
-                                    handleBlur,
-                                    handleChange,
-                                    handleSubmit,
-                                    isSubmitting,
-                                    touched,
-                                    values
-                                }) => (
-                                    <form
-                                        onSubmit={handleSubmit}
-                                        className={clsx(
-                                            classes.root,
-                                            className
-                                        )}
-                                    >
-                                        <Typography
-                                            variant="overline"
-                                            color="textPrimary"
-                                            align="center"
-                                            gutterBottom
-                                        >
+                                {({errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values}) => (
+                                    <form onSubmit={handleSubmit} className={clsx(classes.root, className)}>
+                                        <Typography variant="overline" color="textPrimary" align="center" gutterBottom>
                                             Properties
                                         </Typography>
 
                                         <Box my={1}>
                                             <TextField
-                                                error={Boolean(
-                                                    touched.image_count &&
-                                                        errors.image_count
-                                                )}
-                                                helperText={
-                                                    touched.image_count &&
-                                                    errors.image_count
-                                                }
+                                                error={Boolean(touched.image_count && errors.image_count)}
+                                                helperText={touched.image_count && errors.image_count}
                                                 fullWidth
                                                 label="Image count"
                                                 name="image_count"
@@ -279,26 +223,15 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
 
                                         <Box mt={2} mb={3}>
                                             <Alert severity="info">
-                                                There are{' '}
-                                                <strong>
-                                                    {dataset.image_count}{' '}
-                                                    original images
-                                                </strong>{' '}
-                                                in your dataset, so you can
-                                                generate up to{' '}
-                                                <strong>
-                                                    {dataset.image_count * 10}{' '}
-                                                    new images
-                                                </strong>
-                                                .
+                                                There are <strong>{dataset.image_count} original images</strong> in your
+                                                dataset, so you can generate up to{' '}
+                                                <strong>{dataset.image_count * 10} new images</strong>.
                                             </Alert>
                                         </Box>
 
                                         {errors.submit && (
                                             <Box mt={3}>
-                                                <FormHelperText error>
-                                                    {errors.submit}
-                                                </FormHelperText>
+                                                <FormHelperText error>{errors.submit}</FormHelperText>
                                             </Box>
                                         )}
 
@@ -317,12 +250,7 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                             </Formik>
                         </Grid>
                         <Grid item sm={6} xs={12}>
-                            <Typography
-                                variant="overline"
-                                color="textPrimary"
-                                align="center"
-                                gutterBottom
-                            >
+                            <Typography variant="overline" color="textPrimary" align="center" gutterBottom>
                                 Operations pipeline
                             </Typography>
 

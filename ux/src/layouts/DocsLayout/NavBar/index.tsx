@@ -9,6 +9,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import Logo from 'src/components/utils/Logo';
 import NavItem from './NavItem';
 
+
 interface NavBarProps {
     onMobileClose: () => void;
     openMobile: boolean;

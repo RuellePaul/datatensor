@@ -24,6 +24,7 @@ import ProbabilitySlider from './ProbabilitySlider';
 import OperationProperties from './OperationProperties';
 import {OPERATIONS_DESCRIPTION, OPERATIONS_ICONS} from 'src/config';
 
+
 interface OperationEditModalProps {
     className?: string;
     operation: Operation;

@@ -1,14 +1,7 @@
 import React, {FC} from 'react';
 import {Box, capitalize, LinearProgress, Typography} from '@mui/material';
 import {makeStyles} from '@mui/styles';
-import {
-    DataGrid,
-    GridCellParams,
-    GridColDef,
-    GridOverlay,
-    GridRowParams,
-    GridSortDirection
-} from '@mui/x-data-grid';
+import {DataGrid, GridCellParams, GridColDef, GridOverlay, GridRowParams, GridSortDirection} from '@mui/x-data-grid';
 import useTasks from 'src/hooks/useTasks';
 import {Theme} from 'src/theme';
 import {UserConsumer, UserProvider} from 'src/store/UserContext';
@@ -39,9 +32,7 @@ const columns: GridColDef[] = [
         width: 200,
         renderCell: (params: GridCellParams) => (
             <UserProvider user_id={params.value.toString()}>
-                <UserConsumer>
-                    {value => <UserLabel user={value.user} />}
-                </UserConsumer>
+                <UserConsumer>{value => <UserLabel user={value.user} />}</UserConsumer>
             </UserProvider>
         )
     },
@@ -49,17 +40,13 @@ const columns: GridColDef[] = [
         field: 'type',
         headerName: 'Name',
         width: 160,
-        renderCell: (params: GridCellParams) => (
-            <strong>{capitalize(params.value as TaskType)}</strong>
-        )
+        renderCell: (params: GridCellParams) => <strong>{capitalize(params.value as TaskType)}</strong>
     },
     {
         field: 'status',
         headerName: 'Status',
         width: 120,
-        renderCell: (params: GridCellParams) => (
-            <TaskStatusLabel status={params.value as TaskStatus} />
-        )
+        renderCell: (params: GridCellParams) => <TaskStatusLabel status={params.value as TaskStatus} />
     },
     {
         field: 'progress',
@@ -72,35 +59,19 @@ const columns: GridColDef[] = [
                         {params.row.error}
                     </Typography>
                 );
-            if (params.row.status === 'pending')
-                return (
-                    <LinearProgress variant="query" style={{width: '100%'}} />
-                );
+            if (params.row.status === 'pending') return <LinearProgress variant="query" style={{width: '100%'}} />;
             if (params.row.status === 'success')
                 return (
                     <Typography variant="body2" color="textSecondary" noWrap>
-                        Done in{' '}
-                        {getDateDiff(
-                            params.row.created_at,
-                            params.row.ended_at
-                        )}
+                        Done in {getDateDiff(params.row.created_at, params.row.ended_at)}
                     </Typography>
                 );
             return (
                 <>
                     <Box width="100%" mr={1}>
                         <LinearProgress
-                            variant={
-                                (params.row.progress <= 0 ||
-                                    params.row.progress) >= 1
-                                    ? 'query'
-                                    : 'determinate'
-                            }
-                            value={
-                                params.row.status === 'success'
-                                    ? 100
-                                    : 100 * (params.value as number)
-                            }
+                            variant={(params.row.progress <= 0 || params.row.progress) >= 1 ? 'query' : 'determinate'}
+                            value={params.row.status === 'success' ? 100 : 100 * (params.value as number)}
                         />
                     </Box>
                     <Box minWidth={35}>

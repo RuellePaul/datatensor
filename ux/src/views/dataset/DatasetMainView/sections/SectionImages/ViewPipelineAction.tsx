@@ -1,18 +1,8 @@
 import React, {FC, useState} from 'react';
 import {useDispatch} from 'react-redux';
-import {
-    Button,
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    IconButton,
-    Typography
-} from '@mui/material';
+import {Button, Dialog, DialogContent, DialogTitle, IconButton, Typography} from '@mui/material';
 import {makeStyles} from '@mui/styles';
-import {
-    Close as CloseIcon,
-    VisibilityOutlined as ViewIcon
-} from '@mui/icons-material';
+import {Close as CloseIcon, VisibilityOutlined as ViewIcon} from '@mui/icons-material';
 import {Theme} from 'src/theme';
 import Pipeline from 'src/components/core/Pipeline';
 import {setDefaultPipeline, setPipeline} from 'src/slices/pipeline';
@@ -45,9 +35,7 @@ const ViewPipelineAction: FC<ViewPipelineActionProps> = ({pipeline_id}) => {
     const handlePipelineOpen = () => {
         if (!pipeline_id) return;
 
-        dispatch(
-            setPipeline(pipelines.find(pipeline => pipeline.id === pipeline_id))
-        );
+        dispatch(setPipeline(pipelines.find(pipeline => pipeline.id === pipeline_id)));
         setOpenPipeline(true);
     };
 
@@ -70,21 +58,11 @@ const ViewPipelineAction: FC<ViewPipelineActionProps> = ({pipeline_id}) => {
                 Operations pipeline
             </Button>
 
-            <Dialog
-                disableRestoreFocus
-                fullWidth
-                maxWidth="xs"
-                open={openPipeline}
-                onClose={handlePipelineClose}
-            >
+            <Dialog disableRestoreFocus fullWidth maxWidth="xs" open={openPipeline} onClose={handlePipelineClose}>
                 <DialogTitle className="flex">
                     <Typography variant="h4">Operations pipeline</Typography>
 
-                    <IconButton
-                        className={classes.close}
-                        onClick={handlePipelineClose}
-                        size="large"
-                    >
+                    <IconButton className={classes.close} onClick={handlePipelineClose} size="large">
                         <CloseIcon fontSize="large" />
                     </IconButton>
                 </DialogTitle>

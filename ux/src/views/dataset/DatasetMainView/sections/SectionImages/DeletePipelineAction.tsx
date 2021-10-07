@@ -28,10 +28,7 @@ interface DeletePipelineActionProps {
     callback: () => void;
 }
 
-const DeletePipelineAction: FC<DeletePipelineActionProps> = ({
-    pipeline_id,
-    callback
-}) => {
+const DeletePipelineAction: FC<DeletePipelineActionProps> = ({pipeline_id, callback}) => {
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
 
@@ -46,20 +43,14 @@ const DeletePipelineAction: FC<DeletePipelineActionProps> = ({
         setIsDeleting(true);
 
         try {
-            await api.delete(
-                `/datasets/${dataset.id}/pipelines/${pipeline_id}`
-            );
+            await api.delete(`/datasets/${dataset.id}/pipelines/${pipeline_id}`);
             callback();
             saveDataset(dataset => ({
                 ...dataset,
                 augmented_count:
-                    dataset.augmented_count -
-                    pipelines.find(pipeline => pipeline.id === pipeline_id)
-                        .image_count
+                    dataset.augmented_count - pipelines.find(pipeline => pipeline.id === pipeline_id).image_count
             }));
-            savePipelines(pipelines =>
-                pipelines.filter(pipeline => pipeline.id !== pipeline_id)
-            );
+            savePipelines(pipelines => pipelines.filter(pipeline => pipeline.id !== pipeline_id));
             enqueueSnackbar(`Deleted pipeline & associated images`, {
                 variant: 'info'
             });
@@ -73,9 +64,7 @@ const DeletePipelineAction: FC<DeletePipelineActionProps> = ({
     };
 
     const activeTasksCount = tasks
-        ? tasks.filter(
-              task => task.status === 'active' && task.dataset_id === dataset.id
-          ).length
+        ? tasks.filter(task => task.status === 'active' && task.dataset_id === dataset.id).length
         : 0;
 
     if (!pipeline_id) return null;
@@ -83,22 +72,9 @@ const DeletePipelineAction: FC<DeletePipelineActionProps> = ({
     return (
         <>
             <Button
-                className={clsx(
-                    activeTasksCount === 0 &&
-                        !isDeleting &&
-                        classes.deleteAction
-                )}
+                className={clsx(activeTasksCount === 0 && !isDeleting && classes.deleteAction)}
                 variant="outlined"
-                endIcon={
-                    isDeleting ? (
-                        <CircularProgress
-                            className={classes.loader}
-                            color="inherit"
-                        />
-                    ) : (
-                        <DeleteIcon />
-                    )
-                }
+                endIcon={isDeleting ? <CircularProgress className={classes.loader} color="inherit" /> : <DeleteIcon />}
                 onClick={handleDeletePipeline}
                 size="small"
                 disabled={isDeleting || activeTasksCount > 0}

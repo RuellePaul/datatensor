@@ -28,8 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     link: {
         display: 'flex',
         alignItems: 'center',
-        marginLeft: theme.spacing(1),
-        cursor: 'pointer'
+        marginLeft: theme.spacing(1)
     }
 }));
 
@@ -41,7 +40,7 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
     const isSelected = currentCategory?.name === category.name;
 
     return (
-        <Box m={0.5}>
+        <Box mb={1.5} mr={1.5}>
             <Chip
                 clickable
                 label={
@@ -51,20 +50,20 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
                         </strong>
                     </Typography>
                 }
-                onClick={() =>
-                    saveCurrentCategory(isSelected ? null : category)
-                }
+                onClick={() => saveCurrentCategory(isSelected ? null : category)}
                 title={`${category.name} | ${category.supercategory}`}
                 size="medium"
                 style={
                     isSelected
                         ? {
-                              color: theme.palette.getContrastText(
-                                  COLORS[index]
-                              ),
-                              background: COLORS[index]
+                              color: theme.palette.getContrastText(COLORS[index]),
+                              background: COLORS[index],
+                              borderColor: COLORS[index]
                           }
-                        : {color: COLORS[index]}
+                        : {
+                              color: COLORS[index],
+                              borderColor: COLORS[index]
+                          }
                 }
                 variant="outlined"
             />
@@ -84,34 +83,20 @@ const DTCategories: FC<CategoriesProps> = ({className}) => {
             {expand ? (
                 <>
                     {categories.map(category => (
-                        <DTCategory
-                            category={category}
-                            key={category.id}
-                            index={categories.indexOf(category)}
-                        />
+                        <DTCategory category={category} key={category.id} index={categories.indexOf(category)} />
                     ))}
                 </>
             ) : (
                 <>
                     {categories
-                        .sort((a, b) =>
-                            a.labels_count > b.labels_count ? -1 : 1
-                        )
+                        .sort((a, b) => (a.labels_count > b.labels_count ? -1 : 1))
                         .slice(0, MAX_CATEGORIES_DISPLAYED)
                         .map(category => (
-                            <DTCategory
-                                category={category}
-                                key={category.id}
-                                index={categories.indexOf(category)}
-                            />
+                            <DTCategory category={category} key={category.id} index={categories.indexOf(category)} />
                         ))}
                     {categories.length > MAX_CATEGORIES_DISPLAYED && (
-                        <Link
-                            className={classes.link}
-                            onClick={() => setExpand(true)}
-                        >
-                            and {categories.length - MAX_CATEGORIES_DISPLAYED}{' '}
-                            more...
+                        <Link className={classes.link} onClick={() => setExpand(true)}>
+                            and {categories.length - MAX_CATEGORIES_DISPLAYED} more...
                         </Link>
                     )}
                 </>

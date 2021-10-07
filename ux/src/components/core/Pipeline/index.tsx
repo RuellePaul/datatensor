@@ -8,6 +8,7 @@ import {useDispatch} from 'src/store';
 import {moveOperation, setDefaultPipeline} from 'src/slices/pipeline';
 import OperationsPipeline from './OperationsPipeline';
 
+
 interface PipelineProps {
     readOnly?: boolean;
 }

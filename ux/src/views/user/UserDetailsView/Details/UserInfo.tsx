@@ -7,6 +7,7 @@ import {Theme} from 'src/theme';
 import {User} from 'src/types/user';
 import FancyLabel from 'src/components/FancyLabel';
 
+
 interface UserInfoProps {
     user: User;
     className?: string;
@@ -29,9 +30,7 @@ const UserInfo: FC<UserInfoProps> = ({user, className, ...rest}) => {
             <Table>
                 <TableBody>
                     <TableRow>
-                        <TableCell className={classes.fontWeightMedium}>
-                            Name
-                        </TableCell>
+                        <TableCell className={classes.fontWeightMedium}>Name</TableCell>
                         <TableCell>
                             <Typography variant="body2" color="textSecondary">
                                 {user.name}
@@ -39,26 +38,18 @@ const UserInfo: FC<UserInfoProps> = ({user, className, ...rest}) => {
                         </TableCell>
                     </TableRow>
                     <TableRow>
-                        <TableCell className={classes.fontWeightMedium}>
-                            Email
-                        </TableCell>
+                        <TableCell className={classes.fontWeightMedium}>Email</TableCell>
                         <TableCell>
                             <Typography variant="body2" color="textSecondary">
                                 {user.email}
                             </Typography>
-                            <FancyLabel
-                                color={user.is_verified ? 'success' : 'error'}
-                            >
-                                {user.is_verified
-                                    ? 'Email verified'
-                                    : 'Email not verified'}
+                            <FancyLabel color={user.is_verified ? 'success' : 'error'}>
+                                {user.is_verified ? 'Email verified' : 'Email not verified'}
                             </FancyLabel>
                         </TableCell>
                     </TableRow>
                     <TableRow>
-                        <TableCell className={classes.fontWeightMedium}>
-                            Phone
-                        </TableCell>
+                        <TableCell className={classes.fontWeightMedium}>Phone</TableCell>
                         <TableCell>
                             <Typography variant="body2" color="textSecondary">
                                 {user.phone}
@@ -66,9 +57,7 @@ const UserInfo: FC<UserInfoProps> = ({user, className, ...rest}) => {
                         </TableCell>
                     </TableRow>
                     <TableRow>
-                        <TableCell className={classes.fontWeightMedium}>
-                            Country
-                        </TableCell>
+                        <TableCell className={classes.fontWeightMedium}>Country</TableCell>
                         <TableCell>
                             <Typography variant="body2" color="textSecondary">
                                 {user.country}
@@ -76,9 +65,7 @@ const UserInfo: FC<UserInfoProps> = ({user, className, ...rest}) => {
                         </TableCell>
                     </TableRow>
                     <TableRow>
-                        <TableCell className={classes.fontWeightMedium}>
-                            State/Region
-                        </TableCell>
+                        <TableCell className={classes.fontWeightMedium}>State/Region</TableCell>
                         <TableCell>
                             <Typography variant="body2" color="textSecondary">
                                 {user.state}
@@ -87,15 +74,8 @@ const UserInfo: FC<UserInfoProps> = ({user, className, ...rest}) => {
                     </TableRow>
                 </TableBody>
             </Table>
-            <Box
-                p={1}
-                display="flex"
-                flexDirection="column"
-                alignItems="flex-start"
-            >
-                <Button startIcon={<LockOutlined />}>
-                    Reset &amp; Send Password
-                </Button>
+            <Box p={1} display="flex" flexDirection="column" alignItems="flex-start">
+                <Button startIcon={<LockOutlined />}>Reset &amp; Send Password</Button>
             </Box>
         </Card>
     );

@@ -4,15 +4,25 @@ import clsx from 'clsx';
 import {Box, Breadcrumbs, capitalize, Chip, Grid, Link, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Lock as PrivateIcon, NavigateNext as NavigateNextIcon, Public as PublicIcon} from '@mui/icons-material';
+import WorkingAlert from 'src/components/core/WorkingAlert';
 import useDataset from 'src/hooks/useDataset';
 import {Theme} from 'src/theme';
+
 
 interface HeaderProps {
     className?: string;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {},
+    root: {
+        position: 'relative'
+    },
+    alert: {
+        position: 'absolute',
+        top: theme.spacing(1),
+        right: 0,
+        margin: 0
+    },
     chip: {
         marginLeft: theme.spacing(1)
     }
@@ -25,24 +35,16 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
 
     return (
         <Grid
+            className={clsx(classes.root, className)}
             alignItems="center"
             container
             justifyContent="space-between"
-            spacing={3}
-            className={clsx(classes.root, className)}
+            spacing={2}
             {...rest}
         >
             <Grid item>
-                <Breadcrumbs
-                    separator={<NavigateNextIcon fontSize="small" />}
-                    aria-label="breadcrumb"
-                >
-                    <Link
-                        variant="body1"
-                        color="inherit"
-                        to="/app/datasets"
-                        component={RouterLink}
-                    >
+                <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
+                    <Link variant="body1" color="inherit" to="/app/datasets" component={RouterLink}>
                         Datasets
                     </Link>
                     <Box display="flex">
@@ -52,19 +54,17 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                         <Chip
                             className={classes.chip}
                             label={dataset.is_public ? 'Public' : 'Private'}
-                            icon={
-                                dataset.is_public ? (
-                                    <PublicIcon />
-                                ) : (
-                                    <PrivateIcon />
-                                )
-                            }
+                            icon={dataset.is_public ? <PublicIcon /> : <PrivateIcon />}
                             size="small"
                             variant="outlined"
                         />
                     </Box>
                 </Breadcrumbs>
             </Grid>
+
+            <Box flexGrow={1} />
+
+            <WorkingAlert className={classes.alert} dataset_id={dataset.id} />
         </Grid>
     );
 };

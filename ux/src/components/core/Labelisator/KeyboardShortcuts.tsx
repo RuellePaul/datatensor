@@ -1,23 +1,11 @@
 import React, {FC, useState} from 'react';
-import {
-    Box,
-    Button,
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    Divider,
-    Grid,
-    IconButton,
-    Typography
-} from '@mui/material';
+import {Box, Button, Dialog, DialogContent, DialogTitle, Divider, Grid, IconButton, Typography} from '@mui/material';
 
 import makeStyles from '@mui/styles/makeStyles';
 
-import {
-    Close as CloseIcon,
-    Keyboard as KeyboardIcon
-} from '@mui/icons-material';
+import {Close as CloseIcon, Keyboard as KeyboardIcon} from '@mui/icons-material';
 import {Theme} from 'src/theme';
+
 
 interface ShortcutProps {
     keyDesc: string;
@@ -73,12 +61,7 @@ const KeyboardShortcuts: FC = () => {
 
     return (
         <>
-            <Button
-                color="inherit"
-                variant="outlined"
-                startIcon={<KeyboardIcon />}
-                onClick={handleOpen}
-            >
+            <Button color="inherit" variant="outlined" startIcon={<KeyboardIcon />} onClick={handleOpen}>
                 Keyboard shortcuts
             </Button>
 
@@ -95,11 +78,7 @@ const KeyboardShortcuts: FC = () => {
                 <DialogTitle className="flex">
                     <KeyboardIcon fontSize="large" />
 
-                    <IconButton
-                        className={classes.close}
-                        onClick={handleClose}
-                        size="large"
-                    >
+                    <IconButton className={classes.close} onClick={handleClose} size="large">
                         <CloseIcon fontSize="large" />
                     </IconButton>
                 </DialogTitle>
@@ -109,17 +88,11 @@ const KeyboardShortcuts: FC = () => {
                             <Grid item sm={6} xs={12}>
                                 <Section>Labeling</Section>
                                 <Divider />
-                                <Shortcut keyDesc="a">
-                                    Change tool (draw)
-                                </Shortcut>
+                                <Shortcut keyDesc="a">Change tool (draw)</Shortcut>
                                 <Divider />
-                                <Shortcut keyDesc="z">
-                                    Change tool (move)
-                                </Shortcut>
+                                <Shortcut keyDesc="z">Change tool (move)</Shortcut>
                                 <Divider />
-                                <Shortcut keyDesc="CTRL + Z">
-                                    Restore previous state
-                                </Shortcut>
+                                <Shortcut keyDesc="CTRL + Z">Restore previous state</Shortcut>
                                 <Divider />
                             </Grid>
                             <Grid item sm={6} xs={12}>

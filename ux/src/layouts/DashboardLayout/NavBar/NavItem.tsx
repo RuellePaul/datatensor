@@ -7,6 +7,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import {Theme} from 'src/theme';
 
+
 interface NavItemProps {
     children?: ReactNode;
     className?: string;
@@ -98,17 +99,8 @@ const NavItem: FC<NavItemProps> = ({
 
     if (children) {
         return (
-            <ListItem
-                className={clsx(classes.item, className)}
-                disableGutters
-                key={title}
-                {...rest}
-            >
-                <Button
-                    className={classes.button}
-                    onClick={handleToggle}
-                    style={style}
-                >
+            <ListItem className={clsx(classes.item, className)} disableGutters key={title} {...rest}>
+                <Button className={classes.button} onClick={handleToggle} style={style}>
                     {Icon && <Icon className={classes.icon} size="20" />}
                     <span className={classes.title}>{title}</span>
                     {Info && <Info />}
@@ -120,12 +112,7 @@ const NavItem: FC<NavItemProps> = ({
     }
 
     return (
-        <ListItem
-            className={clsx(classes.itemLeaf, className)}
-            disableGutters
-            key={title}
-            {...rest}
-        >
+        <ListItem className={clsx(classes.itemLeaf, className)} disableGutters key={title} {...rest}>
             <Button
                 activeClassName={classes.active}
                 className={clsx(classes.buttonLeaf, `depth-${depth}`)}

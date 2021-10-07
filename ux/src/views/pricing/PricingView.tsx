@@ -1,14 +1,6 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
-import {
-    Box,
-    Button,
-    Container,
-    Divider,
-    Grid,
-    Paper,
-    Typography
-} from '@mui/material';
+import {Box, Button, Container, Divider, Grid, Paper, Typography} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
@@ -61,14 +53,9 @@ const PricingView: FC = () => {
                     Start today. Boost up your services!
                 </Typography>
                 <Box mt={3}>
-                    <Typography
-                        align="center"
-                        variant="subtitle1"
-                        color="textSecondary"
-                    >
-                        Welcome to the first platform created for freelancers
-                        and agencies for showcasing and finding the best clinets
-                        in the market. 30% of our income goes into Whale Charity
+                    <Typography align="center" variant="subtitle1" color="textSecondary">
+                        Welcome to the first platform created for freelancers and agencies for showcasing and finding
+                        the best clinets in the market. 30% of our income goes into Whale Charity
                     </Typography>
                 </Box>
             </Container>
@@ -82,21 +69,11 @@ const PricingView: FC = () => {
                                     src="/static/images/datasets/product_standard.svg"
                                     alt="Dataset"
                                 />
-                                <Typography
-                                    component="h3"
-                                    gutterBottom
-                                    variant="overline"
-                                    color="textSecondary"
-                                >
+                                <Typography component="h3" gutterBottom variant="overline" color="textSecondary">
                                     Standard
                                 </Typography>
                                 <div>
-                                    <Typography
-                                        component="span"
-                                        display="inline"
-                                        variant="h3"
-                                        color="textPrimary"
-                                    >
+                                    <Typography component="span" display="inline" variant="h3" color="textPrimary">
                                         $5
                                     </Typography>
                                     <Typography
@@ -108,10 +85,7 @@ const PricingView: FC = () => {
                                         /month
                                     </Typography>
                                 </div>
-                                <Typography
-                                    variant="overline"
-                                    color="textSecondary"
-                                >
+                                <Typography variant="overline" color="textSecondary">
                                     Max 1 user
                                 </Typography>
                                 <Box my={2}>
@@ -129,51 +103,26 @@ const PricingView: FC = () => {
                                 <Box my={2}>
                                     <Divider />
                                 </Box>
-                                <Button
-                                    variant="contained"
-                                    fullWidth
-                                    className={classes.chooseButton}
-                                >
+                                <Button variant="contained" fullWidth className={classes.chooseButton}>
                                     Choose
                                 </Button>
                             </Paper>
                         </Grid>
                         <Grid item md={4} xs={12}>
-                            <Paper
-                                className={clsx(
-                                    classes.dataset,
-                                    classes.recommendedProduct
-                                )}
-                                elevation={1}
-                            >
+                            <Paper className={clsx(classes.dataset, classes.recommendedProduct)} elevation={1}>
                                 <img
                                     alt="Dataset"
                                     className={classes.datasetImage}
                                     src="/static/images/datasets/product_premium--outlined.svg"
                                 />
-                                <Typography
-                                    component="h3"
-                                    gutterBottom
-                                    variant="overline"
-                                    color="inherit"
-                                >
+                                <Typography component="h3" gutterBottom variant="overline" color="inherit">
                                     Premium
                                 </Typography>
                                 <div>
-                                    <Typography
-                                        component="span"
-                                        display="inline"
-                                        variant="h3"
-                                        color="inherit"
-                                    >
+                                    <Typography component="span" display="inline" variant="h3" color="inherit">
                                         $29
                                     </Typography>
-                                    <Typography
-                                        component="span"
-                                        display="inline"
-                                        variant="subtitle2"
-                                        color="inherit"
-                                    >
+                                    <Typography component="span" display="inline" variant="subtitle2" color="inherit">
                                         /month
                                     </Typography>
                                 </div>
@@ -195,11 +144,7 @@ const PricingView: FC = () => {
                                 <Box my={2}>
                                     <Divider />
                                 </Box>
-                                <Button
-                                    variant="contained"
-                                    fullWidth
-                                    className={classes.chooseButton}
-                                >
+                                <Button variant="contained" fullWidth className={classes.chooseButton}>
                                     Choose
                                 </Button>
                             </Paper>
@@ -211,21 +156,11 @@ const PricingView: FC = () => {
                                     className={classes.datasetImage}
                                     src="/static/images/datasets/product_extended.svg"
                                 />
-                                <Typography
-                                    component="h3"
-                                    gutterBottom
-                                    variant="overline"
-                                    color="textSecondary"
-                                >
+                                <Typography component="h3" gutterBottom variant="overline" color="textSecondary">
                                     Extended
                                 </Typography>
                                 <div>
-                                    <Typography
-                                        component="span"
-                                        display="inline"
-                                        variant="h3"
-                                        color="textPrimary"
-                                    >
+                                    <Typography component="span" display="inline" variant="h3" color="textPrimary">
                                         $259
                                     </Typography>
                                     <Typography
@@ -237,10 +172,7 @@ const PricingView: FC = () => {
                                         /month
                                     </Typography>
                                 </div>
-                                <Typography
-                                    variant="overline"
-                                    color="textSecondary"
-                                >
+                                <Typography variant="overline" color="textSecondary">
                                     Company
                                 </Typography>
                                 <Box my={2}>
@@ -258,11 +190,7 @@ const PricingView: FC = () => {
                                 <Box my={2}>
                                     <Divider />
                                 </Box>
-                                <Button
-                                    variant="contained"
-                                    fullWidth
-                                    className={classes.chooseButton}
-                                >
+                                <Button variant="contained" fullWidth className={classes.chooseButton}>
                                     Choose
                                 </Button>
                             </Paper>
