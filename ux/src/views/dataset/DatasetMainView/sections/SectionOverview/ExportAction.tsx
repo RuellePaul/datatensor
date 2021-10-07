@@ -12,7 +12,7 @@ import {
     Card,
     CardActions,
     CardContent,
-    CardHeader,
+    CardHeader, CircularProgress,
     Dialog,
     DialogContent,
     InputAdornment,
@@ -21,7 +21,11 @@ import {
     TextField,
     Typography
 } from '@mui/material';
-import {Download, VisibilityOutlined as ViewIcon} from '@mui/icons-material';
+import {
+    Download as DownloadIcon,
+    Downloading as ExportIcon,
+    VisibilityOutlined as ViewIcon
+} from '@mui/icons-material';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
@@ -35,7 +39,7 @@ import download from 'src/utils/download';
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
     alert: {
-        marginBottom: theme.spacing(2),
+        margin: theme.spacing(1, 0, 2),
         '& .MuiAlert-message': {
             width: '100%'
         }
@@ -85,6 +89,7 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
                 ...dataset,
                 exported_at: new Date().toISOString()
             }));
+            trigger(false);
         } catch (error) {
             enqueueSnackbar(error.message || 'Something went wrong', {
                 variant: 'error'
@@ -146,13 +151,22 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
                     <Card className={clsx(classes.root, className)} variant="outlined">
                         <CardHeader title="Export" />
                         <CardContent>
+                            <Typography gutterBottom>Download your dataset in JSON format.</Typography>
+                            <Typography color="textSecondary" gutterBottom>
+                                An exported dataset allows you to use it in your own computer vision pipeline. See the{' '}
+                                <Link variant="subtitle1" color="primary" component={RouterLink} to="/docs">
+                                    dedicated section
+                                </Link>{' '}
+                                on documentation.
+                            </Typography>
+
                             {dataset.exported_at && !activeExportTask && (
                                 <Alert className={classes.alert}>
                                     <Typography variant="body2">
                                         Last export : {moment(dataset.exported_at).format('DD MMM, HH:mm')}
                                         <br />
                                         {exports.length === 0 && (
-                                            <Link variant="subtitle1" color="primary" onClick={trigger}>
+                                            <Link variant="subtitle1" color="primary" onClick={() => trigger(true)}>
                                                 View details
                                             </Link>
                                         )}
@@ -188,7 +202,7 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
                                                 </Box>
                                                 <Button
                                                     color="inherit"
-                                                    endIcon={<Download />}
+                                                    endIcon={<DownloadIcon />}
                                                     type="submit"
                                                     variant="outlined"
                                                     size="small"
@@ -201,16 +215,7 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
                                 </Alert>
                             )}
 
-                            <Typography gutterBottom>Download your dataset in JSON format.</Typography>
-                            <Typography color="textSecondary" gutterBottom>
-                                An exported dataset allows you to use it in your own computer vision pipeline. See the{' '}
-                                <Link variant="subtitle1" color="primary" component={RouterLink} to="/docs">
-                                    dedicated section
-                                </Link>{' '}
-                                on documentation.
-                            </Typography>
-
-                            {activeExportTask ? (
+                            {activeExportTask && (
                                 <Box display="flex" alignItems="center">
                                     <Box width="100%" mr={1}>
                                         <LinearProgress
@@ -226,13 +231,19 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
                                         {`${(100 * activeExportTask.progress).toFixed(2)}%`}
                                     </Typography>
                                 </Box>
-                            ) : (
-                                <CardActions style={{justifyContent: 'flex-end'}}>
-                                    <Button color="primary" onClick={handleExport} variant="contained">
-                                        Export
-                                    </Button>
-                                </CardActions>
                             )}
+
+                            <CardActions style={{justifyContent: 'flex-end'}}>
+                                <Button
+                                    color="primary"
+                                    disabled={!!activeExportTask}
+                                    endIcon={!!activeExportTask ? <CircularProgress className={classes.loader} color="inherit" /> : <ExportIcon />}
+                                    onClick={handleExport}
+                                    variant="contained"
+                                >
+                                    Export
+                                </Button>
+                            </CardActions>
                         </CardContent>
                     </Card>
 

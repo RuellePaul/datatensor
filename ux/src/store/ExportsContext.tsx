@@ -7,7 +7,7 @@ import SplashScreen from 'src/components/screens/SplashScreen';
 export interface ExportsContextValue {
     exports: Export[];
     saveExports: (update: Export[] | ((exports: Export[]) => Export[])) => void;
-    trigger: () => void
+    trigger: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface ExportsProviderProps {
@@ -26,8 +26,6 @@ export const ExportsProvider: FC<ExportsProviderProps> = ({children}) => {
     const {dataset} = useDataset();
 
     const [triggered, setTriggered] = useState<boolean>(false);
-
-    const trigger = () => setTriggered(true);
 
     const handleSaveExports = (update: Export[] | ((exports: Export[]) => Export[])): void => {
         setCurrentExports(update);
@@ -58,7 +56,7 @@ export const ExportsProvider: FC<ExportsProviderProps> = ({children}) => {
             value={{
                 exports: currentExports,
                 saveExports: handleSaveExports,
-                trigger: trigger
+                trigger: setTriggered
             }}
         >
             {children}
