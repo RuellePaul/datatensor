@@ -9,6 +9,7 @@ import ExportAction from './ExportAction';
 import LabelisatorAction from './LabelisatorAction';
 import EditAction from './EditAction';
 import Overview from './Overview';
+import UploadAction from '../SectionImages/UploadAction';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {}
@@ -31,6 +32,8 @@ const SectionOverview: FC<SectionProps> = ({className}) => {
                 <Grid item md={4} xs={12}>
                     <Stack spacing={5}>
                         <ImagesSlideshow />
+
+                        <UploadAction/>
 
                         <LabelisatorAction />
 

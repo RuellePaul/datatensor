@@ -1,12 +1,11 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
-import {Button, Card, CardActions, CardContent, CardHeader, Link, Typography} from '@mui/material';
+import {Button, Card, CardActions, CardContent, CardHeader, Typography} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import {BrandingWatermarkOutlined as LabelisatorIcon} from '@mui/icons-material';
 import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
 import useImages from 'src/hooks/useImages';
-import {Link as RouterLink} from 'react-router-dom';
 
 
 const useStyles = makeStyles((theme: Theme) => ({

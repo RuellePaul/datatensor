@@ -26,7 +26,6 @@ import api from 'src/utils/api';
 import bytesToSize from 'src/utils/bytesToSize';
 import {Image} from 'src/types/image';
 
-
 interface ImagesDropzoneProps {
     callback?: () => void;
     className?: string;
@@ -88,7 +87,11 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({callback, className, ...rest})
     const [files, setFiles] = useState([]);
 
     const handleDrop = useCallback(acceptedImages => {
-        setFiles(prevImages => [...prevImages].concat(acceptedImages));
+        setFiles(prevImages =>
+            [...prevImages.filter(prev => !acceptedImages.map(image => image.path).includes(prev.path))].concat(
+                acceptedImages
+            )
+        );
     }, []);
 
     const handleRemoveAll = () => {

@@ -35,7 +35,6 @@ const UploadAction: FC = () => {
                     color="primary"
                     endIcon={<UploadIcon />}
                     onClick={handleUploadOpen}
-                    size="small"
                 >
                     Upload images
                 </Button>
