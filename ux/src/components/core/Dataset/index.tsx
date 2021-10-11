@@ -21,6 +21,7 @@ import {Image} from 'src/types/image';
 import UserAvatar from 'src/components/UserAvatar';
 import WorkingAlert from 'src/components/core/WorkingAlert';
 import {UserConsumer, UserProvider} from 'src/store/UserContext';
+import {EMPTY_DESCRIPTIONS} from 'src/constants';
 
 
 interface DatasetProps {
@@ -111,9 +112,9 @@ const DTDataset: FC<DatasetProps> = ({className, dataset, ...rest}) => {
                         variant="body2"
                         component="p"
                         dangerouslySetInnerHTML={{
-                            __html: (dataset.description !== '<p><br></p>')
-                                ? dataset.description
-                                : '<i>No description provided</i>'
+                            __html: EMPTY_DESCRIPTIONS.includes(dataset.description)
+                                ? '<i>No description provided</i>'
+                                : dataset.description
                         }}
                     />
 

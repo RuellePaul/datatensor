@@ -8,6 +8,7 @@ export interface ExportsContextValue {
     exports: Export[];
     saveExports: (update: Export[] | ((exports: Export[]) => Export[])) => void;
     trigger: React.Dispatch<React.SetStateAction<boolean>>;
+    loading: boolean;
 }
 
 interface ExportsProviderProps {
@@ -17,7 +18,8 @@ interface ExportsProviderProps {
 export const ExportsContext = createContext<ExportsContextValue>({
     exports: [],
     saveExports: () => {},
-    trigger: () => {}
+    trigger: () => {},
+    loading: false
 });
 
 export const ExportsProvider: FC<ExportsProviderProps> = ({children}) => {
@@ -56,7 +58,8 @@ export const ExportsProvider: FC<ExportsProviderProps> = ({children}) => {
             value={{
                 exports: currentExports,
                 saveExports: handleSaveExports,
-                trigger: setTriggered
+                trigger: setTriggered,
+                loading: triggered && currentExports.length === 0
             }}
         >
             {children}

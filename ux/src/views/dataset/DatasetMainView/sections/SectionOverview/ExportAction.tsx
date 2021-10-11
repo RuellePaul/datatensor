@@ -62,7 +62,7 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
 
     const {tasks, saveTasks} = useTasks();
     const {dataset, saveDataset} = useDataset();
-    const {exports, saveExports, trigger} = useExports();
+    const {exports, saveExports, trigger, loading} = useExports();
 
     const [open, setOpen] = useState<boolean>(false);
 
@@ -164,7 +164,10 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
                                         <br />
                                         {exports.length === 0 && (
                                             <Link variant="subtitle1" color="primary" onClick={() => trigger(true)}>
-                                                View details
+                                                View details{' '}
+                                                {loading && (
+                                                    <CircularProgress className={classes.loader} color="inherit" />
+                                                )}
                                             </Link>
                                         )}
                                     </Typography>

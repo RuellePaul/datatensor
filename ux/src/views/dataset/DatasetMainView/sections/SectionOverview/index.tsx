@@ -26,13 +26,14 @@ const SectionOverview: FC<SectionProps> = ({className}) => {
                         <EditAction />
 
                         <Overview />
+
+                        <ImagesSlideshow />
+
                     </Stack>
                 </Grid>
 
                 <Grid item md={4} xs={12}>
                     <Stack spacing={5}>
-                        <ImagesSlideshow />
-
                         <UploadAction />
 
                         <LabelisatorAction />

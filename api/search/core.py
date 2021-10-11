@@ -29,16 +29,19 @@ def search_unlabeled_image_id(dataset_id, pipeline_id, offset) -> Union[str, Non
     image_ids = [image.id for image in find_images(dataset_id, pipeline_id)]
     labels = list(db.labels.find({'image_id': {'$in': image_ids}}))
     labels = [Label.from_mongo(label) for label in labels]
+
     unlabeled_image_id = None
+
+    labeled_image_ids = set(label.image_id for label in labels)
     try:
         unlabeled_image_id = next(image_id for image_id in image_ids[offset:]
-                                  if image_id not in [label.image_id for label in labels]
+                                  if image_id not in labeled_image_ids
                                   and image_ids.index(image_id) > offset)
     except StopIteration:
         try:
             if not unlabeled_image_id:
                 unlabeled_image_id = next(image_id for image_id in image_ids
-                                          if image_id not in [label.image_id for label in labels])
+                                          if image_id not in labeled_image_ids)
         except StopIteration:
             pass
     return unlabeled_image_id
