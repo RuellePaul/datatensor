@@ -33,7 +33,6 @@ import api from 'src/utils/api';
 import {Task} from 'src/types/task';
 import download from 'src/utils/download';
 
-
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
     alert: {
@@ -56,14 +55,14 @@ interface ExportActionProps {
     className?: string;
 }
 
-const ExportAction: FC<ExportActionProps> = ({ className }) => {
+const ExportAction: FC<ExportActionProps> = ({className}) => {
     const classes = useStyles();
     const isMountedRef = useIsMountedRef();
-    const { enqueueSnackbar } = useSnackbar();
+    const {enqueueSnackbar} = useSnackbar();
 
-    const { tasks, saveTasks } = useTasks();
-    const { dataset, saveDataset } = useDataset();
-    const { exports, saveExports, trigger } = useExports();
+    const {tasks, saveTasks} = useTasks();
+    const {dataset, saveDataset} = useDataset();
+    const {exports, saveExports, trigger} = useExports();
 
     const [open, setOpen] = useState<boolean>(false);
 
@@ -77,7 +76,7 @@ const ExportAction: FC<ExportActionProps> = ({ className }) => {
 
     const handleExport = async () => {
         try {
-            const response = await api.post<{ task: Task }>(`/datasets/${dataset.id}/tasks/`, {
+            const response = await api.post<{task: Task}>(`/datasets/${dataset.id}/tasks/`, {
                 type: 'export',
                 properties: {}
             });
@@ -123,12 +122,12 @@ const ExportAction: FC<ExportActionProps> = ({ className }) => {
                     .max(255)
                     .required('Filename is required')
             })}
-            onSubmit={async (values, { resetForm, setStatus, setSubmitting }) => {
+            onSubmit={async (values, {resetForm, setStatus, setSubmitting}) => {
                 try {
                     await handleDownload(values.filename);
 
                     if (isMountedRef.current) {
-                        setStatus({ success: true });
+                        setStatus({success: true});
                         setSubmitting(false);
                         resetForm();
                     }
@@ -138,21 +137,20 @@ const ExportAction: FC<ExportActionProps> = ({ className }) => {
                     });
 
                     if (isMountedRef.current) {
-                        setStatus({ success: false });
+                        setStatus({success: false});
                         setSubmitting(false);
                     }
                 }
             }}
         >
-            {({ errors, handleBlur, handleChange, handleSubmit, touched, values }) => (
+            {({errors, handleBlur, handleChange, handleSubmit, touched, values}) => (
                 <form noValidate onSubmit={handleSubmit}>
                     <Card className={clsx(classes.root, className)} variant="outlined">
                         <CardHeader title="Export" />
                         <CardContent>
                             <Typography gutterBottom>Download your dataset in JSON format.</Typography>
                             <Typography variant="body2" color="textSecondary" gutterBottom>
-                                An exported dataset allows you to use it in your own computer vision pipeline. See
-                                the{' '}
+                                An exported dataset allows you to use it in your own computer vision pipeline. See the{' '}
                                 <Link variant="body2" color="primary" component={RouterLink} to="/docs">
                                     dedicated section
                                 </Link>{' '}
@@ -232,7 +230,7 @@ const ExportAction: FC<ExportActionProps> = ({ className }) => {
                                 </Box>
                             )}
                         </CardContent>
-                        <CardActions style={{ justifyContent: 'flex-end' }}>
+                        <CardActions style={{justifyContent: 'flex-end'}}>
                             <Button
                                 color="primary"
                                 disabled={!!activeExportTask}

@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const UploadAction: FC = () => {
+const UploadButton: FC = () => {
     const classes = useStyles();
 
     const [openUpload, setOpenUpload] = useState(false);
@@ -58,4 +58,4 @@ const UploadAction: FC = () => {
     );
 };
 
-export default UploadAction;
+export default UploadButton;

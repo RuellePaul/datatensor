@@ -35,7 +35,6 @@ import {currentCategoryCount} from 'src/utils/labeling';
 import {MAX_CATEGORIES_DISPLAYED, SUPERCATEGORIES} from 'src/config';
 import {COLORS} from 'src/utils/colors';
 
-
 interface CategoriesProps {
     className?: string;
 }
