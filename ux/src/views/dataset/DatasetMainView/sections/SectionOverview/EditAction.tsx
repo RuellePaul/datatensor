@@ -11,6 +11,7 @@ import QuillEditor from 'src/components/QuillEditor';
 import useDataset from 'src/hooks/useDataset';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import api from 'src/utils/api';
+import {EMPTY_DESCRIPTIONS} from 'src/constants';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -50,9 +51,9 @@ const EditAction: FC<EditProps> = ({ className }) => {
                         color="textSecondary"
                         variant="body1"
                         dangerouslySetInnerHTML={{
-                            __html: (dataset.description !== '<p><br></p>')
-                                ? dataset.description
-                                : '<i>No description provided</i>'
+                            __html: EMPTY_DESCRIPTIONS.includes(dataset.description)
+                                ? '<i>No description provided</i>'
+                                : dataset.description
                         }}
                     />
                 </div>

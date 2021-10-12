@@ -19,7 +19,7 @@ import {
     Typography
 } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import {CropSharp as LabelisatorIcon, DeleteOutline as DeleteIcon} from '@mui/icons-material';
+import {BrandingWatermarkOutlined as LabelisatorIcon, DeleteOutline as DeleteIcon} from '@mui/icons-material';
 import {Theme} from 'src/theme';
 import api from 'src/utils/api';
 import DTImage from 'src/components/core/Images/Image';

@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import {Box, capitalize, Chip, Link, Typography, useTheme} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
+import AddCategoryAction from 'src/components/core/Labelisator/AddCategoryAction';
 import {Category} from 'src/types/category';
 import useCategory from 'src/hooks/useCategory';
 import useDataset from 'src/hooks/useDataset';
@@ -85,6 +86,8 @@ const DTCategories: FC<CategoriesProps> = ({className}) => {
                     {categories.map(category => (
                         <DTCategory category={category} key={category.id} index={categories.indexOf(category)} />
                     ))}
+
+                    <AddCategoryAction />
                 </>
             ) : (
                 <>
@@ -94,10 +97,12 @@ const DTCategories: FC<CategoriesProps> = ({className}) => {
                         .map(category => (
                             <DTCategory category={category} key={category.id} index={categories.indexOf(category)} />
                         ))}
-                    {categories.length > MAX_CATEGORIES_DISPLAYED && (
+                    {categories.length > MAX_CATEGORIES_DISPLAYED ? (
                         <Link className={classes.link} onClick={() => setExpand(true)}>
                             and {categories.length - MAX_CATEGORIES_DISPLAYED} more...
                         </Link>
+                    ) : (
+                        <AddCategoryAction />
                     )}
                 </>
             )}

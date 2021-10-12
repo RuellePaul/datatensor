@@ -13,7 +13,7 @@ import {
     Typography
 } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import {Lock as PrivateIcon, PhotoLibrary, Public as PublicIcon} from '@mui/icons-material';
+import {Lock as PrivateIcon, PhotoLibraryOutlined as ImagesIcon, Public as PublicIcon} from '@mui/icons-material';
 import {Theme} from 'src/theme';
 import {Dataset} from 'src/types/dataset';
 import api from 'src/utils/api';
@@ -21,7 +21,7 @@ import {Image} from 'src/types/image';
 import UserAvatar from 'src/components/UserAvatar';
 import WorkingAlert from 'src/components/core/WorkingAlert';
 import {UserConsumer, UserProvider} from 'src/store/UserContext';
-
+import {EMPTY_DESCRIPTIONS} from 'src/constants';
 
 interface DatasetProps {
     dataset: Dataset;
@@ -38,6 +38,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     chip: {
         marginLeft: 6
+    },
+    noWrap: {
+        whiteSpace: 'nowrap'
     }
 }));
 
@@ -100,10 +103,11 @@ const DTDataset: FC<DatasetProps> = ({className, dataset, ...rest}) => {
 
                         <div className="flexGrow" />
 
-                        <PhotoLibrary />
-                        <Box width={2} />
-                        <Typography variant="overline" noWrap>
-                            {dataset.image_count} (+{dataset.augmented_count})
+                        <Box mr={0.5}>
+                            <ImagesIcon />
+                        </Box>
+                        <Typography variant="overline" className={classes.noWrap}>
+                            {dataset.image_count + dataset.augmented_count}
                         </Typography>
                     </Box>
                     <Typography
@@ -111,9 +115,9 @@ const DTDataset: FC<DatasetProps> = ({className, dataset, ...rest}) => {
                         variant="body2"
                         component="p"
                         dangerouslySetInnerHTML={{
-                            __html: (dataset.description !== '<p><br></p>')
-                                ? dataset.description
-                                : '<i>No description provided</i>'
+                            __html: EMPTY_DESCRIPTIONS.includes(dataset.description)
+                                ? '<i>No description provided</i>'
+                                : dataset.description
                         }}
                     />
 

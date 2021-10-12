@@ -22,6 +22,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     toolbar: {
         minHeight: 64
+    },
+    logo: {
+        '& polygon, & polygon.line': {
+            fill: theme.palette.mode === 'light' ? 'white !important' : 'initial'
+        }
     }
 }));
 
@@ -40,7 +45,7 @@ const TopBar: FC<TopBarProps> = ({className, onMobileNavOpen, ...rest}) => {
                 </Hidden>
                 <Hidden lgDown>
                     <RouterLink to="/">
-                        <Logo />
+                        <Logo className={classes.logo}/>
                     </RouterLink>
                 </Hidden>
                 <Box ml={2} flexGrow={1} />

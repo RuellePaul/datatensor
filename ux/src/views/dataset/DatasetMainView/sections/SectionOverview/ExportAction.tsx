@@ -12,7 +12,8 @@ import {
     Card,
     CardActions,
     CardContent,
-    CardHeader, CircularProgress,
+    CardHeader,
+    CircularProgress,
     Dialog,
     DialogContent,
     InputAdornment,
@@ -21,11 +22,7 @@ import {
     TextField,
     Typography
 } from '@mui/material';
-import {
-    Download as DownloadIcon,
-    Downloading as ExportIcon,
-    VisibilityOutlined as ViewIcon
-} from '@mui/icons-material';
+import {Download as DownloadIcon, Downloading as ExportIcon, VisibilityOutlined as ViewIcon} from '@mui/icons-material';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
@@ -39,7 +36,7 @@ import download from 'src/utils/download';
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
     alert: {
-        margin: theme.spacing(1, 0, 2),
+        marginTop: theme.spacing(2),
         '& .MuiAlert-message': {
             width: '100%'
         }
@@ -65,7 +62,7 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
 
     const {tasks, saveTasks} = useTasks();
     const {dataset, saveDataset} = useDataset();
-    const {exports, saveExports, trigger} = useExports();
+    const {exports, saveExports, trigger, loading} = useExports();
 
     const [open, setOpen] = useState<boolean>(false);
 
@@ -152,9 +149,9 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
                         <CardHeader title="Export" />
                         <CardContent>
                             <Typography gutterBottom>Download your dataset in JSON format.</Typography>
-                            <Typography color="textSecondary" gutterBottom>
+                            <Typography variant="body2" color="textSecondary" gutterBottom>
                                 An exported dataset allows you to use it in your own computer vision pipeline. See the{' '}
-                                <Link variant="subtitle1" color="primary" component={RouterLink} to="/docs">
+                                <Link variant="body2" color="primary" component={RouterLink} to="/docs">
                                     dedicated section
                                 </Link>{' '}
                                 on documentation.
@@ -167,7 +164,10 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
                                         <br />
                                         {exports.length === 0 && (
                                             <Link variant="subtitle1" color="primary" onClick={() => trigger(true)}>
-                                                View details
+                                                View details{' '}
+                                                {loading && (
+                                                    <CircularProgress className={classes.loader} color="inherit" />
+                                                )}
                                             </Link>
                                         )}
                                     </Typography>
@@ -232,19 +232,24 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
                                     </Typography>
                                 </Box>
                             )}
-
-                            <CardActions style={{justifyContent: 'flex-end'}}>
-                                <Button
-                                    color="primary"
-                                    disabled={!!activeExportTask}
-                                    endIcon={!!activeExportTask ? <CircularProgress className={classes.loader} color="inherit" /> : <ExportIcon />}
-                                    onClick={handleExport}
-                                    variant="contained"
-                                >
-                                    Export
-                                </Button>
-                            </CardActions>
                         </CardContent>
+                        <CardActions style={{justifyContent: 'flex-end'}}>
+                            <Button
+                                color="primary"
+                                disabled={!!activeExportTask}
+                                endIcon={
+                                    !!activeExportTask ? (
+                                        <CircularProgress className={classes.loader} color="inherit" />
+                                    ) : (
+                                        <ExportIcon />
+                                    )
+                                }
+                                onClick={handleExport}
+                                variant="contained"
+                            >
+                                Export
+                            </Button>
+                        </CardActions>
                     </Card>
 
                     <Dialog open={open} onClose={handleClose} maxWidth="md">

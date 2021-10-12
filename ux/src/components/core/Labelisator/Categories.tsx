@@ -1,40 +1,18 @@
 import React, {FC, useState} from 'react';
 import {useSnackbar} from 'notistack';
 import clsx from 'clsx';
-
-import {Formik} from 'formik';
-import * as Yup from 'yup';
-import {
-    Box,
-    Button,
-    capitalize,
-    Chip,
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    Grid,
-    IconButton,
-    InputLabel,
-    Link,
-    MenuItem,
-    Select,
-    TextField,
-    Typography,
-    useTheme
-} from '@mui/material';
+import {Box, capitalize, Chip, Link, Typography, useTheme} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import {Add as AddIcon, Close as CloseIcon} from '@mui/icons-material';
-import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import api from 'src/utils/api';
 import {Theme} from 'src/theme';
 import {Category} from 'src/types/category';
+import AddCategoryAction from 'src/components/core/Labelisator/AddCategoryAction';
 import useDataset from 'src/hooks/useDataset';
 import useImage from 'src/hooks/useImage';
 import useCategory from 'src/hooks/useCategory';
 import {currentCategoryCount} from 'src/utils/labeling';
-import {MAX_CATEGORIES_DISPLAYED, SUPERCATEGORIES} from 'src/config';
+import {MAX_CATEGORIES_DISPLAYED} from 'src/config';
 import {COLORS} from 'src/utils/colors';
-
 
 interface CategoriesProps {
     className?: string;
@@ -62,12 +40,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         display: 'flex',
         alignItems: 'center',
         marginLeft: theme.spacing(1)
-    },
-    close: {
-        position: 'absolute',
-        right: theme.spacing(1),
-        top: theme.spacing(1),
-        color: theme.palette.grey[500]
     }
 }));
 
@@ -165,9 +137,8 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
                             <DTCategory category={category} index={categories.indexOf(category)} />
                         </Box>
                     ))}
-                    <Box mr={1} mb={1}>
-                        {children}
-                    </Box>
+
+                    {children}
                 </div>
             </Box>
 
@@ -208,133 +179,14 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
 
 const DTCategories: FC<CategoriesProps> = ({className}) => {
     const classes = useStyles();
-    const isMountedRef = useIsMountedRef();
 
-    const {enqueueSnackbar} = useSnackbar();
-
-    const {dataset, categories, saveCategories} = useDataset();
-
-    const [openCategoryCreation, setOpenCategoryCreation] = useState(false);
-
-    const handleCloseCategoryCreation = () => {
-        setOpenCategoryCreation(false);
-    };
+    const {categories} = useDataset();
 
     return (
         <div className={clsx(classes.root, className)}>
-            <Chips categories={categories}>
-                <Chip
-                    label="New category"
-                    icon={<AddIcon />}
-                    onClick={() => setOpenCategoryCreation(true)}
-                    variant="outlined"
-                />
+            <Chips categories={categories} >
+                <AddCategoryAction/>
             </Chips>
-
-            <Dialog fullWidth maxWidth="sm" open={openCategoryCreation} onClose={handleCloseCategoryCreation}>
-                <DialogTitle className="flex">
-                    <Typography variant="h4">Add a new category</Typography>
-
-                    <IconButton className={classes.close} onClick={handleCloseCategoryCreation} size="large">
-                        <CloseIcon />
-                    </IconButton>
-                </DialogTitle>
-                <DialogContent>
-                    <Box my={2}>
-                        <Formik
-                            initialValues={{
-                                name: '',
-                                supercategory: null
-                            }}
-                            validationSchema={Yup.object().shape({
-                                name: Yup.string()
-                                    .max(255)
-                                    .required('Name is required')
-                            })}
-                            onSubmit={async (values, {setStatus, setSubmitting}) => {
-                                try {
-                                    const response = await api.post<{
-                                        category: Category;
-                                    }>(`/datasets/${dataset.id}/categories/`, values);
-                                    saveCategories([...categories, response.data.category]);
-                                    setOpenCategoryCreation(false);
-
-                                    if (isMountedRef.current) {
-                                        setStatus({success: true});
-                                        setSubmitting(false);
-                                    }
-                                } catch (error) {
-                                    enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
-
-                                    if (isMountedRef.current) {
-                                        setStatus({success: false});
-                                        setSubmitting(false);
-                                    }
-                                }
-                            }}
-                        >
-                            {({errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values}) => (
-                                <form noValidate onSubmit={handleSubmit}>
-                                    <Grid container spacing={2}>
-                                        <Grid item sm={6} xs={12}>
-                                            <TextField
-                                                autoFocus
-                                                error={Boolean(touched.name && errors.name)}
-                                                fullWidth
-                                                helperText={touched.name && errors.name}
-                                                label="Name *"
-                                                margin="normal"
-                                                name="name"
-                                                onBlur={handleBlur}
-                                                onChange={handleChange}
-                                                onKeyDown={event => event.stopPropagation()}
-                                                value={values.name}
-                                                variant="outlined"
-                                                size="small"
-                                            />
-                                        </Grid>
-                                        <Grid item sm={6} xs={12}>
-                                            <InputLabel>Supercategory</InputLabel>
-                                            <Select
-                                                error={Boolean(touched.supercategory && errors.supercategory)}
-                                                fullWidth
-                                                label="Supercategory"
-                                                name="supercategory"
-                                                onBlur={handleBlur}
-                                                onChange={handleChange}
-                                                value={values.supercategory}
-                                                displayEmpty
-                                            >
-                                                <MenuItem value={null}>
-                                                    <em>Pick one</em>
-                                                </MenuItem>
-                                                {SUPERCATEGORIES.map(supercategory => (
-                                                    <MenuItem key={supercategory} value={supercategory}>
-                                                        {capitalize(supercategory)}
-                                                    </MenuItem>
-                                                ))}
-                                            </Select>
-                                        </Grid>
-                                    </Grid>
-
-                                    <Box mt={2}>
-                                        <Button
-                                            color="primary"
-                                            disabled={isSubmitting}
-                                            fullWidth
-                                            size="large"
-                                            type="submit"
-                                            variant="contained"
-                                        >
-                                            Create a new category
-                                        </Button>
-                                    </Box>
-                                </form>
-                            )}
-                        </Formik>
-                    </Box>
-                </DialogContent>
-            </Dialog>
         </div>
     );
 };

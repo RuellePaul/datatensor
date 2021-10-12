@@ -7,7 +7,9 @@ import {SectionProps} from '../SectionProps';
 import ImagesSlideshow from 'src/components/core/Images/ImagesSlideshow';
 import ExportAction from './ExportAction';
 import LabelisatorAction from './LabelisatorAction';
+import UploadAction from './UploadAction';
 import EditAction from './EditAction';
+import Overview from './Overview';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {}
@@ -23,13 +25,18 @@ const SectionOverview: FC<SectionProps> = ({className}) => {
                     <Stack spacing={2}>
                         <EditAction />
 
-                        <LabelisatorAction />
+                        <Overview />
+
+                        <ImagesSlideshow />
+
                     </Stack>
                 </Grid>
 
                 <Grid item md={4} xs={12}>
                     <Stack spacing={5}>
-                        <ImagesSlideshow />
+                        <UploadAction />
+
+                        <LabelisatorAction />
 
                         <ExportAction />
                     </Stack>

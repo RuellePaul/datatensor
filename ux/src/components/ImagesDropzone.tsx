@@ -17,15 +17,13 @@ import {
     Typography
 } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import FileCopyIcon from '@mui/icons-material/FileCopy';
-import MoreIcon from '@mui/icons-material/MoreVert';
+import {ImageOutlined as ImageIcon, MoreVert as MoreIcon} from '@mui/icons-material';
 import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
 import useImages from 'src/hooks/useImages';
 import api from 'src/utils/api';
 import bytesToSize from 'src/utils/bytesToSize';
 import {Image} from 'src/types/image';
-
 
 interface ImagesDropzoneProps {
     callback?: () => void;
@@ -88,7 +86,11 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({callback, className, ...rest})
     const [files, setFiles] = useState([]);
 
     const handleDrop = useCallback(acceptedImages => {
-        setFiles(prevImages => [...prevImages].concat(acceptedImages));
+        setFiles(prevImages =>
+            [...prevImages.filter(prev => !acceptedImages.map(image => image.path).includes(prev.path))].concat(
+                acceptedImages
+            )
+        );
     }, []);
 
     const handleRemoveAll = () => {
@@ -157,7 +159,7 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({callback, className, ...rest})
                     {files.map((file, i) => (
                         <ListItem divider={i < files.length - 1} key={i}>
                             <ListItemIcon>
-                                <FileCopyIcon />
+                                <ImageIcon />
                             </ListItemIcon>
                             <ListItemText
                                 primary={file.name}

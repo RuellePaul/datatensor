@@ -17,19 +17,92 @@ interface NavBarProps {
 
 interface Item {
     title: string;
-    href: string;
+    href?: string;
     items?: Item[];
 }
 
 const items: Item[] = [
     {
-        title: 'Getting Started',
-        href: '/docs/getting-started'
+        title: 'Welcome',
+        items: [
+            {
+                title: 'Getting started',
+                href: '/docs/getting-started'
+            },
+            {
+                title: 'About Datatensor',
+                href: '/docs/about-datatensor'
+            }
+        ]
     },
     {
-        title: 'Swagger API',
-        href: '/docs/swagger-api'
-    }
+        title: 'Authentication',
+        items: [
+            {
+                title: 'Register',
+                href: '/docs/authentication/register'
+            },
+            {
+                title: 'Account settings',
+                href: '/docs/authentication/account-settings'
+            }
+        ]
+    },
+    {
+        title: 'Dataset workflow',
+        items: [
+            {
+                title: 'Create a dataset',
+                href: '/docs/datasets/create-a-dataset'
+            },
+            {
+                title: 'Upload images',
+                href: '/docs/datasets/create-a-dataset'
+            },
+            {
+                title: 'Labeling',
+                href: '/docs/datasets/labeling'
+            },
+            {
+                title: 'Augmentation',
+                href: '/docs/datasets/augmentation'
+            },
+            {
+                title: 'Export',
+                href: '/docs/datasets/export'
+            }
+        ]
+    },
+    {
+        title: 'Computer vision',
+        items: [
+            {
+                title: 'Using an exported dataset',
+                href: '/docs/computer-vision/using-an-exported-dataset'
+            },
+            {
+                title: 'API documentation',
+                href: '/docs/computer-vision/api-documentation'
+            }
+        ]
+    },
+    {
+        title: 'Contributing',
+        items: [
+            {
+                title: 'Code hosting',
+                href: '/docs/contributing/code-hosting'
+            },
+            {
+                title: 'Running locally',
+                href: '/docs/contributing/running-locally'
+            },
+            {
+                title: 'Project architecture',
+                href: '/docs/contributing/architecture'
+            },
+        ]
+    },
 ];
 
 function renderNavItems({ items, depth = 0 }: { items: Item[], depth?: number }) {

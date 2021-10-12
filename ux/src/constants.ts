@@ -10,3 +10,13 @@ export const THEMES = {
     LIGHT: 'LIGHT',
     DARK: 'DARK'
 };
+
+export const EMPTY_DESCRIPTIONS = [
+    undefined,
+    null,
+    '',
+    '<p></p>',
+    '<p> </p>',
+    '<p>  </p>',
+    '<p><br/></p>',
+]

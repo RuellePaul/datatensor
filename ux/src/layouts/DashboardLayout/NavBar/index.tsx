@@ -200,7 +200,7 @@ const NavBar: FC<NavBarProps> = ({onMobileClose, openMobile}) => {
                 </Box>
                 <Divider />
                 <Box p={2}>
-                    <Box p={2} borderRadius={1} bgcolor="background.paper">
+                    <Box p={2} borderRadius={1} bgcolor="background.default">
                         <Typography variant="h6" color="textPrimary">
                             Need Help?
                         </Typography>

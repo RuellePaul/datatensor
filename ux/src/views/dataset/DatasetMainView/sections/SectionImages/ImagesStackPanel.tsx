@@ -5,9 +5,9 @@ import {makeStyles} from '@mui/styles';
 import {ArrowLeft as BackIcon} from 'react-feather';
 import DTImagesList from 'src/components/core/Images/ImagesList';
 import DTImagesStack from 'src/components/core/Images/ImagesStack';
+import UploadButton from 'src/components/core/Images/UploadButton';
 import useDataset from 'src/hooks/useDataset';
 import {Theme} from 'src/theme';
-import UploadAction from './UploadAction';
 import ViewPipelineAction from './ViewPipelineAction';
 import DeletePipelineAction from './DeletePipelineAction';
 import useCategory from 'src/hooks/useCategory';
@@ -137,7 +137,7 @@ const ImagesStackPanel: FC<ImagesStackPanelProps> = ({pipeline = {}}) => {
                                         section on our documentation to understand.
                                     </Typography>
 
-                                    <UploadAction />
+                                    <UploadButton />
                                 </div>
                             )}
                         </Grid>

@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const UploadAction: FC = () => {
+const UploadButton: FC = () => {
     const classes = useStyles();
 
     const [openUpload, setOpenUpload] = useState(false);
@@ -35,7 +35,6 @@ const UploadAction: FC = () => {
                     color="primary"
                     endIcon={<UploadIcon />}
                     onClick={handleUploadOpen}
-                    size="small"
                 >
                     Upload images
                 </Button>
@@ -49,9 +48,6 @@ const UploadAction: FC = () => {
                     </IconButton>
                 </DialogTitle>
                 <DialogContent>
-                    <Typography color="textSecondary" gutterBottom>
-                        Upload images of objects that you want to detect
-                    </Typography>
                     <ImagesDropzone callback={handleCloseUpload} />
                 </DialogContent>
             </Dialog>
@@ -59,4 +55,4 @@ const UploadAction: FC = () => {
     );
 };
 
-export default UploadAction;
+export default UploadButton;

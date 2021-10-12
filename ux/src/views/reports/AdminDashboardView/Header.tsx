@@ -4,8 +4,9 @@ import {Breadcrumbs, Button, Grid, Menu, MenuItem, SvgIcon, Typography} from '@m
 import makeStyles from '@mui/styles/makeStyles';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import {Calendar as CalendarIcon} from 'react-feather';
-import {TimeRange} from 'src/types/timeRange';
+import {Theme} from 'src/theme';
 
+import {TimeRange} from 'src/types/timeRange';
 
 interface HeaderProps {
     className?: string;
@@ -14,8 +15,10 @@ interface HeaderProps {
     timeRanges: TimeRange[];
 }
 
-const useStyles = makeStyles(() => ({
-    root: {}
+const useStyles = makeStyles((theme: Theme) => ({
+    root: {
+        marginBottom: theme.spacing(2)
+    }
 }));
 
 const Header: FC<HeaderProps> = ({className, timeRange, setTimeRange, timeRanges, ...rest}) => {
