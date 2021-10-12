@@ -10,8 +10,7 @@
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
-        "deployment:test": "run-p server serve:test",
-        "serve:test": "serve -s build -l 5069 --ssl-cert server/cert.pem --ssl-key server/key.pem"
+        "serve:production": "serve -s build -l 5069"
     },
     "browserslist": {
         "production": [
