@@ -86,6 +86,8 @@ const DTCategories: FC<CategoriesProps> = ({className}) => {
                     {categories.map(category => (
                         <DTCategory category={category} key={category.id} index={categories.indexOf(category)} />
                     ))}
+
+                    <AddCategoryAction />
                 </>
             ) : (
                 <>
@@ -95,15 +97,15 @@ const DTCategories: FC<CategoriesProps> = ({className}) => {
                         .map(category => (
                             <DTCategory category={category} key={category.id} index={categories.indexOf(category)} />
                         ))}
-                    {categories.length > MAX_CATEGORIES_DISPLAYED && (
+                    {categories.length > MAX_CATEGORIES_DISPLAYED ? (
                         <Link className={classes.link} onClick={() => setExpand(true)}>
                             and {categories.length - MAX_CATEGORIES_DISPLAYED} more...
                         </Link>
+                    ) : (
+                        <AddCategoryAction />
                     )}
                 </>
             )}
-
-            <AddCategoryAction/>
         </div>
     );
 };
