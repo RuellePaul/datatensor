@@ -111,9 +111,9 @@ sudo -i
 yum install git
 yum install docker
 service docker start
-sudo curl -L "https://github.com/docker/compose/releases/download/1.28.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local_datasets/bin/docker-compose
-sudo mv /usr/local_datasets/bin/docker-compose /usr/bin/docker-compose
-sudo chmod +x /usr/local_datasets/bin/docker-compose
+ sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo mv /usr/local/bin/docker-compose /usr/bin/docker-compose
+sudo chmod +x /usr/bin/docker-compose
 
 ```
 
