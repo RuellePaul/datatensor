@@ -13,7 +13,7 @@ interface TopBarProps {
 
 const useStyles = makeStyles(theme => ({
     root: {
-        backgroundColor: theme.palette.background.default
+        backgroundColor: theme.palette.background.paper
     },
     toolbar: {
         height: 64
