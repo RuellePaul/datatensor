@@ -1,27 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns:xlink="http://www.w3.org/1999/xlink" width="42px" height="43px" viewBox="0 0 42 43" version="1.1"
      xmlns="http://www.w3.org/2000/svg">
-    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
     <title>Logo</title>
-    <desc>Created with Sketch.</desc>
-    <defs>
-        <circle id="path-1" cx="20" cy="20" r="20"></circle>
-        <filter x="-7.5%" y="-5.0%" width="115.0%" height="117.5%" filterUnits="objectBoundingBox" id="filter-2">
-            <feMorphology radius="1" operator="erode" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
-            <feOffset dx="0" dy="2" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
-            <feGaussianBlur stdDeviation="1" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
-            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1"
-                           result="shadowMatrixOuter1"></feColorMatrix>
-            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter2"></feOffset>
-            <feGaussianBlur stdDeviation="0.5" in="shadowOffsetOuter2" result="shadowBlurOuter2"></feGaussianBlur>
-            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.31 0" type="matrix" in="shadowBlurOuter2"
-                           result="shadowMatrixOuter2"></feColorMatrix>
-            <feMerge>
-                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
-                <feMergeNode in="shadowMatrixOuter2"></feMergeNode>
-            </feMerge>
-        </filter>
-    </defs>
+    <desc>Datatensor</desc>
     <g id="Landing" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="Landing-page" transform="translate(-31.000000, -11.000000)">
             <g id="topbar">

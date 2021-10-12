@@ -24,7 +24,12 @@ import {
 } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {TransitionProps} from '@mui/material/transitions';
-import {Close as CloseIcon, ImageOutlined as ImageIcon, Restore as RestoreIcon} from '@mui/icons-material';
+import {
+    BrandingWatermarkOutlined as LabelisatorIcon,
+    Close as CloseIcon,
+    ImageOutlined as ImageIcon,
+    Restore as RestoreIcon
+} from '@mui/icons-material';
 import DTCategories from 'src/components/core/Labelisator/Categories';
 import DTImage from 'src/components/core/Images/Image';
 import CategoriesDistribution from 'src/components/charts/CategoriesDistribution';
@@ -41,7 +46,6 @@ import {Image} from 'src/types/image';
 import api from 'src/utils/api';
 import {ImageConsumer, ImageProvider} from 'src/store/ImageContext';
 import {CANVAS_OFFSET} from 'src/utils/labeling';
-
 
 interface DTLabelisatorProps {}
 
@@ -174,6 +178,9 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
             <ImageProvider image={image}>
                 <AppBar className={classes.header}>
                     <Toolbar className={classes.toolbar}>
+                        <Box mr={2}>
+                            <LabelisatorIcon color="inherit" />
+                        </Box>
                         <Typography variant="h4" color="inherit">
                             Labelisator
                         </Typography>

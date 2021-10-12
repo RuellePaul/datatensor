@@ -12,8 +12,15 @@ const useStyles = makeStyles(theme => ({
     root: {
         animation: 'fadein 0.75s',
         transform: 'scale(1.25)',
-        '& *': {
-            fill: `${theme.palette.primary.main} !important`
+        '& polygon': {
+            fill: `${
+                theme.palette.mode === 'dark' ? theme.palette.primary.main : theme.palette.text.primary
+            } !important`
+        },
+        '& polygon.line': {
+            fill: `${
+                theme.palette.mode === 'dark' ? '#76a2c5' : theme.palette.text.primary
+            } !important`
         }
     }
 }));
@@ -38,7 +45,7 @@ const Logo: FC<LogoProps> = ({className, ...rest}) => {
                     <g id="topbar">
                         <g id="left">
                             <g id="Logo">
-                                <polygon>
+                                <polygon className="line">
                                     <animate
                                         attributeName="points"
                                         dur="0.75s"

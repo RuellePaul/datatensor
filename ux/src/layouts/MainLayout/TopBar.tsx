@@ -1,11 +1,10 @@
 import React, {FC} from 'react';
 import {Link as RouterLink, useHistory} from 'react-router-dom';
 import clsx from 'clsx';
-import {AppBar, Box, Button, Divider, Hidden, Link, Toolbar, Typography} from '@mui/material';
+import {AppBar, Box, Button, Divider, Link, Toolbar, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {APP_VERSION} from 'src/constants';
 import Logo from 'src/components/utils/Logo';
-
 
 interface TopBarProps {
     className?: string;
@@ -14,6 +13,10 @@ interface TopBarProps {
 const useStyles = makeStyles(theme => ({
     root: {
         backgroundColor: theme.palette.background.paper
+    },
+    version: {
+        marginTop: -5,
+        fontSize: 11
     },
     toolbar: {
         height: 64
@@ -50,11 +53,9 @@ const TopBar: FC<TopBarProps> = ({className, ...rest}) => {
                         Datatensor
                     </Typography>
 
-                    <Hidden lgDown>
-                        <Typography variant="caption" color="textSecondary" component="p" style={{marginTop: -3}}>
-                            Version {APP_VERSION}
-                        </Typography>
-                    </Hidden>
+                    <Typography variant="caption" color="textSecondary" component="p" className={classes.version}>
+                        Version {APP_VERSION}
+                    </Typography>
                 </Box>
                 <Box flexGrow={1} />
                 <Link
