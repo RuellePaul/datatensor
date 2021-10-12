@@ -12,6 +12,7 @@ jenkins-test-reports/
 ## Security
 *.pem
 *.csv
+deploy.sh
 /builds/development/development.env
 /builds/tests/tests.env
 /builds/preproduction/preproduction.env

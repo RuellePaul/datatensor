@@ -1,4 +1,4 @@
-name: Make ux test image
+name: Make ux production image
 
 on:
   push:
@@ -26,8 +26,8 @@ jobs:
 
       - uses: actions/checkout@v1
       - name: 'Build ui image'
-        run: export VERSION=${{ steps.branch_name.outputs.SOURCE_TAG }} && export ENVIRONMENT=test && docker-compose -f ./builds/docker-compose.yml build ux
+        run: export VERSION=${{ steps.branch_name.outputs.SOURCE_TAG }} && export ENVIRONMENT=production && docker-compose -f ./builds/docker-compose.yml build ux
       - name: Docker login
         run: docker login docker.pkg.github.com -u $GITHUB_ACTOR -p ${{ secrets.GITHUB_TOKEN }}
       - name: 'Pushing images to distant repository'
-        run: export ENVIRONMENT=test && docker push docker.pkg.github.com/ruellepaul/datatensor/datatensor-ux:${{ steps.branch_name.outputs.SOURCE_TAG }}_$ENVIRONMENT
+        run: export ENVIRONMENT=production && docker push docker.pkg.github.com/ruellepaul/datatensor/datatensor-ux:${{ steps.branch_name.outputs.SOURCE_TAG }}_$ENVIRONMENT
