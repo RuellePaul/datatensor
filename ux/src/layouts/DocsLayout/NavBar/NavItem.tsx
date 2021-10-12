@@ -3,7 +3,7 @@ import React from 'react';
 import {NavLink as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import {Button, ListItem} from '@mui/material';
+import {Button, ListItem, Typography} from '@mui/material';
 
 import makeStyles from '@mui/styles/makeStyles';
 
@@ -81,12 +81,25 @@ const NavItem: FC<NavItemProps> = ({
                 disableGutters
                 {...rest}
             >
-                <Button
-                    className={classes.button}
-                    style={style}
-                >
-                    <span className={classes.title}>{title}</span>
-                </Button>
+                {depth === undefined
+                    ? (
+                        <Button
+                            className={classes.button}
+                            style={style}
+                        >
+                            <span className={classes.title}>{title}</span>
+                        </Button>
+                    )
+                    : (
+                        <Typography
+                            className={classes.button}
+                            color='primary'
+                            style={style}
+                        >
+                            <span className={classes.title}>{title}</span>
+                        </Typography>
+                    )
+                }
 
                 {children}
             </ListItem>
