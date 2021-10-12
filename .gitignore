@@ -13,10 +13,6 @@ jenkins-test-reports/
 *.pem
 *.csv
 deploy.sh
-/builds/development/development.env
-/builds/tests/tests.env
-/builds/preproduction/preproduction.env
-/builds/production/production.env
 run_ui.sh
 
 
