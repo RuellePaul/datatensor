@@ -45,11 +45,17 @@ const TopBar: FC<TopBarProps> = ({className, ...rest}) => {
                 <RouterLink to="/">
                     <Logo className={classes.logo} />
                 </RouterLink>
-                <Hidden lgDown>
-                    <Typography variant="caption" color="textSecondary">
-                        Version {APP_VERSION}
+                <Box>
+                    <Typography variant="overline" color="textPrimary" component="p">
+                        Datatensor
                     </Typography>
-                </Hidden>
+
+                    <Hidden lgDown>
+                        <Typography variant="caption" color="textSecondary" component="p" style={{marginTop: -3}}>
+                            Version {APP_VERSION}
+                        </Typography>
+                    </Hidden>
+                </Box>
                 <Box flexGrow={1} />
                 <Link
                     className={classes.link}

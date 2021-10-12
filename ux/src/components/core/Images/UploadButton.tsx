@@ -48,9 +48,6 @@ const UploadButton: FC = () => {
                     </IconButton>
                 </DialogTitle>
                 <DialogContent>
-                    <Typography color="textSecondary" gutterBottom>
-                        Upload images of objects that you want to detect
-                    </Typography>
                     <ImagesDropzone callback={handleCloseUpload} />
                 </DialogContent>
             </Dialog>
