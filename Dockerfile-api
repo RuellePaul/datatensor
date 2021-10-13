@@ -1,5 +1,5 @@
 # === Api image ====
-FROM python:3.8-slim AS release
+FROM python:3.9-slim AS release
 
 COPY api /api
 WORKDIR /api
