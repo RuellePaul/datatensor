@@ -26,7 +26,7 @@ from routers.users.users import users
 from search.search import search
 from websocket.socket import sockets
 
-PREFIX = '/api/v2'
+PREFIX = '/v2'
 
 app = FastAPI(
     title='Datatensor API',

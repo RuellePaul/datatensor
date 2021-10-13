@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-const PREFIX = '/api/v2';
+const PREFIX = '/v2';
 
 export const API_HOSTNAME =
-    process.env.REACT_APP_ENVIRONMENT === 'development' ? '127.0.0.1:4069' : window.location.hostname;
+    process.env.REACT_APP_ENVIRONMENT === 'production' ? 'https://api.datatensor.io' : '127.0.0.1:4069';
 
 export const API_URI =
     process.env.REACT_APP_ENVIRONMENT === 'development'
