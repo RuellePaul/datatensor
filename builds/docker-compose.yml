@@ -39,7 +39,5 @@ services:
       context: ../
       dockerfile: Dockerfile-ux
     volumes:
-      - './${ENVIRONMENT}/cert.pem:/ux/server/cert.pem'
-      - './${ENVIRONMENT}/key.pem:/ux/server/key.pem'
       - '/ux/node_modules'
     network_mode: host
