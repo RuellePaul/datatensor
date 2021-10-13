@@ -20,8 +20,8 @@ class Settings(BaseSettings):
     ROOT_PATH: str = os.path.abspath(os.path.join(FastAPI().root_path, os.pardir))
     DATASOURCES_PATH: str = os.path.join(ROOT_PATH, 'api', 'workflows', 'generator', 'datasources')
 
-    UI_URL: str = 'https://localhost:5069'
-    API_URI: str = 'http://127.0.0.1:4069'
+    UI_URL: str = 'https://www.datatensor.io'
+    API_URI: str = 'http://www.datatensor.io/api'
 
     MAX_CONTENT_LENGTH: int = 1 * 1000 * 1024 * 1024  # 1 Go
 
@@ -88,7 +88,7 @@ class Settings(BaseSettings):
     S3_LOCATION: AnyHttpUrl = f'http://{S3_BUCKET}.s3.amazonaws.com/'
 
     DB_ENCRYPTION_KEY: str = os.environ['DB_ENCRYPTION_KEY']
-    DB_HOST: str = 'localhost:27017'
+    DB_HOST: str = 'mongodb://127.0.0.1:27017/'
     DB_NAME: str = ''
     DB_ENCRYPT_CLIENT: Any = None
     db: Any = None

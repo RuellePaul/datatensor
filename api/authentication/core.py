@@ -210,7 +210,7 @@ def send_email_with_activation_code(email, activation_code):
    """
 
     message = Mail(
-        from_email='noreply@test.datatensor.io',
+        from_email='noreply@datatensor.io',
         to_emails=email,
         subject=subject,
         html_content=html_content
