@@ -7,7 +7,9 @@ RUN apt-get update
 RUN apt-get install ffmpeg libsm6 libxext6  -y
 RUN pip install --user -r requirements.txt --no-warn-script-location
 
-ENV PYTHONPATH /
+WORKDIR /
+ENV PYTHONPATH "${PYTHONPATH}:/"
+ENV PYTHONPATH "${PYTHONPATH}:/api/"
 ENV PATH /root/.local/bin:$PATH
 
 CMD ["python", "-m", "app"]
