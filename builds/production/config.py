@@ -59,7 +59,7 @@ class Settings(BaseSettings):
             'AUTHORIZATION_URL': 'https://github.com/login/oauth/authorize',
             'TOKEN_URL': 'https://github.com/login/oauth/access_token',
             'USER_URL': 'https://api.github.com/user',
-            'CLIENT_ID': 'a1c2fca55dd2294221cc',
+            'CLIENT_ID': '0eff110490cfa6f0efc0',
             'CLIENT_SECRET': os.environ['OAUTH_GITHUB_CLIENT_SECRET'],
             'SCOPES': ['openid', 'email', 'profile']
         },
@@ -67,7 +67,7 @@ class Settings(BaseSettings):
             'AUTHORIZATION_URL': 'https://accounts.google.com/o/oauth2/v2/auth',
             'TOKEN_URL': 'https://oauth2.googleapis.com/token',
             'USER_URL': 'https://openidconnect.googleapis.com/v1/userinfo',
-            'CLIENT_ID': '1020592902157-8elmelc4n4l2fh3jk4jltf5ulb3mqp5v.apps.googleusercontent.com',
+            'CLIENT_ID': '1015468889518-qfog501sgfjv8jusml7pvjpps8gdoeru.apps.googleusercontent.com',
             'CLIENT_SECRET': os.environ['OAUTH_GOOGLE_CLIENT_SECRET'],
             'SCOPES': ['openid', 'email', 'profile']
         },
@@ -75,7 +75,7 @@ class Settings(BaseSettings):
             'AUTHORIZATION_URL': 'https://stackoverflow.com/oauth',
             'TOKEN_URL': 'https://stackoverflow.com/oauth/access_token/json',
             'USER_URL': 'https://api.stackexchange.com/2.2/me?site=stackoverflow',
-            'CLIENT_ID': '19511',
+            'CLIENT_ID': '21110',
             'CLIENT_SECRET': os.environ['OAUTH_STACKOVERFLOW_CLIENT_SECRET'],
             'SCOPES': [],
             'KEY': os.environ['OAUTH_STACKOVERFLOW_KEY']
