@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends
+from typing import Dict
 
-from api.dependencies import dataset_belongs_to_user
-from api.routers.labels.core import find_labels, find_label, replace_labels
-from api.routers.labels.models import *
-from api.utils import parse
+from dependencies import dataset_belongs_to_user
+from routers.labels.core import find_labels, find_label, replace_labels
+from routers.labels.models import *
+from utils import parse
 
 labels = APIRouter()
 

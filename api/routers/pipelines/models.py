@@ -3,7 +3,7 @@ from typing import List
 
 from pydantic import BaseModel, Field
 
-from api.utils import MongoModel
+from utils import MongoModel
 
 
 class OperationType(str, Enum):

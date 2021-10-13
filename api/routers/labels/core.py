@@ -1,9 +1,9 @@
 import uuid
 from typing import Dict, List
 
-from api import errors
-from api.config import Config
-from api.routers.labels.models import Label
+import errors
+from config import Config
+from routers.labels.models import Label
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 

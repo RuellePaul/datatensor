@@ -3,8 +3,8 @@ from typing import Any, List, Optional
 
 from pydantic import BaseModel, Field
 
-from api.authentication.models import Scope
-from api.utils import MongoModel
+from authentication.models import Scope
+from utils import MongoModel
 
 
 class User(MongoModel):

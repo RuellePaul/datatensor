@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
-from api.utils import MongoModel
+from utils import MongoModel
 
 
 class Image(MongoModel):

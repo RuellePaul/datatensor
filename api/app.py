@@ -6,25 +6,25 @@ from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 from starlette.middleware.cors import CORSMiddleware
 
-from api.authentication.auth import auth
-from api.authentication.oauth import oauth
-from api.config import Config
-from api.database import encrypt_init
-from api.dependencies import logged_user, logged_admin
-from api.errors import APIError
-from api.logger import logger
-from api.routers.categories.categories import categories
-from api.routers.datasets.datasets import datasets
-from api.routers.datasources.datasources import datasources
-from api.routers.exports.exports import exports
-from api.routers.images.images import images
-from api.routers.labels.labels import labels
-from api.routers.notifications.notifications import notifications
-from api.routers.pipelines.pipelines import pipelines
-from api.routers.tasks.tasks import tasks
-from api.routers.users.users import users
-from api.search.search import search
-from api.socket.socket import sockets
+from authentication.auth import auth
+from authentication.oauth import oauth
+from config import Config
+from database import encrypt_init
+from dependencies import logged_user, logged_admin
+from errors import APIError
+from logger import logger
+from routers.categories.categories import categories
+from routers.datasets.datasets import datasets
+from routers.datasources.datasources import datasources
+from routers.exports.exports import exports
+from routers.images.images import images
+from routers.labels.labels import labels
+from routers.notifications.notifications import notifications
+from routers.pipelines.pipelines import pipelines
+from routers.tasks.tasks import tasks
+from routers.users.users import users
+from search.search import search
+from websocket.socket import sockets
 
 PREFIX = '/api/v2'
 

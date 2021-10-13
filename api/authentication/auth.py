@@ -1,14 +1,14 @@
 from fastapi import APIRouter, Depends
 
-from api import errors
-from api.authentication import core
-from api.authentication.models import *
-from api.dependencies import logged_user
-from api.logger import logger
-from api.routers.notifications.core import insert_notification
-from api.routers.notifications.models import NotificationPostBody, NotificationType
-from api.routers.users.models import User
-from api.utils import parse, password_context
+import errors
+from authentication import core
+from authentication.models import *
+from dependencies import logged_user
+from logger import logger
+from routers.notifications.core import insert_notification
+from routers.notifications.models import NotificationPostBody, NotificationType
+from routers.users.models import User
+from utils import parse, password_context
 
 auth = APIRouter()
 

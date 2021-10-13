@@ -3,8 +3,8 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
-from api.utils import MongoModel
-from api.routers.images.models import Image
+from routers.images.models import Image
+from utils import MongoModel
 
 
 class SuperCategory(str, Enum):

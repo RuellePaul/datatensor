@@ -1,11 +1,11 @@
 from typing import List, Union
 
-from api.config import Config
-from api.routers.categories.models import Category
-from api.routers.datasets.core import find_datasets
-from api.routers.images.core import find_images
-from api.routers.labels.models import Label
-from api.utils import get_unique
+from config import Config
+from routers.categories.models import Category
+from routers.datasets.core import find_datasets
+from routers.images.core import find_images
+from routers.labels.models import Label
+from utils import get_unique
 
 db = Config.db
 

@@ -2,10 +2,10 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends
 
-from api.dependencies import dataset_belongs_to_user, logged_user
-from api.search.core import search_categories, search_dataset_ids_from_category_names, search_unlabeled_image_id
-from api.search.models import *
-from api.utils import parse
+from dependencies import dataset_belongs_to_user, logged_user
+from search.core import search_categories, search_dataset_ids_from_category_names, search_unlabeled_image_id
+from search.models import *
+from utils import parse
 
 search = APIRouter()
 

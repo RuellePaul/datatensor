@@ -1,9 +1,9 @@
 from typing import List
 
-from api import errors
-from api.config import Config
-from api.routers.users.models import User
-from api.utils import encrypt_field, password_context
+import errors
+from config import Config
+from routers.users.models import User
+from utils import encrypt_field, password_context
 
 db = Config.db
 

@@ -3,14 +3,14 @@ from datetime import datetime
 
 from celery import Celery
 
-from api import errors
-from api.config import Config
-from api.routers.notifications.core import insert_notification
-from api.routers.notifications.models import NotificationPostBody, NotificationType
-from api.utils import update_task
-from api.workflows.augmentor import augmentor
-from api.workflows.generator import generator
-from api.workflows.export import export
+import errors
+from config import Config
+from routers.notifications.core import insert_notification
+from routers.notifications.models import NotificationPostBody, NotificationType
+from utils import update_task
+from workflows.augmentor import augmentor
+from workflows.export import export
+from workflows.generator import generator
 
 app = Celery('worker', broker='pyamqp://', backend='rpc://')
 

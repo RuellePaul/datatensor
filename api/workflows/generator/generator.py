@@ -7,13 +7,13 @@ from uuid import uuid4
 
 import requests
 
-from api.config import Config
-from api.routers.datasets.models import Dataset
-from api.routers.images.core import allowed_file, upload_image
-from api.routers.labels.core import regroup_labels_by_category
-from api.routers.labels.models import Label
-from api.routers.tasks.models import TaskGeneratorProperties
-from api.utils import update_task, increment_task_progress
+from config import Config
+from routers.datasets.models import Dataset
+from routers.images.core import allowed_file, upload_image
+from routers.labels.core import regroup_labels_by_category
+from routers.labels.models import Label
+from routers.tasks.models import TaskGeneratorProperties
+from utils import update_task, increment_task_progress
 
 db = Config.db
 

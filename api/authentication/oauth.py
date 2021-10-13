@@ -1,10 +1,10 @@
 from fastapi import APIRouter
 
-from api.authentication import core
-from api.authentication.models import *
-from api.logger import logger
-from api.routers.notifications.core import insert_notification
-from api.routers.notifications.models import NotificationPostBody, NotificationType
+from authentication import core
+from authentication.models import *
+from logger import logger
+from routers.notifications.core import insert_notification
+from routers.notifications.models import NotificationPostBody, NotificationType
 
 oauth = APIRouter()
 

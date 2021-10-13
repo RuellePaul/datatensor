@@ -1,11 +1,11 @@
 from fastapi import Depends, Header
 
-from api import errors
-from api.authentication.core import verify_access_token
-from api.config import Config
-from api.routers.datasets.core import find_dataset
-from api.routers.datasets.models import Dataset
-from api.routers.users.models import User
+import errors
+from authentication.core import verify_access_token
+from config import Config
+from routers.datasets.core import find_dataset
+from routers.datasets.models import Dataset
+from routers.users.models import User
 
 
 async def logged_user(authorization: str = Header(...)) -> User:

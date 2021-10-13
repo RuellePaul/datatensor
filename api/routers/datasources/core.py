@@ -6,10 +6,10 @@ from uuid import uuid4
 
 import requests
 
-from api import errors
-from api.config import Config
-from api.logger import logger
-from api.routers.datasources.models import DatasourceKey
+import errors
+from config import Config
+from logger import logger
+from routers.datasources.models import DatasourceKey
 
 db = Config.db
 

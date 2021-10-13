@@ -4,7 +4,7 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-from api.utils import MongoModel
+from utils import MongoModel
 
 
 class NotificationType(str, Enum):
