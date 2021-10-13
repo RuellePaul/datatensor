@@ -11,5 +11,6 @@ WORKDIR /
 ENV PYTHONPATH /
 ENV PATH /root/.local/bin:$PATH
 
+CMD ["printenv"]
 CMD ["python", "-m", "api/app"]
 
