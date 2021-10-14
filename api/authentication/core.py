@@ -17,8 +17,8 @@ from routers.datasets.core import remove_datasets
 from routers.users.models import User, UserWithPassword
 from utils import encrypt_field, password_context
 
-if Config.ENVIRONMENT == 'development':  # allow sendgrid email on development environment
-    ssl._create_default_https_context = ssl._create_unverified_context
+# allow sendgrid email
+ssl._create_default_https_context = ssl._create_unverified_context
 
 db = Config.db
 
