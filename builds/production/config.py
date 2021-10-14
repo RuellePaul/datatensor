@@ -80,7 +80,7 @@ class Settings(BaseSettings):
         }
     }
 
-    S3_BUCKET: str = 'dtservertestbucket'
+    S3_BUCKET: str = 'dtproductionbucket'
     S3_KEY: str = os.environ['S3_KEY']
     S3_SECRET: str = os.environ['S3_SECRET']
     S3_LOCATION: AnyHttpUrl = f'http://{S3_BUCKET}.s3.amazonaws.com/'

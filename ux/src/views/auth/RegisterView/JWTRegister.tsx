@@ -73,6 +73,7 @@ const JWTRegister: FC<JWTRegisterProps> = ({className, ...rest}) => {
             {({errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values, setFieldValue}) => (
                 <form noValidate className={clsx(classes.root, className)} onSubmit={handleSubmit} {...rest}>
                     <TextField
+                        autoFocus
                         error={Boolean(touched.name && errors.name)}
                         fullWidth
                         helperText={touched.name && errors.name}
