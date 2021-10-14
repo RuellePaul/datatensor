@@ -21,7 +21,7 @@ interface CategoryProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        maxHeight: 300,
+        maxHeight: 320,
         display: 'flex',
         flexWrap: 'wrap',
         alignContent: 'flex-start'

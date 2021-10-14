@@ -6,11 +6,11 @@ import {
     LocalOfferOutlined as LabelsIcon,
     PhotoLibraryOutlined as ImagesIcon
 } from '@mui/icons-material';
-import Categories from 'src/components/core/Dataset/Categories';
 import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
 import useImages from 'src/hooks/useImages';
 import getDateDiff from 'src/utils/getDateDiff';
+
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
@@ -24,11 +24,11 @@ interface OverviewProps {
     className?: string;
 }
 
-const Overview: FC<OverviewProps> = ({className}) => {
+const Overview: FC<OverviewProps> = ({ className }) => {
     const classes = useStyles();
 
-    const {dataset, categories} = useDataset();
-    const {images} = useImages();
+    const { dataset, categories } = useDataset();
+    const { images } = useImages();
 
     const totalLabelsCount = categories.map(category => category.labels_count || 0).reduce((acc, val) => acc + val, 0);
 
@@ -65,12 +65,10 @@ const Overview: FC<OverviewProps> = ({className}) => {
                     </Typography>
                 </Box>
                 <Box flexGrow={1} />
-                <Typography variant="body2" color="textSecondary">
+                <Typography variant="caption" color="textSecondary">
                     Created {getDateDiff(new Date(), dataset.created_at, 'passed_event')}
                 </Typography>
             </Box>
-
-            <Categories />
         </div>
     );
 };
