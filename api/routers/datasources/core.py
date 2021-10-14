@@ -14,7 +14,7 @@ from routers.datasources.models import DatasourceKey
 db = Config.db
 
 
-def _download_annotations(datasource_key: DatasourceKey):
+def download_annotations(datasource_key: DatasourceKey):
     if not os.path.exists(Config.DATASOURCES_PATH):
         os.mkdir(Config.DATASOURCES_PATH)
 
@@ -53,7 +53,7 @@ def find_datasources() -> List[dict]:
 
 def find_categories(datasource_key: DatasourceKey):
     try:
-        annotations_path, datasource = _download_annotations(datasource_key)
+        annotations_path, datasource = download_annotations(datasource_key)
     except Exception as e:
         raise errors.InternalError(f'Download of {datasource_key} failed, {str(e)}')
 

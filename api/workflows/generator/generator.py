@@ -7,8 +7,10 @@ from uuid import uuid4
 
 import requests
 
+import errors
 from config import Config
 from routers.datasets.models import Dataset
+from routers.datasources.core import download_annotations
 from routers.images.core import allowed_file, upload_image
 from routers.labels.core import regroup_labels_by_category
 from routers.labels.models import Label
@@ -114,6 +116,11 @@ def main(user_id, task_id, properties: TaskGeneratorProperties):
 
     dataset_id = str(uuid4())
     update_task(task_id, dataset_id=dataset_id, status='active')
+
+    try:
+        download_annotations(datasource_key)
+    except Exception as e:
+        raise errors.InternalError(f'Download of {datasource_key} failed, {str(e)}')
 
     datasource = [datasource for datasource in Config.DATASOURCES if datasource['key'] == datasource_key][0]
 
