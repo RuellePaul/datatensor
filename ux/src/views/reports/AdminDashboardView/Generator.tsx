@@ -28,6 +28,7 @@ import {Task} from 'src/types/task';
 import {DataSource} from 'src/types/datasource';
 import {Category} from 'src/types/category';
 
+
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         padding: theme.spacing(4),
@@ -45,10 +46,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Generator: FC = () => {
     const classes = useStyles();
 
-    const {saveTasks} = useTasks();
+    const { saveTasks } = useTasks();
 
     const isMountedRef = useIsMountedRef();
-    const {enqueueSnackbar} = useSnackbar();
+    const { enqueueSnackbar } = useSnackbar();
 
     const [datasources, setDatasources] = useState<DataSource[]>([]);
 
@@ -58,7 +59,7 @@ const Generator: FC = () => {
 
     const fetchDatasources = useCallback(async () => {
         try {
-            const response = await api.get<{datasources: DataSource[]}>(`/datasources/`);
+            const response = await api.get<{ datasources: DataSource[] }>(`/datasources/`);
             setDatasources(response.data.datasources);
         } catch (err) {
             console.error(err);
@@ -67,13 +68,13 @@ const Generator: FC = () => {
 
     const handleDatasourceChange = async datasource_key => {
         setEligibleCategories(null);
-        const response = await api.get<{categories: Category[]}>(`/datasources/categories`, {params: {datasource_key}});
+        const response = await api.get<{ categories: Category[] }>(`/datasources/categories`, { params: { datasource_key } });
         setEligibleCategories(response.data.categories);
     };
 
     const handleSelectedCategoriesChange = async (datasource_key, selected_categories, callback) => {
         setMaxImageCount(null);
-        const response = await api.post<{max_image_count: number}>(`/datasources/max-image-count`, {
+        const response = await api.post<{ max_image_count: number }>(`/datasources/max-image-count`, {
             datasource_key,
             selected_categories: selected_categories
         });
@@ -103,9 +104,9 @@ const Generator: FC = () => {
                         test: arr => arr.length > 0
                     })
                 })}
-                onSubmit={async (values, {setStatus, setSubmitting, resetForm}) => {
+                onSubmit={async (values, { setStatus, setSubmitting, resetForm }) => {
                     try {
-                        const response = await api.post<{task: Task}>('/tasks/', {
+                        const response = await api.post<{ task: Task }>('/tasks/', {
                             type: 'generator',
                             properties: values
                         });
@@ -114,21 +115,21 @@ const Generator: FC = () => {
                         setEligibleCategories([]);
 
                         if (isMountedRef.current) {
-                            setStatus({success: true});
+                            setStatus({ success: true });
                             setSubmitting(false);
-                            enqueueSnackbar(`Task added`, {variant: 'info'});
+                            enqueueSnackbar(`Task added`, { variant: 'info' });
                         }
                     } catch (error) {
                         console.error(error);
                         if (isMountedRef.current) {
-                            setStatus({success: false});
+                            setStatus({ success: false });
                             setSubmitting(false);
-                            enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
+                            enqueueSnackbar(error.message || 'Something went wrong', { variant: 'error' });
                         }
                     }
                 }}
             >
-                {({errors, handleBlur, handleChange, handleSubmit, setFieldValue, isSubmitting, touched, values}) => (
+                {({ errors, handleBlur, handleChange, handleSubmit, setFieldValue, isSubmitting, touched, values }) => (
                     <form noValidate onSubmit={handleSubmit}>
                         <Box mb={3}>
                             <Typography variant="h4" gutterBottom>
@@ -197,12 +198,14 @@ const Generator: FC = () => {
                                                     setFieldValue('image_count', null);
                                                 }}
                                                 MenuProps={{
-                                                    onClose: () => {
-                                                        handleSelectedCategoriesChange(
-                                                            values.datasource_key,
-                                                            values.selected_categories,
-                                                            maxImageCount => setFieldValue('image_count', maxImageCount)
-                                                        );
+                                                    TransitionProps: {
+                                                        onExited: () => {
+                                                            handleSelectedCategoriesChange(
+                                                                values.datasource_key,
+                                                                values.selected_categories,
+                                                                maxImageCount => setFieldValue('image_count', maxImageCount)
+                                                            );
+                                                        }
                                                     }
                                                 }}
                                                 renderValue={(selected: string[]) =>
@@ -210,7 +213,7 @@ const Generator: FC = () => {
                                                 }
                                                 variant="filled"
                                                 SelectDisplayProps={{
-                                                    style: {padding: 10}
+                                                    style: { padding: 10 }
                                                 }}
                                             >
                                                 {eligibleCategories
