@@ -40,7 +40,7 @@ def handle_task_error(func):
                                                 description=error.detail)
             insert_notification(user_id=user_id, notification=notification)
         except Exception as e:
-            message = f"An error occured {str(e) if Config.ENVIRONMENT == 'development' else ''}"
+            message = f"An error occured {str(e)}"
             update_task(task_id, status='failed', error=message, ended_at=datetime.now())
             notification = NotificationPostBody(type=NotificationType('TASK_FAILED'),
                                                 task_id=task_id,
