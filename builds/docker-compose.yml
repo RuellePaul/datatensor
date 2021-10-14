@@ -54,9 +54,6 @@ services:
   rabbitmq:
     image: rabbitmq:latest
     container_name: 'rabbitmq'
-    ports:
-      - 5672:5672
-      - 15672:15672
     network_mode: host
   ux:
     image: docker.pkg.github.com/ruellepaul/datatensor/datatensor-ux:${VERSION}_${ENVIRONMENT}
