@@ -29,9 +29,10 @@ import useDataset from 'src/hooks/useDataset';
 import useExports from 'src/hooks/useExports';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import useTasks from 'src/hooks/useTasks';
-import api from 'src/utils/api';
 import {Task} from 'src/types/task';
+import api from 'src/utils/api';
 import download from 'src/utils/download';
+import getDateDiff from 'src/utils/getDateDiff';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
@@ -160,7 +161,8 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
                             {dataset.exported_at && !activeExportTask && (
                                 <Alert className={classes.alert}>
                                     <Typography variant="body2">
-                                        Last export : {moment(dataset.exported_at).format('DD MMM, HH:mm')}
+                                        Last export : {moment(dataset.exported_at).format('DD MMM')} (
+                                        {getDateDiff(new Date(), dataset.exported_at, 'passed_event')})
                                         <br />
                                         {exports.length === 0 && (
                                             <Link variant="subtitle1" color="primary" onClick={() => trigger(true)}>

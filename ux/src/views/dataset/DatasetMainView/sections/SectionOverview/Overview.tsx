@@ -10,7 +10,7 @@ import Categories from 'src/components/core/Dataset/Categories';
 import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
 import useImages from 'src/hooks/useImages';
-import getDateDiff from '../../../../../utils/getDateDiff';
+import getDateDiff from 'src/utils/getDateDiff';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
