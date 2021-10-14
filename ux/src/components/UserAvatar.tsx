@@ -13,6 +13,7 @@ interface UserAvatarProps {
     className?: string;
     style?: object;
     user?: User;
+    disableBadge?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -45,13 +46,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const UserAvatar: FC<UserAvatarProps> = ({user = null, className, ...rest}) => {
+const UserAvatar: FC<UserAvatarProps> = ({user = null, className, disableBadge, ...rest}) => {
     const classes = useStyles();
     const {user: loggedUser} = useAuth();
 
     const displayedUser = user !== null ? user : loggedUser;
 
-    return displayedUser.scope ? (
+    return displayedUser.scope && !disableBadge ? (
         <Badge
             className={classes.badge}
             overlap="circular"

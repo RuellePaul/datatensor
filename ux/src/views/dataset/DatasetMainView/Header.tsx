@@ -6,8 +6,9 @@ import makeStyles from '@mui/styles/makeStyles';
 import {Lock as PrivateIcon, NavigateNext as NavigateNextIcon, Public as PublicIcon} from '@mui/icons-material';
 import WorkingAlert from 'src/components/core/WorkingAlert';
 import useDataset from 'src/hooks/useDataset';
+import {UserConsumer} from 'src/store/UserContext';
+import UserAvatar from 'src/components/UserAvatar';
 import {Theme} from 'src/theme';
-
 
 interface HeaderProps {
     className?: string;
@@ -25,6 +26,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     chip: {
         marginLeft: theme.spacing(1)
+    },
+    avatar: {
+        width: 24,
+        height: 24,
+        marginRight: theme.spacing(1)
     }
 }));
 
@@ -44,9 +50,24 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
         >
             <Grid item>
                 <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
-                    <Link variant="body1" color="inherit" to="/app/datasets" component={RouterLink}>
+                    <Link variant="body1" color="text.primary" to="/app/datasets" component={RouterLink}>
                         Datasets
                     </Link>
+                    <UserConsumer>
+                        {value => (
+                            <Box display="flex" alignItems="center">
+                                <UserAvatar className={classes.avatar} user={value.user} disableBadge />
+                                <Link
+                                    variant="body1"
+                                    color="text.primary"
+                                    to={`/app/admin/users/${value.user.id}/details`}
+                                    component={RouterLink}
+                                >
+                                    {value.user.name}
+                                </Link>
+                            </Box>
+                        )}
+                    </UserConsumer>
                     <Box display="flex">
                         <Typography variant="body1" color="textPrimary">
                             {dataset.name && capitalize(dataset.name)}
