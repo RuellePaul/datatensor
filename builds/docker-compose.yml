@@ -6,7 +6,6 @@ services:
     environment:
       - 'ENVIRONMENT=${ENVIRONMENT}'
       - 'DB_ENCRYPTION_KEY=${DB_ENCRYPTION_KEY}'
-      - 'FLASK_SECRET_KEY=${FLASK_SECRET_KEY}'
       - 'ACCESS_TOKEN_KEY=${ACCESS_TOKEN_KEY}'
       - 'GOOGLE_CAPTCHA_SECRET_KEY=${GOOGLE_CAPTCHA_SECRET_KEY}'
       - 'SENDGRID_API_KEY=${SENDGRID_API_KEY}'
@@ -22,6 +21,27 @@ services:
     volumes:
       - './${ENVIRONMENT}/config.py:/api/config.py'
     network_mode: host
+  celery:
+    image: docker.pkg.github.com/ruellepaul/datatensor/datatensor-celery:${VERSION}
+    build:
+      context: ../
+      dockerfile: Dockerfile-celery
+    environment:
+      - 'ENVIRONMENT=${ENVIRONMENT}'
+      - 'DB_ENCRYPTION_KEY=${DB_ENCRYPTION_KEY}'
+      - 'ACCESS_TOKEN_KEY=${ACCESS_TOKEN_KEY}'
+      - 'GOOGLE_CAPTCHA_SECRET_KEY=${GOOGLE_CAPTCHA_SECRET_KEY}'
+      - 'SENDGRID_API_KEY=${SENDGRID_API_KEY}'
+      - 'OAUTH_GITHUB_CLIENT_SECRET=${OAUTH_GITHUB_CLIENT_SECRET}'
+      - 'OAUTH_GOOGLE_CLIENT_SECRET=${OAUTH_GOOGLE_CLIENT_SECRET}'
+      - 'OAUTH_STACKOVERFLOW_CLIENT_SECRET=${OAUTH_STACKOVERFLOW_CLIENT_SECRET}'
+      - 'OAUTH_STACKOVERFLOW_KEY=${OAUTH_STACKOVERFLOW_KEY}'
+      - 'S3_KEY=${S3_KEY}'
+      - 'S3_SECRET=${S3_SECRET}'
+    network_mode: host
+    depends_on:
+      - api
+    restart: on-failure
   db:
     image: mongo
     network_mode: host
@@ -31,6 +51,10 @@ services:
     network_mode: host
     volumes:
       - '/root/letsencrypt:/etc/letsencrypt'
+  rabbitmq:
+    image: rabbitmq:latest
+    container_name: 'rabbitmq'
+    network_mode: host
   ux:
     image: docker.pkg.github.com/ruellepaul/datatensor/datatensor-ux:${VERSION}_${ENVIRONMENT}
     build:
@@ -39,7 +63,5 @@ services:
       context: ../
       dockerfile: Dockerfile-ux
     volumes:
-      - './${ENVIRONMENT}/cert.pem:/ux/server/cert.pem'
-      - './${ENVIRONMENT}/key.pem:/ux/server/key.pem'
       - '/ux/node_modules'
     network_mode: host

@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends
 
-from api.dependencies import dataset_belongs_to_user
-from api.routers.categories.core import find_categories, find_category, find_images_of_category, remove_category, \
+from dependencies import dataset_belongs_to_user
+from routers.categories.core import find_categories, find_category, find_images_of_category, remove_category, \
     insert_category
-from api.routers.categories.models import *
-from api.utils import parse
+from routers.categories.models import *
+from utils import parse
 
 categories = APIRouter()
 

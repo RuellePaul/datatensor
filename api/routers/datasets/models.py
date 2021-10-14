@@ -3,7 +3,7 @@ from typing import List, Optional
 
 from pydantic import Field, BaseModel
 
-from api.utils import MongoModel
+from utils import MongoModel
 
 
 class Dataset(MongoModel):

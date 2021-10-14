@@ -3,14 +3,14 @@ from datetime import datetime
 
 from celery import Celery
 
-from api import errors
-from api.config import Config
-from api.routers.notifications.core import insert_notification
-from api.routers.notifications.models import NotificationPostBody, NotificationType
-from api.utils import update_task
-from api.workflows.augmentor import augmentor
-from api.workflows.generator import generator
-from api.workflows.export import export
+import errors
+from config import Config
+from routers.notifications.core import insert_notification
+from routers.notifications.models import NotificationPostBody, NotificationType
+from utils import update_task
+from workflows.augmentor import augmentor
+from workflows.export import export
+from workflows.generator import generator
 
 app = Celery('worker', broker='pyamqp://', backend='rpc://')
 
@@ -40,7 +40,7 @@ def handle_task_error(func):
                                                 description=error.detail)
             insert_notification(user_id=user_id, notification=notification)
         except Exception as e:
-            message = f"An error occured {str(e) if Config.ENVIRONMENT == 'development' else ''}"
+            message = f"An error occured {str(e)}"
             update_task(task_id, status='failed', error=message, ended_at=datetime.now())
             notification = NotificationPostBody(type=NotificationType('TASK_FAILED'),
                                                 task_id=task_id,

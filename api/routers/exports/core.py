@@ -1,6 +1,6 @@
-from api import errors
-from api.config import Config
-from api.routers.exports.models import *
+import errors
+from config import Config
+from routers.exports.models import *
 
 db = Config.db
 

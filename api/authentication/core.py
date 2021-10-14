@@ -11,14 +11,14 @@ from oauthlib.oauth2 import WebApplicationClient
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
-from api import errors
-from api.config import Config
-from api.routers.datasets.core import remove_datasets
-from api.routers.users.models import User, UserWithPassword
-from api.utils import encrypt_field, password_context
+import errors
+from config import Config
+from routers.datasets.core import remove_datasets
+from routers.users.models import User, UserWithPassword
+from utils import encrypt_field, password_context
 
-if Config.ENVIRONMENT == 'development':  # allow sendgrid email on development environment
-    ssl._create_default_https_context = ssl._create_unverified_context
+# allow sendgrid email
+ssl._create_default_https_context = ssl._create_unverified_context
 
 db = Config.db
 
@@ -210,7 +210,7 @@ def send_email_with_activation_code(email, activation_code):
    """
 
     message = Mail(
-        from_email='noreply@test.datatensor.io',
+        from_email='noreply@datatensor.io',
         to_emails=email,
         subject=subject,
         html_content=html_content

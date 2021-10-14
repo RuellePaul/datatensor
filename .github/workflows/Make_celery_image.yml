@@ -1,4 +1,4 @@
-name: Make ux test image
+name: Make celery image
 
 on:
   push:
@@ -25,9 +25,9 @@ jobs:
           SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
 
       - uses: actions/checkout@v1
-      - name: 'Build ui image'
-        run: export VERSION=${{ steps.branch_name.outputs.SOURCE_TAG }} && export ENVIRONMENT=test && docker-compose -f ./builds/docker-compose.yml build ux
+      - name: 'Build celery image'
+        run: export VERSION=${{ steps.branch_name.outputs.SOURCE_TAG }} && docker-compose -f ./builds/docker-compose.yml build celery
       - name: Docker login
         run: docker login docker.pkg.github.com -u $GITHUB_ACTOR -p ${{ secrets.GITHUB_TOKEN }}
       - name: 'Pushing images to distant repository'
-        run: export ENVIRONMENT=test && docker push docker.pkg.github.com/ruellepaul/datatensor/datatensor-ux:${{ steps.branch_name.outputs.SOURCE_TAG }}_$ENVIRONMENT
+        run: docker push docker.pkg.github.com/ruellepaul/datatensor/datatensor-celery:${{ steps.branch_name.outputs.SOURCE_TAG }}

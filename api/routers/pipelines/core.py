@@ -8,13 +8,13 @@ import requests
 from Augmentor import DataPipeline
 from PIL import Image as PILImage
 
-from api import errors
-from api.config import Config
-from api.routers.images.core import find_images, remove_images
-from api.routers.images.models import Image
-from api.routers.labels.models import Label
-from api.routers.pipelines.models import Operation
-from api.routers.pipelines.models import Pipeline
+import errors
+from config import Config
+from routers.images.core import find_images, remove_images
+from routers.images.models import Image
+from routers.labels.models import Label
+from routers.pipelines.models import Operation
+from routers.pipelines.models import Pipeline
 
 db = Config.db
 

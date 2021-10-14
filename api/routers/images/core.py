@@ -6,11 +6,11 @@ import boto3
 import cv2
 import numpy
 
-from api import errors
-from api.config import Config
-from api.routers.images.models import Image
-from api.routers.labels.core import find_labels, regroup_labels_by_category
-from api.routers.labels.models import Label
+import errors
+from config import Config
+from routers.images.models import Image
+from routers.labels.core import find_labels, regroup_labels_by_category
+from routers.labels.models import Label
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 

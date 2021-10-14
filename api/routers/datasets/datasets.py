@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Depends
 
-from api import errors
-from api.dependencies import logged_admin, logged_user
-from api.routers.datasets.core import find_datasets, find_dataset, remove_dataset, remove_datasets, insert_dataset, \
+import errors
+from dependencies import logged_admin, logged_user
+from routers.datasets.core import find_datasets, find_dataset, remove_dataset, remove_datasets, insert_dataset, \
     update_dataset
-from api.routers.datasets.models import *
-from api.routers.users.models import User
-from api.utils import parse
+from routers.datasets.models import *
+from routers.users.models import User
+from utils import parse
 
 datasets = APIRouter()
 

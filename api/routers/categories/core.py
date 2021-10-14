@@ -1,11 +1,11 @@
 from typing import List
 from uuid import uuid4
 
-from api import errors
-from api.config import Config
-from api.routers.categories.models import Category, SuperCategory
-from api.routers.images.models import Image
-from api.routers.labels.core import find_labels_of_category
+import errors
+from config import Config
+from routers.categories.models import Category, SuperCategory
+from routers.images.models import Image
+from routers.labels.core import find_labels_of_category
 
 db = Config.db
 

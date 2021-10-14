@@ -3,12 +3,12 @@ import base64
 import cv2
 from fastapi import APIRouter, Depends
 
-from api.dependencies import dataset_belongs_to_user
-from api.routers.images.core import find_image
-from api.routers.labels.core import find_labels
-from api.routers.pipelines.core import find_pipelines, perform_sample, delete_pipeline
-from api.routers.pipelines.models import SampleBody, PipelinesResponse
-from api.utils import parse
+from dependencies import dataset_belongs_to_user
+from routers.images.core import find_image
+from routers.labels.core import find_labels
+from routers.pipelines.core import find_pipelines, perform_sample, delete_pipeline
+from routers.pipelines.models import SampleBody, PipelinesResponse
+from utils import parse
 
 pipelines = APIRouter()
 

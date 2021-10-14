@@ -3,8 +3,8 @@ from typing import List, Optional
 
 from pydantic import AnyHttpUrl
 
-from api.routers.categories.models import SuperCategory
-from api.utils import BaseModel
+from routers.categories.models import SuperCategory
+from utils import BaseModel
 
 
 class DatasourceKey(str, Enum):

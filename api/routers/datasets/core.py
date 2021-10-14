@@ -2,10 +2,10 @@ from datetime import datetime
 from typing import List
 from uuid import uuid4
 
-from api import errors
-from api.config import Config
-from api.routers.datasets.models import Dataset, DatasetPostBody, DatasetPatchBody
-from api.routers.images.core import find_all_images, remove_images
+import errors
+from config import Config
+from routers.datasets.models import Dataset, DatasetPostBody, DatasetPatchBody
+from routers.images.core import find_all_images, remove_images
 
 db = Config.db
 

@@ -34,7 +34,7 @@ const InnerSettingsProviders: FC = ({children}) => {
             <ThemeProvider theme={theme}>
                 <StylesProvider jss={jss}>
                     <SnackbarProvider
-                        autoHideDuration={30000}
+                        autoHideDuration={3000}
                         disableWindowBlurListener
                         preventDuplicate
                         maxSnack={3}

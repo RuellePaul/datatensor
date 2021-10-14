@@ -8,7 +8,7 @@ from passlib.context import CryptContext
 from pydantic import BaseModel, BaseConfig
 from pymongo.encryption import Algorithm
 
-from api.config import Config
+from config import Config
 
 db = Config.db
 

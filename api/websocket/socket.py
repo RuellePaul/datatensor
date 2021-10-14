@@ -2,11 +2,11 @@ from fastapi import APIRouter, WebSocket
 from starlette.websockets import WebSocketDisconnect
 from websockets.exceptions import ConnectionClosedOK
 
-from api.authentication.core import verify_access_token
-from api.logger import logger
-from api.routers.notifications.core import find_notifications
-from api.routers.tasks.core import find_tasks, find_users_tasks
-from api.utils import parse
+from authentication.core import verify_access_token
+from logger import logger
+from routers.notifications.core import find_notifications
+from routers.tasks.core import find_tasks, find_users_tasks
+from utils import parse
 
 sockets = APIRouter()
 

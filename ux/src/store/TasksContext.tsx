@@ -6,7 +6,7 @@ import {useDispatch} from 'src/store';
 import TaskDetails from 'src/components/core/TaskDetails';
 import useAuth from 'src/hooks/useAuth';
 import {HEARTBEAT_DELAY} from 'src/constants';
-import {API_HOSTNAME} from 'src/utils/api';
+import {WS_HOSTNAME} from 'src/utils/api';
 
 export interface TasksContextValue {
     tasks: Task[] | null;
@@ -52,7 +52,7 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
 
     // Send
     useEffect(() => {
-        wsTask.current = new WebSocket(`ws://${API_HOSTNAME}/ws/tasks`);
+        wsTask.current = new WebSocket(`${WS_HOSTNAME}/tasks`);
         wsTask.current.onopen = () => {
             console.info('Task websocket opened.');
             setPaused(false);
@@ -61,7 +61,7 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
             console.info('Task websocket closed.');
         };
 
-        wsNotifications.current = new WebSocket(`ws://${API_HOSTNAME}/ws/notifications`);
+        wsNotifications.current = new WebSocket(`${WS_HOSTNAME}/notifications`);
         wsNotifications.current.onopen = () => {
             console.info('Notifications websocket opened.');
             setPaused(false);
