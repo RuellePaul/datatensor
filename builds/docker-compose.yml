@@ -26,8 +26,7 @@ services:
     image: docker.pkg.github.com/ruellepaul/datatensor/datatensor-celery:${VERSION}
     build:
       context: ../
-      dockerfile: Dockerfile-api
-    command: celery -A worker worker --loglevel=INFO
+      dockerfile: Dockerfile-celery
     environment:
       - 'ENVIRONMENT=${ENVIRONMENT}'
       - 'DB_ENCRYPTION_KEY=${DB_ENCRYPTION_KEY}'
