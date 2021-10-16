@@ -102,7 +102,7 @@ services:
     volumes:
       - '/ux/node_modules'
     ports:
-      - '5069'
+      - '5069:5069'
     networks:
       - datatensor_network
 
