@@ -1,6 +1,7 @@
 version: '3.7'
 
 services:
+
   api:
     image: docker.pkg.github.com/ruellepaul/datatensor/datatensor-api:${VERSION}
     environment:
@@ -20,7 +21,14 @@ services:
       dockerfile: Dockerfile-api
     volumes:
       - './${ENVIRONMENT}/config.py:/api/config.py'
-    network_mode: host
+    ports:
+      - '4069:4069'
+    networks:
+      - datatensor_network
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+
+
   celery:
     image: docker.pkg.github.com/ruellepaul/datatensor/datatensor-celery:${VERSION}
     build:
@@ -38,23 +46,52 @@ services:
       - 'OAUTH_STACKOVERFLOW_KEY=${OAUTH_STACKOVERFLOW_KEY}'
       - 'S3_KEY=${S3_KEY}'
       - 'S3_SECRET=${S3_SECRET}'
-    network_mode: host
+    ports:
+      - '6379:6379'
+    networks:
+      - datatensor_network
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
     depends_on:
       - api
     restart: on-failure
+
+
   db:
     image: mongo
-    network_mode: host
+    ports:
+      - '27017:27017'
+    networks:
+      - datatensor_network
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+
+
   proxy:
     build:
       context: proxy
-    network_mode: host
     volumes:
       - '/root/letsencrypt:/etc/letsencrypt'
+    ports:
+      # - '80:80'
+      - '443:443'
+    networks:
+      - datatensor_network
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+
+
   rabbitmq:
     image: rabbitmq:latest
     container_name: 'rabbitmq'
-    network_mode: host
+    ports:
+      - '5672:5672'
+    networks:
+      - datatensor_network
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+
+
   ux:
     image: docker.pkg.github.com/ruellepaul/datatensor/datatensor-ux:${VERSION}_${ENVIRONMENT}
     build:
@@ -64,4 +101,12 @@ services:
       dockerfile: Dockerfile-ux
     volumes:
       - '/ux/node_modules'
-    network_mode: host
+    ports:
+      - '5069'
+    networks:
+      - datatensor_network
+
+
+networks:
+  datatensor_network:
+    driver: bridge
