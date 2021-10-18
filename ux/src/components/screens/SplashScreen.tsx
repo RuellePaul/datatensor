@@ -20,16 +20,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const SlashScreen: FC = () => {
+const SplashScreen: FC = () => {
     const classes = useStyles();
 
     return (
         <div className={classes.root}>
-            <Box width={400}>
+            <Box maxWidth={400} width="100%">
                 <LinearProgress />
             </Box>
         </div>
     );
 };
 
-export default SlashScreen;
+export default SplashScreen;
