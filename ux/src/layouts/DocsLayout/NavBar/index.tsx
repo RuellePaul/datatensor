@@ -1,9 +1,7 @@
-/* eslint-disable no-use-before-define */
 import type {FC} from 'react';
-/* eslint-disable react/prop-types */
 import React, {useEffect} from 'react';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 import {Link as RouterLink, useLocation} from 'react-router-dom';
-import PropTypes from 'prop-types';
 import {Box, Drawer, Hidden, List} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import Logo from 'src/components/utils/Logo';
@@ -100,9 +98,9 @@ const items: Item[] = [
             {
                 title: 'Project architecture',
                 href: '/docs/contributing/architecture'
-            },
+            }
         ]
-    },
+    }
 ];
 
 function renderNavItems({ items, depth = 0 }: { items: Item[], depth?: number }) {
@@ -180,47 +178,46 @@ const NavBar: FC<NavBarProps> = ({ onMobileClose, openMobile }) => {
             display="flex"
             flexDirection="column"
         >
-            <Hidden lgUp>
+            <PerfectScrollbar options={{ suppressScrollX: true }}>
+                <Hidden lgUp>
+                    <Box p={2}>
+                        <RouterLink to="/">
+                            <Logo />
+                        </RouterLink>
+                    </Box>
+                </Hidden>
                 <Box p={2}>
-                    <RouterLink to="/">
-                        <Logo />
-                    </RouterLink>
+                    {renderNavItems({ items })}
                 </Box>
-            </Hidden>
-            <Box p={2}>
-                {renderNavItems({ items })}
-            </Box>
+            </PerfectScrollbar>
         </Box>
     );
 
-    return <>
-        <Hidden lgUp>
-            <Drawer
-                anchor="left"
-                classes={{ paper: classes.mobileDrawer }}
-                onClose={onMobileClose}
-                open={openMobile}
-                variant="temporary"
-            >
-                {content}
-            </Drawer>
-        </Hidden>
-        <Hidden lgDown>
-            <Drawer
-                anchor="left"
-                classes={{ paper: classes.desktopDrawer }}
-                open
-                variant="persistent"
-            >
-                {content}
-            </Drawer>
-        </Hidden>
-    </>;
-};
-
-NavBar.propTypes = {
-    onMobileClose: PropTypes.func,
-    openMobile: PropTypes.bool
+    return (
+        <>
+            <Hidden lgUp>
+                <Drawer
+                    anchor="left"
+                    classes={{ paper: classes.mobileDrawer }}
+                    onClose={onMobileClose}
+                    open={openMobile}
+                    variant="temporary"
+                >
+                    {content}
+                </Drawer>
+            </Hidden>
+            <Hidden lgDown>
+                <Drawer
+                    anchor="left"
+                    classes={{ paper: classes.desktopDrawer }}
+                    open
+                    variant="persistent"
+                >
+                    {content}
+                </Drawer>
+            </Hidden>
+        </>
+    );
 };
 
 export default NavBar;
