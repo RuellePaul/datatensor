@@ -12,6 +12,7 @@ import {
     Divider,
     FormControlLabel,
     Grid,
+    Hidden,
     IconButton,
     Slide,
     Slider,
@@ -185,9 +186,11 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                             Labelisator
                         </Typography>
                         <Box flexGrow={1} />
-                        <Box mr={2}>
-                            <KeyboardShortcuts />
-                        </Box>
+                        <Hidden smDown>
+                            <Box mr={2}>
+                                <KeyboardShortcuts />
+                            </Box>
+                        </Hidden>
                         <IconButton edge="start" color="inherit" onClick={handleClose} size="large">
                             <CloseIcon />
                         </IconButton>

@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         paddingTop: 0,
         paddingBottom: 0,
-        color: theme.palette.text.primary
+        color: theme.palette.text.secondary
     },
     button: {
         padding: '10px 8px',
@@ -85,6 +85,7 @@ const NavItem: FC<NavItemProps> = ({
                     ? (
                         <Button
                             className={classes.button}
+                            color="inherit"
                             style={style}
                         >
                             <span className={classes.title}>{title}</span>
@@ -93,7 +94,7 @@ const NavItem: FC<NavItemProps> = ({
                     : (
                         <Typography
                             className={classes.button}
-                            color='primary'
+                            color="textPrimary"
                             style={style}
                         >
                             <span className={classes.title}>{title}</span>

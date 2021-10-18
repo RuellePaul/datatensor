@@ -10,6 +10,7 @@ import {
     CardHeader,
     CardMedia,
     Chip,
+    Link,
     Typography
 } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
@@ -22,6 +23,7 @@ import UserAvatar from 'src/components/UserAvatar';
 import WorkingAlert from 'src/components/core/WorkingAlert';
 import {UserConsumer, UserProvider} from 'src/store/UserContext';
 import {EMPTY_DESCRIPTIONS} from 'src/constants';
+import {Link as RouterLink} from 'react-router-dom';
 
 interface DatasetProps {
     dataset: Dataset;
@@ -38,6 +40,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     chip: {
         marginLeft: 6
+    },
+    link: {
+        fontWeight: 400
     },
     noWrap: {
         whiteSpace: 'nowrap'
@@ -79,7 +84,16 @@ const DTDataset: FC<DatasetProps> = ({className, dataset, ...rest}) => {
                             title={<Typography variant="h6">{dataset.name && capitalize(dataset.name)}</Typography>}
                             subheader={
                                 <Box mt={'2px'}>
-                                    {value.user.name}
+                                    <Link
+                                        className={classes.link}
+                                        color="inherit"
+                                        component={RouterLink}
+                                        onClick={event => event.stopPropagation()}
+                                        to={`/app/admin/users/${value.user.id}/details`}
+                                        variant="subtitle2"
+                                    >
+                                        {value.user.name}
+                                    </Link>
                                     &nbsp; •
                                     <Chip
                                         className={classes.chip}

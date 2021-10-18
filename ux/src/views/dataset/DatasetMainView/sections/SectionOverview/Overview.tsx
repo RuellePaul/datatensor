@@ -1,22 +1,36 @@
 import React, {FC} from 'react';
-import {Box, Typography} from '@mui/material';
+import {Box, Divider, Stack, Typography} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import {
     CategoryOutlined as CategoriesIcon,
     LocalOfferOutlined as LabelsIcon,
     PhotoLibraryOutlined as ImagesIcon
 } from '@mui/icons-material';
-import Categories from 'src/components/core/Dataset/Categories';
 import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
 import useImages from 'src/hooks/useImages';
+import getDateDiff from 'src/utils/getDateDiff';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
     icon: {
-        marginRight: 6,
+        color: theme.palette.text.primary,
+        marginRight: 10,
         verticalAlign: 'middle'
+    },
+    wrapper: {
+        display: 'flex',
+        alignItems: 'center',
+        marginRight: theme.spacing(2)
+    },
+    stack: {
+        [theme.breakpoints.down('sm')]: {
+            flexDirection: 'column',
+            '& > div': {
+                margin: `${theme.spacing(0, 0, 1, 0)} !important`
+            }
+        }
     }
 }));
 
@@ -25,7 +39,6 @@ interface OverviewProps {
 }
 
 const Overview: FC<OverviewProps> = ({ className }) => {
-
     const classes = useStyles();
 
     const { dataset, categories } = useDataset();
@@ -36,76 +49,49 @@ const Overview: FC<OverviewProps> = ({ className }) => {
     if (images.length === 0) return null;
 
     return (
-        <div>
-            <Box
-                display='flex'
-                alignItems='center'
-                mb={2}
+        <Box className={classes.root} display="flex" alignItems="center" justifyContent="space-between">
+            <Stack
+                className={classes.stack}
+                direction="row"
+                divider={<Divider orientation="vertical" flexItem />}
+                spacing={2}
             >
-                <Box mr={2}>
-                    <Typography
-                        fontWeight={600}
-                        color='textPrimary'
-                    >
-                        <ImagesIcon
-                            className={classes.icon}
-                        />
-                        {dataset.image_count + dataset.augmented_count}
-                        {' '}
-                        <Typography
-                            variant='subtitle1'
-                            component='span'
-                            color='textSecondary'
-                            fontWeight={400}
-                        >
+                <Box className={classes.wrapper}>
+                    <ImagesIcon className={classes.icon} />
+
+                    <Typography fontWeight={600} color="textPrimary">
+                        {dataset.image_count + dataset.augmented_count}{' '}
+                        <Typography variant="subtitle1" component="span" color="textSecondary" fontWeight={400}>
                             images
                         </Typography>
                     </Typography>
                 </Box>
-                <Box mr={2}>
-                    <Typography
-                        fontWeight={600}
-                        color='textPrimary'
-                    >
-                        <CategoriesIcon
-                            className={classes.icon}
-                        />
-                        {categories.length}
-                        {' '}
-                        <Typography
-                            variant='subtitle1'
-                            component='span'
-                            color='textSecondary'
-                            fontWeight={400}
-                        >
+                <Box className={classes.wrapper}>
+                    <CategoriesIcon className={classes.icon} />
+
+                    <Typography fontWeight={600} color="textPrimary">
+                        {categories.length}{' '}
+                        <Typography variant="subtitle1" component="span" color="textSecondary" fontWeight={400}>
                             categories
                         </Typography>
                     </Typography>
                 </Box>
-                <Box mr={2}>
-                    <Typography
-                        fontWeight={600}
-                        color='textPrimary'
-                    >
-                        <LabelsIcon
-                            className={classes.icon}
-                        />
-                        {totalLabelsCount}
-                        {' '}
-                        <Typography
-                            variant='subtitle1'
-                            component='span'
-                            color='textSecondary'
-                            fontWeight={400}
-                        >
+                <Box className={classes.wrapper}>
+                    <LabelsIcon className={classes.icon} />
+
+                    <Typography fontWeight={600} color="textPrimary">
+                        {totalLabelsCount}{' '}
+                        <Typography variant="subtitle1" component="span" color="textSecondary" fontWeight={400}>
                             labels
                         </Typography>
                     </Typography>
                 </Box>
-            </Box>
+            </Stack>
 
-            <Categories />
-        </div>
+            <Typography variant="caption" color="textSecondary">
+                Created {getDateDiff(new Date(), dataset.created_at, 'passed_event')}
+            </Typography>
+        </Box>
     );
 };
 

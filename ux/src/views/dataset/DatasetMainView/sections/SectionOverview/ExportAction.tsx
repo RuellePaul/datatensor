@@ -12,7 +12,6 @@ import {
     Card,
     CardActions,
     CardContent,
-    CardHeader,
     CircularProgress,
     Dialog,
     DialogContent,
@@ -29,9 +28,10 @@ import useDataset from 'src/hooks/useDataset';
 import useExports from 'src/hooks/useExports';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import useTasks from 'src/hooks/useTasks';
-import api from 'src/utils/api';
 import {Task} from 'src/types/task';
+import api from 'src/utils/api';
 import download from 'src/utils/download';
+import getDateDiff from 'src/utils/getDateDiff';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
@@ -146,11 +146,11 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
             {({errors, handleBlur, handleChange, handleSubmit, touched, values}) => (
                 <form noValidate onSubmit={handleSubmit}>
                     <Card className={clsx(classes.root, className)} variant="outlined">
-                        <CardHeader title="Export" />
                         <CardContent>
-                            <Typography gutterBottom>Download your dataset in JSON format.</Typography>
+                            <Typography gutterBottom>Export dataset</Typography>
                             <Typography variant="body2" color="textSecondary" gutterBottom>
-                                An exported dataset allows you to use it in your own computer vision pipeline. See the{' '}
+                                Download this dataset in JSON format. An exported dataset allows you to use it in your
+                                own computer vision pipeline. See the{' '}
                                 <Link variant="body2" color="primary" component={RouterLink} to="/docs">
                                     dedicated section
                                 </Link>{' '}
@@ -160,7 +160,8 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
                             {dataset.exported_at && !activeExportTask && (
                                 <Alert className={classes.alert}>
                                     <Typography variant="body2">
-                                        Last export : {moment(dataset.exported_at).format('DD MMM, HH:mm')}
+                                        Last export : {moment(dataset.exported_at).format('DD MMM')} (
+                                        {getDateDiff(new Date(), dataset.exported_at, 'passed_event')})
                                         <br />
                                         {exports.length === 0 && (
                                             <Link variant="subtitle1" color="primary" onClick={() => trigger(true)}>

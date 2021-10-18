@@ -97,6 +97,10 @@ const QuillEditor: FC<QuillEditorProps> = ({className, ...rest}) => {
         // @ts-ignore
         <ReactQuill
             className={clsx(classes.root, className)}
+            modules={{
+                toolbar: ['bold', 'italic', 'underline', 'strike', 'code-block'],
+
+            }}
             placeholder='Enter a description...'
             {...rest}
         />

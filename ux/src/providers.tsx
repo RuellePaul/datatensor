@@ -43,7 +43,7 @@ const InnerSettingsProviders: FC = ({children}) => {
                             <IconButton
                                 onClick={onCloseSnackbar(key)}
                                 size="large"
-                                style={{color: theme.palette.text.primary}}
+                                style={{color: 'inherit'}}
                             >
                                 <CloseIcon color="inherit" />
                             </IconButton>

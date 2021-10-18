@@ -2,7 +2,6 @@ import React, {ChangeEvent, FC, useState} from 'react';
 import {Link as RouterLink, useHistory} from 'react-router-dom';
 import clsx from 'clsx';
 import moment from 'moment';
-import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
     Box,
     Button,
@@ -27,6 +26,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import {Search as SearchIcon} from 'react-feather';
 import FancyLabel from 'src/components/FancyLabel';
 import UserAvatar from 'src/components/UserAvatar';
+import Scrollbar from 'src/components/utils/Scrollbar';
 import useAuth from 'src/hooks/useAuth';
 import {Theme} from 'src/theme';
 import {User} from 'src/types/user';
@@ -327,7 +327,7 @@ const Results: FC<ResultsProps> = ({className, users, setUsers, ...rest}) => {
                     </div>
                 </div>
             )}
-            <PerfectScrollbar>
+            <Scrollbar>
                 <Box minWidth={700}>
                     <Table>
                         <TableHead>
@@ -395,7 +395,7 @@ const Results: FC<ResultsProps> = ({className, users, setUsers, ...rest}) => {
                         </TableBody>
                     </Table>
                 </Box>
-            </PerfectScrollbar>
+            </Scrollbar>
             <TablePagination
                 component="div"
                 count={filteredUsers.length}

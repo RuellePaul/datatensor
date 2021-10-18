@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import {useSnackbar} from 'notistack';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-import {Box, Button, CircularProgress, IconButton, Paper, TextField, Typography} from '@mui/material';
+import {Box, Button, CircularProgress, IconButton, Paper, TextField, Tooltip, Typography} from '@mui/material';
 import {CreateOutlined as EditIcon} from '@mui/icons-material';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
@@ -30,6 +30,7 @@ interface EditProps {
 
 const EditAction: FC<EditProps> = ({ className }) => {
     const classes = useStyles();
+
     const isMountedRef = useIsMountedRef();
     const { enqueueSnackbar } = useSnackbar();
 
@@ -57,9 +58,11 @@ const EditAction: FC<EditProps> = ({ className }) => {
                         }}
                     />
                 </div>
-                <IconButton onClick={() => setEditing(true)}>
-                    <EditIcon />
-                </IconButton>
+                <Tooltip title="Edit">
+                    <IconButton onClick={() => setEditing(true)}>
+                        <EditIcon />
+                    </IconButton>
+                </Tooltip>
             </Box>
         );
     }
@@ -121,7 +124,6 @@ const EditAction: FC<EditProps> = ({ className }) => {
                             onBlur={handleBlur}
                             onChange={handleChange}
                             value={values.name}
-                            autoFocus
                             margin="dense"
                             fullWidth
                             variant="filled"

@@ -7,7 +7,6 @@ import makeStyles from '@mui/styles/makeStyles';
 import useAuth from 'src/hooks/useAuth';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 
-
 interface JWTLoginProps {
     className?: string;
 }
@@ -25,8 +24,8 @@ const JWTLogin: FC<JWTLoginProps> = ({className, ...rest}) => {
     return (
         <Formik
             initialValues={{
-                email: 'demo@datatensor.io',
-                password: 'Password123',
+                email: process.env.REACT_APP_ENVIRONMENT === 'development' ? 'demo@datatensor.io' : '',
+                password: process.env.REACT_APP_ENVIRONMENT === 'development' ? 'Password123' : '',
                 submit: null
             }}
             validationSchema={Yup.object().shape({
@@ -101,13 +100,15 @@ const JWTLogin: FC<JWTLoginProps> = ({className, ...rest}) => {
                             Log In
                         </Button>
                     </Box>
-                    <Box mt={2}>
-                        <Alert severity="info">
-                            <div>
-                                Use <b>demo@datatensor.io</b> and password <b>Password123</b>
-                            </div>
-                        </Alert>
-                    </Box>
+                    {process.env.REACT_APP_ENVIRONMENT === 'development' && (
+                        <Box mt={2}>
+                            <Alert severity="info">
+                                <div>
+                                    Use <b>demo@datatensor.io</b> and password <b>Password123</b>
+                                </div>
+                            </Alert>
+                        </Box>
+                    )}
                 </form>
             )}
         </Formik>

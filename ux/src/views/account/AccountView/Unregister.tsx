@@ -111,7 +111,6 @@ const Unregister: FC<UnregisterProps> = ({className, ...rest}) => {
                                         </InputLabel>
                                     </Box>
                                     <TextField
-                                        autoFocus
                                         error={Boolean(touched.confirm && errors.confirm)}
                                         name="confirm"
                                         onBlur={handleBlur}

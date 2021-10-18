@@ -93,16 +93,16 @@ On PyCharm terminal, push a new tag :
 ```
 
 
-On AWS, search for `DTServerTest` instance, or rebuild it using DTServerTest instance model.
+On AWS, search for `DTProduction` instance, or rebuild it using DTProduction instance model.
 
-Then, login using SSH to this instance using `DTServerTestLogin.sh` script :
+Then, login using SSH to this instance using `DTProductionLogin.sh` script :
 
 ```bash
-(venv) $ cd builds/test
-(venv) $ source DTServerTestLogin.sh
+(venv) $ cd builds/production
+(venv) $ source DTProductionLogin.sh
 ```
 
-⚠️&nbsp;&nbsp;You must have `DTServerTestKeys.pem` in `builds/test`.
+⚠️&nbsp;&nbsp;You must have `DTProductionKeys.pem` in `builds/production`.
 
 Next, on the machine, install `git`, `docker` and `docker-compose` :
 
@@ -138,7 +138,7 @@ If prompted, login with `<username>` and your github token as password.
 Fill the env with secret keys (copy from local) :
 
 ```bash
-cd ~/datatensor/builds/test
+cd ~/datatensor/builds/production
 nano init_env.sh
 nano cert.pem
 nano key.pem
@@ -147,10 +147,11 @@ nano key.pem
 Finally, deploy your tag :
 
 ```
-cd ~/datatensor/builds
-source deploy_service.sh
+cd ~/datatensor
+source deploy.sh
+>>> dev
 >>> v_0.0.1
->>> test
 >>> all
+>>> no
 ```
 

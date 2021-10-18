@@ -13,7 +13,10 @@ const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 const useStyles = makeStyles(theme => ({
     root: {
         maxWidth: 410,
-        flexGrow: 1
+        flexGrow: 1,
+        [theme.breakpoints.down('sm')]: {
+            margin: `${theme.spacing(3)} auto !important`
+        }
     },
     header: {
         display: 'flex',
@@ -62,7 +65,7 @@ function ImagesSlideshow() {
     return (
         <Card className={classes.root} variant="outlined">
             <Paper square elevation={0} className={classes.header}>
-                <Box display="flex" alignItems="center">
+                <Box display="flex" alignItems="center" maxWidth='75%'>
                     <Box mr={1}>
                         <ImageIcon />
                     </Box>

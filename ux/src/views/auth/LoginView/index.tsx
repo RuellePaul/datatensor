@@ -25,7 +25,10 @@ const useStyles = makeStyles((theme: Theme) => ({
         padding: theme.spacing(4),
         display: 'flex',
         flexDirection: 'column',
-        minHeight: 400
+        minHeight: 400,
+        [theme.breakpoints.down('sm')]: {
+            padding: theme.spacing(3, 2)
+        }
     },
     auth0buttons: {
         [theme.breakpoints.down('sm')]: {

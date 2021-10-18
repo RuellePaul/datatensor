@@ -16,8 +16,7 @@ const useStyles = makeStyles((theme: Theme) =>
                 '-webkit-font-smoothing': 'antialiased',
                 '-moz-osx-font-smoothing': 'grayscale',
                 height: '100%',
-                width: '100%',
-                overflow: 'hidden'
+                width: '100%'
             },
             body: {
                 height: '100%',
