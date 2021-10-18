@@ -1,6 +1,6 @@
 import type {FC, ReactNode} from 'react';
 import React, {useState} from 'react';
-import PerfectScrollbar from 'react-perfect-scrollbar';
+import Scrollbar from 'src/components/utils/Scrollbar';
 import PropTypes from 'prop-types';
 import {MDXProvider} from '@mdx-js/react';
 import {Container} from '@mui/material';
@@ -46,7 +46,7 @@ const DocsLayout: FC<DocsLayoutProps> = ({ children }) => {
                 openMobile={isMobileNavOpen}
             />
             <div className={classes.wrapper}>
-                <PerfectScrollbar options={{ suppressScrollX: true }}>
+                <Scrollbar>
                     <div className={classes.contentContainer}>
                         <Container
                             maxWidth="md"
@@ -57,7 +57,7 @@ const DocsLayout: FC<DocsLayoutProps> = ({ children }) => {
                             </MDXProvider>
                         </Container>
                     </div>
-                </PerfectScrollbar>
+                </Scrollbar>
             </div>
         </>
     );

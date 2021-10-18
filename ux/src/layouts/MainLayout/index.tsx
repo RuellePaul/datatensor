@@ -1,5 +1,5 @@
 import React, {FC, ReactNode} from 'react';
-import PerfectScrollbar from 'react-perfect-scrollbar';
+import Scrollbar from 'src/components/utils/Scrollbar';
 import makeStyles from '@mui/styles/makeStyles';
 import TopBar from './TopBar';
 
@@ -31,7 +31,7 @@ const MainLayout: FC<MainLayoutProps> = ({children}) => {
         <div className={classes.root}>
             <TopBar />
             <div className={classes.wrapper}>
-                <PerfectScrollbar options={{suppressScrollX: true}}>{children}</PerfectScrollbar>
+                <Scrollbar>{children}</Scrollbar>
             </div>
         </div>
     );

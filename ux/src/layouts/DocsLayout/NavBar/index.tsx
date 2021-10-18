@@ -1,6 +1,6 @@
 import type {FC} from 'react';
 import React, {useEffect} from 'react';
-import PerfectScrollbar from 'react-perfect-scrollbar';
+import Scrollbar from 'src/components/utils/Scrollbar';
 import {Link as RouterLink, useLocation} from 'react-router-dom';
 import {Box, Drawer, Hidden, List} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
@@ -178,7 +178,7 @@ const NavBar: FC<NavBarProps> = ({ onMobileClose, openMobile }) => {
             display="flex"
             flexDirection="column"
         >
-            <PerfectScrollbar options={{ suppressScrollX: true }}>
+            <Scrollbar>
                 <Hidden lgUp>
                     <Box p={2}>
                         <RouterLink to="/">
@@ -189,7 +189,7 @@ const NavBar: FC<NavBarProps> = ({ onMobileClose, openMobile }) => {
                 <Box p={2}>
                     {renderNavItems({ items })}
                 </Box>
-            </PerfectScrollbar>
+            </Scrollbar>
         </Box>
     );
 

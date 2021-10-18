@@ -1,7 +1,7 @@
 import React, {FC, useCallback, useState} from 'react';
 import clsx from 'clsx';
 import {useDropzone} from 'react-dropzone';
-import PerfectScrollbar from 'react-perfect-scrollbar';
+import Scrollbar from 'src/components/utils/Scrollbar';
 import {useSnackbar} from 'notistack';
 import {
     Box,
@@ -154,7 +154,7 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({callback, className, ...rest})
                     </Box>
                 </div>
             </div>
-            <PerfectScrollbar options={{suppressScrollX: true}}>
+            <Scrollbar>
                 <List className={classes.list}>
                     {files.map((file, i) => (
                         <ListItem divider={i < files.length - 1} key={i}>
@@ -174,7 +174,7 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({callback, className, ...rest})
                         </ListItem>
                     ))}
                 </List>
-            </PerfectScrollbar>
+            </Scrollbar>
             <div className={classes.actions}>
                 {files.length > 0 && (
                     <Button onClick={handleRemoveAll} size="small">

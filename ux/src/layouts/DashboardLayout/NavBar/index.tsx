@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 import React, {FC, ReactNode, useEffect} from 'react';
 import {Link as RouterLink, matchPath, useLocation} from 'react-router-dom';
-import PerfectScrollbar from 'react-perfect-scrollbar';
+import Scrollbar from 'src/components/utils/Scrollbar';
 import {Box, Chip, Divider, Drawer, Hidden, Link, List, ListSubheader, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {DeveloperBoard as AdminDashboardIcon} from '@mui/icons-material';
@@ -147,7 +147,7 @@ const NavBar: FC<NavBarProps> = ({onMobileClose, openMobile}) => {
 
     const content = (
         <Box height="100%" display="flex" flexDirection="column">
-            <PerfectScrollbar options={{suppressScrollX: true}}>
+            <Scrollbar>
                 <Hidden lgUp>
                     <Box p={2} display="flex" justifyContent="center">
                         <RouterLink to="/">
@@ -209,7 +209,7 @@ const NavBar: FC<NavBarProps> = ({onMobileClose, openMobile}) => {
                         </Link>
                     </Box>
                 </Box>
-            </PerfectScrollbar>
+            </Scrollbar>
         </Box>
     );
 
