@@ -33,7 +33,7 @@ const SectionOverview: FC<SectionProps> = ({ className }) => {
                 </Grid>
 
                 <Grid item md={4} xs={12}>
-                    <Stack spacing={5}>
+                    <Stack spacing={4}>
                         <UploadAction />
 
                         <LabelisatorAction />

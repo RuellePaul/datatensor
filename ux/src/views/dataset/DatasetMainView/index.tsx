@@ -34,10 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         boxShadow: theme.palette.mode === 'dark' && theme.shadows[2]
     },
     tab: {
-        color: theme.palette.text.primary,
-        '&:hover, &$selected': {
-            color: theme.palette.text.primary
-        }
+        color: theme.palette.text.primary
     },
     label: {
         '& .label': {
