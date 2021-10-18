@@ -1,4 +1,5 @@
 import React, {FC, ReactNode} from 'react';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 import makeStyles from '@mui/styles/makeStyles';
 import TopBar from './TopBar';
 
@@ -20,16 +21,6 @@ const useStyles = makeStyles(theme => ({
         flex: '1 1 auto',
         overflow: 'hidden',
         paddingTop: 64
-    },
-    contentContainer: {
-        display: 'flex',
-        flex: '1 1 auto',
-        overflow: 'hidden'
-    },
-    content: {
-        flex: '1 1 auto',
-        height: '100%',
-        overflow: 'auto'
     }
 }));
 
@@ -40,9 +31,7 @@ const MainLayout: FC<MainLayoutProps> = ({children}) => {
         <div className={classes.root}>
             <TopBar />
             <div className={classes.wrapper}>
-                <div className={classes.contentContainer}>
-                    <div className={classes.content}>{children}</div>
-                </div>
+                <PerfectScrollbar options={{suppressScrollX: true}}>{children}</PerfectScrollbar>
             </div>
         </div>
     );
