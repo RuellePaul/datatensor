@@ -62,7 +62,7 @@ function ImagesSlideshow() {
     return (
         <Card className={classes.root} variant="outlined">
             <Paper square elevation={0} className={classes.header}>
-                <Box display="flex" alignItems="center">
+                <Box display="flex" alignItems="center" maxWidth={250}>
                     <Box mr={1}>
                         <ImageIcon />
                     </Box>

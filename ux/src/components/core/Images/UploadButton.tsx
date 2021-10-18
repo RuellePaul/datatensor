@@ -42,7 +42,7 @@ const UploadButton: FC = () => {
 
             <Dialog open={openUpload} onClose={handleCloseUpload}>
                 <DialogTitle>
-                    <Typography variant="h4">Upload Images</Typography>
+                    Upload Images
                     <IconButton className={classes.close} onClick={handleCloseUpload} size="large">
                         <CloseIcon />
                     </IconButton>

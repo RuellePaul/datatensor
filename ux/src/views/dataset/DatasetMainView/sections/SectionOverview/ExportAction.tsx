@@ -12,7 +12,6 @@ import {
     Card,
     CardActions,
     CardContent,
-    CardHeader,
     CircularProgress,
     Dialog,
     DialogContent,
@@ -147,11 +146,11 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
             {({errors, handleBlur, handleChange, handleSubmit, touched, values}) => (
                 <form noValidate onSubmit={handleSubmit}>
                     <Card className={clsx(classes.root, className)} variant="outlined">
-                        <CardHeader title="Export" />
                         <CardContent>
-                            <Typography gutterBottom>Download your dataset in JSON format.</Typography>
+                            <Typography gutterBottom>Export dataset</Typography>
                             <Typography variant="body2" color="textSecondary" gutterBottom>
-                                An exported dataset allows you to use it in your own computer vision pipeline. See the{' '}
+                                Download this dataset in JSON format. An exported dataset allows you to use it in your
+                                own computer vision pipeline. See the{' '}
                                 <Link variant="body2" color="primary" component={RouterLink} to="/docs">
                                     dedicated section
                                 </Link>{' '}

@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
-import {Card, CardActions, CardContent, CardHeader, Link, Typography} from '@mui/material';
+import {Card, CardActions, CardContent, Link, Typography} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import UploadButton from 'src/components/core/Images/UploadButton';
@@ -20,9 +20,8 @@ const UploadAction: FC<UploadActionProps> = ({ className }) => {
 
     return (
         <Card className={clsx(classes.root, className)} variant="outlined">
-            <CardHeader title="Upload" />
             <CardContent>
-                <Typography gutterBottom>Add images</Typography>
+                <Typography gutterBottom>Upload images</Typography>
                 <Typography variant="body2" color="textSecondary" gutterBottom>
                     A dataset should have enough images to train a computer vision AI model. See the{' '}
                     <Link variant="body2" color="primary" component={RouterLink} to="/docs">

@@ -12,11 +12,12 @@ import UploadAction from './UploadAction';
 import EditAction from './EditAction';
 import Overview from './Overview';
 
+
 const useStyles = makeStyles((theme: Theme) => ({
     root: {}
 }));
 
-const SectionOverview: FC<SectionProps> = ({className}) => {
+const SectionOverview: FC<SectionProps> = ({ className }) => {
     const classes = useStyles();
 
     return (
@@ -26,8 +27,8 @@ const SectionOverview: FC<SectionProps> = ({className}) => {
                     <Stack spacing={3}>
                         <EditAction />
                         <Overview />
-                        <Categories />
                         <ImagesSlideshow />
+                        <Categories />
                     </Stack>
                 </Grid>
 
