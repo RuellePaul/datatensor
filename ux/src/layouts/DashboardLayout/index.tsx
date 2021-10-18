@@ -1,9 +1,9 @@
 import React, {FC, ReactNode, useState} from 'react';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 import NavBar from './NavBar';
 import TopBar from './TopBar';
-
 
 interface DashboardLayoutProps {
     children?: ReactNode;
@@ -25,16 +25,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         [theme.breakpoints.up('lg')]: {
             paddingLeft: 256
         }
-    },
-    contentContainer: {
-        display: 'flex',
-        flex: '1 1 auto',
-        overflow: 'hidden'
-    },
-    content: {
-        flex: '1 1 auto',
-        height: '100%',
-        overflow: 'auto'
     }
 }));
 
@@ -47,9 +37,7 @@ const DashboardLayout: FC<DashboardLayoutProps> = ({children}) => {
             <TopBar onMobileNavOpen={() => setMobileNavOpen(true)} />
             <NavBar onMobileClose={() => setMobileNavOpen(false)} openMobile={isMobileNavOpen} />
             <div className={classes.wrapper}>
-                <div className={classes.contentContainer}>
-                    <div className={classes.content}>{children}</div>
-                </div>
+                <PerfectScrollbar options={{suppressScrollX: true}}>{children}</PerfectScrollbar>
             </div>
         </div>
     );

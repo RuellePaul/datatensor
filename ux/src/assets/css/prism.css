@@ -7,6 +7,10 @@
     z-index: -1 !important;
 }
 
+.scrollbar-container {
+    width: 100%;
+}
+
 .flex {
     display: flex;
 }
