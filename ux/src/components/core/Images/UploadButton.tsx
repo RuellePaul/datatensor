@@ -1,5 +1,5 @@
 import React, {FC, useState} from 'react';
-import {Box, Button, Dialog, DialogContent, DialogTitle, IconButton, Typography} from '@mui/material';
+import {Box, Button, Dialog, DialogContent, DialogTitle, IconButton} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import {Close as CloseIcon, PublishOutlined as UploadIcon} from '@mui/icons-material';
 import ImagesDropzone from 'src/components/ImagesDropzone';
@@ -30,12 +30,7 @@ const UploadButton: FC = () => {
     return (
         <>
             <Box display="flex">
-                <Button
-                    variant="contained"
-                    color="primary"
-                    endIcon={<UploadIcon />}
-                    onClick={handleUploadOpen}
-                >
+                <Button variant="contained" color="primary" endIcon={<UploadIcon />} onClick={handleUploadOpen}>
                     Upload images
                 </Button>
             </Box>
