@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import {Link as RouterLink, useHistory} from 'react-router-dom';
 import clsx from 'clsx';
-import {AppBar, Box, Button, Divider, Link, Toolbar, Typography} from '@mui/material';
+import {AppBar, Box, Button, Divider, Hidden, Link, Toolbar, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {APP_VERSION} from 'src/constants';
 import Logo from 'src/components/utils/Logo';
@@ -34,7 +34,11 @@ const useStyles = makeStyles(theme => ({
         width: 1,
         height: 32,
         marginLeft: theme.spacing(2),
-        marginRight: theme.spacing(2)
+        marginRight: theme.spacing(2),
+        [theme.breakpoints.down('sm')]: {
+            marginLeft: theme.spacing(1),
+            marginRight: theme.spacing(1)
+        }
     }
 }));
 
@@ -48,26 +52,30 @@ const TopBar: FC<TopBarProps> = ({className, ...rest}) => {
                 <RouterLink to="/">
                     <Logo className={classes.logo} />
                 </RouterLink>
-                <Box>
-                    <Typography variant="overline" color="textPrimary" component="p">
-                        Datatensor
-                    </Typography>
+                <Hidden smDown>
+                    <Box>
+                        <Typography variant="overline" color="textPrimary" component="p">
+                            Datatensor
+                        </Typography>
 
-                    <Typography variant="caption" color="textSecondary" component="p" className={classes.version}>
-                        Version {APP_VERSION}
-                    </Typography>
-                </Box>
+                        <Typography variant="caption" color="textSecondary" component="p" className={classes.version}>
+                            Version {APP_VERSION}
+                        </Typography>
+                    </Box>
+                </Hidden>
                 <Box flexGrow={1} />
-                <Link
-                    className={classes.link}
-                    color="textSecondary"
-                    component={RouterLink}
-                    to="/app"
-                    underline="none"
-                    variant="body2"
-                >
-                    About
-                </Link>
+                <Hidden smDown>
+                    <Link
+                        className={classes.link}
+                        color="textSecondary"
+                        component={RouterLink}
+                        to="/app"
+                        underline="none"
+                        variant="body2"
+                    >
+                        About
+                    </Link>
+                </Hidden>
                 <Link
                     className={classes.link}
                     color="textSecondary"
