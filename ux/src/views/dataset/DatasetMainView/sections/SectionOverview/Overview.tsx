@@ -13,16 +13,7 @@ import getDateDiff from 'src/utils/getDateDiff';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {
-        [theme.breakpoints.down('md')]: {
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-            '& > span:last-child': {
-                marginTop: theme.spacing(2),
-                marginLeft: 'auto'
-            }
-        }
-    },
+    root: {},
     icon: {
         color: theme.palette.text.primary,
         marginRight: 10,
@@ -32,6 +23,14 @@ const useStyles = makeStyles((theme: Theme) => ({
         display: 'flex',
         alignItems: 'center',
         marginRight: theme.spacing(2)
+    },
+    stack: {
+        [theme.breakpoints.down('sm')]: {
+            flexDirection: 'column',
+            '& > div': {
+                margin: `${theme.spacing(0, 0, 1, 0)} !important`
+            }
+        }
     }
 }));
 
@@ -51,7 +50,12 @@ const Overview: FC<OverviewProps> = ({ className }) => {
 
     return (
         <Box className={classes.root} display="flex" alignItems="center" justifyContent="space-between">
-            <Stack direction="row" divider={<Divider orientation="vertical" flexItem />} spacing={2}>
+            <Stack
+                className={classes.stack}
+                direction="row"
+                divider={<Divider orientation="vertical" flexItem />}
+                spacing={2}
+            >
                 <Box className={classes.wrapper}>
                     <ImagesIcon className={classes.icon} />
 
