@@ -93,11 +93,11 @@ const NavItem: FC<NavItemProps> = ({
                     )
                     : (
                         <Typography
-                            className={classes.button}
                             color="textPrimary"
                             style={style}
+                            variant="overline"
                         >
-                            <span className={classes.title}>{title}</span>
+                            {title}
                         </Typography>
                     )
                 }

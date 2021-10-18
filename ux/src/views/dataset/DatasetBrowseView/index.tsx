@@ -24,10 +24,10 @@ const DatasetBrowseView: FC = () => {
             <DatasetsProvider>
                 <Container component="section" maxWidth="lg">
                     <Header />
-                    <Box mt={3}>
+                    <Box mt={4}>
                         <Filter />
                     </Box>
-                    <Box mt={6}>
+                    <Box mt={3}>
                         <Results />
                     </Box>
                 </Container>
