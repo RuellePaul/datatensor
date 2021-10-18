@@ -20,7 +20,8 @@ interface CategoryProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {
+    root: {},
+    categories: {
         display: 'flex',
         flexWrap: 'wrap',
         alignContent: 'flex-start'
@@ -79,32 +80,44 @@ const DTCategories: FC<CategoriesProps> = ({className}) => {
     const [expand, setExpand] = useState<boolean>(false);
 
     return (
-        <div className={clsx(classes.root, className, 'scroll')}>
-            {expand ? (
-                <>
-                    {categories.map(category => (
-                        <DTCategory category={category} key={category.id} index={categories.indexOf(category)} />
-                    ))}
+        <div className={clsx(classes.root, className)}>
+            <Box display="flex" alignItems="center" justifyContent="space-between">
+                <Typography variant="overline" color="textPrimary" gutterBottom>
+                    Labels per category
+                </Typography>
+            </Box>
 
-                    <AddCategoryAction />
-                </>
-            ) : (
-                <>
-                    {categories
-                        .sort((a, b) => (a.labels_count > b.labels_count ? -1 : 1))
-                        .slice(0, MAX_CATEGORIES_DISPLAYED)
-                        .map(category => (
+            <div className={classes.categories}>
+                {expand ? (
+                    <>
+                        {categories.map(category => (
                             <DTCategory category={category} key={category.id} index={categories.indexOf(category)} />
                         ))}
-                    {categories.length > MAX_CATEGORIES_DISPLAYED ? (
-                        <Link className={classes.link} onClick={() => setExpand(true)}>
-                            and {categories.length - MAX_CATEGORIES_DISPLAYED} more...
-                        </Link>
-                    ) : (
+
                         <AddCategoryAction />
-                    )}
-                </>
-            )}
+                    </>
+                ) : (
+                    <>
+                        {categories
+                            .sort((a, b) => (a.labels_count > b.labels_count ? -1 : 1))
+                            .slice(0, MAX_CATEGORIES_DISPLAYED)
+                            .map(category => (
+                                <DTCategory
+                                    category={category}
+                                    key={category.id}
+                                    index={categories.indexOf(category)}
+                                />
+                            ))}
+                        {categories.length > MAX_CATEGORIES_DISPLAYED ? (
+                            <Link className={classes.link} onClick={() => setExpand(true)}>
+                                and {categories.length - MAX_CATEGORIES_DISPLAYED} more...
+                            </Link>
+                        ) : (
+                            <AddCategoryAction />
+                        )}
+                    </>
+                )}
+            </div>
         </div>
     );
 };
