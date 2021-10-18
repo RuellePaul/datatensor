@@ -16,7 +16,12 @@ interface HeaderProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        position: 'relative'
+        position: 'relative',
+        [theme.breakpoints.down('sm')]: {
+            '& ol li:first-child, li:first-child + li': {
+                display: 'none'
+            }
+        }
     },
     alert: {
         position: 'absolute',
@@ -77,7 +82,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                             label={dataset.is_public ? 'Public' : 'Private'}
                             icon={dataset.is_public ? <PublicIcon /> : <PrivateIcon />}
                             size="small"
-                            variant="outlined"
+                            variant="filled"
                         />
                     </Box>
                 </Breadcrumbs>
