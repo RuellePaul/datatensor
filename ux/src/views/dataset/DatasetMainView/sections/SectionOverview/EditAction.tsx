@@ -30,6 +30,7 @@ interface EditProps {
 
 const EditAction: FC<EditProps> = ({ className }) => {
     const classes = useStyles();
+
     const isMountedRef = useIsMountedRef();
     const { enqueueSnackbar } = useSnackbar();
 
@@ -121,7 +122,6 @@ const EditAction: FC<EditProps> = ({ className }) => {
                             onBlur={handleBlur}
                             onChange={handleChange}
                             value={values.name}
-                            autoFocus
                             margin="dense"
                             fullWidth
                             variant="filled"

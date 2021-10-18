@@ -20,7 +20,6 @@ import {CategoryProvider} from 'src/store/CategoryContext';
 import {PipelineProvider} from 'src/store/PipelineContext';
 import {ExportsProvider} from 'src/store/ExportsContext';
 
-
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         backgroundColor: theme.palette.background.default,
@@ -39,17 +38,25 @@ const useStyles = makeStyles((theme: Theme) => ({
         '&:hover, &$selected': {
             color: theme.palette.text.primary
         }
+    },
+    label: {
+        '& .label': {
+            marginLeft: theme.spacing(1),
+            [theme.breakpoints.down('sm')]: {
+                display: 'none'
+            }
+        }
     }
 }));
 
-const DTTab = ({ label, icon: Icon, ...rest }) => {
+const DTTab = ({label, icon: Icon, ...rest}) => {
     const classes = useStyles();
 
     const TabLabel = (
-        <Box display="flex" alignItems="center">
+        <Box display="flex" alignItems="center" className={classes.label}>
             <Icon fontSize="small" />
 
-            <Box ml={1}>{label}</Box>
+            <Box className="label">{label}</Box>
         </Box>
     );
 
@@ -66,7 +73,7 @@ const DatasetMainView: FC = () => {
         setTab(newTab);
     };
 
-    const { dataset_id } = useParams();
+    const {dataset_id} = useParams();
 
     useEffect(() => {
         setOpenedTabs(openedTabs => (openedTabs.includes(tab) ? openedTabs : [...openedTabs, tab]));
@@ -79,7 +86,6 @@ const DatasetMainView: FC = () => {
             <DatasetConsumer>
                 {value => (
                     <UserProvider user_id={value.dataset.user_id}>
-
                         <Page className={classes.root} title={`Dataset ${value.dataset.name}`}>
                             <ExportsProvider>
                                 <ImagesProvider>
@@ -92,11 +98,7 @@ const DatasetMainView: FC = () => {
                                                     <Box className={classes.sticky} mt={2}>
                                                         <ImagesConsumer>
                                                             {value => (
-                                                                <Tabs
-                                                                    centered
-                                                                    value={tab}
-                                                                    onChange={handleTabChange}
-                                                                >
+                                                                <Tabs centered value={tab} onChange={handleTabChange}>
                                                                     <DTTab label="Overview" icon={DashboardOutlined} />
                                                                     <DTTab
                                                                         label="Images"

@@ -90,7 +90,8 @@ const DTImagesList: FC<ImagesListProps> = ({className, pipeline_id, ...rest}) =>
                     breakpointCols={{
                         default: 4,
                         [theme.breakpoints.values.md]: 3,
-                        700: 2
+                        700: 2,
+                        500: 1
                     }}
                     className={classes.grid}
                     columnClassName={classes.column}
