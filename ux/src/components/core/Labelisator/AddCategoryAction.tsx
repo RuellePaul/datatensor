@@ -20,13 +20,13 @@ import {
     Typography
 } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import {Add as AddIcon, Close as CloseIcon} from '@mui/icons-material';
+import {Add as AddIcon, CategoryOutlined as CategoriesIcon, Close as CloseIcon} from '@mui/icons-material';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import api from 'src/utils/api';
 import {Theme} from 'src/theme';
 import {Category} from 'src/types/category';
 import useDataset from 'src/hooks/useDataset';
-import {SUPERCATEGORIES} from 'src/config';
+import {SUPERCATEGORIES, SUPERCATEGORIES_ICONS} from 'src/config';
 
 interface AddCategoryActionProps {
     className?: string;
@@ -34,6 +34,9 @@ interface AddCategoryActionProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
+    select: {
+        display: 'flex'
+    },
     close: {
         position: 'absolute',
         right: theme.spacing(1),
@@ -69,6 +72,10 @@ const AddCategoryAction: FC<AddCategoryActionProps> = ({className}) => {
 
             <Dialog fullWidth maxWidth="sm" open={openCategoryCreation} onClose={handleCloseCategoryCreation}>
                 <DialogTitle className="flex">
+                    <Box mr={1}>
+                        <CategoriesIcon />
+                    </Box>
+
                     <Typography variant="h4">Add a new category</Typography>
 
                     <IconButton className={classes.close} onClick={handleCloseCategoryCreation} size="large">
@@ -114,7 +121,6 @@ const AddCategoryAction: FC<AddCategoryActionProps> = ({className}) => {
                                     <Grid container spacing={2}>
                                         <Grid item sm={6} xs={12}>
                                             <TextField
-                                                autoFocus
                                                 error={Boolean(touched.name && errors.name)}
                                                 fullWidth
                                                 helperText={touched.name && errors.name}
@@ -126,12 +132,12 @@ const AddCategoryAction: FC<AddCategoryActionProps> = ({className}) => {
                                                 onKeyDown={event => event.stopPropagation()}
                                                 value={values.name}
                                                 variant="outlined"
-                                                size="small"
                                             />
                                         </Grid>
                                         <Grid item sm={6} xs={12}>
                                             <InputLabel>Supercategory</InputLabel>
                                             <Select
+                                                classes={{select: classes.select}}
                                                 error={Boolean(touched.supercategory && errors.supercategory)}
                                                 fullWidth
                                                 label="Supercategory"
@@ -146,6 +152,7 @@ const AddCategoryAction: FC<AddCategoryActionProps> = ({className}) => {
                                                 </MenuItem>
                                                 {SUPERCATEGORIES.map(supercategory => (
                                                     <MenuItem key={supercategory} value={supercategory}>
+                                                        <Box mr={1}>{SUPERCATEGORIES_ICONS[supercategory]}</Box>
                                                         {capitalize(supercategory)}
                                                     </MenuItem>
                                                 ))}

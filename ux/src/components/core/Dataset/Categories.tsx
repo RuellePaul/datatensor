@@ -40,11 +40,14 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
             <Chip
                 label={
                     <Typography variant="body2">
-                        <strong>{capitalize(category.name)} • {category.labels_count}</strong>
+                        <strong>
+                            {capitalize(category.name)}
+                            {category.labels_count && ` • ${category.labels_count}`}
+                        </strong>
                     </Typography>
                 }
                 title={`${category.name} | ${category.supercategory}`}
-                size="small"
+                size="medium"
                 style={{
                     color: theme.palette.getContrastText(COLORS[index]),
                     background: COLORS[index],
