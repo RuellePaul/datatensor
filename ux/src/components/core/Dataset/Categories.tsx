@@ -5,7 +5,6 @@ import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 import AddCategoryAction from 'src/components/core/Labelisator/AddCategoryAction';
 import {Category} from 'src/types/category';
-import useCategory from 'src/hooks/useCategory';
 import useDataset from 'src/hooks/useDataset';
 import {COLORS} from 'src/utils/colors';
 import {MAX_CATEGORIES_DISPLAYED} from 'src/config';
@@ -36,36 +35,22 @@ const useStyles = makeStyles((theme: Theme) => ({
 const DTCategory: FC<CategoryProps> = ({category, index}) => {
     const theme = useTheme();
 
-    const {currentCategory, saveCurrentCategory} = useCategory();
-
-    const isSelected = currentCategory?.name === category.name;
-
     return (
         <Box mb={1.5} mr={1.5}>
             <Chip
-                clickable
                 label={
                     <Typography variant="body2">
-                        <strong>
-                            {capitalize(category.name)} {category.labels_count}
-                        </strong>
+                        <strong>{capitalize(category.name)} • {category.labels_count}</strong>
                     </Typography>
                 }
-                onClick={() => saveCurrentCategory(isSelected ? null : category)}
                 title={`${category.name} | ${category.supercategory}`}
-                size="medium"
-                style={
-                    isSelected
-                        ? {
-                              color: theme.palette.getContrastText(COLORS[index]),
-                              background: COLORS[index],
-                              borderColor: COLORS[index]
-                          }
-                        : {
-                              color: COLORS[index],
-                              borderColor: COLORS[index]
-                          }
-                }
+                size="small"
+                style={{
+                    color: theme.palette.getContrastText(COLORS[index]),
+                    background: COLORS[index],
+                    borderColor: COLORS[index],
+                    boxShadow: theme.shadows[1]
+                }}
                 variant="outlined"
             />
         </Box>
