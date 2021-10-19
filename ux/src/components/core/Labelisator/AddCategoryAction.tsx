@@ -35,7 +35,8 @@ interface AddCategoryActionProps {
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
     select: {
-        display: 'flex'
+        display: 'flex',
+        alignItems: 'center'
     },
     close: {
         position: 'absolute',
@@ -152,7 +153,7 @@ const AddCategoryAction: FC<AddCategoryActionProps> = ({className}) => {
                                                 </MenuItem>
                                                 {SUPERCATEGORIES.map(supercategory => (
                                                     <MenuItem key={supercategory} value={supercategory}>
-                                                        <Box mr={1}>{SUPERCATEGORIES_ICONS[supercategory]}</Box>
+                                                        <Box display="flex" mr={1}>{SUPERCATEGORIES_ICONS[supercategory]}</Box>
                                                         {capitalize(supercategory)}
                                                     </MenuItem>
                                                 ))}
