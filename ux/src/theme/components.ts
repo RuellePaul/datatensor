@@ -1,4 +1,11 @@
 export default {
+    MuiContainer: {
+        styleOverrides: {
+            root: {
+                padding: '0 12px'
+            }
+        }
+    },
     MuiLink: {
         styleOverrides: {
             root: {
