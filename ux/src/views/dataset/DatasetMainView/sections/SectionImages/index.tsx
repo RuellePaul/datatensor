@@ -55,15 +55,13 @@ const SectionImages: FC<SectionProps> = ({ className }) => {
             </ButtonGroup>
 
             <CategoryProvider>
-                <ImagesStackPanel />
-            </CategoryProvider>
-
-            <CategoryProvider>
-                {pipelines.map(pipeline => (
+                {pipeline === null ? (
+                    <ImagesStackPanel />
+                ) : (
                     <ImagesProvider key={pipeline.id} pipeline_id={pipeline.id}>
                         <ImagesStackPanel pipeline={pipeline} />
                     </ImagesProvider>
-                ))}
+                )}
             </CategoryProvider>
         </div>
     );

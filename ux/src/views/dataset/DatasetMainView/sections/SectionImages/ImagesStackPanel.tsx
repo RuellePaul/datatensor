@@ -10,6 +10,7 @@ import FilterCategories from './FilterCategories';
 import {ImagesProvider} from 'src/store/ImagesContext';
 import {Pipeline} from 'src/types/pipeline';
 
+
 const useStyles = makeStyles((theme: Theme) => ({
     root: {}
 }));
@@ -22,11 +23,11 @@ interface DTImagesWrapperProps {
     pipeline_id?: string;
 }
 
-const DTImagesWrapper: FC<DTImagesWrapperProps> = ({pipeline_id}) => {
-    const {images, totalImagesCount} = useImages();
-    const {currentCategory} = useCategory();
+const DTImagesWrapper: FC<DTImagesWrapperProps> = ({ pipeline_id }) => {
+    const { images, totalImagesCount } = useImages();
+    const { currentCategory } = useCategory();
 
-    const {dataset, pipelines} = useDataset();
+    const { dataset, pipelines } = useDataset();
 
     return (
         <>
@@ -38,8 +39,8 @@ const DTImagesWrapper: FC<DTImagesWrapperProps> = ({pipeline_id}) => {
                     {currentCategory
                         ? totalImagesCount
                         : pipeline_id
-                        ? pipelines.find(pipeline => pipeline.id === pipeline_id).image_count
-                        : dataset.image_count}
+                            ? pipelines.find(pipeline => pipeline.id === pipeline_id).image_count
+                            : dataset.image_count}
                 </Typography>
             </Box>
             <DTImagesList pipeline_id={pipeline_id} />
@@ -47,9 +48,9 @@ const DTImagesWrapper: FC<DTImagesWrapperProps> = ({pipeline_id}) => {
     );
 };
 
-const ImagesStackPanel: FC<ImagesStackPanelProps> = ({pipeline = {}}) => {
+const ImagesStackPanel: FC<ImagesStackPanelProps> = ({ pipeline = {} }) => {
     const classes = useStyles();
-    const {currentCategory} = useCategory();
+    const { currentCategory } = useCategory();
 
     return (
         <div className={classes.root}>
