@@ -1,14 +1,16 @@
-import React, {FC} from 'react';
+import React, {FC, useState} from 'react';
 import clsx from 'clsx';
-import {Typography} from '@mui/material';
+import {Button, ButtonGroup, Typography} from '@mui/material';
 import {makeStyles} from '@mui/styles';
+import {Theme} from 'src/theme';
 import FancyLabel from 'src/components/FancyLabel';
 import useDataset from 'src/hooks/useDataset';
 import {CategoryProvider} from 'src/store/CategoryContext';
 import {ImagesProvider} from 'src/store/ImagesContext';
-import {Theme} from 'src/theme';
 import ImagesStackPanel from './ImagesStackPanel';
 import {SectionProps} from '../SectionProps';
+import {Pipeline} from 'src/types/pipeline';
+
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
@@ -17,10 +19,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const SectionImages: FC<SectionProps> = ({className}) => {
+const SectionImages: FC<SectionProps> = ({ className }) => {
     const classes = useStyles();
 
-    const {dataset, pipelines} = useDataset();
+    const { dataset, pipelines } = useDataset();
+
+    const [pipeline, setPipeline] = useState<Pipeline>(null);
 
     return (
         <div className={clsx(classes.root, className)}>
@@ -34,6 +38,21 @@ const SectionImages: FC<SectionProps> = ({className}) => {
                     + {dataset.augmented_count} augmented
                 </FancyLabel>
             </Typography>
+
+            <ButtonGroup>
+                <Button onClick={() => setPipeline(null)} variant={pipeline === null ? 'contained' : 'outlined'}>
+                    Original ({dataset.image_count})
+                </Button>
+                {pipelines.map(current => (
+                    <Button
+                        key={current.id}
+                        onClick={() => setPipeline(current)}
+                        variant={pipeline?.id === current.id ? 'contained' : 'outlined'}
+                    >
+                        Augmented ({current.image_count})
+                    </Button>
+                ))}
+            </ButtonGroup>
 
             <CategoryProvider>
                 <ImagesStackPanel />
