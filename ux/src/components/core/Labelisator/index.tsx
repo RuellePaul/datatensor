@@ -86,7 +86,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
     const classes = useStyles();
 
     const {dataset} = useDataset();
-    const {pipeline, savePipeline} = usePipeline();
+    const {pipeline} = usePipeline();
     const {saveCurrentCategory} = useCategory();
 
     const [autoSwitch, setAutoSwitch] = useState<boolean>(true);
@@ -148,7 +148,6 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
     const handleClose = () => {
         setOpen(false);
         saveCurrentCategory(null);
-        savePipeline(null);
         window.location.hash = '';
     };
 

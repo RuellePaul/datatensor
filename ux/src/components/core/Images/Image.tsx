@@ -23,7 +23,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     root: {
         position: 'relative',
         '& img': {
-            height: '100%'
+            height: '100%',
+            border: 'solid 1px black',
+            boxShadow: '0px 0px 2px black'
         },
         '& .overlay': {
             display: 'none',
