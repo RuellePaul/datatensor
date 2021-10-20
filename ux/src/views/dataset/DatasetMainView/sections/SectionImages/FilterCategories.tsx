@@ -17,7 +17,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     root: {
         width: '100%',
         maxWidth: 300,
-        margin: theme.spacing(0, 2),
         '& input': {
             minHeight: 30
         }
@@ -75,6 +74,7 @@ const FilterCategories: FC<FilterCategoriesProps> = ({className, ...rest}) => {
                             </>
                         )
                     }}
+                    size="small"
                 />
             )}
         />

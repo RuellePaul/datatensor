@@ -22,6 +22,9 @@ interface DTImageProps {
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         position: 'relative',
+        '& img': {
+            height: '100%'
+        },
         '& .overlay': {
             display: 'none',
             zIndex: 1100,

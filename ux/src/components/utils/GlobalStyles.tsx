@@ -32,15 +32,14 @@ const useStyles = makeStyles((theme: Theme) =>
                 height: '100%',
 
                 '&::-webkit-scrollbar': {
-                    width: '0.4em'
+                    width: 6
                 },
                 '&::-webkit-scrollbar-track': {
-                    boxShadow: `inset 0 0 6px ${theme.palette.primary.main}`,
-                    webkitBoxShadow: `inset 0 0 6px ${theme.palette.primary.main}`
+                    background: 'transparent'
                 },
                 '&::-webkit-scrollbar-thumb': {
-                    backgroundColor: `${theme.palette.primary.main}`,
-                    outline: '1px solid slategrey'
+                    borderRadius: 3,
+                    backgroundColor: '#6b6b6b'
                 }
             }
         }

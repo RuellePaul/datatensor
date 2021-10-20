@@ -3,7 +3,17 @@ import clsx from 'clsx';
 import {useSnackbar} from 'notistack';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-import {Box, Button, CircularProgress, IconButton, Paper, TextField, Tooltip, Typography} from '@mui/material';
+import {
+    Box,
+    Button,
+    capitalize,
+    CircularProgress,
+    IconButton,
+    Paper,
+    TextField,
+    Tooltip,
+    Typography
+} from '@mui/material';
 import {CreateOutlined as EditIcon} from '@mui/icons-material';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
@@ -45,7 +55,7 @@ const EditAction: FC<EditProps> = ({ className }) => {
             <Box display="flex" alignItems="center" justifyContent="space-between">
                 <div>
                     <Typography variant="h1" color="textPrimary" gutterBottom>
-                        {dataset.name}
+                        {capitalize(dataset.name)}
                     </Typography>
 
                     <Typography

@@ -7,9 +7,7 @@ interface ScrollbarProps {}
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
-    track: {
-
-    },
+    track: {},
     thumb: {
         backgroundColor: '#6b6b6b !important'
     },

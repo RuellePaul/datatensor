@@ -7,6 +7,7 @@ import {
     AlertTitle,
     Box,
     Button,
+    capitalize,
     CircularProgress,
     Dialog,
     DialogActions,
@@ -72,9 +73,7 @@ const ChangeNameAction: FC<ChangeNameActionProps> = ({className}) => {
             handleCloseDeleteDataset();
             await api.delete(`/datasets/${dataset.id}`);
             saveDatasets(datasets => datasets.filter((current: Dataset) => current.id !== dataset.id));
-            enqueueSnackbar(`Deleted dataset ${dataset.name}`, {
-                variant: 'info'
-            });
+            enqueueSnackbar(`Deleted dataset ${capitalize(dataset.name)}`, {variant: 'info'});
             history.push('/app/datasets');
         } catch (error) {
             enqueueSnackbar(error.message || 'Something went wrong', {

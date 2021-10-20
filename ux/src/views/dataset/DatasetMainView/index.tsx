@@ -31,12 +31,13 @@ const useStyles = makeStyles((theme: Theme) => ({
         top: 0,
         background: theme.palette.background.default,
         zIndex: 1100,
-        boxShadow: theme.palette.mode === 'dark' && theme.shadows[2]
+        boxShadow: '0 4px 3px -4px #28282896'
     },
     tab: {
-        color: theme.palette.text.primary
+        color: theme.palette.text.primary,
+        fontSize: 16
     },
-    label: {
+    wrapper: {
         '& .label': {
             marginLeft: theme.spacing(1),
             [theme.breakpoints.down('sm')]: {
@@ -50,8 +51,8 @@ const DTTab = ({label, icon: Icon, ...rest}) => {
     const classes = useStyles();
 
     const TabLabel = (
-        <Box display="flex" alignItems="center" className={classes.label}>
-            <Icon fontSize="small" />
+        <Box display="flex" alignItems="center" className={classes.wrapper}>
+            <Icon />
 
             <Box className="label">{label}</Box>
         </Box>
