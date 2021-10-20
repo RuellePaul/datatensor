@@ -1,18 +1,15 @@
 import React, {FC, useState} from 'react';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import Masonry from 'react-masonry-css';
 import clsx from 'clsx';
-import {IconButton, LinearProgress, Tooltip, Typography, useTheme} from '@mui/material';
+import {IconButton, Tooltip, Typography} from '@mui/material';
+import Masonry from '@mui/lab/Masonry';
+import MasonryItem from '@mui/lab/MasonryItem';
 import makeStyles from '@mui/styles/makeStyles';
 import {CreateOutlined as LabelisatorIcon} from '@mui/icons-material';
 import DTImage from 'src/components/core/Images/Image';
 import useImages from 'src/hooks/useImages';
 import {Theme} from 'src/theme';
-import useDataset from 'src/hooks/useDataset';
 import {ImageProvider} from 'src/store/ImageContext';
-import {LAZY_LOAD_BATCH} from 'src/constants';
 import DTImagePreview from './ImagePreview';
-
 
 interface ImagesListProps {
     pipeline_id?: string;
@@ -48,10 +45,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const DTImagesList: FC<ImagesListProps> = ({className, pipeline_id, ...rest}) => {
     const classes = useStyles();
-    const theme = useTheme();
 
-    const {dataset, pipelines} = useDataset();
-    const {images, saveOffset, totalImagesCount} = useImages();
+    const {images} = useImages();
 
     const [open, setOpen] = useState(false);
     const [selected, setSelected] = useState(0);
@@ -72,32 +67,10 @@ const DTImagesList: FC<ImagesListProps> = ({className, pipeline_id, ...rest}) =>
 
     return (
         <div className={clsx(classes.root, className)} {...rest}>
-            <InfiniteScroll
-                className="scroll"
-                dataLength={images.length}
-                next={() => saveOffset(offset => offset + LAZY_LOAD_BATCH)}
-                height={700}
-                hasMore={
-                    totalImagesCount
-                        ? totalImagesCount > images.length
-                        : pipeline_id
-                        ? pipelines.find(pipeline => pipeline.id === pipeline_id).image_count > images.length
-                        : dataset.image_count > images.length
-                }
-                loader={<LinearProgress />}
-            >
-                <Masonry
-                    breakpointCols={{
-                        default: 4,
-                        [theme.breakpoints.values.md]: 3,
-                        700: 2,
-                        500: 1
-                    }}
-                    className={classes.grid}
-                    columnClassName={classes.column}
-                >
-                    {images.map((image, index) => (
-                        <ImageProvider key={image.id} image={image}>
+            <Masonry columns={{xs: 2, sm: 3, md: 4}} spacing={1}>
+                {images.map((image, index) => (
+                    <MasonryItem key={image.id}>
+                        <ImageProvider image={image}>
                             <DTImage
                                 className={classes.image}
                                 clickable
@@ -118,9 +91,9 @@ const DTImagesList: FC<ImagesListProps> = ({className, pipeline_id, ...rest}) =>
                                 onClick={() => handleOpenImage(index)}
                             />
                         </ImageProvider>
-                    ))}
-                </Masonry>
-            </InfiniteScroll>
+                    </MasonryItem>
+                ))}
+            </Masonry>
 
             {imageSelected && (
                 <DTImagePreview open={open} setOpen={setOpen} selected={selected} setSelected={setSelected} />

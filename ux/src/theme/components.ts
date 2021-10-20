@@ -8,5 +8,12 @@ export default {
                 }
             }
         }
+    },
+    MuiMasonry: {
+        styleOverrides: {
+            root: {
+                overflow: 'visible'
+            }
+        }
     }
 };
