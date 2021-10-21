@@ -1,6 +1,6 @@
 import React, {FC, useState} from 'react';
 import clsx from 'clsx';
-import {IconButton, Tooltip, Typography} from '@mui/material';
+import {IconButton, Skeleton, Tooltip, Typography} from '@mui/material';
 import Masonry from '@mui/lab/Masonry';
 import MasonryItem from '@mui/lab/MasonryItem';
 import makeStyles from '@mui/styles/makeStyles';
@@ -10,6 +10,7 @@ import useImages from 'src/hooks/useImages';
 import {Theme} from 'src/theme';
 import {ImageProvider} from 'src/store/ImageContext';
 import DTImagePreview from './ImagePreview';
+import {LAZY_LOAD_BATCH} from '../../../constants';
 
 interface ImagesListProps {
     pipeline_id?: string;
@@ -51,15 +52,40 @@ const DTImagesList: FC<ImagesListProps> = ({className, pipeline_id, ...rest}) =>
     const [open, setOpen] = useState(false);
     const [selected, setSelected] = useState(0);
 
-    const imageSelected = images[selected];
-
     const handleOpenImage = index => {
         setOpen(true);
         setSelected(index);
     };
 
+    if (images === null)
+        return (
+            <Typography
+                color='textPrimary'
+            >
+                No images found
+            </Typography>
+        )
+
+    const imageSelected = images[selected];
+
     if (images.length === 0)
-        return null;
+        return (
+            <div className={clsx(classes.root, className)} {...rest}>
+                <Masonry columns={{xs: 2, sm: 3, md: 4}} spacing={1}>
+                    {Array.from(Array(LAZY_LOAD_BATCH), () => null).map((_, index) => (
+                        <MasonryItem key={`masonry_skeleton_${index}`}>
+                            <Skeleton
+                                component="div"
+                                animation="wave"
+                                width="100%"
+                                height={Math.floor(200 + Math.random() * 100)}
+                                variant="rectangular"
+                            />
+                        </MasonryItem>
+                    ))}
+                </Masonry>
+            </div>
+        );
 
     return (
         <div className={clsx(classes.root, className)} {...rest}>
