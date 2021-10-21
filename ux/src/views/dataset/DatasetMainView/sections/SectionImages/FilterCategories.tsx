@@ -16,6 +16,7 @@ interface FilterCategoriesProps {
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         width: '100%',
+        minWidth: 260,
         maxWidth: 300,
         '& input': {
             minHeight: 30

@@ -10,7 +10,7 @@ import useImages from 'src/hooks/useImages';
 import {Theme} from 'src/theme';
 import {ImageProvider} from 'src/store/ImageContext';
 import DTImagePreview from './ImagePreview';
-import {LAZY_LOAD_BATCH} from '../../../constants';
+import {LAZY_LOAD_BATCH} from 'src/constants';
 
 interface ImagesListProps {
     pipeline_id?: string;

@@ -98,7 +98,7 @@ function ImagesSlideshow() {
                 className={classes.mobileStepper}
                 steps={images.length}
                 position="static"
-                variant="text"
+                variant="dots"
                 activeStep={activeStep}
                 nextButton={
                     <Button
