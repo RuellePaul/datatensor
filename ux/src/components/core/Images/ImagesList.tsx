@@ -18,7 +18,9 @@ interface ImagesListProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {},
+    root: {
+        minHeight: 800
+    },
     grid: {
         display: 'flex',
         marginLeft: -10,
@@ -58,13 +60,7 @@ const DTImagesList: FC<ImagesListProps> = ({className, pipeline_id, ...rest}) =>
     };
 
     if (images === null)
-        return (
-            <Typography
-                color='textPrimary'
-            >
-                No images found
-            </Typography>
-        )
+        return null;
 
     const imageSelected = images[selected];
 

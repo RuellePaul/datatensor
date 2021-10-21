@@ -44,8 +44,6 @@ export const ImagesProvider: FC<ImagesProviderProps> = ({ children, pipeline_id,
         handleSaveImages([]);
 
         try {
-            if (currentImages.length >= dataset.image_count) return;
-
             let response;
 
             if (category_id) {

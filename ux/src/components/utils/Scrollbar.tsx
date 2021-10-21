@@ -8,6 +8,9 @@ interface ScrollbarProps {}
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
     track: {},
+    view: {
+        position: 'relative'
+    },
     thumb: {
         backgroundColor: '#6b6b6b !important'
     },
@@ -22,6 +25,7 @@ const Scrollbar: FC<ScrollbarProps> = ({children, ...rest}) => {
     return (
         <Scrollbars
             classes={{
+                view: classes.view,
                 trackHorizontal: classes.hide,
                 thumbHorizontal: classes.hide,
                 trackVertical: classes.track,

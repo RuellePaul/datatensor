@@ -2,16 +2,19 @@ import React, {FC} from 'react';
 import {Box, Button, ButtonGroup, Paper} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import DTImagesList from 'src/components/core/Images/ImagesList';
-import FancyLabel from 'src/components/FancyLabel';
+import UploadButton from 'src/components/core/Images/UploadButton';
 import useDataset from 'src/hooks/useDataset';
 import {Theme} from 'src/theme';
 import useCategory from 'src/hooks/useCategory';
 import useImages from 'src/hooks/useImages';
 import usePipeline from 'src/hooks/usePipeline';
 import FilterCategories from './FilterCategories';
+
 import {ImagesProvider} from 'src/store/ImagesContext';
 import {Pipeline} from 'src/types/pipeline';
 import {LAZY_LOAD_BATCH} from 'src/constants';
+import DeletePipelineAction from './DeletePipelineAction';
+import ViewPipelineAction from './ViewPipelineAction';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -22,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         zIndex: 1100,
         background: theme.palette.background.default,
         display: 'flex',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         padding: theme.spacing(2, 0),
         [theme.breakpoints.down('md')]: {
             position: 'relative',
@@ -30,15 +33,6 @@ const useStyles = makeStyles((theme: Theme) => ({
             zIndex: 1000,
             flexDirection: 'column-reverse',
             alignItems: 'flex-start'
-        }
-    },
-    wrapper: {
-        display: 'flex',
-        alignItems: 'center',
-        [theme.breakpoints.down('md')]: {
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-            marginTop: theme.spacing(2)
         }
     }
 }));
@@ -97,25 +91,25 @@ const DTImagesWrapper: FC<DTImagesWrapperProps> = ({ pipeline_id }) => {
 
     const { dataset, pipelines } = useDataset();
     const { pipeline, savePipeline } = usePipeline();
-    const { totalImagesCount } = useImages();
-    const { currentCategory } = useCategory();
 
     return (
         <>
             <div className={classes.sticky}>
-                <div className={classes.wrapper}>
-                    <FilterCategories />
+                <FilterCategories />
 
-                    {currentCategory !== null && totalImagesCount > 0 && (
-                        <Box ml={2}>
-                            <FancyLabel>{totalImagesCount} images found</FancyLabel>
-                        </Box>
-                    )}
-                </div>
+                {pipeline_id ? (
+                    <>
+                        <ViewPipelineAction pipeline_id={pipeline_id} />
+                        <DeletePipelineAction pipeline_id={pipeline_id} callback={() => {
+                        }} />
+                    </>
+                ) : (
+                    <UploadButton />
+                )}
 
                 <Box flexGrow={1} />
 
-                <ButtonGroup size="small">
+                <ButtonGroup size="small" color="primary">
                     <Button onClick={() => savePipeline(null)} variant={pipeline === null ? 'contained' : 'outlined'}>
                         Original ({dataset.image_count})
                     </Button>
