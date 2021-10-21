@@ -61,6 +61,7 @@ function ImagesSlideshow() {
     };
 
     if (images.length === 0) return null;
+    if (!images[activeStep]) return null; // FIXME
 
     return (
         <Card className={classes.root} variant="outlined">

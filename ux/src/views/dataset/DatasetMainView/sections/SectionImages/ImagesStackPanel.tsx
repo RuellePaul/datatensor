@@ -11,6 +11,7 @@ import usePipeline from 'src/hooks/usePipeline';
 import FilterCategories from './FilterCategories';
 import {ImagesProvider} from 'src/store/ImagesContext';
 import {Pipeline} from 'src/types/pipeline';
+import {LAZY_LOAD_BATCH} from 'src/constants';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
@@ -39,7 +40,7 @@ const DTImagesWrapper: FC<DTImagesWrapperProps> = ({pipeline_id}) => {
 
     const {dataset, pipelines} = useDataset();
     const {pipeline, savePipeline} = usePipeline();
-    const {totalImagesCount} = useImages();
+    const {offset, saveOffset, totalImagesCount} = useImages();
     const {currentCategory} = useCategory();
 
     return (
@@ -72,6 +73,19 @@ const DTImagesWrapper: FC<DTImagesWrapperProps> = ({pipeline_id}) => {
             </div>
 
             <DTImagesList pipeline_id={pipeline_id} />
+
+            <Button
+                disabled={offset <= 0}
+                onClick={() => saveOffset(offset => offset - LAZY_LOAD_BATCH)}
+            >
+                Previous
+            </Button>
+            <Button
+                disabled={offset >= dataset.image_count - LAZY_LOAD_BATCH}
+                onClick={() => saveOffset(offset => offset + LAZY_LOAD_BATCH)}
+            >
+                Next
+            </Button>
         </>
     );
 };

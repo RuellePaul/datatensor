@@ -59,11 +59,7 @@ const DTImagesList: FC<ImagesListProps> = ({className, pipeline_id, ...rest}) =>
     };
 
     if (images.length === 0)
-        return (
-            <Typography color="textSecondary" gutterBottom>
-                No images found.
-            </Typography>
-        );
+        return null;
 
     return (
         <div className={clsx(classes.root, className)} {...rest}>
