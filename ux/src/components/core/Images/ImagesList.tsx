@@ -63,7 +63,7 @@ const DTImagesList: FC<ImagesListProps> = ({className, pipeline_id, ...rest}) =>
                                 component="div"
                                 animation="wave"
                                 width="100%"
-                                height={Math.floor(200 + Math.random() * 100)}
+                                height={Math.floor(180 + Math.random() * 100)}
                                 variant="rectangular"
                             />
                         </MasonryItem>
