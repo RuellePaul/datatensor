@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
     mobileStepper: {
         background: theme.palette.background.paper
     },
-    img: {
+    image: {
         height: 255,
         display: 'block',
         maxWidth: 410,
@@ -90,7 +90,7 @@ function ImagesSlideshow() {
             >
                 {images.map((image, index) => (
                     <ImageProvider image={image} key={image.id}>
-                        {Math.abs(activeStep - index) <= 2 ? <DTImage className={classes.img} /> : null}
+                        {Math.abs(activeStep - index) <= 2 ? <DTImage className={classes.image} /> : null}
                     </ImageProvider>
                 ))}
             </AutoPlaySwipeableViews>

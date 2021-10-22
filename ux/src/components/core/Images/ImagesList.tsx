@@ -18,6 +18,7 @@ interface ImagesListProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
+        overflow: 'hidden',
         minHeight: 600
     },
     grid: {
@@ -81,6 +82,7 @@ const DTImagesList: FC<ImagesListProps> = ({className, pipeline_id, ...rest}) =>
                                 className={classes.image}
                                 clickable
                                 onClick={() => (window.location.hash = image.id)}
+                                skeleton
                             />
                         </ImageProvider>
                     </MasonryItem>

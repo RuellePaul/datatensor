@@ -338,7 +338,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                             <ToolMove setTool={setTool} autoSwitch={autoSwitch} />
                                         </div>
 
-                                        <DTImage skeleton fullWidth />
+                                        <DTImage skeleton />
 
                                         <KeyboardListener index={index} imageIds={imageIds} setTool={setTool} />
                                     </Box>
