@@ -14,7 +14,7 @@ auth = APIRouter()
 
 
 @auth.post('/login', response_model=AuthResponse)
-async def do_login(payload: AuthLoginBody):
+def do_login(payload: AuthLoginBody):
     """
     Login workflow (email + password)
     """
@@ -39,7 +39,7 @@ async def do_login(payload: AuthLoginBody):
 
 
 @auth.post('/register', response_model=AuthResponse)
-async def do_register(payload: AuthRegisterBody):
+def do_register(payload: AuthRegisterBody):
     """
     Register workflow (email + password)
     """
@@ -76,7 +76,7 @@ async def do_register(payload: AuthRegisterBody):
 
 
 @auth.get('/me')
-async def me(user: User = Depends(logged_user)):
+def me(user: User = Depends(logged_user)):
     """
     Return user from access token
     """
@@ -84,7 +84,7 @@ async def me(user: User = Depends(logged_user)):
 
 
 @auth.post('/email-confirmation', response_model=AuthResponse)
-async def do_email_confirmation(payload: AuthEmailConfirmBody):
+def do_email_confirmation(payload: AuthEmailConfirmBody):
     """
     Validates the code in the link provided in email body
     """
@@ -108,7 +108,7 @@ async def do_email_confirmation(payload: AuthEmailConfirmBody):
 
 
 @auth.post('/unregister')
-async def do_unregister(user: User = Depends(logged_user)):
+def do_unregister(user: User = Depends(logged_user)):
     """
     Unregister logged user
     """

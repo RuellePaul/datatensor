@@ -8,7 +8,7 @@ notifications = APIRouter()
 
 
 @notifications.patch('/read')
-async def patch_notifications(user: User = Depends(logged_user)):
+def patch_notifications(user: User = Depends(logged_user)):
     """
     Fetch notifications of logged user
     """
@@ -16,7 +16,7 @@ async def patch_notifications(user: User = Depends(logged_user)):
 
 
 @notifications.delete('/')
-async def delete_notifications(user: User = Depends(logged_user)):
+def delete_notifications(user: User = Depends(logged_user)):
     """
     Fetch notifications of logged user
     """

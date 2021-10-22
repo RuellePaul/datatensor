@@ -33,8 +33,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     loader: {
         marginTop: theme.spacing(1),
-        width: '20px !important',
-        height: '20px !important'
+        width: '16px !important',
+        height: '16px !important'
     }
 }));
 

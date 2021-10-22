@@ -12,7 +12,7 @@ datasets = APIRouter()
 
 
 @datasets.get('/', response_model=DatasetsResponse)
-async def get_datasets(user: User = Depends(logged_user), offset: int = 0, limit: int = 0):
+def get_datasets(user: User = Depends(logged_user), offset: int = 0, limit: int = 0):
     """
     Fetch paginated datasets list (either user datasets, or public ones).
     """
@@ -21,7 +21,7 @@ async def get_datasets(user: User = Depends(logged_user), offset: int = 0, limit
 
 
 @datasets.get('/{dataset_id}', response_model=DatasetResponse)
-async def get_dataset(dataset_id):
+def get_dataset(dataset_id):
     """
     Fetch dataset.
     🌍 All users
@@ -31,7 +31,7 @@ async def get_dataset(dataset_id):
 
 
 @datasets.post('/')
-async def post_dataset(payload: DatasetPostBody, user: User = Depends(logged_user)):
+def post_dataset(payload: DatasetPostBody, user: User = Depends(logged_user)):
     """
     Create a new dataset.
     🔒️ Verified users
@@ -42,7 +42,7 @@ async def post_dataset(payload: DatasetPostBody, user: User = Depends(logged_use
 
 
 @datasets.patch('/{dataset_id}')
-async def patch_dataset(dataset_id, payload: DatasetPatchBody, user: User = Depends(logged_user)):
+def patch_dataset(dataset_id, payload: DatasetPatchBody, user: User = Depends(logged_user)):
     """
     Update dataset (name, description & privacy)..
     """
@@ -50,7 +50,7 @@ async def patch_dataset(dataset_id, payload: DatasetPatchBody, user: User = Depe
 
 
 @datasets.delete('/')
-async def delete_datasets(user: User = Depends(logged_admin)):
+def delete_datasets(user: User = Depends(logged_admin)):
     """
     Delete all datasets of admin user, and other linked collections (`images`, `labels`, `tasks`...).
     🔒️ Admin only
@@ -59,7 +59,7 @@ async def delete_datasets(user: User = Depends(logged_admin)):
 
 
 @datasets.delete('/{dataset_id}')
-async def delete_dataset(dataset_id, user: User = Depends(logged_user)):
+def delete_dataset(dataset_id, user: User = Depends(logged_user)):
     """
     Delete a dataset, and other linked collections (`images`, `labels`, `tasks`...)
     """

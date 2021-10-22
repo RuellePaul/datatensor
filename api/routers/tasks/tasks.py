@@ -10,7 +10,7 @@ tasks = APIRouter()
 
 
 @tasks.post('/', response_model=TaskResponse)
-async def post_task(payload: TaskPostBody, dataset_id=None, user: User = Depends(logged_user)):
+def post_task(payload: TaskPostBody, dataset_id=None, user: User = Depends(logged_user)):
     """
     Create a new pending task
     """

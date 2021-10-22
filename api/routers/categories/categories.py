@@ -10,7 +10,7 @@ categories = APIRouter()
 
 
 @categories.get('/', response_model=CategoriesResponse)
-async def get_categories(dataset_id, offset: int = 0, limit: int = 0):
+def get_categories(dataset_id, offset: int = 0, limit: int = 0):
     """
     Fetch paginated categories list of given dataset.
     """
@@ -19,7 +19,7 @@ async def get_categories(dataset_id, offset: int = 0, limit: int = 0):
 
 
 @categories.get('/{category_id}', response_model=CategoryResponse)
-async def get_category(dataset_id, category_id):
+def get_category(dataset_id, category_id):
     """
     Fetch given category of given dataset.
     """
@@ -28,7 +28,7 @@ async def get_category(dataset_id, category_id):
 
 
 @categories.get('/{category_id}/images', response_model=ImagesCategoryResponse)
-async def get_category(dataset_id, category_id, pipeline_id=None, offset: int = 0, limit: int = 0):
+def get_category(dataset_id, category_id, pipeline_id=None, offset: int = 0, limit: int = 0):
     """
     Fetch images of a given category.
     """
@@ -38,7 +38,7 @@ async def get_category(dataset_id, category_id, pipeline_id=None, offset: int = 
 
 
 @categories.post('/')
-async def post_category(category: CategoryPostBody, dataset_id, dataset=Depends(dataset_belongs_to_user)):
+def post_category(category: CategoryPostBody, dataset_id, dataset=Depends(dataset_belongs_to_user)):
     """
     Create a new category on given dataset, and returns it.
     """
@@ -47,7 +47,7 @@ async def post_category(category: CategoryPostBody, dataset_id, dataset=Depends(
 
 
 @categories.delete('/{category_id}')
-async def delete_category(dataset_id, category_id, dataset=Depends(dataset_belongs_to_user)):
+def delete_category(dataset_id, category_id, dataset=Depends(dataset_belongs_to_user)):
     """
     Delete given category of given dataset.
     """

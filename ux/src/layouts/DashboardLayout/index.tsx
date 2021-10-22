@@ -37,7 +37,9 @@ const DashboardLayout: FC<DashboardLayoutProps> = ({children}) => {
             <TopBar onMobileNavOpen={() => setMobileNavOpen(true)} />
             <NavBar onMobileClose={() => setMobileNavOpen(false)} openMobile={isMobileNavOpen} />
             <div className={classes.wrapper}>
-                <Scrollbar>{children}</Scrollbar>
+                <Scrollbar className='scroller'>
+                    {children}
+                </Scrollbar>
             </div>
         </div>
     );

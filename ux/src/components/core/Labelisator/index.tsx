@@ -350,15 +350,17 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                             <Grid item lg={4} xs={12}>
                                 <DTCategories />
 
-                                <Box my={2}>
-                                    <Divider />
-                                </Box>
+                                <Hidden mdDown>
+                                    <Box my={2}>
+                                        <Divider />
+                                    </Box>
 
-                                <Typography variant="overline" color="textPrimary">
-                                    Top 10 categories
-                                </Typography>
+                                    <Typography variant="overline" color="textPrimary">
+                                        Top 10 categories
+                                    </Typography>
 
-                                <CategoriesDistribution />
+                                    <CategoriesDistribution />
+                                </Hidden>
                             </Grid>
                         </Grid>
                     </Container>

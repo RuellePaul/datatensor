@@ -66,10 +66,12 @@ const Navigation: FC = () => {
 
     const handlePrevious = () => {
         saveOffset(offset => offset - LAZY_LOAD_BATCH);
+        document.querySelector('.scroller').scrollTo(0, 64);
     };
 
     const handleNext = () => {
         saveOffset(offset => offset + LAZY_LOAD_BATCH);
+        document.querySelector('.scroller').scrollTo(0, 64);
     };
 
     if (images === null) return null;

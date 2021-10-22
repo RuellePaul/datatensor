@@ -14,7 +14,7 @@ pipelines = APIRouter()
 
 
 @pipelines.get('/', response_model=PipelinesResponse)
-async def get_pipelines(dataset_id, offset: int = 0, limit: int = 0):
+def get_pipelines(dataset_id, offset: int = 0, limit: int = 0):
     """
     Fetch paginated pipelines list of given dataset.
     """
@@ -23,7 +23,7 @@ async def get_pipelines(dataset_id, offset: int = 0, limit: int = 0):
 
 
 @pipelines.post('/sample')
-async def sample(dataset_id, payload: SampleBody, dataset=Depends(dataset_belongs_to_user)):
+def sample(dataset_id, payload: SampleBody, dataset=Depends(dataset_belongs_to_user)):
     """
     Execute a sample of augmentor operations pipeline
     """
@@ -49,7 +49,7 @@ async def sample(dataset_id, payload: SampleBody, dataset=Depends(dataset_belong
 
 
 @pipelines.delete('/{pipeline_id}')
-async def sample(dataset_id, pipeline_id, dataset=Depends(dataset_belongs_to_user)):
+def sample(dataset_id, pipeline_id, dataset=Depends(dataset_belongs_to_user)):
     """
     Delete a pipeline & associated images, labels, and task
     """
