@@ -2,7 +2,6 @@ import React, {FC} from 'react';
 import {Box, Button, ButtonGroup, Paper} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import DTImagesList from 'src/components/core/Images/ImagesList';
-import UploadButton from 'src/components/core/Images/UploadButton';
 import useDataset from 'src/hooks/useDataset';
 import {Theme} from 'src/theme';
 import useCategory from 'src/hooks/useCategory';
@@ -13,9 +12,6 @@ import FilterCategories from './FilterCategories';
 import {ImagesProvider} from 'src/store/ImagesContext';
 import {Pipeline} from 'src/types/pipeline';
 import {LAZY_LOAD_BATCH} from 'src/constants';
-import DeletePipelineAction from './DeletePipelineAction';
-import ViewPipelineAction from './ViewPipelineAction';
-
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
@@ -24,15 +20,26 @@ const useStyles = makeStyles((theme: Theme) => ({
         top: 49,
         zIndex: 1100,
         background: theme.palette.background.default,
+        color: theme.palette.text.primary,
+        padding: theme.spacing(1.5, 0),
         display: 'flex',
         alignItems: 'flex-start',
-        padding: theme.spacing(2, 0),
+        justifyContent: 'space-between',
+        '& .group': {
+            marginTop: 5
+        },
+        '& .MuiButton-contained': {
+            background: theme.palette.text.primary,
+            color: theme.palette.getContrastText(theme.palette.text.primary)
+        },
         [theme.breakpoints.down('md')]: {
             position: 'relative',
             top: 0,
             zIndex: 1000,
             flexDirection: 'column-reverse',
-            alignItems: 'flex-start'
+            '& .group': {
+                margin: theme.spacing(0, 'auto', 2)
+            }
         }
     }
 }));
@@ -46,16 +53,16 @@ interface DTImagesWrapperProps {
 }
 
 const Navigation: FC = () => {
-    const { dataset, pipelines } = useDataset();
-    const { pipeline } = usePipeline();
-    const { images, offset, saveOffset, totalImagesCount } = useImages();
-    const { currentCategory } = useCategory();
+    const {dataset, pipelines} = useDataset();
+    const {pipeline} = usePipeline();
+    const {images, offset, saveOffset, totalImagesCount} = useImages();
+    const {currentCategory} = useCategory();
 
     const imagesCount = currentCategory
         ? totalImagesCount
         : pipeline?.id
-            ? pipelines.find(current => current.id === pipeline.id).image_count
-            : dataset.image_count;
+        ? pipelines.find(current => current.id === pipeline.id).image_count
+        : dataset.image_count;
 
     const handlePrevious = () => {
         saveOffset(offset => offset - LAZY_LOAD_BATCH);
@@ -86,30 +93,18 @@ const Navigation: FC = () => {
     );
 };
 
-const DTImagesWrapper: FC<DTImagesWrapperProps> = ({ pipeline_id }) => {
+const DTImagesWrapper: FC<DTImagesWrapperProps> = ({pipeline_id}) => {
     const classes = useStyles();
 
-    const { dataset, pipelines } = useDataset();
-    const { pipeline, savePipeline } = usePipeline();
+    const {dataset, pipelines} = useDataset();
+    const {pipeline, savePipeline} = usePipeline();
 
     return (
         <>
             <div className={classes.sticky}>
                 <FilterCategories />
 
-                {pipeline_id ? (
-                    <>
-                        <ViewPipelineAction pipeline_id={pipeline_id} />
-                        <DeletePipelineAction pipeline_id={pipeline_id} callback={() => {
-                        }} />
-                    </>
-                ) : (
-                    <UploadButton />
-                )}
-
-                <Box flexGrow={1} />
-
-                <ButtonGroup size="small" color="primary">
+                <ButtonGroup className="group" color="inherit">
                     <Button onClick={() => savePipeline(null)} variant={pipeline === null ? 'contained' : 'outlined'}>
                         Original ({dataset.image_count})
                     </Button>
@@ -117,7 +112,7 @@ const DTImagesWrapper: FC<DTImagesWrapperProps> = ({ pipeline_id }) => {
                         <Button
                             key={current.id}
                             onClick={() => savePipeline(current)}
-                            variant={pipeline?.id === current.id ? 'contained' : 'outlined'}
+                            variant={pipeline !== null ? 'contained' : 'outlined'}
                         >
                             Augmented ({current.image_count})
                         </Button>
@@ -132,9 +127,9 @@ const DTImagesWrapper: FC<DTImagesWrapperProps> = ({ pipeline_id }) => {
     );
 };
 
-const ImagesStackPanel: FC<ImagesStackPanelProps> = ({ pipeline = {} }) => {
+const ImagesStackPanel: FC<ImagesStackPanelProps> = ({pipeline = {}}) => {
     const classes = useStyles();
-    const { currentCategory } = useCategory();
+    const {currentCategory} = useCategory();
 
     return (
         <div className={classes.root}>

@@ -13,12 +13,14 @@ interface FilterCategoriesProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {},
-    autocomplete: {
+    root: {
         width: '100%',
-        minWidth: 270,
-        maxWidth: 300,
-        marginBottom: theme.spacing(1),
+        maxWidth: 320,
+        [theme.breakpoints.down('sm')]: {
+            maxWidth: 'initial'
+        }
+    },
+    autocomplete: {
         '& input': {
             minHeight: 30
         }
@@ -30,6 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         margin: theme.spacing(1)
     },
     loader: {
+        marginTop: theme.spacing(1),
         width: '20px !important',
         height: '20px !important'
     }
@@ -69,7 +72,7 @@ const FilterCategories: FC<FilterCategoriesProps> = ({className, ...rest}) => {
                         label="Filter by category..."
                         placeholder={`${categories
                             .map(category => capitalize(category.name))
-                            .slice(0, 3)
+                            .slice(0, 2)
                             .join(', ')}...`}
                         InputProps={{
                             ...params.InputProps,
@@ -88,13 +91,13 @@ const FilterCategories: FC<FilterCategoriesProps> = ({className, ...rest}) => {
             />
 
             {currentCategory !== null && totalImagesCount > 0 && (
-                <Typography variant="subtitle2" color="textPrimary">
+                <Typography variant="caption" color="textPrimary">
                     {totalImagesCount} image{totalImagesCount > 1 ? 's' : ''} found
                 </Typography>
             )}
 
             {currentCategory !== null && totalImagesCount === 0 && (
-                <Typography variant="subtitle2" color="textPrimary">
+                <Typography variant="caption" color="textPrimary">
                     No images found
                 </Typography>
             )}

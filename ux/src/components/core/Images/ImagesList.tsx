@@ -1,16 +1,15 @@
-import React, {FC, useState} from 'react';
+import React, {FC} from 'react';
 import clsx from 'clsx';
-import {IconButton, Skeleton, Tooltip, Typography} from '@mui/material';
+import {Skeleton} from '@mui/material';
 import Masonry from '@mui/lab/Masonry';
 import MasonryItem from '@mui/lab/MasonryItem';
 import makeStyles from '@mui/styles/makeStyles';
-import {CreateOutlined as LabelisatorIcon} from '@mui/icons-material';
 import DTImage from 'src/components/core/Images/Image';
 import useImages from 'src/hooks/useImages';
 import {Theme} from 'src/theme';
 import {ImageProvider} from 'src/store/ImageContext';
-import DTImagePreview from './ImagePreview';
 import {LAZY_LOAD_BATCH} from 'src/constants';
+import {Image} from 'src/types/image';
 
 interface ImagesListProps {
     pipeline_id?: string;
@@ -19,7 +18,7 @@ interface ImagesListProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        minHeight: 800
+        minHeight: 600
     },
     grid: {
         display: 'flex',
@@ -51,18 +50,7 @@ const DTImagesList: FC<ImagesListProps> = ({className, pipeline_id, ...rest}) =>
 
     const {images} = useImages();
 
-    const [open, setOpen] = useState(false);
-    const [selected, setSelected] = useState(0);
-
-    const handleOpenImage = index => {
-        setOpen(true);
-        setSelected(index);
-    };
-
-    if (images === null)
-        return null;
-
-    const imageSelected = images[selected];
+    if (images === null) return null;
 
     if (images.length === 0)
         return (
@@ -86,36 +74,18 @@ const DTImagesList: FC<ImagesListProps> = ({className, pipeline_id, ...rest}) =>
     return (
         <div className={clsx(classes.root, className)} {...rest}>
             <Masonry columns={{xs: 2, sm: 3, md: 4}} spacing={1}>
-                {images.map((image, index) => (
+                {images.map((image: Image) => (
                     <MasonryItem key={image.id}>
                         <ImageProvider image={image}>
                             <DTImage
                                 className={classes.image}
                                 clickable
-                                overlay={
-                                    <Tooltip title={<Typography variant="overline">Edit labels</Typography>}>
-                                        <IconButton
-                                            className={classes.icon}
-                                            onClick={event => {
-                                                event.stopPropagation();
-                                                window.location.hash = image.id;
-                                            }}
-                                            size="large"
-                                        >
-                                            <LabelisatorIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                }
-                                onClick={() => handleOpenImage(index)}
+                                onClick={() => (window.location.hash = image.id)}
                             />
                         </ImageProvider>
                     </MasonryItem>
                 ))}
             </Masonry>
-
-            {imageSelected && (
-                <DTImagePreview open={open} setOpen={setOpen} selected={selected} setSelected={setSelected} />
-            )}
         </div>
     );
 };

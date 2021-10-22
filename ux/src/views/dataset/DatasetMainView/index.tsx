@@ -135,7 +135,7 @@ const DatasetMainView: FC = () => {
                                                         <Divider />
                                                     </Box>
 
-                                                    <Box mb={2} />
+                                                    {tab !== 1 && (<Box mb={2} />)}
 
                                                     {openedTabs.includes(0) && (
                                                         <SectionOverview className={clsx(tab !== 0 && 'hidden')} />
