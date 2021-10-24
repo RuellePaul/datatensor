@@ -65,6 +65,9 @@ const PipelineSample: FC<PipelineSampleProps> = ({ className }) => {
         // eslint-disable-next-line
     }, [pipeline.isLoaded, dataset_id, image_id, pipeline.operations]);
 
+    if (!image)
+        return null;
+
     return (
         <div className={clsx(classes.root, className)}>
             <Grid

@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useRef, useState} from 'react';
+import React, {FC, ReactNode, useEffect, useRef, useState} from 'react';
 import clsx from 'clsx';
 import {Box, ButtonBase, Skeleton} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
@@ -12,13 +12,20 @@ interface DTImageProps {
     className?: string;
     clickable?: boolean;
     skeleton?: boolean;
+    overlay?: ReactNode;
     onClick?: () => void;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         position: 'relative',
-        width: '100%'
+        width: '100%',
+        '& .overlay': {
+            zIndex: 1050,
+            '& > *': {
+                zIndex: 1050
+            }
+        }
     },
     wrapper: {
         position: 'relative',
@@ -26,16 +33,6 @@ const useStyles = makeStyles((theme: Theme) => ({
             height: '100%',
             border: 'solid 1px black',
             boxShadow: '0px 0px 2px black'
-        },
-        '& .overlay': {
-            display: 'none',
-            zIndex: 1100,
-            '& > *': {
-                zIndex: 1100
-            }
-        },
-        '&:hover .overlay': {
-            display: 'initial !important'
         }
     },
     clickable: {
@@ -44,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
             zIndex: 1000
         },
         '&:hover img': {
-            filter: 'brightness(0.75)'
+            filter: 'brightness(0.85)'
         }
     },
     canvas: {
@@ -57,30 +54,36 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const DTImage: FC<DTImageProps> = ({className, clickable = false, skeleton = false, onClick = () => {}}) => {
+const DTImage: FC<DTImageProps> = ({
+    className,
+    clickable = false,
+    skeleton = false,
+    overlay = null,
+    onClick = () => {}
+}) => {
     const classes = useStyles();
 
     const {categories} = useDataset();
     const {image, labels} = useImage();
 
-    const imageRef = useRef(null);
-    const canvasRef = useRef(null);
+    const imageRef = useRef<HTMLImageElement>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
 
     const {value} = useTabContext();
 
     const [loaded, setLoaded] = useState<boolean>(false);
 
     const handleLoad = () => {
-        if (imageRef.current?.complete) setLoaded(true);
+        if (imageRef.current.complete) setLoaded(true);
 
-        if (canvasRef.current && imageRef.current?.complete) {
+        if (canvasRef.current && imageRef.current.complete) {
             reset(canvasRef.current);
             drawLabels(canvasRef.current, labels, categories, 0);
         }
     };
 
     useEffect(() => {
-        if (canvasRef.current && imageRef.current?.complete) {
+        if (canvasRef.current && imageRef.current.complete) {
             reset(canvasRef.current);
             drawLabels(canvasRef.current, labels, categories, 0);
         }
@@ -92,7 +95,10 @@ const DTImage: FC<DTImageProps> = ({className, clickable = false, skeleton = fal
                 <Skeleton className={clsx(loaded && 'hidden')} animation="wave" height="100%" variant="rectangular" />
             )}
             {clickable ? (
-                <ButtonBase className={clsx(classes.wrapper, skeleton && !loaded && 'hidden')} onClick={onClick}>
+                <ButtonBase
+                    className={clsx(classes.wrapper, classes.clickable, skeleton && !loaded && 'hidden')}
+                    onClick={onClick}
+                >
                     <img
                         src={image?.path}
                         alt={image?.name}
@@ -116,6 +122,7 @@ const DTImage: FC<DTImageProps> = ({className, clickable = false, skeleton = fal
                     <canvas className={clsx(classes.canvas)} ref={canvasRef} />
                 </div>
             )}
+            {overlay && loaded && <div className="overlay">{overlay}</div>}
         </Box>
     );
 };

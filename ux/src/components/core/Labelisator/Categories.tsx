@@ -132,11 +132,13 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
                     On this image
                 </Typography>
                 <div className={classes.wrapper}>
-                    {labeledCategories.map(category => (
-                        <Box mr={1} mb={1} key={category.id}>
-                            <DTCategory category={category} index={categories.indexOf(category)} />
-                        </Box>
-                    ))}
+                    {labeledCategories
+                        .sort((a, b) => -b.name.localeCompare(a.name))
+                        .map(category => (
+                            <Box mr={1} mb={1} key={category.id}>
+                                <DTCategory category={category} index={categories.indexOf(category)} />
+                            </Box>
+                        ))}
 
                     {children}
                 </div>
@@ -148,18 +150,23 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
 
             <div className={classes.wrapper}>
                 {expand ? (
-                    unlabeledCategories.map(category => (
-                        <Box mr={1} mb={1} key={category.id}>
-                            <DTCategory category={category} index={categories.indexOf(category)} />
-                        </Box>
-                    ))
-                ) : (
-                    <>
-                        {unlabeledCategories.slice(0, MAX_CATEGORIES_DISPLAYED).map(category => (
+                    unlabeledCategories
+                        .sort((a, b) => -b.name.localeCompare(a.name))
+                        .map(category => (
                             <Box mr={1} mb={1} key={category.id}>
                                 <DTCategory category={category} index={categories.indexOf(category)} />
                             </Box>
-                        ))}
+                        ))
+                ) : (
+                    <>
+                        {unlabeledCategories
+                            .sort((a, b) => -b.name.localeCompare(a.name))
+                            .slice(0, MAX_CATEGORIES_DISPLAYED)
+                            .map(category => (
+                                <Box mr={1} mb={1} key={category.id}>
+                                    <DTCategory category={category} index={categories.indexOf(category)} />
+                                </Box>
+                            ))}
                         {unlabeledCategories.length > MAX_CATEGORIES_DISPLAYED && (
                             <Link
                                 className={classes.link}
@@ -184,8 +191,8 @@ const DTCategories: FC<CategoriesProps> = ({className}) => {
 
     return (
         <div className={clsx(classes.root, className)}>
-            <Chips categories={categories} >
-                <AddCategoryAction/>
+            <Chips categories={categories}>
+                <AddCategoryAction />
             </Chips>
         </div>
     );
