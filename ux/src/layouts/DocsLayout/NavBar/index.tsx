@@ -105,7 +105,7 @@ const items: Item[] = [
 
 function renderNavItems({ items, depth = 0 }: { items: Item[], depth?: number }) {
     return (
-        <List disablePadding>
+        <List disablePadding sx={{mb: 4}}>
             {items.reduce(
                 (acc, item) => reduceChildRoutes({ acc, item, depth }),
                 []

@@ -26,12 +26,10 @@ import makeStyles from '@mui/styles/makeStyles';
 import {Search as SearchIcon} from 'react-feather';
 import FancyLabel from 'src/components/FancyLabel';
 import UserAvatar from 'src/components/UserAvatar';
-import Scrollbar from 'src/components/utils/Scrollbar';
 import useAuth from 'src/hooks/useAuth';
 import {Theme} from 'src/theme';
 import {User} from 'src/types/user';
 import api from 'src/utils/api';
-
 
 interface ResultsProps {
     className?: string;
@@ -327,75 +325,73 @@ const Results: FC<ResultsProps> = ({className, users, setUsers, ...rest}) => {
                     </div>
                 </div>
             )}
-            <Scrollbar>
-                <Box minWidth={700}>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell padding="checkbox">
-                                    <Checkbox
-                                        checked={selectedAllUsers}
-                                        indeterminate={selectedSomeUsers}
-                                        onChange={handleSelectAllUsers}
-                                    />
-                                </TableCell>
-                                <TableCell>Name</TableCell>
-                                <TableCell>Created at</TableCell>
-                                <TableCell>Verified</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {paginatedUsers.map(user => {
-                                const isUserSelected = selectedUsers.includes(user.id);
+            <Box minWidth={700}>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell padding="checkbox">
+                                <Checkbox
+                                    checked={selectedAllUsers}
+                                    indeterminate={selectedSomeUsers}
+                                    onChange={handleSelectAllUsers}
+                                />
+                            </TableCell>
+                            <TableCell>Name</TableCell>
+                            <TableCell>Created at</TableCell>
+                            <TableCell>Verified</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {paginatedUsers.map(user => {
+                            const isUserSelected = selectedUsers.includes(user.id);
 
-                                return (
-                                    <TableRow
-                                        className={classes.row}
-                                        hover
-                                        key={user.id}
-                                        selected={isUserSelected}
-                                        onClick={event => handleSelectOneUser(event, user.id)}
-                                    >
-                                        <TableCell padding="checkbox">
-                                            <Checkbox
-                                                checked={isUserSelected}
-                                                onChange={event => handleSelectOneUser(event, user.id)}
-                                                onClick={event => event.stopPropagation()}
-                                                value={isUserSelected}
-                                                disabled={user.id === admin.id}
-                                            />
-                                        </TableCell>
-                                        <TableCell>
-                                            <Box display="flex" alignItems="center">
-                                                <UserAvatar user={user} className={classes.avatar} />
-                                                <Box ml={1}>
-                                                    <Link
-                                                        color="inherit"
-                                                        component={RouterLink}
-                                                        to={`/app/admin/users/${user.id}/details`}
-                                                        variant="h6"
-                                                    >
-                                                        {user.name}
-                                                    </Link>
-                                                    <Typography variant="body2" color="textSecondary">
-                                                        {user.email}
-                                                    </Typography>
-                                                </Box>
+                            return (
+                                <TableRow
+                                    className={classes.row}
+                                    hover
+                                    key={user.id}
+                                    selected={isUserSelected}
+                                    onClick={event => handleSelectOneUser(event, user.id)}
+                                >
+                                    <TableCell padding="checkbox">
+                                        <Checkbox
+                                            checked={isUserSelected}
+                                            onChange={event => handleSelectOneUser(event, user.id)}
+                                            onClick={event => event.stopPropagation()}
+                                            value={isUserSelected}
+                                            disabled={user.id === admin.id}
+                                        />
+                                    </TableCell>
+                                    <TableCell>
+                                        <Box display="flex" alignItems="center">
+                                            <UserAvatar user={user} className={classes.avatar} />
+                                            <Box ml={1}>
+                                                <Link
+                                                    color="inherit"
+                                                    component={RouterLink}
+                                                    to={`/app/admin/users/${user.id}/details`}
+                                                    variant="h6"
+                                                >
+                                                    {user.name}
+                                                </Link>
+                                                <Typography variant="body2" color="textSecondary">
+                                                    {user.email}
+                                                </Typography>
                                             </Box>
-                                        </TableCell>
-                                        <TableCell>
-                                            <FancyLabel color={user.is_verified ? 'success' : 'error'}>
-                                                {user.is_verified ? 'Email verified' : 'Email not verified'}
-                                            </FancyLabel>
-                                        </TableCell>
-                                        <TableCell>{moment(user.created_at).format('DD/MM/YYYY | HH:mm:ss')}</TableCell>
-                                    </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
-                </Box>
-            </Scrollbar>
+                                        </Box>
+                                    </TableCell>
+                                    <TableCell>
+                                        <FancyLabel color={user.is_verified ? 'success' : 'error'}>
+                                            {user.is_verified ? 'Email verified' : 'Email not verified'}
+                                        </FancyLabel>
+                                    </TableCell>
+                                    <TableCell>{moment(user.created_at).format('DD/MM/YYYY | HH:mm:ss')}</TableCell>
+                                </TableRow>
+                            );
+                        })}
+                    </TableBody>
+                </Table>
+            </Box>
             <TablePagination
                 component="div"
                 count={filteredUsers.length}

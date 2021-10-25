@@ -8,9 +8,7 @@ import {
 } from '@mui/icons-material';
 import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
-import useImages from 'src/hooks/useImages';
 import getDateDiff from 'src/utils/getDateDiff';
-
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
@@ -38,15 +36,12 @@ interface OverviewProps {
     className?: string;
 }
 
-const Overview: FC<OverviewProps> = ({ className }) => {
+const Overview: FC<OverviewProps> = ({className}) => {
     const classes = useStyles();
 
-    const { dataset, categories } = useDataset();
-    const { images } = useImages();
+    const {dataset, categories} = useDataset();
 
     const totalLabelsCount = categories.map(category => category.labels_count || 0).reduce((acc, val) => acc + val, 0);
-
-    if (images.length === 0) return null;
 
     return (
         <Box className={classes.root} display="flex" alignItems="center" justifyContent="space-between">

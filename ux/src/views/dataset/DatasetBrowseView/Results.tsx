@@ -6,6 +6,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import {Theme} from 'src/theme';
 import DTDataset from 'src/components/core/Dataset';
 import useDatasets from 'src/hooks/useDatasets';
+import {MAX_DATASETS_DISPLAYED} from 'src/config';
 
 
 interface ResultsProps {
@@ -55,6 +56,12 @@ const Results: FC<ResultsProps> = ({className, ...rest}) => {
         setOpenSort(false);
     };
 
+    const [page, setPage] = useState<number>(0);
+
+    const handlePaginationChange = (event: React.ChangeEvent<unknown>, value: number) => {
+        setPage(value - 1);
+    };
+
     return (
         <div className={clsx(classes.root, className)} {...rest}>
             <Box display="flex" alignItems="center" justifyContent="space-between" flexWrap="wrap" mb={2}>
@@ -81,6 +88,7 @@ const Results: FC<ResultsProps> = ({className, ...rest}) => {
                             return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
                         else return 0;
                     })
+                    .slice(page * MAX_DATASETS_DISPLAYED, page * MAX_DATASETS_DISPLAYED + MAX_DATASETS_DISPLAYED)
                     .map(dataset => (
                         <Grid item key={dataset.id} md={4} sm={6} xs={12}>
                             <DTDataset dataset={dataset} />
@@ -88,7 +96,12 @@ const Results: FC<ResultsProps> = ({className, ...rest}) => {
                     ))}
             </Grid>
             <Box mt={6} display="flex" justifyContent="center">
-                <Pagination count={1} />
+                <Pagination
+                    color="primary"
+                    count={Math.ceil(displayedDatasets.length / MAX_DATASETS_DISPLAYED)}
+                    page={page + 1}
+                    onChange={handlePaginationChange}
+                />
             </Box>
             <Menu anchorEl={sortRef.current} onClose={handleSortClose} open={openSort} elevation={1}>
                 {['Most images', 'Most original images', 'Most recent'].map(option => (

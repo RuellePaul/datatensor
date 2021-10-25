@@ -99,8 +99,8 @@ const ChangePrivacyAction: FC<ChangePrivacyActionProps> = ({className}) => {
             </Button>
 
             <Dialog disableRestoreFocus fullWidth open={openChangePrivacy} onClose={handleCloseChangePrivacy}>
-                <DialogTitle className="flex">
-                    <Typography variant="h4">Change privacy</Typography>
+                <DialogTitle>
+                    Change privacy
 
                     <IconButton className={classes.close} onClick={handleCloseChangePrivacy} size="large">
                         <CloseIcon />

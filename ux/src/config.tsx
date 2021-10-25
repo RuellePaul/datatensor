@@ -1,6 +1,19 @@
 import React from 'react';
 import * as Yup from 'yup';
 import {
+    EmojiPeopleOutlined as PersonIcon,
+    CommuteOutlined as VehicleIcon,
+    MemoryOutlined as ElectronicIcon,
+    HomeOutlined as IndoorIcon,
+    EmojiNature as OutdoorIcon,
+    SportsFootball as SportsIcon,
+    PetsOutlined as AnimalIcon,
+    Deck as FurnitureIcon,
+    BeachAccess as AccessoryIcon,
+    Kitchen as KitchenIcon,
+    Devices as ApplianceIcon,
+    Fastfood as FoodIcon,
+    AutoAwesome as MiscelleanousIcon,
     BlurOn as DistortionIcon,
     Brightness7 as BrightnessIcon,
     CropRotate as RotateIcon,
@@ -15,6 +28,7 @@ import {
 import {OperationType, Pipeline} from './types/pipeline';
 import {SuperCategory} from 'src/types/category';
 
+export const MAX_DATASETS_DISPLAYED = 6;
 export const MAX_CATEGORIES_DISPLAYED = 16;
 
 export const SUPERCATEGORIES: SuperCategory[] = [
@@ -48,6 +62,22 @@ export const OPERATIONS_TYPES: OperationType[] = [
     'invert',
     'greyscale'
 ];
+
+export const SUPERCATEGORIES_ICONS = {
+    person: <PersonIcon/>,
+    vehicle: <VehicleIcon/>,
+    electronic: <ElectronicIcon/>,
+    indoor: <IndoorIcon/>,
+    outdoor: <OutdoorIcon/>,
+    sports: <SportsIcon/>,
+    furniture: <FurnitureIcon/>,
+    accessory: <AccessoryIcon/>,
+    kitchen: <KitchenIcon/>,
+    animal: <AnimalIcon/>,
+    appliance: <ApplianceIcon/>,
+    food: <FoodIcon/>,
+    miscellaneous: <MiscelleanousIcon/>,
+}
 
 export const OPERATIONS_ICONS = {
     rotate: <RotateIcon />,

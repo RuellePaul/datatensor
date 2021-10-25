@@ -1,4 +1,11 @@
 export default {
+    MuiContainer: {
+        styleOverrides: {
+            root: {
+                padding: '0 12px'
+            }
+        }
+    },
     MuiLink: {
         styleOverrides: {
             root: {
@@ -6,6 +13,22 @@ export default {
                 '&:hover': {
                     textDecoration: 'underline'
                 }
+            }
+        }
+    },
+    MuiMasonry: {
+        styleOverrides: {
+            root: {
+                overflow: 'visible'
+            }
+        }
+    },
+    MuiDialogTitle: {
+        styleOverrides: {
+            root: {
+                display: 'flex',
+                alignItems: 'center',
+                fontSize: 18
             }
         }
     }

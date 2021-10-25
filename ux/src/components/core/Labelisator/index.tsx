@@ -86,7 +86,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
     const classes = useStyles();
 
     const {dataset} = useDataset();
-    const {pipeline, savePipeline} = usePipeline();
+    const {pipeline} = usePipeline();
     const {saveCurrentCategory} = useCategory();
 
     const [autoSwitch, setAutoSwitch] = useState<boolean>(true);
@@ -148,7 +148,6 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
     const handleClose = () => {
         setOpen(false);
         saveCurrentCategory(null);
-        savePipeline(null);
         window.location.hash = '';
     };
 
@@ -339,7 +338,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                             <ToolMove setTool={setTool} autoSwitch={autoSwitch} />
                                         </div>
 
-                                        <DTImage skeleton fullWidth />
+                                        <DTImage skeleton />
 
                                         <KeyboardListener index={index} imageIds={imageIds} setTool={setTool} />
                                     </Box>
@@ -351,15 +350,17 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                             <Grid item lg={4} xs={12}>
                                 <DTCategories />
 
-                                <Box my={2}>
-                                    <Divider />
-                                </Box>
+                                <Hidden mdDown>
+                                    <Box my={2}>
+                                        <Divider />
+                                    </Box>
 
-                                <Typography variant="overline" color="textPrimary">
-                                    Top 10 categories
-                                </Typography>
+                                    <Typography variant="overline" color="textPrimary">
+                                        Top 10 categories
+                                    </Typography>
 
-                                <CategoriesDistribution />
+                                    <CategoriesDistribution />
+                                </Hidden>
                             </Grid>
                         </Grid>
                     </Container>

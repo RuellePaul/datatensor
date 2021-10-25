@@ -1,14 +1,18 @@
 import React, {FC} from 'react';
+import clsx from 'clsx';
 import {Scrollbars} from 'rc-scrollbars';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 
-interface ScrollbarProps {}
+interface ScrollbarProps {
+    className?: string;
+}
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
-    track: {
-
+    track: {},
+    view: {
+        position: 'relative'
     },
     thumb: {
         backgroundColor: '#6b6b6b !important'
@@ -18,12 +22,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const Scrollbar: FC<ScrollbarProps> = ({children, ...rest}) => {
+const Scrollbar: FC<ScrollbarProps> = ({children, className, ...rest}) => {
     const classes = useStyles();
 
     return (
         <Scrollbars
             classes={{
+                view: clsx(classes.view, className),
                 trackHorizontal: classes.hide,
                 thumbHorizontal: classes.hide,
                 trackVertical: classes.track,

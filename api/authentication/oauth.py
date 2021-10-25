@@ -10,7 +10,7 @@ oauth = APIRouter()
 
 
 @oauth.get('/authorization/{scope}', response_model=OAuthAuthorizationResponse)
-async def oauth_authorization(scope: str):
+def oauth_authorization(scope: str):
     """
     Fetch and return OAuth authorization url, depending on requested scope.
     """
@@ -23,7 +23,7 @@ async def oauth_authorization(scope: str):
 
 
 @oauth.post('/callback', response_model=AuthResponse)
-async def oauth_callback(payload: OAuthCallbackBody):
+def oauth_callback(payload: OAuthCallbackBody):
     """
     Using code provided by OAuth workflow, fetch profile depending on requested scope; register user if doesn't exists
     """

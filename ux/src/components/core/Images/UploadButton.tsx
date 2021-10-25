@@ -14,7 +14,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const UploadButton: FC = () => {
+interface UploadButtonProps {
+    size?: 'small' | 'medium' | 'large'
+}
+
+const UploadButton: FC<UploadButtonProps> = ({size = 'medium'}) => {
     const classes = useStyles();
 
     const [openUpload, setOpenUpload] = useState(false);
@@ -30,7 +34,7 @@ const UploadButton: FC = () => {
     return (
         <>
             <Box display="flex">
-                <Button variant="contained" color="primary" endIcon={<UploadIcon />} onClick={handleUploadOpen}>
+                <Button variant="contained" color="primary" endIcon={<UploadIcon />} onClick={handleUploadOpen} size={size}>
                     Upload images
                 </Button>
             </Box>

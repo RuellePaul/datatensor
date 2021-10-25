@@ -11,7 +11,7 @@ search = APIRouter()
 
 
 @search.get('/categories', response_model=SearchCategoriesResponse)
-async def search_unique_public_categories(user: User = Depends(logged_user)):
+def search_unique_public_categories(user: User = Depends(logged_user)):
     response = {
         'categories': search_categories(user.id)
     }
@@ -19,7 +19,7 @@ async def search_unique_public_categories(user: User = Depends(logged_user)):
 
 
 @search.post('/datasets', response_model=SearchDatasetsResponse)
-async def search_datasets_from_category_names(payload: SearchDatasetsPayload):
+def search_datasets_from_category_names(payload: SearchDatasetsPayload):
     response = {
         'dataset_ids': search_dataset_ids_from_category_names(payload.category_names)
     }
@@ -27,7 +27,7 @@ async def search_datasets_from_category_names(payload: SearchDatasetsPayload):
 
 
 @search.post('/datasets/{dataset_id}/unlabeled-image-id', response_model=SearchUnlabeledImageIdResponse)
-async def search_next_unlabeled_image(dataset_id,
+def search_next_unlabeled_image(dataset_id,
                                       pipeline_id: Optional[str] = None,
                                       offset: int = 0,
                                       dataset=Depends(dataset_belongs_to_user)):

@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
     mobileStepper: {
         background: theme.palette.background.paper
     },
-    img: {
+    image: {
         height: 255,
         display: 'block',
         maxWidth: 410,
@@ -60,7 +60,8 @@ function ImagesSlideshow() {
         setActiveStep(step);
     };
 
-    if (images.length === 0) return null;
+    if (images === null || images.length === 0) return null;
+    if (!images[activeStep]) return null; // FIXME
 
     return (
         <Card className={classes.root} variant="outlined">
@@ -89,7 +90,7 @@ function ImagesSlideshow() {
             >
                 {images.map((image, index) => (
                     <ImageProvider image={image} key={image.id}>
-                        {Math.abs(activeStep - index) <= 2 ? <DTImage className={classes.img} /> : null}
+                        {Math.abs(activeStep - index) <= 2 ? <DTImage className={classes.image} /> : null}
                     </ImageProvider>
                 ))}
             </AutoPlaySwipeableViews>
@@ -97,7 +98,7 @@ function ImagesSlideshow() {
                 className={classes.mobileStepper}
                 steps={images.length}
                 position="static"
-                variant="text"
+                variant="dots"
                 activeStep={activeStep}
                 nextButton={
                     <Button

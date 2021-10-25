@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, File, UploadFile
 
 from dependencies import dataset_belongs_to_user
-from routers.images.core import find_images, find_image, remove_image, insert_images
+from routers.images.core import find_images, find_image, remove_all_images, remove_image, insert_images
 from routers.images.models import *
 from utils import parse
 
@@ -9,7 +9,7 @@ images = APIRouter()
 
 
 @images.get('/', response_model=ImagesResponse)
-async def get_images(dataset_id: str, pipeline_id: Optional[str] = None, offset: int = 0, limit: int = 0):
+def get_images(dataset_id: str, pipeline_id: Optional[str] = None, offset: int = 0, limit: int = 0):
     """
     Fetch paginated images list of given dataset.
     """
@@ -18,7 +18,7 @@ async def get_images(dataset_id: str, pipeline_id: Optional[str] = None, offset:
 
 
 @images.get('/ids', response_model=ImageIdsResponse)
-async def get_image_ids(dataset_id: str, pipeline_id: Optional[str] = None):
+def get_image_ids(dataset_id: str, pipeline_id: Optional[str] = None):
     """
     Fetch all image_ids of given dataset (original image_ids or <pipeline> image ids).
     """
@@ -27,7 +27,7 @@ async def get_image_ids(dataset_id: str, pipeline_id: Optional[str] = None):
 
 
 @images.get('/{image_id}', response_model=ImageResponse)
-async def get_image(dataset_id, image_id):
+def get_image(dataset_id, image_id):
     """
     Fetch given image of given dataset.
     """
@@ -36,7 +36,7 @@ async def get_image(dataset_id, image_id):
 
 
 @images.post('/')
-async def post_images(dataset_id, files: List[UploadFile] = File(...), dataset=Depends(dataset_belongs_to_user)):
+def post_images(dataset_id, files: List[UploadFile] = File(...), dataset=Depends(dataset_belongs_to_user)):
     """
     Upload a list of images.
     """
@@ -44,8 +44,16 @@ async def post_images(dataset_id, files: List[UploadFile] = File(...), dataset=D
     return parse(response)
 
 
+@images.delete('/')
+def delete_images(dataset_id, dataset=Depends(dataset_belongs_to_user)):
+    """
+    Delete all images (original & augmented) of given dataset.
+    """
+    remove_all_images(dataset_id)
+
+
 @images.delete('/{image_id}')
-async def delete_image(dataset_id, image_id, dataset=Depends(dataset_belongs_to_user)):
+def delete_image(dataset_id, image_id, dataset=Depends(dataset_belongs_to_user)):
     """
     Delete given image of given dataset.
     """

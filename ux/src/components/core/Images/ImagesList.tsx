@@ -1,26 +1,34 @@
-import React, {FC, useState} from 'react';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import Masonry from 'react-masonry-css';
+import React, {FC} from 'react';
 import clsx from 'clsx';
-import {IconButton, LinearProgress, Tooltip, Typography, useTheme} from '@mui/material';
+import {useSnackbar} from 'notistack';
+import {IconButton, ListItemIcon, Menu, MenuItem, Skeleton, Tooltip, Typography} from '@mui/material';
+import {Delete as DeleteIcon, MoreVert as MoreIcon} from '@mui/icons-material';
+import Masonry from '@mui/lab/Masonry';
+import MasonryItem from '@mui/lab/MasonryItem';
 import makeStyles from '@mui/styles/makeStyles';
-import {CreateOutlined as LabelisatorIcon} from '@mui/icons-material';
 import DTImage from 'src/components/core/Images/Image';
+import useDataset from 'src/hooks/useDataset';
 import useImages from 'src/hooks/useImages';
 import {Theme} from 'src/theme';
-import useDataset from 'src/hooks/useDataset';
 import {ImageProvider} from 'src/store/ImageContext';
 import {LAZY_LOAD_BATCH} from 'src/constants';
-import DTImagePreview from './ImagePreview';
-
+import {Image} from 'src/types/image';
+import api from 'src/utils/api';
 
 interface ImagesListProps {
     pipeline_id?: string;
     className?: string;
 }
 
+interface ImageOverlayProps {
+    image: Image;
+}
+
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {},
+    root: {
+        overflow: 'hidden',
+        minHeight: 600
+    },
     grid: {
         display: 'flex',
         marginLeft: -10,
@@ -39,92 +47,117 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     icon: {
         position: 'absolute',
-        bottom: theme.spacing(1),
+        top: theme.spacing(1),
         right: theme.spacing(1),
+        width: 32,
+        height: 32,
+        background: 'rgba(0, 0, 0, 0.25)',
         color: 'white',
-        background: 'rgba(0, 0, 0, 0.25)'
+        '&:hover': {
+            background: 'rgba(0, 0, 0, 0.5)'
+        }
     }
 }));
 
+const ImageOverlay: FC<ImageOverlayProps> = ({image}) => {
+    const classes = useStyles();
+    const {enqueueSnackbar} = useSnackbar();
+
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+    const open = Boolean(anchorEl);
+    const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleCloseMenu = () => {
+        setAnchorEl(null);
+    };
+
+    const {dataset, saveDataset} = useDataset();
+    const {images, saveImages} = useImages();
+
+    const handleDelete = async () => {
+        try {
+            await api.delete(`/datasets/${dataset.id}/images/${image.id}`);
+            saveImages(images.filter(current => current.id !== image.id));
+            saveDataset({...dataset, image_count: dataset.image_count - 1});
+            handleCloseMenu();
+        } catch (error) {
+            enqueueSnackbar(error.message || 'Something went wrong', {
+                variant: 'error'
+            });
+        }
+    };
+
+    return (
+        <>
+            <Tooltip title={<Typography variant="caption">More</Typography>} disableInteractive>
+                <IconButton
+                    className={classes.icon}
+                    onClick={event => {
+                        event.stopPropagation();
+                        handleOpenMenu(event);
+                    }}
+                >
+                    <MoreIcon />
+                </IconButton>
+            </Tooltip>
+
+            <Menu anchorEl={anchorEl} open={open} onClose={handleCloseMenu}>
+                <MenuItem key="Delete" onClick={handleDelete}>
+                    <ListItemIcon>
+                        <DeleteIcon />
+                    </ListItemIcon>
+                    Delete
+                </MenuItem>
+            </Menu>
+        </>
+    );
+};
+
 const DTImagesList: FC<ImagesListProps> = ({className, pipeline_id, ...rest}) => {
     const classes = useStyles();
-    const theme = useTheme();
 
-    const {dataset, pipelines} = useDataset();
-    const {images, saveOffset, totalImagesCount} = useImages();
+    const {images} = useImages();
 
-    const [open, setOpen] = useState(false);
-    const [selected, setSelected] = useState(0);
-
-    const imageSelected = images[selected];
-
-    const handleOpenImage = index => {
-        setOpen(true);
-        setSelected(index);
-    };
+    if (images === null) return null;
 
     if (images.length === 0)
         return (
-            <Typography color="textSecondary" gutterBottom>
-                No images found.
-            </Typography>
+            <div className={clsx(classes.root, className)} {...rest}>
+                <Masonry columns={{xs: 2, sm: 3, md: 4}} spacing={1}>
+                    {Array.from(Array(LAZY_LOAD_BATCH), () => null).map((_, index) => (
+                        <MasonryItem key={`masonry_skeleton_${index}`}>
+                            <Skeleton
+                                component="div"
+                                animation="wave"
+                                width="100%"
+                                height={Math.floor(180 + Math.random() * 100)}
+                                variant="rectangular"
+                            />
+                        </MasonryItem>
+                    ))}
+                </Masonry>
+            </div>
         );
 
     return (
         <div className={clsx(classes.root, className)} {...rest}>
-            <InfiniteScroll
-                className="scroll"
-                dataLength={images.length}
-                next={() => saveOffset(offset => offset + LAZY_LOAD_BATCH)}
-                height={700}
-                hasMore={
-                    totalImagesCount
-                        ? totalImagesCount > images.length
-                        : pipeline_id
-                        ? pipelines.find(pipeline => pipeline.id === pipeline_id).image_count > images.length
-                        : dataset.image_count > images.length
-                }
-                loader={<LinearProgress />}
-            >
-                <Masonry
-                    breakpointCols={{
-                        default: 4,
-                        [theme.breakpoints.values.md]: 3,
-                        700: 2,
-                        500: 1
-                    }}
-                    className={classes.grid}
-                    columnClassName={classes.column}
-                >
-                    {images.map((image, index) => (
-                        <ImageProvider key={image.id} image={image}>
+            <Masonry columns={{xs: 2, sm: 3, md: 4}} spacing={1}>
+                {images.map((image: Image) => (
+                    <MasonryItem key={image.id}>
+                        <ImageProvider image={image}>
                             <DTImage
                                 className={classes.image}
                                 clickable
-                                overlay={
-                                    <Tooltip title={<Typography variant="overline">Edit labels</Typography>}>
-                                        <IconButton
-                                            className={classes.icon}
-                                            onClick={event => {
-                                                event.stopPropagation();
-                                                window.location.hash = image.id;
-                                            }}
-                                            size="large"
-                                        >
-                                            <LabelisatorIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                }
-                                onClick={() => handleOpenImage(index)}
+                                onClick={() => (window.location.hash = image.id)}
+                                skeleton
+                                overlay={<ImageOverlay image={image} />}
                             />
                         </ImageProvider>
-                    ))}
-                </Masonry>
-            </InfiniteScroll>
-
-            {imageSelected && (
-                <DTImagePreview open={open} setOpen={setOpen} selected={selected} setSelected={setSelected} />
-            )}
+                    </MasonryItem>
+                ))}
+            </Masonry>
         </div>
     );
 };

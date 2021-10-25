@@ -16,14 +16,14 @@ def user_is_allowed_to_create_task(user, dataset_id, task_type) -> bool:
         if not user.is_admin:
             raise errors.Forbidden(errors.USER_NOT_ADMIN)
 
-    if task_type == 'augmentor' or task_type == 'augmentor':
+    if task_type == 'augmentor' or task_type == 'export':
         if dataset_id is None:
             raise errors.Forbidden(errors.DATASET_NOT_FOUND)
         user_dataset_ids = [dataset.id for dataset in find_own_datasets(user.id)]
         if dataset_id not in user_dataset_ids:
             raise errors.Forbidden(errors.NOT_YOUR_DATASET)
         pipelines_count = db.pipelines.count({'dataset_id': dataset_id})
-        if pipelines_count >= 2:
+        if pipelines_count >= 1:
             raise errors.Forbidden(errors.TOO_MANY_PIPELINES)
     return True
 
