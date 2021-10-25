@@ -3,7 +3,9 @@ import clsx from 'clsx';
 import {useSnackbar} from 'notistack';
 import {
     Button,
+    CircularProgress,
     Dialog,
+    DialogActions,
     DialogContent,
     DialogTitle,
     Divider,
@@ -17,8 +19,8 @@ import {
 import {
     Close as CloseIcon,
     Delete as DeleteIcon,
-    VisibilityOutlined as ViewIcon,
-    ExpandMore as ArrowDown
+    ExpandMore as ArrowDown,
+    VisibilityOutlined as ViewIcon
 } from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
@@ -33,10 +35,6 @@ interface ImagesActionsMenuProps {
     className?: string;
 }
 
-interface MenuItemProps {
-    handleCloseMenu: () => void;
-}
-
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
     close: {
@@ -44,6 +42,10 @@ const useStyles = makeStyles((theme: Theme) => ({
         right: theme.spacing(1),
         top: theme.spacing(1),
         color: theme.palette.grey[500]
+    },
+    loader: {
+        width: '20px !important',
+        height: '20px !important'
     }
 }));
 
@@ -54,7 +56,7 @@ const ViewPipelineMenuItem: FC = () => {
 
     const {pipelines} = useDataset();
 
-    const [openPipeline, setOpenPipeline] = useState(false);
+    const [open, setOpen] = useState(false);
 
     const pipeline_id = pipelines.length > 0 && pipelines[0].id;
 
@@ -64,11 +66,11 @@ const ViewPipelineMenuItem: FC = () => {
         if (!pipeline_id) return;
 
         dispatch(setPipeline(pipelines.find(pipeline => pipeline.id === pipeline_id)));
-        setOpenPipeline(true);
+        setOpen(true);
     };
 
     const handlePipelineClose = () => {
-        setOpenPipeline(false);
+        setOpen(false);
         dispatch(setDefaultPipeline());
     };
     return (
@@ -82,7 +84,7 @@ const ViewPipelineMenuItem: FC = () => {
                 </Typography>
             </MenuItem>
             <Divider sx={{my: 0.5}} />
-            <Dialog disableRestoreFocus fullWidth maxWidth="xs" open={openPipeline} onClose={handlePipelineClose}>
+            <Dialog fullWidth maxWidth="xs" open={open} onClose={handlePipelineClose}>
                 <DialogTitle className="flex">
                     <Typography variant="h4">Operations pipeline</Typography>
 
@@ -99,6 +101,7 @@ const ViewPipelineMenuItem: FC = () => {
 };
 
 const DeletePipelineMenuItem: FC = () => {
+    const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
 
     const {dataset, saveDataset, pipelines, savePipelines} = useDataset();
@@ -134,6 +137,11 @@ const DeletePipelineMenuItem: FC = () => {
 
     const pipeline_id = pipelines.length > 0 && pipelines[0].id;
 
+    const [open, setOpen] = useState(false);
+
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
     if (!pipeline_id) return null;
 
     const activeTasksCount = tasks
@@ -141,14 +149,37 @@ const DeletePipelineMenuItem: FC = () => {
         : 0;
 
     return (
-        <MenuItem disabled={isDeleting || activeTasksCount > 0} onClick={handleDeletePipeline}>
-            <ListItemIcon>
-                <DeleteIcon fontSize="small" />
-            </ListItemIcon>
-            <Typography variant="inherit" noWrap>
-                Delete augmented images ({dataset.augmented_count})
-            </Typography>
-        </MenuItem>
+        <>
+            <MenuItem disabled={isDeleting || activeTasksCount > 0} onClick={handleOpen}>
+                <ListItemIcon>
+                    <DeleteIcon fontSize="small" />
+                </ListItemIcon>
+                <Typography variant="inherit" noWrap>
+                    Delete augmented images ({dataset.augmented_count})
+                </Typography>
+            </MenuItem>
+            <Dialog fullWidth maxWidth="xs" open={open} onClose={handleClose}>
+                <DialogTitle className="flex">
+                    <Typography variant="h4">Delete augmented images</Typography>
+
+                    <IconButton className={classes.close} onClick={handleClose} size="large">
+                        <CloseIcon fontSize="large" />
+                    </IconButton>
+                </DialogTitle>
+                <DialogContent>
+                    <Typography color="textSecondary">This will delete {dataset.augmented_count} images.</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        disabled={isDeleting}
+                        endIcon={isDeleting && <CircularProgress className={classes.loader} color="inherit" />}
+                        onClick={handleDeletePipeline}
+                    >
+                        Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </>
     );
 };
 
