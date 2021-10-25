@@ -60,7 +60,7 @@ function ImagesSlideshow() {
         setActiveStep(step);
     };
 
-    if (images.length === 0) return null;
+    if (images === null || images.length === 0) return null;
     if (!images[activeStep]) return null; // FIXME
 
     return (

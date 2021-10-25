@@ -8,7 +8,6 @@ import useCategory from 'src/hooks/useCategory';
 import useImages from 'src/hooks/useImages';
 import usePipeline from 'src/hooks/usePipeline';
 import FilterCategories from './FilterCategories';
-
 import {ImagesProvider} from 'src/store/ImagesContext';
 import {Pipeline} from 'src/types/pipeline';
 import {LAZY_LOAD_BATCH} from 'src/constants';
@@ -106,20 +105,25 @@ const DTImagesWrapper: FC<DTImagesWrapperProps> = ({pipeline_id}) => {
             <div className={classes.sticky}>
                 <FilterCategories />
 
-                <ButtonGroup className="group" color="inherit">
-                    <Button onClick={() => savePipeline(null)} variant={pipeline === null ? 'contained' : 'outlined'}>
-                        Original ({dataset.image_count})
-                    </Button>
-                    {pipelines.map(current => (
+                {pipelines.length > 0 && (
+                    <ButtonGroup className="group" color="inherit">
                         <Button
-                            key={current.id}
-                            onClick={() => savePipeline(current)}
-                            variant={pipeline !== null ? 'contained' : 'outlined'}
+                            onClick={() => savePipeline(null)}
+                            variant={pipeline === null ? 'contained' : 'outlined'}
                         >
-                            Augmented ({current.image_count})
+                            Original ({dataset.image_count})
                         </Button>
-                    ))}
-                </ButtonGroup>
+                        {pipelines.map(current => (
+                            <Button
+                                key={current.id}
+                                onClick={() => savePipeline(current)}
+                                variant={pipeline !== null ? 'contained' : 'outlined'}
+                            >
+                                Augmented ({current.image_count})
+                            </Button>
+                        ))}
+                    </ButtonGroup>
+                )}
             </div>
 
             <DTImagesList pipeline_id={pipeline_id} />

@@ -105,7 +105,7 @@ const DatasetMainView: FC = () => {
                                                                     />
                                                                     <DTTab
                                                                         label={
-                                                                            value.images.length === 0 ? (
+                                                                            value.images === null || value.images.length === 0 ? (
                                                                                 <Tooltip
                                                                                     title={
                                                                                         <Typography variant="h6">
@@ -120,7 +120,7 @@ const DatasetMainView: FC = () => {
                                                                                 'Augmentation'
                                                                             )
                                                                         }
-                                                                        disabled={value.images.length === 0}
+                                                                        disabled={value.images === null || value.images.length === 0}
                                                                         style={{
                                                                             pointerEvents: 'auto'
                                                                         }}

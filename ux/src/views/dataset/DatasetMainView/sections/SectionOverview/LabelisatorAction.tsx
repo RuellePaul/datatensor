@@ -25,7 +25,7 @@ const LabelisatorAction: FC<LabelisatorActionProps> = ({ className }) => {
 
     const totalLabelsCount = categories.map(category => category.labels_count || 0).reduce((acc, val) => acc + val, 0);
 
-    if (images.length === 0) return null;
+    if (images === null || images.length === 0) return null;
 
     return (
         <Card className={clsx(classes.root, className)} variant="outlined">
