@@ -35,7 +35,6 @@ const OperationAdd: FC<OperationAddProps> = ({
     const [operationType, setOperationType] = useState<OperationType>(OPERATIONS_TYPES[0]);
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
-        event.persist();
         setOperationType(event.target.value as OperationType);
     };
 

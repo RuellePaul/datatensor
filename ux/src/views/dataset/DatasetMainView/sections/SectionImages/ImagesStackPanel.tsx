@@ -8,6 +8,7 @@ import useCategory from 'src/hooks/useCategory';
 import useImages from 'src/hooks/useImages';
 import usePipeline from 'src/hooks/usePipeline';
 import FilterCategories from './FilterCategories';
+import ImagesActionsMenu from './ImagesActionsMenu';
 import {ImagesProvider} from 'src/store/ImagesContext';
 import {Pipeline} from 'src/types/pipeline';
 import {LAZY_LOAD_BATCH} from 'src/constants';
@@ -22,11 +23,8 @@ const useStyles = makeStyles((theme: Theme) => ({
         color: theme.palette.text.primary,
         padding: theme.spacing(1.5, 0),
         display: 'flex',
-        alignItems: 'flex-start',
+        alignItems: 'center',
         justifyContent: 'space-between',
-        '& .group': {
-            marginTop: 5
-        },
         '& .MuiButton-contained': {
             background: theme.palette.text.primary,
             color: theme.palette.getContrastText(theme.palette.text.primary)
@@ -35,10 +33,14 @@ const useStyles = makeStyles((theme: Theme) => ({
             position: 'relative',
             top: 0,
             zIndex: 1000,
-            flexDirection: 'column-reverse',
-            '& .group': {
-                margin: theme.spacing(0, 'auto', 2)
-            }
+            flexDirection: 'column-reverse'
+        }
+    },
+    wrapper: {
+        display: 'flex',
+        alignItems: 'center',
+        [theme.breakpoints.down('md')]: {
+            marginBottom: theme.spacing(1.5)
         }
     }
 }));
@@ -105,25 +107,31 @@ const DTImagesWrapper: FC<DTImagesWrapperProps> = ({pipeline_id}) => {
             <div className={classes.sticky}>
                 <FilterCategories />
 
-                {pipelines.length > 0 && (
-                    <ButtonGroup className="group" color="inherit">
-                        <Button
-                            onClick={() => savePipeline(null)}
-                            variant={pipeline === null ? 'contained' : 'outlined'}
-                        >
-                            Original ({dataset.image_count})
-                        </Button>
-                        {pipelines.map(current => (
+                <div className={classes.wrapper}>
+                    {pipelines.length > 0 && (
+                        <ButtonGroup color="inherit" size="small">
                             <Button
-                                key={current.id}
-                                onClick={() => savePipeline(current)}
-                                variant={pipeline !== null ? 'contained' : 'outlined'}
+                                onClick={() => savePipeline(null)}
+                                variant={pipeline === null ? 'contained' : 'outlined'}
                             >
-                                Augmented ({current.image_count})
+                                Original ({dataset.image_count})
                             </Button>
-                        ))}
-                    </ButtonGroup>
-                )}
+                            {pipelines.map(current => (
+                                <Button
+                                    key={current.id}
+                                    onClick={() => savePipeline(current)}
+                                    variant={pipeline !== null ? 'contained' : 'outlined'}
+                                >
+                                    Augmented ({current.image_count})
+                                </Button>
+                            ))}
+                        </ButtonGroup>
+                    )}
+
+                    <Box ml={2}>
+                        <ImagesActionsMenu />
+                    </Box>
+                </div>
             </div>
 
             <DTImagesList pipeline_id={pipeline_id} />
