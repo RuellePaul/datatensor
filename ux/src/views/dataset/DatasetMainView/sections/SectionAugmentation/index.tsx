@@ -155,8 +155,8 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                 open={openAugmentation}
                 onClose={handleClose}
             >
-                <DialogTitle className="flex">
-                    <Typography variant="h4">Augmentation</Typography>
+                <DialogTitle>
+                    <Typography>Augmentation</Typography>
 
                     <IconButton className={classes.close} onClick={handleClose} size="large">
                         <CloseIcon />

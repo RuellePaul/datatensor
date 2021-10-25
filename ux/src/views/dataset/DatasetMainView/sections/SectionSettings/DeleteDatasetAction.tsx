@@ -105,8 +105,8 @@ const ChangeNameAction: FC<ChangeNameActionProps> = ({className}) => {
             </Button>
 
             <Dialog disableRestoreFocus fullWidth open={openDeleteDataset} onClose={handleCloseDeleteDataset}>
-                <DialogTitle className="flex">
-                    <Typography variant="h4">Delete dataset</Typography>
+                <DialogTitle>
+                    Delete dataset
 
                     <IconButton className={classes.close} onClick={handleCloseDeleteDataset} size="large">
                         <CloseIcon />

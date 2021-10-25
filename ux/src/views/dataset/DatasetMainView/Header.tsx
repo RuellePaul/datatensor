@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     alert: {
         position: 'absolute',
-        top: theme.spacing(1),
+        top: 4,
         right: 0,
         margin: 0
     },

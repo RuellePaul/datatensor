@@ -172,8 +172,8 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
             >
                 {task && (
                     <>
-                        <DialogTitle className="flex">
-                            <Typography variant="h4">{capitalize(task.type)}</Typography>
+                        <DialogTitle>
+                            <Typography>{capitalize(task.type)}</Typography>
 
                             <IconButton className={classes.close} onClick={handleClose} size="large">
                                 <CloseIcon />

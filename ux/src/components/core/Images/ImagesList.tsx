@@ -49,6 +49,8 @@ const useStyles = makeStyles((theme: Theme) => ({
         position: 'absolute',
         top: theme.spacing(1),
         right: theme.spacing(1),
+        width: 32,
+        height: 32,
         background: 'rgba(0, 0, 0, 0.25)',
         color: 'white',
         '&:hover': {

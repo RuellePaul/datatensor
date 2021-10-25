@@ -75,7 +75,7 @@ const KeyboardShortcuts: FC = () => {
                 open={open}
                 onClose={handleClose}
             >
-                <DialogTitle className="flex">
+                <DialogTitle>
                     <KeyboardIcon fontSize="large" />
 
                     <IconButton className={classes.close} onClick={handleClose} size="large">

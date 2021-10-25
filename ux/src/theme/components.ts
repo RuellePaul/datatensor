@@ -22,5 +22,14 @@ export default {
                 overflow: 'visible'
             }
         }
+    },
+    MuiDialogTitle: {
+        styleOverrides: {
+            root: {
+                display: 'flex',
+                alignItems: 'center',
+                fontSize: 18
+            }
+        }
     }
 };

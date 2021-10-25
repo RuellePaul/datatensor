@@ -3,6 +3,8 @@ import {useDispatch} from 'react-redux';
 import clsx from 'clsx';
 import {useSnackbar} from 'notistack';
 import {
+    Alert,
+    AlertTitle,
     Button,
     CircularProgress,
     Dialog,
@@ -73,7 +75,7 @@ const UploadMenuItem: FC = () => {
             <Dialog open={open} onClose={handleCloseUpload}>
                 <DialogTitle>
                     Upload Images
-                    <IconButton className={classes.close} onClick={handleOpenUpload} size="large">
+                    <IconButton className={classes.close} onClick={handleCloseUpload}>
                         <CloseIcon />
                     </IconButton>
                 </DialogTitle>
@@ -120,11 +122,10 @@ const ViewPipelineMenuItem: FC = () => {
                 </Typography>
             </MenuItem>
             <Dialog fullWidth maxWidth="xs" open={open} onClose={handlePipelineClose}>
-                <DialogTitle className="flex">
-                    <Typography variant="h4">Operations pipeline</Typography>
-
-                    <IconButton className={classes.close} onClick={handlePipelineClose} size="large">
-                        <CloseIcon fontSize="large" />
+                <DialogTitle>
+                    Operations pipeline
+                    <IconButton className={classes.close} onClick={handlePipelineClose}>
+                        <CloseIcon />
                     </IconButton>
                 </DialogTitle>
                 <DialogContent>
@@ -160,6 +161,7 @@ const DeletePipelineMenuItem: FC = () => {
             enqueueSnackbar(`Deleted augmented images`, {
                 variant: 'info'
             });
+            handleClose();
         } catch (error) {
             enqueueSnackbar(error.message || 'Something went wrong', {
                 variant: 'error'
@@ -193,11 +195,10 @@ const DeletePipelineMenuItem: FC = () => {
                 </Typography>
             </MenuItem>
             <Dialog fullWidth maxWidth="xs" open={open} onClose={handleClose}>
-                <DialogTitle className="flex">
-                    <Typography variant="h4">Delete augmented images</Typography>
-
-                    <IconButton className={classes.close} onClick={handleClose} size="large">
-                        <CloseIcon fontSize="large" />
+                <DialogTitle>
+                    Delete augmented images
+                    <IconButton className={classes.close} onClick={handleClose}>
+                        <CloseIcon />
                     </IconButton>
                 </DialogTitle>
                 <DialogContent>
@@ -243,6 +244,7 @@ const DeleteImagesMenuItem: FC = () => {
             enqueueSnackbar(`Deleted all images`, {
                 variant: 'info'
             });
+            handleClose();
         } catch (error) {
             enqueueSnackbar(error.message || 'Something went wrong', {
                 variant: 'error'
@@ -275,17 +277,20 @@ const DeleteImagesMenuItem: FC = () => {
                 </Typography>
             </MenuItem>
             <Dialog fullWidth maxWidth="xs" open={open} onClose={handleClose}>
-                <DialogTitle className="flex">
-                    <Typography variant="h4">Delete all images</Typography>
-
-                    <IconButton className={classes.close} onClick={handleClose} size="large">
-                        <CloseIcon fontSize="large" />
+                <DialogTitle>
+                    Delete all images
+                    <IconButton className={classes.close} onClick={handleClose}>
+                        <CloseIcon />
                     </IconButton>
                 </DialogTitle>
                 <DialogContent>
-                    <Typography color="textSecondary">
+                    <Typography gutterBottom>
                         This will delete {dataset.image_count + dataset.augmented_count} images.
                     </Typography>
+                    <Alert severity='error'>
+                        <AlertTitle>There is no way back</AlertTitle>
+                        Your images and associated data (labels, categories...) will be deleted <strong>forever</strong>
+                    </Alert>
                 </DialogContent>
                 <DialogActions>
                     <Button

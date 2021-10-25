@@ -72,12 +72,12 @@ const AddCategoryAction: FC<AddCategoryActionProps> = ({className}) => {
             </Box>
 
             <Dialog fullWidth maxWidth="sm" open={openCategoryCreation} onClose={handleCloseCategoryCreation}>
-                <DialogTitle className="flex">
+                <DialogTitle>
                     <Box mr={1}>
                         <CategoriesIcon />
                     </Box>
 
-                    <Typography variant="h4">Add a new category</Typography>
+                    <Typography>Add a new category</Typography>
 
                     <IconButton className={classes.close} onClick={handleCloseCategoryCreation} size="large">
                         <CloseIcon />
