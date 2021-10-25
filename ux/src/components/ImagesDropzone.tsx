@@ -113,7 +113,10 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({callback, className, ...rest})
                 const response = await api.post<{images: Image[]}>(`/datasets/${dataset.id}/images/`, formData, {
                     headers: {'Content-Type': 'multipart/form-data'}
                 });
-                saveImages((images: Image[]) => [...images, ...response.data.images]);
+                saveImages((images: Image[] | null) => (images instanceof Array
+                    ? [...images, ...response.data.images]
+                    : response.data.images
+                ));
                 saveDataset({
                     ...dataset,
                     image_count: dataset.image_count + response.data.images.length
@@ -154,7 +157,7 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({callback, className, ...rest})
                     </Box>
                 </div>
             </div>
-            <Scrollbar>
+            <Scrollbar className='relative'>
                 <List className={classes.list}>
                     {files.map((file, i) => (
                         <ListItem divider={i < files.length - 1} key={i}>

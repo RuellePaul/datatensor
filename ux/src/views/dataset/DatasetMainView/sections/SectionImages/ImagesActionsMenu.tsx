@@ -1,4 +1,5 @@
 import React, {FC, useState} from 'react';
+import {useDispatch} from 'react-redux';
 import clsx from 'clsx';
 import {useSnackbar} from 'notistack';
 import {
@@ -20,15 +21,17 @@ import {
     Close as CloseIcon,
     Delete as DeleteIcon,
     ExpandMore as ArrowDown,
+    PublishOutlined as UploadIcon,
     VisibilityOutlined as ViewIcon
 } from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
-import {useDispatch} from 'react-redux';
-import {setDefaultPipeline, setPipeline} from 'src/slices/pipeline';
-import Pipeline from 'src/components/core/Pipeline';
+import useImages from 'src/hooks/useImages';
 import useTasks from 'src/hooks/useTasks';
+import {setDefaultPipeline, setPipeline} from 'src/slices/pipeline';
+import ImagesDropzone from 'src/components/ImagesDropzone';
+import Pipeline from 'src/components/core/Pipeline';
 import api from 'src/utils/api';
 
 interface ImagesActionsMenuProps {
@@ -48,6 +51,39 @@ const useStyles = makeStyles((theme: Theme) => ({
         height: '20px !important'
     }
 }));
+
+const UploadMenuItem: FC = () => {
+    const classes = useStyles();
+
+    const [open, setOpen] = useState(false);
+
+    const handleOpenUpload = () => setOpen(true);
+    const handleCloseUpload = () => setOpen(false);
+
+    return (
+        <>
+            <MenuItem onClick={handleOpenUpload}>
+                <ListItemIcon>
+                    <UploadIcon fontSize="small" />
+                </ListItemIcon>
+                <Typography variant="inherit" noWrap>
+                    Upload images
+                </Typography>
+            </MenuItem>
+            <Dialog open={open} onClose={handleCloseUpload}>
+                <DialogTitle>
+                    Upload Images
+                    <IconButton className={classes.close} onClick={handleOpenUpload} size="large">
+                        <CloseIcon />
+                    </IconButton>
+                </DialogTitle>
+                <DialogContent>
+                    <ImagesDropzone callback={handleCloseUpload} />
+                </DialogContent>
+            </Dialog>
+        </>
+    );
+};
 
 const ViewPipelineMenuItem: FC = () => {
     const classes = useStyles();
@@ -83,7 +119,6 @@ const ViewPipelineMenuItem: FC = () => {
                     View augmentation pipeline
                 </Typography>
             </MenuItem>
-            <Divider sx={{my: 0.5}} />
             <Dialog fullWidth maxWidth="xs" open={open} onClose={handlePipelineClose}>
                 <DialogTitle className="flex">
                     <Typography variant="h4">Operations pipeline</Typography>
@@ -119,11 +154,10 @@ const DeletePipelineMenuItem: FC = () => {
             await api.delete(`/datasets/${dataset.id}/pipelines/${pipeline_id}`);
             saveDataset(dataset => ({
                 ...dataset,
-                augmented_count:
-                    dataset.augmented_count - pipelines.find(pipeline => pipeline.id === pipeline_id).image_count
+                augmented_count: 0
             }));
             savePipelines(pipelines => pipelines.filter(pipeline => pipeline.id !== pipeline_id));
-            enqueueSnackbar(`Deleted pipeline & associated images`, {
+            enqueueSnackbar(`Deleted augmented images`, {
                 variant: 'info'
             });
         } catch (error) {
@@ -155,7 +189,7 @@ const DeletePipelineMenuItem: FC = () => {
                     <DeleteIcon fontSize="small" />
                 </ListItemIcon>
                 <Typography variant="inherit" noWrap>
-                    Delete augmented images ({dataset.augmented_count})
+                    Delete augmented images
                 </Typography>
             </MenuItem>
             <Dialog fullWidth maxWidth="xs" open={open} onClose={handleClose}>
@@ -183,9 +217,92 @@ const DeletePipelineMenuItem: FC = () => {
     );
 };
 
+const DeleteImagesMenuItem: FC = () => {
+    const classes = useStyles();
+    const {enqueueSnackbar} = useSnackbar();
+
+    const {dataset, saveDataset, savePipelines} = useDataset();
+    const {images, saveImages} = useImages();
+
+    const {tasks} = useTasks();
+
+    const [isDeleting, setIsDeleting] = useState(false);
+
+    const handleDeleteImages = async () => {
+        setIsDeleting(true);
+
+        try {
+            await api.delete(`/datasets/${dataset.id}/images/`);
+            saveDataset(dataset => ({
+                ...dataset,
+                image_count: 0,
+                augmented_count: 0
+            }));
+            saveImages(null);
+            savePipelines([]);
+            enqueueSnackbar(`Deleted all images`, {
+                variant: 'info'
+            });
+        } catch (error) {
+            enqueueSnackbar(error.message || 'Something went wrong', {
+                variant: 'error'
+            });
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
+    const [open, setOpen] = useState(false);
+
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
+    const activeTasksCount = tasks
+        ? tasks.filter(task => task.status === 'active' && task.dataset_id === dataset.id).length
+        : 0;
+
+    return (
+        <>
+            <MenuItem
+                disabled={isDeleting || activeTasksCount > 0 || images === null || images.length === 0}
+                onClick={handleOpen}
+            >
+                <ListItemIcon>
+                    <DeleteIcon fontSize="small" />
+                </ListItemIcon>
+                <Typography variant="inherit" noWrap>
+                    Delete all images
+                </Typography>
+            </MenuItem>
+            <Dialog fullWidth maxWidth="xs" open={open} onClose={handleClose}>
+                <DialogTitle className="flex">
+                    <Typography variant="h4">Delete all images</Typography>
+
+                    <IconButton className={classes.close} onClick={handleClose} size="large">
+                        <CloseIcon fontSize="large" />
+                    </IconButton>
+                </DialogTitle>
+                <DialogContent>
+                    <Typography color="textSecondary">
+                        This will delete {dataset.image_count + dataset.augmented_count} images.
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        disabled={isDeleting}
+                        endIcon={isDeleting && <CircularProgress className={classes.loader} color="inherit" />}
+                        onClick={handleDeleteImages}
+                    >
+                        Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </>
+    );
+};
+
 const ImagesActionsMenu: FC<ImagesActionsMenuProps> = ({className}) => {
     const classes = useStyles();
-    const {dataset} = useDataset();
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -202,15 +319,10 @@ const ImagesActionsMenu: FC<ImagesActionsMenuProps> = ({className}) => {
                 Options
             </Button>
             <Menu anchorEl={anchorEl} open={open} onClose={handleCloseMenu} TransitionComponent={Fade}>
+                <UploadMenuItem />
                 <ViewPipelineMenuItem />
-                <MenuItem>
-                    <ListItemIcon>
-                        <DeleteIcon fontSize="small" />
-                    </ListItemIcon>
-                    <Typography variant="inherit" noWrap>
-                        Delete original images ({dataset.image_count})
-                    </Typography>
-                </MenuItem>
+                <Divider sx={{my: 0.5}} />
+                <DeleteImagesMenuItem />
                 <DeletePipelineMenuItem />
             </Menu>
         </div>

@@ -7,6 +7,10 @@
     z-index: -1 !important;
 }
 
+.relative {
+    position: relative !important;
+}
+
 .scrollbar-container {
     width: 100%;
 }

@@ -137,6 +137,13 @@ def insert_images(dataset_id, request_files) -> List[Image]:
     return images
 
 
+def remove_all_images(dataset_id):
+    images = find_all_images(dataset_id)
+    image_ids = [image.id for image in images]
+    remove_images(dataset_id, image_ids)
+    db.pipelines.delete_many({'dataset_id': dataset_id})
+
+
 def remove_images(dataset_id, image_ids):
     # Find labels of images to delete
     labels = list(db.labels.find({'image_id': {'$in': image_ids}}))
