@@ -83,12 +83,13 @@ export const drawLabels = (
     offset = CANVAS_OFFSET,
     dash = 0,
     filled = false,
-    resize = false
+    resize = false,
+    categorySelected: Category = null
 ) => {
     if (!labels) return;
 
     let context = canvas.getContext('2d');
-    context.lineWidth = 2;
+    context.lineWidth = 1;
     context.setLineDash([dash]);
 
     for (const label of labels) {
@@ -103,8 +104,8 @@ export const drawLabels = (
 
         context.fillStyle = `${color}05`;
         context.fillRect(x, y, w, h);
-        if (filled) {
-            context.fillStyle = `${color}25`;
+        if (filled || (category && categorySelected && categorySelected.id === category.id)) {
+            context.fillStyle = `${color}50`;
             context.fillRect(x, y, w, h);
         }
 

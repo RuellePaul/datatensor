@@ -1,4 +1,4 @@
-import React, {FC, useState} from 'react';
+import React, {FC, useMemo, useState} from 'react';
 import {useSnackbar} from 'notistack';
 import clsx from 'clsx';
 import {Box, capitalize, Chip, Link, Typography, useTheme} from '@mui/material';
@@ -115,15 +115,17 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
 
     const [expand, setExpand] = useState<boolean>(false);
 
-    let labeledCategories, unlabeledCategories;
+    const labeledCategories = useMemo(() => (
+        labels
+            ? categories.filter(category => currentCategoryCount(labels, category) > 0)
+            : []
+    ), [categories, labels]);
 
-    if (labels) {
-        labeledCategories = categories.filter(category => currentCategoryCount(labels, category) > 0);
-        unlabeledCategories = categories.filter(category => currentCategoryCount(labels, category) === 0);
-    } else {
-        labeledCategories = [];
-        unlabeledCategories = categories;
-    }
+    const unlabeledCategories = useMemo(() => (
+        labels
+            ? categories.filter(category => currentCategoryCount(labels, category) === 0)
+            : categories
+    ), [categories, labels]);
 
     return (
         <div className={clsx(classes.root, 'scroll')}>
