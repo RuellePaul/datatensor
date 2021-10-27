@@ -47,6 +47,7 @@ import {Image} from 'src/types/image';
 import api from 'src/utils/api';
 import {ImageConsumer, ImageProvider} from 'src/store/ImageContext';
 import {CANVAS_OFFSET} from 'src/utils/labeling';
+import Scrollbar from '../../utils/Scrollbar';
 
 interface DTLabelisatorProps {}
 
@@ -196,10 +197,10 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                     </Toolbar>
                 </AppBar>
 
-                <div className={clsx(classes.scroll, 'scroll')}>
-                    <Container maxWidth="lg">
+                <Scrollbar>
+                    <Container maxWidth="xl">
                         <Grid className={classes.content} container spacing={3}>
-                            <Grid item xs={12} style={{paddingBottom: 0}}>
+                            <Grid item lg={8} xs={12}>
                                 <Box display="flex" alignItems="center">
                                     <Box mr={1}>
                                         <ImageIcon />
@@ -224,8 +225,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
 
                                     <NextUnlabeledImageAction index={index} pipeline_id={pipeline?.id} />
                                 </Box>
-                            </Grid>
-                            <Grid item lg={8} xs={12}>
+
                                 <Box display="flex" alignItems="center">
                                     <ToggleButtonGroup value={tool} exclusive onChange={handleToolChange} size="small">
                                         <ToggleButton value="label" disabled={autoSwitch}>
@@ -364,7 +364,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                             </Grid>
                         </Grid>
                     </Container>
-                </div>
+                </Scrollbar>
             </ImageProvider>
         </Dialog>
     );

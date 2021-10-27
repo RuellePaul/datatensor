@@ -23,7 +23,7 @@ export const ExportsContext = createContext<ExportsContextValue>({
 });
 
 export const ExportsProvider: FC<ExportsProviderProps> = ({children}) => {
-    const [currentExports, setCurrentExports] = useState<Export[] | []>([]);
+    const [currentExports, setCurrentExports] = useState<Export[] | null>([]);
 
     const {dataset} = useDataset();
 

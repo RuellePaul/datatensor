@@ -30,7 +30,7 @@ export const ImagesContext = createContext<ImagesContextValue>({
 });
 
 export const ImagesProvider: FC<ImagesProviderProps> = ({ children, pipeline_id, category_id }) => {
-    const [currentImages, setCurrentImages] = useState<Image[] | []>([]);
+    const [currentImages, setCurrentImages] = useState<Image[] | null>([]);
     const [currentOffset, setCurrentOffset] = useState<number>(0);
     const [totalImagesCount, setTotalImagesCount] = useState<number | null>(null);
 

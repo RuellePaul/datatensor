@@ -96,6 +96,7 @@ const ContextMenu: FC<ContextMenuProps> = ({canvas, selectedLabels, point, handl
                 </ListItemIcon>
                 <Typography variant="inherit" noWrap>
                     Delete
+                    {labels instanceof Array ? ` (${selectedLabels.length})` : ''}
                 </Typography>
             </MenuItem>
         </Menu>
