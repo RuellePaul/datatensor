@@ -93,17 +93,12 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
                 </Typography>
             }
             onClick={() => saveCurrentCategory(category)}
-            style={
-                isSelected
-                    ? {
-                          color: theme.palette.getContrastText(COLORS[index]),
-                          background: COLORS[index]
-                      }
-                    : {color: COLORS[index]}
-            }
+            style={{
+                color: theme.palette.getContrastText(COLORS[index]),
+                background: COLORS[index]
+            }}
             title={`${category.name} | ${category.supercategory}`}
             size={count > 0 ? 'medium' : 'small'}
-            variant="outlined"
             onDelete={() => handleDeleteCategory(category.id)}
         />
     );
@@ -115,17 +110,15 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
 
     const [expand, setExpand] = useState<boolean>(false);
 
-    const labeledCategories = useMemo(() => (
-        labels
-            ? categories.filter(category => currentCategoryCount(labels, category) > 0)
-            : []
-    ), [categories, labels]);
+    const labeledCategories = useMemo(
+        () => (labels ? categories.filter(category => currentCategoryCount(labels, category) > 0) : []),
+        [categories, labels]
+    );
 
-    const unlabeledCategories = useMemo(() => (
-        labels
-            ? categories.filter(category => currentCategoryCount(labels, category) === 0)
-            : categories
-    ), [categories, labels]);
+    const unlabeledCategories = useMemo(
+        () => (labels ? categories.filter(category => currentCategoryCount(labels, category) === 0) : categories),
+        [categories, labels]
+    );
 
     return (
         <div className={clsx(classes.root, 'scroll')}>
@@ -135,7 +128,6 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
                 </Typography>
                 <div className={classes.wrapper}>
                     {labeledCategories
-                        .sort((a, b) => -b.name.localeCompare(a.name))
                         .map(category => (
                             <Box mr={1} mb={1} key={category.id}>
                                 <DTCategory category={category} index={categories.indexOf(category)} />
@@ -153,7 +145,6 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
             <div className={classes.wrapper}>
                 {expand ? (
                     unlabeledCategories
-                        .sort((a, b) => -b.name.localeCompare(a.name))
                         .map(category => (
                             <Box mr={1} mb={1} key={category.id}>
                                 <DTCategory category={category} index={categories.indexOf(category)} />
@@ -162,7 +153,6 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
                 ) : (
                     <>
                         {unlabeledCategories
-                            .sort((a, b) => -b.name.localeCompare(a.name))
                             .slice(0, MAX_CATEGORIES_DISPLAYED)
                             .map(category => (
                                 <Box mr={1} mb={1} key={category.id}>

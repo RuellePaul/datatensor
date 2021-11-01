@@ -14,6 +14,7 @@ import {ImageProvider} from 'src/store/ImageContext';
 import {LAZY_LOAD_BATCH} from 'src/constants';
 import {Image} from 'src/types/image';
 import api from 'src/utils/api';
+import goToHash from 'src/utils/goToHash';
 
 interface ImagesListProps {
     pipeline_id?: string;
@@ -150,7 +151,7 @@ const DTImagesList: FC<ImagesListProps> = ({className, pipeline_id, ...rest}) =>
                             <DTImage
                                 className={classes.image}
                                 clickable
-                                onClick={() => (window.location.hash = image.id)}
+                                onClick={() => goToHash(image.id, true)}
                                 skeleton
                                 overlay={<ImageOverlay image={image} />}
                             />

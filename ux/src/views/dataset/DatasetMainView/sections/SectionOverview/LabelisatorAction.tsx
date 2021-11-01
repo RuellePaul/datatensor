@@ -7,6 +7,7 @@ import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
 import useImages from 'src/hooks/useImages';
 import {Link as RouterLink} from 'react-router-dom';
+import goToHash from 'src/utils/goToHash';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -30,9 +31,7 @@ const LabelisatorAction: FC<LabelisatorActionProps> = ({ className }) => {
     return (
         <Card className={clsx(classes.root, className)} variant="outlined">
             <CardContent>
-                <Typography gutterBottom>
-                    Label images
-                </Typography>
+                <Typography gutterBottom>Label images</Typography>
                 <Typography variant="body2" color="textSecondary" gutterBottom>
                     {totalLabelsCount > 0 ? 'Edit labels' : 'Start labeling'} with our labelisator tool. See the{' '}
                     <Link variant="body2" color="primary" component={RouterLink} to="/docs">
@@ -44,8 +43,7 @@ const LabelisatorAction: FC<LabelisatorActionProps> = ({ className }) => {
             <CardActions style={{ justifyContent: 'flex-end' }}>
                 <Button
                     color="primary"
-                    disabled={!!window.location.hash}
-                    onClick={() => (window.location.hash = images[0].id)}
+                    onClick={() => goToHash(images[0].id, true)}
                     endIcon={<LabelisatorIcon />}
                     variant="contained"
                 >

@@ -34,6 +34,7 @@ import {
 import DTCategories from 'src/components/core/Labelisator/Categories';
 import DTImage from 'src/components/core/Images/Image';
 import CategoriesDistribution from 'src/components/charts/CategoriesDistribution';
+import Scrollbar from 'src/components/utils/Scrollbar';
 import KeyboardListener from './KeyboardListener';
 import KeyboardShortcuts from './KeyboardShortcuts';
 import NextUnlabeledImageAction from './NextUnlabeledImageAction';
@@ -46,8 +47,8 @@ import usePipeline from 'src/hooks/usePipeline';
 import {Image} from 'src/types/image';
 import api from 'src/utils/api';
 import {ImageConsumer, ImageProvider} from 'src/store/ImageContext';
+import goToHash from 'src/utils/goToHash';
 import {CANVAS_OFFSET} from 'src/utils/labeling';
-import Scrollbar from '../../utils/Scrollbar';
 
 interface DTLabelisatorProps {}
 
@@ -136,7 +137,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
 
     const handleSliderChange = (event, value) => {
         try {
-            window.location.hash = imageIds[value];
+            goToHash(imageIds[value]);
         } catch (err) {
             console.error(err);
         }
@@ -149,7 +150,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
     const handleClose = () => {
         setOpen(false);
         saveCurrentCategory(null);
-        window.location.hash = '';
+        window.location.replace(`#`)
     };
 
     const [open, setOpen] = useState<boolean>(window.location.hash.length > 0);
