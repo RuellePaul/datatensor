@@ -2,6 +2,7 @@ import React, {FC, useMemo, useState} from 'react';
 import {useSnackbar} from 'notistack';
 import clsx from 'clsx';
 import {Box, capitalize, Chip, Link, Typography, useTheme} from '@mui/material';
+import {Delete as DeleteIcon} from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
 import api from 'src/utils/api';
 import {Theme} from 'src/theme';
@@ -74,32 +75,28 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
         <Chip
             clickable
             label={
-                <Typography variant="body2">
-                    {count > 0 ? (
-                        <>
-                            <Typography
-                                component="span"
-                                style={{
-                                    fontWeight: count > 0 ? 'bold' : 'initial'
-                                }}
-                            >
-                                {capitalize(category.name)}{' '}
-                            </Typography>
-                            ({count})
-                        </>
-                    ) : (
-                        capitalize(category.name)
-                    )}
-                </Typography>
+                    <Typography variant="body2">
+                        <strong>
+                            {capitalize(category.name)}
+                            {count > 0
+                                ? category.labels_count && ` • ${count}`
+                                : ''
+                            }
+                        </strong>
+                    </Typography>
             }
             onClick={() => saveCurrentCategory(category)}
             style={{
                 color: theme.palette.getContrastText(COLORS[index]),
-                background: COLORS[index]
+                background: COLORS[index],
+                filter: 'grayscale(0.1)'
             }}
-            title={`${category.name} | ${category.supercategory}`}
+            title={`${capitalize(category.name)} | ${capitalize(category.supercategory)}`}
             size={count > 0 ? 'medium' : 'small'}
             onDelete={() => handleDeleteCategory(category.id)}
+            deleteIcon={(
+                <DeleteIcon style={{color: theme.palette.getContrastText(COLORS[index])}}/>
+            )}
         />
     );
 };

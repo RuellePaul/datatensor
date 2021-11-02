@@ -1,6 +1,7 @@
 import React, {FC, useState} from 'react';
 import clsx from 'clsx';
 import {Box, capitalize, Chip, Link, Typography, useTheme} from '@mui/material';
+
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 import AddCategoryAction from 'src/components/core/Labelisator/AddCategoryAction';
@@ -46,13 +47,14 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
                         </strong>
                     </Typography>
                 }
-                title={`${category.name} | ${category.supercategory}`}
+                title={`${capitalize(category.name)} | ${capitalize(category.supercategory)}`}
                 size="medium"
                 style={{
                     color: theme.palette.getContrastText(COLORS[index]),
                     background: COLORS[index],
                     borderColor: COLORS[index],
-                    boxShadow: theme.shadows[1]
+                    boxShadow: theme.shadows[1],
+                    filter: 'grayscale(0.1)'
                 }}
                 variant="outlined"
             />

@@ -1,4 +1,4 @@
-import React, {FC, useEffect} from 'react';
+import React, {FC} from 'react';
 import {Router} from 'react-router-dom';
 import {createBrowserHistory} from 'history';
 import GlobalStyles from 'src/components/utils/GlobalStyles';
