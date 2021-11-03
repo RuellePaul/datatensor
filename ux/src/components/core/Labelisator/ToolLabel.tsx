@@ -4,7 +4,7 @@ import {Point} from 'src/types/point';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 import {
-    CANVAS_OFFSET,
+    CANVAS_OFFSET, currentDelta,
     currentLabelsHoverIds,
     currentPoint,
     drawCursorLines,
@@ -108,6 +108,25 @@ const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
         }
     };
 
+    const handleTouchMove = (event: React.UIEvent<HTMLCanvasElement>) => {
+
+        const touchEvent = (event.nativeEvent as TouchEvent);
+        const touches = touchEvent.changedTouches;
+
+        if (touches.length !== 2)
+            return
+
+        const pointA = [touches[0].pageX, touches[0].pageY];
+        const pointB = [touches[1].pageX, touches[1].pageY];
+
+        const canvas = canvasRef.current;
+        if (canvas === null)
+            return;
+
+        reset(canvas);
+        drawRect(canvas, pointB, pointA);
+    }
+
     return (
         <canvas
             className={classes.canvas}
@@ -115,6 +134,7 @@ const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
             onMouseUp={handleMouseUp}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
+            onTouchMove={handleTouchMove}
             ref={canvasRef}
         />
     );
