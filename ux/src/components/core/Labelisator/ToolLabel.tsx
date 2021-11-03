@@ -115,7 +115,6 @@ const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
             onMouseUp={handleMouseUp}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
-            onTouchStart={handleTouchStart}
             ref={canvasRef}
         />
     );
