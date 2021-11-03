@@ -45,6 +45,18 @@ const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
 
     const [storedPoint, setStoredPoint] = useState<Point>(null);
 
+    const handleMouseLeave = (event: React.MouseEvent<HTMLCanvasElement>) => {
+        reset(canvasRef.current);
+    };
+
+    const handleMouseDown = (event: React.MouseEvent<HTMLCanvasElement>) => {
+        let point = currentPoint(event.nativeEvent);
+        if (pointIsOutside(canvasRef.current, point)) return;
+        if (event.nativeEvent.which === 1) {
+            setStoredPoint(point);
+        }
+    };
+
     const handleMouseMove = (event: React.MouseEvent<HTMLCanvasElement>) => {
         let canvas = canvasRef.current;
         reset(canvas);
@@ -64,18 +76,6 @@ const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
         if (event.nativeEvent.which === 1)
             // START DRAW LABEL
             drawRect(canvas, point, storedPoint);
-    };
-
-    const handleMouseLeave = (event: React.MouseEvent<HTMLCanvasElement>) => {
-        reset(canvasRef.current);
-    };
-
-    const handleMouseDown = (event: React.MouseEvent<HTMLCanvasElement>) => {
-        let point = currentPoint(event.nativeEvent);
-        if (pointIsOutside(canvasRef.current, point)) return;
-        if (event.nativeEvent.which === 1) {
-            setStoredPoint(point);
-        }
     };
 
     const handleMouseUp = (event: React.MouseEvent<HTMLCanvasElement>) => {
@@ -115,6 +115,7 @@ const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
             onMouseUp={handleMouseUp}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
+            onTouchStart={handleTouchStart}
             ref={canvasRef}
         />
     );
