@@ -5,7 +5,8 @@ import {
     AppBar,
     Badge,
     Box,
-    Button, capitalize,
+    Button,
+    capitalize,
     CircularProgress,
     Container,
     Dialog,
@@ -21,7 +22,8 @@ import {
     ToggleButtonGroup,
     Toolbar,
     Tooltip,
-    Typography
+    Typography,
+    useMediaQuery
 } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {TransitionProps} from '@mui/material/transitions';
@@ -58,8 +60,13 @@ const useStyles = makeStyles((theme: Theme) => ({
         overflow: 'hidden',
         background: theme.palette.background.default
     },
-    scroll: {
-        overflowY: 'auto'
+    labelisator: {
+        position: 'relative',
+        margin: `${CANVAS_OFFSET}px 0px`,
+        [theme.breakpoints.down('sm')]: {
+            marginLeft: -10,
+            marginRight: -10
+        }
     },
     content: {
         padding: theme.spacing(2, 0)
@@ -87,11 +94,17 @@ const Transition = forwardRef(function Transition(
 const DTLabelisator: FC<DTLabelisatorProps> = () => {
     const classes = useStyles();
 
+    const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
+
     const {dataset} = useDataset();
     const {pipeline} = usePipeline();
     const {currentCategory, saveCurrentCategory} = useCategory();
 
-    const [autoSwitch, setAutoSwitch] = useState<boolean>(true);
+    const [autoSwitch, setAutoSwitch] = useState<boolean>(isDesktop);
+
+    useEffect(() => {
+        setAutoSwitch(isDesktop);
+    }, [isDesktop, setAutoSwitch]);
 
     const [tool, setTool] = useState<'label' | 'move'>('label');
     const handleToolChange = (event: React.MouseEvent<HTMLElement>, newTool: 'label' | 'move' | null) => {
@@ -150,7 +163,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
     const handleClose = () => {
         setOpen(false);
         saveCurrentCategory(null);
-        window.location.replace(`#`)
+        window.location.replace(`#`);
     };
 
     const [open, setOpen] = useState<boolean>(window.location.hash.length > 0);
@@ -257,18 +270,20 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                         </ToggleButton>
                                     </ToggleButtonGroup>
 
-                                    <FormControlLabel
-                                        className={classes.switch}
-                                        control={
-                                            <Switch
-                                                color="primary"
-                                                size="small"
-                                                checked={autoSwitch}
-                                                onChange={() => setAutoSwitch(!autoSwitch)}
-                                            />
-                                        }
-                                        label={<Typography color="textSecondary">Auto switch</Typography>}
-                                    />
+                                    <Hidden smDown>
+                                        <FormControlLabel
+                                            className={classes.switch}
+                                            control={
+                                                <Switch
+                                                    color="primary"
+                                                    size="small"
+                                                    checked={autoSwitch}
+                                                    onChange={() => setAutoSwitch(!autoSwitch)}
+                                                />
+                                            }
+                                            label={<Typography color="textSecondary">Auto switch</Typography>}
+                                        />
+                                    </Hidden>
 
                                     <div className="flexGrow" />
 
@@ -337,7 +352,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                 </Box>
 
                                 {image ? (
-                                    <Box position="relative" my={`${CANVAS_OFFSET}px`}>
+                                    <div className={classes.labelisator}>
                                         <div className={clsx(tool !== 'label' && 'hidden')}>
                                             <ToolLabel setTool={setTool} autoSwitch={autoSwitch} />
                                         </div>
@@ -348,7 +363,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                         <DTImage skeleton />
 
                                         <KeyboardListener index={index} imageIds={imageIds} setTool={setTool} />
-                                    </Box>
+                                    </div>
                                 ) : (
                                     <CircularProgress />
                                 )}

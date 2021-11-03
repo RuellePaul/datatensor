@@ -12,7 +12,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     root: {},
     track: {},
     view: {
-        position: 'relative'
+        position: 'relative',
+        overflowX: 'hidden !important' as any
     },
     thumb: {
         backgroundColor: '#6b6b6b !important'
