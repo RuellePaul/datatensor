@@ -86,13 +86,13 @@ const DTCategory: FC<CategoryProps> = ({category, index, edit}) => {
                 variant="outlined"
                 onDelete={edit ? () => handleDeleteCategory(category.id) : null}
                 deleteIcon={
-                    edit && (
+                    edit ? (
                         <Tooltip title={`Delete "${capitalize(category.name)}" category`}>
                             <IconButton size="small">
                                 <DeleteIcon style={{color: theme.palette.getContrastText(COLORS[index])}} />
                             </IconButton>
                         </Tooltip>
-                    )
+                    ) : null
                 }
             />
         </Box>
