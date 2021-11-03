@@ -5,7 +5,7 @@ import {
     AppBar,
     Badge,
     Box,
-    Button,
+    Button, capitalize,
     CircularProgress,
     Container,
     Dialog,
@@ -89,7 +89,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
 
     const {dataset} = useDataset();
     const {pipeline} = usePipeline();
-    const {saveCurrentCategory} = useCategory();
+    const {currentCategory, saveCurrentCategory} = useCategory();
 
     const [autoSwitch, setAutoSwitch] = useState<boolean>(true);
 
@@ -227,6 +227,8 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                     <NextUnlabeledImageAction index={index} pipeline_id={pipeline?.id} />
                                 </Box>
 
+                                <Divider sx={{my: 2}} />
+
                                 <Box display="flex" alignItems="center">
                                     <ToggleButtonGroup value={tool} exclusive onChange={handleToolChange} size="small">
                                         <ToggleButton value="label" disabled={autoSwitch}>
@@ -267,6 +269,10 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                         }
                                         label={<Typography color="textSecondary">Auto switch</Typography>}
                                     />
+
+                                    <div className="flexGrow" />
+
+                                    {currentCategory && capitalize(currentCategory.name)}
 
                                     <div className="flexGrow" />
 
@@ -316,7 +322,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                                 <ImageConsumer>
                                                     {value => (
                                                         <Button
-                                                            variant="outlined"
+                                                            variant="contained"
                                                             color="primary"
                                                             size="small"
                                                             onClick={value.validateLabels}
