@@ -60,6 +60,9 @@ const useStyles = makeStyles((theme: Theme) => ({
         overflow: 'hidden',
         background: theme.palette.background.default
     },
+    container: {
+        touchAction: 'pan-y'
+    },
     labelisator: {
         position: 'relative',
         margin: `${CANVAS_OFFSET}px 0px`,
@@ -213,7 +216,10 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                         </Toolbar>
                     </AppBar>
 
-                    <Container maxWidth="xl">
+                    <Container
+                        maxWidth="xl"
+                        className={classes.container}
+                    >
                         <Grid className={classes.content} container spacing={3}>
                             <Grid item lg={8} xs={12}>
                                 <Box display="flex" alignItems="center">

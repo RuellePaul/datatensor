@@ -32,8 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         left: -CANVAS_OFFSET,
         width: `calc(100% + ${2 * CANVAS_OFFSET}px)`,
         height: `calc(100% + ${2 * CANVAS_OFFSET}px)`,
-        zIndex: 1000,
-        touchAction: 'pan-y'
+        zIndex: 1000
     }
 }));
 
