@@ -23,6 +23,10 @@
     flex-grow: 700;
 }
 
+.noTouch {
+    touch-action: none !important;
+}
+
 .smaller {
     font-size: 0.7em !important;
     vertical-align: middle !important;

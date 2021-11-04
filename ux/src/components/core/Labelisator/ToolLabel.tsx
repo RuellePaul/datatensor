@@ -1,5 +1,7 @@
 import React, {FC, useRef, useState} from 'react';
+import clsx from 'clsx';
 import {v4 as uuid} from 'uuid';
+import {useSnackbar} from 'notistack';
 import {Point} from 'src/types/point';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
@@ -30,13 +32,14 @@ const useStyles = makeStyles((theme: Theme) => ({
         left: -CANVAS_OFFSET,
         width: `calc(100% + ${2 * CANVAS_OFFSET}px)`,
         height: `calc(100% + ${2 * CANVAS_OFFSET}px)`,
-        zIndex: 1000,
-        touchAction: 'none'
+        zIndex: 1000
     }
 }));
 
 const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
     const classes = useStyles();
+    const {enqueueSnackbar} = useSnackbar();
+
     const canvasRef = useRef(null);
 
     const {labels, saveLabels, storePosition} = useImage();
@@ -107,30 +110,42 @@ const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
         }
     };
 
-    const handleTouchMove = (event: React.UIEvent<HTMLCanvasElement>) => {
+    const [touchesCount, setTouchesCount] = useState(0);
+
+    const handleTouch = (event: React.UIEvent<HTMLCanvasElement>) => {
         const touchEvent = event.nativeEvent as TouchEvent;
         const touches = touchEvent.changedTouches;
 
-        if (touches.length !== 2) return;
+        setTouchesCount(touches.length);
 
-        const pointA = [touches[0].pageX, touches[0].pageY];
-        const pointB = [touches[1].pageX, touches[1].pageY];
+        if (touches.length <= 1) {
 
-        const canvas = canvasRef.current;
-        if (canvas === null) return;
+        } else if (touches.length === 2) {
+            const canvas = canvasRef.current;
+            if (canvas === null) return;
 
-        reset(canvas);
-        drawRect(canvas, pointB, pointA);
+            const offsetX = canvas.getBoundingClientRect().left;
+            const offsetY = canvas.getBoundingClientRect().top;
+
+            const pointA = [touches[0].pageX - offsetX, touches[0].pageY - offsetY];
+            const pointB = [touches[1].pageX - offsetX, touches[1].pageY - offsetY];
+
+            reset(canvas);
+            drawRect(canvas, pointB, pointA);
+        } else {
+            enqueueSnackbar('Labelisator only handles 2 touch point', {variant: 'warning'});
+        }
     };
 
     return (
         <canvas
-            className={classes.canvas}
+            className={clsx(classes.canvas, touchesCount === 2 && 'noTouch')}
             onMouseDown={handleMouseDown}
             onMouseUp={handleMouseUp}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
-            onTouchMove={handleTouchMove}
+            onTouchStart={handleTouch}
+            onTouchMove={handleTouch}
             ref={canvasRef}
         />
     );

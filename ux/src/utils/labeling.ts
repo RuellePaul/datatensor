@@ -68,11 +68,10 @@ export const drawRect = (canvas: HTMLCanvasElement, pointA: Point, pointB: Point
     let h = pointB[1] - pointA[1];
     let color = Math.abs(w) < LABEL_MIN_WIDTH || Math.abs(h) < LABEL_MIN_HEIGHT ? '#FF0000' : '#FFFFFF';
     let context = canvas.getContext('2d');
-    context.lineWidth = 2;
-    context.setLineDash([5]);
+    context.lineWidth = 1;
     context.strokeStyle = color;
     context.strokeRect(x, y, w, h);
-    context.fillStyle = `${color}08`;
+    context.fillStyle = `${color}22`;
     context.fillRect(x, y, w, h);
 };
 

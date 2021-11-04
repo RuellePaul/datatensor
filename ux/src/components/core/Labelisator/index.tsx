@@ -65,7 +65,8 @@ const useStyles = makeStyles((theme: Theme) => ({
         margin: `${CANVAS_OFFSET}px 0px`,
         [theme.breakpoints.down('sm')]: {
             marginLeft: -10,
-            marginRight: -10
+            marginRight: -10,
+            marginBottom: -10
         }
     },
     content: {
@@ -191,27 +192,27 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
             TransitionComponent={Transition}
         >
             <ImageProvider image={image}>
-                <AppBar className={classes.header}>
-                    <Toolbar className={classes.toolbar}>
-                        <Box mr={2}>
-                            <LabelisatorIcon color="inherit" />
-                        </Box>
-                        <Typography variant="h4" color="inherit">
-                            Labelisator
-                        </Typography>
-                        <Box flexGrow={1} />
-                        <Hidden smDown>
-                            <Box mr={2}>
-                                <KeyboardShortcuts />
-                            </Box>
-                        </Hidden>
-                        <IconButton edge="start" color="inherit" onClick={handleClose} size="large">
-                            <CloseIcon />
-                        </IconButton>
-                    </Toolbar>
-                </AppBar>
-
                 <Scrollbar>
+                    <AppBar className={classes.header}>
+                        <Toolbar className={classes.toolbar}>
+                            <Box mr={2}>
+                                <LabelisatorIcon color="inherit" />
+                            </Box>
+                            <Typography variant="h4" color="inherit">
+                                Labelisator
+                            </Typography>
+                            <Box flexGrow={1} />
+                            <Hidden smDown>
+                                <Box mr={2}>
+                                    <KeyboardShortcuts />
+                                </Box>
+                            </Hidden>
+                            <IconButton edge="start" color="inherit" onClick={handleClose} size="large">
+                                <CloseIcon />
+                            </IconButton>
+                        </Toolbar>
+                    </AppBar>
+
                     <Container maxWidth="xl">
                         <Grid className={classes.content} container spacing={3}>
                             <Grid item lg={8} xs={12}>
