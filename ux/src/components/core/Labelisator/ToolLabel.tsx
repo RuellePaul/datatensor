@@ -110,17 +110,15 @@ const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
         }
     };
 
-    const [touchesCount, setTouchesCount] = useState(0);
-
     const handleTouch = (event: React.UIEvent<HTMLCanvasElement>) => {
         const touchEvent = event.nativeEvent as TouchEvent;
         const touches = touchEvent.changedTouches;
 
-        setTouchesCount(touches.length);
-
         if (touches.length <= 1) {
 
         } else if (touches.length === 2) {
+            event.preventDefault();
+
             const canvas = canvasRef.current;
             if (canvas === null) return;
 
@@ -139,7 +137,7 @@ const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
 
     return (
         <canvas
-            className={clsx(classes.canvas, touchesCount === 2 && 'noTouch')}
+            className={clsx(classes.canvas)}
             onMouseDown={handleMouseDown}
             onMouseUp={handleMouseUp}
             onMouseMove={handleMouseMove}
