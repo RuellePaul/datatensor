@@ -1,7 +1,6 @@
 import React, {FC, useRef, useState} from 'react';
 import clsx from 'clsx';
 import {v4 as uuid} from 'uuid';
-import {useSnackbar} from 'notistack';
 import {Point} from 'src/types/point';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
@@ -38,7 +37,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
     const classes = useStyles();
-    const {enqueueSnackbar} = useSnackbar();
 
     const canvasRef = useRef(null);
 
@@ -90,6 +88,8 @@ const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
             if (canvas === null) return;
             if (Math.abs(storedPoint[0] - point[0]) < LABEL_MIN_WIDTH) return;
             if (Math.abs(storedPoint[1] - point[1]) < LABEL_MIN_HEIGHT) return;
+
+            reset(canvas);
             let newLabel = {
                 id: uuid(),
                 x: formatRatio(
@@ -115,7 +115,6 @@ const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
         const touches = touchEvent.changedTouches;
 
         if (touches.length <= 1) {
-
         } else if (touches.length === 2) {
             event.preventDefault();
 
@@ -130,8 +129,47 @@ const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
 
             reset(canvas);
             drawRect(canvas, pointB, pointA);
-        } else {
-            enqueueSnackbar('Labelisator only handles 2 touch point', {variant: 'warning'});
+        }
+    };
+
+    const handleTouchEnd = (event: React.UIEvent<HTMLCanvasElement>) => {
+        const touchEvent = event.nativeEvent as TouchEvent;
+        const touches = touchEvent.changedTouches;
+
+        if (touches.length <= 1) {
+        } else if (touches.length === 2) {
+            event.preventDefault();
+
+            const canvas = canvasRef.current;
+            if (canvas === null) return;
+
+            const offsetX = canvas.getBoundingClientRect().left;
+            const offsetY = canvas.getBoundingClientRect().top;
+
+            const pointA = [touches[0].pageX - offsetX, touches[0].pageY - offsetY];
+            const pointB = [touches[1].pageX - offsetX, touches[1].pageY - offsetY];
+
+            if (pointIsOutside(canvas, pointA)) return;
+            if (pointIsOutside(canvas, pointB)) return;
+            if (Math.abs(pointB[0] - pointA[0]) < LABEL_MIN_WIDTH) return;
+            if (Math.abs(pointB[1] - pointA[1]) < LABEL_MIN_HEIGHT) return;
+
+            reset(canvas);
+            let newLabel = {
+                id: uuid(),
+                x: formatRatio(
+                    Math.min(pointA[0] - CANVAS_OFFSET, pointB[0] - CANVAS_OFFSET) / (canvas.width - 2 * CANVAS_OFFSET)
+                ),
+                y: formatRatio(
+                    Math.min(pointA[1] - CANVAS_OFFSET, pointB[1] - CANVAS_OFFSET) / (canvas.height - 2 * CANVAS_OFFSET)
+                ),
+                w: formatRatio((pointA[0] - pointB[0]) / (canvas.width - 2 * CANVAS_OFFSET)),
+                h: formatRatio((pointA[1] - pointB[1]) / (canvas.height - 2 * CANVAS_OFFSET)),
+                category_id: currentCategory?.id || null
+            };
+            let newLabels = [...labels, newLabel];
+            saveLabels(newLabels);
+            storePosition(newLabels);
         }
     };
 
@@ -144,6 +182,7 @@ const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
             onMouseLeave={handleMouseLeave}
             onTouchStart={handleTouch}
             onTouchMove={handleTouch}
+            onTouchEnd={handleTouchEnd}
             ref={canvasRef}
         />
     );
