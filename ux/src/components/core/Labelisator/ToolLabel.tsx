@@ -110,14 +110,15 @@ const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
         }
     };
 
+    const [storedPointA, setStoredPointA] = useState<Point>(null);
+    const [storedPointB, setStoredPointB] = useState<Point>(null);
+
     const handleTouch = (event: React.UIEvent<HTMLCanvasElement>) => {
         const touchEvent = event.nativeEvent as TouchEvent;
         const touches = touchEvent.changedTouches;
 
         if (touches.length <= 1) {
         } else if (touches.length === 2) {
-            event.preventDefault();
-
             const canvas = canvasRef.current;
             if (canvas === null) return;
 
@@ -126,6 +127,8 @@ const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
 
             const pointA = [touches[0].pageX - offsetX, touches[0].pageY - offsetY];
             const pointB = [touches[1].pageX - offsetX, touches[1].pageY - offsetY];
+            setStoredPointA(pointA);
+            setStoredPointB(pointB);
 
             reset(canvas);
             drawRect(canvas, pointB, pointA);
@@ -133,44 +136,33 @@ const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
     };
 
     const handleTouchEnd = (event: React.UIEvent<HTMLCanvasElement>) => {
-        const touchEvent = event.nativeEvent as TouchEvent;
-        const touches = touchEvent.changedTouches;
+        if (!storedPointA) return;
+        if (!storedPointB) return;
 
-        if (touches.length <= 1) {
-        } else if (touches.length === 2) {
-            event.preventDefault();
+        const canvas = canvasRef.current;
+        if (canvas === null) return;
 
-            const canvas = canvasRef.current;
-            if (canvas === null) return;
+        if (pointIsOutside(canvas, storedPointA)) return;
+        if (pointIsOutside(canvas, storedPointB)) return;
+        if (Math.abs(storedPointB[0] - storedPointA[0]) < LABEL_MIN_WIDTH) return;
+        if (Math.abs(storedPointB[1] - storedPointA[1]) < LABEL_MIN_HEIGHT) return;
 
-            const offsetX = canvas.getBoundingClientRect().left;
-            const offsetY = canvas.getBoundingClientRect().top;
-
-            const pointA = [touches[0].pageX - offsetX, touches[0].pageY - offsetY];
-            const pointB = [touches[1].pageX - offsetX, touches[1].pageY - offsetY];
-
-            if (pointIsOutside(canvas, pointA)) return;
-            if (pointIsOutside(canvas, pointB)) return;
-            if (Math.abs(pointB[0] - pointA[0]) < LABEL_MIN_WIDTH) return;
-            if (Math.abs(pointB[1] - pointA[1]) < LABEL_MIN_HEIGHT) return;
-
-            reset(canvas);
-            let newLabel = {
-                id: uuid(),
-                x: formatRatio(
-                    Math.min(pointA[0] - CANVAS_OFFSET, pointB[0] - CANVAS_OFFSET) / (canvas.width - 2 * CANVAS_OFFSET)
-                ),
-                y: formatRatio(
-                    Math.min(pointA[1] - CANVAS_OFFSET, pointB[1] - CANVAS_OFFSET) / (canvas.height - 2 * CANVAS_OFFSET)
-                ),
-                w: formatRatio((pointA[0] - pointB[0]) / (canvas.width - 2 * CANVAS_OFFSET)),
-                h: formatRatio((pointA[1] - pointB[1]) / (canvas.height - 2 * CANVAS_OFFSET)),
-                category_id: currentCategory?.id || null
-            };
-            let newLabels = [...labels, newLabel];
-            saveLabels(newLabels);
-            storePosition(newLabels);
-        }
+        reset(canvas);
+        let newLabel = {
+            id: uuid(),
+            x: formatRatio(
+                Math.min(storedPointA[0] - CANVAS_OFFSET, storedPointB[0] - CANVAS_OFFSET) / (canvas.width - 2 * CANVAS_OFFSET)
+            ),
+            y: formatRatio(
+                Math.min(storedPointA[1] - CANVAS_OFFSET, storedPointB[1] - CANVAS_OFFSET) / (canvas.height - 2 * CANVAS_OFFSET)
+            ),
+            w: formatRatio((storedPointA[0] - storedPointB[0]) / (canvas.width - 2 * CANVAS_OFFSET)),
+            h: formatRatio((storedPointA[1] - storedPointB[1]) / (canvas.height - 2 * CANVAS_OFFSET)),
+            category_id: currentCategory?.id || null
+        };
+        let newLabels = [...labels, newLabel];
+        saveLabels(newLabels);
+        storePosition(newLabels);
     };
 
     return (
