@@ -41,7 +41,7 @@ export const convertLabel = (canvas: HTMLCanvasElement, label: Label, offset = C
     let y = offset + label.y * (canvas.height - 2 * offset);
     let w = label.w * (canvas.width - 2 * offset);
     let h = label.h * (canvas.height - 2 * offset);
-    return {x, y, w, h};
+    return { x, y, w, h };
 };
 
 export const drawCursorLines = (canvas: HTMLCanvasElement, point: Point) => {
@@ -50,7 +50,7 @@ export const drawCursorLines = (canvas: HTMLCanvasElement, point: Point) => {
 
     let context = canvas.getContext('2d');
     context.beginPath();
-    context.setLineDash([5]);
+    context.strokeStyle = '#FFFFFF';
     context.moveTo(point[0], CANVAS_OFFSET);
     context.lineTo(point[0], canvas.height - CANVAS_OFFSET);
     context.moveTo(CANVAS_OFFSET, point[1]);
@@ -94,9 +94,9 @@ export const drawLabels = (
     for (const label of labels) {
         const category = categories.find(category => label.category_id === category.id);
 
-        const {x, y, w, h} = convertLabel(canvas, label, offset);
+        const { x, y, w, h } = convertLabel(canvas, label, offset);
 
-        let color = COLORS[categories.indexOf(category)] || '#000000';
+        let color = COLORS[categories.indexOf(category)] || '#FFFFFF';
 
         context.strokeStyle = color;
         context.strokeRect(x, y, w, h);
@@ -134,7 +134,7 @@ export const renderCursor = (
     if (!labels || !point) return;
 
     for (const label of labels) {
-        const {x, y, w, h} = convertLabel(canvas, label);
+        const { x, y, w, h } = convertLabel(canvas, label);
 
         if (point[0] > x && point[0] < x + RESIZE_SIZE) {
             if (point[1] > y && point[1] < y + RESIZE_SIZE) {
@@ -165,7 +165,7 @@ export const currentLabelsHoverIds = (canvas: HTMLCanvasElement, point: Point, l
 
     let labelsHoverIds = [];
     for (const label of labels) {
-        const {x, y, w, h} = convertLabel(canvas, label);
+        const { x, y, w, h } = convertLabel(canvas, label);
 
         if (x < point[0]) {
             if (y < point[1]) {
