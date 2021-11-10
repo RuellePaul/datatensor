@@ -12,12 +12,12 @@ import {
     currentLabelsResized,
     currentLabelsTranslated,
     currentPoint,
+    distance,
     drawLabels,
     renderCursor,
     reset
 } from 'src/utils/labeling';
 import useImage from 'src/hooks/useImage';
-
 
 interface ToolMoveProps {
     setTool: any;
@@ -31,8 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         left: -CANVAS_OFFSET,
         width: `calc(100% + ${2 * CANVAS_OFFSET}px)`,
         height: `calc(100% + ${2 * CANVAS_OFFSET}px)`,
-        zIndex: 1000,
-        touchAction: 'none'
+        zIndex: 1000
     }
 }));
 
@@ -63,9 +62,10 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
         let point = currentPoint(event.nativeEvent);
 
         let canvas = canvasRef.current;
-        reset(canvas);
 
         if (event.nativeEvent.which === 1) {
+            reset(canvas);
+
             let labelsHoverIds = currentLabelsHoverIds(canvasRef.current, point, labels);
             if (labelsHoverIds.length > 0) {
                 setStoredPoint(point);
@@ -99,18 +99,15 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
                 });
             }
         }
-        if (event.nativeEvent.which === 3) {
-            let labelsHoverIds = currentLabelsHoverIds(canvasRef.current, point, labels);
-            setStoredLabels(labels.filter(label => labelsHoverIds.includes(label.id)));
-        }
     };
 
     const handleMouseMove = (event: React.MouseEvent<HTMLCanvasElement>) => {
         let canvas = canvasRef.current;
-        reset(canvas);
         let point = currentPoint(event.nativeEvent);
 
         if (event.nativeEvent.which === 0) {
+            reset(canvas);
+
             // IDLE
             let labelsHoverIds = currentLabelsHoverIds(canvas, point, labels);
             if (autoSwitch && labelsHoverIds.length === 0) {
@@ -122,7 +119,7 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
                 labels.filter(label => labelsHoverIds.includes(label.id)),
                 categories,
                 CANVAS_OFFSET,
-                5,
+                0,
                 true,
                 true
             );
@@ -133,6 +130,8 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
         }
 
         if (event.nativeEvent.which === 1) {
+            reset(canvas);
+
             // START MOVE
             if (storedLabels.length === 0) return;
             if (direction === null) {
@@ -173,10 +172,65 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
     const handleContextMenu = (event: React.MouseEvent<HTMLElement>) => {
         event.preventDefault();
         setContextMenuPoint([event.clientX, event.clientY]);
+        let point = currentPoint(event.nativeEvent);
+        setStoredPoint(point);
+        let labelsHoverIds = currentLabelsHoverIds(canvasRef.current, point, labels);
+        setStoredLabels(labels.filter(label => labelsHoverIds.includes(label.id)));
     };
 
     const handleClose = () => {
         setContextMenuPoint([null, null]);
+        setStoredLabels([]);
+        reset(canvasRef.current);
+    };
+
+    const [lastPoint, setLastPoint] = useState<Point>(null);
+
+    const handleTouch = (event: React.UIEvent<HTMLCanvasElement>) => {
+        const touchEvent = event.nativeEvent as TouchEvent;
+        const touches = touchEvent.changedTouches;
+
+        if (touches.length === 1) {
+            if (storedLabels.length === 0) return;
+
+            const canvas = canvasRef.current;
+            if (canvas === null) return;
+
+            const offsetX = canvas.getBoundingClientRect().left;
+            const offsetY = canvas.getBoundingClientRect().top;
+
+            const point = [touches[0].pageX - offsetX, touches[0].pageY - offsetY];
+            setLastPoint(point);
+
+            if (distance(lastPoint, storedPoint) > 20) setContextMenuPoint([null, null]);
+
+            let labelsTranslated = currentLabelsTranslated(canvas, storedLabels, point, storedPoint);
+            reset(canvas);
+            drawLabels(canvas, labelsTranslated, categories, CANVAS_OFFSET, 5, true, true);
+        }
+    };
+
+    const handleTouchEnd = (event: React.UIEvent<HTMLCanvasElement>) => {
+        const canvas = canvasRef.current;
+        if (canvas === null) return;
+        reset(canvas);
+
+        if (!storedPoint || !storedLabels) return;
+        if (storedLabels.length === 0) return;
+
+        if (distance(lastPoint, storedPoint) > 20) handleClose();
+
+        setLastPoint(null);
+
+        let labelsTranslated = currentLabelsTranslated(canvas, storedLabels, lastPoint, storedPoint);
+        saveLabels([
+            ...labels.filter(label => !labelsTranslated.map(label => label.id).includes(label.id)),
+            ...labelsTranslated
+        ]);
+        storePosition([
+            ...labels.filter(label => !labelsTranslated.map(label => label.id).includes(label.id)),
+            ...labelsTranslated
+        ]);
     };
 
     return (
@@ -187,6 +241,9 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
                 onMouseUp={handleMouseUp}
                 onMouseMove={handleMouseMove}
                 onContextMenu={handleContextMenu}
+                onTouchStart={handleTouch}
+                onTouchMove={handleTouch}
+                onTouchEnd={handleTouchEnd}
                 ref={canvasRef}
             />
             <ContextMenu

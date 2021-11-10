@@ -7,11 +7,18 @@ import {COLORS} from 'src/utils/colors';
 import {capitalize} from '@mui/material';
 
 export const RESIZE_SIZE = 8;
-export const LABEL_MIN_WIDTH = 25;
-export const LABEL_MIN_HEIGHT = 25;
+export const LABEL_MIN_WIDTH = 16;
+export const LABEL_MIN_HEIGHT = 16;
 export const CANVAS_OFFSET = 20;
 export const MIN_FONT_SIZE = 16;
 export const MAX_FONT_SIZE = 24;
+
+export const distance = (pointA, pointB) => {
+    if (pointA === null) return 0;
+    if (pointB === null) return 0;
+
+    return Math.sqrt((pointB[1] - pointA[1]) ** 2 + (pointB[0] - pointA[0]) ** 2);
+};
 
 export const currentPoint = nativeEvent => [nativeEvent.offsetX, nativeEvent.offsetY];
 

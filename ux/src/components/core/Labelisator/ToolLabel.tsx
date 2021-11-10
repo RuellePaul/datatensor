@@ -50,15 +50,21 @@ const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
     };
 
     const handleMouseDown = (event: React.MouseEvent<HTMLCanvasElement>) => {
+        let canvas = canvasRef.current;
+        if (!canvas) return;
+
         let point = currentPoint(event.nativeEvent);
         if (pointIsOutside(canvasRef.current, point)) return;
         if (event.nativeEvent.which === 1) {
             setStoredPoint(point);
+            drawCursorLines(canvas, point);
         }
     };
 
     const handleMouseMove = (event: React.MouseEvent<HTMLCanvasElement>) => {
         let canvas = canvasRef.current;
+        if (!canvas) return;
+
         reset(canvas);
 
         let point = currentPoint(event.nativeEvent);
@@ -86,10 +92,12 @@ const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
             if (pointIsOutside(canvasRef.current, point)) return;
             let canvas = canvasRef.current;
             if (canvas === null) return;
+
             if (Math.abs(storedPoint[0] - point[0]) < LABEL_MIN_WIDTH) return;
             if (Math.abs(storedPoint[1] - point[1]) < LABEL_MIN_HEIGHT) return;
 
             reset(canvas);
+            drawCursorLines(canvas, point);
             let newLabel = {
                 id: uuid(),
                 x: formatRatio(
