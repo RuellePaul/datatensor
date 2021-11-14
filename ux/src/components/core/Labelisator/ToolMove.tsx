@@ -14,10 +14,17 @@ import {
     currentPoint,
     distance,
     drawLabels,
+    drawRect,
+    formatRatio,
+    LABEL_MIN_HEIGHT,
+    LABEL_MIN_WIDTH,
+    pointIsOutside,
     renderCursor,
     reset
 } from 'src/utils/labeling';
 import useImage from 'src/hooks/useImage';
+import {v4 as uuid} from 'uuid';
+import useCategory from '../../../hooks/useCategory';
 
 interface ToolMoveProps {
     setTool: any;
@@ -39,6 +46,8 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
     const classes = useStyles();
 
     const {categories} = useDataset();
+    const {currentCategory} = useCategory();
+
     const {image, labels, saveLabels, storePosition} = useImage();
 
     const canvasRef = useRef<HTMLCanvasElement>();
@@ -114,6 +123,7 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
                 setTool('label');
                 return;
             }
+            if (labels === null) return;
             drawLabels(
                 canvas,
                 labels.filter(label => labelsHoverIds.includes(label.id)),
@@ -184,17 +194,18 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
         reset(canvasRef.current);
     };
 
-    const [lastPoint, setLastPoint] = useState<Point>(null);
+    const [storedPointA, setStoredPointA] = useState<Point>(null);
+    const [storedPointB, setStoredPointB] = useState<Point>(null);
 
     const handleTouch = (event: React.UIEvent<HTMLCanvasElement>) => {
         const touchEvent = event.nativeEvent as TouchEvent;
         const touches = touchEvent.changedTouches;
 
+        const canvas = canvasRef.current;
+        if (canvas === null) return;
+
         if (touches.length === 1) {
             if (storedLabels.length === 0) return;
-
-            const canvas = canvasRef.current;
-            if (canvas === null) return;
 
             const offsetX = canvas.getBoundingClientRect().left;
             const offsetY = canvas.getBoundingClientRect().top;
@@ -202,11 +213,22 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
             const point = [touches[0].pageX - offsetX, touches[0].pageY - offsetY];
             setLastPoint(point);
 
-            if (distance(lastPoint, storedPoint) > 20) setContextMenuPoint([null, null]);
+            if (distance(lastPoint, storedPoint) > 100) setContextMenuPoint([null, null]);
 
             let labelsTranslated = currentLabelsTranslated(canvas, storedLabels, point, storedPoint);
             reset(canvas);
             drawLabels(canvas, labelsTranslated, categories, CANVAS_OFFSET, 5, true, true);
+        } else if (touches.length === 2) {
+            const offsetX = canvas.getBoundingClientRect().left;
+            const offsetY = canvas.getBoundingClientRect().top;
+
+            const pointA = [touches[0].pageX - offsetX, touches[0].pageY - offsetY];
+            const pointB = [touches[1].pageX - offsetX, touches[1].pageY - offsetY];
+            setStoredPointA(pointA);
+            setStoredPointB(pointB);
+
+            reset(canvas);
+            drawRect(canvas, pointB, pointA);
         }
     };
 
@@ -215,23 +237,55 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
         if (canvas === null) return;
         reset(canvas);
 
-        if (!storedPoint || !storedLabels) return;
-        if (storedLabels.length === 0) return;
+        if (storedLabels.length > 0) {
+            if (!storedPoint || !storedLabels) return;
+            if (storedLabels.length === 0) return;
 
-        if (distance(lastPoint, storedPoint) > 20) handleClose();
+            if (distance(lastPoint, storedPoint) > 100) handleClose();
 
-        setLastPoint(null);
+            setLastPoint(null);
 
-        let labelsTranslated = currentLabelsTranslated(canvas, storedLabels, lastPoint, storedPoint);
-        saveLabels([
-            ...labels.filter(label => !labelsTranslated.map(label => label.id).includes(label.id)),
-            ...labelsTranslated
-        ]);
-        storePosition([
-            ...labels.filter(label => !labelsTranslated.map(label => label.id).includes(label.id)),
-            ...labelsTranslated
-        ]);
+            let labelsTranslated = currentLabelsTranslated(canvas, storedLabels, lastPoint, storedPoint);
+            saveLabels([
+                ...labels.filter(label => !labelsTranslated.map(label => label.id).includes(label.id)),
+                ...labelsTranslated
+            ]);
+            storePosition([
+                ...labels.filter(label => !labelsTranslated.map(label => label.id).includes(label.id)),
+                ...labelsTranslated
+            ]);
+        } else {
+            if (!storedPointA) return;
+            if (!storedPointB) return;
+
+            if (pointIsOutside(canvas, storedPointA)) return;
+            if (pointIsOutside(canvas, storedPointB)) return;
+            if (Math.abs(storedPointB[0] - storedPointA[0]) < LABEL_MIN_WIDTH) return;
+            if (Math.abs(storedPointB[1] - storedPointA[1]) < LABEL_MIN_HEIGHT) return;
+
+            let newLabel = {
+                id: uuid(),
+                x: formatRatio(
+                    Math.min(storedPointA[0] - CANVAS_OFFSET, storedPointB[0] - CANVAS_OFFSET) /
+                        (canvas.width - 2 * CANVAS_OFFSET)
+                ),
+                y: formatRatio(
+                    Math.min(storedPointA[1] - CANVAS_OFFSET, storedPointB[1] - CANVAS_OFFSET) /
+                        (canvas.height - 2 * CANVAS_OFFSET)
+                ),
+                w: formatRatio((storedPointA[0] - storedPointB[0]) / (canvas.width - 2 * CANVAS_OFFSET)),
+                h: formatRatio((storedPointA[1] - storedPointB[1]) / (canvas.height - 2 * CANVAS_OFFSET)),
+                category_id: currentCategory?.id || null
+            };
+            let newLabels = [...labels, newLabel];
+            saveLabels(newLabels);
+            storePosition(newLabels);
+            setStoredPointA(null);
+            setStoredPointB(null);
+        }
     };
+
+    const [lastPoint, setLastPoint] = useState<Point>(null);
 
     return (
         <>

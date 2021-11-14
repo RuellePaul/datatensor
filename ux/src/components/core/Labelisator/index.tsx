@@ -104,16 +104,17 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
     const {pipeline} = usePipeline();
     const {currentCategory, saveCurrentCategory} = useCategory();
 
-    const [autoSwitch, setAutoSwitch] = useState<boolean>(isDesktop);
-
-    useEffect(() => {
-        setAutoSwitch(isDesktop);
-    }, [isDesktop, setAutoSwitch]);
-
     const [tool, setTool] = useState<'label' | 'move'>('label');
     const handleToolChange = (event: React.MouseEvent<HTMLElement>, newTool: 'label' | 'move' | null) => {
         if (newTool !== null) setTool(newTool);
     };
+
+    const [autoSwitch, setAutoSwitch] = useState<boolean>(isDesktop);
+
+    useEffect(() => {
+        setAutoSwitch(isDesktop);
+        setTool('move');
+    }, [isDesktop, setAutoSwitch]);
 
     const [imageIds, setImageIds] = useState<string[]>([]);
 
@@ -216,10 +217,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                         </Toolbar>
                     </AppBar>
 
-                    <Container
-                        maxWidth="xl"
-                        className={classes.container}
-                    >
+                    <Container maxWidth="xl" className={classes.container}>
                         <Grid className={classes.content} container spacing={3}>
                             <Grid item lg={8} xs={12}>
                                 <Box display="flex" alignItems="center">
@@ -250,32 +248,39 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                 <Divider sx={{my: 2}} />
 
                                 <Box display="flex" alignItems="center">
-                                    <ToggleButtonGroup value={tool} exclusive onChange={handleToolChange} size="small">
-                                        <ToggleButton value="label" disabled={autoSwitch}>
-                                            <Tooltip
-                                                title={
-                                                    <Typography variant="overline">
-                                                        Draw
-                                                        <kbd>A</kbd>
-                                                    </Typography>
-                                                }
-                                            >
-                                                <LabelIcon />
-                                            </Tooltip>
-                                        </ToggleButton>
-                                        <ToggleButton value="move" disabled={autoSwitch}>
-                                            <Tooltip
-                                                title={
-                                                    <Typography variant="overline">
-                                                        Move
-                                                        <kbd>Z</kbd>
-                                                    </Typography>
-                                                }
-                                            >
-                                                <MoveIcon />
-                                            </Tooltip>
-                                        </ToggleButton>
-                                    </ToggleButtonGroup>
+                                    <Hidden smDown>
+                                        <ToggleButtonGroup
+                                            value={tool}
+                                            exclusive
+                                            onChange={handleToolChange}
+                                            size="small"
+                                        >
+                                            <ToggleButton value="label" disabled={autoSwitch}>
+                                                <Tooltip
+                                                    title={
+                                                        <Typography variant="overline">
+                                                            Draw
+                                                            <kbd>A</kbd>
+                                                        </Typography>
+                                                    }
+                                                >
+                                                    <LabelIcon />
+                                                </Tooltip>
+                                            </ToggleButton>
+                                            <ToggleButton value="move" disabled={autoSwitch}>
+                                                <Tooltip
+                                                    title={
+                                                        <Typography variant="overline">
+                                                            Move
+                                                            <kbd>Z</kbd>
+                                                        </Typography>
+                                                    }
+                                                >
+                                                    <MoveIcon />
+                                                </Tooltip>
+                                            </ToggleButton>
+                                        </ToggleButtonGroup>
+                                    </Hidden>
 
                                     <Hidden smDown>
                                         <FormControlLabel

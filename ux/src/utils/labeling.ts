@@ -17,7 +17,7 @@ export const distance = (pointA, pointB) => {
     if (pointA === null) return 0;
     if (pointB === null) return 0;
 
-    return Math.sqrt((pointB[1] - pointA[1]) ** 2 + (pointB[0] - pointA[0]) ** 2);
+    return (pointB[1] - pointA[1]) ** 2 + (pointB[0] - pointA[0]) ** 2;
 };
 
 export const currentPoint = nativeEvent => [nativeEvent.offsetX, nativeEvent.offsetY];
