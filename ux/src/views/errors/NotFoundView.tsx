@@ -57,7 +57,7 @@ const NotFoundView: FC = () => {
                             Back to previous page
                         </Button>
                     </Box>
-                    <Button color="primary" component={RouterLink} to="/app/dashboard" variant="contained">
+                    <Button color="primary" component={RouterLink} to="/app/datasets" variant="contained">
                         Back to home
                     </Button>
                 </Box>
