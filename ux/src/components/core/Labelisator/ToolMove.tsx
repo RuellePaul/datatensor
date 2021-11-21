@@ -335,10 +335,10 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
                 <Hidden smUp>
                     <div className={classes.overlay} onClick={handleCloseOverlay}>
                         <Box mb={2}>
-                            <Typography variant="h4" color="textPrimary" align="center" gutterBottom>
+                            <Typography variant="h5" color="textPrimary" align="center" gutterBottom>
                                 To start labeling images, touch with two fingers.
                             </Typography>
-                            <Typography variant="h4" color="textPrimary" align="center" gutterBottom>
+                            <Typography variant="h5" color="textPrimary" align="center" gutterBottom>
                                 To change a label, long-tap and drag it.
                             </Typography>
                         </Box>
