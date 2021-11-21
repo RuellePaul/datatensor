@@ -1,5 +1,7 @@
 import React, {FC, useEffect, useRef, useState} from 'react';
+import {Box, Hidden, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
+import {TouchApp as TouchIcon} from '@mui/icons-material';
 import ContextMenu from './ContextMenu';
 import useDataset from 'src/hooks/useDataset';
 import {Theme} from 'src/theme';
@@ -23,8 +25,9 @@ import {
     reset
 } from 'src/utils/labeling';
 import useImage from 'src/hooks/useImage';
+import useCategory from 'src/hooks/useCategory';
 import {v4 as uuid} from 'uuid';
-import useCategory from '../../../hooks/useCategory';
+import Cookies from 'js-cookie';
 
 interface ToolMoveProps {
     setTool: any;
@@ -39,6 +42,21 @@ const useStyles = makeStyles((theme: Theme) => ({
         width: `calc(100% + ${2 * CANVAS_OFFSET}px)`,
         height: `calc(100% + ${2 * CANVAS_OFFSET}px)`,
         zIndex: 1000
+    },
+    overlay: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        background: 'rgba(0, 0, 0, 0.65)',
+        zIndex: 1100,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        padding: theme.spacing(2, 3),
+        backdropFilter: 'blur(3px)'
     }
 }));
 
@@ -287,6 +305,13 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
 
     const [lastPoint, setLastPoint] = useState<Point>(null);
 
+    const [openOverlay, setOpenOverlay] = useState<boolean>(!Boolean(Cookies.get('labelisatorTouchOverlay')));
+
+    const handleCloseOverlay = () => {
+        Cookies.set('labelisatorTouchOverlay', 'true');
+        setOpenOverlay(false);
+    };
+
     return (
         <>
             <canvas
@@ -306,6 +331,21 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
                 point={contextMenuPoint}
                 handleClose={handleClose}
             />
+            {openOverlay && (
+                <Hidden smUp>
+                    <div className={classes.overlay} onClick={handleCloseOverlay}>
+                        <Box mb={2}>
+                            <Typography variant="h4" color="textPrimary" align="center" gutterBottom>
+                                To start labeling images, touch with two fingers.
+                            </Typography>
+                            <Typography variant="h4" color="textPrimary" align="center" gutterBottom>
+                                To change a label, long-tap and drag it.
+                            </Typography>
+                        </Box>
+                        <TouchIcon className="highlight" fontSize="large" />
+                    </div>
+                </Hidden>
+            )}
         </>
     );
 };
