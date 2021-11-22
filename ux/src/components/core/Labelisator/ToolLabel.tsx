@@ -1,4 +1,5 @@
 import React, {FC, useRef, useState} from 'react';
+import clsx from 'clsx';
 import {v4 as uuid} from 'uuid';
 import {Point} from 'src/types/point';
 import makeStyles from '@mui/styles/makeStyles';
@@ -18,7 +19,6 @@ import {
 import useCategory from 'src/hooks/useCategory';
 import useImage from 'src/hooks/useImage';
 
-
 interface ToolLabelProps {
     setTool: any;
     autoSwitch: boolean;
@@ -37,6 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
     const classes = useStyles();
+
     const canvasRef = useRef(null);
 
     const {labels, saveLabels, storePosition} = useImage();
@@ -44,8 +45,26 @@ const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
 
     const [storedPoint, setStoredPoint] = useState<Point>(null);
 
+    const handleMouseLeave = (event: React.MouseEvent<HTMLCanvasElement>) => {
+        reset(canvasRef.current);
+    };
+
+    const handleMouseDown = (event: React.MouseEvent<HTMLCanvasElement>) => {
+        let canvas = canvasRef.current;
+        if (!canvas) return;
+
+        let point = currentPoint(event.nativeEvent);
+        if (pointIsOutside(canvasRef.current, point)) return;
+        if (event.nativeEvent.which === 1) {
+            setStoredPoint(point);
+            drawCursorLines(canvas, point);
+        }
+    };
+
     const handleMouseMove = (event: React.MouseEvent<HTMLCanvasElement>) => {
         let canvas = canvasRef.current;
+        if (!canvas) return;
+
         reset(canvas);
 
         let point = currentPoint(event.nativeEvent);
@@ -65,18 +84,6 @@ const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
             drawRect(canvas, point, storedPoint);
     };
 
-    const handleMouseLeave = (event: React.MouseEvent<HTMLCanvasElement>) => {
-        reset(canvasRef.current);
-    };
-
-    const handleMouseDown = (event: React.MouseEvent<HTMLCanvasElement>) => {
-        let point = currentPoint(event.nativeEvent);
-        if (pointIsOutside(canvasRef.current, point)) return;
-        if (event.nativeEvent.which === 1) {
-            setStoredPoint(point);
-        }
-    };
-
     const handleMouseUp = (event: React.MouseEvent<HTMLCanvasElement>) => {
         if (event.nativeEvent.which === 1) {
             if (!storedPoint) return;
@@ -85,8 +92,12 @@ const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
             if (pointIsOutside(canvasRef.current, point)) return;
             let canvas = canvasRef.current;
             if (canvas === null) return;
+
             if (Math.abs(storedPoint[0] - point[0]) < LABEL_MIN_WIDTH) return;
             if (Math.abs(storedPoint[1] - point[1]) < LABEL_MIN_HEIGHT) return;
+
+            reset(canvas);
+            drawCursorLines(canvas, point);
             let newLabel = {
                 id: uuid(),
                 x: formatRatio(
@@ -109,7 +120,7 @@ const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
 
     return (
         <canvas
-            className={classes.canvas}
+            className={clsx(classes.canvas)}
             onMouseDown={handleMouseDown}
             onMouseUp={handleMouseUp}
             onMouseMove={handleMouseMove}

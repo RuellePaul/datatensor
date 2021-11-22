@@ -1,11 +1,18 @@
 import React, {FC, useState} from 'react';
 import clsx from 'clsx';
-import {Box, capitalize, Chip, Link, Typography, useTheme} from '@mui/material';
+import {useSnackbar} from 'notistack';
+
+import {Box, Button, capitalize, Chip, IconButton, Link, Tooltip, Typography, useTheme} from '@mui/material';
+import {CreateOutlined as EditIcon, Delete as DeleteIcon} from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
+
 import {Theme} from 'src/theme';
 import AddCategoryAction from 'src/components/core/Labelisator/AddCategoryAction';
 import {Category} from 'src/types/category';
 import useDataset from 'src/hooks/useDataset';
+import useImage from 'src/hooks/useImage';
+import useCategory from 'src/hooks/useCategory';
+import api from 'src/utils/api';
 import {COLORS} from 'src/utils/colors';
 import {MAX_CATEGORIES_DISPLAYED} from 'src/config';
 
@@ -16,6 +23,7 @@ interface CategoriesProps {
 interface CategoryProps {
     category: Category;
     index: number;
+    edit: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -32,8 +40,29 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const DTCategory: FC<CategoryProps> = ({category, index}) => {
+const DTCategory: FC<CategoryProps> = ({category, index, edit}) => {
     const theme = useTheme();
+
+    const {enqueueSnackbar} = useSnackbar();
+
+    const {dataset, saveCategories} = useDataset();
+    const {currentCategory, saveCurrentCategory} = useCategory();
+    const {saveLabels} = useImage();
+
+    const handleDeleteCategory = async (category_id: string) => {
+        try {
+            await api.delete(`/datasets/${dataset.id}/categories/${category_id}`);
+
+            saveCategories(categories => categories.filter(category => category.id !== category_id));
+            saveLabels(labels => labels.filter(label => label.category_id !== category_id));
+
+            if (currentCategory && currentCategory.id === category_id) saveCurrentCategory(null);
+        } catch (error) {
+            enqueueSnackbar(error.message || 'Something went wrong', {
+                variant: 'error'
+            });
+        }
+    };
 
     return (
         <Box mb={1.5} mr={1.5}>
@@ -46,7 +75,7 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
                         </strong>
                     </Typography>
                 }
-                title={`${category.name} | ${category.supercategory}`}
+                title={`${capitalize(category.name)} | ${capitalize(category.supercategory)}`}
                 size="medium"
                 style={{
                     color: theme.palette.getContrastText(COLORS[index]),
@@ -55,6 +84,16 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
                     boxShadow: theme.shadows[1]
                 }}
                 variant="outlined"
+                onDelete={edit ? () => handleDeleteCategory(category.id) : null}
+                deleteIcon={
+                    edit ? (
+                        <Tooltip title={`Delete "${capitalize(category.name)}" category`}>
+                            <IconButton size="small">
+                                <DeleteIcon style={{color: theme.palette.getContrastText(COLORS[index])}} />
+                            </IconButton>
+                        </Tooltip>
+                    ) : null
+                }
             />
         </Box>
     );
@@ -66,20 +105,34 @@ const DTCategories: FC<CategoriesProps> = ({className}) => {
     const {categories} = useDataset();
 
     const [expand, setExpand] = useState<boolean>(false);
+    const [edit, setEdit] = useState<boolean>(false);
+
+    const toggleEdit = () => {
+        setEdit(true);
+    };
 
     return (
         <div className={clsx(classes.root, className)}>
-            <Box display="flex" alignItems="center" justifyContent="space-between">
-                <Typography variant="overline" color="textPrimary" gutterBottom>
+            <Box display="flex" justifyContent="space-between" mb={1}>
+                <Typography variant="overline" color="textPrimary">
                     Labels per category
                 </Typography>
+
+                <Button onClick={toggleEdit} endIcon={<EditIcon />} size="small" disabled={edit}>
+                    Edit
+                </Button>
             </Box>
 
             <div className={classes.categories}>
                 {expand ? (
                     <>
                         {categories.map(category => (
-                            <DTCategory category={category} key={category.id} index={categories.indexOf(category)} />
+                            <DTCategory
+                                category={category}
+                                key={category.id}
+                                index={categories.indexOf(category)}
+                                edit={edit}
+                            />
                         ))}
 
                         <AddCategoryAction />
@@ -94,6 +147,7 @@ const DTCategories: FC<CategoriesProps> = ({className}) => {
                                     category={category}
                                     key={category.id}
                                     index={categories.indexOf(category)}
+                                    edit={edit}
                                 />
                             ))}
                         {categories.length > MAX_CATEGORIES_DISPLAYED ? (

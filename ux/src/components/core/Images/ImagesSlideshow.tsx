@@ -15,7 +15,8 @@ const useStyles = makeStyles(theme => ({
         maxWidth: 410,
         flexGrow: 1,
         [theme.breakpoints.down('sm')]: {
-            margin: `${theme.spacing(3)} auto !important`
+            margin: `${theme.spacing(3)} auto !important`,
+            maxWidth: '100% !important'
         }
     },
     header: {
@@ -31,9 +32,7 @@ const useStyles = makeStyles(theme => ({
     image: {
         height: 255,
         display: 'block',
-        maxWidth: 410,
-        overflow: 'hidden',
-        width: '100%'
+        overflow: 'hidden'
     },
     button: {
         minWidth: 75,

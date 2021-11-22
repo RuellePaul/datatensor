@@ -28,8 +28,7 @@ class Settings(BaseSettings):
     ADMIN_USER_IDS: List[str] = [
         '58a802c1b350056c737ca447db48c7c645581b265e61d2ceeae5e0320adc7e6a',  # RuellePaul (github)
         'b813fd7e62edcdd7b630837e2f7314e0aa28684eca85a15787be242386ee4e0f',  # RuellePaul (google)
-        '83d2218ec37d73a99944dbcd90e5753908a418b99fa79678402ba6bc97a81f83',  # ThomasRoudil (github)
-        '4768b80e01b15556366790ffafa7a344e71f76f6c942c6acbcec87a602336219'  # admin@datatensor.io
+        '83d2218ec37d73a99944dbcd90e5753908a418b99fa79678402ba6bc97a81f83'  # ThomasRoudil (github)
     ]
 
     DATASOURCES: List[dict] = [

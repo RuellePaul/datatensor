@@ -6,6 +6,8 @@ import {
     Badge,
     Box,
     Button,
+    capitalize,
+    Chip,
     CircularProgress,
     Container,
     Dialog,
@@ -21,7 +23,9 @@ import {
     ToggleButtonGroup,
     Toolbar,
     Tooltip,
-    Typography
+    Typography,
+    useMediaQuery,
+    useTheme
 } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {TransitionProps} from '@mui/material/transitions';
@@ -34,6 +38,7 @@ import {
 import DTCategories from 'src/components/core/Labelisator/Categories';
 import DTImage from 'src/components/core/Images/Image';
 import CategoriesDistribution from 'src/components/charts/CategoriesDistribution';
+import Scrollbar from 'src/components/utils/Scrollbar';
 import KeyboardListener from './KeyboardListener';
 import KeyboardShortcuts from './KeyboardShortcuts';
 import NextUnlabeledImageAction from './NextUnlabeledImageAction';
@@ -46,7 +51,9 @@ import usePipeline from 'src/hooks/usePipeline';
 import {Image} from 'src/types/image';
 import api from 'src/utils/api';
 import {ImageConsumer, ImageProvider} from 'src/store/ImageContext';
+import goToHash from 'src/utils/goToHash';
 import {CANVAS_OFFSET} from 'src/utils/labeling';
+import {COLORS} from 'src/utils/colors';
 
 interface DTLabelisatorProps {}
 
@@ -56,8 +63,17 @@ const useStyles = makeStyles((theme: Theme) => ({
         overflow: 'hidden',
         background: theme.palette.background.default
     },
-    scroll: {
-        overflowY: 'auto'
+    container: {
+        touchAction: 'pan-y'
+    },
+    labelisator: {
+        position: 'relative',
+        margin: `${CANVAS_OFFSET}px 0px`,
+        [theme.breakpoints.down('sm')]: {
+            marginLeft: -10,
+            marginRight: -10,
+            marginBottom: -10
+        }
     },
     content: {
         padding: theme.spacing(2, 0)
@@ -84,17 +100,25 @@ const Transition = forwardRef(function Transition(
 
 const DTLabelisator: FC<DTLabelisatorProps> = () => {
     const classes = useStyles();
+    const theme = useTheme();
 
-    const {dataset} = useDataset();
+    const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
+
+    const {dataset, categories} = useDataset();
     const {pipeline} = usePipeline();
-    const {saveCurrentCategory} = useCategory();
-
-    const [autoSwitch, setAutoSwitch] = useState<boolean>(true);
+    const {currentCategory, saveCurrentCategory} = useCategory();
 
     const [tool, setTool] = useState<'label' | 'move'>('label');
     const handleToolChange = (event: React.MouseEvent<HTMLElement>, newTool: 'label' | 'move' | null) => {
         if (newTool !== null) setTool(newTool);
     };
+
+    const [autoSwitch, setAutoSwitch] = useState<boolean>(isDesktop);
+
+    useEffect(() => {
+        setAutoSwitch(isDesktop);
+        setTool('move');
+    }, [isDesktop, setAutoSwitch]);
 
     const [imageIds, setImageIds] = useState<string[]>([]);
 
@@ -135,7 +159,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
 
     const handleSliderChange = (event, value) => {
         try {
-            window.location.hash = imageIds[value];
+            goToHash(imageIds[value]);
         } catch (err) {
             console.error(err);
         }
@@ -148,7 +172,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
     const handleClose = () => {
         setOpen(false);
         saveCurrentCategory(null);
-        window.location.hash = '';
+        window.location.replace(`#`);
     };
 
     const [open, setOpen] = useState<boolean>(window.location.hash.length > 0);
@@ -176,30 +200,30 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
             TransitionComponent={Transition}
         >
             <ImageProvider image={image}>
-                <AppBar className={classes.header}>
-                    <Toolbar className={classes.toolbar}>
-                        <Box mr={2}>
-                            <LabelisatorIcon color="inherit" />
-                        </Box>
-                        <Typography variant="h4" color="inherit">
-                            Labelisator
-                        </Typography>
-                        <Box flexGrow={1} />
-                        <Hidden smDown>
+                <Scrollbar>
+                    <AppBar className={classes.header}>
+                        <Toolbar className={classes.toolbar}>
                             <Box mr={2}>
-                                <KeyboardShortcuts />
+                                <LabelisatorIcon color="inherit" />
                             </Box>
-                        </Hidden>
-                        <IconButton edge="start" color="inherit" onClick={handleClose} size="large">
-                            <CloseIcon />
-                        </IconButton>
-                    </Toolbar>
-                </AppBar>
+                            <Typography variant="h4" color="inherit">
+                                Labelisator
+                            </Typography>
+                            <Box flexGrow={1} />
+                            <Hidden smDown>
+                                <Box mr={2}>
+                                    <KeyboardShortcuts />
+                                </Box>
+                            </Hidden>
+                            <IconButton edge="start" color="inherit" onClick={handleClose} size="large">
+                                <CloseIcon />
+                            </IconButton>
+                        </Toolbar>
+                    </AppBar>
 
-                <div className={clsx(classes.scroll, 'scroll')}>
-                    <Container maxWidth="lg">
+                    <Container maxWidth="xl" className={classes.container}>
                         <Grid className={classes.content} container spacing={3}>
-                            <Grid item xs={12} style={{paddingBottom: 0}}>
+                            <Grid item lg={8} xs={12}>
                                 <Box display="flex" alignItems="center">
                                     <Box mr={1}>
                                         <ImageIcon />
@@ -224,48 +248,81 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
 
                                     <NextUnlabeledImageAction index={index} pipeline_id={pipeline?.id} />
                                 </Box>
-                            </Grid>
-                            <Grid item lg={8} xs={12}>
-                                <Box display="flex" alignItems="center">
-                                    <ToggleButtonGroup value={tool} exclusive onChange={handleToolChange} size="small">
-                                        <ToggleButton value="label" disabled={autoSwitch}>
-                                            <Tooltip
-                                                title={
-                                                    <Typography variant="overline">
-                                                        Draw
-                                                        <kbd>A</kbd>
-                                                    </Typography>
-                                                }
-                                            >
-                                                <LabelIcon />
-                                            </Tooltip>
-                                        </ToggleButton>
-                                        <ToggleButton value="move" disabled={autoSwitch}>
-                                            <Tooltip
-                                                title={
-                                                    <Typography variant="overline">
-                                                        Move
-                                                        <kbd>Z</kbd>
-                                                    </Typography>
-                                                }
-                                            >
-                                                <MoveIcon />
-                                            </Tooltip>
-                                        </ToggleButton>
-                                    </ToggleButtonGroup>
 
-                                    <FormControlLabel
-                                        className={classes.switch}
-                                        control={
-                                            <Switch
-                                                color="primary"
-                                                size="small"
-                                                checked={autoSwitch}
-                                                onChange={() => setAutoSwitch(!autoSwitch)}
-                                            />
-                                        }
-                                        label={<Typography color="textSecondary">Auto switch</Typography>}
-                                    />
+                                <Divider sx={{my: 2}} />
+
+                                <Box display="flex" alignItems="center">
+                                    <Hidden smDown>
+                                        <ToggleButtonGroup
+                                            value={tool}
+                                            exclusive
+                                            onChange={handleToolChange}
+                                            size="small"
+                                        >
+                                            <ToggleButton value="label" disabled={autoSwitch}>
+                                                <Tooltip
+                                                    title={
+                                                        <Typography variant="overline">
+                                                            Draw
+                                                            <kbd>A</kbd>
+                                                        </Typography>
+                                                    }
+                                                >
+                                                    <LabelIcon />
+                                                </Tooltip>
+                                            </ToggleButton>
+                                            <ToggleButton value="move" disabled={autoSwitch}>
+                                                <Tooltip
+                                                    title={
+                                                        <Typography variant="overline">
+                                                            Move
+                                                            <kbd>Z</kbd>
+                                                        </Typography>
+                                                    }
+                                                >
+                                                    <MoveIcon />
+                                                </Tooltip>
+                                            </ToggleButton>
+                                        </ToggleButtonGroup>
+                                    </Hidden>
+
+                                    <Hidden smDown>
+                                        <FormControlLabel
+                                            className={classes.switch}
+                                            control={
+                                                <Switch
+                                                    color="primary"
+                                                    size="small"
+                                                    checked={autoSwitch}
+                                                    onChange={() => setAutoSwitch(!autoSwitch)}
+                                                />
+                                            }
+                                            label={<Typography color="textSecondary">Auto switch</Typography>}
+                                        />
+
+                                        <div className="flexGrow" />
+                                    </Hidden>
+
+                                    {currentCategory && (
+                                        <Chip
+                                            label={
+                                                <Typography variant="body2">
+                                                    <strong>{capitalize(currentCategory.name)}</strong>
+                                                </Typography>
+                                            }
+                                            title={`${capitalize(currentCategory.name)} | ${capitalize(
+                                                currentCategory.supercategory
+                                            )}`}
+                                            size="medium"
+                                            style={{
+                                                color: theme.palette.getContrastText(COLORS[categories.indexOf(currentCategory)]),
+                                                background: COLORS[categories.indexOf(currentCategory)],
+                                                borderColor: COLORS[categories.indexOf(currentCategory)],
+                                                boxShadow: theme.shadows[1]
+                                            }}
+                                            variant="outlined"
+                                        />
+                                    )}
 
                                     <div className="flexGrow" />
 
@@ -315,7 +372,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                                 <ImageConsumer>
                                                     {value => (
                                                         <Button
-                                                            variant="outlined"
+                                                            variant="contained"
                                                             color="primary"
                                                             size="small"
                                                             onClick={value.validateLabels}
@@ -330,7 +387,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                 </Box>
 
                                 {image ? (
-                                    <Box position="relative" my={`${CANVAS_OFFSET}px`}>
+                                    <div className={classes.labelisator}>
                                         <div className={clsx(tool !== 'label' && 'hidden')}>
                                             <ToolLabel setTool={setTool} autoSwitch={autoSwitch} />
                                         </div>
@@ -341,7 +398,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                         <DTImage skeleton />
 
                                         <KeyboardListener index={index} imageIds={imageIds} setTool={setTool} />
-                                    </Box>
+                                    </div>
                                 ) : (
                                     <CircularProgress />
                                 )}
@@ -364,7 +421,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                             </Grid>
                         </Grid>
                     </Container>
-                </div>
+                </Scrollbar>
             </ImageProvider>
         </Dialog>
     );

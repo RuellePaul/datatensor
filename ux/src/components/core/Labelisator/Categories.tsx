@@ -1,9 +1,7 @@
-import React, {FC, useState} from 'react';
-import {useSnackbar} from 'notistack';
+import React, {FC, useMemo, useState} from 'react';
 import clsx from 'clsx';
-import {Box, capitalize, Chip, Link, Typography, useTheme} from '@mui/material';
+import {Box, ButtonBase, capitalize, Chip, Link, Typography, useTheme} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import api from 'src/utils/api';
 import {Theme} from 'src/theme';
 import {Category} from 'src/types/category';
 import AddCategoryAction from 'src/components/core/Labelisator/AddCategoryAction';
@@ -31,6 +29,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     root: {
         width: '100%'
     },
+    button: {
+        borderRadius: 16
+    },
     wrapper: {
         marginTop: theme.spacing(1),
         display: 'flex',
@@ -44,68 +45,38 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const DTCategory: FC<CategoryProps> = ({category, index}) => {
+
+    const classes = useStyles();
     const theme = useTheme();
-    const {enqueueSnackbar} = useSnackbar();
 
-    const {dataset, saveCategories} = useDataset();
-    const {currentCategory, saveCurrentCategory} = useCategory();
-    const {labels, saveLabels} = useImage();
-
-    const isSelected = currentCategory?.name === category.name;
-
-    const handleDeleteCategory = async (category_id: string) => {
-        try {
-            await api.delete(`/datasets/${dataset.id}/categories/${category_id}`);
-
-            saveCategories(categories => categories.filter(category => category.id !== category_id));
-            saveLabels(labels => labels.filter(label => label.category_id !== category_id));
-
-            if (currentCategory && currentCategory.id === category_id) saveCurrentCategory(null);
-        } catch (error) {
-            enqueueSnackbar(error.message || 'Something went wrong', {
-                variant: 'error'
-            });
-        }
-    };
+    const {saveCurrentCategory} = useCategory();
+    const {labels} = useImage();
 
     const count = labels ? currentCategoryCount(labels, category) : 0;
 
     return (
-        <Chip
-            clickable
-            label={
-                <Typography variant="body2">
-                    {count > 0 ? (
-                        <>
-                            <Typography
-                                component="span"
-                                style={{
-                                    fontWeight: count > 0 ? 'bold' : 'initial'
-                                }}
-                            >
-                                {capitalize(category.name)}{' '}
-                            </Typography>
-                            ({count})
-                        </>
-                    ) : (
-                        capitalize(category.name)
-                    )}
-                </Typography>
-            }
+        <ButtonBase
+            className={classes.button}
             onClick={() => saveCurrentCategory(category)}
-            style={
-                isSelected
-                    ? {
-                          color: theme.palette.getContrastText(COLORS[index]),
-                          background: COLORS[index]
-                      }
-                    : {color: COLORS[index]}
-            }
-            title={`${category.name} | ${category.supercategory}`}
-            size={count > 0 ? 'medium' : 'small'}
-            variant="outlined"
-            onDelete={() => handleDeleteCategory(category.id)}
-        />
+        >
+            <Chip
+                clickable
+                label={
+                    <Typography variant="body2">
+                        <strong>
+                            {capitalize(category.name)}
+                            {count > 0 ? (category.labels_count && ` • ${count}`) : ''}
+                        </strong>
+                    </Typography>
+                }
+                style={{
+                    color: theme.palette.getContrastText(COLORS[index]),
+                    background: COLORS[index]
+                }}
+                title={`${capitalize(category.name)} | ${capitalize(category.supercategory)}`}
+                size={count > 0 ? 'medium' : 'small'}
+            />
+        </ButtonBase>
     );
 };
 
@@ -115,15 +86,15 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
 
     const [expand, setExpand] = useState<boolean>(false);
 
-    let labeledCategories, unlabeledCategories;
+    const labeledCategories = useMemo(
+        () => (labels ? categories.filter(category => currentCategoryCount(labels, category) > 0) : []),
+        [categories, labels]
+    );
 
-    if (labels) {
-        labeledCategories = categories.filter(category => currentCategoryCount(labels, category) > 0);
-        unlabeledCategories = categories.filter(category => currentCategoryCount(labels, category) === 0);
-    } else {
-        labeledCategories = [];
-        unlabeledCategories = categories;
-    }
+    const unlabeledCategories = useMemo(
+        () => (labels ? categories.filter(category => currentCategoryCount(labels, category) === 0) : categories),
+        [categories, labels]
+    );
 
     return (
         <div className={clsx(classes.root, 'scroll')}>
@@ -132,13 +103,11 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
                     On this image
                 </Typography>
                 <div className={classes.wrapper}>
-                    {labeledCategories
-                        .sort((a, b) => -b.name.localeCompare(a.name))
-                        .map(category => (
-                            <Box mr={1} mb={1} key={category.id}>
-                                <DTCategory category={category} index={categories.indexOf(category)} />
-                            </Box>
-                        ))}
+                    {labeledCategories.map(category => (
+                        <Box mr={1} mb={1} key={category.id}>
+                            <DTCategory category={category} index={categories.indexOf(category)} />
+                        </Box>
+                    ))}
 
                     {children}
                 </div>
@@ -150,23 +119,18 @@ const Chips: FC<ChipsProps> = ({categories, children}) => {
 
             <div className={classes.wrapper}>
                 {expand ? (
-                    unlabeledCategories
-                        .sort((a, b) => -b.name.localeCompare(a.name))
-                        .map(category => (
+                    unlabeledCategories.map(category => (
+                        <Box mr={1} mb={1} key={category.id}>
+                            <DTCategory category={category} index={categories.indexOf(category)} />
+                        </Box>
+                    ))
+                ) : (
+                    <>
+                        {unlabeledCategories.slice(0, MAX_CATEGORIES_DISPLAYED).map(category => (
                             <Box mr={1} mb={1} key={category.id}>
                                 <DTCategory category={category} index={categories.indexOf(category)} />
                             </Box>
-                        ))
-                ) : (
-                    <>
-                        {unlabeledCategories
-                            .sort((a, b) => -b.name.localeCompare(a.name))
-                            .slice(0, MAX_CATEGORIES_DISPLAYED)
-                            .map(category => (
-                                <Box mr={1} mb={1} key={category.id}>
-                                    <DTCategory category={category} index={categories.indexOf(category)} />
-                                </Box>
-                            ))}
+                        ))}
                         {unlabeledCategories.length > MAX_CATEGORIES_DISPLAYED && (
                             <Link
                                 className={classes.link}

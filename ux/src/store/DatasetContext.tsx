@@ -53,7 +53,7 @@ export const DatasetProvider: FC<DatasetProviderProps> = ({dataset_id, children}
     const fetchCategories = useCallback(async () => {
         try {
             const response = await api.get<{categories: Category[]}>(`/datasets/${dataset_id}/categories/`);
-            handleSaveCategories(response.data.categories);
+            handleSaveCategories(response.data.categories.sort((a, b) => -b.name.localeCompare(a.name)));
         } catch (err) {
             console.error(err);
         }

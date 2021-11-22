@@ -109,7 +109,7 @@ const DTDataset: FC<DatasetProps> = ({className, dataset, ...rest}) => {
                 </UserConsumer>
             </UserProvider>
 
-            <CardActionArea onClick={() => history.push(`/app/datasets/${dataset.id}`)}>
+            <CardActionArea onClick={() => history.push(`/app/datasets/${dataset.id}#`)}>
                 <CardMedia className={classes.media} component="span" image={imagePreview?.path} />
                 <CardContent>
                     <Box display="flex" alignItems="center" mb={1}>

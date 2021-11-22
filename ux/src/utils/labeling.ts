@@ -6,12 +6,20 @@ import {Category} from 'src/types/category';
 import {COLORS} from 'src/utils/colors';
 import {capitalize} from '@mui/material';
 
+
 export const RESIZE_SIZE = 8;
-export const LABEL_MIN_WIDTH = 25;
-export const LABEL_MIN_HEIGHT = 25;
+export const LABEL_MIN_WIDTH = 16;
+export const LABEL_MIN_HEIGHT = 16;
 export const CANVAS_OFFSET = 20;
 export const MIN_FONT_SIZE = 16;
 export const MAX_FONT_SIZE = 24;
+
+export const distance = (pointA, pointB) => {
+    if (pointA === null) return 0;
+    if (pointB === null) return 0;
+
+    return (pointB[1] - pointA[1]) ** 2 + (pointB[0] - pointA[0]) ** 2;
+};
 
 export const currentPoint = nativeEvent => [nativeEvent.offsetX, nativeEvent.offsetY];
 
@@ -41,7 +49,7 @@ export const convertLabel = (canvas: HTMLCanvasElement, label: Label, offset = C
     let y = offset + label.y * (canvas.height - 2 * offset);
     let w = label.w * (canvas.width - 2 * offset);
     let h = label.h * (canvas.height - 2 * offset);
-    return {x, y, w, h};
+    return { x, y, w, h };
 };
 
 export const drawCursorLines = (canvas: HTMLCanvasElement, point: Point) => {
@@ -50,7 +58,9 @@ export const drawCursorLines = (canvas: HTMLCanvasElement, point: Point) => {
 
     let context = canvas.getContext('2d');
     context.beginPath();
-    context.setLineDash([5]);
+    context.strokeStyle = '#FFFFFF';
+    context.shadowColor = '#000000';
+    context.shadowBlur = 1;
     context.moveTo(point[0], CANVAS_OFFSET);
     context.lineTo(point[0], canvas.height - CANVAS_OFFSET);
     context.moveTo(CANVAS_OFFSET, point[1]);
@@ -68,11 +78,12 @@ export const drawRect = (canvas: HTMLCanvasElement, pointA: Point, pointB: Point
     let h = pointB[1] - pointA[1];
     let color = Math.abs(w) < LABEL_MIN_WIDTH || Math.abs(h) < LABEL_MIN_HEIGHT ? '#FF0000' : '#FFFFFF';
     let context = canvas.getContext('2d');
-    context.lineWidth = 2;
-    context.setLineDash([5]);
+    context.lineWidth = 1;
     context.strokeStyle = color;
     context.strokeRect(x, y, w, h);
-    context.fillStyle = `${color}08`;
+    context.shadowColor = '#000000';
+    context.shadowBlur = 1;
+    context.fillStyle = `${color}22`;
     context.fillRect(x, y, w, h);
 };
 
@@ -83,28 +94,31 @@ export const drawLabels = (
     offset = CANVAS_OFFSET,
     dash = 0,
     filled = false,
-    resize = false
+    resize = false,
+    categorySelected: Category = null
 ) => {
     if (!labels) return;
 
     let context = canvas.getContext('2d');
-    context.lineWidth = 2;
+    context.lineWidth = 1;
     context.setLineDash([dash]);
 
     for (const label of labels) {
-        const category = categories.find(category => label.category_id === category.id);
+        const category = categories.sort((a, b) => -b.name.localeCompare(a.name)).find(category => label.category_id === category.id);
 
-        const {x, y, w, h} = convertLabel(canvas, label, offset);
+        const { x, y, w, h } = convertLabel(canvas, label, offset);
 
-        let color = COLORS[categories.indexOf(category)] || '#000000';
+        let color = COLORS[categories.sort((a, b) => -b.name.localeCompare(a.name)).indexOf(category)] || '#FFFFFF';
 
         context.strokeStyle = color;
+        context.shadowColor = '#000000';
+        context.shadowBlur = 1;
         context.strokeRect(x, y, w, h);
 
         context.fillStyle = `${color}05`;
         context.fillRect(x, y, w, h);
-        if (filled) {
-            context.fillStyle = `${color}25`;
+        if (filled || (category && categorySelected && categorySelected.id === category.id)) {
+            context.fillStyle = `${color}50`;
             context.fillRect(x, y, w, h);
         }
 
@@ -134,7 +148,7 @@ export const renderCursor = (
     if (!labels || !point) return;
 
     for (const label of labels) {
-        const {x, y, w, h} = convertLabel(canvas, label);
+        const { x, y, w, h } = convertLabel(canvas, label);
 
         if (point[0] > x && point[0] < x + RESIZE_SIZE) {
             if (point[1] > y && point[1] < y + RESIZE_SIZE) {
@@ -165,7 +179,7 @@ export const currentLabelsHoverIds = (canvas: HTMLCanvasElement, point: Point, l
 
     let labelsHoverIds = [];
     for (const label of labels) {
-        const {x, y, w, h} = convertLabel(canvas, label);
+        const { x, y, w, h } = convertLabel(canvas, label);
 
         if (x < point[0]) {
             if (y < point[1]) {

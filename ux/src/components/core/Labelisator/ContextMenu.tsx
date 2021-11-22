@@ -10,7 +10,6 @@ import {reset} from 'src/utils/labeling';
 import useDataset from 'src/hooks/useDataset';
 import useImage from 'src/hooks/useImage';
 
-
 interface ContextMenuProps {
     canvas: HTMLCanvasElement; // ToolMove's canvas
     selectedLabels: Label[];
@@ -71,21 +70,25 @@ const ContextMenu: FC<ContextMenuProps> = ({canvas, selectedLabels, point, handl
                     </>
                 }
             >
-                {categories.map(category => (
-                    <MenuItem
-                        className={classes.item}
-                        key={category.name}
-                        onClick={() => handleUpdateLabelCategory(category)}
-                    >
-                        <Typography variant="inherit" noWrap>
-                            {selectedLabels.map(selectedLabel => selectedLabel.category_id).includes(category.id) ? (
-                                <strong>{capitalize(category.name)}</strong>
-                            ) : (
-                                capitalize(category.name)
-                            )}
-                        </Typography>
-                    </MenuItem>
-                ))}
+                {categories
+                    .sort((a, b) => -b.name.localeCompare(a.name))
+                    .map(category => (
+                        <MenuItem
+                            className={classes.item}
+                            key={category.name}
+                            onClick={() => handleUpdateLabelCategory(category)}
+                        >
+                            <Typography variant="inherit" noWrap>
+                                {selectedLabels
+                                    .map(selectedLabel => selectedLabel.category_id)
+                                    .includes(category.id) ? (
+                                    <strong>{capitalize(category.name)}</strong>
+                                ) : (
+                                    capitalize(category.name)
+                                )}
+                            </Typography>
+                        </MenuItem>
+                    ))}
             </NestedMenuItem>
             <Box my={0.5}>
                 <Divider />
@@ -96,6 +99,7 @@ const ContextMenu: FC<ContextMenuProps> = ({canvas, selectedLabels, point, handl
                 </ListItemIcon>
                 <Typography variant="inherit" noWrap>
                     Delete
+                    {labels instanceof Array ? ` (${selectedLabels.length})` : ''}
                 </Typography>
             </MenuItem>
         </Menu>

@@ -2,11 +2,12 @@ import React, {FC, ReactNode, useEffect, useRef, useState} from 'react';
 import clsx from 'clsx';
 import {Box, ButtonBase, Skeleton} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
+import {useTabContext} from '@mui/lab';
 import {Theme} from 'src/theme';
 import {drawLabels, reset} from 'src/utils/labeling';
+import useCategory from 'src/hooks/useCategory';
 import useDataset from 'src/hooks/useDataset';
 import useImage from 'src/hooks/useImage';
-import {useTabContext} from '@mui/lab';
 
 interface DTImageProps {
     className?: string;
@@ -64,6 +65,7 @@ const DTImage: FC<DTImageProps> = ({
     const classes = useStyles();
 
     const {categories} = useDataset();
+    const {currentCategory} = useCategory();
     const {image, labels} = useImage();
 
     const imageRef = useRef<HTMLImageElement>(null);
@@ -78,16 +80,16 @@ const DTImage: FC<DTImageProps> = ({
 
         if (canvasRef.current && imageRef.current.complete) {
             reset(canvasRef.current);
-            drawLabels(canvasRef.current, labels, categories, 0);
+            drawLabels(canvasRef.current, labels, categories, 0, 0, false, false, currentCategory);
         }
     };
 
     useEffect(() => {
         if (canvasRef.current && imageRef.current.complete) {
             reset(canvasRef.current);
-            drawLabels(canvasRef.current, labels, categories, 0);
+            drawLabels(canvasRef.current, labels, categories, 0, 0, false, false, currentCategory);
         }
-    }, [labels, categories, value, loaded]);
+    }, [labels, categories, value, loaded, currentCategory]);
 
     return (
         <Box className={clsx(classes.root, className)} style={{aspectRatio: `${image.width} / ${image.height}`}}>

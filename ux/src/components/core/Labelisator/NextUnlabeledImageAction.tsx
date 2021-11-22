@@ -10,6 +10,7 @@ import {ArrowRight} from 'react-feather';
 import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
 import api from 'src/utils/api';
+import goToHash from 'src/utils/goToHash';
 
 
 interface NextUnlabeledImageActionProps {
@@ -60,7 +61,8 @@ const NextUnlabeledImageAction: FC<NextUnlabeledImageActionProps> = ({index, pip
                             }
                         }
                     );
-                    if (response.data.image_id) window.location.hash = response.data.image_id;
+                    if (response.data.image_id)
+                        goToHash(response.data.image_id);
                     else
                         enqueueSnackbar('All images have labels', {
                             variant: 'success'
