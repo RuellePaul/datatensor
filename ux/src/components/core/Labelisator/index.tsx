@@ -7,6 +7,7 @@ import {
     Box,
     Button,
     capitalize,
+    Chip,
     CircularProgress,
     Container,
     Dialog,
@@ -23,7 +24,8 @@ import {
     Toolbar,
     Tooltip,
     Typography,
-    useMediaQuery
+    useMediaQuery,
+    useTheme
 } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {TransitionProps} from '@mui/material/transitions';
@@ -51,6 +53,7 @@ import api from 'src/utils/api';
 import {ImageConsumer, ImageProvider} from 'src/store/ImageContext';
 import goToHash from 'src/utils/goToHash';
 import {CANVAS_OFFSET} from 'src/utils/labeling';
+import {COLORS} from '../../../utils/colors';
 
 interface DTLabelisatorProps {}
 
@@ -97,6 +100,7 @@ const Transition = forwardRef(function Transition(
 
 const DTLabelisator: FC<DTLabelisatorProps> = () => {
     const classes = useStyles();
+    const theme = useTheme();
 
     const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
 
@@ -295,11 +299,30 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                             }
                                             label={<Typography color="textSecondary">Auto switch</Typography>}
                                         />
+
+                                        <div className="flexGrow" />
                                     </Hidden>
 
-                                    <div className="flexGrow" />
-
-                                    {currentCategory && capitalize(currentCategory.name)}
+                                    {currentCategory && (
+                                        <Chip
+                                            label={
+                                                <Typography variant="body2">
+                                                    <strong>{capitalize(currentCategory.name)}</strong>
+                                                </Typography>
+                                            }
+                                            title={`${capitalize(currentCategory.name)} | ${capitalize(
+                                                currentCategory.supercategory
+                                            )}`}
+                                            size="medium"
+                                            style={{
+                                                color: theme.palette.getContrastText(COLORS[index]),
+                                                background: COLORS[index],
+                                                borderColor: COLORS[index],
+                                                boxShadow: theme.shadows[1]
+                                            }}
+                                            variant="outlined"
+                                        />
+                                    )}
 
                                     <div className="flexGrow" />
 

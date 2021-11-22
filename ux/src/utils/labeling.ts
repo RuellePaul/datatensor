@@ -6,6 +6,7 @@ import {Category} from 'src/types/category';
 import {COLORS} from 'src/utils/colors';
 import {capitalize} from '@mui/material';
 
+
 export const RESIZE_SIZE = 8;
 export const LABEL_MIN_WIDTH = 16;
 export const LABEL_MIN_HEIGHT = 16;
@@ -58,6 +59,8 @@ export const drawCursorLines = (canvas: HTMLCanvasElement, point: Point) => {
     let context = canvas.getContext('2d');
     context.beginPath();
     context.strokeStyle = '#FFFFFF';
+    context.shadowColor = '#000000';
+    context.shadowBlur = 1;
     context.moveTo(point[0], CANVAS_OFFSET);
     context.lineTo(point[0], canvas.height - CANVAS_OFFSET);
     context.moveTo(CANVAS_OFFSET, point[1]);
@@ -78,6 +81,8 @@ export const drawRect = (canvas: HTMLCanvasElement, pointA: Point, pointB: Point
     context.lineWidth = 1;
     context.strokeStyle = color;
     context.strokeRect(x, y, w, h);
+    context.shadowColor = '#000000';
+    context.shadowBlur = 1;
     context.fillStyle = `${color}22`;
     context.fillRect(x, y, w, h);
 };
@@ -106,6 +111,8 @@ export const drawLabels = (
         let color = COLORS[categories.indexOf(category)] || '#FFFFFF';
 
         context.strokeStyle = color;
+        context.shadowColor = '#000000';
+        context.shadowBlur = 1;
         context.strokeRect(x, y, w, h);
 
         context.fillStyle = `${color}05`;
