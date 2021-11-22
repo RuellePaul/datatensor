@@ -2,7 +2,7 @@ import React, {FC} from 'react';
 import clsx from 'clsx';
 import * as Yup from 'yup';
 import {Formik} from 'formik';
-import {Alert, Box, Button, FormHelperText, TextField} from '@mui/material';
+import {Box, Button, FormHelperText, TextField} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import useAuth from 'src/hooks/useAuth';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
@@ -100,15 +100,6 @@ const JWTLogin: FC<JWTLoginProps> = ({className, ...rest}) => {
                             Log In
                         </Button>
                     </Box>
-                    {process.env.REACT_APP_ENVIRONMENT === 'development' && (
-                        <Box mt={2}>
-                            <Alert severity="info">
-                                <div>
-                                    Use <b>demo@datatensor.io</b> and password <b>Password123</b>
-                                </div>
-                            </Alert>
-                        </Box>
-                    )}
                 </form>
             )}
         </Formik>

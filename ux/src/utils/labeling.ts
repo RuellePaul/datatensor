@@ -118,7 +118,7 @@ export const drawLabels = (
         context.fillStyle = `${color}05`;
         context.fillRect(x, y, w, h);
         if (filled || (category && categorySelected && categorySelected.id === category.id)) {
-            context.fillStyle = `${color}50`;
+            context.fillStyle = `${color}05`;
             context.fillRect(x, y, w, h);
         }
 
@@ -172,6 +172,25 @@ export const renderCursor = (
     }
 
     callback(null, null);
+};
+
+export const isHoveringLabels = (canvas: HTMLCanvasElement, point: Point, labels: Label[]) => {
+    if (!point || !labels) return false;
+
+    for (const label of labels) {
+        const { x, y, w, h } = convertLabel(canvas, label);
+
+        if (x < point[0]) {
+            if (y < point[1]) {
+                if (x + w > point[0]) {
+                    if (y + h > point[1]) {
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    return false;
 };
 
 export const currentLabelsHoverIds = (canvas: HTMLCanvasElement, point: Point, labels: Label[]) => {
