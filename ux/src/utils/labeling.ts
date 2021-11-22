@@ -104,11 +104,11 @@ export const drawLabels = (
     context.setLineDash([dash]);
 
     for (const label of labels) {
-        const category = categories.find(category => label.category_id === category.id);
+        const category = categories.sort((a, b) => -b.name.localeCompare(a.name)).find(category => label.category_id === category.id);
 
         const { x, y, w, h } = convertLabel(canvas, label, offset);
 
-        let color = COLORS[categories.indexOf(category)] || '#FFFFFF';
+        let color = COLORS[categories.sort((a, b) => -b.name.localeCompare(a.name)).indexOf(category)] || '#FFFFFF';
 
         context.strokeStyle = color;
         context.shadowColor = '#000000';

@@ -65,7 +65,7 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
                     <Typography variant="body2">
                         <strong>
                             {capitalize(category.name)}
-                            {count > 0 ? category.labels_count && ` • ${count}` : ''}
+                            {count > 0 ? (category.labels_count && ` • ${count}`) : ''}
                         </strong>
                     </Typography>
                 }

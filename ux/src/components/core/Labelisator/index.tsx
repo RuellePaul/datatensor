@@ -53,7 +53,7 @@ import api from 'src/utils/api';
 import {ImageConsumer, ImageProvider} from 'src/store/ImageContext';
 import goToHash from 'src/utils/goToHash';
 import {CANVAS_OFFSET} from 'src/utils/labeling';
-import {COLORS} from '../../../utils/colors';
+import {COLORS} from 'src/utils/colors';
 
 interface DTLabelisatorProps {}
 
@@ -104,7 +104,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
 
     const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
 
-    const {dataset} = useDataset();
+    const {dataset, categories} = useDataset();
     const {pipeline} = usePipeline();
     const {currentCategory, saveCurrentCategory} = useCategory();
 
@@ -315,9 +315,9 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                             )}`}
                                             size="medium"
                                             style={{
-                                                color: theme.palette.getContrastText(COLORS[index]),
-                                                background: COLORS[index],
-                                                borderColor: COLORS[index],
+                                                color: theme.palette.getContrastText(COLORS[categories.indexOf(currentCategory)]),
+                                                background: COLORS[categories.indexOf(currentCategory)],
+                                                borderColor: COLORS[categories.indexOf(currentCategory)],
                                                 boxShadow: theme.shadows[1]
                                             }}
                                             variant="outlined"
