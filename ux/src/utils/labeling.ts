@@ -11,8 +11,15 @@ export const RESIZE_SIZE = 8;
 export const LABEL_MIN_WIDTH = 16;
 export const LABEL_MIN_HEIGHT = 16;
 export const CANVAS_OFFSET = 20;
-export const MIN_FONT_SIZE = 14;
-export const MAX_FONT_SIZE = 18;
+export const RESIZE_DOT_WIDTH = 5;
+
+const drawPoint = (context, x, y) => {
+    context.beginPath();
+    context.arc(x, y, RESIZE_DOT_WIDTH, 0, 2 * Math.PI, false);
+    context.fill();
+    context.stroke();
+
+}
 
 export const distance = (pointA, pointB) => {
     if (pointA === null) return 0;
@@ -125,22 +132,10 @@ export const drawLabels = (
         if (resize) {
             context.fillStyle = '#90caf9';
             context.strokeStyle = '#FFFFFF';
-            context.beginPath();
-            context.arc(x , y , 5, 0, 2 * Math.PI, false);
-            context.fill();
-            context.stroke();
-            context.beginPath();
-            context.arc(x + w, y, 5, 0, 2 * Math.PI, false);
-            context.fill();
-            context.stroke();
-            context.beginPath();
-            context.arc(x, y + h, 5, 0, 2 * Math.PI, false);
-            context.fill();
-            context.stroke();
-            context.beginPath();
-            context.arc(x + w, y + h, 5, 0, 2 * Math.PI, false);
-            context.fill();
-            context.stroke();
+            drawPoint(context, x, y);
+            drawPoint(context, x + w, y);
+            drawPoint(context, x, y + h);
+            drawPoint(context, x + w, y + h);
         }
 
         if (category && w > category.name.length * 8 && h > LABEL_MIN_HEIGHT * 2) {
@@ -214,8 +209,8 @@ export const currentLabelsHoverIds = (canvas: HTMLCanvasElement, point: Point, l
     for (const label of labels) {
         const { x, y, w, h } = convertLabel(canvas, label);
 
-        if (x < point[0]) {
-            if (y < point[1]) {
+        if (x <= point[0]) {
+            if (y <= point[1]) {
                 if (x + w >= point[0]) {
                     if (y + h >= point[1]) {
                         labelsHoverIds.push(label.id);
