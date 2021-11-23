@@ -133,6 +133,7 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
         let point = currentPoint(event.nativeEvent);
 
         if (event.nativeEvent.which === 0) {
+            reset(canvas);
             // IDLE
             let labelsHoverIds = currentLabelsHoverIds(canvas, point, labels);
             if (autoSwitch && labelsHoverIds.length === 0) {
@@ -140,7 +141,6 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
                 return;
             }
             if (labels === null) return;
-            reset(canvas);
             drawLabels(
                 canvas,
                 labels.filter(label => labelsHoverIds.includes(label.id)),
