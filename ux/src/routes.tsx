@@ -84,12 +84,12 @@ const routes: Routes = [
             },
             {
                 exact: true,
-                path: '/app/admin/users',
+                path: '/app/users',
                 component: lazy(() => import('src/views/user/UserListView'))
             },
             {
                 exact: true,
-                path: '/app/admin/users/:user_id/details',
+                path: '/app/users/:user_id/details',
                 component: lazy(() => import('src/views/user/UserDetailsView'))
             },
             {

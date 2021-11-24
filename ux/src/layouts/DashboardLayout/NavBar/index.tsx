@@ -61,7 +61,7 @@ const sections = (user: User): Section[] => [
                       {
                           title: 'Users',
                           icon: UsersIcon,
-                          href: '/app/admin/users',
+                          href: '/app/users',
                           info: () => <Chip size="small" label="Admin" variant="outlined" />
                       }
                   ]

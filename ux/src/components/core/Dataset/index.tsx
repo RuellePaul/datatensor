@@ -89,7 +89,7 @@ const DTDataset: FC<DatasetProps> = ({className, dataset, ...rest}) => {
                                         color="inherit"
                                         component={RouterLink}
                                         onClick={event => event.stopPropagation()}
-                                        to={`/app/admin/users/${value.user.id}/details`}
+                                        to={`/app/users/${value.user.id}/details`}
                                         variant="subtitle2"
                                     >
                                         {value.user.name}
