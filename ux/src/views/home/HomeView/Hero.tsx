@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import {useHistory} from 'react-router-dom';
 import clsx from 'clsx';
-import {Box, Button, Container, Grid, Typography} from '@mui/material';
+import {Box, Button, Container, Grid, Hidden, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 import {AutoStories as DocsIcon, NavigateNext as ArrowIcon} from '@mui/icons-material';
@@ -36,16 +36,45 @@ const useStyles = makeStyles((theme: Theme) => ({
             '& * ': {
                 textAlign: 'center'
             }
+        },
+        [theme.breakpoints.down('sm')]: {
+            '& h1': {
+                fontSize: 36
+            }
+        }
+    },
+    actions: {
+        display: 'flex',
+        '& > *:first-child': {
+            marginRight: theme.spacing(2)
+        },
+        [theme.breakpoints.down('md')]: {
+            padding: theme.spacing(6, 2, 2),
+            justifyContent: 'center'
+        },
+        [theme.breakpoints.down('sm')]: {
+            flexDirection: 'column',
+            alignItems: 'center',
+            '& > *:first-child': {
+                marginRight: 0,
+                marginBottom: theme.spacing(2)
+            },
+            '& button': {
+                width: '100%'
+            }
         }
     },
     image: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         perspectiveOrigin: 'left center',
         transformStyle: 'preserve-3d',
         perspective: 1500,
         '& > img': {
             maxWidth: '90%',
             height: 'auto',
-            transform: 'rotateY(-35deg) rotateX(15deg)',
+            transform: 'translateX(-16px) rotateY(-35deg) rotateX(15deg)',
             backfaceVisibility: 'hidden',
             boxShadow: theme.shadows[16]
         }
@@ -68,7 +97,7 @@ const Hero: FC<HeroProps> = ({className, ...rest}) => {
     return (
         <div className={clsx(classes.root, className)} {...rest}>
             <Container component="section" maxWidth="lg">
-                <Grid container spacing={4}>
+                <Grid container spacing={3}>
                     <Grid item xs={12} md={5}>
                         <Typography variant="overline" color="textPrimary" fontSize={16}>
                             DATATENSOR
@@ -79,23 +108,31 @@ const Hero: FC<HeroProps> = ({className, ...rest}) => {
                             </Typography>{' '}
                             made easy
                         </Typography>
-                        <Box mt={3}>
+                        <Box mt={3} mb={4}>
                             <Typography color="textSecondary">
                                 Datatensor provides a powerful and accessible website of images datasets management,
                                 enabling you to build your own computer vision models faster.
                             </Typography>
                         </Box>
-                        <Box display="flex" mt={4}>
-                            <Box mr={2}>
-                                <Button
-                                    onClick={() => history.push('/login')}
-                                    endIcon={<ArrowIcon />}
-                                    variant="contained"
-                                    size="large"
-                                >
-                                    Get started
-                                </Button>
+
+                        <Hidden mdUp>
+                            <Box position="relative" display="flex" alignItems="center" justifyContent="center">
+                                <div className={classes.image}>
+                                    <img alt="Presentation" src="/static/images/yolov4.gif" draggable={false} />
+                                </div>
                             </Box>
+                        </Hidden>
+
+                        <Box className={classes.actions}>
+                            <Button
+                                onClick={() => history.push('/login')}
+                                endIcon={<ArrowIcon />}
+                                variant="contained"
+                                size="large"
+                            >
+                                Get started
+                            </Button>
+
                             <Button
                                 onClick={() => history.push('/docs')}
                                 endIcon={<DocsIcon />}
@@ -107,13 +144,15 @@ const Hero: FC<HeroProps> = ({className, ...rest}) => {
                         </Box>
                     </Grid>
 
-                    <Grid item xs={12} md={7}>
-                        <Box position="relative">
-                            <div className={classes.image}>
-                                <img alt="Presentation" src="/static/images/yolov4.gif" draggable={false} />
-                            </div>
-                        </Box>
-                    </Grid>
+                    <Hidden mdDown>
+                        <Grid item xs={12} md={7}>
+                            <Box position="relative">
+                                <div className={classes.image}>
+                                    <img alt="Presentation" src="/static/images/yolov4.gif" draggable={false} />
+                                </div>
+                            </Box>
+                        </Grid>
+                    </Hidden>
                 </Grid>
             </Container>
         </div>

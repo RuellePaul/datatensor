@@ -1,12 +1,13 @@
 import React, {FC} from 'react';
 import {Link as RouterLink, useHistory} from 'react-router-dom';
 import clsx from 'clsx';
-import {AppBar, Box, Button, Divider, Hidden, Toolbar, Typography} from '@mui/material';
+import {AppBar, Box, Button, Divider, Hidden, Toolbar, Typography, useMediaQuery} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
+import {Theme} from 'src/theme';
 import {APP_VERSION} from 'src/constants';
 import Logo from 'src/components/utils/Logo';
-import useAuth from '../../hooks/useAuth';
-import UserAvatar from '../../components/UserAvatar';
+import UserAvatar from 'src/components/UserAvatar';
+import useAuth from 'src/hooks/useAuth';
 
 interface TopBarProps {
     className?: string;
@@ -14,9 +15,9 @@ interface TopBarProps {
 
 const useStyles = makeStyles(theme => ({
     root: {
-        backdropFilter: theme.palette.mode === 'dark' ? 'blur(18px)' : 'none',
+        backdropFilter: theme.palette.mode === 'dark' ? 'blur(16px)' : 'none',
         boxShadow: theme.palette.mode === 'dark' ? 'rgb(19 47 76) 0px -1px 1px inset' : 'initial',
-        backgroundColor: theme.palette.mode === 'dark' ? 'rgb(4 28 58 / 70%)' : 'rgb(255 255 255 / 70%)'
+        backgroundColor: theme.palette.mode === 'dark' ? 'rgb(4 28 58 / 65%)' : 'rgb(255 255 255 / 65%)'
     },
     version: {
         marginTop: -5,
@@ -51,6 +52,7 @@ const TopBar: FC<TopBarProps> = ({className, ...rest}) => {
     const history = useHistory();
 
     const {user} = useAuth();
+    const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
 
     return (
         <AppBar className={clsx(classes.root, className)} color="default" {...rest}>
@@ -76,7 +78,7 @@ const TopBar: FC<TopBarProps> = ({className, ...rest}) => {
                     </Button>
                 </Hidden>
                 <Button className={classes.link} component="a" onClick={() => history.push('/docs')}>
-                    Documentation
+                                                    {isDesktop ? 'Documentation' : 'Docs'}
                 </Button>
                 <Divider className={classes.divider} />
                 <Button
