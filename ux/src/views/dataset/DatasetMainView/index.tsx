@@ -20,6 +20,7 @@ import {CategoryProvider} from 'src/store/CategoryContext';
 import {PipelineProvider} from 'src/store/PipelineContext';
 import {ExportsProvider} from 'src/store/ExportsContext';
 
+
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         backgroundColor: theme.palette.background.default,
@@ -30,8 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         position: 'sticky',
         top: 0,
         background: theme.palette.background.default,
-        zIndex: 1100,
-        boxShadow: '0 4px 3px -4px #28282896'
+        zIndex: 1100
     },
     tab: {
         color: theme.palette.text.primary,
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const DTTab = ({label, icon: Icon, ...rest}) => {
+const DTTab = ({ label, icon: Icon, ...rest }) => {
     const classes = useStyles();
 
     const TabLabel = (
@@ -71,7 +71,7 @@ const DatasetMainView: FC = () => {
         setTab(newTab);
     };
 
-    const {dataset_id} = useParams();
+    const { dataset_id } = useParams();
 
     useEffect(() => {
         setOpenedTabs(openedTabs => (openedTabs.includes(tab) ? openedTabs : [...openedTabs, tab]));

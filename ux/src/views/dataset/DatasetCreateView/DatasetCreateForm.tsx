@@ -20,6 +20,7 @@ import {
     Typography
 } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
+import {Theme} from 'src/theme';
 import QuillEditor from 'src/components/QuillEditor';
 import api from 'src/utils/api';
 import {Dataset} from 'src/types/dataset';
@@ -29,8 +30,10 @@ interface ProductCreateFormProps {
     className?: string;
 }
 
-const useStyles = makeStyles(() => ({
-    root: {},
+const useStyles = makeStyles((theme: Theme) => ({
+    root: {
+        margin: theme.spacing(2, 0)
+    },
     editor: {
         '& .ql-editor': {
             height: 400

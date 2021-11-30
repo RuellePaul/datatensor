@@ -87,11 +87,11 @@ export const drawRect = (canvas: HTMLCanvasElement, pointA: Point, pointB: Point
     let context = canvas.getContext('2d');
     context.lineWidth = 1;
     context.strokeStyle = color;
-    context.strokeRect(x, y, w, h);
+    context.strokeRect(x + .5, y + .5, w, h);
     context.shadowColor = '#000000';
     context.shadowBlur = 1;
     context.fillStyle = `${color}22`;
-    context.fillRect(x, y, w, h);
+    context.fillRect(x + .5, y + .5, w, h);
 };
 
 export const drawLabels = (
@@ -120,13 +120,13 @@ export const drawLabels = (
         context.strokeStyle = color;
         context.shadowColor = `${color}55`;
         context.shadowBlur = 1;
-        context.strokeRect(x, y, w, h);
+        context.strokeRect(x + .5, y + .5, w, h);
 
         context.fillStyle = `${color}05`;
         context.fillRect(x, y, w, h);
         if (filled || (category && categorySelected && categorySelected.id === category.id)) {
             context.fillStyle = `${color}05`;
-            context.fillRect(x, y, w, h);
+            context.fillRect(x + .5, y + .5, w, h);
         }
 
         if (resize) {

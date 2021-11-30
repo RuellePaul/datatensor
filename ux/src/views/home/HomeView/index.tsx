@@ -15,7 +15,7 @@ const HomeView: FC = () => {
     const classes = useStyles();
 
     return (
-        <Page className={classes.root} title="Home">
+        <Page className={classes.root}>
             <Hero />
             <Features />
             <Testimonials />

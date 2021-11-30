@@ -12,6 +12,9 @@ interface ShortcutProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+    button: {
+        color: theme.palette.getContrastText(theme.palette.background.paper)
+    },
     dialog: {
         padding: theme.spacing(1, 2, 2)
     },
@@ -61,7 +64,7 @@ const KeyboardShortcuts: FC = () => {
 
     return (
         <>
-            <Button color="inherit" variant="outlined" startIcon={<KeyboardIcon />} onClick={handleOpen}>
+            <Button className={classes.button} variant="outlined" startIcon={<KeyboardIcon />} onClick={handleOpen}>
                 Keyboard shortcuts
             </Button>
 

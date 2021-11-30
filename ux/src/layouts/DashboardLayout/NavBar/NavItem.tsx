@@ -7,7 +7,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import {Theme} from 'src/theme';
 
-
 interface NavItemProps {
     children?: ReactNode;
     className?: string;
@@ -61,12 +60,12 @@ const useStyles = makeStyles((theme: Theme) => ({
         marginRight: 'auto'
     },
     active: {
-        color: theme.palette.primary.main,
+        color: theme.palette.mode === 'dark' ? theme.palette.text.primary : theme.palette.primary.main,
         '& $title': {
             fontWeight: `${theme.typography.fontWeightBold} !important`
         },
         '& $icon': {
-            color: theme.palette.primary.main
+            color: theme.palette.mode === 'dark' ? theme.palette.text.primary : theme.palette.primary.main
         }
     }
 }));

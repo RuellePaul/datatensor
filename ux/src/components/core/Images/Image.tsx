@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         position: 'relative',
         '& img': {
             height: '100%',
-            border: 'solid 1px black',
+            border: theme.palette.mode === 'dark' ? 'solid 1px black' : 'none',
             boxShadow: '0px 0px 2px black'
         }
     },
