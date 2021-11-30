@@ -12,9 +12,9 @@ interface TopBarProps {
 
 const useStyles = makeStyles(theme => ({
     root: {
-        backdropFilter: 'blur(18px)',
-        boxShadow: 'rgb(19 47 76) 0px -1px 1px inset',
-        backgroundColor: 'rgb(0 30 60 / 65%)'
+        backdropFilter: theme.palette.mode === 'dark' ? 'blur(18px)' : 'none',
+        boxShadow: theme.palette.mode === 'dark' ? 'rgb(19 47 76) 0px -1px 1px inset' : 'initial',
+        backgroundColor: theme.palette.mode === 'dark' ? 'rgb(0 30 60 / 65%)' : '#FFFFFF'
     },
     version: {
         marginTop: -5,
