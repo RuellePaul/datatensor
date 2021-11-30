@@ -83,7 +83,7 @@ const TopBar: FC<TopBarProps> = ({className, ...rest}) => {
                     color="primary"
                     component="a"
                     variant="contained"
-                    onClick={() => history.push('/app/datasets')}
+                    onClick={() => history.push('/login')}
                     endIcon={user !== null && <UserAvatar user={user} style={{width: 30, height: 30}} />}
                 >
                     Dashboard
