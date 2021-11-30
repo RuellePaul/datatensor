@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         '& > img': {
             maxWidth: '90%',
             height: 'auto',
-            transform: 'translateX(-16px) rotateY(-35deg) rotateX(15deg)',
+            transform: 'rotateY(-35deg) rotateX(15deg)',
             backfaceVisibility: 'hidden',
             boxShadow: theme.shadows[16]
         }
