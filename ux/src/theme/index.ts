@@ -130,7 +130,7 @@ const themesOptions: ThemeOptions[] = [
                 700: '#F1A204',
                 800: '#DB9A00',
                 900: '#8F6400'
-            }
+            },
         },
         components: {
             MuiPaper: {
@@ -145,6 +145,17 @@ const themesOptions: ThemeOptions[] = [
                 styleOverrides: {
                     root: {
                         cursor: 'pointer'
+                    }
+                }
+            },
+            MuiButton: {
+                styleOverrides: {
+                    text: {
+                        color: 'white',
+                    },
+                    contained: {
+                        color: 'white',
+                        fontWeight: 'bold'
                     }
                 }
             }
@@ -229,6 +240,17 @@ const themesOptions: ThemeOptions[] = [
                 styleOverrides: {
                     root: {
                         color: 'white !important'
+                    }
+                }
+            },
+            MuiButton: {
+                styleOverrides: {
+                    text: {
+                        color: 'white',
+                    },
+                    contained: {
+                        color: 'white',
+                        fontWeight: 'bold'
                     }
                 }
             }

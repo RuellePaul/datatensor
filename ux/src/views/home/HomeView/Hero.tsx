@@ -1,9 +1,10 @@
 import React, {FC} from 'react';
+import {useHistory} from 'react-router-dom';
 import clsx from 'clsx';
-import {Box, Container, Grid, Typography} from '@mui/material';
+import {Box, Button, Container, Grid, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
-
+import {AutoStories as DocsIcon, NavigateNext as ArrowIcon} from '@mui/icons-material';
 
 interface HeroProps {
     className?: string;
@@ -11,17 +12,31 @@ interface HeroProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
+        paddingTop: 64,
+        display: 'flex',
+        alignItems: 'center',
+        height: 900,
         backgroundColor: theme.palette.background.default,
-        paddingTop: 220,
-        paddingBottom: 220,
-        [theme.breakpoints.down('lg')]: {
-            paddingTop: 120,
-            paddingBottom: 120
+        '& h1': {
+            fontFamily:
+                'PlusJakartaSans-ExtraBold, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+            fontSize: 64,
+            fontWeight: 'bold',
+            lineHeight: '1.11429',
+            '& span': {
+                fontSize: 'inherit',
+                fontWeight: 'inherit',
+                whiteSpace: 'nowrap'
+            }
+        },
+        [theme.breakpoints.down('md')]: {
+            '& h1': {
+                fontSize: 48
+            },
+            '& * ': {
+                textAlign: 'center'
+            }
         }
-    },
-    technologyIcon: {
-        height: 40,
-        margin: theme.spacing(1)
     },
     image: {
         perspectiveOrigin: 'left center',
@@ -48,60 +63,52 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const Hero: FC<HeroProps> = ({className, ...rest}) => {
     const classes = useStyles();
+    const history = useHistory();
 
     return (
         <div className={clsx(classes.root, className)} {...rest}>
             <Container component="section" maxWidth="lg">
-                <Grid container spacing={3}>
+                <Grid container spacing={4}>
                     <Grid item xs={12} md={5}>
-                        <Box display="flex" flexDirection="column" justifyContent="center" height="100%">
-                            <Typography variant="overline" color="primary">
-                                Introducing
+                        <Typography variant="overline" color="textPrimary" fontSize={16}>
+                            DATATENSOR
+                        </Typography>
+                        <Typography variant="h1" color="textPrimary">
+                            <Typography component="span" color="primary">
+                                Object detection
+                            </Typography>{' '}
+                            made easy
+                        </Typography>
+                        <Box mt={3}>
+                            <Typography color="textSecondary">
+                                Datatensor provides a powerful and accessible website of images datasets management,
+                                enabling you to build your own computer vision models faster.
                             </Typography>
-                            <Typography variant="h1" color="textPrimary">
-                                Datatensor
-                            </Typography>
-                            <Box mt={3}>
-                                <Typography variant="body1" color="textSecondary">
-                                    A professional web application that comes with ready-to-use object detection models,
-                                    developed with one goal in mind, help you build faster computer vision applications.
-                                </Typography>
+                        </Box>
+                        <Box display="flex" mt={4}>
+                            <Box mr={2}>
+                                <Button
+                                    onClick={() => history.push('/login')}
+                                    endIcon={<ArrowIcon />}
+                                    variant="contained"
+                                    size="large"
+                                >
+                                    Get started
+                                </Button>
                             </Box>
-                            <Box mt={3}>
-                                <Grid container spacing={3}>
-                                    <Grid item>
-                                        <Typography variant="h1" color="primary">
-                                            30+
-                                        </Typography>
-                                        <Typography variant="overline" color="textSecondary">
-                                            Demo Pages
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item>
-                                        <Typography variant="h1" color="primary">
-                                            UX
-                                        </Typography>
-                                        <Typography variant="overline" color="textSecondary">
-                                            Complete Flows
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item>
-                                        <Typography variant="h1" color="primary">
-                                            10+
-                                        </Typography>
-                                        <Typography variant="overline" color="textSecondary">
-                                            Dataset Tools
-                                        </Typography>
-                                    </Grid>
-                                </Grid>
-                            </Box>
+                            <Button
+                                onClick={() => history.push('/docs')}
+                                endIcon={<DocsIcon />}
+                                variant="outlined"
+                                size="large"
+                            >
+                                Documentation
+                            </Button>
                         </Box>
                     </Grid>
+
                     <Grid item xs={12} md={7}>
                         <Box position="relative">
-                            <div className={classes.shape}>
-                                <img alt="Shapes" src="/static/home/shapes.svg" />
-                            </div>
                             <div className={classes.image}>
                                 <img alt="Presentation" src="/static/images/yolov4.gif" draggable={false} />
                             </div>

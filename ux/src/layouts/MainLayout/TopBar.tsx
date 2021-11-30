@@ -1,10 +1,12 @@
 import React, {FC} from 'react';
 import {Link as RouterLink, useHistory} from 'react-router-dom';
 import clsx from 'clsx';
-import {AppBar, Box, Button, Divider, Hidden, Link, Toolbar, Typography} from '@mui/material';
+import {AppBar, Box, Button, Divider, Hidden, Toolbar, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {APP_VERSION} from 'src/constants';
 import Logo from 'src/components/utils/Logo';
+import useAuth from '../../hooks/useAuth';
+import UserAvatar from '../../components/UserAvatar';
 
 interface TopBarProps {
     className?: string;
@@ -14,7 +16,7 @@ const useStyles = makeStyles(theme => ({
     root: {
         backdropFilter: theme.palette.mode === 'dark' ? 'blur(18px)' : 'none',
         boxShadow: theme.palette.mode === 'dark' ? 'rgb(19 47 76) 0px -1px 1px inset' : 'initial',
-        backgroundColor: theme.palette.mode === 'dark' ? 'rgb(0 30 60 / 65%)' : '#FFFFFF'
+        backgroundColor: theme.palette.mode === 'dark' ? 'rgb(4 28 58 / 70%)' : 'rgb(255 255 255 / 70%)'
     },
     version: {
         marginTop: -5,
@@ -48,6 +50,8 @@ const TopBar: FC<TopBarProps> = ({className, ...rest}) => {
     const classes = useStyles();
     const history = useHistory();
 
+    const {user} = useAuth();
+
     return (
         <AppBar className={clsx(classes.root, className)} color="default" {...rest}>
             <Toolbar className={classes.toolbar}>
@@ -67,34 +71,28 @@ const TopBar: FC<TopBarProps> = ({className, ...rest}) => {
                 </Hidden>
                 <Box flexGrow={1} />
                 <Hidden smDown>
-                    <Link
+                    <Button
                         className={classes.link}
-                        color="textSecondary"
-                        component={RouterLink}
-                        to="/app"
-                        underline="none"
-                        variant="body2"
+                        component="a"
+                        onClick={() => history.push('/app')}
                     >
                         About
-                    </Link>
+                    </Button>
                 </Hidden>
-                <Link
+                <Button
                     className={classes.link}
-                    color="textSecondary"
-                    component={RouterLink}
-                    to="/docs"
-                    underline="none"
-                    variant="body2"
+                    component="a"
+                    onClick={() => history.push('/docs')}
                 >
                     Documentation
-                </Link>
+                </Button>
                 <Divider className={classes.divider} />
                 <Button
                     color="primary"
                     component="a"
                     variant="contained"
-                    size="small"
                     onClick={() => history.push('/app')}
+                    endIcon={                user !== null && <UserAvatar user={user} style={{width: 30, height: 30}} />}
                 >
                     Dashboard
                 </Button>
