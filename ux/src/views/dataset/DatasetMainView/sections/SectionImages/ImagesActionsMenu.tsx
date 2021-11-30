@@ -321,7 +321,7 @@ const ImagesActionsMenu: FC<ImagesActionsMenuProps> = ({className}) => {
     return (
         <div className={clsx(classes.root, className)}>
             <Button endIcon={<ArrowDown />} onClick={handleClick} size="small">
-                Options
+                Actions
             </Button>
             <Menu anchorEl={anchorEl} open={open} onClose={handleCloseMenu} TransitionComponent={Fade}>
                 <UploadMenuItem />
