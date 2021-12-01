@@ -12,7 +12,7 @@ interface CTAProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        backgroundColor: theme.palette.background.paper,
+        backgroundColor: theme.palette.background.default,
         paddingTop: 128,
         paddingBottom: 128,
         textAlign: 'center'

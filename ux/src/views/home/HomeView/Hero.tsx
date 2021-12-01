@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         display: 'flex',
         alignItems: 'center',
         height: 900,
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: theme.palette.background.paper,
         '& h1': {
             fontFamily:
                 'PlusJakartaSans-ExtraBold, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
