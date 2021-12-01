@@ -1,4 +1,4 @@
-export const APP_VERSION = '0.9.35';
+export const APP_VERSION = '0.9.36';
 
 export const ENABLE_REDUX_DEV_TOOLS = true;
 
