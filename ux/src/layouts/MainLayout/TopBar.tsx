@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
     root: {
         backdropFilter: theme.palette.mode === 'dark' ? 'blur(16px)' : 'none',
         boxShadow: theme.palette.mode === 'dark' ? 'rgb(19 47 76) 0px -1px 1px inset' : 'initial',
-        backgroundColor: theme.palette.mode === 'dark' ? 'rgb(10 25 40 / 50%)' : 'rgb(255 255 255 / 65%)',
+        backgroundColor: theme.palette.mode === 'dark' ? 'rgb(10 25 40 / 70%)' : 'rgb(255 255 255 / 65%)',
         backgroundImage: 'none'
     },
     version: {
