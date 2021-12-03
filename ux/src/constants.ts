@@ -11,6 +11,8 @@ export const THEMES = {
     DARK: 'DARK'
 };
 
+export const PUBLIC_DATASET_ID = '46931cd7-a4bd-43ba-9872-29be35ab696a';
+
 export const EMPTY_DESCRIPTIONS = [
     undefined,
     null,

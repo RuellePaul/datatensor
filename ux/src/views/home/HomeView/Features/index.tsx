@@ -68,14 +68,14 @@ const FEATURES = [
         title: 'Image labeling',
         subtitle: 'Ergonomic and intuitive tools for labeling your datasets.',
         docPath: '/docs/datasets/labeling',
-        component: <FeatureLabeling />,
+        component: <div />,
         icon: <BrandingWatermarkOutlined />
     },
     {
         title: 'Image labeling',
         subtitle: 'Ergonomic and intuitive tools for labeling your datasets.',
         docPath: '/docs/datasets/labeling',
-        component: <FeatureLabeling />,
+        component: <div />,
         icon: <BrandingWatermarkOutlined />
     }
 ];
@@ -88,9 +88,12 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
     return (
         <div className={clsx(classes.root, className)} {...rest}>
             <Container component="section" maxWidth="lg">
-                <Grid container spacing={2}>
+                <Grid container spacing={4}>
                     <Grid item sm={6} xs={12}>
-                        <Typography variant="overline" color="primary">
+                        {FEATURES[selected].component}
+                    </Grid>
+                    <Grid item sm={6} xs={12}>
+                        <Typography variant="overline" color="primary" fontSize={16}>
                             Features
                         </Typography>
                         <Typography variant="h1" color="textPrimary">
@@ -100,7 +103,7 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
                             </Typography>{' '}
                             est
                         </Typography>
-                        <Box mt={3} mb={4}>
+                        <Box mb={4}>
                             <Typography color="textSecondary">Lorem ipsum dolor est...</Typography>
                         </Box>
 
@@ -126,9 +129,6 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
                                 </Box>
                             </ButtonBase>
                         ))}
-                    </Grid>
-                    <Grid item sm={6} xs={12}>
-                        ...
                     </Grid>
                 </Grid>
             </Container>

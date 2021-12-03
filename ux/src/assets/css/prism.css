@@ -259,6 +259,7 @@ pre[class*="language-"] {
 
 
 .highlight {
+    color: white;
     animation: highlight 3s ease infinite;
 }
 
