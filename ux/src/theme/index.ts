@@ -69,7 +69,7 @@ const baseOptions: MuiThemeOptions = {
             xs: 0,
             sm: 600,
             md: 960,
-            lg: 1340,
+            lg: 1400,
             xl: 1920
         }
     }

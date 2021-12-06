@@ -6,6 +6,9 @@ import DTImage from 'src/components/core/Images/Image';
 import {Grid, Typography} from '@mui/material';
 import PipelineSample from 'src/components/core/PipelineSample';
 import Pipeline from 'src/components/core/Pipeline';
+import api from 'src/utils/api';
+import {Label} from 'src/types/label';
+import useImage from 'src/hooks/useImage';
 
 interface FeaturesProps {
     className?: string;
@@ -20,16 +23,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 const FeatureAugmentation: FC<FeaturesProps> = ({className, ...rest}) => {
     const classes = useStyles();
 
+    const {image} = useImage();
+
     return (
         <div className={clsx(classes.root, className)} {...rest}>
             <Grid container spacing={2}>
-                <Grid item sm={6} xs={12}>
-                    <Typography variant="overline" color="textPrimary" align="center" gutterBottom>
-                        Operations pipeline
-                    </Typography>
-
-                    <Pipeline />
-                </Grid>
                 <Grid item sm={6} xs={12}>
                     <Typography variant="overline" color="textPrimary" align="center" gutterBottom>
                         Input image
@@ -41,7 +39,21 @@ const FeatureAugmentation: FC<FeaturesProps> = ({className, ...rest}) => {
                         Result
                     </Typography>
 
-                    <PipelineSample />
+                    <PipelineSample
+                        handler={operations =>
+                            api.post<{images: string[]; images_labels: Label[][]}>(`/public/sample`, {
+                                image_id: image.id,
+                                operations
+                            })
+                        }
+                    />
+                </Grid>
+                <Grid item sm={6} xs={12}>
+                    <Typography variant="overline" color="textPrimary" align="center" gutterBottom>
+                        Operations pipeline
+                    </Typography>
+
+                    <Pipeline />
                 </Grid>
             </Grid>
         </div>

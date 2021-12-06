@@ -103,7 +103,7 @@ export const DatasetProvider: FC<DatasetProviderProps> = ({
             value={{
                 dataset: dataset || currentDataset,
                 saveDataset: handleSaveDataset,
-                categories: categories || currentCategories,
+                categories: currentCategories,
                 saveCategories: handleSaveCategories,
                 pipelines: currentPipelines,
                 savePipelines: handleSavePipelines

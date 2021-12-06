@@ -2,6 +2,7 @@ from enum import Enum
 from typing import List
 
 from pydantic import BaseModel, Field
+from routers.labels.models import Label
 
 from utils import MongoModel
 
@@ -43,3 +44,8 @@ class PipelinesResponse(BaseModel):
 class SampleBody(BaseModel):
     image_id: str
     operations: List[Operation]
+
+
+class SampleResponse(BaseModel):
+    images: List[str]  # base64 encoded
+    images_labels: List[List[Label]]

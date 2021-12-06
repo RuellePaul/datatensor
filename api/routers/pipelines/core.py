@@ -78,8 +78,12 @@ class AugmentorPipeline(DataPipeline):
         self.labels = labels
         super().__init__(image, labels)
 
-    def sample(self, n):
-        images = [from_image_path(self.image.path)]
+    def sample(self, n, cv2image=None):
+        if cv2image is None:
+            images = [from_image_path(self.image.path)]
+        else:
+            images = [cv2image]
+
         for label in self.labels:
             images.append(draw_ellipsis(self.image.width, self.image.height, label))
 
@@ -111,11 +115,13 @@ class AugmentorPipeline(DataPipeline):
         return output_images, output_images_labels
 
 
-def perform_sample(image: Image, labels: List[Label], operations: List[Operation]):
+def perform_sample(image: Image, labels: List[Label], operations: List[Operation], cv2image=None):
     pipeline = AugmentorPipeline(image, labels)
     for operation in operations:
         getattr(pipeline, operation.type)(probability=operation.probability, **operation.properties)
-    if image.width > image.height:
+    if cv2image is not None:
+        return pipeline.sample(1, cv2image=cv2image)
+    elif image.width > image.height:
         return pipeline.sample(4)
     else:
         return pipeline.sample(3)

@@ -183,7 +183,6 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
                                 onClick={() => {
                                     if (index === selected) return;
                                     setSelected(index);
-                                    document.querySelector('.scroller').scrollTo({top: 900 - 64, behavior: 'smooth'});
                                 }}
                             >
                                 {feature.icon}
