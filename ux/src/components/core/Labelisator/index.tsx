@@ -83,9 +83,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     toolbar: {
         alignItems: 'center',
         color: theme.palette.getContrastText(theme.palette.text.primary)
-    },
-    switch: {
-        marginLeft: theme.spacing(2)
     }
 }));
 
@@ -284,18 +281,19 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                     </Hidden>
 
                                     <Hidden smDown>
-                                        <FormControlLabel
-                                            className={classes.switch}
-                                            control={
-                                                <Switch
-                                                    color="primary"
-                                                    size="small"
-                                                    checked={autoSwitch}
-                                                    onChange={() => setAutoSwitch(!autoSwitch)}
-                                                />
-                                            }
-                                            label={<Typography color="textSecondary">Auto switch</Typography>}
-                                        />
+                                        <Box ml={2}>
+                                            <FormControlLabel
+                                                control={
+                                                    <Switch
+                                                        color="primary"
+                                                        size="small"
+                                                        checked={autoSwitch}
+                                                        onChange={() => setAutoSwitch(!autoSwitch)}
+                                                    />
+                                                }
+                                                label={<Typography color="textSecondary">Auto switch</Typography>}
+                                            />
+                                        </Box>
 
                                         <div className="flexGrow" />
                                     </Hidden>

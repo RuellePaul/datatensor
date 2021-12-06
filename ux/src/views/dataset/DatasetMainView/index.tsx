@@ -9,7 +9,12 @@ import SectionOverview from './sections/SectionOverview';
 import SectionImages from './sections/SectionImages';
 import SectionAugmentation from './sections/SectionAugmentation';
 import SectionSettings from './sections/SectionSettings';
-import {DashboardOutlined, DynamicFeedOutlined, PhotoLibraryOutlined, SettingsOutlined} from '@mui/icons-material';
+import {
+    DashboardOutlined,
+    DynamicFeedOutlined as AugmentationIcon,
+    PhotoLibraryOutlined,
+    SettingsOutlined
+} from '@mui/icons-material';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
 import DTLabelisator from 'src/components/core/Labelisator';
@@ -124,7 +129,7 @@ const DatasetMainView: FC = () => {
                                                                         style={{
                                                                             pointerEvents: 'auto'
                                                                         }}
-                                                                        icon={DynamicFeedOutlined}
+                                                                        icon={AugmentationIcon}
                                                                     />
 
                                                                     <DTTab label="Settings" icon={SettingsOutlined} />

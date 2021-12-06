@@ -1,15 +1,31 @@
-import React, {FC, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import clsx from 'clsx';
-import {Box, Button, ButtonBase, Hidden, Typography, useMediaQuery} from '@mui/material';
+import {
+    Badge,
+    Box,
+    Button,
+    ButtonBase,
+    FormControlLabel,
+    Hidden,
+    IconButton,
+    Switch,
+    ToggleButton,
+    ToggleButtonGroup,
+    Tooltip,
+    Typography,
+    useMediaQuery
+} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 import DTImage from 'src/components/core/Images/Image';
 import ToolLabel from 'src/components/core/Labelisator/ToolLabel';
 import ToolMove from 'src/components/core/Labelisator/ToolMove';
 import {CANVAS_OFFSET} from 'src/utils/labeling';
-import {MouseOutlined as MouseIcon} from '@mui/icons-material';
+import {MouseOutlined as MouseIcon, Restore as RestoreIcon} from '@mui/icons-material';
 import KeyboardListener from 'src/components/core/Labelisator/KeyboardListener';
 import useImages from '../../../../hooks/useImages';
+import {Maximize as LabelIcon, Move as MoveIcon} from 'react-feather';
+import {ImageConsumer} from '../../../../store/ImageContext';
 
 interface FeaturesProps {
     className?: string;
@@ -50,8 +66,18 @@ const FeatureLabeling: FC<FeaturesProps> = ({className, ...rest}) => {
     const {images} = useImages();
 
     const [tool, setTool] = useState<'label' | 'move'>('label');
+    const handleToolChange = (event: React.MouseEvent<HTMLElement>, newTool: 'label' | 'move' | null) => {
+        if (newTool !== null) setTool(newTool);
+    };
 
     const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
+
+    const [autoSwitch, setAutoSwitch] = useState<boolean>(isDesktop);
+
+    useEffect(() => {
+        setAutoSwitch(isDesktop);
+        setTool('move');
+    }, [isDesktop, setAutoSwitch]);
 
     const [openOverlay, setOpenOverlay] = useState<boolean>(true);
     const handleCloseOverlay = () => {
@@ -60,12 +86,92 @@ const FeatureLabeling: FC<FeaturesProps> = ({className, ...rest}) => {
 
     return (
         <div className={clsx(classes.root, className)} {...rest}>
+            <Box display="flex" alignItems="center">
+                <Hidden smDown>
+                    <ToggleButtonGroup value={tool} exclusive onChange={handleToolChange} size="small">
+                        <ToggleButton value="label" disabled={autoSwitch}>
+                            <Tooltip
+                                title={
+                                    <Typography variant="overline">
+                                        Draw
+                                        <kbd>A</kbd>
+                                    </Typography>
+                                }
+                            >
+                                <LabelIcon />
+                            </Tooltip>
+                        </ToggleButton>
+                        <ToggleButton value="move" disabled={autoSwitch}>
+                            <Tooltip
+                                title={
+                                    <Typography variant="overline">
+                                        Move
+                                        <kbd>Z</kbd>
+                                    </Typography>
+                                }
+                            >
+                                <MoveIcon />
+                            </Tooltip>
+                        </ToggleButton>
+                    </ToggleButtonGroup>
+                </Hidden>
+
+                <Hidden smDown>
+                    <Box ml={2}>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    color="primary"
+                                    size="small"
+                                    checked={autoSwitch}
+                                    onChange={() => setAutoSwitch(!autoSwitch)}
+                                />
+                            }
+                            label={<Typography color="textSecondary">Auto switch</Typography>}
+                        />
+                    </Box>
+
+                    <div className="flexGrow" />
+                </Hidden>
+
+                <div className="flexGrow" />
+
+                <ImageConsumer>
+                    {value => (
+                        <Box mr={1}>
+                            <IconButton
+                                disabled={value.positions.length <= 1}
+                                onClick={value.previousPosition}
+                                size="large"
+                            >
+                                <Tooltip
+                                    title={
+                                        <Typography variant="overline">
+                                            Undo
+                                            <kbd>CTRL</kbd>+<kbd>Z</kbd>
+                                        </Typography>
+                                    }
+                                >
+                                    <Badge
+                                        color="primary"
+                                        badgeContent={value.positions.length > 1 ? value.positions.length - 1 : 0}
+                                        max={99}
+                                    >
+                                        <RestoreIcon />
+                                    </Badge>
+                                </Tooltip>
+                            </IconButton>
+                        </Box>
+                    )}
+                </ImageConsumer>
+            </Box>
+
             <div className={classes.labelisator}>
                 <div className={clsx(tool !== 'label' && 'hidden')}>
-                    <ToolLabel setTool={setTool} autoSwitch={isDesktop} />
+                    <ToolLabel setTool={setTool} autoSwitch={autoSwitch} />
                 </div>
                 <div className={clsx(tool !== 'move' && 'hidden')}>
-                    <ToolMove setTool={setTool} autoSwitch={isDesktop} />
+                    <ToolMove setTool={setTool} autoSwitch={autoSwitch} />
                 </div>
                 <KeyboardListener index={0} imageIds={images.map(image => image.id)} setTool={setTool} />
 

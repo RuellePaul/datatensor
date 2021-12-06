@@ -5,7 +5,7 @@ import {Box, ButtonBase, Container, Grid, Link, Typography} from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles';
 import {blueDark, Theme} from 'src/theme';
 import FeatureLabeling from './FeatureLabeling';
-import {BrandingWatermarkOutlined} from '@mui/icons-material';
+import {BrandingWatermarkOutlined as LabelingIcon, DynamicFeedOutlined as AugmentationIcon} from '@mui/icons-material';
 import api from 'src/utils/api';
 import {Label} from 'src/types/label';
 import {Image} from 'src/types/image';
@@ -70,21 +70,15 @@ const FEATURES = [
         subtitle: 'Ergonomic and intuitive tools for labeling your datasets.',
         docPath: '/docs/datasets/labeling',
         component: <FeatureLabeling />,
-        icon: <BrandingWatermarkOutlined />
+        icon: <LabelingIcon />
     },
     {
-        title: 'Image labeling',
-        subtitle: 'Ergonomic and intuitive tools for labeling your datasets.',
+        title: 'Image augmentation',
+        subtitle:
+            'Image augmentation on your labeled datasets, by computing the positions of objects on the new images.',
         docPath: '/docs/datasets/labeling',
         component: <div />,
-        icon: <BrandingWatermarkOutlined />
-    },
-    {
-        title: 'Image labeling',
-        subtitle: 'Ergonomic and intuitive tools for labeling your datasets.',
-        docPath: '/docs/datasets/labeling',
-        component: <div />,
-        icon: <BrandingWatermarkOutlined />
+        icon: <AugmentationIcon />
     }
 ];
 
@@ -126,7 +120,22 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
         <div className={clsx(classes.root, className)} {...rest}>
             <Container component="section" maxWidth="lg">
                 <Grid container spacing={6}>
-                    <Grid item sm={6} xs={12}>
+                    <Grid item sm={7} xs={12}>
+                        {dataset !== null && images.length > 0 && (
+                            <DatasetProvider dataset={dataset} categories={categories}>
+                                <ImagesProvider images={images}>
+                                    <ImageProvider
+                                        image={image}
+                                        labels={labels.filter(label => label.image_id === image.id)}
+                                    >
+                                        {FEATURES[selected].component}
+                                    </ImageProvider>
+                                </ImagesProvider>
+                            </DatasetProvider>
+                        )}
+                    </Grid>
+
+                    <Grid item sm={5} xs={12}>
                         <Typography variant="overline" color="primary" fontSize={16}>
                             Features
                         </Typography>
@@ -163,20 +172,6 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
                                 </Box>
                             </ButtonBase>
                         ))}
-                    </Grid>
-                    <Grid item sm={6} xs={12}>
-                        {dataset !== null && images.length > 0 && (
-                            <DatasetProvider dataset={dataset} categories={categories}>
-                                <ImagesProvider images={images}>
-                                    <ImageProvider
-                                        image={image}
-                                        labels={labels.filter(label => label.image_id === image.id)}
-                                    >
-                                        {FEATURES[selected].component}
-                                    </ImageProvider>
-                                </ImagesProvider>
-                            </DatasetProvider>
-                        )}
                     </Grid>
                 </Grid>
             </Container>
