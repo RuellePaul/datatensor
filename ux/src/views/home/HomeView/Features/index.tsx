@@ -37,6 +37,11 @@ const useStyles = makeStyles((theme: Theme) => ({
             }
         }
     },
+    container: {
+        [theme.breakpoints.down('lg')]: {
+            flexDirection: 'column-reverse'
+        }
+    },
     button: {
         width: '100%',
         display: 'flex',
@@ -119,8 +124,8 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
     return (
         <div className={clsx(classes.root, className)} {...rest}>
             <Container component="section" maxWidth="lg">
-                <Grid container spacing={6}>
-                    <Grid item sm={7} xs={12}>
+                <Grid className={classes.container} container spacing={4}>
+                    <Grid item lg={7} xs={12}>
                         {dataset !== null && images.length > 0 && (
                             <DatasetProvider dataset={dataset} categories={categories}>
                                 <ImagesProvider images={images}>
@@ -128,14 +133,14 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
                                         image={image}
                                         labels={labels.filter(label => label.image_id === image.id)}
                                     >
-                                        {FEATURES[selected].component}
+                                        {React.cloneElement(FEATURES[selected].component, {className: 'visible'})}
                                     </ImageProvider>
                                 </ImagesProvider>
                             </DatasetProvider>
                         )}
                     </Grid>
 
-                    <Grid item sm={5} xs={12}>
+                    <Grid item lg={5} xs={12}>
                         <Typography variant="overline" color="primary" fontSize={16}>
                             Features
                         </Typography>

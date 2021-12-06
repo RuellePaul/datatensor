@@ -1,10 +1,10 @@
 import React, {FC, useEffect, useState} from 'react';
+import Cookies from 'js-cookie';
 import clsx from 'clsx';
 import {
     Badge,
     Box,
     Button,
-    ButtonBase,
     FormControlLabel,
     Hidden,
     IconButton,
@@ -23,16 +23,22 @@ import ToolMove from 'src/components/core/Labelisator/ToolMove';
 import {CANVAS_OFFSET} from 'src/utils/labeling';
 import {MouseOutlined as MouseIcon, Restore as RestoreIcon} from '@mui/icons-material';
 import KeyboardListener from 'src/components/core/Labelisator/KeyboardListener';
-import useImages from '../../../../hooks/useImages';
+import useImages from 'src/hooks/useImages';
 import {Maximize as LabelIcon, Move as MoveIcon} from 'react-feather';
-import {ImageConsumer} from '../../../../store/ImageContext';
+import {ImageConsumer} from 'src/store/ImageContext';
+
 
 interface FeaturesProps {
     className?: string;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {},
+    root: {
+        padding: theme.spacing(2, 2, 0.5),
+        background: theme.palette.background.paper,
+        border: `solid 1px ${theme.palette.divider}`,
+        borderRadius: 8
+    },
     labelisator: {
         position: 'relative',
         margin: `${CANVAS_OFFSET}px 0px`,
@@ -60,10 +66,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const FeatureLabeling: FC<FeaturesProps> = ({className, ...rest}) => {
+const FeatureLabeling: FC<FeaturesProps> = ({ className, ...rest }) => {
     const classes = useStyles();
 
-    const {images} = useImages();
+    const { images } = useImages();
 
     const [tool, setTool] = useState<'label' | 'move'>('label');
     const handleToolChange = (event: React.MouseEvent<HTMLElement>, newTool: 'label' | 'move' | null) => {
@@ -79,8 +85,10 @@ const FeatureLabeling: FC<FeaturesProps> = ({className, ...rest}) => {
         setTool('move');
     }, [isDesktop, setAutoSwitch]);
 
-    const [openOverlay, setOpenOverlay] = useState<boolean>(true);
+    const [openOverlay, setOpenOverlay] = useState<boolean>(!Boolean(Cookies.get('labelisatorTouchOverlay')));
+
     const handleCloseOverlay = () => {
+        Cookies.set('labelisatorTouchOverlay', 'true');
         setOpenOverlay(false);
     };
 
@@ -179,7 +187,7 @@ const FeatureLabeling: FC<FeaturesProps> = ({className, ...rest}) => {
 
                 {openOverlay && (
                     <Hidden smDown>
-                        <ButtonBase className={classes.overlay} onClick={handleCloseOverlay}>
+                        <div className={classes.overlay} onClick={handleCloseOverlay}>
                             <Box mb={2}>
                                 <Typography variant="h6" color="textPrimary" align="center" gutterBottom>
                                     To start drawing labels, click and drag.
@@ -189,10 +197,10 @@ const FeatureLabeling: FC<FeaturesProps> = ({className, ...rest}) => {
                                 </Typography>
                             </Box>
                             <MouseIcon className="highlight" fontSize="large" />
-                            <Button onClick={handleCloseOverlay} sx={{mt: 3}}>
+                            <Button onClick={handleCloseOverlay} sx={{ mt: 3 }}>
                                 Got it
                             </Button>
-                        </ButtonBase>
+                        </div>
                     </Hidden>
                 )}
             </div>
