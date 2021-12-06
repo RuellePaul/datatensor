@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 import DTImage from 'src/components/core/Images/Image';
-import {Grid, Typography} from '@mui/material';
+import {Grid, Hidden, Typography} from '@mui/material';
 import PipelineSample from 'src/components/core/PipelineSample';
 import Pipeline from 'src/components/core/Pipeline';
 import api from 'src/utils/api';
@@ -48,13 +48,15 @@ const FeatureAugmentation: FC<FeaturesProps> = ({className, ...rest}) => {
                         }
                     />
                 </Grid>
-                <Grid item sm={5} xs={12}>
-                    <Typography variant="overline" color="textPrimary" align="center" gutterBottom>
-                        Operations pipeline
-                    </Typography>
+                <Hidden smDown>
+                    <Grid item sm={5} xs={12}>
+                        <Typography variant="overline" color="textPrimary" align="center" gutterBottom>
+                            Operations pipeline
+                        </Typography>
 
-                    <Pipeline />
-                </Grid>
+                        <Pipeline />
+                    </Grid>
+                </Hidden>
             </Grid>
         </div>
     );

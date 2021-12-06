@@ -31,7 +31,10 @@ const useStyles = makeStyles((theme: Theme) => ({
         backgroundColor: theme.palette.background.default,
         padding: theme.spacing(10, 0),
         [theme.breakpoints.down('sm')]: {
-            padding: theme.spacing(8, 0)
+            padding: theme.spacing(8, 0),
+            '& > *': {
+                textAlign: 'center'
+            }
         },
         '& h1': {
             marginBottom: theme.spacing(1),
@@ -103,8 +106,7 @@ const FEATURES = [
     },
     {
         title: 'Image augmentation',
-        subtitle:
-            'Image augmentation on your labeled datasets, by computing the positions of objects on the new images.',
+        subtitle: 'Get more labeled images, without the tears.',
         docPath: '/docs/datasets/labeling',
         component: <FeatureAugmentation />,
         icon: <AugmentationIcon />
@@ -220,40 +222,49 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
 
                         <Hidden lgUp>
                             <Box display="flex" alignItems="center" justifyContent="center" mb={2}>
-                                <IconButton disabled={selected === 0} onClick={() => setSelected(s => s - 1)}>
-                                    <KeyboardArrowLeft />
+                                <IconButton
+                                    className={clsx(selected > 0 && 'highlight')}
+                                    disabled={selected === 0}
+                                    onClick={() => setSelected(s => s - 1)}
+                                >
+                                    <KeyboardArrowLeft className={clsx(selected === 0 && 'invisible')} />
                                 </IconButton>
 
-                                <SwipeableViews index={selected} onChangeIndex={setSelected}>
-                                    {FEATURES.map((feature, index) => (
-                                        <ButtonBase
-                                            className={clsx(classes.button, selected === index && 'selected')}
-                                            key={`feature-${index}`}
-                                            disableRipple
-                                            onClick={() => {
-                                                if (index === selected) return;
-                                                setSelected(index);
-                                            }}
-                                        >
-                                            {feature.icon}
+                                <Box px={1}>
+                                    <SwipeableViews index={selected} onChangeIndex={setSelected}>
+                                        {FEATURES.map((feature, index) => (
+                                            <ButtonBase
+                                                className={clsx(classes.button, selected === index && 'selected')}
+                                                key={`feature-${index}`}
+                                                disableRipple
+                                                onClick={() => {
+                                                    if (index === selected) return;
+                                                    setSelected(index);
+                                                }}
+                                            >
+                                                {feature.icon}
 
-                                            <Box>
-                                                <Typography variant="h5" color="textPrimary" gutterBottom>
-                                                    {feature.title}
-                                                </Typography>
-                                                <Typography color="textSecondary" gutterBottom>
-                                                    {feature.subtitle}
-                                                </Typography>
-                                            </Box>
-                                        </ButtonBase>
-                                    ))}
-                                </SwipeableViews>
+                                                <Box>
+                                                    <Typography variant="h5" color="textPrimary" gutterBottom>
+                                                        {feature.title}
+                                                    </Typography>
+                                                    <Typography color="textSecondary" gutterBottom>
+                                                        {feature.subtitle}
+                                                    </Typography>
+                                                </Box>
+                                            </ButtonBase>
+                                        ))}
+                                    </SwipeableViews>
+                                </Box>
 
                                 <IconButton
+                                    className={clsx(selected < FEATURES.length - 1 && 'highlight')}
                                     disabled={selected === FEATURES.length - 1}
                                     onClick={() => setSelected(s => s + 1)}
                                 >
-                                    <KeyboardArrowRight />
+                                    <KeyboardArrowRight
+                                        className={clsx(selected === FEATURES.length - 1 && 'invisible')}
+                                    />
                                 </IconButton>
                             </Box>
                         </Hidden>

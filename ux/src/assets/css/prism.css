@@ -10,6 +10,9 @@
 .visible {
     opacity: 1 !important;
 }
+.invisible {
+    opacity: 0 !important;
+}
 
 .relative {
     position: relative !important;

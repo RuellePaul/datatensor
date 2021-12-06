@@ -27,13 +27,21 @@ import useImages from 'src/hooks/useImages';
 import {Maximize as LabelIcon, Move as MoveIcon} from 'react-feather';
 import {ImageConsumer} from 'src/store/ImageContext';
 
-
 interface FeaturesProps {
     className?: string;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {},
+    root: {
+        [theme.breakpoints.down('sm')]: {
+            padding: '8px !important',
+            background: 'none !important',
+            border: 'none !important',
+            display: 'flex',
+            justifyContent: 'center'
+        },
+        touchAction: 'pan-y'
+    },
     labelisator: {
         position: 'relative',
         margin: `${CANVAS_OFFSET}px 0px`,
@@ -61,10 +69,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const FeatureLabeling: FC<FeaturesProps> = ({ className, ...rest }) => {
+const FeatureLabeling: FC<FeaturesProps> = ({className, ...rest}) => {
     const classes = useStyles();
 
-    const { images } = useImages();
+    const {images} = useImages();
 
     const [tool, setTool] = useState<'label' | 'move'>('label');
     const handleToolChange = (event: React.MouseEvent<HTMLElement>, newTool: 'label' | 'move' | null) => {
@@ -89,8 +97,8 @@ const FeatureLabeling: FC<FeaturesProps> = ({ className, ...rest }) => {
 
     return (
         <div className={clsx(classes.root, className)} {...rest}>
-            <Box display="flex" alignItems="center">
-                <Hidden smDown>
+            <Hidden smDown>
+                <Box display="flex" alignItems="center">
                     <ToggleButtonGroup value={tool} exclusive onChange={handleToolChange} size="small">
                         <ToggleButton value="label" disabled={autoSwitch}>
                             <Tooltip
@@ -117,9 +125,7 @@ const FeatureLabeling: FC<FeaturesProps> = ({ className, ...rest }) => {
                             </Tooltip>
                         </ToggleButton>
                     </ToggleButtonGroup>
-                </Hidden>
 
-                <Hidden smDown>
                     <Box ml={2}>
                         <FormControlLabel
                             control={
@@ -135,39 +141,37 @@ const FeatureLabeling: FC<FeaturesProps> = ({ className, ...rest }) => {
                     </Box>
 
                     <div className="flexGrow" />
-                </Hidden>
 
-                <div className="flexGrow" />
-
-                <ImageConsumer>
-                    {value => (
-                        <Box mr={1}>
-                            <IconButton
-                                disabled={value.positions.length <= 1}
-                                onClick={value.previousPosition}
-                                size="large"
-                            >
-                                <Tooltip
-                                    title={
-                                        <Typography variant="overline">
-                                            Undo
-                                            <kbd>CTRL</kbd>+<kbd>Z</kbd>
-                                        </Typography>
-                                    }
+                    <ImageConsumer>
+                        {value => (
+                            <Box mr={1}>
+                                <IconButton
+                                    disabled={value.positions.length <= 1}
+                                    onClick={value.previousPosition}
+                                    size="large"
                                 >
-                                    <Badge
-                                        color="primary"
-                                        badgeContent={value.positions.length > 1 ? value.positions.length - 1 : 0}
-                                        max={99}
+                                    <Tooltip
+                                        title={
+                                            <Typography variant="overline">
+                                                Undo
+                                                <kbd>CTRL</kbd>+<kbd>Z</kbd>
+                                            </Typography>
+                                        }
                                     >
-                                        <RestoreIcon />
-                                    </Badge>
-                                </Tooltip>
-                            </IconButton>
-                        </Box>
-                    )}
-                </ImageConsumer>
-            </Box>
+                                        <Badge
+                                            color="primary"
+                                            badgeContent={value.positions.length > 1 ? value.positions.length - 1 : 0}
+                                            max={99}
+                                        >
+                                            <RestoreIcon />
+                                        </Badge>
+                                    </Tooltip>
+                                </IconButton>
+                            </Box>
+                        )}
+                    </ImageConsumer>
+                </Box>
+            </Hidden>
 
             <div className={classes.labelisator}>
                 <div className={clsx(tool !== 'label' && 'hidden')}>
@@ -192,7 +196,7 @@ const FeatureLabeling: FC<FeaturesProps> = ({ className, ...rest }) => {
                                 </Typography>
                             </Box>
                             <MouseIcon className="highlight" fontSize="large" />
-                            <Button onClick={handleCloseOverlay} sx={{ mt: 3 }}>
+                            <Button onClick={handleCloseOverlay} sx={{mt: 3}}>
                                 Got it
                             </Button>
                         </div>
