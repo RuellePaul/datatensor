@@ -33,12 +33,7 @@ interface FeaturesProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {
-        padding: theme.spacing(2, 2, 0.5),
-        background: theme.palette.background.paper,
-        border: `solid 1px ${theme.palette.divider}`,
-        borderRadius: 8
-    },
+    root: {},
     labelisator: {
         position: 'relative',
         margin: `${CANVAS_OFFSET}px 0px`,

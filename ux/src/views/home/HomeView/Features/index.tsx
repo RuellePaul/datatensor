@@ -42,6 +42,12 @@ const useStyles = makeStyles((theme: Theme) => ({
             flexDirection: 'column-reverse'
         }
     },
+    feature: {
+        padding: theme.spacing(2, 2, 0.5),
+        background: theme.palette.background.paper,
+        border: `solid 1px ${theme.palette.divider}`,
+        borderRadius: 8
+    },
     button: {
         width: '100%',
         display: 'flex',
@@ -127,16 +133,18 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
                 <Grid className={classes.container} container spacing={4}>
                     <Grid item lg={7} xs={12}>
                         {dataset !== null && images.length > 0 && (
-                            <DatasetProvider dataset={dataset} categories={categories}>
-                                <ImagesProvider images={images}>
-                                    <ImageProvider
-                                        image={image}
-                                        labels={labels.filter(label => label.image_id === image.id)}
-                                    >
-                                        {React.cloneElement(FEATURES[selected].component, {className: 'visible'})}
-                                    </ImageProvider>
-                                </ImagesProvider>
-                            </DatasetProvider>
+                            <div className={classes.feature}>
+                                <DatasetProvider dataset={dataset} categories={categories}>
+                                    <ImagesProvider images={images}>
+                                        <ImageProvider
+                                            image={image}
+                                            labels={labels.filter(label => label.image_id === image.id)}
+                                        >
+                                            {React.cloneElement(FEATURES[selected].component, {className: 'visible'})}
+                                        </ImageProvider>
+                                    </ImagesProvider>
+                                </DatasetProvider>
+                            </div>
                         )}
                     </Grid>
 
