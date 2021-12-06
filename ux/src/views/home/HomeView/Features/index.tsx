@@ -1,12 +1,18 @@
 import React, {cloneElement, FC, useCallback, useEffect, useMemo, useState} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
+import SwipeableViews from 'react-swipeable-views';
 import clsx from 'clsx';
-import {Box, ButtonBase, Container, Grid, Link, Typography} from '@mui/material';
+import {Box, ButtonBase, Container, Grid, Hidden, IconButton, Link, Typography, useMediaQuery} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {blueDark, Theme} from 'src/theme';
 import FeatureLabeling from './FeatureLabeling';
 import FeatureAugmentation from './FeatureAugmentation';
-import {BrandingWatermarkOutlined as LabelingIcon, DynamicFeedOutlined as AugmentationIcon} from '@mui/icons-material';
+import {
+    BrandingWatermarkOutlined as LabelingIcon,
+    DynamicFeedOutlined as AugmentationIcon,
+    KeyboardArrowLeft,
+    KeyboardArrowRight
+} from '@mui/icons-material';
 import api from 'src/utils/api';
 import {Label} from 'src/types/label';
 import {Image} from 'src/types/image';
@@ -24,6 +30,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     root: {
         backgroundColor: theme.palette.background.default,
         padding: theme.spacing(10, 0),
+        [theme.breakpoints.down('sm')]: {
+            padding: theme.spacing(8, 0)
+        },
         '& h1': {
             marginBottom: theme.spacing(1),
             fontFamily:
@@ -52,7 +61,10 @@ const useStyles = makeStyles((theme: Theme) => ({
         border: `solid 1px ${theme.palette.divider}`,
         borderRadius: 8,
         opacity: 0,
-        transition: 'all 300ms ease-out'
+        transition: 'all 300ms ease-out',
+        [theme.breakpoints.down('lg')]: {
+            padding: theme.spacing(1.5)
+        }
     },
     button: {
         width: '100%',
@@ -102,6 +114,8 @@ const FEATURES = [
 const Features: FC<FeaturesProps> = ({className, ...rest}) => {
     const classes = useStyles();
 
+    const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
+
     const [selected, setSelected] = useState(0);
 
     const [dataset, setDataset] = useState<Dataset>(null);
@@ -136,7 +150,7 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
     return (
         <div className={clsx(classes.root, className)} {...rest}>
             <Container component="section" maxWidth="lg">
-                <Grid className={classes.container} container spacing={4}>
+                <Grid className={classes.container} container spacing={isMobile ? 0 : 4}>
                     <Grid item lg={7} xs={12}>
                         {dataset !== null && images.length > 0 && (
                             <DatasetProvider dataset={dataset} categories={categories}>
@@ -176,31 +190,73 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
                             </Typography>
                         </Box>
 
-                        {FEATURES.map((feature, index) => (
-                            <ButtonBase
-                                className={clsx(classes.button, selected === index && 'selected')}
-                                disableRipple
-                                key={`feature-${index}`}
-                                onClick={() => {
-                                    if (index === selected) return;
-                                    setSelected(index);
-                                }}
-                            >
-                                {feature.icon}
+                        <Hidden lgDown>
+                            {FEATURES.map((feature, index) => (
+                                <ButtonBase
+                                    className={clsx(classes.button, selected === index && 'selected')}
+                                    disableRipple
+                                    key={`feature-${index}`}
+                                    onClick={() => {
+                                        if (index === selected) return;
+                                        setSelected(index);
+                                    }}
+                                >
+                                    {feature.icon}
 
-                                <Box>
-                                    <Typography variant="h5" color="textPrimary" gutterBottom>
-                                        {feature.title}
-                                    </Typography>
-                                    <Typography color="textSecondary" gutterBottom>
-                                        {feature.subtitle}
-                                    </Typography>
-                                    <Link component={RouterLink} to={feature.docPath}>
-                                        Learn more
-                                    </Link>
-                                </Box>
-                            </ButtonBase>
-                        ))}
+                                    <Box>
+                                        <Typography variant="h5" color="textPrimary" gutterBottom>
+                                            {feature.title}
+                                        </Typography>
+                                        <Typography color="textSecondary" gutterBottom>
+                                            {feature.subtitle}
+                                        </Typography>
+                                        <Link component={RouterLink} to={feature.docPath}>
+                                            Learn more
+                                        </Link>
+                                    </Box>
+                                </ButtonBase>
+                            ))}
+                        </Hidden>
+
+                        <Hidden lgUp>
+                            <Box display="flex" alignItems="center" justifyContent="center" mb={2}>
+                                <IconButton disabled={selected === 0} onClick={() => setSelected(s => s - 1)}>
+                                    <KeyboardArrowLeft />
+                                </IconButton>
+
+                                <SwipeableViews index={selected} onChangeIndex={setSelected}>
+                                    {FEATURES.map((feature, index) => (
+                                        <ButtonBase
+                                            className={clsx(classes.button, selected === index && 'selected')}
+                                            key={`feature-${index}`}
+                                            disableRipple
+                                            onClick={() => {
+                                                if (index === selected) return;
+                                                setSelected(index);
+                                            }}
+                                        >
+                                            {feature.icon}
+
+                                            <Box>
+                                                <Typography variant="h5" color="textPrimary" gutterBottom>
+                                                    {feature.title}
+                                                </Typography>
+                                                <Typography color="textSecondary" gutterBottom>
+                                                    {feature.subtitle}
+                                                </Typography>
+                                            </Box>
+                                        </ButtonBase>
+                                    ))}
+                                </SwipeableViews>
+
+                                <IconButton
+                                    disabled={selected === FEATURES.length - 1}
+                                    onClick={() => setSelected(s => s + 1)}
+                                >
+                                    <KeyboardArrowRight />
+                                </IconButton>
+                            </Box>
+                        </Hidden>
                     </Grid>
                 </Grid>
             </Container>
