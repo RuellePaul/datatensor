@@ -5,4 +5,5 @@ export interface Label {
     w: number; // ratio
     h: number; // ratio
     category_id?: string;
+    image_id?: string;
 }

@@ -5,6 +5,7 @@ import {Image} from 'src/types/image';
 import api from 'src/utils/api';
 import useDataset from 'src/hooks/useDataset';
 
+
 export interface ImageContextValue {
     image: Image;
     labels: Label[];
@@ -18,47 +19,60 @@ export interface ImageContextValue {
 interface ImageProviderProps {
     image: Image;
     children?: ReactNode;
+    labels?: Label[]; // for public data
 }
 
 export const ImageContext = createContext<ImageContextValue>({
     image: null,
     labels: [],
-    saveLabels: () => {},
-    validateLabels: () => {},
+    saveLabels: () => {
+    },
+    validateLabels: () => {
+    },
     positions: [],
-    storePosition: () => {},
-    previousPosition: () => {}
+    storePosition: () => {
+    },
+    previousPosition: () => {
+    }
 });
 
-export const ImageProvider: FC<ImageProviderProps> = ({image, children}) => {
-    const {dataset, saveCategories} = useDataset();
-    const {enqueueSnackbar} = useSnackbar();
+export const ImageProvider: FC<ImageProviderProps> = ({ image, children, labels = null }) => {
+    const { dataset, saveCategories } = useDataset();
+    const { enqueueSnackbar } = useSnackbar();
 
-    const [currentLabels, setCurrentLabels] = useState<Label[]>(null);
+    const [currentLabels, setCurrentLabels] = useState<Label[]>(labels);
 
     const handleSaveLabels = (update: Label[] | ((labels: Label[]) => Label[])): void => {
         setCurrentLabels(update);
     };
 
     const fetchLabels = useCallback(async () => {
+        if (labels !== null) {
+            setCurrentLabels(labels);
+            return
+        }
+
         setCurrentLabels(null);
 
         if (image) {
             try {
-                const response = await api.get<{labels: Label[]}>(`/datasets/${dataset.id}/images/${image.id}/labels/`);
+                const response = await api.get<{ labels: Label[] }>(`/datasets/${dataset.id}/images/${image.id}/labels/`);
                 handleSaveLabels(response.data.labels);
                 setPositions([response.data.labels]);
             } catch (err) {
                 console.error(err);
             }
         }
-    }, [dataset.id, image]);
+    }, [dataset.id, image, labels]);
 
     useEffect(() => {
         fetchLabels();
     }, [fetchLabels]);
 
     const validateLabels = async () => {
+        if (labels !== null)
+            return
+
         try {
             const response = await api.post<any>(`/datasets/${dataset.id}/images/${image.id}/labels/`, {
                 labels: currentLabels
@@ -69,7 +83,7 @@ export const ImageProvider: FC<ImageProviderProps> = ({image, children}) => {
                     labels_count: category.labels_count + (response.data[category.id] ? response.data[category.id] : 0)
                 }))
             );
-            enqueueSnackbar('Labels updated', {variant: 'info'});
+            enqueueSnackbar('Labels updated', { variant: 'info' });
         } catch (error) {
             enqueueSnackbar(error.message || 'Something went wrong', {
                 variant: 'error'

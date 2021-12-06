@@ -5,6 +5,7 @@ import api from 'src/utils/api';
 import {Box, CircularProgress} from '@mui/material';
 import {Pipeline} from 'src/types/pipeline';
 
+
 export interface DatasetContextValue {
     dataset: Dataset;
     saveDataset: (update: Dataset | ((dataset: Dataset) => Dataset)) => void;
@@ -15,22 +16,32 @@ export interface DatasetContextValue {
 }
 
 interface DatasetProviderProps {
-    dataset_id: string;
+    dataset_id?: string;
     children?: ReactNode;
+    dataset?: Dataset;  // for public data
+    categories?: Category[];  // for public data
 }
 
 export const DatasetContext = createContext<DatasetContextValue>({
     dataset: null,
-    saveDataset: () => {},
+    saveDataset: () => {
+    },
     categories: [],
-    saveCategories: () => {},
+    saveCategories: () => {
+    },
     pipelines: [],
-    savePipelines: () => {}
+    savePipelines: () => {
+    }
 });
 
-export const DatasetProvider: FC<DatasetProviderProps> = ({dataset_id, children}) => {
-    const [currentDataset, setCurrentDataset] = useState<Dataset>(null);
-    const [currentCategories, setCurrentCategories] = useState<Category[]>([]);
+export const DatasetProvider: FC<DatasetProviderProps> = ({
+                                                              dataset_id,
+                                                              dataset = null,
+                                                              categories = [],
+                                                              children
+                                                          }) => {
+    const [currentDataset, setCurrentDataset] = useState<Dataset>(dataset);
+    const [currentCategories, setCurrentCategories] = useState<Category[]>(categories);
     const [currentPipelines, setCurrentPipelines] = useState<Pipeline[]>([]);
 
     const handleSaveDataset = (update: Dataset | ((dataset: Dataset) => Dataset)): void => {
@@ -39,7 +50,7 @@ export const DatasetProvider: FC<DatasetProviderProps> = ({dataset_id, children}
 
     const fetchDataset = useCallback(async () => {
         try {
-            const response = await api.get<{dataset: Dataset}>(`/datasets/${dataset_id}`);
+            const response = await api.get<{ dataset: Dataset }>(`/datasets/${dataset_id}`);
             handleSaveDataset(response.data.dataset);
         } catch (err) {
             console.error(err);
@@ -52,7 +63,7 @@ export const DatasetProvider: FC<DatasetProviderProps> = ({dataset_id, children}
 
     const fetchCategories = useCallback(async () => {
         try {
-            const response = await api.get<{categories: Category[]}>(`/datasets/${dataset_id}/categories/`);
+            const response = await api.get<{ categories: Category[] }>(`/datasets/${dataset_id}/categories/`);
             handleSaveCategories(response.data.categories.sort((a, b) => -b.name.localeCompare(a.name)));
         } catch (err) {
             console.error(err);
@@ -65,7 +76,7 @@ export const DatasetProvider: FC<DatasetProviderProps> = ({dataset_id, children}
 
     const fetchPipelines = useCallback(async () => {
         try {
-            const response = await api.get<{pipelines: Pipeline[]}>(`/datasets/${dataset_id}/pipelines/`);
+            const response = await api.get<{ pipelines: Pipeline[] }>(`/datasets/${dataset_id}/pipelines/`);
             handleSavePipelines(response.data.pipelines);
         } catch (err) {
             console.error(err);
@@ -73,10 +84,12 @@ export const DatasetProvider: FC<DatasetProviderProps> = ({dataset_id, children}
     }, [dataset_id]);
 
     useEffect(() => {
-        fetchDataset();
-        fetchCategories();
-        fetchPipelines();
-    }, [fetchDataset, fetchCategories, fetchPipelines]);
+        if (dataset === null) {
+            fetchDataset();
+            fetchCategories();
+            fetchPipelines();
+        }
+    }, [fetchDataset, fetchCategories, fetchPipelines, dataset]);
 
     if (currentDataset === null)
         return (
@@ -88,9 +101,9 @@ export const DatasetProvider: FC<DatasetProviderProps> = ({dataset_id, children}
     return (
         <DatasetContext.Provider
             value={{
-                dataset: currentDataset,
+                dataset: dataset || currentDataset,
                 saveDataset: handleSaveDataset,
-                categories: currentCategories,
+                categories: categories || currentCategories,
                 saveCategories: handleSaveCategories,
                 pipelines: currentPipelines,
                 savePipelines: handleSavePipelines

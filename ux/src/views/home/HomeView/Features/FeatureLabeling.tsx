@@ -1,18 +1,15 @@
 import React, {FC, useState} from 'react';
 import clsx from 'clsx';
-import {Box, ButtonBase, Button, Hidden, Typography, useMediaQuery} from '@mui/material';
+import {Box, Button, ButtonBase, Hidden, Typography, useMediaQuery} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
-import {DatasetProvider} from 'src/store/DatasetContext';
-import {PUBLIC_DATASET_ID} from 'src/constants';
 import DTImage from 'src/components/core/Images/Image';
 import ToolLabel from 'src/components/core/Labelisator/ToolLabel';
 import ToolMove from 'src/components/core/Labelisator/ToolMove';
-import {ImageProvider} from 'src/store/ImageContext';
 import {CANVAS_OFFSET} from 'src/utils/labeling';
-import {ImagesConsumer, ImagesProvider} from 'src/store/ImagesContext';
 import {MouseOutlined as MouseIcon} from '@mui/icons-material';
-import KeyboardListener from '../../../../components/core/Labelisator/KeyboardListener';
+import KeyboardListener from 'src/components/core/Labelisator/KeyboardListener';
+import useImages from '../../../../hooks/useImages';
 
 interface FeaturesProps {
     className?: string;
@@ -50,11 +47,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 const FeatureLabeling: FC<FeaturesProps> = ({className, ...rest}) => {
     const classes = useStyles();
 
+    const {images} = useImages();
+
     const [tool, setTool] = useState<'label' | 'move'>('label');
 
     const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
-
-    const autoSwitch = isDesktop;
 
     const [openOverlay, setOpenOverlay] = useState<boolean>(true);
     const handleCloseOverlay = () => {
@@ -63,59 +60,36 @@ const FeatureLabeling: FC<FeaturesProps> = ({className, ...rest}) => {
 
     return (
         <div className={clsx(classes.root, className)} {...rest}>
-            <DatasetProvider dataset_id={PUBLIC_DATASET_ID}>
-                <ImagesProvider>
-                    <ImagesConsumer>
-                        {value =>
-                            value.images &&
-                            value.images.length > 0 && (
-                                <ImageProvider image={value.images[0]}>
-                                    <div className={classes.labelisator}>
-                                        <div className={clsx(tool !== 'label' && 'hidden')}>
-                                            <ToolLabel setTool={setTool} autoSwitch={autoSwitch} />
-                                        </div>
-                                        <div className={clsx(tool !== 'move' && 'hidden')}>
-                                            <ToolMove setTool={setTool} autoSwitch={autoSwitch} />
-                                        </div>
-                                        <KeyboardListener index={0} imageIds={value.images.map(image => image.id)} setTool={setTool}/>
+            <div className={classes.labelisator}>
+                <div className={clsx(tool !== 'label' && 'hidden')}>
+                    <ToolLabel setTool={setTool} autoSwitch={isDesktop} />
+                </div>
+                <div className={clsx(tool !== 'move' && 'hidden')}>
+                    <ToolMove setTool={setTool} autoSwitch={isDesktop} />
+                </div>
+                <KeyboardListener index={0} imageIds={images.map(image => image.id)} setTool={setTool} />
 
-                                        <DTImage skeleton />
+                <DTImage skeleton />
 
-                                        {openOverlay && (
-                                            <Hidden smDown>
-                                                <ButtonBase className={classes.overlay} onClick={handleCloseOverlay}>
-                                                    <Box mb={2}>
-                                                        <Typography
-                                                            variant="h6"
-                                                            color="textPrimary"
-                                                            align="center"
-                                                            gutterBottom
-                                                        >
-                                                            To start drawing labels, click and drag.
-                                                        </Typography>
-                                                        <Typography
-                                                            variant="h6"
-                                                            color="textPrimary"
-                                                            align="center"
-                                                            gutterBottom
-                                                        >
-                                                            To change a label, hover it or use right click.
-                                                        </Typography>
-                                                    </Box>
-                                                    <MouseIcon className="highlight" fontSize="large" />
-                                                    <Button onClick={handleCloseOverlay} sx={{mt: 3}}>
-                                                        Got it
-                                                    </Button>
-                                                </ButtonBase>
-                                            </Hidden>
-                                        )}
-                                    </div>
-                                </ImageProvider>
-                            )
-                        }
-                    </ImagesConsumer>
-                </ImagesProvider>
-            </DatasetProvider>
+                {openOverlay && (
+                    <Hidden smDown>
+                        <ButtonBase className={classes.overlay} onClick={handleCloseOverlay}>
+                            <Box mb={2}>
+                                <Typography variant="h6" color="textPrimary" align="center" gutterBottom>
+                                    To start drawing labels, click and drag.
+                                </Typography>
+                                <Typography variant="h6" color="textPrimary" align="center" gutterBottom>
+                                    To change a label, hover it or use right click.
+                                </Typography>
+                            </Box>
+                            <MouseIcon className="highlight" fontSize="large" />
+                            <Button onClick={handleCloseOverlay} sx={{mt: 3}}>
+                                Got it
+                            </Button>
+                        </ButtonBase>
+                    </Hidden>
+                )}
+            </div>
         </div>
     );
 };
