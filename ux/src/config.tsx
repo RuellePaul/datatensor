@@ -268,8 +268,14 @@ export const DEFAULT_PIPELINE: Pipeline = {
         {
             id: '100af1ba-9cd7-44c5-9f31-223996f916f7',
             type: 'random_distortion',
-            probability: 0.65,
+            probability: 0.35,
             properties: OPERATIONS_INITIAL_PROPERTIES.random_distortion
-        }
+        },
+        {
+            id: 'c552d61e-4b85-4b3d-b76a-9504a2bc22d9',
+            type: 'random_contrast',
+            probability: 0.55,
+            properties: OPERATIONS_INITIAL_PROPERTIES.random_contrast
+        },
     ]
 };

@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
                 whiteSpace: 'nowrap'
             },
             [theme.breakpoints.down('sm')]: {
-                fontSize: 32,
+                fontSize: 32
             }
         }
     },
@@ -165,14 +165,15 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
                             Features
                         </Typography>
                         <Typography variant="h1" color="textPrimary">
-                            Lorem ipsum{' '}
+                            A wide range of tools{' '}
                             <Typography component="span" color="primary">
-                                dolor
-                            </Typography>{' '}
-                            est
+                                to build faster
+                            </Typography>
                         </Typography>
                         <Box mb={4}>
-                            <Typography color="textSecondary">Lorem ipsum dolor est...</Typography>
+                            <Typography color="textSecondary">
+                                Once your image datasets are complete, you can interact with them using our API.
+                            </Typography>
                         </Box>
 
                         {FEATURES.map((feature, index) => (

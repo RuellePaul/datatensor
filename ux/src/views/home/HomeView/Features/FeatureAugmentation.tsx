@@ -28,7 +28,7 @@ const FeatureAugmentation: FC<FeaturesProps> = ({className, ...rest}) => {
     return (
         <div className={clsx(classes.root, className)} {...rest}>
             <Grid container spacing={2}>
-                <Grid item sm={6} xs={12}>
+                <Grid item sm={7} xs={12}>
                     <Typography variant="overline" color="textPrimary" align="center" gutterBottom>
                         Input image
                     </Typography>
@@ -48,7 +48,7 @@ const FeatureAugmentation: FC<FeaturesProps> = ({className, ...rest}) => {
                         }
                     />
                 </Grid>
-                <Grid item sm={6} xs={12}>
+                <Grid item sm={5} xs={12}>
                     <Typography variant="overline" color="textPrimary" align="center" gutterBottom>
                         Operations pipeline
                     </Typography>
