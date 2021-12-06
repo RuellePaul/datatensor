@@ -7,10 +7,6 @@
     z-index: -1 !important;
 }
 
-.visible {
-    opacity: 1 !important;
-}
-
 .relative {
     position: relative !important;
 }
