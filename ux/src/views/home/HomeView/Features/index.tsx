@@ -122,8 +122,6 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
 
     const image = useMemo(() => images[Math.floor(Math.random() * images.length)], [images]);
 
-    if (dataset === null || images.length === 0) return null;
-
     return (
         <div className={clsx(classes.root, className)} {...rest}>
             <Container component="section" maxWidth="lg">
@@ -167,16 +165,18 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
                         ))}
                     </Grid>
                     <Grid item sm={6} xs={12}>
-                        <DatasetProvider dataset={dataset} categories={categories}>
-                            <ImagesProvider images={images}>
-                                <ImageProvider
-                                    image={image}
-                                    labels={labels.filter(label => label.image_id === image.id)}
-                                >
-                                    {FEATURES[selected].component}
-                                </ImageProvider>
-                            </ImagesProvider>
-                        </DatasetProvider>
+                        {dataset !== null && images.length > 0 && (
+                            <DatasetProvider dataset={dataset} categories={categories}>
+                                <ImagesProvider images={images}>
+                                    <ImageProvider
+                                        image={image}
+                                        labels={labels.filter(label => label.image_id === image.id)}
+                                    >
+                                        {FEATURES[selected].component}
+                                    </ImageProvider>
+                                </ImagesProvider>
+                            </DatasetProvider>
+                        )}
                     </Grid>
                 </Grid>
             </Container>
