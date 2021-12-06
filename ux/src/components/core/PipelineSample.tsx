@@ -1,5 +1,4 @@
 import React, {FC, useCallback, useState} from 'react';
-import {useParams} from 'react-router';
 import {useSnackbar} from 'notistack';
 import {Formik} from 'formik';
 import clsx from 'clsx';
@@ -13,6 +12,7 @@ import api from 'src/utils/api';
 import ImageBase64 from 'src/components/utils/ImageBase64';
 import {Label} from 'src/types/label';
 import wait from 'src/utils/wait';
+import useDataset from 'src/hooks/useDataset';
 
 
 interface PipelineSampleProps {
@@ -31,7 +31,7 @@ const PipelineSample: FC<PipelineSampleProps> = ({ className }) => {
     const classes = useStyles();
     const { enqueueSnackbar } = useSnackbar();
 
-    const { dataset_id } = useParams();
+    const { dataset } = useDataset();
     const { image } = useImage();
 
     const pipeline = useSelector<any>((state) => state.pipeline);
@@ -42,13 +42,13 @@ const PipelineSample: FC<PipelineSampleProps> = ({ className }) => {
     const [imagesLabels, setImagesLabels] = useState<Label[][]>([]);
 
     const doSample = useCallback(async () => {
-        if (dataset_id && image_id && pipeline.isLoaded) {
+        if (dataset.id && image_id && pipeline.isLoaded) {
             const operations: Operation[] = pipeline.operations.allIds.map(id => pipeline.operations.byId[id]);
 
             try {
                 await wait(10);
 
-                const response = await api.post<{ images: string[], images_labels: Label[][] }>(`/datasets/${dataset_id}/pipelines/sample`, {
+                const response = await api.post<{ images: string[], images_labels: Label[][] }>(`/datasets/${dataset.id}/pipelines/sample`, {
                     image_id,
                     operations
                 });
@@ -63,7 +63,7 @@ const PipelineSample: FC<PipelineSampleProps> = ({ className }) => {
         }
 
         // eslint-disable-next-line
-    }, [pipeline.isLoaded, dataset_id, image_id, pipeline.operations]);
+    }, [pipeline.isLoaded, dataset.id, image_id, pipeline.operations]);
 
     if (!image)
         return null;

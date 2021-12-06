@@ -29,7 +29,7 @@ const MainLayout: FC<MainLayoutProps> = ({children}) => {
         <div className={classes.root}>
             <TopBar />
             <div className={classes.wrapper}>
-                <Scrollbar>{children}</Scrollbar>
+                <Scrollbar className='scroller'>{children}</Scrollbar>
             </div>
         </div>
     );

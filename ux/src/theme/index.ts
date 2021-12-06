@@ -86,7 +86,7 @@ const themesOptions: ThemeOptions[] = [
             divider: grey[200],
             common: {
                 black: '#1D1D1D'
-            },  // @ts-ignore
+            },
             text: {
                 primary: grey[900],
                 secondary: grey[700]

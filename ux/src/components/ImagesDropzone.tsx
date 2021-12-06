@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         }
     },
     dragActive: {
-        backgroundColor: theme.palette.action.active,
+        backgroundColor: theme.palette.action.hover,
         opacity: 0.5
     },
     image: {

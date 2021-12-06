@@ -15,9 +15,9 @@ interface TopBarProps {
 
 const useStyles = makeStyles(theme => ({
     root: {
-        backdropFilter: theme.palette.mode === 'dark' ? 'blur(16px)' : 'none',
-        boxShadow: theme.palette.mode === 'dark' ? 'rgb(19 47 76) 0px -1px 1px inset' : 'initial',
-        backgroundColor: theme.palette.mode === 'dark' ? 'rgb(10 25 40 / 60%)' : 'rgb(255 255 255 / 65%)',
+        backdropFilter: 'blur(16px)',
+        boxShadow: theme.palette.mode === 'dark' ? 'rgb(19 47 76) 0px -1px 1px inset' : 'rgb(0 0 0) 0px -1px 1px inset',
+        backgroundColor: theme.palette.mode === 'dark' ? 'rgb(10 25 40 / 60%)' : 'rgb(0 0 0 / 65%)',
         backgroundImage: 'none'
     },
     version: {

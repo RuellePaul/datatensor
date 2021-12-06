@@ -1,10 +1,11 @@
-import React, {FC, useCallback, useEffect, useMemo, useState} from 'react';
+import React, {cloneElement, FC, useCallback, useEffect, useMemo, useState} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
 import {Box, ButtonBase, Container, Grid, Link, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {blueDark, Theme} from 'src/theme';
 import FeatureLabeling from './FeatureLabeling';
+import FeatureAugmentation from './FeatureAugmentation';
 import {BrandingWatermarkOutlined as LabelingIcon, DynamicFeedOutlined as AugmentationIcon} from '@mui/icons-material';
 import api from 'src/utils/api';
 import {Label} from 'src/types/label';
@@ -34,6 +35,9 @@ const useStyles = makeStyles((theme: Theme) => ({
                 fontSize: 'inherit',
                 fontWeight: 'inherit',
                 whiteSpace: 'nowrap'
+            },
+            [theme.breakpoints.down('sm')]: {
+                fontSize: 32,
             }
         }
     },
@@ -46,7 +50,9 @@ const useStyles = makeStyles((theme: Theme) => ({
         padding: theme.spacing(2, 2, 0.5),
         background: theme.palette.background.paper,
         border: `solid 1px ${theme.palette.divider}`,
-        borderRadius: 8
+        borderRadius: 8,
+        opacity: 0,
+        transition: 'all 300ms ease-out'
     },
     button: {
         width: '100%',
@@ -88,7 +94,7 @@ const FEATURES = [
         subtitle:
             'Image augmentation on your labeled datasets, by computing the positions of objects on the new images.',
         docPath: '/docs/datasets/labeling',
-        component: <div />,
+        component: <FeatureAugmentation />,
         icon: <AugmentationIcon />
     }
 ];
@@ -133,18 +139,24 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
                 <Grid className={classes.container} container spacing={4}>
                     <Grid item lg={7} xs={12}>
                         {dataset !== null && images.length > 0 && (
-                            <div className={classes.feature}>
-                                <DatasetProvider dataset={dataset} categories={categories}>
-                                    <ImagesProvider images={images}>
-                                        <ImageProvider
-                                            image={image}
-                                            labels={labels.filter(label => label.image_id === image.id)}
-                                        >
-                                            {React.cloneElement(FEATURES[selected].component, {className: 'visible'})}
-                                        </ImageProvider>
-                                    </ImagesProvider>
-                                </DatasetProvider>
-                            </div>
+                            <DatasetProvider dataset={dataset} categories={categories}>
+                                <ImagesProvider images={images}>
+                                    <ImageProvider
+                                        image={image}
+                                        labels={labels.filter(label => label.image_id === image.id)}
+                                    >
+                                        {FEATURES.map((feature, index) =>
+                                            cloneElement(feature.component, {
+                                                className: clsx(
+                                                    classes.feature,
+                                                    index === selected ? 'visible' : 'hidden'
+                                                ),
+                                                key: feature.title
+                                            })
+                                        )}
+                                    </ImageProvider>
+                                </ImagesProvider>
+                            </DatasetProvider>
                         )}
                     </Grid>
 
@@ -168,7 +180,11 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
                                 className={clsx(classes.button, selected === index && 'selected')}
                                 disableRipple
                                 key={`feature-${index}`}
-                                onClick={() => setSelected(index)}
+                                onClick={() => {
+                                    if (index === selected) return;
+                                    setSelected(index);
+                                    document.querySelector('.scroller').scrollTo({top: 900 - 64, behavior: 'smooth'});
+                                }}
                             >
                                 {feature.icon}
 
