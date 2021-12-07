@@ -5,7 +5,6 @@ import api from 'src/utils/api';
 import {Box, CircularProgress} from '@mui/material';
 import {Pipeline} from 'src/types/pipeline';
 
-
 export interface DatasetContextValue {
     dataset: Dataset;
     saveDataset: (update: Dataset | ((dataset: Dataset) => Dataset)) => void;
@@ -18,28 +17,20 @@ export interface DatasetContextValue {
 interface DatasetProviderProps {
     dataset_id?: string;
     children?: ReactNode;
-    dataset?: Dataset;  // for public data
-    categories?: Category[];  // for public data
+    dataset?: Dataset; // for public data
+    categories?: Category[]; // for public data
 }
 
 export const DatasetContext = createContext<DatasetContextValue>({
     dataset: null,
-    saveDataset: () => {
-    },
+    saveDataset: () => {},
     categories: [],
-    saveCategories: () => {
-    },
+    saveCategories: () => {},
     pipelines: [],
-    savePipelines: () => {
-    }
+    savePipelines: () => {}
 });
 
-export const DatasetProvider: FC<DatasetProviderProps> = ({
-                                                              dataset_id,
-                                                              dataset = null,
-                                                              categories = [],
-                                                              children
-                                                          }) => {
+export const DatasetProvider: FC<DatasetProviderProps> = ({dataset_id, dataset = null, categories = [], children}) => {
     const [currentDataset, setCurrentDataset] = useState<Dataset>(dataset);
     const [currentCategories, setCurrentCategories] = useState<Category[]>(categories);
     const [currentPipelines, setCurrentPipelines] = useState<Pipeline[]>([]);
@@ -61,22 +52,13 @@ export const DatasetProvider: FC<DatasetProviderProps> = ({
         setCurrentCategories(update);
     };
 
-    const fetchCategories = useCallback(async () => {
-        try {
-            const response = await api.get<{ categories: Category[] }>(`/datasets/${dataset_id}/categories/`);
-            handleSaveCategories(response.data.categories.sort((a, b) => -b.name.localeCompare(a.name)));
-        } catch (err) {
-            console.error(err);
-        }
-    }, [dataset_id]);
-
     const handleSavePipelines = (update: Pipeline[] | ((update: Pipeline[]) => Pipeline[])): void => {
         setCurrentPipelines(update);
     };
 
     const fetchPipelines = useCallback(async () => {
         try {
-            const response = await api.get<{ pipelines: Pipeline[] }>(`/datasets/${dataset_id}/pipelines/`);
+            const response = await api.get<{pipelines: Pipeline[]}>(`/datasets/${dataset_id}/pipelines/`);
             handleSavePipelines(response.data.pipelines);
         } catch (err) {
             console.error(err);
@@ -86,10 +68,9 @@ export const DatasetProvider: FC<DatasetProviderProps> = ({
     useEffect(() => {
         if (dataset === null) {
             fetchDataset();
-            fetchCategories();
             fetchPipelines();
         }
-    }, [fetchDataset, fetchCategories, fetchPipelines, dataset]);
+    }, [fetchDataset, fetchPipelines, dataset]);
 
     if (currentDataset === null)
         return (

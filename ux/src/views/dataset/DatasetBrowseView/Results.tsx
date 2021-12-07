@@ -91,7 +91,7 @@ const Results: FC<ResultsProps> = ({className, ...rest}) => {
                     .slice(page * MAX_DATASETS_DISPLAYED, page * MAX_DATASETS_DISPLAYED + MAX_DATASETS_DISPLAYED)
                     .map(dataset => (
                         <Grid item key={dataset.id} md={4} sm={6} xs={12}>
-                            <DatasetProvider dataset={dataset}>
+                            <DatasetProvider dataset={dataset} categories={dataset.categories}>
                                 <DTDataset dataset={dataset} />
                             </DatasetProvider>
                         </Grid>

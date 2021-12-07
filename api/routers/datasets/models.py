@@ -3,6 +3,7 @@ from typing import List, Optional
 
 from pydantic import Field, BaseModel
 
+from routers.categories.models import Category
 from utils import MongoModel
 
 
@@ -16,6 +17,7 @@ class Dataset(MongoModel):
     image_count: int
     augmented_count: int = 0
     exported_at: Optional[datetime] = None
+    categories: Optional[List[Category]]
 
 
 class DatasetsResponse(BaseModel):

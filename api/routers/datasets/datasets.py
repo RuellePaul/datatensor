@@ -12,11 +12,11 @@ datasets = APIRouter()
 
 
 @datasets.get('/', response_model=DatasetsResponse)
-def get_datasets(user: User = Depends(logged_user), offset: int = 0, limit: int = 0):
+def get_datasets(user: User = Depends(logged_user), include_categories: bool = None, offset: int = 0, limit: int = 0):
     """
     Fetch paginated datasets list (either user datasets, or public ones).
     """
-    response = {'datasets': find_datasets(user.id, offset, limit)}
+    response = {'datasets': find_datasets(user.id, offset, limit, include_categories=include_categories)}
     return parse(response)
 
 

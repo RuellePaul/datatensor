@@ -34,7 +34,7 @@ export const DatasetsProvider: FC<DatasetsProviderProps> = ({children}) => {
 
     const fetchDatasets = useCallback(async () => {
         try {
-            const response = await api.get<{datasets: Dataset[]}>(`/datasets/`);
+            const response = await api.get<{datasets: Dataset[]}>(`/datasets/`, {params: {'include_categories': true}});
             handleSaveDatasets(response.data.datasets);
         } catch (err) {
             console.error(err);
