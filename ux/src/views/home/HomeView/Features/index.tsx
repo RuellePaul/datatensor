@@ -1,4 +1,4 @@
-import React, {FC, useCallback, useEffect, useMemo, useState} from 'react';
+import React, {cloneElement, FC, useCallback, useEffect, useMemo, useState} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import SwipeableViews from 'react-swipeable-views';
 import clsx from 'clsx';
@@ -76,13 +76,17 @@ const useStyles = makeStyles((theme: Theme) => ({
         borderRadius: 8,
         opacity: 0.5,
         transition: 'all 0.15s ease-out',
+        transform: 'scale(0.95)',
+        pointerEvents: 'none',
         [theme.breakpoints.down('lg')]: {
             padding: theme.spacing(1.5),
             marginBottom: theme.spacing(2)
         },
         '&.selected': {
             opacity: 1,
-            border: `solid 1px ${theme.palette.divider}`
+            border: `solid 1px ${theme.palette.divider}`,
+            transform: 'scale(1)',
+            pointerEvents: 'initial'
         }
     },
     button: {
@@ -126,13 +130,15 @@ const FEATURES = [
         title: 'Image labeling',
         subtitle: 'Ergonomic and intuitive tools for labeling your datasets.',
         docPath: '/docs/datasets/labeling',
-        icon: <LabelingIcon />
+        icon: <LabelingIcon />,
+        component: <FeatureLabeling />
     },
     {
         title: 'Image augmentation',
         subtitle: 'Get more labeled images, without the tears.',
         docPath: '/docs/datasets/augmentation',
-        icon: <AugmentationIcon />
+        icon: <AugmentationIcon />,
+        component: <FeatureAugmentation />
     }
 ];
 
@@ -175,27 +181,48 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
     const {scrollTop} = useScroll(document.querySelector('.scroller'));
 
     useEffect(() => {
-        if (scrollTop < 1100) setSelected(0);
-        else setSelected(1);
+        // @ts-ignore
+        const heights = [...document.querySelectorAll('#features > div')].map(x => x.clientHeight);
+        if (heights.length === 0) return;
+
+        if (scrollTop < OFFSET + heights[0] / 2) setSelected(0);
+        else if (scrollTop < OFFSET + heights[0] + heights[1] / 2) setSelected(1);
+        else if (scrollTop < OFFSET + heights[0] + heights[1] + heights[2] / 2) setSelected(2);
+        else if (scrollTop < OFFSET + heights[0] + heights[1] + heights[2] + heights[3] / 2) setSelected(3);
+        else setSelected(null);
     }, [scrollTop]);
 
     const providerLabels = useMemo(() => labels.filter(label => label.image_id === image.id), [labels, image]);
+
+    const handleChangeIndex = index => {
+        if (index === selected) return;
+
+        // @ts-ignore
+        const heights = [...document.querySelectorAll('#features > div')].map(x => x.clientHeight);
+        if (heights.length === 0) return;
+
+        console.log(OFFSET, heights, index);
+
+        if (index > 0)
+            document.querySelector('.scroller').scrollTo({top: OFFSET + heights[index - 1], behavior: 'smooth'});
+        else document.querySelector('.scroller').scrollTo({top: OFFSET, behavior: 'smooth'});
+    };
 
     return (
         <div className={clsx(classes.root, className)} {...rest}>
             <Container component="section" maxWidth="lg">
                 <Grid className={classes.container} container spacing={isMobile ? 0 : 6}>
-                    <Grid item lg={7} xs={12}>
+                    <Grid item lg={7} xs={12} id="features">
                         {dataset !== null && images.length > 0 && (
                             <DatasetProvider dataset={dataset} categories={categories}>
                                 <ImagesProvider images={images}>
                                     <ImageProvider image={image} labels={providerLabels}>
-                                        <FeatureLabeling
-                                            className={clsx(classes.feature, selected === 0 && 'selected')}
-                                        />
-                                        <FeatureAugmentation
-                                            className={clsx(classes.feature, selected === 1 && 'selected')}
-                                        />
+                                        {FEATURES.map((feature, index) =>
+                                            cloneElement(feature.component, {
+                                                className: clsx(classes.feature, selected === index && 'selected'),
+                                                key: feature.title
+                                            })
+                                        )}
                                     </ImageProvider>
                                 </ImagesProvider>
                             </DatasetProvider>
@@ -221,13 +248,7 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
                                     className={clsx(classes.button, selected === index && 'selected')}
                                     disableRipple
                                     key={`feature-${index}`}
-                                    onClick={() => {
-                                        if (index === selected) return;
-
-                                        document
-                                            .querySelector('.scroller')
-                                            .scrollTo({top: OFFSET + index * 600, behavior: 'smooth'});
-                                    }}
+                                    onClick={() => handleChangeIndex(index)}
                                 >
                                     {feature.icon}
 
@@ -249,14 +270,7 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
                         <Hidden lgUp>
                             <Box display="flex" alignItems="center" justifyContent="center" mb={isMobile ? 1 : 2}>
                                 <Box px={1}>
-                                    <SwipeableViews
-                                        index={selected}
-                                        onChangeIndex={index =>
-                                            document
-                                                .querySelector('.scroller')
-                                                .scrollTo({top: OFFSET + index * 500, behavior: 'smooth'})
-                                        }
-                                    >
+                                    <SwipeableViews index={selected} onChangeIndex={handleChangeIndex}>
                                         {FEATURES.map((feature, index) => (
                                             <div
                                                 className={clsx(classes.button, selected === index && 'selected')}
