@@ -5,7 +5,6 @@ import {Image} from 'src/types/image';
 import api from 'src/utils/api';
 import useDataset from 'src/hooks/useDataset';
 
-
 export interface ImageContextValue {
     image: Image;
     labels: Label[];
@@ -25,20 +24,16 @@ interface ImageProviderProps {
 export const ImageContext = createContext<ImageContextValue>({
     image: null,
     labels: [],
-    saveLabels: () => {
-    },
-    validateLabels: () => {
-    },
+    saveLabels: () => {},
+    validateLabels: () => {},
     positions: [],
-    storePosition: () => {
-    },
-    previousPosition: () => {
-    }
+    storePosition: () => {},
+    previousPosition: () => {}
 });
 
-export const ImageProvider: FC<ImageProviderProps> = ({ image, children, labels = null }) => {
-    const { dataset, saveCategories } = useDataset();
-    const { enqueueSnackbar } = useSnackbar();
+export const ImageProvider: FC<ImageProviderProps> = ({image, children, labels = null}) => {
+    const {dataset, saveCategories} = useDataset();
+    const {enqueueSnackbar} = useSnackbar();
 
     const [currentLabels, setCurrentLabels] = useState<Label[]>(labels);
 
@@ -59,7 +54,7 @@ export const ImageProvider: FC<ImageProviderProps> = ({ image, children, labels 
 
         if (image) {
             try {
-                const response = await api.get<{ labels: Label[] }>(`/datasets/${dataset.id}/images/${image.id}/labels/`);
+                const response = await api.get<{labels: Label[]}>(`/datasets/${dataset.id}/images/${image.id}/labels/`);
                 handleSaveLabels(response.data.labels);
                 setPositions([response.data.labels]);
             } catch (err) {
@@ -73,8 +68,7 @@ export const ImageProvider: FC<ImageProviderProps> = ({ image, children, labels 
     }, [fetchLabels]);
 
     const validateLabels = async () => {
-        if (labels !== null)
-            return
+        if (labels !== null) return;
 
         try {
             const response = await api.post<any>(`/datasets/${dataset.id}/images/${image.id}/labels/`, {
@@ -86,7 +80,7 @@ export const ImageProvider: FC<ImageProviderProps> = ({ image, children, labels 
                     labels_count: category.labels_count + (response.data[category.id] ? response.data[category.id] : 0)
                 }))
             );
-            enqueueSnackbar('Labels updated', { variant: 'info' });
+            enqueueSnackbar('Labels updated', {variant: 'info'});
         } catch (error) {
             enqueueSnackbar(error.message || 'Something went wrong', {
                 variant: 'error'

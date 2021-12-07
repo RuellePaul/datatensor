@@ -37,7 +37,7 @@ const FeatureAugmentation: FC<FeaturesProps> = ({className, ...rest}) => {
 
     return (
         <div className={clsx(classes.root, className)} {...rest}>
-            <Grid container spacing={1}>
+            <Grid container spacing={2}>
                 <Grid item sm={7} xs={12}>
                     <Box mb={1}>
                         <DTImage skeleton />

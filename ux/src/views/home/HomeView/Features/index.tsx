@@ -229,10 +229,7 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
         if (heights.length === 0) return;
 
         if (scrollTop < OFFSET + heights[0] / 2) setSelected(0);
-        else if (scrollTop < OFFSET + heights[0] + heights[1] / 2) setSelected(1);
-        else if (scrollTop < OFFSET + heights[0] + heights[1] + heights[2] / 2) setSelected(2);
-        else if (scrollTop < OFFSET + heights[0] + heights[1] + heights[2] + heights[3] / 2) setSelected(3);
-        else setSelected(null);
+        else setSelected(1);
     }, [scrollTop, isMobile]);
 
     const providerLabels = useMemo(() => labels.filter(label => label.image_id === image.id), [labels, image]);

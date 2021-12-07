@@ -1,18 +1,8 @@
 import React, {FC, useCallback, useEffect, useRef, useState} from 'react';
 import {useHistory} from 'react-router';
+import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
-import {
-    Box,
-    capitalize,
-    Card,
-    CardActionArea,
-    CardContent,
-    CardHeader,
-    CardMedia,
-    Chip,
-    Link,
-    Typography
-} from '@mui/material';
+import {Box, capitalize, Card, CardActionArea, CardContent, CardHeader, Chip, Link, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Lock as PrivateIcon, PhotoLibraryOutlined as ImagesIcon, Public as PublicIcon} from '@mui/icons-material';
 import {Theme} from 'src/theme';
@@ -23,7 +13,8 @@ import UserAvatar from 'src/components/UserAvatar';
 import WorkingAlert from 'src/components/core/WorkingAlert';
 import {UserConsumer, UserProvider} from 'src/store/UserContext';
 import {EMPTY_DESCRIPTIONS} from 'src/constants';
-import {Link as RouterLink} from 'react-router-dom';
+import DTImage from 'src/components/core/Images/Image';
+import {ImageProvider} from 'src/store/ImageContext';
 
 interface DatasetProps {
     dataset: Dataset;
@@ -110,7 +101,11 @@ const DTDataset: FC<DatasetProps> = ({className, dataset, ...rest}) => {
             </UserProvider>
 
             <CardActionArea onClick={() => history.push(`/app/datasets/${dataset.id}#`)}>
-                <CardMedia className={classes.media} component="span" image={imagePreview?.path} />
+                {imagePreview !== null && (
+                    <ImageProvider image={imagePreview}>
+                        <DTImage skeleton />
+                    </ImageProvider>
+                )}
                 <CardContent>
                     <Box display="flex" alignItems="center" mb={1}>
                         <Typography variant="h5">{dataset.name && capitalize(dataset.name)}</Typography>
