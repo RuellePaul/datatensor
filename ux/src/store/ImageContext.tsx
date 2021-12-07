@@ -50,7 +50,6 @@ export const ImageProvider: FC<ImageProviderProps> = ({ image, children, labels 
 
     const fetchLabels = useCallback(async () => {
         if (labels !== null) {
-            console.log(labels)
             handleSaveLabels(labels);
             setPositions([labels]);
             return;
