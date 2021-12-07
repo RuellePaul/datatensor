@@ -52,6 +52,7 @@ const DTDataset: FC<DatasetProps> = ({className, dataset, ...rest}) => {
         try {
             const response = await api.get<{images: Image[]}>(`/datasets/${dataset.id}/images/`, {
                 params: {
+                    include_labels: true,
                     limit: 1
                 }
             });
@@ -67,7 +68,7 @@ const DTDataset: FC<DatasetProps> = ({className, dataset, ...rest}) => {
 
     return (
         <Card className={clsx(classes.root, className)} ref={datasetRef} variant="outlined" {...rest}>
-            <UserProvider user_id={dataset.user_id}>
+            <UserProvider user={dataset.user}>
                 <UserConsumer>
                     {value => (
                         <CardHeader
@@ -102,7 +103,7 @@ const DTDataset: FC<DatasetProps> = ({className, dataset, ...rest}) => {
 
             <CardActionArea onClick={() => history.push(`/app/datasets/${dataset.id}#`)}>
                 {imagePreview !== null && (
-                    <ImageProvider image={imagePreview}>
+                    <ImageProvider image={imagePreview} labels={imagePreview.labels}>
                         <DTImage skeleton />
                     </ImageProvider>
                 )}

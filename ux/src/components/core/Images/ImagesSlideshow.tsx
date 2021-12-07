@@ -88,7 +88,7 @@ function ImagesSlideshow() {
                 enableMouseEvents
             >
                 {images.map((image, index) => (
-                    <ImageProvider image={image} key={image.id}>
+                    <ImageProvider image={image} labels={image.labels} key={image.id}>
                         {Math.abs(activeStep - index) <= 2 ? <DTImage className={classes.image} /> : null}
                     </ImageProvider>
                 ))}

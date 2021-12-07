@@ -8,7 +8,7 @@ import numpy
 
 import errors
 from config import Config
-from routers.images.models import Image
+from routers.images.models import Image, ImageExtended
 from routers.labels.core import find_labels, regroup_labels_by_category
 from routers.labels.models import Label
 
@@ -106,14 +106,18 @@ def find_all_images(dataset_id, offset=0, limit=0) -> List[Image]:
     return [Image.from_mongo(image) for image in images]
 
 
-def find_images(dataset_id, pipeline_id=None, offset=0, limit=0) -> List[Image]:
+def find_images(dataset_id, pipeline_id=None, include_labels=False, offset=0, limit=0) -> List[ImageExtended]:
     images = list(db.images
                   .find({'dataset_id': dataset_id, 'pipeline_id': pipeline_id})
                   .skip(offset)
                   .limit(limit))
     if images is None:
         raise errors.NotFound(errors.IMAGE_NOT_FOUND)
-    return [Image.from_mongo(image) for image in images]
+    images = [ImageExtended.from_mongo(image) for image in images]
+    if include_labels:
+        for image in images:
+            image.labels = find_labels(image.id)
+    return images
 
 
 def find_image(dataset_id, image_id) -> Image:

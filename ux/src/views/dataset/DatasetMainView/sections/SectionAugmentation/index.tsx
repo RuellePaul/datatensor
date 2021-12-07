@@ -103,7 +103,7 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                 </Typography>
             </Box>
 
-            <ImageProvider image={images[randomIndex]}>
+            <ImageProvider image={images[randomIndex]} labels={images[randomIndex].labels}>
                 <Grid container spacing={3}>
                     <Grid item md={3} sm={6} xs={12}>
                         <Typography variant="overline" color="textPrimary" align="center" gutterBottom>

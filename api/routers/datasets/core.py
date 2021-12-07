@@ -5,20 +5,24 @@ from uuid import uuid4
 import errors
 from config import Config
 from routers.categories.core import find_categories
-from routers.datasets.models import Dataset, DatasetPostBody, DatasetPatchBody
+from routers.datasets.models import Dataset, DatasetExtended, DatasetPostBody, DatasetPatchBody
+from routers.users.core import find_user
 from routers.images.core import find_all_images, remove_images
 
 db = Config.db
 
 
-def find_datasets(user_id, offset=0, limit=0, include_categories=False) -> List[Dataset]:
+def find_datasets(user_id, offset=0, limit=0, include_user=False, include_categories=False) -> List[DatasetExtended]:
     datasets = list(db.datasets
                     .find({'$or': [{'user_id': user_id}, {'is_public': True}]})
                     .skip(offset)
                     .limit(limit))
     if datasets is None:
         raise errors.NotFound(errors.DATASET_NOT_FOUND)
-    datasets = [Dataset.from_mongo(dataset) for dataset in datasets]
+    datasets = [DatasetExtended.from_mongo(dataset) for dataset in datasets]
+    if include_user:
+        for dataset in datasets:
+            dataset.user = find_user(dataset.user_id)
     if include_categories:
         for dataset in datasets:
             dataset.categories = find_categories(dataset.id)
@@ -33,11 +37,16 @@ def find_own_datasets(user_id) -> List[Dataset]:
     return [Dataset.from_mongo(dataset) for dataset in datasets]
 
 
-def find_dataset(dataset_id) -> Dataset:
+def find_dataset(dataset_id, include_user=False, include_categories=False) -> DatasetExtended:
     dataset = db.datasets.find_one({'_id': dataset_id})
     if dataset is None:
         raise errors.NotFound(errors.DATASET_NOT_FOUND)
-    return Dataset.from_mongo(dataset)
+    dataset = DatasetExtended.from_mongo(dataset)
+    if include_user:
+        dataset.user = find_user(dataset.user_id)
+    if include_categories:
+        dataset.categories = find_categories(dataset_id)
+    return dataset
 
 
 def update_dataset(user_id, dataset_id, payload: DatasetPatchBody):

@@ -39,18 +39,24 @@ export const DatasetProvider: FC<DatasetProviderProps> = ({dataset_id, dataset =
         setCurrentDataset(update);
     };
 
+    const handleSaveCategories = (update: Category[] | ((update: Category[]) => Category[])): void => {
+        setCurrentCategories(update);
+    };
+
     const fetchDataset = useCallback(async () => {
         try {
-            const response = await api.get<{ dataset: Dataset }>(`/datasets/${dataset_id}`);
+            const response = await api.get<{dataset: Dataset}>(`/datasets/${dataset_id}`, {
+                params: {
+                    include_user: true,
+                    include_categories: true
+                }
+            });
             handleSaveDataset(response.data.dataset);
+            handleSaveCategories(response.data.dataset.categories);
         } catch (err) {
             console.error(err);
         }
     }, [dataset_id]);
-
-    const handleSaveCategories = (update: Category[] | ((update: Category[]) => Category[])): void => {
-        setCurrentCategories(update);
-    };
 
     const handleSavePipelines = (update: Pipeline[] | ((update: Pipeline[]) => Pipeline[])): void => {
         setCurrentPipelines(update);

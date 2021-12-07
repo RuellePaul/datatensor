@@ -1,4 +1,5 @@
-import {Category} from './category';
+import {Category} from 'src/types/category';
+import {User} from 'src/types/user';
 
 
 export interface Dataset {
@@ -12,5 +13,6 @@ export interface Dataset {
     is_public: boolean;
     exported_at?: string;
 
-    categories?: Category[]
+    user?: User;
+    categories?: Category[];
 }

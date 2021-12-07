@@ -6,8 +6,8 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import {Theme} from 'src/theme';
 import DTDataset from 'src/components/core/Dataset';
 import useDatasets from 'src/hooks/useDatasets';
+import {DatasetProvider} from 'src/store/DatasetContext';
 import {MAX_DATASETS_DISPLAYED} from 'src/config';
-import {DatasetProvider} from '../../../store/DatasetContext';
 
 interface ResultsProps {
     className?: string;

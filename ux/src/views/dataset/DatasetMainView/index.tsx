@@ -25,7 +25,6 @@ import {CategoryProvider} from 'src/store/CategoryContext';
 import {PipelineProvider} from 'src/store/PipelineContext';
 import {ExportsProvider} from 'src/store/ExportsContext';
 
-
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         backgroundColor: theme.palette.background.default,
@@ -52,7 +51,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const DTTab = ({ label, icon: Icon, ...rest }) => {
+const DTTab = ({label, icon: Icon, ...rest}) => {
     const classes = useStyles();
 
     const TabLabel = (
@@ -76,7 +75,7 @@ const DatasetMainView: FC = () => {
         setTab(newTab);
     };
 
-    const { dataset_id } = useParams();
+    const {dataset_id} = useParams();
 
     useEffect(() => {
         setOpenedTabs(openedTabs => (openedTabs.includes(tab) ? openedTabs : [...openedTabs, tab]));
@@ -88,7 +87,7 @@ const DatasetMainView: FC = () => {
         <DatasetProvider dataset_id={dataset_id}>
             <DatasetConsumer>
                 {value => (
-                    <UserProvider user_id={value.dataset.user_id}>
+                    <UserProvider user={value.dataset.user}>
                         <Page className={classes.root} title={`Dataset ${value.dataset.name}`}>
                             <ExportsProvider>
                                 <ImagesProvider>
@@ -110,7 +109,8 @@ const DatasetMainView: FC = () => {
                                                                     />
                                                                     <DTTab
                                                                         label={
-                                                                            value.images === null || value.images.length === 0 ? (
+                                                                            value.images === null ||
+                                                                            value.images.length === 0 ? (
                                                                                 <Tooltip
                                                                                     title={
                                                                                         <Typography variant="h6">
@@ -125,7 +125,10 @@ const DatasetMainView: FC = () => {
                                                                                 'Augmentation'
                                                                             )
                                                                         }
-                                                                        disabled={value.images === null || value.images.length === 0}
+                                                                        disabled={
+                                                                            value.images === null ||
+                                                                            value.images.length === 0
+                                                                        }
                                                                         style={{
                                                                             pointerEvents: 'auto'
                                                                         }}

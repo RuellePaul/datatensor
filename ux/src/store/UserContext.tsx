@@ -10,6 +10,7 @@ export interface UserContextValue {
 interface UserProviderProps {
     user_id?: string | null;
     children?: ReactNode;
+    user?: User;
 }
 
 export const UserContext = createContext<UserContextValue>({
@@ -17,8 +18,8 @@ export const UserContext = createContext<UserContextValue>({
     saveUser: () => {}
 });
 
-export const UserProvider: FC<UserProviderProps> = ({user_id = null, children}) => {
-    const [currentUser, setCurrentUser] = useState<User>(null);
+export const UserProvider: FC<UserProviderProps> = ({user_id = null, user = null, children}) => {
+    const [currentUser, setCurrentUser] = useState<User>(user);
 
     const handleSaveUser = (update: User | ((user: User) => User)): void => {
         setCurrentUser(update);
@@ -36,13 +37,14 @@ export const UserProvider: FC<UserProviderProps> = ({user_id = null, children}) 
     }, [user_id]);
 
     useEffect(() => {
-        fetchUser();
-    }, [fetchUser]);
+        if (user === null)
+            fetchUser();
+    }, [fetchUser, user]);
 
     return (
         <UserContext.Provider
             value={{
-                user: currentUser,
+                user: user || currentUser,
                 saveUser: handleSaveUser
             }}
         >

@@ -64,7 +64,8 @@ export const ImagesProvider: FC<ImagesProviderProps> = ({ children, pipeline_id,
                     params: {
                         offset: currentOffset,
                         limit: LAZY_LOAD_BATCH,
-                        pipeline_id
+                        pipeline_id,
+                        include_labels: true
                     }
                 });
                 setTotalImagesCount(null);
