@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         }
     },
     container: {
-        [theme.breakpoints.down('lg')]: {
+        [theme.breakpoints.down('md')]: {
             flexDirection: 'column-reverse'
         }
     },
@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         height: 'fit-content',
         paddingBottom: 60,
         background: theme.palette.background.default,
-        [theme.breakpoints.down('lg')]: {
+        [theme.breakpoints.down('md')]: {
             paddingBottom: 0,
             top: -86
         }
@@ -83,7 +83,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         transition: 'all 0.15s ease-out',
         transform: 'scale(0.95)',
         pointerEvents: 'none',
-        [theme.breakpoints.down('lg')]: {
+        [theme.breakpoints.down('md')]: {
             padding: theme.spacing(1.5),
             marginBottom: theme.spacing(6),
             background: 'none !important'
@@ -145,7 +145,7 @@ const FEATURES = [
 const FeatureButton: FC<FeatureButtonProps> = ({feature, index, selected}) => {
     const classes = useStyles();
 
-    const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
+    const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
 
     const handleChangeIndex = index => {
         if (index === selected) return;
@@ -186,7 +186,7 @@ const FeatureButton: FC<FeatureButtonProps> = ({feature, index, selected}) => {
 const Features: FC<FeaturesProps> = ({className, ...rest}) => {
     const classes = useStyles();
 
-    const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
+    const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
 
     const [selected, setSelected] = useState(0);
 
@@ -241,14 +241,14 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
         <div className={clsx(classes.root, className)} {...rest}>
             <Container component="section" maxWidth="lg">
                 <Grid className={classes.container} container spacing={isMobile ? 0 : 6}>
-                    <Grid item lg={7} xs={12} id="features">
+                    <Grid item md={7} xs={12} id="features">
                         {dataset !== null && images.length > 0 && (
                             <DatasetProvider dataset={dataset} categories={categories}>
                                 <ImagesProvider images={images}>
                                     <ImageProvider image={image} labels={providerLabels}>
                                         {FEATURES.map((feature, index) => (
                                             <>
-                                                <Hidden lgUp>
+                                                <Hidden mdUp>
                                                     <FeatureButton
                                                         feature={feature}
                                                         index={index}
@@ -270,7 +270,7 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
                         )}
                     </Grid>
 
-                    <Grid className={clsx(!isMobile && classes.sticky)} item lg={5} xs={12}>
+                    <Grid className={clsx(!isMobile && classes.sticky)} item md={5} xs={12}>
                         <Typography variant="overline" color="primary" fontSize={16}>
                             Features
                         </Typography>
@@ -283,7 +283,7 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
 
                         <Box height={24} />
 
-                        <Hidden lgDown>
+                        <Hidden mdDown>
                             {FEATURES.map((feature, index) => (
                                 <FeatureButton feature={feature} index={index} selected={selected} />
                             ))}

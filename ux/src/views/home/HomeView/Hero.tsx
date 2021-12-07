@@ -29,9 +29,14 @@ const useStyles = makeStyles((theme: Theme) => ({
                 whiteSpace: 'nowrap'
             }
         },
+        [theme.breakpoints.down('lg')]: {
+            '& h1': {
+                fontSize: 46
+            },
+        },
         [theme.breakpoints.down('md')]: {
             '& h1': {
-                fontSize: 48
+                fontSize: 42
             },
             '& * ': {
                 textAlign: 'center'
