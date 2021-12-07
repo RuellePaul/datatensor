@@ -1,6 +1,5 @@
 import React, {cloneElement, FC, useCallback, useEffect, useMemo, useState} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
-import SwipeableViews from 'react-swipeable-views';
 import clsx from 'clsx';
 import {Box, ButtonBase, Container, Grid, Hidden, Link, Typography, useMediaQuery} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
@@ -20,6 +19,12 @@ import useScroll from 'src/hooks/useScroll';
 
 interface FeaturesProps {
     className?: string;
+}
+
+interface FeatureButtonProps {
+    feature: any; // TODO
+    index: number;
+    selected: number;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -98,7 +103,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         padding: 20,
         marginTop: 10,
         border: `solid 1px transparent`,
-        '&:hover, &:focus': {
+        '&:hover': {
             background: theme.palette.background.paper
         },
         '&.selected': {
@@ -113,12 +118,6 @@ const useStyles = makeStyles((theme: Theme) => ({
             marginRight: theme.spacing(3),
             fontSize: 28,
             color: theme.palette.primary.main
-        },
-        [theme.breakpoints.down('lg')]: {
-            padding: theme.spacing(2),
-            width: `calc(100vw - ${theme.spacing(4)})`,
-            margin: 'auto',
-            border: 'none !important'
         }
     }
 }));
@@ -141,6 +140,47 @@ const FEATURES = [
         component: <FeatureAugmentation />
     }
 ];
+
+const FeatureButton: FC<FeatureButtonProps> = ({feature, index, selected}) => {
+    const classes = useStyles();
+
+    const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
+
+    const handleChangeIndex = index => {
+        if (index === selected) return;
+
+        // @ts-ignore
+        const heights = [...document.querySelectorAll('#features > div')].map(x => x.clientHeight);
+        if (heights.length === 0) return;
+
+        if (index > 0)
+            document.querySelector('.scroller').scrollTo({top: OFFSET + heights[index - 1], behavior: 'smooth'});
+        else document.querySelector('.scroller').scrollTo({top: OFFSET, behavior: 'smooth'});
+    };
+
+    return (
+        <ButtonBase
+            className={clsx(classes.button, isMobile ? 'selected' : selected === index && 'selected')}
+            disableRipple
+            key={`feature-${index}`}
+            onClick={() => handleChangeIndex(index)}
+        >
+            {feature.icon}
+
+            <Box>
+                <Typography variant="h5" color="textPrimary" gutterBottom>
+                    {feature.title}
+                </Typography>
+                <Typography color="textSecondary" gutterBottom>
+                    {feature.subtitle}
+                </Typography>
+                <Link component={RouterLink} to={feature.docPath}>
+                    Learn more
+                </Link>
+            </Box>
+        </ButtonBase>
+    );
+};
 
 const Features: FC<FeaturesProps> = ({className, ...rest}) => {
     const classes = useStyles();
@@ -181,6 +221,8 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
     const {scrollTop} = useScroll(document.querySelector('.scroller'));
 
     useEffect(() => {
+        if (isMobile) return;
+
         // @ts-ignore
         const heights = [...document.querySelectorAll('#features > div')].map(x => x.clientHeight);
         if (heights.length === 0) return;
@@ -190,23 +232,9 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
         else if (scrollTop < OFFSET + heights[0] + heights[1] + heights[2] / 2) setSelected(2);
         else if (scrollTop < OFFSET + heights[0] + heights[1] + heights[2] + heights[3] / 2) setSelected(3);
         else setSelected(null);
-    }, [scrollTop]);
+    }, [scrollTop, isMobile]);
 
     const providerLabels = useMemo(() => labels.filter(label => label.image_id === image.id), [labels, image]);
-
-    const handleChangeIndex = index => {
-        if (index === selected) return;
-
-        // @ts-ignore
-        const heights = [...document.querySelectorAll('#features > div')].map(x => x.clientHeight);
-        if (heights.length === 0) return;
-
-        console.log(OFFSET, heights, index);
-
-        if (index > 0)
-            document.querySelector('.scroller').scrollTo({top: OFFSET + heights[index - 1], behavior: 'smooth'});
-        else document.querySelector('.scroller').scrollTo({top: OFFSET, behavior: 'smooth'});
-    };
 
     return (
         <div className={clsx(classes.root, className)} {...rest}>
@@ -217,19 +245,31 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
                             <DatasetProvider dataset={dataset} categories={categories}>
                                 <ImagesProvider images={images}>
                                     <ImageProvider image={image} labels={providerLabels}>
-                                        {FEATURES.map((feature, index) =>
-                                            cloneElement(feature.component, {
-                                                className: clsx(classes.feature, selected === index && 'selected'),
-                                                key: feature.title
-                                            })
-                                        )}
+                                        {FEATURES.map((feature, index) => (
+                                            <>
+                                                <Hidden lgUp>
+                                                    <FeatureButton
+                                                        feature={feature}
+                                                        index={index}
+                                                        selected={selected}
+                                                    />
+                                                </Hidden>
+                                                {cloneElement(feature.component, {
+                                                    className: clsx(
+                                                        classes.feature,
+                                                        isMobile ? 'selected' : selected === index && 'selected'
+                                                    ),
+                                                    key: feature.title
+                                                })}
+                                            </>
+                                        ))}
                                     </ImageProvider>
                                 </ImagesProvider>
                             </DatasetProvider>
                         )}
                     </Grid>
 
-                    <Grid className={classes.sticky} item lg={5} xs={12}>
+                    <Grid className={clsx(!isMobile && classes.sticky)} item lg={5} xs={12}>
                         <Typography variant="overline" color="primary" fontSize={16}>
                             Features
                         </Typography>
@@ -244,53 +284,8 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
 
                         <Hidden lgDown>
                             {FEATURES.map((feature, index) => (
-                                <ButtonBase
-                                    className={clsx(classes.button, selected === index && 'selected')}
-                                    disableRipple
-                                    key={`feature-${index}`}
-                                    onClick={() => handleChangeIndex(index)}
-                                >
-                                    {feature.icon}
-
-                                    <Box>
-                                        <Typography variant="h5" color="textPrimary" gutterBottom>
-                                            {feature.title}
-                                        </Typography>
-                                        <Typography color="textSecondary" gutterBottom>
-                                            {feature.subtitle}
-                                        </Typography>
-                                        <Link component={RouterLink} to={feature.docPath}>
-                                            Learn more
-                                        </Link>
-                                    </Box>
-                                </ButtonBase>
+                                <FeatureButton feature={feature} index={index} selected={selected} />
                             ))}
-                        </Hidden>
-
-                        <Hidden lgUp>
-                            <Box display="flex" alignItems="center" justifyContent="center" mb={isMobile ? 1 : 2}>
-                                <Box px={1}>
-                                    <SwipeableViews index={selected} onChangeIndex={handleChangeIndex}>
-                                        {FEATURES.map((feature, index) => (
-                                            <div
-                                                className={clsx(classes.button, selected === index && 'selected')}
-                                                key={`feature-${index}`}
-                                            >
-                                                {feature.icon}
-
-                                                <Box>
-                                                    <Typography variant="h5" color="textPrimary" gutterBottom>
-                                                        {feature.title}
-                                                    </Typography>
-                                                    <Typography color="textSecondary" gutterBottom>
-                                                        {feature.subtitle}
-                                                    </Typography>
-                                                </Box>
-                                            </div>
-                                        ))}
-                                    </SwipeableViews>
-                                </Box>
-                            </Box>
                         </Hidden>
                     </Grid>
                 </Grid>
