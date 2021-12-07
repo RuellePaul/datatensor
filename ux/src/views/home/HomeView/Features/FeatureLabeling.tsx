@@ -44,12 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     labelisator: {
         position: 'relative',
-        margin: `${CANVAS_OFFSET}px 0px`,
-        [theme.breakpoints.down('sm')]: {
-            marginLeft: -10,
-            marginRight: -10,
-            marginBottom: -10
-        }
+        margin: `${CANVAS_OFFSET}px 0px`
     },
     overlay: {
         cursor: 'pointer',

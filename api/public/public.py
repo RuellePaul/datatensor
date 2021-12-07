@@ -10,9 +10,9 @@ from config import Config
 from routers.images.models import Image
 from routers.labels.models import Label
 from routers.pipelines.core import perform_sample
-from routers.pipelines.models import SampleBody, SampleResponse
+from routers.pipelines.models import SampleResponse
 from utils import parse
-from .models import PublicDatasetResponse
+from .models import PublicDatasetResponse, PublicSampleBody
 
 db = Config.db
 
@@ -37,12 +37,12 @@ def get_public_data():
 
 
 @public.post('/sample', response_model=SampleResponse)
-def get_public_sample(payload: SampleBody):
+def get_public_sample(payload: PublicSampleBody):
     image_id = payload.image_id
     operations = payload.operations
 
     image = _find_public_image(image_id)
-    labels = _find_public_labels(image_id)
+    labels = payload.labels
 
     image_path = os.path.join(Config.ROOT_PATH, 'api', 'public', 'public-dataset', image.path.split('/')[0], image.name)
     cv2image = cv2.imread(image_path)

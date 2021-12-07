@@ -1,18 +1,13 @@
-import React, {cloneElement, FC, useCallback, useEffect, useMemo, useState} from 'react';
+import React, {FC, useCallback, useEffect, useMemo, useState} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import SwipeableViews from 'react-swipeable-views';
 import clsx from 'clsx';
-import {Box, ButtonBase, Container, Grid, Hidden, IconButton, Link, Typography, useMediaQuery} from '@mui/material';
+import {Box, ButtonBase, Container, Grid, Hidden, Link, Typography, useMediaQuery} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {blueDark, Theme} from 'src/theme';
 import FeatureLabeling from './FeatureLabeling';
 import FeatureAugmentation from './FeatureAugmentation';
-import {
-    BrandingWatermarkOutlined as LabelingIcon,
-    DynamicFeedOutlined as AugmentationIcon,
-    KeyboardArrowLeft,
-    KeyboardArrowRight
-} from '@mui/icons-material';
+import {BrandingWatermarkOutlined as LabelingIcon, DynamicFeedOutlined as AugmentationIcon} from '@mui/icons-material';
 import api from 'src/utils/api';
 import {Label} from 'src/types/label';
 import {Image} from 'src/types/image';
@@ -21,6 +16,7 @@ import {Category} from 'src/types/category';
 import {DatasetProvider} from 'src/store/DatasetContext';
 import {ImagesProvider} from 'src/store/ImagesContext';
 import {ImageProvider} from 'src/store/ImageContext';
+import useScroll from 'src/hooks/useScroll';
 
 interface FeaturesProps {
     className?: string;
@@ -58,20 +54,41 @@ const useStyles = makeStyles((theme: Theme) => ({
             flexDirection: 'column-reverse'
         }
     },
+    sticky: {
+        zIndex: 1050,
+        position: 'sticky',
+        top: 100,
+        display: 'flex',
+        flexDirection: 'column',
+        height: 'fit-content',
+        paddingBottom: 60,
+        background: theme.palette.background.default,
+        [theme.breakpoints.down('lg')]: {
+            paddingBottom: 0,
+            top: -85
+        }
+    },
     feature: {
         padding: theme.spacing(2, 2, 0.5),
+        marginBottom: theme.spacing(8),
         background: theme.palette.background.paper,
-        border: `solid 1px ${theme.palette.divider}`,
+        border: `solid 1px ${theme.palette.background.paper}`,
         borderRadius: 8,
-        opacity: 0,
-        transition: 'all 300ms ease-out',
+        opacity: 0.5,
+        transition: 'all 0.15s ease-out',
         [theme.breakpoints.down('lg')]: {
-            padding: theme.spacing(1.5)
+            padding: theme.spacing(1.5),
+            marginBottom: theme.spacing(2)
+        },
+        '&.selected': {
+            opacity: 1,
+            border: `solid 1px ${theme.palette.divider}`
         }
     },
     button: {
         width: '100%',
         display: 'flex',
+        alignItems: 'center',
         justifyContent: 'flex-start',
         borderRadius: 10,
         padding: 20,
@@ -81,7 +98,7 @@ const useStyles = makeStyles((theme: Theme) => ({
             background: theme.palette.background.paper
         },
         '&.selected': {
-            background: blueDark[700],
+            background: theme.palette.mode === 'dark' ? blueDark[700] : 'none',
             border: `solid 1px ${theme.palette.primary.main}`
         },
         '& > div': {
@@ -92,23 +109,29 @@ const useStyles = makeStyles((theme: Theme) => ({
             marginRight: theme.spacing(3),
             fontSize: 28,
             color: theme.palette.primary.main
+        },
+        [theme.breakpoints.down('lg')]: {
+            padding: theme.spacing(2),
+            width: `calc(100vw - ${theme.spacing(2)})`,
+            margin: 'auto',
+            border: 'none !important'
         }
     }
 }));
+
+const OFFSET = 900 - 64;
 
 const FEATURES = [
     {
         title: 'Image labeling',
         subtitle: 'Ergonomic and intuitive tools for labeling your datasets.',
         docPath: '/docs/datasets/labeling',
-        component: <FeatureLabeling />,
         icon: <LabelingIcon />
     },
     {
         title: 'Image augmentation',
         subtitle: 'Get more labeled images, without the tears.',
-        docPath: '/docs/datasets/labeling',
-        component: <FeatureAugmentation />,
+        docPath: '/docs/datasets/augmentation',
         icon: <AugmentationIcon />
     }
 ];
@@ -149,34 +172,37 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
 
     const image = useMemo(() => images[Math.floor(Math.random() * images.length)], [images]);
 
+    const {scrollTop} = useScroll(document.querySelector('.scroller'));
+
+    useEffect(() => {
+        if (scrollTop < 1100) setSelected(0);
+        else setSelected(1);
+    }, [scrollTop]);
+
+    const providerLabels = useMemo(() => labels.filter(label => label.image_id === image.id), [labels, image]);
+
     return (
         <div className={clsx(classes.root, className)} {...rest}>
             <Container component="section" maxWidth="lg">
-                <Grid className={classes.container} container spacing={isMobile ? 0 : 4}>
+                <Grid className={classes.container} container spacing={isMobile ? 0 : 6}>
                     <Grid item lg={7} xs={12}>
                         {dataset !== null && images.length > 0 && (
                             <DatasetProvider dataset={dataset} categories={categories}>
                                 <ImagesProvider images={images}>
-                                    <ImageProvider
-                                        image={image}
-                                        labels={labels.filter(label => label.image_id === image.id)}
-                                    >
-                                        {FEATURES.map((feature, index) =>
-                                            cloneElement(feature.component, {
-                                                className: clsx(
-                                                    classes.feature,
-                                                    index === selected ? 'visible' : 'hidden'
-                                                ),
-                                                key: feature.title
-                                            })
-                                        )}
+                                    <ImageProvider image={image} labels={providerLabels}>
+                                        <FeatureLabeling
+                                            className={clsx(classes.feature, selected === 0 && 'selected')}
+                                        />
+                                        <FeatureAugmentation
+                                            className={clsx(classes.feature, selected === 1 && 'selected')}
+                                        />
                                     </ImageProvider>
                                 </ImagesProvider>
                             </DatasetProvider>
                         )}
                     </Grid>
 
-                    <Grid item lg={5} xs={12}>
+                    <Grid className={classes.sticky} item lg={5} xs={12}>
                         <Typography variant="overline" color="primary" fontSize={16}>
                             Features
                         </Typography>
@@ -186,11 +212,8 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
                                 to build faster
                             </Typography>
                         </Typography>
-                        <Box mb={4}>
-                            <Typography color="textSecondary">
-                                Once your image datasets are complete, you can interact with them using our API.
-                            </Typography>
-                        </Box>
+
+                        <Box height={24} />
 
                         <Hidden lgDown>
                             {FEATURES.map((feature, index) => (
@@ -200,7 +223,10 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
                                     key={`feature-${index}`}
                                     onClick={() => {
                                         if (index === selected) return;
-                                        setSelected(index);
+
+                                        document
+                                            .querySelector('.scroller')
+                                            .scrollTo({top: OFFSET + index * 600, behavior: 'smooth'});
                                     }}
                                 >
                                     {feature.icon}
@@ -222,25 +248,19 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
 
                         <Hidden lgUp>
                             <Box display="flex" alignItems="center" justifyContent="center" mb={2}>
-                                <IconButton
-                                    className={clsx(selected > 0 && 'highlight')}
-                                    disabled={selected === 0}
-                                    onClick={() => setSelected(s => s - 1)}
-                                >
-                                    <KeyboardArrowLeft className={clsx(selected === 0 && 'invisible')} />
-                                </IconButton>
-
                                 <Box px={1}>
-                                    <SwipeableViews index={selected} onChangeIndex={setSelected}>
+                                    <SwipeableViews
+                                        index={selected}
+                                        onChangeIndex={index =>
+                                            document
+                                                .querySelector('.scroller')
+                                                .scrollTo({top: OFFSET + index * 500, behavior: 'smooth'})
+                                        }
+                                    >
                                         {FEATURES.map((feature, index) => (
-                                            <ButtonBase
+                                            <div
                                                 className={clsx(classes.button, selected === index && 'selected')}
                                                 key={`feature-${index}`}
-                                                disableRipple
-                                                onClick={() => {
-                                                    if (index === selected) return;
-                                                    setSelected(index);
-                                                }}
                                             >
                                                 {feature.icon}
 
@@ -252,20 +272,10 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
                                                         {feature.subtitle}
                                                     </Typography>
                                                 </Box>
-                                            </ButtonBase>
+                                            </div>
                                         ))}
                                     </SwipeableViews>
                                 </Box>
-
-                                <IconButton
-                                    className={clsx(selected < FEATURES.length - 1 && 'highlight')}
-                                    disabled={selected === FEATURES.length - 1}
-                                    onClick={() => setSelected(s => s + 1)}
-                                >
-                                    <KeyboardArrowRight
-                                        className={clsx(selected === FEATURES.length - 1 && 'invisible')}
-                                    />
-                                </IconButton>
                             </Box>
                         </Hidden>
                     </Grid>

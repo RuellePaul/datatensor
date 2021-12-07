@@ -42,15 +42,18 @@ export const ImageProvider: FC<ImageProviderProps> = ({ image, children, labels 
 
     const [currentLabels, setCurrentLabels] = useState<Label[]>(labels);
 
+    const [positions, setPositions] = useState<Label[][]>([]);
+
     const handleSaveLabels = (update: Label[] | ((labels: Label[]) => Label[])): void => {
         setCurrentLabels(update);
     };
 
     const fetchLabels = useCallback(async () => {
         if (labels !== null) {
+            console.log(labels)
             handleSaveLabels(labels);
             setPositions([labels]);
-            return
+            return;
         }
 
         setCurrentLabels(null);
@@ -91,8 +94,6 @@ export const ImageProvider: FC<ImageProviderProps> = ({ image, children, labels 
             });
         }
     };
-
-    const [positions, setPositions] = useState<Label[][]>([]);
 
     const handleSavePosition = (update: Label[]): void => {
         setPositions(positions => [...positions, update]);

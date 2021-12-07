@@ -16,10 +16,6 @@ class Image(MongoModel):
     pipeline_id: Optional[str] = None
 
 
-class ImageWithBase64(Image):
-    base64: str
-
-
 class ImagesResponse(BaseModel):
     images: List[Image] = []
 

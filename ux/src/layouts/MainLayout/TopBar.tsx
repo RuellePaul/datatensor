@@ -63,7 +63,7 @@ const TopBar: FC<TopBarProps> = ({className, ...rest}) => {
                 </RouterLink>
                 <Hidden smDown>
                     <Box>
-                        <Typography variant="overline" color="textPrimary" component="p">
+                        <Typography variant="overline" component="p" sx={{color: 'white'}}>
                             Datatensor
                         </Typography>
 

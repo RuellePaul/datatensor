@@ -44,7 +44,10 @@ const useStyles = makeStyles((theme: Theme) =>
             },
             '#nprogress': {
                 position: 'relative',
-                zIndex: 9999999
+                zIndex: 9999999,
+                '& .spinner': {
+                    display: 'none'
+                }
             }
         }
     })

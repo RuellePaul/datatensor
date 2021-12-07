@@ -4,7 +4,6 @@ import {Avatar, Box, Container, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 
-
 interface TestimonialsProps {
     className?: string;
 }
@@ -42,7 +41,12 @@ const Testimonials: FC<TestimonialsProps> = ({className, ...rest}) => {
                     It will save you time.&quot;
                 </Typography>
                 <Box mt={6} display="flex" justifyContent="center" alignItems="center">
-                    <Avatar className={classes.avatar} src="/static/home/paul.jpg" alt="Creator" />
+                    <Avatar
+                        className={classes.avatar}
+                        src="/static/home/paul.jpg"
+                        alt="Creator"
+                        imgProps={{loading: 'lazy'}}
+                    />
                     <Box ml={2}>
                         <Typography variant="body1" color="textPrimary">
                             <span

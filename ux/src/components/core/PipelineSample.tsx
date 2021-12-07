@@ -33,7 +33,7 @@ const PipelineSample: FC<PipelineSampleProps> = ({ handler, className }) => {
     const { enqueueSnackbar } = useSnackbar();
 
     const { dataset } = useDataset();
-    const { image } = useImage();
+    const { image, labels} = useImage();
 
     const pipeline = useSelector<any>((state) => state.pipeline);
 
@@ -61,7 +61,7 @@ const PipelineSample: FC<PipelineSampleProps> = ({ handler, className }) => {
         }
 
         // eslint-disable-next-line
-    }, [pipeline.isLoaded, dataset.id, image_id, pipeline.operations]);
+    }, [pipeline.isLoaded, dataset.id, image_id, pipeline.operations, labels]);
 
     if (!image)
         return null;
