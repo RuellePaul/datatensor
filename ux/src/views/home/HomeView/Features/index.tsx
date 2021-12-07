@@ -8,14 +8,13 @@ import FeatureLabeling from './FeatureLabeling';
 import FeatureAugmentation from './FeatureAugmentation';
 import {BrandingWatermarkOutlined as LabelingIcon, DynamicFeedOutlined as AugmentationIcon} from '@mui/icons-material';
 import api from 'src/utils/api';
-import {Label} from 'src/types/label';
 import {Image} from 'src/types/image';
 import {Dataset} from 'src/types/dataset';
-import {Category} from 'src/types/category';
 import {DatasetProvider} from 'src/store/DatasetContext';
 import {ImagesProvider} from 'src/store/ImagesContext';
 import {ImageProvider} from 'src/store/ImageContext';
 import useScroll from 'src/hooks/useScroll';
+import randomIndexes from '../../../../utils/randomIndexes';
 
 interface FeaturesProps {
     className?: string;
@@ -191,23 +190,17 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
     const [selected, setSelected] = useState(0);
 
     const [dataset, setDataset] = useState<Dataset>(null);
-    const [categories, setCategories] = useState<Category[]>([]);
     const [images, setImages] = useState<Image[]>([]);
-    const [labels, setLabels] = useState<Label[]>([]);
 
     const handleFetchPublic = useCallback(async () => {
         try {
             const response = await api.get<{
                 datasets: Dataset[];
-                categories: Category[];
                 images: Image[];
-                labels: Label[];
             }>(`/public/`);
 
             setDataset(response.data.datasets[0]);
-            setCategories(response.data.categories);
             setImages(response.data.images);
-            setLabels(response.data.labels);
         } catch (error) {
             console.error(error);
         }
@@ -216,8 +209,6 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
     useEffect(() => {
         handleFetchPublic();
     }, [handleFetchPublic]);
-
-    const image = useMemo(() => images[Math.floor(Math.random() * images.length)], [images]);
 
     const {scrollTop} = useScroll(document.querySelector('.scroller'));
 
@@ -232,7 +223,7 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
         else setSelected(1);
     }, [scrollTop, isMobile]);
 
-    const providerLabels = useMemo(() => labels.filter(label => label.image_id === image.id), [labels, image]);
+    const indexes = useMemo(() => randomIndexes(FEATURES.length, 0, images.length), [images]);
 
     return (
         <div className={clsx(classes.root, className)} {...rest}>
@@ -240,28 +231,26 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
                 <Grid className={classes.container} container spacing={isMobile ? 0 : 6}>
                     <Grid item md={7} xs={12} id="features">
                         {dataset !== null && images.length > 0 && (
-                            <DatasetProvider dataset={dataset} categories={categories}>
+                            <DatasetProvider dataset={dataset} categories={dataset.categories}>
                                 <ImagesProvider images={images}>
-                                    <ImageProvider image={image} labels={providerLabels}>
-                                        {FEATURES.map((feature, index) => (
-                                            <>
-                                                <Hidden mdUp>
-                                                    <FeatureButton
-                                                        feature={feature}
-                                                        index={index}
-                                                        selected={selected}
-                                                    />
-                                                </Hidden>
-                                                {cloneElement(feature.component, {
-                                                    className: clsx(
-                                                        classes.feature,
-                                                        isMobile ? 'selected' : selected === index && 'selected'
-                                                    ),
-                                                    key: feature.title
-                                                })}
-                                            </>
-                                        ))}
-                                    </ImageProvider>
+                                    {FEATURES.map((feature, index) => (
+                                        <ImageProvider
+                                            key={feature.docPath}
+                                            image={images[indexes[index]]}
+                                            labels={images[indexes[index]].labels}
+                                        >
+                                            <Hidden mdUp>
+                                                <FeatureButton feature={feature} index={index} selected={selected} />
+                                            </Hidden>
+                                            {cloneElement(feature.component, {
+                                                className: clsx(
+                                                    classes.feature,
+                                                    isMobile ? 'selected' : selected === index && 'selected'
+                                                ),
+                                                key: feature.title
+                                            })}
+                                        </ImageProvider>
+                                    ))}
                                 </ImagesProvider>
                             </DatasetProvider>
                         )}
