@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         background: theme.palette.background.default,
         [theme.breakpoints.down('lg')]: {
             paddingBottom: 0,
-            top: -85
+            top: -86
         }
     },
     feature: {
@@ -112,7 +112,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         },
         [theme.breakpoints.down('lg')]: {
             padding: theme.spacing(2),
-            width: `calc(100vw - ${theme.spacing(2)})`,
+            width: `calc(100vw - ${theme.spacing(4)})`,
             margin: 'auto',
             border: 'none !important'
         }
@@ -247,7 +247,7 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
                         </Hidden>
 
                         <Hidden lgUp>
-                            <Box display="flex" alignItems="center" justifyContent="center" mb={2}>
+                            <Box display="flex" alignItems="center" justifyContent="center" mb={isMobile ? 1 : 2}>
                                 <Box px={1}>
                                     <SwipeableViews
                                         index={selected}
