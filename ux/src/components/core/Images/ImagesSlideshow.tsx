@@ -115,6 +115,7 @@ function ImagesSlideshow() {
                         Back
                     </Button>
                 }
+                variant='text'
             />
         </Card>
     );

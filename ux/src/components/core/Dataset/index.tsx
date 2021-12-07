@@ -18,6 +18,7 @@ import {ImageProvider} from 'src/store/ImageContext';
 
 interface DatasetProps {
     dataset: Dataset;
+    image?: Image;
     className?: string;
 }
 
@@ -40,13 +41,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const DTDataset: FC<DatasetProps> = ({className, dataset, ...rest}) => {
+const DTDataset: FC<DatasetProps> = ({className, dataset, image = null, ...rest}) => {
     const classes = useStyles();
     const history = useHistory();
 
     const datasetRef = useRef(null);
 
-    const [imagePreview, setImagePreview] = useState<Image>(null);
+    const [imagePreview, setImagePreview] = useState<Image>(image);
 
     const fetchImage = useCallback(async () => {
         try {
@@ -63,8 +64,9 @@ const DTDataset: FC<DatasetProps> = ({className, dataset, ...rest}) => {
     }, [dataset.id]);
 
     useEffect(() => {
-        fetchImage();
-    }, [fetchImage]);
+        if (image === null)
+            fetchImage();
+    }, [fetchImage, image]);
 
     return (
         <Card className={clsx(classes.root, className)} ref={datasetRef} variant="outlined" {...rest}>

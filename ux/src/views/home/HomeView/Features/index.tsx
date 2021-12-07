@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import {Box, ButtonBase, Container, Grid, Hidden, Link, Typography, useMediaQuery} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {blueDark, Theme} from 'src/theme';
+import FeatureDatasets from './FeatureDatasets';
 import FeatureLabeling from './FeatureLabeling';
 import FeatureAugmentation from './FeatureAugmentation';
 import {BrandingWatermarkOutlined as LabelingIcon, DynamicFeedOutlined as AugmentationIcon} from '@mui/icons-material';
@@ -14,7 +15,8 @@ import {DatasetProvider} from 'src/store/DatasetContext';
 import {ImagesProvider} from 'src/store/ImagesContext';
 import {ImageProvider} from 'src/store/ImageContext';
 import useScroll from 'src/hooks/useScroll';
-import randomIndexes from '../../../../utils/randomIndexes';
+import randomIndexes from 'src/utils/randomIndexes';
+import {Package as DatasetIcon} from 'react-feather';
 
 interface FeaturesProps {
     className?: string;
@@ -126,6 +128,13 @@ const OFFSET = 900 - 64;
 
 const FEATURES = [
     {
+        title: 'Datasets',
+        subtitle: 'Lorem ipsum dolor est...',
+        docPath: '/docs/datasets',
+        icon: <DatasetIcon />,
+        component: <FeatureDatasets />
+    },
+    {
         title: 'Image labeling',
         subtitle: 'Ergonomic and intuitive tools for labeling your datasets.',
         docPath: '/docs/datasets/labeling',
@@ -150,11 +159,14 @@ const FeatureButton: FC<FeatureButtonProps> = ({feature, index, selected}) => {
         if (index === selected) return;
 
         // @ts-ignore
-        const heights = [...document.querySelectorAll('#features > div')].map(x => x.clientHeight);
+        const heights = [...document.querySelectorAll('#features > div')].map(x => x.clientHeight + 64);
         if (heights.length === 0) return;
 
         if (index > 0)
-            document.querySelector('.scroller').scrollTo({top: OFFSET + heights[index - 1], behavior: 'smooth'});
+            document.querySelector('.scroller').scrollTo({
+                top: OFFSET + heights.slice(0, index).reduce((acc, val) => acc + val, 0),
+                behavior: 'smooth'
+            });
         else document.querySelector('.scroller').scrollTo({top: OFFSET, behavior: 'smooth'});
     };
 
@@ -219,11 +231,12 @@ const Features: FC<FeaturesProps> = ({className, ...rest}) => {
         const heights = [...document.querySelectorAll('#features > div')].map(x => x.clientHeight);
         if (heights.length === 0) return;
 
-        if (scrollTop < OFFSET + heights[0] / 2) setSelected(0);
-        else setSelected(1);
+        if (scrollTop < OFFSET + heights[0] * 0.75) setSelected(0);
+        else if (scrollTop < OFFSET + heights[0] + heights[1] * 0.75) setSelected(1);
+        else setSelected(2);
     }, [scrollTop, isMobile]);
 
-    const indexes = useMemo(() => randomIndexes(FEATURES.length, 0, images.length), [images]);
+    const indexes = useMemo(() => randomIndexes(FEATURES.length, 1, images.length), [images]);
 
     return (
         <div className={clsx(classes.root, className)} {...rest}>

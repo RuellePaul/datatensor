@@ -6,7 +6,7 @@ import Scrollbar from 'src/components/utils/Scrollbar';
 import {Box, Chip, Divider, Drawer, Hidden, Link, List, ListSubheader, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {DeveloperBoard as AdminDashboardIcon} from '@mui/icons-material';
-import {Activity as ActivityIcon, Package as PackageIcon, Users as UsersIcon} from 'react-feather';
+import {Activity as ActivityIcon, Package as DatasetIcon, Users as UsersIcon} from 'react-feather';
 import Logo from 'src/components/utils/Logo';
 import UserAvatar from 'src/components/UserAvatar';
 import useAuth from 'src/hooks/useAuth';
@@ -68,7 +68,7 @@ const sections = (user: User): Section[] => [
                 : []),
             {
                 title: 'Datasets',
-                icon: PackageIcon,
+                icon: DatasetIcon,
                 href: '/app/datasets'
             }
         ]
