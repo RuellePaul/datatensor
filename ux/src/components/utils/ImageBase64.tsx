@@ -1,12 +1,10 @@
 import React, {FC, useEffect, useRef} from 'react';
 import clsx from 'clsx';
-import {ButtonBase} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 import {Label} from 'src/types/label';
 import {drawLabels, reset} from 'src/utils/labeling';
 import useDataset from 'src/hooks/useDataset';
-
 
 interface ImageBase64Props {
     imageBase64: string;
@@ -19,11 +17,7 @@ interface ImageBase64Props {
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         position: 'relative',
-        border: `solid 1px ${theme.palette.divider}`,
-        '&:hover img': {
-            boxShadow: theme.shadows[6],
-            opacity: 0.85
-        }
+        border: `solid 1px ${theme.palette.divider}`
     },
     canvas: {
         position: 'absolute',
@@ -58,7 +52,7 @@ const ImageBase64: FC<ImageBase64Props> = ({imageBase64, labels, className, ...p
     }, [labels, categories]);
 
     return (
-        <ButtonBase className={clsx(classes.root, className)} {...props}>
+        <div className={clsx(classes.root, className)} {...props}>
             <img
                 src={`data:image/png;base64, ${imageBase64}`}
                 alt="Augmented sample"
@@ -68,7 +62,7 @@ const ImageBase64: FC<ImageBase64Props> = ({imageBase64, labels, className, ...p
                 ref={imageRef}
             />
             <canvas className={classes.canvas} ref={canvasRef} />
-        </ButtonBase>
+        </div>
     );
 };
 

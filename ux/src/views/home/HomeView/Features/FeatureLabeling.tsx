@@ -33,13 +33,6 @@ interface FeaturesProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        [theme.breakpoints.down('sm')]: {
-            padding: '8px !important',
-            background: 'none !important',
-            border: 'none !important',
-            display: 'flex',
-            justifyContent: 'center'
-        },
         touchAction: 'pan-y'
     },
     labelisator: {

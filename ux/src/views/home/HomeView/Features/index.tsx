@@ -85,7 +85,8 @@ const useStyles = makeStyles((theme: Theme) => ({
         pointerEvents: 'none',
         [theme.breakpoints.down('lg')]: {
             padding: theme.spacing(1.5),
-            marginBottom: theme.spacing(2)
+            marginBottom: theme.spacing(6),
+            background: 'none !important'
         },
         '&.selected': {
             opacity: 1,
@@ -101,7 +102,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         justifyContent: 'flex-start',
         borderRadius: 10,
         padding: 20,
-        marginTop: 10,
+        marginBottom: theme.spacing(3),
         border: `solid 1px transparent`,
         '&:hover': {
             background: theme.palette.background.paper
