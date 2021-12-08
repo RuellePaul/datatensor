@@ -31,6 +31,7 @@ import {EMPTY_DESCRIPTIONS} from 'src/constants';
 import DTImage from 'src/components/core/Images/Image';
 import {ImageProvider} from 'src/store/ImageContext';
 import useDataset from 'src/hooks/useDataset';
+import {Category} from 'src/types/category';
 
 interface DatasetProps {
     image?: Image;
@@ -44,6 +45,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     media: {
         height: 200
+    },
+    categories: {
+        position: 'absolute',
+        top: theme.spacing(1),
+        right: theme.spacing(1),
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-end'
+    },
+    category: {
+        color: 'white',
+        background: 'rgba(0, 0, 0, 0.7)',
+        backdropFilter: 'blur(3px)',
+        marginBottom: theme.spacing(0.5)
     },
     chip: {
         marginLeft: 6
@@ -65,8 +80,39 @@ const useStyles = makeStyles((theme: Theme) => ({
         color: theme.palette.text.primary,
         marginRight: 8,
         verticalAlign: 'middle'
+    },
+    image: {
+        zIndex: 0,
+        maxHeight: 300
     }
 }));
+
+interface CategoryProps {
+    category: Category;
+    index: number;
+}
+
+const DTCategory: FC<CategoryProps> = ({category, index}) => {
+    const classes = useStyles();
+
+    return (
+        <Chip
+            className={classes.category}
+            label={
+                <Typography variant="body2">
+                    <strong>
+                        {capitalize(category.name)}
+                        {` • ${category.labels_count || 0}`}
+                    </strong>
+                </Typography>
+            }
+            title={`${capitalize(category.name)} | ${capitalize(category.supercategory)}`}
+            size="small"
+            variant="outlined"
+            style={{filter: `opacity(${1 - 0.15 * index})`}}
+        />
+    );
+};
 
 const DTDataset: FC<DatasetProps> = ({className, image = null, ...rest}) => {
     const classes = useStyles();
@@ -134,10 +180,21 @@ const DTDataset: FC<DatasetProps> = ({className, image = null, ...rest}) => {
             </UserProvider>
 
             <CardActionArea onClick={() => history.push(`/app/datasets/${dataset.id}#`)}>
-                {imagePreview !== null && (
-                    <ImageProvider image={imagePreview} labels={imagePreview.labels}>
-                        <DTImage skeleton />
-                    </ImageProvider>
+                {imagePreview && (
+                    <Box position="relative">
+                        <ImageProvider image={imagePreview} labels={imagePreview.labels}>
+                            <DTImage className={classes.image} skeleton />
+
+                            <div className={classes.categories}>
+                                {categories
+                                    .sort((a, b) => (a.labels_count > b.labels_count ? -1 : 1))
+                                    .slice(0, 4)
+                                    .map((category, index) => (
+                                        <DTCategory category={category} index={index} key={category.id} />
+                                    ))}
+                            </div>
+                        </ImageProvider>
+                    </Box>
                 )}
                 <CardContent>
                     <Box display="flex" alignItems="flex-start" justifyContent="space-between">
