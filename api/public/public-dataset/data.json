@@ -7,7 +7,7 @@
             "description": "",
             "is_public": true,
             "created_at": "2021-12-06T08:47:45.144546",
-            "image_count": 6,
+            "image_count": 6846,
             "augmented_count": 0,
             "categories": [
                 {
@@ -15,30 +15,45 @@
                     "dataset_id": "4c0c15da-0b1d-4ba6-a635-dca4d901ad12",
                     "name": "Dog",
                     "supercategory": "animal",
-                    "labels_count": 5
+                    "labels_count": 4504
                 },
                 {
                     "id": "fa8316b2-b493-4475-8e3a-82a78294ff54",
                     "dataset_id": "4c0c15da-0b1d-4ba6-a635-dca4d901ad12",
                     "name": "Cat",
                     "supercategory": "animal",
-                    "labels_count": 3
+                    "labels_count": 5437
                 },
                 {
                     "id": "be90a15e-19d0-48dc-8a3d-5a6ad93f25ec",
                     "dataset_id": "4c0c15da-0b1d-4ba6-a635-dca4d901ad12",
                     "name": "Person",
                     "supercategory": "person",
-                    "labels_count": 25
+                    "labels_count": 12274
                 }
-            ]
+            ],
+            "user": {
+                "id": "00000000-0000-0000-0000-000000000000",
+                "email": "demo@datatensor.io",
+                "name": "Anika Visser",
+                "created_at": "2021-09-10T12:13:26.724000",
+                "is_verified": true,
+                "is_admin": true,
+                "tier": "premium",
+                "scope": "google",
+                "avatar": "/public-data/personas/1.png",
+                "phone": "06",
+                "country": "",
+                "city": "",
+                "is_public": true
+            }
         }
     ],
     "images": [
         {
             "id": "24d31047-46ce-4b82-a2b1-e49b885feea4",
             "dataset_id": "4c0c15da-0b1d-4ba6-a635-dca4d901ad12",
-            "path": "/public-dataset/1.jpeg",
+            "path": "/public-data/datasets/1.jpeg",
             "name": "1.jpeg",
             "size": 345602,
             "width": 1280,
@@ -76,7 +91,7 @@
         {
             "id": "b47aff63-4ccf-45d9-9066-54d1efaa58e7",
             "dataset_id": "4c0c15da-0b1d-4ba6-a635-dca4d901ad12",
-            "path": "/public-dataset/2.jpeg",
+            "path": "/public-data/datasets/2.jpeg",
             "name": "2.jpeg",
             "size": 286293,
             "width": 1280,
@@ -96,7 +111,7 @@
         {
             "id": "888eafd5-a277-4bbe-82e2-2764a442d333",
             "dataset_id": "4c0c15da-0b1d-4ba6-a635-dca4d901ad12",
-            "path": "/public-dataset/3.jpeg",
+            "path": "/public-data/datasets/3.jpeg",
             "name": "3.jpeg",
             "size": 78016,
             "width": 650,
@@ -134,7 +149,7 @@
         {
             "id": "2c95e066-6dcb-41f8-a2f6-16d5c410a2d1",
             "dataset_id": "4c0c15da-0b1d-4ba6-a635-dca4d901ad12",
-            "path": "/public-dataset/4.jpeg",
+            "path": "/public-data/datasets/4.jpeg",
             "name": "4.jpeg",
             "size": 256948,
             "width": 1280,
@@ -163,7 +178,7 @@
         {
             "id": "9a561cfe-b709-417a-be2d-925f4ab9cf54",
             "dataset_id": "4c0c15da-0b1d-4ba6-a635-dca4d901ad12",
-            "path": "/public-dataset/5.jpeg",
+            "path": "/public-data/datasets/5.jpeg",
             "name": "5.jpeg",
             "size": 85599,
             "width": 728,
@@ -192,7 +207,7 @@
         {
             "id": "6d2a63c0-a695-4e09-8a04-dac16e70fe14",
             "dataset_id": "4c0c15da-0b1d-4ba6-a635-dca4d901ad12",
-            "path": "/public-dataset/6.jpeg",
+            "path": "/public-data/datasets/6.jpeg",
             "name": "6.jpeg",
             "size": 343671,
             "width": 1000,
