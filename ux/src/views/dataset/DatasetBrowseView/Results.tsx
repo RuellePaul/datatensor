@@ -92,7 +92,7 @@ const Results: FC<ResultsProps> = ({className, ...rest}) => {
                     .map(dataset => (
                         <Grid item key={dataset.id} md={4} sm={6} xs={12}>
                             <DatasetProvider dataset={dataset} categories={dataset.categories}>
-                                <DTDataset dataset={dataset} />
+                                <DTDataset />
                             </DatasetProvider>
                         </Grid>
                     ))}

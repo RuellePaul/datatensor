@@ -2,11 +2,26 @@ import React, {FC, useCallback, useEffect, useRef, useState} from 'react';
 import {useHistory} from 'react-router';
 import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
-import {Box, capitalize, Card, CardActionArea, CardContent, CardHeader, Chip, Link, Typography} from '@mui/material';
+import {
+    Box,
+    capitalize,
+    Card,
+    CardActionArea,
+    CardContent,
+    CardHeader,
+    Chip,
+    Link,
+    Stack,
+    Typography
+} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import {Lock as PrivateIcon, PhotoLibraryOutlined as ImagesIcon, Public as PublicIcon} from '@mui/icons-material';
+import {
+    LocalOfferOutlined as LabelsIcon,
+    Lock as PrivateIcon,
+    PhotoLibraryOutlined as ImagesIcon,
+    Public as PublicIcon
+} from '@mui/icons-material';
 import {Theme} from 'src/theme';
-import {Dataset} from 'src/types/dataset';
 import api from 'src/utils/api';
 import {Image} from 'src/types/image';
 import UserAvatar from 'src/components/UserAvatar';
@@ -15,9 +30,9 @@ import {UserConsumer, UserProvider} from 'src/store/UserContext';
 import {EMPTY_DESCRIPTIONS} from 'src/constants';
 import DTImage from 'src/components/core/Images/Image';
 import {ImageProvider} from 'src/store/ImageContext';
+import useDataset from 'src/hooks/useDataset';
 
 interface DatasetProps {
-    dataset: Dataset;
     image?: Image;
     className?: string;
 }
@@ -38,14 +53,28 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     noWrap: {
         whiteSpace: 'nowrap'
+    },
+    wrapper: {
+        display: 'flex',
+        alignItems: 'center',
+        '& > p': {
+            whiteSpace: 'nowrap'
+        }
+    },
+    icon: {
+        color: theme.palette.text.primary,
+        marginRight: 8,
+        verticalAlign: 'middle'
     }
 }));
 
-const DTDataset: FC<DatasetProps> = ({className, dataset, image = null, ...rest}) => {
+const DTDataset: FC<DatasetProps> = ({className, image = null, ...rest}) => {
     const classes = useStyles();
     const history = useHistory();
 
     const datasetRef = useRef(null);
+
+    const {dataset, categories} = useDataset();
 
     const [imagePreview, setImagePreview] = useState<Image>(image);
 
@@ -64,9 +93,10 @@ const DTDataset: FC<DatasetProps> = ({className, dataset, image = null, ...rest}
     }, [dataset.id]);
 
     useEffect(() => {
-        if (image === null)
-            fetchImage();
+        if (image === null) fetchImage();
     }, [fetchImage, image]);
+
+    const totalLabelsCount = categories.map(category => category.labels_count || 0).reduce((acc, val) => acc + val, 0);
 
     return (
         <Card className={clsx(classes.root, className)} ref={datasetRef} variant="outlined" {...rest}>
@@ -110,30 +140,61 @@ const DTDataset: FC<DatasetProps> = ({className, dataset, image = null, ...rest}
                     </ImageProvider>
                 )}
                 <CardContent>
-                    <Box display="flex" alignItems="center" mb={1}>
-                        <Typography variant="h5">{dataset.name && capitalize(dataset.name)}</Typography>
-
-                        <div className="flexGrow" />
-
-                        <Box mr={0.5}>
-                            <ImagesIcon />
+                    <Box display="flex" alignItems="flex-start" justifyContent="space-between">
+                        <Box pr={1}>
+                            <Typography variant="h5" gutterBottom>
+                                {dataset.name && capitalize(dataset.name)}
+                            </Typography>
+                            <Typography
+                                color="textSecondary"
+                                variant="body2"
+                                component="p"
+                                dangerouslySetInnerHTML={{
+                                    __html: EMPTY_DESCRIPTIONS.includes(dataset.description)
+                                        ? '<i>No description provided</i>'
+                                        : dataset.description.length > 100
+                                        ? `${dataset.description.slice(0, 100)}...`
+                                        : dataset.description
+                                }}
+                            />
                         </Box>
-                        <Typography variant="overline" className={classes.noWrap}>
-                            {dataset.image_count + dataset.augmented_count}
-                        </Typography>
-                    </Box>
-                    <Typography
-                        color="textSecondary"
-                        variant="body2"
-                        component="p"
-                        dangerouslySetInnerHTML={{
-                            __html: EMPTY_DESCRIPTIONS.includes(dataset.description)
-                                ? '<i>No description provided</i>'
-                                : dataset.description
-                        }}
-                    />
+                        <Box>
+                            <Stack spacing={1}>
+                                <Box className={classes.wrapper}>
+                                    <ImagesIcon className={classes.icon} />
 
-                    <WorkingAlert dataset_id={dataset.id} />
+                                    <Typography fontWeight={600} color="textPrimary">
+                                        {dataset.image_count + dataset.augmented_count}{' '}
+                                        <Typography
+                                            variant="subtitle1"
+                                            component="span"
+                                            color="textSecondary"
+                                            fontWeight={400}
+                                        >
+                                            images
+                                        </Typography>
+                                    </Typography>
+                                </Box>
+                                <Box className={classes.wrapper}>
+                                    <LabelsIcon className={classes.icon} />
+
+                                    <Typography fontWeight={600} color="textPrimary">
+                                        {totalLabelsCount}{' '}
+                                        <Typography
+                                            variant="subtitle1"
+                                            component="span"
+                                            color="textSecondary"
+                                            fontWeight={400}
+                                        >
+                                            labels
+                                        </Typography>
+                                    </Typography>
+                                </Box>
+                            </Stack>
+                        </Box>
+
+                        <WorkingAlert dataset_id={dataset.id} />
+                    </Box>
                 </CardContent>
             </CardActionArea>
         </Card>
