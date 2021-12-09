@@ -2,9 +2,9 @@
     "datasets": [
         {
             "id": "00000000-0000-0000-0000-000000000000",
-            "user_id": "58a802c1b350056c737ca447db48c7c645581b265e61d2ceeae5e0320adc7e6a",
-            "name": "Public",
-            "description": "",
+            "user_id": "46eaee40-0663-4132-a0c4-bde9633ec208",
+            "name": "Humans, cats & dogs",
+            "description": "Case study of object recognition, human and pet detection",
             "is_public": true,
             "created_at": "2021-12-06T08:47:45.144546",
             "image_count": 6846,
@@ -12,36 +12,104 @@
             "categories": [
                 {
                     "id": "5026ac72-05f1-4de5-a6b6-60ec7c5d5428",
-                    "dataset_id": "4c0c15da-0b1d-4ba6-a635-dca4d901ad12",
+                    "dataset_id": "00000000-0000-0000-0000-000000000000",
                     "name": "Dog",
                     "supercategory": "animal",
                     "labels_count": 4504
                 },
                 {
                     "id": "fa8316b2-b493-4475-8e3a-82a78294ff54",
-                    "dataset_id": "4c0c15da-0b1d-4ba6-a635-dca4d901ad12",
+                    "dataset_id": "00000000-0000-0000-0000-000000000000",
                     "name": "Cat",
                     "supercategory": "animal",
                     "labels_count": 5437
                 },
                 {
                     "id": "be90a15e-19d0-48dc-8a3d-5a6ad93f25ec",
-                    "dataset_id": "4c0c15da-0b1d-4ba6-a635-dca4d901ad12",
+                    "dataset_id": "00000000-0000-0000-0000-000000000000",
                     "name": "Person",
                     "supercategory": "person",
                     "labels_count": 12274
                 }
             ],
             "user": {
-                "id": "00000000-0000-0000-0000-000000000000",
-                "email": "demo@datatensor.io",
+                "id": "46eaee40-0663-4132-a0c4-bde9633ec208",
+                "email": "anika.visser@datatensor.io",
                 "name": "Anika Visser",
                 "created_at": "2021-09-10T12:13:26.724000",
                 "is_verified": true,
-                "is_admin": true,
+                "is_admin": false,
+                "tier": "premium",
+                "scope": "github",
+                "avatar": "/public-data/personas/1.png",
+                "phone": "06",
+                "country": "",
+                "city": "",
+                "is_public": true
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "user_id": "e831fa25-75b6-4310-bbf5-a6c60e462725",
+            "name": "Cerebral injuries",
+            "description": "Extraction and assistance in the detection of brain lesions.",
+            "is_public": false,
+            "created_at": "2021-12-06T08:47:45.144546",
+            "image_count": 3487,
+            "augmented_count": 0,
+            "categories": [
+                {
+                    "id": "673eef6c-2b33-4702-8ece-55c86228f78c",
+                    "dataset_id": "00000000-0000-0000-0000-000000000000",
+                    "name": "Cerebral lesion",
+                    "supercategory": "person",
+                    "labels_count": 6484
+                }
+            ],
+            "user": {
+                "id": "00000000-0000-0000-0000-000000000001",
+                "email": "demo@datatensor.io",
+                "name": "Stan Goodman",
+                "created_at": "2021-08-09T12:13:26.724000",
+                "is_verified": true,
+                "is_admin": false,
                 "tier": "premium",
                 "scope": "google",
-                "avatar": "/public-data/personas/1.png",
+                "avatar": "/public-data/personas/2.jpeg",
+                "phone": "06",
+                "country": "",
+                "city": "",
+                "is_public": true
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000002",
+            "user_id": "ded244a4-3208-4c07-95b2-7590cedff7fe",
+            "name": "Bullets impact",
+            "description": "In order to create an algorithm capable of counting the impacts of a rifle bullet",
+            "is_public": false,
+            "created_at": "2021-12-06T08:47:45.144546",
+            "image_count": 3487,
+            "augmented_count": 0,
+            "categories": [
+                {
+                    "id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808",
+                    "dataset_id": "00000000-0000-0000-0000-000000000002",
+                    "name": "Bullet impact",
+                    "supercategory": "miscellaneous",
+                    "labels_count": 1436
+                }
+            ],
+            "user": {
+                "id": "ded244a4-3208-4c07-95b2-7590cedff7fe",
+                "email": "demo@datatensor.io",
+                "name": "Siegbert Gottfried",
+                "created_at": "2021-08-09T12:13:26.724000",
+                "is_verified": true,
+                "is_admin": false,
+                "tier": "premium",
+                "scope": null,
+                "avatar": "/public-data/personas/3.png",
                 "phone": "06",
                 "country": "",
                 "city": "",
@@ -52,7 +120,7 @@
     "images": [
         {
             "id": "24d31047-46ce-4b82-a2b1-e49b885feea4",
-            "dataset_id": "4c0c15da-0b1d-4ba6-a635-dca4d901ad12",
+            "dataset_id": "00000000-0000-0000-0000-000000000000",
             "path": "/public-data/datasets/1.jpeg",
             "name": "1.jpeg",
             "size": 345602,
@@ -90,7 +158,7 @@
         },
         {
             "id": "b47aff63-4ccf-45d9-9066-54d1efaa58e7",
-            "dataset_id": "4c0c15da-0b1d-4ba6-a635-dca4d901ad12",
+            "dataset_id": "00000000-0000-0000-0000-000000000000",
             "path": "/public-data/datasets/2.jpeg",
             "name": "2.jpeg",
             "size": 286293,
@@ -110,7 +178,7 @@
         },
         {
             "id": "888eafd5-a277-4bbe-82e2-2764a442d333",
-            "dataset_id": "4c0c15da-0b1d-4ba6-a635-dca4d901ad12",
+            "dataset_id": "00000000-0000-0000-0000-000000000000",
             "path": "/public-data/datasets/3.jpeg",
             "name": "3.jpeg",
             "size": 78016,
@@ -148,7 +216,7 @@
         },
         {
             "id": "2c95e066-6dcb-41f8-a2f6-16d5c410a2d1",
-            "dataset_id": "4c0c15da-0b1d-4ba6-a635-dca4d901ad12",
+            "dataset_id": "00000000-0000-0000-0000-000000000000",
             "path": "/public-data/datasets/4.jpeg",
             "name": "4.jpeg",
             "size": 256948,
@@ -177,7 +245,7 @@
         },
         {
             "id": "9a561cfe-b709-417a-be2d-925f4ab9cf54",
-            "dataset_id": "4c0c15da-0b1d-4ba6-a635-dca4d901ad12",
+            "dataset_id": "00000000-0000-0000-0000-000000000000",
             "path": "/public-data/datasets/5.jpeg",
             "name": "5.jpeg",
             "size": 85599,
@@ -206,7 +274,7 @@
         },
         {
             "id": "6d2a63c0-a695-4e09-8a04-dac16e70fe14",
-            "dataset_id": "4c0c15da-0b1d-4ba6-a635-dca4d901ad12",
+            "dataset_id": "00000000-0000-0000-0000-000000000000",
             "path": "/public-data/datasets/6.jpeg",
             "name": "6.jpeg",
             "size": 343671,
@@ -410,6 +478,93 @@
                     "h": 0.144578,
                     "image_id": "6d2a63c0-a695-4e09-8a04-dac16e70fe14",
                     "category_id": "be90a15e-19d0-48dc-8a3d-5a6ad93f25ec"
+                }
+            ]
+        },
+        {
+            "id": "94084595-1981-44c2-beec-548422723fd8",
+            "dataset_id": "00000000-0000-0000-0000-000000000001",
+            "path": "/public-data/datasets/brain.jpeg",
+            "name": "brain.jpeg",
+            "size": 119269,
+            "width": 1186,
+            "height": 720,
+            "pipeline_id": null,
+            "labels": [
+                {
+                    "id": "434c8d5c-da6d-406f-8625-61bfd99d544c",
+                    "x": 0.6072584516129033,
+                    "y": 0.28496073878627964,
+                    "w": 0.025,
+                    "h": 0.050132,
+                    "image_id": "94084595-1981-44c2-beec-548422723fd8",
+                    "category_id": "673eef6c-2b33-4702-8ece-55c86228f78c"
+                },
+                {
+                    "id": "c697b34c-f9c1-44ef-9dfa-919c7f675cc8",
+                    "x": 0.37338719354838706,
+                    "y": 0.271768,
+                    "w": 0.03145135483870968,
+                    "h": 0.04089678364116095,
+                    "image_id": "94084595-1981-44c2-beec-548422723fd8",
+                    "category_id": "673eef6c-2b33-4702-8ece-55c86228f78c"
+                },
+                {
+                    "id": "0bd60e7c-1dc8-410e-a260-37f4b4ab15ae",
+                    "x": 0.422581,
+                    "y": 0.488127,
+                    "w": 0.029839,
+                    "h": 0.03562,
+                    "image_id": "94084595-1981-44c2-beec-548422723fd8",
+                    "category_id": "673eef6c-2b33-4702-8ece-55c86228f78c"
+                },
+                {
+                    "id": "f83b47c0-28cc-4406-96b4-35d9e1e5891c",
+                    "x": 0.473387,
+                    "y": 0.203166,
+                    "w": 0.022581,
+                    "h": 0.072559,
+                    "image_id": "94084595-1981-44c2-beec-548422723fd8",
+                    "category_id": "673eef6c-2b33-4702-8ece-55c86228f78c"
+                }
+            ]
+        },
+        {
+            "id": "becfcbb8-a1ca-466b-93e6-2fc4b02b91e3",
+            "dataset_id": "00000000-0000-0000-0000-000000000002",
+            "path": "/public-data/datasets/bullets.jpeg",
+            "name": "bullets.jpeg",
+            "size": 84027,
+            "width": 612,
+            "height": 408,
+            "pipeline_id": null,
+            "labels": [
+                {
+                    "id": "bb38ea8a-b438-44d2-8f8c-aba583c5fd91",
+                    "x": 0.14838754838709675,
+                    "y": 0.274368,
+                    "w": 0.13225809677419353,
+                    "h": 0.19013226113116727,
+                    "image_id": "becfcbb8-a1ca-466b-93e6-2fc4b02b91e3",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "e889febd-fdf1-4879-ae07-2bfa842c71e0",
+                    "x": 0.5879027419354839,
+                    "y": 0.086643,
+                    "w": 0.13871,
+                    "h": 0.229844,
+                    "image_id": "becfcbb8-a1ca-466b-93e6-2fc4b02b91e3",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "64a991f6-2f3d-475e-bb75-82e81ce29be3",
+                    "x": 0.649194,
+                    "y": 0.694344,
+                    "w": 0.18871,
+                    "h": 0.184116,
+                    "image_id": "becfcbb8-a1ca-466b-93e6-2fc4b02b91e3",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
                 }
             ]
         }

@@ -2,16 +2,20 @@ import React, {FC, useState} from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import {autoPlay} from 'react-swipeable-views-utils';
 import clsx from 'clsx';
+import {IconButton} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
+import {KeyboardArrowLeft, KeyboardArrowRight} from '@mui/icons-material';
 import {Theme} from 'src/theme';
 import DTDataset from 'src/components/core/Dataset';
 import useImages from 'src/hooks/useImages';
-import {IconButton} from '@mui/material';
-import {KeyboardArrowLeft, KeyboardArrowRight} from '@mui/icons-material';
+import useDataset from 'src/hooks/useDataset';
+import {Dataset} from 'src/types/dataset';
+import {DatasetProvider} from 'src/store/DatasetContext';
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
 interface FeatureProps {
+    datasets: Dataset[] | null;
     className?: string;
 }
 
@@ -33,9 +37,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const FeatureDatasets: FC<FeatureProps> = ({className, ...rest}) => {
+const FeatureDatasets: FC<FeatureProps> = ({className, datasets = null, ...rest}) => {
     const classes = useStyles();
 
+    const {dataset} = useDataset();
     const {images} = useImages();
 
     const [activeStep, setActiveStep] = useState(0);
@@ -57,12 +62,24 @@ const FeatureDatasets: FC<FeatureProps> = ({className, ...rest}) => {
                 <KeyboardArrowLeft />
             </IconButton>
 
-            <AutoPlaySwipeableViews index={activeStep} onChangeIndex={handleStepChange} enableMouseEvents>
-                <DTDataset className={classes.dataset} image={images[0]} onClick={() => {}} />
-                <DTDataset className={classes.dataset} image={images[0]} onClick={() => {}} />
+            <AutoPlaySwipeableViews autoHeight index={activeStep} onChangeIndex={handleStepChange} enableMouseEvents>
+                <DTDataset
+                    className={classes.dataset}
+                    image={images.filter(image => image.dataset_id === dataset.id)[0]}
+                    onClick={() => {}}
+                />
+                {datasets.slice(1, datasets.length).map(dataset => (
+                    <DatasetProvider dataset={dataset} categories={dataset.categories} key={dataset.id}>
+                        <DTDataset
+                            className={classes.dataset}
+                            image={images.filter(image => image.dataset_id === dataset.id)[0]}
+                            onClick={() => {}}
+                        />
+                    </DatasetProvider>
+                ))}
             </AutoPlaySwipeableViews>
 
-            <IconButton color="inherit" size="small" onClick={handleNext} disabled={activeStep === 1}>
+            <IconButton color="inherit" size="small" onClick={handleNext} disabled={activeStep === datasets.length - 1}>
                 <KeyboardArrowRight />
             </IconButton>
         </div>

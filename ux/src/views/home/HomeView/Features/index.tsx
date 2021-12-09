@@ -129,10 +129,10 @@ const OFFSET = 900 - 64;
 const FEATURES = [
     {
         title: 'Datasets',
-        subtitle: 'Lorem ipsum dolor est...',
+        subtitle: 'Create, organize and share your labeled image datasets with the world',
         docPath: '/docs/datasets',
         icon: <DatasetIcon />,
-        component: <FeatureDatasets />
+        component: <FeatureDatasets datasets={[]}/>
     },
     {
         title: 'Image labeling',
@@ -201,7 +201,7 @@ const Features: FC<FeatureProps> = ({className, ...rest}) => {
 
     const [selected, setSelected] = useState(0);
 
-    const [dataset, setDataset] = useState<Dataset>(null);
+    const [datasets, setDatasets] = useState<Dataset[]>(null);
     const [images, setImages] = useState<Image[]>([]);
 
     const handleFetchPublic = useCallback(async () => {
@@ -211,7 +211,7 @@ const Features: FC<FeatureProps> = ({className, ...rest}) => {
                 images: Image[];
             }>(`/public/`);
 
-            setDataset(response.data.datasets[0]);
+            setDatasets(response.data.datasets);
             setImages(response.data.images);
         } catch (error) {
             console.error(error);
@@ -243,8 +243,8 @@ const Features: FC<FeatureProps> = ({className, ...rest}) => {
             <Container component="section" maxWidth="lg">
                 <Grid className={classes.container} container spacing={isMobile ? 0 : 6}>
                     <Grid item md={7} xs={12} id="features">
-                        {dataset !== null && images.length > 0 && (
-                            <DatasetProvider dataset={dataset} categories={dataset.categories}>
+                        {datasets !== null && images.length > 0 && (
+                            <DatasetProvider dataset={datasets[0]} categories={datasets[0].categories}>
                                 <ImagesProvider images={images}>
                                     {FEATURES.map((feature, index) => (
                                         <ImageProvider
@@ -260,7 +260,8 @@ const Features: FC<FeatureProps> = ({className, ...rest}) => {
                                                     classes.feature,
                                                     isMobile ? 'selected' : selected === index && 'selected'
                                                 ),
-                                                key: feature.title
+                                                key: feature.title,
+                                                datasets
                                             })}
                                         </ImageProvider>
                                     ))}
