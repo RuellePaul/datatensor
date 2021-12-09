@@ -252,9 +252,9 @@ const DTDataset: FC<DatasetProps> = ({className, image = null, onClick, ...rest}
                                 </Box>
                             </Stack>
                         </Box>
-
-                        <WorkingAlert dataset_id={dataset.id} />
                     </Box>
+
+                    <WorkingAlert dataset_id={dataset.id} />
                 </CardContent>
             </CardActionArea>
         </Card>
