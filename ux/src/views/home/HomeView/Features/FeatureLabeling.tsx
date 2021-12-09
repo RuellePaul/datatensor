@@ -27,7 +27,7 @@ import useImages from 'src/hooks/useImages';
 import {Maximize as LabelIcon, Move as MoveIcon} from 'react-feather';
 import {ImageConsumer} from 'src/store/ImageContext';
 
-interface FeaturesProps {
+interface FeatureProps {
     className?: string;
 }
 
@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const FeatureLabeling: FC<FeaturesProps> = ({className, ...rest}) => {
+const FeatureLabeling: FC<FeatureProps> = ({className, ...rest}) => {
     const classes = useStyles();
 
     const {images} = useImages();

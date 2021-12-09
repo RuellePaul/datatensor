@@ -36,6 +36,7 @@ import {Category} from 'src/types/category';
 interface DatasetProps {
     image?: Image;
     className?: string;
+    onClick?: () => void;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -114,7 +115,7 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
     );
 };
 
-const DTDataset: FC<DatasetProps> = ({className, image = null, ...rest}) => {
+const DTDataset: FC<DatasetProps> = ({className, image = null, onClick, ...rest}) => {
     const classes = useStyles();
     const history = useHistory();
 
@@ -179,7 +180,9 @@ const DTDataset: FC<DatasetProps> = ({className, image = null, ...rest}) => {
                 </UserConsumer>
             </UserProvider>
 
-            <CardActionArea onClick={() => history.push(`/app/datasets/${dataset.id}#`)}>
+            <CardActionArea
+                onClick={onClick instanceof Function ? onClick : () => history.push(`/app/datasets/${dataset.id}#`)}
+            >
                 {imagePreview && (
                     <Box position="relative">
                         <ImageProvider image={imagePreview} labels={imagePreview.labels}>

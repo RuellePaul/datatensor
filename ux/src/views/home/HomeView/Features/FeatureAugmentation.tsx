@@ -10,7 +10,7 @@ import {Label} from 'src/types/label';
 import useImage from 'src/hooks/useImage';
 import DTImage from 'src/components/core/Images/Image';
 
-interface FeaturesProps {
+interface FeatureProps {
     className?: string;
 }
 
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const FeatureAugmentation: FC<FeaturesProps> = ({className, ...rest}) => {
+const FeatureAugmentation: FC<FeatureProps> = ({className, ...rest}) => {
     const classes = useStyles();
 
     const {image, labels} = useImage();

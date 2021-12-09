@@ -18,7 +18,7 @@ import useScroll from 'src/hooks/useScroll';
 import randomIndexes from 'src/utils/randomIndexes';
 import {Package as DatasetIcon} from 'react-feather';
 
-interface FeaturesProps {
+interface FeatureProps {
     className?: string;
 }
 
@@ -194,7 +194,7 @@ const FeatureButton: FC<FeatureButtonProps> = ({feature, index, selected}) => {
     );
 };
 
-const Features: FC<FeaturesProps> = ({className, ...rest}) => {
+const Features: FC<FeatureProps> = ({className, ...rest}) => {
     const classes = useStyles();
 
     const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
