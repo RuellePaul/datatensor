@@ -86,6 +86,7 @@ function ImagesSlideshow() {
                 index={activeStep}
                 onChangeIndex={handleStepChange}
                 enableMouseEvents
+                interval={4000}
             >
                 {images.map((image, index) => (
                     <ImageProvider image={image} labels={image.labels} key={image.id}>

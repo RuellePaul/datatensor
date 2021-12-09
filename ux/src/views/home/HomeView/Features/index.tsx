@@ -26,6 +26,8 @@ interface FeatureButtonProps {
     feature: any; // TODO
     index: number;
     selected: number;
+    setSelected: React.Dispatch<React.SetStateAction<number>>;
+    setAnimated: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -83,7 +85,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         opacity: 0.5,
         transition: 'all 0.15s ease-out',
         transform: 'scale(0.95)',
-        pointerEvents: 'none',
         [theme.breakpoints.down('md')]: {
             padding: theme.spacing(1.5),
             marginBottom: theme.spacing(6),
@@ -132,7 +133,7 @@ const FEATURES = [
         subtitle: 'Create, organize and share your labeled image datasets with the world',
         docPath: '/docs/datasets',
         icon: <DatasetIcon />,
-        component: <FeatureDatasets datasets={[]}/>
+        component: <FeatureDatasets datasets={[]} />
     },
     {
         title: 'Image labeling',
@@ -150,13 +151,18 @@ const FEATURES = [
     }
 ];
 
-const FeatureButton: FC<FeatureButtonProps> = ({feature, index, selected}) => {
+const FeatureButton: FC<FeatureButtonProps> = ({feature, index, selected, setSelected, setAnimated}) => {
     const classes = useStyles();
 
     const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
 
     const handleChangeIndex = index => {
         if (index === selected) return;
+
+        setAnimated(true);
+        setTimeout(() => setAnimated(false), 400);
+
+        setSelected(index);
 
         // @ts-ignore
         const heights = [...document.querySelectorAll('#features > div')].map(x => x.clientHeight + 64);
@@ -201,6 +207,9 @@ const Features: FC<FeatureProps> = ({className, ...rest}) => {
 
     const [selected, setSelected] = useState(0);
 
+     // for preventing scroll selection after FeatureButton click
+    const [animated, setAnimated] = useState<boolean>(false);
+
     const [datasets, setDatasets] = useState<Dataset[]>(null);
     const [images, setImages] = useState<Image[]>([]);
 
@@ -225,18 +234,21 @@ const Features: FC<FeatureProps> = ({className, ...rest}) => {
     const {scrollTop} = useScroll(document.querySelector('.scroller'));
 
     useEffect(() => {
-        if (isMobile) return;
+        if (!isMobile && !animated) {
+            // @ts-ignore
+            const heights = [...document.querySelectorAll('#features > div')].map(x => x.clientHeight);
+            if (heights.length === 0) return;
 
-        // @ts-ignore
-        const heights = [...document.querySelectorAll('#features > div')].map(x => x.clientHeight);
-        if (heights.length === 0) return;
+            if (scrollTop < OFFSET + heights[0] * 0.66) setSelected(0);
+            else if (scrollTop < OFFSET + heights[0] + heights[1] * 0.66) setSelected(1);
+            else setSelected(2);
+        }
+    }, [scrollTop, isMobile, animated]);
 
-        if (scrollTop < OFFSET + heights[0] * 0.75) setSelected(0);
-        else if (scrollTop < OFFSET + heights[0] + heights[1] * 0.75) setSelected(1);
-        else setSelected(2);
-    }, [scrollTop, isMobile]);
-
-    const indexes = useMemo(() => randomIndexes(FEATURES.length, 1, images.length), [images]);
+    const indexes = useMemo(
+        () => randomIndexes(FEATURES.length, 1, images.filter(image => image.dataset_id === datasets[0].id).length),
+        [datasets, images]
+    );
 
     return (
         <div className={clsx(classes.root, className)} {...rest}>
@@ -253,7 +265,13 @@ const Features: FC<FeatureProps> = ({className, ...rest}) => {
                                             labels={images[indexes[index]].labels}
                                         >
                                             <Hidden mdUp>
-                                                <FeatureButton feature={feature} index={index} selected={selected} />
+                                                <FeatureButton
+                                                    feature={feature}
+                                                    index={index}
+                                                    selected={selected}
+                                                    setSelected={setSelected}
+                                                    setAnimated={setAnimated}
+                                                />
                                             </Hidden>
                                             {cloneElement(feature.component, {
                                                 className: clsx(
@@ -261,7 +279,10 @@ const Features: FC<FeatureProps> = ({className, ...rest}) => {
                                                     isMobile ? 'selected' : selected === index && 'selected'
                                                 ),
                                                 key: feature.title,
-                                                datasets
+                                                datasets,
+                                                onMouseEnter: () => setAnimated(true),
+                                                onMouseMove: () => setSelected(index),
+                                                onMouseLeave: () => setAnimated(false),
                                             })}
                                         </ImageProvider>
                                     ))}
@@ -285,7 +306,14 @@ const Features: FC<FeatureProps> = ({className, ...rest}) => {
 
                         <Hidden mdDown>
                             {FEATURES.map((feature, index) => (
-                                <FeatureButton feature={feature} index={index} selected={selected} />
+                                <FeatureButton
+                                    key={`feature-button-${index}`}
+                                    feature={feature}
+                                    index={index}
+                                    selected={selected}
+                                    setSelected={setSelected}
+                                    setAnimated={setAnimated}
+                                />
                             ))}
                         </Hidden>
                     </Grid>

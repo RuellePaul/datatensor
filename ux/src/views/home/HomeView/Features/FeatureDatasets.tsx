@@ -2,7 +2,7 @@ import React, {FC, useState} from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import {autoPlay} from 'react-swipeable-views-utils';
 import clsx from 'clsx';
-import {IconButton} from '@mui/material';
+import {Hidden, IconButton} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {KeyboardArrowLeft, KeyboardArrowRight} from '@mui/icons-material';
 import {Theme} from 'src/theme';
@@ -58,11 +58,18 @@ const FeatureDatasets: FC<FeatureProps> = ({className, datasets = null, ...rest}
 
     return (
         <div className={clsx(classes.root, className)} {...rest}>
-            <IconButton color="inherit" size="small" onClick={handleBack} disabled={activeStep === 0}>
-                <KeyboardArrowLeft />
-            </IconButton>
+            <Hidden smDown>
+                <IconButton color="inherit" size="small" onClick={handleBack} disabled={activeStep === 0}>
+                    <KeyboardArrowLeft />
+                </IconButton>
+            </Hidden>
 
-            <AutoPlaySwipeableViews autoHeight index={activeStep} onChangeIndex={handleStepChange} enableMouseEvents>
+            <AutoPlaySwipeableViews
+                index={activeStep}
+                onChangeIndex={handleStepChange}
+                enableMouseEvents
+                interval={5000}
+            >
                 <DTDataset
                     className={classes.dataset}
                     image={images.filter(image => image.dataset_id === dataset.id)[0]}
@@ -79,9 +86,16 @@ const FeatureDatasets: FC<FeatureProps> = ({className, datasets = null, ...rest}
                 ))}
             </AutoPlaySwipeableViews>
 
-            <IconButton color="inherit" size="small" onClick={handleNext} disabled={activeStep === datasets.length - 1}>
-                <KeyboardArrowRight />
-            </IconButton>
+            <Hidden smDown>
+                <IconButton
+                    color="inherit"
+                    size="small"
+                    onClick={handleNext}
+                    disabled={activeStep === datasets.length - 1}
+                >
+                    <KeyboardArrowRight />
+                </IconButton>
+            </Hidden>
         </div>
     );
 };
