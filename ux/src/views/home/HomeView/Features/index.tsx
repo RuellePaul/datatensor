@@ -80,21 +80,13 @@ const useStyles = makeStyles((theme: Theme) => ({
         padding: theme.spacing(2, 2, 0.5),
         marginBottom: theme.spacing(8),
         background: theme.palette.background.paper,
-        border: `solid 1px ${theme.palette.background.paper}`,
+        border: `solid 1px ${theme.palette.divider}`,
         borderRadius: 8,
-        opacity: 0.5,
         transition: 'all 0.15s ease-out',
-        transform: 'scale(0.95)',
         [theme.breakpoints.down('md')]: {
             padding: theme.spacing(1.5),
             marginBottom: theme.spacing(6),
             background: 'none !important'
-        },
-        '&.selected': {
-            opacity: 1,
-            border: `solid 1px ${theme.palette.divider}`,
-            transform: 'scale(1)',
-            pointerEvents: 'initial'
         }
     },
     button: {
@@ -120,7 +112,8 @@ const useStyles = makeStyles((theme: Theme) => ({
             margin: theme.spacing(1),
             marginRight: theme.spacing(3),
             fontSize: 28,
-            color: theme.palette.primary.main
+            color: theme.palette.primary.main,
+            minWidth: 25
         }
     }
 }));
@@ -160,7 +153,7 @@ const FeatureButton: FC<FeatureButtonProps> = ({feature, index, selected, setSel
         if (index === selected) return;
 
         setAnimated(true);
-        setTimeout(() => setAnimated(false), 400);
+        setTimeout(() => setAnimated(false), 500);
 
         setSelected(index);
 
@@ -279,10 +272,7 @@ const Features: FC<FeatureProps> = ({className, ...rest}) => {
                                                     isMobile ? 'selected' : selected === index && 'selected'
                                                 ),
                                                 key: feature.title,
-                                                datasets,
-                                                onMouseEnter: () => setAnimated(true),
-                                                onMouseMove: () => setSelected(index),
-                                                onMouseLeave: () => setAnimated(false),
+                                                datasets
                                             })}
                                         </ImageProvider>
                                     ))}

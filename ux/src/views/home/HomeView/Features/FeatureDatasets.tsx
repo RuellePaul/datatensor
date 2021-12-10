@@ -33,7 +33,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     dataset: {
         margin: 'auto',
-        borderRadius: 8
+        borderRadius: 8,
+        [theme.breakpoints.down('xs')]: {
+            margin: theme.spacing(0, 2)
+        }
     }
 }));
 

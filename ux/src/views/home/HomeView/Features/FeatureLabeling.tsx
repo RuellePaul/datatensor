@@ -24,8 +24,8 @@ import {CANVAS_OFFSET} from 'src/utils/labeling';
 import {MouseOutlined as MouseIcon, Restore as RestoreIcon} from '@mui/icons-material';
 import KeyboardListener from 'src/components/core/Labelisator/KeyboardListener';
 import useImages from 'src/hooks/useImages';
+import useImage from 'src/hooks/useImage';
 import {Maximize as LabelIcon, Move as MoveIcon} from 'react-feather';
-import {ImageConsumer} from 'src/store/ImageContext';
 
 interface FeatureProps {
     className?: string;
@@ -33,7 +33,11 @@ interface FeatureProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        touchAction: 'pan-y'
+        touchAction: 'pan-y',
+        [theme.breakpoints.down('sm')]: {
+            padding: '0px !important',
+            border: 'none !important'
+        }
     },
     labelisator: {
         position: 'relative',
@@ -53,7 +57,8 @@ const useStyles = makeStyles((theme: Theme) => ({
         justifyContent: 'center',
         flexDirection: 'column',
         padding: theme.spacing(2, 3),
-        backdropFilter: 'blur(3px)'
+        backdropFilter: 'blur(3px)',
+        color: 'white'
     }
 }));
 
@@ -61,6 +66,7 @@ const FeatureLabeling: FC<FeatureProps> = ({className, ...rest}) => {
     const classes = useStyles();
 
     const {images} = useImages();
+    const {positions, previousPosition} = useImage();
 
     const [tool, setTool] = useState<'label' | 'move'>('label');
     const handleToolChange = (event: React.MouseEvent<HTMLElement>, newTool: 'label' | 'move' | null) => {
@@ -130,34 +136,26 @@ const FeatureLabeling: FC<FeatureProps> = ({className, ...rest}) => {
 
                     <div className="flexGrow" />
 
-                    <ImageConsumer>
-                        {value => (
-                            <Box mr={1}>
-                                <IconButton
-                                    disabled={value.positions.length <= 1}
-                                    onClick={value.previousPosition}
-                                    size="large"
+                    <Box mr={1}>
+                        <IconButton disabled={positions.length <= 1} onClick={previousPosition} size="large">
+                            <Tooltip
+                                title={
+                                    <Typography variant="overline">
+                                        Undo
+                                        <kbd>CTRL</kbd>+<kbd>Z</kbd>
+                                    </Typography>
+                                }
+                            >
+                                <Badge
+                                    color="primary"
+                                    badgeContent={positions.length > 1 ? positions.length - 1 : 0}
+                                    max={99}
                                 >
-                                    <Tooltip
-                                        title={
-                                            <Typography variant="overline">
-                                                Undo
-                                                <kbd>CTRL</kbd>+<kbd>Z</kbd>
-                                            </Typography>
-                                        }
-                                    >
-                                        <Badge
-                                            color="primary"
-                                            badgeContent={value.positions.length > 1 ? value.positions.length - 1 : 0}
-                                            max={99}
-                                        >
-                                            <RestoreIcon />
-                                        </Badge>
-                                    </Tooltip>
-                                </IconButton>
-                            </Box>
-                        )}
-                    </ImageConsumer>
+                                    <RestoreIcon />
+                                </Badge>
+                            </Tooltip>
+                        </IconButton>
+                    </Box>
                 </Box>
             </Hidden>
 
@@ -184,13 +182,35 @@ const FeatureLabeling: FC<FeatureProps> = ({className, ...rest}) => {
                                 </Typography>
                             </Box>
                             <MouseIcon className="highlight" fontSize="large" />
-                            <Button onClick={handleCloseOverlay} sx={{mt: 3}}>
+                            <Button color="inherit" variant="outlined" onClick={handleCloseOverlay} sx={{mt: 3}}>
                                 Got it
                             </Button>
                         </div>
                     </Hidden>
                 )}
             </div>
+
+            <Hidden smUp>
+                <Box display="flex" width="100%" justifyContent="flex-end">
+                    <Button
+                        color="inherit"
+                        disabled={positions.length <= 1}
+                        onClick={previousPosition}
+                        size="small"
+                        endIcon={
+                            <Badge
+                                color="primary"
+                                badgeContent={positions.length > 1 ? positions.length - 1 : 0}
+                                max={99}
+                            >
+                                <RestoreIcon />
+                            </Badge>
+                        }
+                    >
+                        Undo
+                    </Button>
+                </Box>
+            </Hidden>
         </div>
     );
 };

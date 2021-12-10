@@ -1,5 +1,5 @@
 import React, {FC, useEffect, useRef, useState} from 'react';
-import {Box, Hidden, Typography} from '@mui/material';
+import {Box, Button, Hidden, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {TouchApp as TouchIcon} from '@mui/icons-material';
 import ContextMenu from './ContextMenu';
@@ -56,7 +56,8 @@ const useStyles = makeStyles((theme: Theme) => ({
         justifyContent: 'center',
         flexDirection: 'column',
         padding: theme.spacing(2, 3),
-        backdropFilter: 'blur(3px)'
+        backdropFilter: 'blur(3px)',
+        color: 'white'
     }
 }));
 
@@ -334,14 +335,23 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
                 <Hidden smUp>
                     <div className={classes.overlay} onClick={handleCloseOverlay}>
                         <Box mb={2}>
-                            <Typography variant="h5" color="textPrimary" align="center" gutterBottom>
-                                To start labeling images, touch with two fingers.
+                            <Typography variant="h6" color="textPrimary" align="center" gutterBottom>
+                                To start drawing labels, touch with two fingers.
                             </Typography>
-                            <Typography variant="h5" color="textPrimary" align="center" gutterBottom>
+                            <Typography variant="h6" color="textPrimary" align="center" gutterBottom>
                                 To change a label, long-tap and drag it.
                             </Typography>
                         </Box>
                         <TouchIcon className="highlight" fontSize="large" />
+                        <Button
+                            variant="outlined"
+                            color="inherit"
+                            onClick={handleCloseOverlay}
+                            sx={{mt: 2}}
+                            size="small"
+                        >
+                            Got it
+                        </Button>
                     </div>
                 </Hidden>
             )}
