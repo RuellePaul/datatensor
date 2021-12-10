@@ -64,21 +64,27 @@ const OperationsPipeline: FC<ListProps> = ({ className, readOnly, ...rest }) => 
                                     key={operationId}
                                     isDragDisabled={readOnly || dragDisabled}
                                 >
-                                    {(provided, snapshot) => (
-                                        <Operation
-                                            operationId={operationId}
-                                            dragging={snapshot.isDragging}
-                                            index={index}
-                                            key={operationId}
-                                            setDragDisabled={setDragDisabled}
-                                            // @ts-ignore
-                                            ref={provided.innerRef}
-                                            readOnly={readOnly}
-                                            style={{ ...provided.draggableProps.style }}
-                                            {...provided.draggableProps}
-                                            {...provided.dragHandleProps}
-                                        />
-                                    )}
+                                    {(provided, snapshot) => {
+                                        if (snapshot.isDragging) {// @ts-ignore
+                                            provided.draggableProps.style.left = undefined; // @ts-ignore
+                                            provided.draggableProps.style.top = undefined;
+                                        }
+                                        return (
+                                            <Operation
+                                                operationId={operationId}
+                                                dragging={snapshot.isDragging}
+                                                index={index}
+                                                key={operationId}
+                                                setDragDisabled={setDragDisabled}
+                                                // @ts-ignore
+                                                ref={provided.innerRef}
+                                                readOnly={readOnly}
+                                                style={{ ...provided.draggableProps.style }}
+                                                {...provided.draggableProps}
+                                                {...provided.dragHandleProps}
+                                            />
+                                        );
+                                    }}
                                 </Draggable>
                             ))}
                             {provided.placeholder}
