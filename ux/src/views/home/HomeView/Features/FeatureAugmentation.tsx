@@ -1,8 +1,9 @@
-import React, {FC, useCallback} from 'react';
+import React, {FC, useCallback, useState} from 'react';
 import clsx from 'clsx';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
-import {Box, Grid, Typography} from '@mui/material';
+import {Box, Button, Grid, Hidden, Typography} from '@mui/material';
+import {ExpandLess, ExpandMore} from '@mui/icons-material';
 import PipelineSample from 'src/components/core/PipelineSample';
 import Pipeline from 'src/components/core/Pipeline';
 import api from 'src/utils/api';
@@ -35,6 +36,11 @@ const FeatureAugmentation: FC<FeatureProps> = ({className, ...rest}) => {
         [image, labels]
     );
 
+    const [expand, setExpand] = useState<boolean>(false);
+    const handleTogglePipeline = () => {
+        setExpand(expand => !expand);
+    };
+
     return (
         <div className={clsx(classes.root, className)} {...rest}>
             <Grid container spacing={2}>
@@ -46,11 +52,26 @@ const FeatureAugmentation: FC<FeatureProps> = ({className, ...rest}) => {
                     <PipelineSample handler={handleSample} />
                 </Grid>
                 <Grid item sm={5} xs={12}>
-                    <Typography variant="overline" color="textPrimary" align="center" gutterBottom>
-                        Operations pipeline
-                    </Typography>
+                    <Hidden smDown>
+                        <Typography variant="overline" color="textPrimary" gutterBottom>
+                            Operations pipeline
+                        </Typography>
 
-                    <Pipeline />
+                        <Pipeline />
+                    </Hidden>
+                    <Hidden smUp>
+                        <Button
+                            fullWidth
+                            size="small"
+                            endIcon={expand ? <ExpandLess /> : <ExpandMore />}
+                            onClick={handleTogglePipeline}
+                            sx={{mb: 1}}
+                        >
+                            Operations pipeline
+                        </Button>
+
+                        {expand && <Pipeline />}
+                    </Hidden>
                 </Grid>
             </Grid>
         </div>

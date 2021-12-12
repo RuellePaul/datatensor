@@ -54,7 +54,7 @@ const Testimonials: FC<TestimonialsProps> = ({className, ...rest}) => {
                                 title="LinkedIn profile"
                                 onClick={() => (window.location.href = 'https://www.linkedin.com/in/paulruelle')}
                             >
-                                Paul Ruelle
+                                Paul
                             </span>
                             <Typography color="textSecondary" display="inline" component="span">
                                 , co-creator of @Datatensor
