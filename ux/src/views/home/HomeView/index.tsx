@@ -20,7 +20,6 @@ const HomeView: FC = () => {
             <Features />
             <Testimonials />
             <CTA />
-            <FAQS />
         </Page>
     );
 };
