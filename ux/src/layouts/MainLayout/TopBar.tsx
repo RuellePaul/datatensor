@@ -1,10 +1,13 @@
 import React, {FC} from 'react';
 import {Link as RouterLink, useHistory} from 'react-router-dom';
 import clsx from 'clsx';
-import {AppBar, Box, Button, Divider, Hidden, Link, Toolbar, Typography} from '@mui/material';
+import {AppBar, Box, Button, Divider, Hidden, Toolbar, Typography, useMediaQuery} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
+import {Theme} from 'src/theme';
 import {APP_VERSION} from 'src/constants';
 import Logo from 'src/components/utils/Logo';
+import UserAvatar from 'src/components/UserAvatar';
+import useAuth from 'src/hooks/useAuth';
 
 interface TopBarProps {
     className?: string;
@@ -12,7 +15,10 @@ interface TopBarProps {
 
 const useStyles = makeStyles(theme => ({
     root: {
-        backgroundColor: theme.palette.background.paper
+        backdropFilter: 'blur(16px)',
+        boxShadow: theme.palette.mode === 'dark' ? 'rgb(19 47 76) 0px -1px 1px inset' : 'rgb(0 0 0) 0px -1px 1px inset',
+        backgroundColor: theme.palette.mode === 'dark' ? 'rgb(10 25 40 / 60%)' : 'rgb(0 0 0 / 65%)',
+        backgroundImage: 'none'
     },
     version: {
         marginTop: -5,
@@ -46,6 +52,9 @@ const TopBar: FC<TopBarProps> = ({className, ...rest}) => {
     const classes = useStyles();
     const history = useHistory();
 
+    const {user} = useAuth();
+    const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
+
     return (
         <AppBar className={clsx(classes.root, className)} color="default" {...rest}>
             <Toolbar className={classes.toolbar}>
@@ -54,7 +63,7 @@ const TopBar: FC<TopBarProps> = ({className, ...rest}) => {
                 </RouterLink>
                 <Hidden smDown>
                     <Box>
-                        <Typography variant="overline" color="textPrimary" component="p">
+                        <Typography variant="overline" component="p" sx={{color: 'white'}}>
                             Datatensor
                         </Typography>
 
@@ -65,34 +74,20 @@ const TopBar: FC<TopBarProps> = ({className, ...rest}) => {
                 </Hidden>
                 <Box flexGrow={1} />
                 <Hidden smDown>
-                    <Link
-                        className={classes.link}
-                        color="textSecondary"
-                        component={RouterLink}
-                        to="/app"
-                        underline="none"
-                        variant="body2"
-                    >
+                    <Button className={classes.link} component="a" onClick={() => history.push('/app')}>
                         About
-                    </Link>
+                    </Button>
                 </Hidden>
-                <Link
-                    className={classes.link}
-                    color="textSecondary"
-                    component={RouterLink}
-                    to="/docs"
-                    underline="none"
-                    variant="body2"
-                >
-                    Documentation
-                </Link>
+                <Button className={classes.link} component="a" onClick={() => history.push('/docs')}>
+                                                    {isDesktop ? 'Documentation' : 'Docs'}
+                </Button>
                 <Divider className={classes.divider} />
                 <Button
                     color="primary"
                     component="a"
                     variant="contained"
-                    size="small"
-                    onClick={() => history.push('/app')}
+                    onClick={() => history.push('/login')}
+                    endIcon={user !== null && <UserAvatar user={user} style={{width: 30, height: 30}} />}
                 >
                     Dashboard
                 </Button>

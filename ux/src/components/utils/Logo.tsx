@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
         },
         '& polygon.line': {
             fill: `${
-                theme.palette.mode === 'dark' ? '#76a2c5' : theme.palette.text.primary
+                theme.palette.mode === 'dark' ? theme.palette.primary[600] : theme.palette.text.primary
             } !important`
         }
     }

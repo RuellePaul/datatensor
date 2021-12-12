@@ -1,5 +1,5 @@
 import React, {FC, useCallback, useState} from 'react';
-import {useParams} from 'react-router';
+import {AxiosResponse} from 'axios';
 import {useSnackbar} from 'notistack';
 import {Formik} from 'formik';
 import clsx from 'clsx';
@@ -9,13 +9,14 @@ import type {Theme} from 'src/theme';
 import {useSelector} from 'src/store';
 import {Operation} from 'src/types/pipeline';
 import useImage from 'src/hooks/useImage';
-import api from 'src/utils/api';
 import ImageBase64 from 'src/components/utils/ImageBase64';
 import {Label} from 'src/types/label';
 import wait from 'src/utils/wait';
+import useDataset from 'src/hooks/useDataset';
 
 
 interface PipelineSampleProps {
+    handler: (operations: Operation[]) => Promise<AxiosResponse>;
     className?: string;
 }
 
@@ -27,12 +28,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const PipelineSample: FC<PipelineSampleProps> = ({ className }) => {
+const PipelineSample: FC<PipelineSampleProps> = ({ handler, className }) => {
     const classes = useStyles();
     const { enqueueSnackbar } = useSnackbar();
 
-    const { dataset_id } = useParams();
-    const { image } = useImage();
+    const { dataset } = useDataset();
+    const { image, labels} = useImage();
 
     const pipeline = useSelector<any>((state) => state.pipeline);
 
@@ -42,16 +43,13 @@ const PipelineSample: FC<PipelineSampleProps> = ({ className }) => {
     const [imagesLabels, setImagesLabels] = useState<Label[][]>([]);
 
     const doSample = useCallback(async () => {
-        if (dataset_id && image_id && pipeline.isLoaded) {
+        if (dataset.id && image_id && pipeline.isLoaded) {
             const operations: Operation[] = pipeline.operations.allIds.map(id => pipeline.operations.byId[id]);
 
             try {
                 await wait(10);
 
-                const response = await api.post<{ images: string[], images_labels: Label[][] }>(`/datasets/${dataset_id}/pipelines/sample`, {
-                    image_id,
-                    operations
-                });
+                const response = await handler(operations);
 
                 setImagesBase64(response.data.images);
                 setImagesLabels(response.data.images_labels);
@@ -63,7 +61,7 @@ const PipelineSample: FC<PipelineSampleProps> = ({ className }) => {
         }
 
         // eslint-disable-next-line
-    }, [pipeline.isLoaded, dataset_id, image_id, pipeline.operations]);
+    }, [pipeline.isLoaded, dataset.id, image_id, pipeline.operations, labels]);
 
     if (!image)
         return null;
@@ -111,8 +109,9 @@ const PipelineSample: FC<PipelineSampleProps> = ({ className }) => {
 
                                 <Box mb={1}>
                                     <Button
+                                        fullWidth
                                         size="small"
-                                        variant="outlined"
+                                        variant="contained"
                                         type="submit"
                                         disabled={isSubmitting}
                                         endIcon={isSubmitting && (
@@ -142,7 +141,10 @@ const PipelineSample: FC<PipelineSampleProps> = ({ className }) => {
                     <Grid
                         key={index}
                         item
-                        xs={image.width > image.height ? 6 : 4}
+                        xs={imagesBase64.length > 1
+                            ? image.width > image.height ? 6 : 4
+                            : 12
+                        }
                     >
                         <ImageBase64
                             imageBase64={imageBase64}

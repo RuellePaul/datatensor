@@ -3,7 +3,6 @@ import {Router} from 'react-router-dom';
 import {createBrowserHistory} from 'history';
 import GlobalStyles from 'src/components/utils/GlobalStyles';
 import ScrollReset from 'src/components/utils/ScrollReset';
-import CookiesNotification from 'src/components/overlays/CookiesNotification';
 import {AuthProvider} from 'src/store/AuthContext';
 import routes, {renderRoutes} from 'src/routes';
 import Providers from './providers';
@@ -19,7 +18,6 @@ const App: FC = () => {
                 <AuthProvider>
                     <GlobalStyles />
                     <ScrollReset />
-                    <CookiesNotification />
                     {renderRoutes(routes)}
                 </AuthProvider>
             </Router>

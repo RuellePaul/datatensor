@@ -17,6 +17,7 @@ interface ImagesProviderProps {
     pipeline_id?: string;
     category_id?: string;
     children?: ReactNode;
+    images?: Image[] // for public data
 }
 
 export const ImagesContext = createContext<ImagesContextValue>({
@@ -29,7 +30,7 @@ export const ImagesContext = createContext<ImagesContextValue>({
     totalImagesCount: null
 });
 
-export const ImagesProvider: FC<ImagesProviderProps> = ({ children, pipeline_id, category_id }) => {
+export const ImagesProvider: FC<ImagesProviderProps> = ({ children, pipeline_id, category_id, images = null}) => {
     const [currentImages, setCurrentImages] = useState<Image[] | null>([]);
     const [currentOffset, setCurrentOffset] = useState<number>(0);
     const [totalImagesCount, setTotalImagesCount] = useState<number | null>(null);
@@ -63,7 +64,8 @@ export const ImagesProvider: FC<ImagesProviderProps> = ({ children, pipeline_id,
                     params: {
                         offset: currentOffset,
                         limit: LAZY_LOAD_BATCH,
-                        pipeline_id
+                        pipeline_id,
+                        include_labels: true
                     }
                 });
                 setTotalImagesCount(null);
@@ -79,13 +81,13 @@ export const ImagesProvider: FC<ImagesProviderProps> = ({ children, pipeline_id,
     }, [dataset.id, currentOffset, pipeline_id, category_id]);
 
     useEffect(() => {
-        fetchImages();
-    }, [fetchImages]);
+        images === null && fetchImages();
+    }, [fetchImages, images]);
 
     return (
         <ImagesContext.Provider
             value={{
-                images: currentImages,
+                images: images || currentImages,
                 saveImages: handleSaveImages,
                 offset: currentOffset,
                 saveOffset: setCurrentOffset,

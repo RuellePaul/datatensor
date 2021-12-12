@@ -2,6 +2,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
+from routers.labels.models import Label
 from utils import MongoModel
 
 
@@ -16,8 +17,12 @@ class Image(MongoModel):
     pipeline_id: Optional[str] = None
 
 
+class ImageExtended(Image):
+    labels: Optional[List[Label]]
+
+
 class ImagesResponse(BaseModel):
-    images: List[Image] = []
+    images: List[ImageExtended] = []
 
 
 class ImageIdsResponse(BaseModel):

@@ -18,6 +18,7 @@ export interface ImageContextValue {
 interface ImageProviderProps {
     image: Image;
     children?: ReactNode;
+    labels?: Label[]; // for public data
 }
 
 export const ImageContext = createContext<ImageContextValue>({
@@ -30,17 +31,25 @@ export const ImageContext = createContext<ImageContextValue>({
     previousPosition: () => {}
 });
 
-export const ImageProvider: FC<ImageProviderProps> = ({image, children}) => {
+export const ImageProvider: FC<ImageProviderProps> = ({image, children, labels = null}) => {
     const {dataset, saveCategories} = useDataset();
     const {enqueueSnackbar} = useSnackbar();
 
-    const [currentLabels, setCurrentLabels] = useState<Label[]>(null);
+    const [currentLabels, setCurrentLabels] = useState<Label[]>(labels);
+
+    const [positions, setPositions] = useState<Label[][]>([]);
 
     const handleSaveLabels = (update: Label[] | ((labels: Label[]) => Label[])): void => {
         setCurrentLabels(update);
     };
 
     const fetchLabels = useCallback(async () => {
+        if (labels !== null) {
+            handleSaveLabels(labels);
+            setPositions([labels]);
+            return;
+        }
+
         setCurrentLabels(null);
 
         if (image) {
@@ -52,13 +61,15 @@ export const ImageProvider: FC<ImageProviderProps> = ({image, children}) => {
                 console.error(err);
             }
         }
-    }, [dataset.id, image]);
+    }, [dataset.id, image, labels]);
 
     useEffect(() => {
         fetchLabels();
     }, [fetchLabels]);
 
     const validateLabels = async () => {
+        if (labels !== null) return;
+
         try {
             const response = await api.post<any>(`/datasets/${dataset.id}/images/${image.id}/labels/`, {
                 labels: currentLabels
@@ -76,8 +87,6 @@ export const ImageProvider: FC<ImageProviderProps> = ({image, children}) => {
             });
         }
     };
-
-    const [positions, setPositions] = useState<Label[][]>([]);
 
     const handleSavePosition = (update: Label[]): void => {
         setPositions(positions => [...positions, update]);

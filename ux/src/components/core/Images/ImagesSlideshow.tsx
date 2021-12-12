@@ -86,9 +86,10 @@ function ImagesSlideshow() {
                 index={activeStep}
                 onChangeIndex={handleStepChange}
                 enableMouseEvents
+                interval={4000}
             >
                 {images.map((image, index) => (
-                    <ImageProvider image={image} key={image.id}>
+                    <ImageProvider image={image} labels={image.labels} key={image.id}>
                         {Math.abs(activeStep - index) <= 2 ? <DTImage className={classes.image} /> : null}
                     </ImageProvider>
                 ))}
@@ -97,7 +98,6 @@ function ImagesSlideshow() {
                 className={classes.mobileStepper}
                 steps={images.length}
                 position="static"
-                variant="dots"
                 activeStep={activeStep}
                 nextButton={
                     <Button
@@ -116,6 +116,7 @@ function ImagesSlideshow() {
                         Back
                     </Button>
                 }
+                variant='text'
             />
         </Card>
     );

@@ -13,6 +13,7 @@ from database import encrypt_init
 from dependencies import logged_user, logged_admin
 from errors import APIError
 from logger import logger
+from public.public import public
 from routers.categories.categories import categories
 from routers.datasets.datasets import datasets
 from routers.datasources.datasources import datasources
@@ -50,6 +51,9 @@ app.include_router(sockets)
 # Authentication
 app.include_router(auth, prefix=f'{PREFIX}/auth', tags=['auth'])
 app.include_router(oauth, prefix=f'{PREFIX}/oauth', tags=['oauth'])
+
+# Public dataset
+app.include_router(public, prefix=f'{PREFIX}/public',  tags=['public'])
 
 # Users | 🔒 Admin partially
 app.include_router(users, prefix=f'{PREFIX}/users',

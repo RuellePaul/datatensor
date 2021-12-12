@@ -34,9 +34,8 @@ const Page = forwardRef<HTMLDivElement, PageProps>(({children, title = '', ...re
                 <title>
                     {unreadNotificationsCount > 0 ? `(${unreadNotificationsCount}) ` : ''}
                     {title}
-                    {' | '}
+                    {title ? ' | ' : ''}
                     Datatensor {process.env.REACT_APP_ENVIRONMENT === 'development' ? '🔥' : ''}
-                    {process.env.REACT_APP_ENVIRONMENT === 'test' ? '🧪' : ''}
                 </title>
             </Helmet>
             {children}

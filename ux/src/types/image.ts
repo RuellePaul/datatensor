@@ -1,3 +1,6 @@
+import {Label} from 'src/types/label';
+
+
 export interface Image {
     id: string;
     dataset_id: string;
@@ -7,4 +10,5 @@ export interface Image {
     width: number;
     height: number;
     pipeline_id?: string;
+    labels?: Label[];
 }

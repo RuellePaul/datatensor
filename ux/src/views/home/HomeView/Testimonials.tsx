@@ -4,14 +4,13 @@ import {Avatar, Box, Container, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 
-
 interface TestimonialsProps {
     className?: string;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: theme.palette.background.paper,
         paddingTop: 128,
         paddingBottom: 128
     },
@@ -42,7 +41,12 @@ const Testimonials: FC<TestimonialsProps> = ({className, ...rest}) => {
                     It will save you time.&quot;
                 </Typography>
                 <Box mt={6} display="flex" justifyContent="center" alignItems="center">
-                    <Avatar className={classes.avatar} src="/static/home/paul.jpg" alt="Creator" />
+                    <Avatar
+                        className={classes.avatar}
+                        src="/static/home/paul.jpg"
+                        alt="Creator"
+                        imgProps={{loading: 'lazy'}}
+                    />
                     <Box ml={2}>
                         <Typography variant="body1" color="textPrimary">
                             <span
@@ -50,7 +54,7 @@ const Testimonials: FC<TestimonialsProps> = ({className, ...rest}) => {
                                 title="LinkedIn profile"
                                 onClick={() => (window.location.href = 'https://www.linkedin.com/in/paulruelle')}
                             >
-                                Paul Ruelle
+                                Paul
                             </span>
                             <Typography color="textSecondary" display="inline" component="span">
                                 , co-creator of @Datatensor

@@ -15,8 +15,10 @@ export interface DatasetContextValue {
 }
 
 interface DatasetProviderProps {
-    dataset_id: string;
+    dataset_id?: string;
     children?: ReactNode;
+    dataset?: Dataset; // for public data
+    categories?: Category[]; // for public data
 }
 
 export const DatasetContext = createContext<DatasetContextValue>({
@@ -28,32 +30,29 @@ export const DatasetContext = createContext<DatasetContextValue>({
     savePipelines: () => {}
 });
 
-export const DatasetProvider: FC<DatasetProviderProps> = ({dataset_id, children}) => {
-    const [currentDataset, setCurrentDataset] = useState<Dataset>(null);
-    const [currentCategories, setCurrentCategories] = useState<Category[]>([]);
+export const DatasetProvider: FC<DatasetProviderProps> = ({dataset_id, dataset = null, categories = [], children}) => {
+    const [currentDataset, setCurrentDataset] = useState<Dataset>(dataset);
+    const [currentCategories, setCurrentCategories] = useState<Category[]>(categories);
     const [currentPipelines, setCurrentPipelines] = useState<Pipeline[]>([]);
 
     const handleSaveDataset = (update: Dataset | ((dataset: Dataset) => Dataset)): void => {
         setCurrentDataset(update);
     };
 
-    const fetchDataset = useCallback(async () => {
-        try {
-            const response = await api.get<{dataset: Dataset}>(`/datasets/${dataset_id}`);
-            handleSaveDataset(response.data.dataset);
-        } catch (err) {
-            console.error(err);
-        }
-    }, [dataset_id]);
-
     const handleSaveCategories = (update: Category[] | ((update: Category[]) => Category[])): void => {
         setCurrentCategories(update);
     };
 
-    const fetchCategories = useCallback(async () => {
+    const fetchDataset = useCallback(async () => {
         try {
-            const response = await api.get<{categories: Category[]}>(`/datasets/${dataset_id}/categories/`);
-            handleSaveCategories(response.data.categories.sort((a, b) => -b.name.localeCompare(a.name)));
+            const response = await api.get<{dataset: Dataset}>(`/datasets/${dataset_id}`, {
+                params: {
+                    include_user: true,
+                    include_categories: true
+                }
+            });
+            handleSaveDataset(response.data.dataset);
+            handleSaveCategories(response.data.dataset.categories);
         } catch (err) {
             console.error(err);
         }
@@ -73,10 +72,11 @@ export const DatasetProvider: FC<DatasetProviderProps> = ({dataset_id, children}
     }, [dataset_id]);
 
     useEffect(() => {
-        fetchDataset();
-        fetchCategories();
-        fetchPipelines();
-    }, [fetchDataset, fetchCategories, fetchPipelines]);
+        if (dataset === null) {
+            fetchDataset();
+            fetchPipelines();
+        }
+    }, [fetchDataset, fetchPipelines, dataset]);
 
     if (currentDataset === null)
         return (
@@ -88,7 +88,7 @@ export const DatasetProvider: FC<DatasetProviderProps> = ({dataset_id, children}
     return (
         <DatasetContext.Provider
             value={{
-                dataset: currentDataset,
+                dataset: dataset || currentDataset,
                 saveDataset: handleSaveDataset,
                 categories: currentCategories,
                 saveCategories: handleSaveCategories,

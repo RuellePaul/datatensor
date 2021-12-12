@@ -3,6 +3,8 @@ from typing import List, Optional
 
 from pydantic import Field, BaseModel
 
+from routers.categories.models import Category
+from routers.users.models import User
 from utils import MongoModel
 
 
@@ -18,12 +20,17 @@ class Dataset(MongoModel):
     exported_at: Optional[datetime] = None
 
 
+class DatasetExtended(Dataset):
+    categories: Optional[List[Category]]
+    user: Optional[User]
+
+
 class DatasetsResponse(BaseModel):
-    datasets: List[Dataset] = []
+    datasets: List[DatasetExtended] = []
 
 
 class DatasetResponse(BaseModel):
-    dataset: Dataset
+    dataset: DatasetExtended
 
 
 class DatasetPostBody(BaseModel):

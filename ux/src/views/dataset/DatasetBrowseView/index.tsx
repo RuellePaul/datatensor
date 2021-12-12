@@ -20,7 +20,7 @@ const DatasetBrowseView: FC = () => {
     const classes = useStyles();
 
     return (
-        <Page className={classes.root} title="Dataset List">
+        <Page className={classes.root} title="Datasets">
             <DatasetsProvider>
                 <Container component="section" maxWidth="lg">
                     <Header />

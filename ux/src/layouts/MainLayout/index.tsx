@@ -10,7 +10,6 @@ interface MainLayoutProps {
 
 const useStyles = makeStyles(theme => ({
     root: {
-        backgroundColor: theme.palette.background.default,
         display: 'flex',
         height: '100%',
         overflow: 'hidden',
@@ -19,8 +18,7 @@ const useStyles = makeStyles(theme => ({
     wrapper: {
         display: 'flex',
         flex: '1 1 auto',
-        overflow: 'hidden',
-        paddingTop: 64
+        overflow: 'hidden'
     }
 }));
 
@@ -31,7 +29,7 @@ const MainLayout: FC<MainLayoutProps> = ({children}) => {
         <div className={classes.root}>
             <TopBar />
             <div className={classes.wrapper}>
-                <Scrollbar>{children}</Scrollbar>
+                <Scrollbar className='scroller'>{children}</Scrollbar>
             </div>
         </div>
     );

@@ -9,7 +9,12 @@ import SectionOverview from './sections/SectionOverview';
 import SectionImages from './sections/SectionImages';
 import SectionAugmentation from './sections/SectionAugmentation';
 import SectionSettings from './sections/SectionSettings';
-import {DashboardOutlined, DynamicFeedOutlined, PhotoLibraryOutlined, SettingsOutlined} from '@mui/icons-material';
+import {
+    DashboardOutlined,
+    DynamicFeedOutlined as AugmentationIcon,
+    PhotoLibraryOutlined,
+    SettingsOutlined
+} from '@mui/icons-material';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
 import DTLabelisator from 'src/components/core/Labelisator';
@@ -30,8 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         position: 'sticky',
         top: 0,
         background: theme.palette.background.default,
-        zIndex: 1100,
-        boxShadow: '0 4px 3px -4px #28282896'
+        zIndex: 1100
     },
     tab: {
         color: theme.palette.text.primary,
@@ -83,7 +87,7 @@ const DatasetMainView: FC = () => {
         <DatasetProvider dataset_id={dataset_id}>
             <DatasetConsumer>
                 {value => (
-                    <UserProvider user_id={value.dataset.user_id}>
+                    <UserProvider user={value.dataset.user}>
                         <Page className={classes.root} title={`Dataset ${value.dataset.name}`}>
                             <ExportsProvider>
                                 <ImagesProvider>
@@ -105,7 +109,8 @@ const DatasetMainView: FC = () => {
                                                                     />
                                                                     <DTTab
                                                                         label={
-                                                                            value.images === null || value.images.length === 0 ? (
+                                                                            value.images === null ||
+                                                                            value.images.length === 0 ? (
                                                                                 <Tooltip
                                                                                     title={
                                                                                         <Typography variant="h6">
@@ -120,11 +125,14 @@ const DatasetMainView: FC = () => {
                                                                                 'Augmentation'
                                                                             )
                                                                         }
-                                                                        disabled={value.images === null || value.images.length === 0}
+                                                                        disabled={
+                                                                            value.images === null ||
+                                                                            value.images.length === 0
+                                                                        }
                                                                         style={{
                                                                             pointerEvents: 'auto'
                                                                         }}
-                                                                        icon={DynamicFeedOutlined}
+                                                                        icon={AugmentationIcon}
                                                                     />
 
                                                                     <DTTab label="Settings" icon={SettingsOutlined} />

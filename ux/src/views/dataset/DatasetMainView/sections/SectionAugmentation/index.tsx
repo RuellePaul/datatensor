@@ -23,7 +23,7 @@ import Pipeline from 'src/components/core/Pipeline';
 import PipelineSample from 'src/components/core/PipelineSample';
 import DTImage from 'src/components/core/Images/Image';
 import useImages from 'src/hooks/useImages';
-import {ImageProvider} from 'src/store/ImageContext';
+import {ImageProvider, ImageConsumer} from 'src/store/ImageContext';
 import {SectionProps} from '../SectionProps';
 import api from 'src/utils/api';
 import {Task} from 'src/types/task';
@@ -31,6 +31,7 @@ import useTasks from 'src/hooks/useTasks';
 import useDataset from 'src/hooks/useDataset';
 import {useSelector} from 'src/store';
 import {Operation} from 'src/types/pipeline';
+import {Label} from 'src/types/label';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
@@ -102,7 +103,7 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                 </Typography>
             </Box>
 
-            <ImageProvider image={images[randomIndex]}>
+            <ImageProvider image={images[randomIndex]} labels={images[randomIndex].labels}>
                 <Grid container spacing={3}>
                     <Grid item md={3} sm={6} xs={12}>
                         <Typography variant="overline" color="textPrimary" align="center" gutterBottom>
@@ -135,7 +136,21 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                             Sample
                         </Typography>
 
-                        <PipelineSample />
+                        <ImageConsumer>
+                            {value => (
+                                <PipelineSample
+                                    handler={operations =>
+                                        api.post<{images: string[]; images_labels: Label[][]}>(
+                                            `/datasets/${dataset.id}/pipelines/sample`,
+                                            {
+                                                image_id: value.image.id,
+                                                operations
+                                            }
+                                        )
+                                    }
+                                />
+                            )}
+                        </ImageConsumer>
                     </Grid>
                 </Grid>
             </ImageProvider>

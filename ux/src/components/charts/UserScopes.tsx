@@ -50,7 +50,7 @@ const UserScopes: FC<UserScopesProps> = ({className, users, ...rest}) => {
             <CardHeader
                 action={
                     <GenericMoreButton>
-                        <MenuItem onClick={() => history.push('/app/admin/users')}>
+                        <MenuItem onClick={() => history.push('/app/users')}>
                             <ListItemIcon>
                                 <UsersIcon />
                             </ListItemIcon>

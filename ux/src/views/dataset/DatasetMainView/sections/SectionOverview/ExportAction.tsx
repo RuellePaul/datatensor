@@ -97,6 +97,8 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
     const handleDownload = filename => {
         if (exports.length === 0) return;
 
+        console.log(exports[0].export_data)
+
         download(exports[0].export_data, `${filename || 'export'}.json`, 'application/json');
     };
 

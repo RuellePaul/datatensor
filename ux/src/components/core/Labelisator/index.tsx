@@ -24,8 +24,7 @@ import {
     Toolbar,
     Tooltip,
     Typography,
-    useMediaQuery,
-    useTheme
+    useMediaQuery
 } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {TransitionProps} from '@mui/material/transitions';
@@ -53,7 +52,6 @@ import api from 'src/utils/api';
 import {ImageConsumer, ImageProvider} from 'src/store/ImageContext';
 import goToHash from 'src/utils/goToHash';
 import {CANVAS_OFFSET} from 'src/utils/labeling';
-import {COLORS} from 'src/utils/colors';
 
 interface DTLabelisatorProps {}
 
@@ -85,9 +83,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     toolbar: {
         alignItems: 'center',
         color: theme.palette.getContrastText(theme.palette.text.primary)
-    },
-    switch: {
-        marginLeft: theme.spacing(2)
     }
 }));
 
@@ -100,11 +95,10 @@ const Transition = forwardRef(function Transition(
 
 const DTLabelisator: FC<DTLabelisatorProps> = () => {
     const classes = useStyles();
-    const theme = useTheme();
 
     const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
 
-    const {dataset, categories} = useDataset();
+    const {dataset} = useDataset();
     const {pipeline} = usePipeline();
     const {currentCategory, saveCurrentCategory} = useCategory();
 
@@ -287,18 +281,19 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                     </Hidden>
 
                                     <Hidden smDown>
-                                        <FormControlLabel
-                                            className={classes.switch}
-                                            control={
-                                                <Switch
-                                                    color="primary"
-                                                    size="small"
-                                                    checked={autoSwitch}
-                                                    onChange={() => setAutoSwitch(!autoSwitch)}
-                                                />
-                                            }
-                                            label={<Typography color="textSecondary">Auto switch</Typography>}
-                                        />
+                                        <Box ml={2}>
+                                            <FormControlLabel
+                                                control={
+                                                    <Switch
+                                                        color="primary"
+                                                        size="small"
+                                                        checked={autoSwitch}
+                                                        onChange={() => setAutoSwitch(!autoSwitch)}
+                                                    />
+                                                }
+                                                label={<Typography color="textSecondary">Auto switch</Typography>}
+                                            />
+                                        </Box>
 
                                         <div className="flexGrow" />
                                     </Hidden>
@@ -314,12 +309,6 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                                 currentCategory.supercategory
                                             )}`}
                                             size="medium"
-                                            style={{
-                                                color: theme.palette.getContrastText(COLORS[categories.indexOf(currentCategory)]),
-                                                background: COLORS[categories.indexOf(currentCategory)],
-                                                borderColor: COLORS[categories.indexOf(currentCategory)],
-                                                boxShadow: theme.shadows[1]
-                                            }}
                                             variant="outlined"
                                         />
                                     )}

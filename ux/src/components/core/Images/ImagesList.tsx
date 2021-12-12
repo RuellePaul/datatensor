@@ -147,7 +147,7 @@ const DTImagesList: FC<ImagesListProps> = ({className, pipeline_id, ...rest}) =>
             <Masonry columns={{xs: 2, sm: 3, md: 4}} spacing={1}>
                 {images.map((image: Image) => (
                     <MasonryItem key={image.id}>
-                        <ImageProvider image={image}>
+                        <ImageProvider image={image} labels={image.labels}>
                             <DTImage
                                 className={classes.image}
                                 clickable

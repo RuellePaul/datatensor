@@ -2,6 +2,7 @@ import React, {createContext, FC, ReactNode, useCallback, useEffect, useState} f
 import {Dataset} from 'src/types/dataset';
 import api from 'src/utils/api';
 
+
 export interface DatasetsContextValue {
     datasets: Dataset[];
     saveDatasets: (update: Dataset[] | ((datasets: Dataset[]) => Dataset[])) => void;
@@ -15,12 +16,14 @@ interface DatasetsProviderProps {
 
 export const DatasetsContext = createContext<DatasetsContextValue>({
     datasets: [],
-    saveDatasets: () => {},
+    saveDatasets: () => {
+    },
     displayedDatasets: null,
-    saveDisplayedDatasets: () => {}
+    saveDisplayedDatasets: () => {
+    }
 });
 
-export const DatasetsProvider: FC<DatasetsProviderProps> = ({children}) => {
+export const DatasetsProvider: FC<DatasetsProviderProps> = ({ children }) => {
     const [currentDatasets, setCurrentDatasets] = useState<Dataset[]>([]);
     const [displayedDatasets, setDisplayedDatasets] = useState<Dataset[] | null>(null);
 
@@ -34,7 +37,12 @@ export const DatasetsProvider: FC<DatasetsProviderProps> = ({children}) => {
 
     const fetchDatasets = useCallback(async () => {
         try {
-            const response = await api.get<{datasets: Dataset[]}>(`/datasets/`);
+            const response = await api.get<{ datasets: Dataset[] }>(`/datasets/`, {
+                params: {
+                    'include_user': true,
+                    'include_categories': true
+                }
+            });
             handleSaveDatasets(response.data.datasets);
         } catch (err) {
             console.error(err);

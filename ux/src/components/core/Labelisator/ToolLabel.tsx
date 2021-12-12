@@ -6,11 +6,11 @@ import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 import {
     CANVAS_OFFSET,
-    currentLabelsHoverIds,
     currentPoint,
     drawCursorLines,
     drawRect,
     formatRatio,
+    isHoveringLabels,
     LABEL_MIN_HEIGHT,
     LABEL_MIN_WIDTH,
     pointIsOutside,
@@ -18,6 +18,7 @@ import {
 } from 'src/utils/labeling';
 import useCategory from 'src/hooks/useCategory';
 import useImage from 'src/hooks/useImage';
+
 
 interface ToolLabelProps {
     setTool: any;
@@ -71,12 +72,12 @@ const ToolLabel: FC<ToolLabelProps> = ({setTool, autoSwitch}) => {
 
         if (event.nativeEvent.which === 0) {
             // IDLE
-            let labelsHoverIds = currentLabelsHoverIds(canvas, point, labels);
-            if (autoSwitch && labelsHoverIds.length > 0) {
+            drawCursorLines(canvas, point);
+
+            if (autoSwitch && isHoveringLabels(canvas, point, labels)) {
                 setTool('move');
                 return;
             }
-            drawCursorLines(canvas, point);
         }
 
         if (event.nativeEvent.which === 1)

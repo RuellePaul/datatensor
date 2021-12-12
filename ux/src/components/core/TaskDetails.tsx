@@ -19,14 +19,13 @@ import {Close as CloseIcon} from '@mui/icons-material';
 import {Theme} from 'src/theme';
 import {TaskAugmentorProperties, TaskGeneratorProperties, TaskStatus} from 'src/types/task';
 import {UserConsumer, UserProvider} from 'src/store/UserContext';
-import {DatasetConsumer, DatasetProvider} from 'src/store/DatasetContext';
+import {DatasetProvider} from 'src/store/DatasetContext';
 import useTasks from 'src/hooks/useTasks';
 import DTDataset from 'src/components/core/Dataset';
 import FancyLabel from 'src/components/FancyLabel';
 import UserLabel from 'src/components/UserLabel';
 import getDateDiff from 'src/utils/getDateDiff';
 import {MAX_CATEGORIES_DISPLAYED} from 'src/config';
-
 
 interface TaskDetailsProps {}
 
@@ -240,9 +239,7 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                                     </Typography>
 
                                     <DatasetProvider dataset_id={task?.dataset_id}>
-                                        <DatasetConsumer>
-                                            {value => <DTDataset dataset={value.dataset} />}
-                                        </DatasetConsumer>
+                                        <DTDataset />
                                     </DatasetProvider>
                                 </Grid>
                             </Grid>

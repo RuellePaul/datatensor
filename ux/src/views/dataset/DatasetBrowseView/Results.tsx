@@ -6,8 +6,8 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import {Theme} from 'src/theme';
 import DTDataset from 'src/components/core/Dataset';
 import useDatasets from 'src/hooks/useDatasets';
+import {DatasetProvider} from 'src/store/DatasetContext';
 import {MAX_DATASETS_DISPLAYED} from 'src/config';
-
 
 interface ResultsProps {
     className?: string;
@@ -91,7 +91,9 @@ const Results: FC<ResultsProps> = ({className, ...rest}) => {
                     .slice(page * MAX_DATASETS_DISPLAYED, page * MAX_DATASETS_DISPLAYED + MAX_DATASETS_DISPLAYED)
                     .map(dataset => (
                         <Grid item key={dataset.id} md={4} sm={6} xs={12}>
-                            <DTDataset dataset={dataset} />
+                            <DatasetProvider dataset={dataset} categories={dataset.categories}>
+                                <DTDataset />
+                            </DatasetProvider>
                         </Grid>
                     ))}
             </Grid>

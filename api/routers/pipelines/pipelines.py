@@ -7,7 +7,7 @@ from dependencies import dataset_belongs_to_user
 from routers.images.core import find_image
 from routers.labels.core import find_labels
 from routers.pipelines.core import find_pipelines, perform_sample, delete_pipeline
-from routers.pipelines.models import SampleBody, PipelinesResponse
+from routers.pipelines.models import *
 from utils import parse
 
 pipelines = APIRouter()
@@ -22,7 +22,7 @@ def get_pipelines(dataset_id, offset: int = 0, limit: int = 0):
     return parse(response)
 
 
-@pipelines.post('/sample')
+@pipelines.post('/sample', response_model=SampleResponse)
 def sample(dataset_id, payload: SampleBody, dataset=Depends(dataset_belongs_to_user)):
     """
     Execute a sample of augmentor operations pipeline

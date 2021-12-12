@@ -41,6 +41,13 @@ const useStyles = makeStyles((theme: Theme) =>
                     borderRadius: 3,
                     backgroundColor: '#6b6b6b'
                 }
+            },
+            '#nprogress': {
+                position: 'relative',
+                zIndex: 9999999,
+                '& .spinner': {
+                    display: 'none'
+                }
             }
         }
     })
