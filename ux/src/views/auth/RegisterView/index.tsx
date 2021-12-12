@@ -48,7 +48,7 @@ const RegisterView: FC = () => {
                                     Register
                                 </Typography>
                                 <Typography variant="body2" color="textSecondary">
-                                    Register on the internal platform
+                                    Register on Datatensor
                                 </Typography>
                             </div>
                         </Box>

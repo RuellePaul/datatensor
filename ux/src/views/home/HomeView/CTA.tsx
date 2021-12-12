@@ -1,10 +1,11 @@
 import React, {FC} from 'react';
+import {useHistory} from 'react-router';
 import clsx from 'clsx';
-import {Container, Link, Typography} from '@mui/material';
+
+import {Button, Container, Typography} from '@mui/material';
+import {Login as LoginIcon} from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
-import {Link as RouterLink} from 'react-router-dom';
-
 
 interface CTAProps {
     className?: string;
@@ -21,16 +22,24 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const CTA: FC<CTAProps> = ({className, ...rest}) => {
     const classes = useStyles();
+    const history = useHistory();
 
     return (
         <div className={clsx(classes.root, className)} {...rest}>
             <Container component="section" maxWidth="lg">
                 <Typography variant="h1" align="center" color="textPrimary">
-                    Ready to start building?
+                    Get started with Datatensor today.
                 </Typography>
-                <Link variant="h2" color="primary" component={RouterLink} to="/app">
-                    Login to Datatensor
-                </Link>
+                <Button
+                    color="primary"
+                    onClick={() => history.push('/register')}
+                    size="large"
+                    variant="contained"
+                    sx={{mt: 2}}
+                    endIcon={<LoginIcon />}
+                >
+                    Register now
+                </Button>
             </Container>
         </div>
     );
