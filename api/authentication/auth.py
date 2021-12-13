@@ -76,8 +76,8 @@ def do_register(payload: AuthRegisterBody):
     return parse(response)
 
 
-@auth.post('/forgot-password')
-def do_forgot_password(payload: AuthForgotPasswordBody):
+@auth.post('/send-password-recovery-link')
+def do_forgot_password(payload: AuthSendPasswordRecoveryBody):
     """
     Forgot password workflow (send recovery link)
     """

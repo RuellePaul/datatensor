@@ -64,6 +64,12 @@ const routes: Routes = [
     {
         exact: true,
         guard: GuestGuard,
+        path: '/reset-password',
+        component: lazy(() => import('src/views/auth/ResetPasswordView'))
+    },
+    {
+        exact: true,
+        guard: GuestGuard,
         path: '/oauthcallback/:scope',
         component: lazy(() => import('src/views/auth/OAuthCallbackView'))
     },

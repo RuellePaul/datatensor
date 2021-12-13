@@ -1,12 +1,12 @@
-import React, {FC, useEffect} from 'react';
-import {Link as RouterLink, useHistory} from 'react-router-dom';
+import React, {FC} from 'react';
+import {Link as RouterLink} from 'react-router-dom';
 import {Box, Card, CardContent, Container, Typography} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
 import Logo from 'src/components/utils/Logo';
-import JWTForgotPassword from './JWTForgotPassword';
 import parseQueryArgs from 'src/utils/parseQueryArgs';
+import JWTResetPassword from './JWTResetPassword';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -26,17 +26,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const ForgotPasswordView: FC = () => {
+const ResetPasswordView: FC = () => {
     const classes = useStyles();
-    const history = useHistory();
 
     const recovery_code = parseQueryArgs('recovery_code');
 
-    useEffect(() => {
-        if (recovery_code) history.push(`/reset-password?recovery_code=${recovery_code}`);
-    }, [recovery_code, history]);
-
-    if (recovery_code) return null;
+    if (!recovery_code) return null;
 
     return (
         <Page className={classes.root} title="Login">
@@ -51,15 +46,15 @@ const ForgotPasswordView: FC = () => {
                         <Box alignItems="center" display="flex" justifyContent="space-between" mb={1}>
                             <div>
                                 <Typography color="textPrimary" gutterBottom variant="h2">
-                                    Forgot password
+                                    Reset password
                                 </Typography>
                                 <Typography variant="body2" color="textSecondary">
-                                    Enter your email address below, we will send you a password recovery link{' '}
+                                    Please set your new password.
                                 </Typography>
                             </div>
                         </Box>
 
-                        <JWTForgotPassword />
+                        <JWTResetPassword />
                     </CardContent>
                 </Card>
             </Container>
@@ -67,4 +62,4 @@ const ForgotPasswordView: FC = () => {
     );
 };
 
-export default ForgotPasswordView;
+export default ResetPasswordView;

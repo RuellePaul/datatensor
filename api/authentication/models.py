@@ -21,7 +21,7 @@ class AuthRegisterBody(BaseModel):
     recaptcha: str
 
 
-class AuthForgotPasswordBody(BaseModel):
+class AuthSendPasswordRecoveryBody(BaseModel):
     email: str
     recaptcha: str
 

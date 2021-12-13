@@ -22,7 +22,7 @@ const JWTForgotPassword: FC<JWTForgotPasswordProps> = ({className, ...rest}) => 
 
     const isMountedRef = useIsMountedRef();
 
-    const {forgotPassword} = useAuth();
+    const {sendPasswordRecoveryLink} = useAuth();
 
     const [reload, setReload] = useState<string>('');
 
@@ -62,7 +62,7 @@ const JWTForgotPassword: FC<JWTForgotPasswordProps> = ({className, ...rest}) => 
             })}
             onSubmit={async (values, {setErrors, setStatus, setSubmitting}) => {
                 try {
-                    await forgotPassword(values.email, values.recaptcha);
+                    await sendPasswordRecoveryLink(values.email, values.recaptcha);
 
                     if (isMountedRef.current) {
                         setStatus({success: true});

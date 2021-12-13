@@ -20,7 +20,7 @@ interface AuthContextValue extends AuthState {
     logout: () => void;
     register: (email: string, name: string, password: string, recaptcha: string) => Promise<void>;
     confirmEmail: (activation_code: string) => Promise<void>;
-    forgotPassword: (email: string, recaptcha: string) => Promise<void>;
+    sendPasswordRecoveryLink: (email: string, recaptcha: string) => Promise<void>;
 }
 
 interface AuthProviderProps {
@@ -140,7 +140,7 @@ const AuthContext = createContext<AuthContextValue>({
     logout: () => {},
     register: () => Promise.resolve(),
     confirmEmail: () => Promise.resolve(),
-    forgotPassword: () => Promise.resolve()
+    sendPasswordRecoveryLink: () => Promise.resolve()
 });
 
 export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
@@ -229,9 +229,9 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         }
     };
 
-    const forgotPassword = async (email: string, recaptcha: string) => {
+    const sendPasswordRecoveryLink = async (email: string, recaptcha: string) => {
         try {
-            await api.post('/auth/forgot-password', {email, recaptcha});
+            await api.post('/auth/send-password-recovery-link', {email, recaptcha});
         } catch (error) {
             enqueueSnackbar(error.message || 'Something went wrong', {
                 variant: 'error'
@@ -294,7 +294,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
                 logout,
                 register,
                 confirmEmail,
-                forgotPassword
+                sendPasswordRecoveryLink
             }}
         >
             {children}
