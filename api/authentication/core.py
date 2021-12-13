@@ -128,7 +128,6 @@ def register_user(user_id, name, email, password, activation_code) -> User:
                 name=name,
                 is_admin=user_id in Config.ADMIN_USER_IDS,
                 avatar=None,
-                tier='premium',
                 is_verified=False)
     encrypted_password = password_context.hash(password)
     db.users.insert_one({
@@ -149,7 +148,6 @@ def register_user_from_profile(profile, scope) -> User:
                     name=profile.get('name'),
                     is_admin=user_id in Config.ADMIN_USER_IDS,
                     avatar=profile.get('avatar_url'),
-                    tier='premium',
                     scope=scope,
                     is_verified=True)
 
@@ -160,7 +158,6 @@ def register_user_from_profile(profile, scope) -> User:
                     name=profile.get('name'),
                     is_admin=user_id in Config.ADMIN_USER_IDS,
                     avatar=profile.get('picture'),
-                    tier='premium',
                     scope=scope,
                     is_verified=True)
 
@@ -170,7 +167,6 @@ def register_user_from_profile(profile, scope) -> User:
                     name=profile['items'][0]['display_name'],
                     is_admin=user_id in Config.ADMIN_USER_IDS,
                     avatar=profile['items'][0]['profile_image'],
-                    tier='premium',
                     scope=scope,
                     is_verified=True)
     else:

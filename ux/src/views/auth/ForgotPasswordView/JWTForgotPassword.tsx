@@ -2,14 +2,12 @@ import React, {FC} from 'react';
 import clsx from 'clsx';
 import * as Yup from 'yup';
 import {Formik} from 'formik';
-import {Box, Button, FormHelperText, InputAdornment, Link, TextField} from '@mui/material';
-import {AlternateEmail as EmailIcon, LockOutlined as PasswordIcon} from '@mui/icons-material';
+import {Box, Button, FormHelperText, InputAdornment, TextField} from '@mui/material';
+import {AlternateEmail as EmailIcon} from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
-import useAuth from 'src/hooks/useAuth';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
-import {Link as RouterLink} from 'react-router-dom';
 
-interface JWTLoginProps {
+interface JWTForgotPasswordProps {
     className?: string;
 }
 
@@ -17,31 +15,26 @@ const useStyles = makeStyles(() => ({
     root: {}
 }));
 
-const JWTLogin: FC<JWTLoginProps> = ({className, ...rest}) => {
+const JWTForgotPassword: FC<JWTForgotPasswordProps> = ({className, ...rest}) => {
     const classes = useStyles();
 
-    const {login} = useAuth();
     const isMountedRef = useIsMountedRef();
 
     return (
         <Formik
             initialValues={{
-                email: process.env.REACT_APP_ENVIRONMENT === 'development' ? 'demo@datatensor.io' : '',
-                password: process.env.REACT_APP_ENVIRONMENT === 'development' ? 'Password123' : '',
+                email: '',
                 submit: null
             }}
             validationSchema={Yup.object().shape({
                 email: Yup.string()
                     .email('Must be a valid email')
                     .max(255)
-                    .required('Email is required'),
-                password: Yup.string()
-                    .max(255)
-                    .required('Password is required')
+                    .required('Email is required')
             })}
             onSubmit={async (values, {setErrors, setStatus, setSubmitting}) => {
                 try {
-                    await login(values.email, values.password);
+                    // await ...
 
                     if (isMountedRef.current) {
                         setStatus({success: true});
@@ -78,30 +71,6 @@ const JWTLogin: FC<JWTLoginProps> = ({className, ...rest}) => {
                             )
                         }}
                     />
-                    <TextField
-                        error={Boolean(touched.password && errors.password)}
-                        fullWidth
-                        helperText={touched.password && errors.password}
-                        label="Password"
-                        margin="normal"
-                        name="password"
-                        onChange={handleChange}
-                        type="password"
-                        value={values.password}
-                        variant="outlined"
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <PasswordIcon />
-                                </InputAdornment>
-                            )
-                        }}
-                    />
-                    <Box display="flex" justifyContent="flex-end">
-                        <Link color="primary" component={RouterLink} to="/forgot-password" variant="body2">
-                            Forgot password ?
-                        </Link>
-                    </Box>
                     {errors.submit && (
                         <Box mt={1}>
                             <FormHelperText error>{errors.submit}</FormHelperText>
@@ -116,7 +85,7 @@ const JWTLogin: FC<JWTLoginProps> = ({className, ...rest}) => {
                             type="submit"
                             variant="contained"
                         >
-                            Log In
+                            Send recovery link
                         </Button>
                     </Box>
                 </form>
@@ -125,4 +94,4 @@ const JWTLogin: FC<JWTLoginProps> = ({className, ...rest}) => {
     );
 };
 
-export default JWTLogin;
+export default JWTForgotPassword;

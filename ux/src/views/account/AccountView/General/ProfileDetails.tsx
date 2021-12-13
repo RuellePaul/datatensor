@@ -1,12 +1,10 @@
 import React, {FC} from 'react';
-import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
-import {Box, Button, Card, CardActions, CardContent, Link, Typography} from '@mui/material';
+import {Box, Button, Card, CardActions, CardContent, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import UserAvatar from 'src/components/UserAvatar';
 import {Theme} from 'src/theme';
 import {User} from 'src/types/user';
-
 
 interface ProfileDetailsProps {
     className?: string;
@@ -34,12 +32,6 @@ const ProfileDetails: FC<ProfileDetailsProps> = ({className, user, ...rest}) => 
                     <UserAvatar className={classes.avatar} />
                     <Typography className={classes.name} color="textPrimary" gutterBottom variant="h3">
                         {user.name}
-                    </Typography>
-                    <Typography color="textPrimary" variant="body1">
-                        Your tier:{' '}
-                        <Link component={RouterLink} to="/pricing">
-                            {user.tier}
-                        </Link>
                     </Typography>
                 </Box>
             </CardContent>

@@ -14,8 +14,6 @@ import parseQueryArgs from 'src/utils/parseQueryArgs';
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         backgroundColor: theme.palette.background.default,
-        display: 'flex',
-        flexDirection: 'column',
         minHeight: '100vh'
     },
     cardContainer: {
@@ -24,9 +22,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     cardContent: {
         padding: theme.spacing(4),
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: 400,
         [theme.breakpoints.down('sm')]: {
             padding: theme.spacing(3, 2)
         }
@@ -64,7 +59,7 @@ const LoginView: FC = () => {
                 </Box>
                 <Card>
                     <CardContent className={classes.cardContent}>
-                        <Box alignItems="center" display="flex" justifyContent="space-between" mb={3}>
+                        <Box alignItems="center" display="flex" justifyContent="space-between" mb={1}>
                             <div>
                                 <Typography color="textPrimary" gutterBottom variant="h2">
                                     Sign in
@@ -75,17 +70,26 @@ const LoginView: FC = () => {
                             </div>
                         </Box>
 
+                        <Box mt={3}>
+                            <Divider>
+                                <Typography variant="overline">with external app</Typography>
+                            </Divider>
+                        </Box>
+
                         <Box className={classes.auth0buttons}>
                             <OAuthLoginButton scope="github" />
                             <OAuthLoginButton scope="google" />
                             <OAuthLoginButton scope="stackoverflow" />
                         </Box>
-                        <Box mt={3}>
-                            <Divider />
+
+                        <Box mt={3} mb={1}>
+                            <Divider>
+                                <Typography variant="overline">with your email</Typography>
+                            </Divider>
                         </Box>
-                        <Box flexGrow={1} mt={3}>
-                            <JWTLogin />
-                        </Box>
+
+                        <JWTLogin />
+
                         <Box my={3}>
                             <Divider />
                         </Box>

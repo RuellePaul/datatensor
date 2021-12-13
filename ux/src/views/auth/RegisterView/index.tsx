@@ -22,9 +22,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     cardContent: {
         padding: theme.spacing(3, 4),
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: 400,
         [theme.breakpoints.down('sm')]: {
             padding: theme.spacing(3, 2)
         }
@@ -58,7 +55,7 @@ const RegisterView: FC = () => {
                             Sign up now on Datatensor
                         </Typography>
 
-                        <Box mt={3} mb={1}>
+                        <Box mt={3}>
                             <Divider>
                                 <Typography variant="overline">with external app</Typography>
                             </Divider>
