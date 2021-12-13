@@ -2,12 +2,16 @@ import React, {FC, useState} from 'react';
 import clsx from 'clsx';
 import * as Yup from 'yup';
 import {Formik} from 'formik';
-import {Box, Button, Checkbox, FormHelperText, Link, TextField, Typography} from '@mui/material';
+import {Box, Button, FormHelperText, InputAdornment, TextField} from '@mui/material';
+import {
+    AlternateEmail as EmailIcon,
+    LockOutlined as PasswordIcon,
+    PersonOutlined as NameIcon
+} from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
 import GoogleCaptcha from 'src/components/utils/GoogleCaptcha';
 import useAuth from 'src/hooks/useAuth';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
-
 
 interface JWTRegisterProps {
     className?: string;
@@ -31,7 +35,6 @@ const JWTRegister: FC<JWTRegisterProps> = ({className, ...rest}) => {
                 name: '',
                 password: '',
                 recaptcha: '',
-                policy: false,
                 submit: null
             }}
             validationSchema={Yup.object().shape({
@@ -46,8 +49,7 @@ const JWTRegister: FC<JWTRegisterProps> = ({className, ...rest}) => {
                     .min(7)
                     .max(255)
                     .required('Password is required'),
-                recaptcha: Yup.string().required('Captcha is required'),
-                policy: Yup.boolean().oneOf([true], 'This field must be checked')
+                recaptcha: Yup.string().required('Captcha is required')
             })}
             onSubmit={async (values, {setErrors, setStatus, setSubmitting}) => {
                 try {
@@ -70,7 +72,7 @@ const JWTRegister: FC<JWTRegisterProps> = ({className, ...rest}) => {
                 }
             }}
         >
-            {({errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values, setFieldValue}) => (
+            {({errors, handleChange, handleSubmit, isSubmitting, touched, values, setFieldValue}) => (
                 <form noValidate className={clsx(classes.root, className)} onSubmit={handleSubmit} {...rest}>
                     <TextField
                         error={Boolean(touched.name && errors.name)}
@@ -79,10 +81,16 @@ const JWTRegister: FC<JWTRegisterProps> = ({className, ...rest}) => {
                         label="Name"
                         margin="normal"
                         name="name"
-                        onBlur={handleBlur}
                         onChange={handleChange}
                         value={values.name}
                         variant="outlined"
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <NameIcon />
+                                </InputAdornment>
+                            )
+                        }}
                     />
                     <TextField
                         error={Boolean(touched.email && errors.email)}
@@ -91,11 +99,17 @@ const JWTRegister: FC<JWTRegisterProps> = ({className, ...rest}) => {
                         label="Email Address"
                         margin="normal"
                         name="email"
-                        onBlur={handleBlur}
                         onChange={handleChange}
                         type="email"
                         value={values.email}
                         variant="outlined"
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <EmailIcon />
+                                </InputAdornment>
+                            )
+                        }}
                     />
                     <TextField
                         error={Boolean(touched.password && errors.password)}
@@ -104,11 +118,17 @@ const JWTRegister: FC<JWTRegisterProps> = ({className, ...rest}) => {
                         label="Password"
                         margin="normal"
                         name="password"
-                        onBlur={handleBlur}
                         onChange={handleChange}
                         type="password"
                         value={values.password}
                         variant="outlined"
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <PasswordIcon />
+                                </InputAdornment>
+                            )
+                        }}
                     />
                     <Box mt={2}>
                         <GoogleCaptcha
@@ -118,16 +138,6 @@ const JWTRegister: FC<JWTRegisterProps> = ({className, ...rest}) => {
                             key={reload}
                         />
                     </Box>
-                    <Box alignItems="center" display="flex" mt={2} ml={-1}>
-                        <Checkbox checked={values.policy} name="policy" onChange={handleChange} />
-                        <Typography variant="body2" color="textSecondary">
-                            I have read the{' '}
-                            <Link component="a" href="#" color="primary">
-                                Terms and Conditions
-                            </Link>
-                        </Typography>
-                    </Box>
-                    {Boolean(touched.policy && errors.policy) && <FormHelperText error>{errors.policy}</FormHelperText>}
                     {errors.submit && (
                         <Box mt={3}>
                             <FormHelperText error>{errors.submit}</FormHelperText>

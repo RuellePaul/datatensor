@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import {Button, SvgIcon} from '@mui/material';
+import {Button, capitalize, SvgIcon, Tooltip} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import api from 'src/utils/api';
 import {useSnackbar} from 'notistack';
@@ -68,27 +68,29 @@ const OAuthLoginButton: FC<OAuthLoginButtonProps> = ({scope}) => {
     const {enqueueSnackbar} = useSnackbar();
 
     return (
-        <Button
-            className={classes.root}
-            onClick={async () => {
-                try {
-                    const response = await api.get<{authorization_url: string}>(`/oauth/authorization/${scope}`);
-                    const {authorization_url} = response.data;
-                    window.location.href = authorization_url;
-                } catch (error) {
-                    enqueueSnackbar(error.message || 'Something went wrong', {
-                        variant: 'error'
-                    });
-                }
-            }}
-            color="inherit"
-            size="large"
-            variant="outlined"
-        >
-            {OAUTH_ICONS[scope]}
-            &nbsp;
-            {scope}
-        </Button>
+        <Tooltip title={`Login using ${capitalize(scope)}`}>
+            <Button
+                className={classes.root}
+                onClick={async () => {
+                    try {
+                        const response = await api.get<{authorization_url: string}>(`/oauth/authorization/${scope}`);
+                        const {authorization_url} = response.data;
+                        window.location.href = authorization_url;
+                    } catch (error) {
+                        enqueueSnackbar(error.message || 'Something went wrong', {
+                            variant: 'error'
+                        });
+                    }
+                }}
+                color="inherit"
+                size="large"
+                variant="outlined"
+            >
+                {OAUTH_ICONS[scope]}
+                &nbsp;
+                {scope}
+            </Button>
+        </Tooltip>
     );
 };
 

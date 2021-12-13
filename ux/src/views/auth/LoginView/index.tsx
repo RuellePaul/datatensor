@@ -87,7 +87,7 @@ const LoginView: FC = () => {
                             <Divider />
                         </Box>
                         <Link component={RouterLink} to="/register" variant="body2" color="textSecondary">
-                            Create new account
+                            Create an account
                         </Link>
                     </CardContent>
                 </Card>

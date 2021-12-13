@@ -6,6 +6,8 @@ import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
 import Logo from 'src/components/utils/Logo';
 import JWTRegister from './JWTRegister';
+import OAuthLoginButton from 'src/views/auth/LoginView/OAuthLoginButton';
+
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -19,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         paddingTop: 80
     },
     cardContent: {
-        padding: theme.spacing(4),
+        padding: theme.spacing(3, 4),
         display: 'flex',
         flexDirection: 'column',
         minHeight: 400,
@@ -42,25 +44,38 @@ const RegisterView: FC = () => {
                 </Box>
                 <Card>
                     <CardContent className={classes.cardContent}>
-                        <Box alignItems="center" display="flex" justifyContent="space-between" mb={3}>
-                            <div>
-                                <Typography color="textPrimary" gutterBottom variant="h2">
-                                    Register
-                                </Typography>
-                                <Typography variant="body2" color="textSecondary">
-                                    Register on Datatensor
-                                </Typography>
-                            </div>
+                        <Typography color="textPrimary" gutterBottom variant="h2">
+                            Create an account
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary">
+                            Sign up now on Datatensor
+                        </Typography>
+
+                        <Box mt={3} mb={1}>
+                            <Divider>
+                                <Typography variant="overline">with external app</Typography>
+                            </Divider>
                         </Box>
-                        <Box flexGrow={1} mt={3}>
-                            <JWTRegister />
+
+                        <Box alignItems="center" display="flex" justifyContent="space-between" mt={1}>
+                            <OAuthLoginButton scope="github" />
+                            <OAuthLoginButton scope="google" />
+                            <OAuthLoginButton scope="stackoverflow" />
                         </Box>
-                        <Box my={3}>
-                            <Divider />
+
+                        <Box mt={3} mb={1}>
+                            <Divider>
+                                <Typography variant="overline">with your email</Typography>
+                            </Divider>
                         </Box>
-                        <Link component={RouterLink} to="/login" variant="body2" color="textSecondary">
-                            Having an account
-                        </Link>
+
+                        <JWTRegister />
+
+                        <Box mt={3}>
+                            <Link component={RouterLink} to="/login" variant="body2" color="primary">
+                                Having an account ?
+                            </Link>
+                        </Box>
                     </CardContent>
                 </Card>
             </Container>

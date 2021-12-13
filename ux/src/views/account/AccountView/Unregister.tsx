@@ -10,7 +10,6 @@ import {Theme} from 'src/theme';
 import api from 'src/utils/api';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 
-
 interface UnregisterProps {
     className?: string;
 }
@@ -77,17 +76,7 @@ const Unregister: FC<UnregisterProps> = ({className, ...rest}) => {
                     }
                 }}
             >
-                {({
-                    errors,
-                    handleBlur,
-                    handleChange,
-                    handleSubmit,
-                    isSubmitting,
-                    setFieldValue,
-                    touched,
-                    values,
-                    isValid
-                }) => (
+                {({errors, handleChange, handleSubmit, isSubmitting, setFieldValue, touched, values, isValid}) => (
                     <form noValidate onSubmit={handleSubmit}>
                         <Box my={2}>
                             {!values.clicked && (
@@ -113,7 +102,6 @@ const Unregister: FC<UnregisterProps> = ({className, ...rest}) => {
                                     <TextField
                                         error={Boolean(touched.confirm && errors.confirm)}
                                         name="confirm"
-                                        onBlur={handleBlur}
                                         onChange={handleChange}
                                         value={values.confirm}
                                         variant="outlined"
