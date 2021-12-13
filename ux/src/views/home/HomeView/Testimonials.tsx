@@ -51,8 +51,8 @@ const Testimonials: FC<TestimonialsProps> = ({className, ...rest}) => {
                         <Typography variant="body1" color="textPrimary">
                             <span
                                 className={classes.creator}
-                                title="LinkedIn profile"
-                                onClick={() => (window.location.href = 'https://www.linkedin.com/in/paulruelle')}
+                                title="Github profile"
+                                onClick={() => (window.location.href = 'https://github.com/RuellePaul')}
                             >
                                 Paul
                             </span>

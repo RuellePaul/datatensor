@@ -83,7 +83,7 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) =
                                     <TextField
                                         fullWidth
                                         helperText="We will use this email to contact you"
-                                        label="Email Address"
+                                        label="Email"
                                         type="email"
                                         value={user.email}
                                         variant="outlined"

@@ -58,6 +58,18 @@ const routes: Routes = [
     {
         exact: true,
         guard: GuestGuard,
+        path: '/forgot-password',
+        component: lazy(() => import('src/views/auth/ForgotPasswordView'))
+    },
+    {
+        exact: true,
+        guard: GuestGuard,
+        path: '/reset-password',
+        component: lazy(() => import('src/views/auth/ResetPasswordView'))
+    },
+    {
+        exact: true,
+        guard: GuestGuard,
         path: '/oauthcallback/:scope',
         component: lazy(() => import('src/views/auth/OAuthCallbackView'))
     },
@@ -159,11 +171,6 @@ const routes: Routes = [
                 exact: true,
                 path: '/',
                 component: HomeView
-            },
-            {
-                exact: true,
-                path: '/pricing',
-                component: lazy(() => import('src/views/pricing/PricingView'))
             },
             {
                 component: () => <Redirect to="/404" />

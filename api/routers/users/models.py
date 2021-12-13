@@ -14,7 +14,6 @@ class User(MongoModel):
     created_at: datetime
     is_verified: bool
     is_admin: bool
-    tier: str = 'standard'
     scope: Optional[Scope] = None
     avatar: Optional[str] = None
     phone: Optional[str] = None

@@ -171,12 +171,6 @@ const NavBar: FC<NavBarProps> = ({onMobileClose, openMobile}) => {
                         >
                             {user.name}
                         </Link>
-                        <Typography variant="body2" color="textSecondary">
-                            Your tier:{' '}
-                            <Link component={RouterLink} to="/pricing">
-                                {user.tier}
-                            </Link>
-                        </Typography>
                     </Box>
                 </Box>
                 <Divider />

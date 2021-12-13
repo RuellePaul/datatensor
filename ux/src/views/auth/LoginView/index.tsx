@@ -10,11 +10,10 @@ import JWTLogin from './JWTLogin';
 import OAuthLoginButton from './OAuthLoginButton';
 import parseQueryArgs from 'src/utils/parseQueryArgs';
 
+
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         backgroundColor: theme.palette.background.default,
-        display: 'flex',
-        flexDirection: 'column',
         minHeight: '100vh'
     },
     cardContainer: {
@@ -23,14 +22,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     cardContent: {
         padding: theme.spacing(4),
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: 400,
         [theme.breakpoints.down('sm')]: {
             padding: theme.spacing(3, 2)
         }
     },
     auth0buttons: {
+        display: 'flex',
+        marginTop: theme.spacing(2),
         [theme.breakpoints.down('sm')]: {
             flexDirection: 'column'
         }
@@ -40,11 +38,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 const LoginView: FC = () => {
     const classes = useStyles();
     const history = useHistory();
-    const {enqueueSnackbar} = useSnackbar();
+    const { enqueueSnackbar } = useSnackbar();
 
     useEffect(() => {
         if (parseQueryArgs('expired')) {
-            enqueueSnackbar(`Session expired.`, {variant: 'warning'});
+            enqueueSnackbar(`Session expired.`, { variant: 'warning' });
             history.replace('/login');
         }
 
@@ -61,7 +59,7 @@ const LoginView: FC = () => {
                 </Box>
                 <Card>
                     <CardContent className={classes.cardContent}>
-                        <Box alignItems="center" display="flex" justifyContent="space-between" mb={3}>
+                        <Box alignItems="center" display="flex" justifyContent="space-between" mb={1}>
                             <div>
                                 <Typography color="textPrimary" gutterBottom variant="h2">
                                     Sign in
@@ -72,22 +70,31 @@ const LoginView: FC = () => {
                             </div>
                         </Box>
 
-                        <Box display="flex" className={classes.auth0buttons} mt={2}>
+                        <Box mt={3}>
+                            <Divider>
+                                <Typography variant="overline">with external app</Typography>
+                            </Divider>
+                        </Box>
+
+                        <Box className={classes.auth0buttons}>
                             <OAuthLoginButton scope="github" />
                             <OAuthLoginButton scope="google" />
                             <OAuthLoginButton scope="stackoverflow" />
                         </Box>
-                        <Box mt={3}>
-                            <Divider />
+
+                        <Box mt={3} mb={1}>
+                            <Divider>
+                                <Typography variant="overline">with your email</Typography>
+                            </Divider>
                         </Box>
-                        <Box flexGrow={1} mt={3}>
-                            <JWTLogin />
-                        </Box>
+
+                        <JWTLogin />
+
                         <Box my={3}>
                             <Divider />
                         </Box>
-                        <Link component={RouterLink} to="/register" variant="body2" color="textSecondary">
-                            Create new account
+                        <Link color="primary" component={RouterLink} to="/register" variant="body2">
+                            Create an account
                         </Link>
                     </CardContent>
                 </Card>

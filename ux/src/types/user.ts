@@ -7,7 +7,6 @@ export interface User {
     is_admin: boolean;
     scope: 'github' | 'google' | 'stackoverflow' | null;
     avatar: string | null;
-    tier: 'standard' | 'premium' | 'business';
     phone?: string;
     country?: string;
     city?: string;
