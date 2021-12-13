@@ -7,7 +7,7 @@ from dependencies import logged_user
 from logger import logger
 from routers.notifications.core import insert_notification
 from routers.notifications.models import NotificationPostBody, NotificationType
-from routers.users.core import find_user_by_email
+from routers.users.core import find_user_by_email, find_user_by_recovery_code, reset_user_password
 from routers.users.models import User
 from utils import parse, password_context
 
@@ -77,7 +77,7 @@ def do_register(payload: AuthRegisterBody):
 
 
 @auth.post('/send-password-recovery-link')
-def do_forgot_password(payload: AuthSendPasswordRecoveryBody):
+def send_password_recovery_link(payload: AuthSendPasswordRecoveryBody):
     """
     Forgot password workflow (send recovery link)
     """
@@ -89,6 +89,18 @@ def do_forgot_password(payload: AuthSendPasswordRecoveryBody):
     recovery_code = core.generate_code()
     core.store_recovery_code(email, recovery_code)
     core.send_email_with_recovery_link(email, recovery_code)
+
+
+@auth.post('/reset-password')
+def do_reset_password(payload: AuthResetPasswordBody):
+    """
+    Forgot password workflow (reset password using recovery code)
+    """
+    new_password = payload.new_password
+    recovery_code = payload.recovery_code
+
+    user = find_user_by_recovery_code(recovery_code)
+    reset_user_password(user, new_password)
 
 
 @auth.get('/me')

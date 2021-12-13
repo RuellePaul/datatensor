@@ -31,7 +31,7 @@ const JWTForgotPassword: FC<JWTForgotPasswordProps> = ({className, ...rest}) => 
     if (send)
         return (
             <>
-                <Divider/>
+                <Divider sx={{my: 2}}/>
                 <Typography gutterBottom>We have just sent you a password recovery email.</Typography>
                 <Typography gutterBottom>
                     If you did not receive it, check your spam or{' '}

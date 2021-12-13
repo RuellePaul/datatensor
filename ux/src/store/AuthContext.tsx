@@ -6,7 +6,6 @@ import api from 'src/utils/api';
 import {useHistory} from 'react-router-dom';
 import {useSnackbar} from 'notistack';
 
-
 interface AuthState {
     isInitialised: boolean;
     isAuthenticated: boolean;
@@ -21,6 +20,7 @@ interface AuthContextValue extends AuthState {
     register: (email: string, name: string, password: string, recaptcha: string) => Promise<void>;
     confirmEmail: (activation_code: string) => Promise<void>;
     sendPasswordRecoveryLink: (email: string, recaptcha: string) => Promise<void>;
+    resetPassword: (email: string, recaptcha: string) => Promise<void>;
 }
 
 interface AuthProviderProps {
@@ -65,7 +65,6 @@ const initialAuthState: AuthState = {
 };
 
 const isValidToken = (accessToken: string): boolean => {
-
     if (!accessToken) {
         return false;
     }
@@ -140,7 +139,8 @@ const AuthContext = createContext<AuthContextValue>({
     logout: () => {},
     register: () => Promise.resolve(),
     confirmEmail: () => Promise.resolve(),
-    sendPasswordRecoveryLink: () => Promise.resolve()
+    sendPasswordRecoveryLink: () => Promise.resolve(),
+    resetPassword: () => Promise.resolve()
 });
 
 export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
@@ -239,6 +239,17 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         }
     };
 
+    const resetPassword = async (new_password: string, recovery_code: string) => {
+        try {
+            await api.post('/auth/reset-password', {new_password, recovery_code});
+            enqueueSnackbar('Password reset', {variant: 'info'});
+        } catch (error) {
+            enqueueSnackbar(error.message || 'Something went wrong', {
+                variant: 'error'
+            });
+        }
+    };
+
     useEffect(() => {
         const initialise = async () => {
             try {
@@ -294,7 +305,8 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
                 logout,
                 register,
                 confirmEmail,
-                sendPasswordRecoveryLink
+                sendPasswordRecoveryLink,
+                resetPassword
             }}
         >
             {children}

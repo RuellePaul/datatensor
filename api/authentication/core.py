@@ -220,7 +220,7 @@ def send_email_with_activation_code(email, activation_code):
 
 def store_recovery_code(email, recovery_code):
     db.users.find_one_and_update({'email': email},
-                                 {'$set': {'recovery_code': encrypt_field(recovery_code)}})
+                                 {'$set': {'recovery_code': recovery_code}})
 
 
 def send_email_with_recovery_link(email, recovery_code):

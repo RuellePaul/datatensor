@@ -27,6 +27,13 @@ def find_user_by_email(email) -> Union[User, None]:
     return User.from_mongo(user)
 
 
+def find_user_by_recovery_code(recovery_code) -> User:
+    user = db.users.find_one_and_update({'recovery_code': recovery_code}, {'$set': {'recovery_code': None}})
+    if not user:
+        raise errors.Forbidden('Invalid recovery code. Please try again.')
+    return User.from_mongo(user)
+
+
 def update_user(user, update):
     db.users.find_one_and_update({'_id': user.id},
                                  {'$set': dict(update)},
@@ -44,6 +51,15 @@ def update_user_password(user, password, new_password):
 
     if not password_context.verify(password, user_password):
         raise errors.InvalidAuthentication(errors.INVALID_PASSWORD)
+
+    encrypted_password = password_context.hash(new_password)
+    db.users.find_one_and_update({'_id': user.id},
+                                 {'$set': {'password': encrypt_field(encrypted_password)}})
+
+
+def reset_user_password(user, new_password):
+    if user.scope:
+        raise errors.BadRequest(errors.USER_HAS_A_SCOPE)
 
     encrypted_password = password_context.hash(new_password)
     db.users.find_one_and_update({'_id': user.id},

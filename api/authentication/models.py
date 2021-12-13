@@ -26,6 +26,11 @@ class AuthSendPasswordRecoveryBody(BaseModel):
     recaptcha: str
 
 
+class AuthResetPasswordBody(BaseModel):
+    new_password: str
+    recovery_code: str
+
+
 class AuthEmailConfirmBody(BaseModel):
     activation_code: str
 
