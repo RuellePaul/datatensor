@@ -10,6 +10,7 @@
 .visible {
     opacity: 1 !important;
 }
+
 .invisible {
     opacity: 0 !important;
 }
@@ -76,10 +77,10 @@ kbd {
     background-color: #eee;
     border-radius: 3px;
     border: 1px solid #b4b4b4;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 2px 0 0 rgba(255, 255, 255, .7) inset;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2), 0 2px 0 0 rgba(255, 255, 255, 0.7) inset;
     color: #333;
     display: inline-block;
-    font-size: .85em;
+    font-size: 0.85em;
     font-weight: 700;
     line-height: 1;
     padding: 2px 4px;
@@ -93,11 +94,11 @@ pre {
     background-color: #191c27;
     padding: 16px;
     font-size: 14px;
-    margin-bottom: 24px
+    margin-bottom: 24px;
 }
 
-code[class*="language-"],
-pre[class*="language-"] {
+code[class*='language-'],
+pre[class*='language-'] {
     color: rgb(191, 199, 213);
     font-family: Inconsolata, Monaco, Consolas, 'Courier New', Courier, monospace;
     direction: ltr;
@@ -111,22 +112,22 @@ pre[class*="language-"] {
 }
 
 /* Code blocks */
-pre[class*="language-"] {
+pre[class*='language-'] {
     padding: 1em;
-    margin: .5em 0;
+    margin: 0.5em 0;
     overflow: auto;
     border-radius: 0.3em;
 }
 
-:not(pre) > code[class*="language-"],
-pre[class*="language-"] {
+:not(pre) > code[class*='language-'],
+pre[class*='language-'] {
     background: #1d1f21;
 }
 
 /* Inline code */
-:not(pre) > code[class*="language-"] {
-    padding: .1em;
-    border-radius: .3em;
+:not(pre) > code[class*='language-'] {
+    padding: 0.1em;
+    border-radius: 0.3em;
 }
 
 .token.prolog {
@@ -221,34 +222,34 @@ pre[class*="language-"] {
 }
 
 .token.operator {
-    color: #EDEDED;
+    color: #ededed;
 }
 
 .token.entity {
-    color: #FFFFB6;
+    color: #ffffb6;
     cursor: help;
 }
 
 .token.url {
-    color: #96CBFE;
+    color: #96cbfe;
 }
 
 .language-css .token.string,
 .style .token.string {
-    color: #87C38A;
+    color: #87c38a;
 }
 
 .token.atrule,
 .token.attr-value {
-    color: #F9EE98;
+    color: #f9ee98;
 }
 
 .token.function {
-    color: rgb(121, 182, 242)
+    color: rgb(121, 182, 242);
 }
 
 .token.regex {
-    color: #E9C062;
+    color: #e9c062;
 }
 
 .token.important {
@@ -263,7 +264,6 @@ pre[class*="language-"] {
 .token.italic {
     font-style: italic;
 }
-
 
 .highlight {
     color: white;

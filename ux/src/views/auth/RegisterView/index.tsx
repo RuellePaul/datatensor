@@ -28,6 +28,13 @@ const useStyles = makeStyles((theme: Theme) => ({
         [theme.breakpoints.down('sm')]: {
             padding: theme.spacing(3, 2)
         }
+    },
+    auth0buttons: {
+        display: 'flex',
+        marginTop: theme.spacing(2),
+        [theme.breakpoints.down('sm')]: {
+            flexDirection: 'column'
+        }
     }
 }));
 
@@ -57,7 +64,7 @@ const RegisterView: FC = () => {
                             </Divider>
                         </Box>
 
-                        <Box alignItems="center" display="flex" justifyContent="space-between" mt={1}>
+                        <Box className={classes.auth0buttons}>
                             <OAuthLoginButton scope="github" />
                             <OAuthLoginButton scope="google" />
                             <OAuthLoginButton scope="stackoverflow" />
@@ -71,11 +78,13 @@ const RegisterView: FC = () => {
 
                         <JWTRegister />
 
-                        <Box mt={3}>
-                            <Link component={RouterLink} to="/login" variant="body2" color="primary">
-                                Having an account ?
-                            </Link>
+                        <Box my={3}>
+                            <Divider />
                         </Box>
+
+                        <Link component={RouterLink} to="/login" variant="body2" color="primary">
+                            Having an account ?
+                        </Link>
                     </CardContent>
                 </Card>
             </Container>

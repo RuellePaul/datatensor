@@ -78,7 +78,7 @@ const JWTRegister: FC<JWTRegisterProps> = ({className, ...rest}) => {
                         error={Boolean(touched.name && errors.name)}
                         fullWidth
                         helperText={touched.name && errors.name}
-                        label="Name"
+                        label="Fullname"
                         margin="normal"
                         name="name"
                         onChange={handleChange}
@@ -96,7 +96,7 @@ const JWTRegister: FC<JWTRegisterProps> = ({className, ...rest}) => {
                         error={Boolean(touched.email && errors.email)}
                         fullWidth
                         helperText={touched.email && errors.email}
-                        label="Email Address"
+                        label="Email"
                         margin="normal"
                         name="email"
                         onChange={handleChange}

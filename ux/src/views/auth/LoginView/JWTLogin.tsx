@@ -2,7 +2,8 @@ import React, {FC} from 'react';
 import clsx from 'clsx';
 import * as Yup from 'yup';
 import {Formik} from 'formik';
-import {Box, Button, FormHelperText, TextField} from '@mui/material';
+import {Box, Button, FormHelperText, InputAdornment, TextField} from '@mui/material';
+import {AlternateEmail as EmailIcon, LockOutlined as PasswordIcon} from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
 import useAuth from 'src/hooks/useAuth';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
@@ -55,20 +56,26 @@ const JWTLogin: FC<JWTLoginProps> = ({className, ...rest}) => {
                 }
             }}
         >
-            {({errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values}) => (
+            {({errors, handleChange, handleSubmit, isSubmitting, touched, values}) => (
                 <form noValidate onSubmit={handleSubmit} className={clsx(classes.root, className)} {...rest}>
                     <TextField
                         error={Boolean(touched.email && errors.email)}
                         fullWidth
                         helperText={touched.email && errors.email}
-                        label="Email Address"
+                        label="Email"
                         margin="normal"
                         name="email"
-                        onBlur={handleBlur}
                         onChange={handleChange}
                         type="email"
                         value={values.email}
                         variant="outlined"
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <EmailIcon />
+                                </InputAdornment>
+                            )
+                        }}
                     />
                     <TextField
                         error={Boolean(touched.password && errors.password)}
@@ -77,11 +84,17 @@ const JWTLogin: FC<JWTLoginProps> = ({className, ...rest}) => {
                         label="Password"
                         margin="normal"
                         name="password"
-                        onBlur={handleBlur}
                         onChange={handleChange}
                         type="password"
                         value={values.password}
                         variant="outlined"
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <PasswordIcon />
+                                </InputAdornment>
+                            )
+                        }}
                     />
                     {errors.submit && (
                         <Box mt={1}>

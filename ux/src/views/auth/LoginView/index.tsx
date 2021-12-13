@@ -10,6 +10,7 @@ import JWTLogin from './JWTLogin';
 import OAuthLoginButton from './OAuthLoginButton';
 import parseQueryArgs from 'src/utils/parseQueryArgs';
 
+
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         backgroundColor: theme.palette.background.default,
@@ -31,6 +32,8 @@ const useStyles = makeStyles((theme: Theme) => ({
         }
     },
     auth0buttons: {
+        display: 'flex',
+        marginTop: theme.spacing(2),
         [theme.breakpoints.down('sm')]: {
             flexDirection: 'column'
         }
@@ -40,11 +43,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 const LoginView: FC = () => {
     const classes = useStyles();
     const history = useHistory();
-    const {enqueueSnackbar} = useSnackbar();
+    const { enqueueSnackbar } = useSnackbar();
 
     useEffect(() => {
         if (parseQueryArgs('expired')) {
-            enqueueSnackbar(`Session expired.`, {variant: 'warning'});
+            enqueueSnackbar(`Session expired.`, { variant: 'warning' });
             history.replace('/login');
         }
 
@@ -72,7 +75,7 @@ const LoginView: FC = () => {
                             </div>
                         </Box>
 
-                        <Box display="flex" className={classes.auth0buttons} mt={2}>
+                        <Box className={classes.auth0buttons}>
                             <OAuthLoginButton scope="github" />
                             <OAuthLoginButton scope="google" />
                             <OAuthLoginButton scope="stackoverflow" />
@@ -86,7 +89,7 @@ const LoginView: FC = () => {
                         <Box my={3}>
                             <Divider />
                         </Box>
-                        <Link component={RouterLink} to="/register" variant="body2" color="textSecondary">
+                        <Link color="primary" component={RouterLink} to="/register" variant="body2">
                             Create an account
                         </Link>
                     </CardContent>

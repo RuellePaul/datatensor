@@ -6,7 +6,10 @@ import {useSnackbar} from 'notistack';
 
 const useStyles = makeStyles(theme => ({
     root: {
-        margin: theme.spacing(1)
+        margin: theme.spacing(1),
+        [theme.breakpoints.down('sm')]: {
+            margin: theme.spacing(1, 0)
+        }
     }
 }));
 
@@ -83,11 +86,10 @@ const OAuthLoginButton: FC<OAuthLoginButtonProps> = ({scope}) => {
                     }
                 }}
                 color="inherit"
+                startIcon={OAUTH_ICONS[scope]}
                 size="large"
                 variant="outlined"
             >
-                {OAUTH_ICONS[scope]}
-                &nbsp;
                 {scope}
             </Button>
         </Tooltip>
