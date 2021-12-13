@@ -20,6 +20,7 @@ interface AuthContextValue extends AuthState {
     logout: () => void;
     register: (email: string, name: string, password: string, recaptcha: string) => Promise<void>;
     confirmEmail: (activation_code: string) => Promise<void>;
+    forgotPassword: (email: string, recaptcha: string) => Promise<void>;
 }
 
 interface AuthProviderProps {
@@ -64,7 +65,7 @@ const initialAuthState: AuthState = {
 };
 
 const isValidToken = (accessToken: string): boolean => {
-    '';
+
     if (!accessToken) {
         return false;
     }
@@ -138,7 +139,8 @@ const AuthContext = createContext<AuthContextValue>({
     loginOAuth: () => Promise.resolve(),
     logout: () => {},
     register: () => Promise.resolve(),
-    confirmEmail: () => Promise.resolve()
+    confirmEmail: () => Promise.resolve(),
+    forgotPassword: () => Promise.resolve()
 });
 
 export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
@@ -227,6 +229,16 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         }
     };
 
+    const forgotPassword = async (email: string, recaptcha: string) => {
+        try {
+            await api.post('/auth/forgot-password', {email, recaptcha});
+        } catch (error) {
+            enqueueSnackbar(error.message || 'Something went wrong', {
+                variant: 'error'
+            });
+        }
+    };
+
     useEffect(() => {
         const initialise = async () => {
             try {
@@ -281,7 +293,8 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
                 loginOAuth,
                 logout,
                 register,
-                confirmEmail
+                confirmEmail,
+                forgotPassword
             }}
         >
             {children}

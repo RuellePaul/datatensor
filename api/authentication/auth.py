@@ -7,6 +7,7 @@ from dependencies import logged_user
 from logger import logger
 from routers.notifications.core import insert_notification
 from routers.notifications.models import NotificationPostBody, NotificationType
+from routers.users.core import find_user_by_email
 from routers.users.models import User
 from utils import parse, password_context
 
@@ -53,7 +54,7 @@ def do_register(payload: AuthRegisterBody):
     if user:
         raise errors.Forbidden(errors.USER_ALREADY_EXISTS)
 
-    activation_code = core.generate_activation_code()
+    activation_code = core.generate_code()
 
     core.send_email_with_activation_code(email, activation_code)
     user = core.register_user(user_id, payload.name, email, payload.password, activation_code)
@@ -73,6 +74,21 @@ def do_register(payload: AuthRegisterBody):
     }
 
     return parse(response)
+
+
+@auth.post('/forgot-password')
+def do_forgot_password(payload: AuthForgotPasswordBody):
+    """
+    Forgot password workflow (send recovery link)
+    """
+    core.check_captcha(payload.recaptcha)
+
+    email = payload.email
+    if not find_user_by_email(email):
+        return
+    recovery_code = core.generate_code()
+    core.store_recovery_code(email, recovery_code)
+    core.send_email_with_recovery_link(email, recovery_code)
 
 
 @auth.get('/me')

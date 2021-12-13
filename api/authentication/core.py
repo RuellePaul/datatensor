@@ -117,7 +117,7 @@ def user_from_activation_code(activation_code) -> User:
     return User.from_mongo(db.users.find_one({'activation_code': activation_code}))
 
 
-def generate_activation_code():
+def generate_code():
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=32))
 
 
@@ -132,7 +132,7 @@ def register_user(user_id, name, email, password, activation_code) -> User:
     encrypted_password = password_context.hash(password)
     db.users.insert_one({
         **user.mongo(),
-        'email': encrypt_field(user.email),
+        'email': user.email,
         'password': encrypt_field(encrypted_password),
         'activation_code': activation_code
     })
@@ -174,7 +174,7 @@ def register_user_from_profile(profile, scope) -> User:
 
     db.users.insert_one({
         **user.mongo(),
-        'email': encrypt_field(user.email) if user.email else None,
+        'email': user.email if user.email else None,
     })
     return user
 
@@ -213,11 +213,40 @@ def send_email_with_activation_code(email, activation_code):
     )
     try:
         sg = SendGridAPIClient(Config.SENDGRID_API_KEY)
-        if Config.ENVIRONMENT == 'test':
-            return
         sg.send(message)
     except Exception as e:
-        raise errors.InternalError(f'Unable to send email with SendGrid | {str(e)}')
+        raise errors.InternalError(f'Unable to send email | {str(e)}')
+    
+
+def store_recovery_code(email, recovery_code):
+    db.users.find_one_and_update({'email': email},
+                                 {'$set': {'recovery_code': encrypt_field(recovery_code)}})
+
+
+def send_email_with_recovery_link(email, recovery_code):
+    subject = "Datatensor | Forgot password"
+    recovery_url = f'{Config.UI_URL}/forgot-password?recovery_code={recovery_code}'
+    html_content = f"""
+         <h5>Forgot password</h5>
+         Reset password of your Datatensor account by clinking the following link :
+         <br/>
+         <a href="{recovery_url}">Reset password</a>
+         <br/>
+         <br/>
+         Happy hacking !
+    """
+
+    message = Mail(
+        from_email='noreply@datatensor.io',
+        to_emails=email,
+        subject=subject,
+        html_content=html_content
+    )
+    try:
+        sg = SendGridAPIClient(Config.SENDGRID_API_KEY)
+        sg.send(message)
+    except Exception as e:
+        raise errors.InternalError(f'Unable to send email | {str(e)}')
 
 
 def verify_user_email(activation_code) -> User:

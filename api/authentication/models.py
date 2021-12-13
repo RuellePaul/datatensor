@@ -21,6 +21,11 @@ class AuthRegisterBody(BaseModel):
     recaptcha: str
 
 
+class AuthForgotPasswordBody(BaseModel):
+    email: str
+    recaptcha: str
+
+
 class AuthEmailConfirmBody(BaseModel):
     activation_code: str
 

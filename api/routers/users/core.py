@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 import errors
 from config import Config
@@ -17,6 +17,13 @@ def find_user(user_id) -> User:
     user = db.users.find_one({'_id': user_id})
     if not user:
         raise errors.NotFound(errors.USER_NOT_FOUND)
+    return User.from_mongo(user)
+
+
+def find_user_by_email(email) -> Union[User, None]:
+    user = db.users.find_one({'email': email})
+    if not user:
+        return None
     return User.from_mongo(user)
 
 
