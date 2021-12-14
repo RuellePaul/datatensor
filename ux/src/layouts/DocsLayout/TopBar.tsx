@@ -2,10 +2,12 @@ import type {FC} from 'react';
 import React from 'react';
 import {Link as RouterLink, useHistory} from 'react-router-dom';
 import PropTypes from 'prop-types';
-import {AppBar, Box, Button, Hidden, IconButton, Toolbar} from '@mui/material';
+import {AppBar, Box, Button, Hidden, IconButton, Toolbar, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Menu as MenuIcon} from 'react-feather';
 import Logo from 'src/components/utils/Logo';
+import UserAvatar from 'src/components/UserAvatar';
+import useAuth from 'src/hooks/useAuth';
 
 
 interface TopBarProps {
@@ -29,6 +31,8 @@ const TopBar: FC<TopBarProps> = ({ onMobileNavOpen }) => {
     const classes = useStyles();
     const history = useHistory();
 
+    const {user} = useAuth();
+
     return (
         <AppBar className={classes.root}>
             <Toolbar className={classes.toolbar}>
@@ -42,6 +46,13 @@ const TopBar: FC<TopBarProps> = ({ onMobileNavOpen }) => {
                         <Logo />
                     </RouterLink>
                 </Hidden>
+                <Hidden smDown>
+                    <Box ml={1}>
+                        <Typography variant="overline" component="p" sx={{ color: 'white' }}>
+                            Datatensor
+                        </Typography>
+                    </Box>
+                </Hidden>
                 <Box
                     ml={2}
                     flexGrow={1}
@@ -50,8 +61,8 @@ const TopBar: FC<TopBarProps> = ({ onMobileNavOpen }) => {
                     color="primary"
                     component="a"
                     variant="contained"
-                    size="small"
                     onClick={() => history.push('/app')}
+                    endIcon={user !== null && <UserAvatar user={user} style={{width: 30, height: 30}} />}
                 >
                     Dashboard
                 </Button>

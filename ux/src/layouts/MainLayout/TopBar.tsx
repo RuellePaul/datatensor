@@ -74,7 +74,7 @@ const TopBar: FC<TopBarProps> = ({className, ...rest}) => {
                 </Hidden>
                 <Box flexGrow={1} />
                 <Button className={classes.link} component="a" onClick={() => history.push('/docs')}>
-                                                    {isDesktop ? 'Documentation' : 'Docs'}
+                    {isDesktop ? 'Documentation' : 'Docs'}
                 </Button>
                 <Divider className={classes.divider} />
                 <Button
