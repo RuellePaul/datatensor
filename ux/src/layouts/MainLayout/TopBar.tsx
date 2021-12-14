@@ -73,11 +73,6 @@ const TopBar: FC<TopBarProps> = ({className, ...rest}) => {
                     </Box>
                 </Hidden>
                 <Box flexGrow={1} />
-                <Hidden smDown>
-                    <Button className={classes.link} component="a" onClick={() => history.push('/app')}>
-                        About
-                    </Button>
-                </Hidden>
                 <Button className={classes.link} component="a" onClick={() => history.push('/docs')}>
                                                     {isDesktop ? 'Documentation' : 'Docs'}
                 </Button>

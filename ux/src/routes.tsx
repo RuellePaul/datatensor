@@ -155,8 +155,63 @@ const routes: Routes = [
             },
             {
                 exact: true,
-                path: '/docs/swagger-api',
-                component: lazy(() => import('src/views/docs/SwaggerAPI'))
+                path: '/docs/about-datatensor',
+                component: lazy(() => import('src/views/docs/AboutDatatensorView'))
+            },
+            {
+                exact: true,
+                path: '/docs/authentication/register',
+                component: lazy(() => import('src/views/docs/RegisterView'))
+            },
+            {
+                exact: true,
+                path: '/docs/authentication/account-settings',
+                component: lazy(() => import('src/views/docs/AccountSettingsView'))
+            },
+            {
+                exact: true,
+                path: '/docs/datasets/create-a-dataset',
+                component: lazy(() => import('src/views/docs/CreateDatasetView'))
+            },
+            {
+                exact: true,
+                path: '/docs/datasets/upload-images',
+                component: lazy(() => import('src/views/docs/UploadImagesView'))
+            },
+            {
+                exact: true,
+                path: '/docs/datasets/labeling',
+                component: lazy(() => import('src/views/docs/LabelingView'))
+            },
+            {
+                exact: true,
+                path: '/docs/datasets/augmentation',
+                component: lazy(() => import('src/views/docs/AugmentationView'))
+            },
+            {
+                exact: true,
+                path: '/docs/datasets/export',
+                component: lazy(() => import('src/views/docs/ExportView'))
+            },
+            {
+                exact: true,
+                path: '/docs/computer-vision/using-an-exported-dataset',
+                component: lazy(() => import('src/views/docs/UsingExportedDatasetView'))
+            },
+            {
+                exact: true,
+                path: '/docs/computer-vision/api-documentation',
+                component: lazy(() => import('src/views/docs/APIDocsView'))
+            },
+            {
+                exact: true,
+                path: '/docs/contributing/project-architecture',
+                component: lazy(() => import('src/views/docs/ProjectArchitectureView'))
+            },
+            {
+                exact: true,
+                path: '/docs/contributing/running-locally',
+                component: lazy(() => import('src/views/docs/RunningLocallyView'))
             },
             {
                 component: () => <Redirect to="/404" />

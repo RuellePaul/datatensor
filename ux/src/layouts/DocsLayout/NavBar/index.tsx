@@ -55,7 +55,7 @@ const items: Item[] = [
             },
             {
                 title: 'Upload images',
-                href: '/docs/datasets/create-a-dataset'
+                href: '/docs/datasets/upload-images'
             },
             {
                 title: 'Labeling',
@@ -88,16 +88,12 @@ const items: Item[] = [
         title: 'Contributing',
         items: [
             {
-                title: 'Code hosting',
-                href: '/docs/contributing/code-hosting'
+                title: 'Project architecture',
+                href: '/docs/contributing/project-architecture'
             },
             {
                 title: 'Running locally',
                 href: '/docs/contributing/running-locally'
-            },
-            {
-                title: 'Project architecture',
-                href: '/docs/contributing/architecture'
             }
         ]
     }

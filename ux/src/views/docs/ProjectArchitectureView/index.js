@@ -3,9 +3,9 @@ import Page from 'src/components/Page';
 
 const Content = lazy(() => import('!babel-loader!mdx-loader!./Content.mdx'));
 
-const GettingStartedView = () => {
+const ProjectArchitectureView = () => {
     return (
-        <Page title="Swagger API">
+        <Page title="Project Architecture">
             <Suspense fallback={null}>
                 <Content />
             </Suspense>
@@ -13,4 +13,4 @@ const GettingStartedView = () => {
     );
 };
 
-export default GettingStartedView;
+export default ProjectArchitectureView;
