@@ -19,7 +19,7 @@ interface Item {
     items?: Item[];
 }
 
-const items: Item[] = [
+export const items: Item[] = [
     {
         title: 'Welcome',
         items: [

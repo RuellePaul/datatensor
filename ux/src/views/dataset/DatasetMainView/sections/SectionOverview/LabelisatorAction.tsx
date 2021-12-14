@@ -34,7 +34,7 @@ const LabelisatorAction: FC<LabelisatorActionProps> = ({ className }) => {
                 <Typography gutterBottom>Label images</Typography>
                 <Typography variant="body2" color="textSecondary" gutterBottom>
                     {totalLabelsCount > 0 ? 'Edit labels' : 'Start labeling'} with our labelisator tool. See the{' '}
-                    <Link variant="body2" color="primary" component={RouterLink} to="/docs">
+                    <Link variant="body2" color="primary" component={RouterLink} to="/docs/datasets/labeling">
                         dedicated section
                     </Link>{' '}
                     on documentation.
