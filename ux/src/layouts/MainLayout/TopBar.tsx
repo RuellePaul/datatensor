@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import {AppBar, Box, Button, Divider, Hidden, Toolbar, Typography, useMediaQuery} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
-import {APP_VERSION} from 'src/constants';
 import Logo from 'src/components/utils/Logo';
 import UserAvatar from 'src/components/UserAvatar';
 import useAuth from 'src/hooks/useAuth';
@@ -19,10 +18,6 @@ const useStyles = makeStyles(theme => ({
         boxShadow: theme.palette.mode === 'dark' ? 'rgb(19 47 76) 0px -1px 1px inset' : 'rgb(0 0 0) 0px -1px 1px inset',
         backgroundColor: theme.palette.mode === 'dark' ? 'rgb(10 25 40 / 60%)' : 'rgb(0 0 0 / 65%)',
         backgroundImage: 'none'
-    },
-    version: {
-        marginTop: -5,
-        fontSize: 11
     },
     toolbar: {
         height: 64
@@ -65,10 +60,6 @@ const TopBar: FC<TopBarProps> = ({className, ...rest}) => {
                     <Box>
                         <Typography variant="overline" component="p" sx={{color: 'white'}}>
                             Datatensor
-                        </Typography>
-
-                        <Typography variant="caption" color="textSecondary" component="p" className={classes.version}>
-                            Version {APP_VERSION}
                         </Typography>
                     </Box>
                 </Hidden>
