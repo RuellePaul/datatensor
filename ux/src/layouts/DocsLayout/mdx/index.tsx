@@ -7,6 +7,7 @@ import ListItem from './ListItem';
 import Blockquote from './Blockquote';
 import Code from './Code';
 import InlineCode from './InlineCode';
+import Image from './Image';
 
 const components = {
     h1: props => <Heading variant="h1" {...props} />,
@@ -22,7 +23,8 @@ const components = {
     p: Paragraph,
     blockquote: Blockquote,
     code: Code,
-    inlineCode: InlineCode
+    inlineCode: InlineCode,
+    img: Image
 };
 
 export default components;
