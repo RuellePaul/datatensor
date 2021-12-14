@@ -160,16 +160,6 @@ const routes: Routes = [
             },
             {
                 exact: true,
-                path: '/docs/authentication/register',
-                component: lazy(() => import('src/views/docs/RegisterView'))
-            },
-            {
-                exact: true,
-                path: '/docs/authentication/account-settings',
-                component: lazy(() => import('src/views/docs/AccountSettingsView'))
-            },
-            {
-                exact: true,
                 path: '/docs/datasets/create-a-dataset',
                 component: lazy(() => import('src/views/docs/CreateDatasetView'))
             },

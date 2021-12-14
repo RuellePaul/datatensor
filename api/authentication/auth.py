@@ -103,7 +103,7 @@ def do_reset_password(payload: AuthResetPasswordBody):
     reset_user_password(user, new_password)
 
 
-@auth.get('/me')
+@auth.get('/me', response_model=User)
 def me(user: User = Depends(logged_user)):
     """
     Return user from access token

@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import {Link as RouterLink, useHistory} from 'react-router-dom';
 import clsx from 'clsx';
-import {AppBar, Box, Button, Divider, Hidden, Toolbar, Typography, useMediaQuery} from '@mui/material';
+import {AppBar, Box, Button, Divider, Hidden, Toolbar, Tooltip, Typography, useMediaQuery} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 import Logo from 'src/components/utils/Logo';
@@ -68,15 +68,17 @@ const TopBar: FC<TopBarProps> = ({className, ...rest}) => {
                     {isDesktop ? 'Documentation' : 'Docs'}
                 </Button>
                 <Divider className={classes.divider} />
-                <Button
-                    color="primary"
-                    component="a"
-                    variant="contained"
-                    onClick={() => history.push('/login')}
-                    endIcon={user !== null && <UserAvatar user={user} style={{width: 30, height: 30}} />}
-                >
-                    Dashboard
-                </Button>
+                <Tooltip title={user === null ? 'Login to Datatensor' : 'Back to dashboard'}>
+                    <Button
+                        color="primary"
+                        component="a"
+                        variant="contained"
+                        onClick={() => history.push('/app')}
+                        endIcon={user !== null && <UserAvatar user={user} style={{ width: 30, height: 30 }} />}
+                    >
+                        Dashboard
+                    </Button>
+                </Tooltip>
             </Toolbar>
         </AppBar>
     );

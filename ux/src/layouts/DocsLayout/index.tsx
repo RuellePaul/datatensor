@@ -36,13 +36,13 @@ const useStyles = makeStyles((theme) => ({
     buttons: {
         display: 'flex',
         alignItems: 'center',
-        margin: theme.spacing(4, 0),
+        margin: theme.spacing(5, 0, 2),
         [theme.breakpoints.down('sm')]: {
             flexDirection: 'column',
             '& > a': {
                 width: '100%',
                 '&:first-child': {
-                    marginBottom: theme.spacing(2)
+                    marginBottom: theme.spacing(3)
                 }
             }
         }
@@ -60,11 +60,12 @@ const DocsButtons: FC = () => {
         <div className={classes.buttons}>
             {index > 0 && (
                 <Button
+                    color="primary"
                     component={RouterLink}
                     to={pages[index - 1].href}
                     startIcon={<BackIcon />}
                     size="large"
-                    variant="contained"
+                    variant="outlined"
                 >
                     {pages[index - 1].title}
                 </Button>
@@ -74,6 +75,7 @@ const DocsButtons: FC = () => {
 
             {index < pages.length - 1 && (
                 <Button
+                    color="primary"
                     component={RouterLink}
                     to={pages[index + 1].href}
                     endIcon={<NextIcon />}

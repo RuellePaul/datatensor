@@ -34,19 +34,6 @@ export const items: Item[] = [
         ]
     },
     {
-        title: 'Authentication',
-        items: [
-            {
-                title: 'Register',
-                href: '/docs/authentication/register'
-            },
-            {
-                title: 'Account settings',
-                href: '/docs/authentication/account-settings'
-            }
-        ]
-    },
-    {
         title: 'Dataset workflow',
         items: [
             {
