@@ -115,7 +115,7 @@ const Hero: FC<HeroProps> = ({className, ...rest}) => {
                         </Typography>
                         <Box mt={3} mb={4}>
                             <Typography color="textSecondary">
-                                Datatensor provides a powerful and accessible website of images datasets management,
+                                Datatensor provides a powerful and accessible website of image datasets management,
                                 enabling you to build your own computer vision models faster.
                             </Typography>
                         </Box>
