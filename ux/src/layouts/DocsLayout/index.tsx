@@ -3,7 +3,7 @@ import React, {useMemo, useState} from 'react';
 import {Link as RouterLink, useLocation} from 'react-router-dom';
 import {MDXProvider} from '@mdx-js/react';
 import Scrollbar from 'src/components/utils/Scrollbar';
-import {Box, Button, Container, Divider} from '@mui/material';
+import {Box, Button, Container} from '@mui/material';
 import {KeyboardArrowLeft as BackIcon, KeyboardArrowRight as NextIcon} from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
 import NavBar, {items} from './NavBar';
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
     buttons: {
         display: 'flex',
         alignItems: 'center',
-        margin: theme.spacing(3, 0),
+        margin: theme.spacing(4, 0),
         [theme.breakpoints.down('sm')]: {
             flexDirection: 'column',
             '& > a': {
@@ -108,8 +108,6 @@ const DocsLayout: FC<DocsLayoutProps> = ({ children }) => {
                             <MDXProvider components={components}>
                                 {children}
                             </MDXProvider>
-
-                            <Divider sx={{mt: 2}}/>
 
                             <DocsButtons />
                         </Container>
