@@ -26,8 +26,12 @@ const EmailConfirmationView: FC = () => {
     const activation_code = parseQueryArgs('activation_code');
 
     useEffect(() => {
-        activation_code && confirmEmail(activation_code);
-    }, [confirmEmail, activation_code]);
+        if (activation_code) {
+            confirmEmail(activation_code);
+        }
+
+        // eslint-disable-next-line
+    }, [activation_code]);
 
     return (
         <>
