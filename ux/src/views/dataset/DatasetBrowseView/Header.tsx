@@ -49,7 +49,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                         </SvgIcon>
                     }
                 >
-                    Add new dataset
+                    New dataset
                 </Button>
             </Grid>
         </Grid>
