@@ -13,7 +13,7 @@ interface ShortcutProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     button: {
-        color: theme.palette.getContrastText(theme.palette.background.paper)
+        color: theme.palette.getContrastText(theme.palette.primary.main)
     },
     dialog: {
         padding: theme.spacing(1, 2, 2)
