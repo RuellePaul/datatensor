@@ -15,7 +15,9 @@ interface ResultsProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {},
+    root: {
+        paddingBottom: theme.spacing(4)
+    },
     title: {
         position: 'relative',
         '&:after': {
@@ -64,25 +66,21 @@ const Results: FC<ResultsProps> = ({className, ...rest}) => {
     };
 
     useEffect(() => {
-        if (displayedDatasets.length === 0)
-            NProgress.start();
-        else
-             NProgress.done();
+        if (displayedDatasets.length === 0) NProgress.start();
+        else NProgress.done();
 
         return () => {
             NProgress.done();
         };
     }, [displayedDatasets]);
 
-    if (displayedDatasets === null || displayedDatasets.length === 0)
-        return null;
+    if (displayedDatasets === null || displayedDatasets.length === 0) return null;
 
     return (
         <div className={clsx(classes.root, className)} {...rest}>
             <Box display="flex" alignItems="center" justifyContent="space-between" flexWrap="wrap" mb={2}>
                 <Typography className={classes.title} variant="h5" color="textPrimary">
-                    Showing {displayedDatasets.length}
-                    {' '}
+                    Showing {displayedDatasets.length}{' '}
                     <Typography variant="h5" component="span" color="primary">
                         public dataset{displayedDatasets.length > 1 ? 's' : ''}
                     </Typography>
@@ -115,14 +113,16 @@ const Results: FC<ResultsProps> = ({className, ...rest}) => {
                         </Grid>
                     ))}
             </Grid>
-            <Box mt={6} display="flex" justifyContent="center">
-                <Pagination
-                    color="primary"
-                    count={Math.ceil(displayedDatasets.length / MAX_DATASETS_DISPLAYED)}
-                    page={page + 1}
-                    onChange={handlePaginationChange}
-                />
-            </Box>
+            {displayedDatasets.length > MAX_DATASETS_DISPLAYED && (
+                <Box mt={6} display="flex" justifyContent="center">
+                    <Pagination
+                        color="primary"
+                        count={Math.ceil(displayedDatasets.length / MAX_DATASETS_DISPLAYED)}
+                        page={page + 1}
+                        onChange={handlePaginationChange}
+                    />
+                </Box>
+            )}
             <Menu anchorEl={sortRef.current} onClose={handleSortClose} open={openSort} elevation={1}>
                 {['Most images', 'Most original images', 'Most recent'].map(option => (
                     <MenuItem key={option} onClick={() => handleSortSelect(option)}>
