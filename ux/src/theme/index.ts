@@ -72,6 +72,9 @@ const baseOptions: MuiThemeOptions = {
             lg: 1380,
             xl: 1920
         }
+    },
+    zIndex: {
+        drawer: 1100
     }
 };
 
@@ -251,6 +254,15 @@ const themesOptions: ThemeOptions[] = [
                     contained: {
                         color: 'white',
                         fontWeight: 'bold'
+                    }
+                }
+            },
+            MuiAutocomplete: {
+                styleOverrides: {
+                    listbox: {
+                        padding: 0,
+                        border: `solid 2px ${blueDark[900]}`,
+                        borderTop: 'none'
                     }
                 }
             }

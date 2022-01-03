@@ -1,4 +1,4 @@
-import React, {FC, useRef, useState} from 'react';
+import React, {FC, useEffect, useRef, useState} from 'react';
 import clsx from 'clsx';
 import {Box, Button, Grid, ListItemText, Menu, MenuItem, Pagination, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
@@ -8,6 +8,7 @@ import DTDataset from 'src/components/core/Dataset';
 import useDatasets from 'src/hooks/useDatasets';
 import {DatasetProvider} from 'src/store/DatasetContext';
 import {MAX_DATASETS_DISPLAYED} from 'src/config';
+import NProgress from 'nprogress';
 
 interface ResultsProps {
     className?: string;
@@ -23,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
             left: 0,
             content: '" "',
             height: 3,
-            width: 48,
+            width: 64,
             backgroundColor: theme.palette.primary.main
         }
     },
@@ -62,12 +63,29 @@ const Results: FC<ResultsProps> = ({className, ...rest}) => {
         setPage(value - 1);
     };
 
+    useEffect(() => {
+        if (displayedDatasets.length === 0)
+            NProgress.start();
+        else
+             NProgress.done();
+
+        return () => {
+            NProgress.done();
+        };
+    }, [displayedDatasets]);
+
+    if (displayedDatasets === null || displayedDatasets.length === 0)
+        return null;
+
     return (
         <div className={clsx(classes.root, className)} {...rest}>
             <Box display="flex" alignItems="center" justifyContent="space-between" flexWrap="wrap" mb={2}>
                 <Typography className={classes.title} variant="h5" color="textPrimary">
-                    Showing {displayedDatasets.length} dataset
-                    {displayedDatasets.length > 1 ? 's' : ''}
+                    Showing {displayedDatasets.length}
+                    {' '}
+                    <Typography variant="h5" component="span" color="primary">
+                        public dataset{displayedDatasets.length > 1 ? 's' : ''}
+                    </Typography>
                 </Typography>
                 <Box display="flex" alignItems="center">
                     <Button className={classes.sortButton} onClick={handleSortOpen} ref={sortRef}>

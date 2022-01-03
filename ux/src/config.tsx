@@ -64,19 +64,19 @@ export const OPERATIONS_TYPES: OperationType[] = [
 ];
 
 export const SUPERCATEGORIES_ICONS = {
-    person: <PersonIcon/>,
-    vehicle: <VehicleIcon/>,
-    electronic: <ElectronicIcon/>,
-    indoor: <IndoorIcon/>,
-    outdoor: <OutdoorIcon/>,
-    sports: <SportsIcon/>,
-    furniture: <FurnitureIcon/>,
-    accessory: <AccessoryIcon/>,
-    kitchen: <KitchenIcon/>,
-    animal: <AnimalIcon/>,
-    appliance: <ApplianceIcon/>,
-    food: <FoodIcon/>,
-    miscellaneous: <MiscelleanousIcon/>,
+    person: <PersonIcon color="inherit" fontSize="small"/>,
+    vehicle: <VehicleIcon color="inherit" fontSize="small"/>,
+    electronic: <ElectronicIcon color="inherit" fontSize="small"/>,
+    indoor: <IndoorIcon color="inherit" fontSize="small"/>,
+    outdoor: <OutdoorIcon color="inherit" fontSize="small"/>,
+    sports: <SportsIcon color="inherit" fontSize="small"/>,
+    furniture: <FurnitureIcon color="inherit" fontSize="small"/>,
+    accessory: <AccessoryIcon color="inherit" fontSize="small"/>,
+    kitchen: <KitchenIcon color="inherit" fontSize="small"/>,
+    animal: <AnimalIcon color="inherit" fontSize="small"/>,
+    appliance: <ApplianceIcon color="inherit" fontSize="small"/>,
+    food: <FoodIcon color="inherit" fontSize="small"/>,
+    miscellaneous: <MiscelleanousIcon color="inherit" fontSize="small"/>,
 }
 
 export const OPERATIONS_ICONS = {

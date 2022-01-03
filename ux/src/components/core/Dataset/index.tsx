@@ -11,6 +11,7 @@ import {
     CardHeader,
     Chip,
     Link,
+    Skeleton,
     Stack,
     Typography
 } from '@mui/material';
@@ -37,6 +38,7 @@ interface DatasetProps {
     image?: Image;
     className?: string;
     onClick?: () => void;
+    disabled?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -115,7 +117,7 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
     );
 };
 
-const DTDataset: FC<DatasetProps> = ({className, image = null, onClick, ...rest}) => {
+const DTDataset: FC<DatasetProps> = ({className, image = null, onClick, disabled = false, ...rest}) => {
     const classes = useStyles();
     const history = useHistory();
 
@@ -182,8 +184,9 @@ const DTDataset: FC<DatasetProps> = ({className, image = null, onClick, ...rest}
 
             <CardActionArea
                 onClick={onClick instanceof Function ? onClick : () => history.push(`/app/datasets/${dataset.id}#`)}
+                disabled={disabled}
             >
-                {imagePreview && (
+                {imagePreview ? (
                     <Box position="relative">
                         <ImageProvider image={imagePreview} labels={imagePreview.labels}>
                             <DTImage className={classes.image} skeleton />
@@ -198,6 +201,8 @@ const DTDataset: FC<DatasetProps> = ({className, image = null, onClick, ...rest}
                             </div>
                         </ImageProvider>
                     </Box>
+                ) : (
+                    <Skeleton width="100%" height={270} sx={{transform: 'none'}}/>
                 )}
                 <CardContent>
                     <Box display="flex" alignItems="flex-start" justifyContent="space-between">

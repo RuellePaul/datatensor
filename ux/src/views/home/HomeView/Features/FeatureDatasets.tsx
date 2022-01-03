@@ -77,6 +77,7 @@ const FeatureDatasets: FC<FeatureProps> = ({className, datasets = null, ...rest}
                     className={classes.dataset}
                     image={images.filter(image => image.dataset_id === dataset.id)[0]}
                     onClick={() => {}}
+                    disabled
                 />
                 {datasets.slice(1, datasets.length).map(dataset => (
                     <DatasetProvider dataset={dataset} categories={dataset.categories} key={dataset.id}>
@@ -84,6 +85,7 @@ const FeatureDatasets: FC<FeatureProps> = ({className, datasets = null, ...rest}
                             className={classes.dataset}
                             image={images.filter(image => image.dataset_id === dataset.id)[0]}
                             onClick={() => {}}
+                            disabled
                         />
                     </DatasetProvider>
                 ))}
