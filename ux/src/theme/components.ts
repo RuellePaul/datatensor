@@ -31,5 +31,12 @@ export default {
                 fontSize: 18
             }
         }
+    },
+    MuiTooltip: {
+        styleOverrides: {
+            tooltip: {
+                fontSize: 14
+            }
+        }
     }
 };

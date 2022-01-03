@@ -1,8 +1,19 @@
 import React, {FC, useEffect, useRef, useState} from 'react';
 import clsx from 'clsx';
-import {Box, Button, Grid, ListItemText, Menu, MenuItem, Pagination, Typography} from '@mui/material';
+import {
+    Box,
+    Button,
+    Grid,
+    IconButton,
+    ListItemText,
+    Menu,
+    MenuItem,
+    Pagination,
+    Tooltip,
+    Typography
+} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import {ArrowDropDown, HelpOutline as HelpIcon} from '@mui/icons-material';
 import {Theme} from 'src/theme';
 import DTDataset from 'src/components/core/Dataset';
 import useDatasets from 'src/hooks/useDatasets';
@@ -37,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const Results: FC<ResultsProps> = ({className, ...rest}) => {
+const PublicDatasets: FC<ResultsProps> = ({className, ...rest}) => {
     const classes = useStyles();
 
     const {displayedDatasets} = useDatasets();
@@ -78,20 +89,32 @@ const Results: FC<ResultsProps> = ({className, ...rest}) => {
 
     return (
         <div className={clsx(classes.root, className)} {...rest}>
-            <Box display="flex" alignItems="center" justifyContent="space-between" flexWrap="wrap" mb={2}>
+            <Box display="flex" alignItems="center" flexWrap="wrap" mb={2}>
                 <Typography className={classes.title} variant="h5" color="textPrimary">
                     Showing {displayedDatasets.length}{' '}
                     <Typography variant="h5" component="span" color="primary">
                         public dataset{displayedDatasets.length > 1 ? 's' : ''}
                     </Typography>
                 </Typography>
+
+                <Tooltip title="A public dataset is made by another user, but exportable by anyone.">
+                    <sup>
+                        <IconButton>
+                            <HelpIcon fontSize="small" />
+                        </IconButton>
+                    </sup>
+                </Tooltip>
+
+                <Box flexGrow={1} />
+
                 <Box display="flex" alignItems="center">
                     <Button className={classes.sortButton} onClick={handleSortOpen} ref={sortRef}>
                         {selectedSort}
-                        <ArrowDropDownIcon />
+                        <ArrowDropDown />
                     </Button>
                 </Box>
             </Box>
+
             <Grid container spacing={3}>
                 {displayedDatasets
                     .sort((a, b) => {
@@ -134,4 +157,4 @@ const Results: FC<ResultsProps> = ({className, ...rest}) => {
     );
 };
 
-export default Results;
+export default PublicDatasets;

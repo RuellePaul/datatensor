@@ -15,6 +15,7 @@ import {Search as SearchIcon} from '@mui/icons-material';
 import {Theme} from 'src/theme';
 import api from 'src/utils/api';
 import {Category} from 'src/types/category';
+import useAuth from 'src/hooks/useAuth';
 import useDatasets from 'src/hooks/useDatasets';
 import {SUPERCATEGORIES_ICONS} from 'src/config';
 
@@ -61,6 +62,7 @@ const Filter: FC<FilterProps> = ({className, ...rest}) => {
 
     const [open, setOpen] = useState<boolean>(false);
 
+    const {user} = useAuth();
     const {datasets, saveDisplayedDatasets} = useDatasets();
 
     const [categories, setCategories] = useState<Category[]>([]);
@@ -82,7 +84,7 @@ const Filter: FC<FilterProps> = ({className, ...rest}) => {
     const searchDatasets = useCallback(
         async category_names => {
             if (category_names.length === 0) {
-                saveDisplayedDatasets(datasets);
+                saveDisplayedDatasets(datasets.filter(dataset => dataset.user_id !== user.id));
                 return;
             }
 
