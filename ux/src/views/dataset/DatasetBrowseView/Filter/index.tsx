@@ -5,8 +5,9 @@ import {
     Backdrop,
     Box,
     capitalize,
+    Chip, FormControl,
     Hidden,
-    InputAdornment,
+    InputAdornment, InputLabel,
     ListItem,
     MenuItem,
     Select,
@@ -168,82 +169,84 @@ const Filter: FC<FilterProps> = ({className, ...rest}) => {
                 />
             </Hidden>
             <Hidden smUp>
-                <Select
-                    color="primary"
-                    open={open}
-                    onOpen={() => {
-                        setOpen(true);
-                    }}
-                    onClose={() => {
-                        setOpen(false);
-                    }}
-                    fullWidth
-                    multiple
-                    value={categoriesSelected.map(el => el.name)}
-                    renderValue={(selected: string[]) => selected.map(value => capitalize(value)).join(', ')}
-                    placeholder={
-                        categoriesSelected.length === 0
-                            ? `${categories
-                                  .map(category => capitalize(category.name))
-                                  .slice(0, 3)
-                                  .join(', ')}...`
-                            : 'Search for categories...'
-                    }
-                    startAdornment={
-                        <InputAdornment position="start">
-                            <SearchIcon />
-                        </InputAdornment>
-                    }
-                >
-                    {categories
-                        .filter(category => category.labels_count > 0)
-                        .map(category => category.supercategory)
-                        .filter(onlyUnique)
-                        .sort((a, b) => -b.localeCompare(a))
-                        .map(supercategory => (
-                            <div key={supercategory}>
-                                <ListItem className={classes.group}>
-                                    <Box
-                                        className={classes.icon}
-                                        children={SUPERCATEGORIES_ICONS[supercategory.toLowerCase()]}
-                                    />
+                <FormControl fullWidth>
+                    <InputLabel>Search for categories...</InputLabel>
 
-                                    <Typography variant="body2" color="textSecondary" fontWeight="bold">
-                                        {capitalize(supercategory)}
-                                    </Typography>
-                                </ListItem>
+                    <Select
+                        open={open}
+                        onOpen={() => {
+                            setOpen(true);
+                        }}
+                        onClose={() => {
+                            setOpen(false);
+                        }}
+                        fullWidth
+                        label="Search for categories..."
+                        multiple
+                        value={categoriesSelected.length > 0 ? categoriesSelected.map(el => el.name) : []}
+                        startAdornment={
+                            <InputAdornment position="start">
+                                <SearchIcon />
+                            </InputAdornment>
+                        }
+                        renderValue={selected => (
+                            <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
+                                {selected.map(value => (
+                                    <Chip key={value} label={capitalize(value)} />
+                                ))}
+                            </Box>
+                        )}
+                    >
+                        {categories
+                            .filter(category => category.labels_count > 0)
+                            .map(category => category.supercategory)
+                            .filter(onlyUnique)
+                            .sort((a, b) => -b.localeCompare(a))
+                            .map(supercategory => (
+                                <div key={supercategory}>
+                                    <ListItem className={classes.group}>
+                                        <Box
+                                            className={classes.icon}
+                                            children={SUPERCATEGORIES_ICONS[supercategory.toLowerCase()]}
+                                        />
 
-                                {categories
-                                    .filter(
-                                        category =>
-                                            category.labels_count > 0 && category.supercategory === supercategory
-                                    )
-                                    .sort((a, b) => -b.name.localeCompare(a.name))
-                                    .map(category => (
-                                        <MenuItem
-                                            value={category.name}
-                                            key={category.name}
-                                            onClick={() => {
-                                                categoriesSelected
-                                                    .map(category => category.name)
-                                                    .includes(category.name)
-                                                    ? setCategoriesSelected(
-                                                          categoriesSelected.filter(
-                                                              current => current.name !== category.name
+                                        <Typography variant="body2" color="textSecondary" fontWeight="bold">
+                                            {capitalize(supercategory)}
+                                        </Typography>
+                                    </ListItem>
+
+                                    {categories
+                                        .filter(
+                                            category =>
+                                                category.labels_count > 0 && category.supercategory === supercategory
+                                        )
+                                        .sort((a, b) => -b.name.localeCompare(a.name))
+                                        .map(category => (
+                                            <MenuItem
+                                                value={category.name}
+                                                key={category.name}
+                                                onClick={() => {
+                                                    categoriesSelected
+                                                        .map(category => category.name)
+                                                        .includes(category.name)
+                                                        ? setCategoriesSelected(
+                                                              categoriesSelected.filter(
+                                                                  current => current.name !== category.name
+                                                              )
                                                           )
-                                                      )
-                                                    : setCategoriesSelected(categoriesSelected.concat(category));
-                                            }}
-                                            selected={categoriesSelected
-                                                .map(category => category.name)
-                                                .includes(category.name)}
-                                        >
-                                            {capitalize(category.name)} ({category.labels_count})
-                                        </MenuItem>
-                                    ))}
-                            </div>
-                        ))}
-                </Select>
+                                                        : setCategoriesSelected(categoriesSelected.concat(category));
+                                                }}
+                                                selected={categoriesSelected
+                                                    .map(category => category.name)
+                                                    .includes(category.name)}
+                                            >
+                                                {capitalize(category.name)} ({category.labels_count})
+                                            </MenuItem>
+                                        ))}
+                                </div>
+                            ))}
+                    </Select>
+                </FormControl>
             </Hidden>
             <Backdrop open={open} className={classes.backdrop} />
         </>

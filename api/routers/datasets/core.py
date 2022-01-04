@@ -62,7 +62,7 @@ def update_dataset(user_id, dataset_id, payload: DatasetPatchBody):
                                     {'$set': {k: v for k, v in payload.dict().items() if v is not None}})
 
 
-def insert_dataset(user_id, payload: DatasetPostBody):
+def insert_dataset(user_id, payload: DatasetPostBody) -> Dataset:
     dataset = Dataset(
         id=str(uuid4()),
         user_id=user_id,
@@ -74,6 +74,7 @@ def insert_dataset(user_id, payload: DatasetPostBody):
         augmented_count=0
     )
     db.datasets.insert_one(dataset.mongo())
+    return dataset
 
 
 def remove_dataset(user_id, dataset_id):

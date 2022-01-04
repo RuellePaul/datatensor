@@ -2,7 +2,7 @@ import React, {FC, useEffect, useRef, useState} from 'react';
 import clsx from 'clsx';
 import {
     Box,
-    Button,
+    Button, ClickAwayListener,
     Grid,
     IconButton,
     ListItemText,
@@ -43,8 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     sortButton: {
         textTransform: 'none',
-        letterSpacing: 0,
-        marginRight: theme.spacing(2)
+        letterSpacing: 0
     }
 }));
 
@@ -52,6 +51,14 @@ const PublicDatasets: FC<ResultsProps> = ({className, ...rest}) => {
     const classes = useStyles();
 
     const {displayedDatasets} = useDatasets();
+
+    const [open, setOpen] = React.useState(false);
+    const handleTooltipClose = () => {
+        setOpen(false);
+    };
+    const handleTooltipOpen = () => {
+        setOpen(true);
+    };
 
     const sortRef = useRef<HTMLButtonElement | null>(null);
     const [openSort, setOpenSort] = useState<boolean>(false);
@@ -91,19 +98,32 @@ const PublicDatasets: FC<ResultsProps> = ({className, ...rest}) => {
         <div className={clsx(classes.root, className)} {...rest}>
             <Box display="flex" alignItems="center" flexWrap="wrap" mb={2}>
                 <Typography className={classes.title} variant="h5" color="textPrimary">
-                    Showing {displayedDatasets.length}{' '}
+                    {displayedDatasets.length}{' '}
                     <Typography variant="h5" component="span" color="primary">
                         public dataset{displayedDatasets.length > 1 ? 's' : ''}
                     </Typography>
                 </Typography>
-
-                <Tooltip title="A public dataset is made by another user, but can be exported by anyone.">
-                    <sup>
-                        <IconButton>
-                            <HelpIcon fontSize="small" />
-                        </IconButton>
-                    </sup>
-                </Tooltip>
+                <ClickAwayListener onClickAway={handleTooltipClose}>
+                    <div>
+                        <Tooltip
+                            PopperProps={{
+                                disablePortal: true
+                            }}
+                            onClose={handleTooltipClose}
+                            open={open}
+                            disableFocusListener
+                            disableHoverListener
+                            disableTouchListener
+                            title="A public dataset is made by another user, but can be exported by anyone."
+                        >
+                            <sup>
+                                <IconButton onClick={handleTooltipOpen}>
+                                    <HelpIcon fontSize="small" />
+                                </IconButton>
+                            </sup>
+                        </Tooltip>
+                    </div>
+                </ClickAwayListener>
 
                 <Box flexGrow={1} />
 
@@ -122,7 +142,6 @@ const PublicDatasets: FC<ResultsProps> = ({className, ...rest}) => {
                             return (
                                 b.image_count + (b.augmented_count || 0) - (a.image_count + (a.augmented_count || 0))
                             );
-                        else if (selectedSort === 'Most original images') return b.image_count - a.image_count;
                         else if (selectedSort === 'Most recent')
                             return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
                         else return 0;
@@ -154,7 +173,7 @@ const PublicDatasets: FC<ResultsProps> = ({className, ...rest}) => {
                 </Box>
             )}
             <Menu anchorEl={sortRef.current} onClose={handleSortClose} open={openSort} elevation={1}>
-                {['Most images', 'Most original images', 'Most recent'].map(option => (
+                {['Most images', 'Most recent'].map(option => (
                     <MenuItem key={option} onClick={() => handleSortSelect(option)}>
                         <ListItemText primary={option} />
                     </MenuItem>

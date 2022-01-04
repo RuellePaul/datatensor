@@ -1,6 +1,6 @@
 import React, {FC, useState} from 'react';
 import clsx from 'clsx';
-import {Box, Grid, Pagination, Typography} from '@mui/material';
+import {Box, Divider, Grid, Pagination, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 import DTDataset from 'src/components/core/Dataset';
@@ -15,7 +15,10 @@ interface ResultsProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        padding: theme.spacing(4, 0)
+        padding: theme.spacing(4, 0),
+        [theme.breakpoints.down('sm')]: {
+            padding: theme.spacing(4, 0, 2)
+        }
     },
     title: {
         position: 'relative',
@@ -28,11 +31,6 @@ const useStyles = makeStyles((theme: Theme) => ({
             width: 64,
             backgroundColor: theme.palette.primary.main
         }
-    },
-    sortButton: {
-        textTransform: 'none',
-        letterSpacing: 0,
-        marginRight: theme.spacing(2)
     }
 }));
 
@@ -90,6 +88,7 @@ const OwnDatasets: FC<ResultsProps> = ({className, ...rest}) => {
                     />
                 </Box>
             )}
+            <Divider sx={{width: '100%', mt: 4}} />
         </div>
     );
 };

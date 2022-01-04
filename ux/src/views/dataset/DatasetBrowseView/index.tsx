@@ -28,7 +28,7 @@ const DatasetBrowseView: FC = () => {
 
                     <OwnDatasets />
 
-                    <Box mt={4}>
+                    <Box mt={3}>
                         <Filter />
                     </Box>
                     <Box mt={3}>

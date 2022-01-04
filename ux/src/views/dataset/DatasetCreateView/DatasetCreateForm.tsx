@@ -64,14 +64,12 @@ const DatasetCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
             onSubmit={async (values, {setErrors, setStatus, setSubmitting}) => {
                 try {
                     const {submit, ...payload} = values;
-                    const response = await api.post<Dataset>('/datasets/', payload);
-                    const dataset = response.data;
-                    console.info(dataset);
-
+                    const response = await api.post<{dataset: Dataset}>('/datasets/', payload);
+                    const dataset = response.data.dataset;
                     setStatus({success: true});
                     setSubmitting(false);
-                    enqueueSnackbar('Dataset Created', {variant: 'info'});
-                    history.push('/app/datasets');
+                    enqueueSnackbar(`Dataset ${dataset.name} created`);
+                    history.push(`/app/datasets/${dataset.id}`);
                 } catch (err) {
                     console.error(err);
                     setStatus({success: false});

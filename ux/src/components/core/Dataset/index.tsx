@@ -218,8 +218,8 @@ const DTDataset: FC<DatasetProps> = ({className, image = null, onClick, disabled
                                 dangerouslySetInnerHTML={{
                                     __html: EMPTY_DESCRIPTIONS.includes(dataset.description)
                                         ? '<i>No description provided</i>'
-                                        : dataset.description.length > 100
-                                        ? `${dataset.description.slice(0, 100)}...`
+                                        : dataset.description.length > 70
+                                        ? `${dataset.description.slice(0, 70)}...`
                                         : dataset.description
                                 }}
                             />

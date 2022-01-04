@@ -38,5 +38,13 @@ export default {
                 fontSize: 14
             }
         }
+    },
+    MuiSelect: {
+        styleOverrides: {
+            select: {
+                paddingTop: 12,
+                paddingBottom: 12,
+            }
+        }
     }
 };
