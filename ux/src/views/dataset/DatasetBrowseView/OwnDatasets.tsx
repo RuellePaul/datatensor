@@ -15,10 +15,7 @@ interface ResultsProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        padding: theme.spacing(4, 0),
-        [theme.breakpoints.down('sm')]: {
-            padding: theme.spacing(4, 0, 2)
-        }
+        padding: theme.spacing(4, 0, 0)
     },
     title: {
         position: 'relative',
@@ -88,7 +85,9 @@ const OwnDatasets: FC<ResultsProps> = ({className, ...rest}) => {
                     />
                 </Box>
             )}
-            <Divider sx={{width: '100%', mt: 4}} />
+            <Divider sx={{width: '100%', mt: 6}} >
+                <Typography variant="overline" color="primary">Public datasets</Typography>
+            </Divider>
         </div>
     );
 };
