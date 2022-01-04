@@ -44,7 +44,8 @@ interface DatasetProps {
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         position: 'relative',
-        maxWidth: 400
+        maxWidth: 400,
+        width: '100%'
     },
     media: {
         height: 200

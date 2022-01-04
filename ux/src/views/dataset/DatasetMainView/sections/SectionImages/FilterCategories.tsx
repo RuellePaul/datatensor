@@ -18,7 +18,7 @@ import {Category} from 'src/types/category';
 import useDataset from 'src/hooks/useDataset';
 import useCategory from 'src/hooks/useCategory';
 import useImages from 'src/hooks/useImages';
-import {SUPERCATEGORIES_ICONS} from '../../../../../config';
+import {SUPERCATEGORIES_ICONS} from 'src/config';
 
 interface FilterCategoriesProps {
     className?: string;

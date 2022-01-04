@@ -97,7 +97,7 @@ const PublicDatasets: FC<ResultsProps> = ({className, ...rest}) => {
                     </Typography>
                 </Typography>
 
-                <Tooltip title="A public dataset is made by another user, but exportable by anyone.">
+                <Tooltip title="A public dataset is made by another user, but can be exported by anyone.">
                     <sup>
                         <IconButton>
                             <HelpIcon fontSize="small" />
@@ -129,7 +129,14 @@ const PublicDatasets: FC<ResultsProps> = ({className, ...rest}) => {
                     })
                     .slice(page * MAX_DATASETS_DISPLAYED, page * MAX_DATASETS_DISPLAYED + MAX_DATASETS_DISPLAYED)
                     .map(dataset => (
-                        <Grid item key={dataset.id} md={4} sm={6} xs={12}>
+                        <Grid
+                            item
+                            key={dataset.id}
+                            md={4}
+                            sm={6}
+                            xs={12}
+                            sx={{display: 'flex', justifyContent: 'center'}}
+                        >
                             <DatasetProvider dataset={dataset} categories={dataset.categories}>
                                 <DTDataset />
                             </DatasetProvider>

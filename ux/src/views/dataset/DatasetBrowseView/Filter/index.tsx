@@ -5,8 +5,11 @@ import {
     Backdrop,
     Box,
     capitalize,
+    Hidden,
     InputAdornment,
     ListItem,
+    MenuItem,
+    Select,
     TextField,
     Typography
 } from '@mui/material';
@@ -18,6 +21,7 @@ import {Category} from 'src/types/category';
 import useAuth from 'src/hooks/useAuth';
 import useDatasets from 'src/hooks/useDatasets';
 import {SUPERCATEGORIES_ICONS} from 'src/config';
+import onlyUnique from 'src/utils/onlyUnique';
 
 interface FilterProps {
     className?: string;
@@ -100,66 +104,147 @@ const Filter: FC<FilterProps> = ({className, ...rest}) => {
 
     return (
         <>
-            <Autocomplete
-                open={open}
-                onOpen={() => {
-                    setOpen(true);
-                }}
-                onClose={() => {
-                    setOpen(false);
-                }}
-                loading={categories.length === 0}
-                className={classes.autocomplete}
-                disableCloseOnSelect
-                options={categories
-                    .sort((a, b) => -b.name.localeCompare(a.name))
-                    .sort((a, b) => -b.supercategory.localeCompare(a.supercategory))}
-                groupBy={category => capitalize(category.supercategory)}
-                getOptionLabel={category => `${capitalize(category.name)}`}
-                multiple
-                onChange={(event, newCategories) => setCategoriesSelected(newCategories as Category[])}
-                value={categoriesSelected}
-                renderInput={params => (
-                    <TextField
-                        {...params}
-                        label="Search for categories..."
-                        placeholder={
-                            categoriesSelected.length === 0
-                                ? `${categories
-                                      .map(category => capitalize(category.name))
-                                      .slice(0, 3)
-                                      .join(', ')}...`
-                                : ''
-                        }
-                        InputProps={{
-                            ...params.InputProps,
-                            startAdornment: (
-                                <>
-                                    <InputAdornment position="start">
-                                        <SearchIcon />
-                                    </InputAdornment>
-                                    {params.InputProps.startAdornment}
-                                </>
-                            )
-                        }}
-                    />
-                )}
-                renderGroup={(params: AutocompleteRenderGroupParams) => (
-                    <Box key={params.key}>
-                        <ListItem className={classes.group} alignItems="center">
-                            <Box
-                                className={classes.icon}
-                                children={SUPERCATEGORIES_ICONS[params.group.toLowerCase()]}
-                            />
+            <Hidden smDown>
+                <Autocomplete
+                    open={open}
+                    onOpen={() => {
+                        setOpen(true);
+                    }}
+                    onClose={() => {
+                        setOpen(false);
+                    }}
+                    loading={categories.length === 0}
+                    className={classes.autocomplete}
+                    disableCloseOnSelect
+                    options={categories
+                        .sort((a, b) => -b.name.localeCompare(a.name))
+                        .sort((a, b) => -b.supercategory.localeCompare(a.supercategory))
+                        .filter(category => category.labels_count > 0)}
+                    groupBy={category => capitalize(category.supercategory)}
+                    getOptionLabel={category => `${capitalize(category.name)}`}
+                    multiple
+                    onChange={(event, newCategories) => setCategoriesSelected(newCategories as Category[])}
+                    value={categoriesSelected}
+                    renderInput={params => (
+                        <TextField
+                            {...params}
+                            label="Search for categories..."
+                            placeholder={
+                                categoriesSelected.length === 0
+                                    ? `${categories
+                                          .map(category => capitalize(category.name))
+                                          .slice(0, 3)
+                                          .join(', ')}...`
+                                    : ''
+                            }
+                            InputProps={{
+                                ...params.InputProps,
+                                startAdornment: (
+                                    <>
+                                        <InputAdornment position="start">
+                                            <SearchIcon />
+                                        </InputAdornment>
+                                        {params.InputProps.startAdornment}
+                                    </>
+                                )
+                            }}
+                        />
+                    )}
+                    renderGroup={(params: AutocompleteRenderGroupParams) => (
+                        <Box key={params.key}>
+                            <ListItem className={classes.group} alignItems="center">
+                                <Box
+                                    className={classes.icon}
+                                    children={SUPERCATEGORIES_ICONS[params.group.toLowerCase()]}
+                                />
 
-                            <Typography variant="body2" color="textSecondary" fontWeight="bold">
-                                {params.group}
-                            </Typography>
-                        </ListItem>
-                        <Box className={classes.item} {...params} />
-                    </Box>
-                )}
-            />
+                                <Typography variant="body2" color="textSecondary" fontWeight="bold">
+                                    {params.group}
+                                </Typography>
+                            </ListItem>
+                            <Box className={classes.item} {...params} />
+                        </Box>
+                    )}
+                />
+            </Hidden>
+            <Hidden smUp>
+                <Select
+                    color="primary"
+                    open={open}
+                    onOpen={() => {
+                        setOpen(true);
+                    }}
+                    onClose={() => {
+                        setOpen(false);
+                    }}
+                    fullWidth
+                    multiple
+                    value={categoriesSelected.map(el => el.name)}
+                    renderValue={(selected: string[]) => selected.map(value => capitalize(value)).join(', ')}
+                    placeholder={
+                        categoriesSelected.length === 0
+                            ? `${categories
+                                  .map(category => capitalize(category.name))
+                                  .slice(0, 3)
+                                  .join(', ')}...`
+                            : 'Search for categories...'
+                    }
+                    startAdornment={
+                        <InputAdornment position="start">
+                            <SearchIcon />
+                        </InputAdornment>
+                    }
+                >
+                    {categories
+                        .filter(category => category.labels_count > 0)
+                        .map(category => category.supercategory)
+                        .filter(onlyUnique)
+                        .sort((a, b) => -b.localeCompare(a))
+                        .map(supercategory => (
+                            <div key={supercategory}>
+                                <ListItem className={classes.group}>
+                                    <Box
+                                        className={classes.icon}
+                                        children={SUPERCATEGORIES_ICONS[supercategory.toLowerCase()]}
+                                    />
+
+                                    <Typography variant="body2" color="textSecondary" fontWeight="bold">
+                                        {capitalize(supercategory)}
+                                    </Typography>
+                                </ListItem>
+
+                                {categories
+                                    .filter(
+                                        category =>
+                                            category.labels_count > 0 && category.supercategory === supercategory
+                                    )
+                                    .sort((a, b) => -b.name.localeCompare(a.name))
+                                    .map(category => (
+                                        <MenuItem
+                                            value={category.name}
+                                            key={category.name}
+                                            onClick={() => {
+                                                categoriesSelected
+                                                    .map(category => category.name)
+                                                    .includes(category.name)
+                                                    ? setCategoriesSelected(
+                                                          categoriesSelected.filter(
+                                                              current => current.name !== category.name
+                                                          )
+                                                      )
+                                                    : setCategoriesSelected(categoriesSelected.concat(category));
+                                            }}
+                                            selected={categoriesSelected
+                                                .map(category => category.name)
+                                                .includes(category.name)}
+                                        >
+                                            {capitalize(category.name)} ({category.labels_count})
+                                        </MenuItem>
+                                    ))}
+                            </div>
+                        ))}
+                </Select>
+            </Hidden>
             <Backdrop open={open} className={classes.backdrop} />
         </>
     );

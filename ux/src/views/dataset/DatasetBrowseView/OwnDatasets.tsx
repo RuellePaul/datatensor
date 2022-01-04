@@ -51,8 +51,7 @@ const OwnDatasets: FC<ResultsProps> = ({className, ...rest}) => {
 
     const ownDatasets = datasets.filter(dataset => dataset.user_id === user.id);
 
-    if (ownDatasets.length === 0)
-        return null;
+    if (ownDatasets.length === 0) return null;
 
     return (
         <div className={clsx(classes.root, className)} {...rest}>
@@ -67,7 +66,14 @@ const OwnDatasets: FC<ResultsProps> = ({className, ...rest}) => {
                     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
                     .slice(page * MAX_DATASETS_DISPLAYED, page * MAX_DATASETS_DISPLAYED + MAX_DATASETS_DISPLAYED)
                     .map(dataset => (
-                        <Grid item key={dataset.id} md={4} sm={6} xs={12}>
+                        <Grid
+                            item
+                            key={dataset.id}
+                            md={4}
+                            sm={6}
+                            xs={12}
+                            sx={{display: 'flex', justifyContent: 'center'}}
+                        >
                             <DatasetProvider dataset={dataset} categories={dataset.categories}>
                                 <DTDataset />
                             </DatasetProvider>
