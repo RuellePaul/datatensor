@@ -44,7 +44,8 @@ const useStyles = makeStyles((theme: Theme) => ({
         position: 'sticky',
         top: 0,
         overflow: 'hidden',
-        background: theme.palette.background.paper
+        background: theme.palette.background.paper,
+        zIndex: 1
     },
     item: {
         '& > li': {

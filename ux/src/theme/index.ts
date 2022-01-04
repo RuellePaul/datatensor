@@ -133,7 +133,7 @@ const themesOptions: ThemeOptions[] = [
                 700: '#F1A204',
                 800: '#DB9A00',
                 900: '#8F6400'
-            },
+            }
         },
         components: {
             MuiPaper: {
@@ -154,11 +154,18 @@ const themesOptions: ThemeOptions[] = [
             MuiButton: {
                 styleOverrides: {
                     text: {
-                        color: 'white',
+                        color: 'white'
                     },
                     contained: {
                         color: 'white',
                         fontWeight: 'bold'
+                    }
+                }
+            },
+            MuiList: {
+                styleOverrides: {
+                    root: {
+                        padding: 0
                     }
                 }
             }
@@ -178,7 +185,7 @@ const themesOptions: ThemeOptions[] = [
             },
             common: {
                 black: '#1D1D1D'
-            },  // @ts-ignore
+            }, // @ts-ignore
             text: {
                 primary: '#fff',
                 secondary: grey[500]
@@ -249,7 +256,7 @@ const themesOptions: ThemeOptions[] = [
             MuiButton: {
                 styleOverrides: {
                     text: {
-                        color: 'white',
+                        color: 'white'
                     },
                     contained: {
                         color: 'white',
@@ -263,6 +270,13 @@ const themesOptions: ThemeOptions[] = [
                         padding: 0,
                         border: `solid 2px ${blueDark[900]}`,
                         borderTop: 'none'
+                    }
+                }
+            },
+            MuiList: {
+                styleOverrides: {
+                    root: {
+                        padding: 0
                     }
                 }
             }
