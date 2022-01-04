@@ -92,6 +92,8 @@ const Notifications: FC = () => {
             enqueueSnackbar(error.message || 'Something went wrong', {
                 variant: 'error'
             });
+        } finally {
+            handleClose();
         }
     };
 
