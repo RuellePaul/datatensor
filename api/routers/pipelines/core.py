@@ -11,7 +11,7 @@ from PIL import Image as PILImage
 import errors
 from config import Config
 from routers.images.core import find_images, remove_images
-from routers.images.models import Image
+from routers.images.models import Image, ImageExtended
 from routers.labels.models import Label
 from routers.pipelines.models import Operation
 from routers.pipelines.models import Pipeline
@@ -115,12 +115,14 @@ class AugmentorPipeline(DataPipeline):
         return output_images, output_images_labels
 
 
-def perform_sample(image: Image, labels: List[Label], operations: List[Operation], cv2image=None):
+def perform_sample(image: Image, labels: List[Label], operations: List[Operation], cv2image=None, n=None):
     pipeline = AugmentorPipeline(image, labels)
     for operation in operations:
         getattr(pipeline, operation.type)(probability=operation.probability, **operation.properties)
     if cv2image is not None:
-        return pipeline.sample(1, cv2image=cv2image)
+        return pipeline.sample(6, cv2image=cv2image)
+    elif n:
+        return pipeline.sample(n)
     elif image.width > image.height:
         return pipeline.sample(4)
     else:

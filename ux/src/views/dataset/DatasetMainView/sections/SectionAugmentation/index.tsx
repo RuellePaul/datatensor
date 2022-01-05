@@ -1,4 +1,4 @@
-import React, {FC, useCallback, useEffect, useState} from 'react';
+import React, {FC, useState} from 'react';
 import clsx from 'clsx';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
@@ -17,13 +17,11 @@ import {
     Typography
 } from '@mui/material';
 import {makeStyles} from '@mui/styles';
-import {Close as CloseIcon, Refresh} from '@mui/icons-material';
+import {Close as CloseIcon} from '@mui/icons-material';
 import {Theme} from 'src/theme';
 import Pipeline from 'src/components/core/Pipeline';
 import PipelineSample from 'src/components/core/PipelineSample';
-import DTImage from 'src/components/core/Images/Image';
 import useImages from 'src/hooks/useImages';
-import {ImageProvider, ImageConsumer} from 'src/store/ImageContext';
 import {SectionProps} from '../SectionProps';
 import api from 'src/utils/api';
 import {Task} from 'src/types/task';
@@ -62,8 +60,6 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
     const {images} = useImages();
     const {saveTasks} = useTasks();
 
-    const [randomIndex, setRandomIndex] = useState<number | null>(0);
-
     const [openAugmentation, setOpenAugmentation] = useState<boolean>(false);
 
     const handleOpen = () => {
@@ -74,29 +70,10 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
         setOpenAugmentation(false);
     };
 
-    const pickRandomImage = useCallback(() => {
-        if (images && images.length > 1) {
-            let random = Math.floor(Math.random() * images.length);
-
-            while (random === randomIndex) {
-                random = Math.floor(Math.random() * images.length);
-            }
-
-            setRandomIndex(random);
-        }
-    }, [images, randomIndex]);
-
-    useEffect(() => {
-        pickRandomImage();
-
-        // eslint-disable-next-line
-    }, [images]);
-
     const pipeline = useSelector<any>(state => state.pipeline);
     const operations: Operation[] = pipeline.operations.allIds.map(id => pipeline.operations.byId[id]);
 
-    if (images === null || images.length === 0)
-        return null;
+    if (images === null || images.length === 0) return null;
 
     return (
         <div className={clsx(classes.root, className)}>
@@ -106,57 +83,31 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                 </Typography>
             </Box>
 
-            <ImageProvider image={images[randomIndex]} labels={images[randomIndex].labels}>
-                <Grid container spacing={3}>
-                    <Grid item md={3} sm={6} xs={12}>
-                        <Typography variant="overline" color="textPrimary" align="center" gutterBottom>
-                            Input image
-                        </Typography>
+            <Grid container spacing={3}>
+                <Grid item md={3} sm={6} xs={12}>
+                    <Typography variant="overline" color="textPrimary" align="center" gutterBottom>
+                        Operations pipeline
+                    </Typography>
 
-                        <div className={classes.wrapper}>
-                            <Button
-                                className={classes.refresh}
-                                onClick={pickRandomImage}
-                                startIcon={<Refresh />}
-                                size="small"
-                                disabled={images.length < 2}
-                            >
-                                Random image
-                            </Button>
-
-                            <DTImage />
-                        </div>
-                    </Grid>
-                    <Grid item md={3} sm={6} xs={12}>
-                        <Typography variant="overline" color="textPrimary" align="center" gutterBottom>
-                            Operations pipeline
-                        </Typography>
-
-                        <Pipeline />
-                    </Grid>
-                    <Grid item md={6} xs={12}>
-                        <Typography variant="overline" color="textPrimary" align="center" gutterBottom>
-                            Sample
-                        </Typography>
-
-                        <ImageConsumer>
-                            {value => (
-                                <PipelineSample
-                                    handler={operations =>
-                                        api.post<{images: string[]; images_labels: Label[][]}>(
-                                            `/datasets/${dataset.id}/pipelines/sample`,
-                                            {
-                                                image_id: value.image.id,
-                                                operations
-                                            }
-                                        )
-                                    }
-                                />
-                            )}
-                        </ImageConsumer>
-                    </Grid>
+                    <Pipeline />
                 </Grid>
-            </ImageProvider>
+                <Grid item md={9} xs={12}>
+                    <Typography variant="overline" color="textPrimary" align="center" gutterBottom>
+                        Sample
+                    </Typography>
+
+                    <PipelineSample
+                        handler={operations =>
+                            api.post<{images: string[]; images_labels: Label[][]}>(
+                                `/datasets/${dataset.id}/pipelines/sample`,
+                                {
+                                    operations
+                                }
+                            )
+                        }
+                    />
+                </Grid>
+            </Grid>
 
             <Button variant="contained" color="primary" onClick={handleOpen}>
                 Augment images

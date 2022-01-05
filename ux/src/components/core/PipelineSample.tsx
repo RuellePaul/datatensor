@@ -8,11 +8,12 @@ import makeStyles from '@mui/styles/makeStyles';
 import type {Theme} from 'src/theme';
 import {useSelector} from 'src/store';
 import {Operation} from 'src/types/pipeline';
-import useImage from 'src/hooks/useImage';
 import ImageBase64 from 'src/components/utils/ImageBase64';
 import {Label} from 'src/types/label';
 import wait from 'src/utils/wait';
 import useDataset from 'src/hooks/useDataset';
+import Masonry from '@mui/lab/Masonry';
+import MasonryItem from '@mui/lab/MasonryItem';
 
 
 interface PipelineSampleProps {
@@ -33,17 +34,14 @@ const PipelineSample: FC<PipelineSampleProps> = ({ handler, className }) => {
     const { enqueueSnackbar } = useSnackbar();
 
     const { dataset } = useDataset();
-    const { image, labels} = useImage();
 
     const pipeline = useSelector<any>((state) => state.pipeline);
-
-    const image_id = image?.id;
 
     const [imagesBase64, setImagesBase64] = useState<string[]>([]);
     const [imagesLabels, setImagesLabels] = useState<Label[][]>([]);
 
     const doSample = useCallback(async () => {
-        if (dataset.id && image_id && pipeline.isLoaded) {
+        if (dataset.id && pipeline.isLoaded) {
             const operations: Operation[] = pipeline.operations.allIds.map(id => pipeline.operations.byId[id]);
 
             try {
@@ -61,10 +59,7 @@ const PipelineSample: FC<PipelineSampleProps> = ({ handler, className }) => {
         }
 
         // eslint-disable-next-line
-    }, [pipeline.isLoaded, dataset.id, image_id, pipeline.operations, labels]);
-
-    if (!image)
-        return null;
+    }, [pipeline.isLoaded, dataset.id, pipeline.operations]);
 
     return (
         <div className={clsx(classes.root, className)}>
@@ -137,21 +132,16 @@ const PipelineSample: FC<PipelineSampleProps> = ({ handler, className }) => {
                     </Formik>
                 </Grid>
 
-                {imagesBase64.map((imageBase64, index) => (
-                    <Grid
-                        key={index}
-                        item
-                        xs={imagesBase64.length > 1
-                            ? image.width > image.height ? 6 : 4
-                            : 12
-                        }
-                    >
-                        <ImageBase64
-                            imageBase64={imageBase64}
-                            labels={imagesLabels[index]}
-                        />
-                    </Grid>
-                ))}
+                <Masonry columns={{ xs: 2, sm: 3, }} spacing={1}>
+                    {imagesBase64.map((imageBase64, index) => (
+                        <MasonryItem key={`masonry_image_${index}`}>
+                            <ImageBase64
+                                imageBase64={imageBase64}
+                                labels={imagesLabels[index]}
+                            />
+                        </MasonryItem>
+                    ))}
+                </Masonry>
             </Grid>
         </div>
     );

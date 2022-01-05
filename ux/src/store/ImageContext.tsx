@@ -90,8 +90,7 @@ export const ImageProvider: FC<ImageProviderProps> = ({image, children, labels =
             });
         } finally {
             saveImages(images => images
-                .filter(current => current.id !== image.id)
-                .concat({...image, labels: currentLabels})
+                .map(current => current.id === image.id ? {...current, labels: currentLabels} : current)
             )
         }
     };

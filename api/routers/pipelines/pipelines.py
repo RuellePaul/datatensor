@@ -4,8 +4,7 @@ import cv2
 from fastapi import APIRouter, Depends
 
 from dependencies import dataset_belongs_to_user
-from routers.images.core import find_image
-from routers.labels.core import find_labels
+from routers.images.core import find_images
 from routers.pipelines.core import find_pipelines, perform_sample, delete_pipeline
 from routers.pipelines.models import *
 from utils import parse
@@ -14,7 +13,7 @@ pipelines = APIRouter()
 
 
 @pipelines.get('/', response_model=PipelinesResponse)
-def get_pipelines(dataset_id, offset: int = 0, limit: int = 0):
+def get_dataset_pipelines(dataset_id, offset: int = 0, limit: int = 0):
     """
     Fetch paginated pipelines list of given dataset.
     """
@@ -23,21 +22,21 @@ def get_pipelines(dataset_id, offset: int = 0, limit: int = 0):
 
 
 @pipelines.post('/sample', response_model=SampleResponse)
-def sample(dataset_id, payload: SampleBody, dataset=Depends(dataset_belongs_to_user)):
+def do_sample(dataset_id, payload: SampleBody, dataset=Depends(dataset_belongs_to_user)):
     """
     Execute a sample of augmentor operations pipeline
     """
-    image_id = payload.image_id
     operations = payload.operations
 
-    image = find_image(dataset_id, image_id)
-    labels = find_labels(image_id, offset=0, limit=0)
+    images = find_images(dataset_id, limit=3, include_labels=True)
 
-    augmented_images, augmented_labels = perform_sample(
-        image,
-        labels,
-        operations
-    )
+    augmented_images = []
+    augmented_labels = []
+
+    for image in images:
+        current_images, current_labels = perform_sample(image, image.labels, operations, n=3)
+        augmented_images.extend(current_images)
+        augmented_labels.extend(current_labels)
 
     encoded_images = [cv2.imencode('.jpg', augmented_image)[1].tostring()
                       for augmented_image in augmented_images]
@@ -49,7 +48,7 @@ def sample(dataset_id, payload: SampleBody, dataset=Depends(dataset_belongs_to_u
 
 
 @pipelines.delete('/{pipeline_id}')
-def sample(dataset_id, pipeline_id, dataset=Depends(dataset_belongs_to_user)):
+def delete_dataset_pipeline(dataset_id, pipeline_id, dataset=Depends(dataset_belongs_to_user)):
     """
     Delete a pipeline & associated images, labels, and task
     """
