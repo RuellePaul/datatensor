@@ -284,7 +284,7 @@ const DeleteImagesMenuItem: FC = () => {
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
 
-    const {dataset, saveDataset, savePipelines} = useDataset();
+    const {dataset, saveDataset, savePipelines, saveCategories} = useDataset();
     const {images, saveImages} = useImages();
 
     const {tasks} = useTasks();
@@ -301,7 +301,8 @@ const DeleteImagesMenuItem: FC = () => {
                 image_count: 0,
                 augmented_count: 0
             }));
-            saveImages(null);
+            saveCategories(categories => categories.map(category => ({...category, labels_count: 0})));
+            saveImages([]);
             savePipelines([]);
             enqueueSnackbar(`Deleted all images`, {
                 variant: 'info'

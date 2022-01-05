@@ -13,14 +13,15 @@ import Overview from './Overview';
 import useImages from 'src/hooks/useImages';
 import useDataset from 'src/hooks/useDataset';
 
+
 const useStyles = makeStyles((theme: Theme) => ({
     root: {}
 }));
 
-const SectionOverview: FC<SectionProps> = ({className}) => {
+const SectionOverview: FC<SectionProps> = ({ className }) => {
     const classes = useStyles();
-    const {categories} = useDataset();
-    const {images} = useImages();
+    const { categories } = useDataset();
+    const { images } = useImages();
 
     const totalLabelsCount = categories.map(category => category.labels_count || 0).reduce((acc, val) => acc + val, 0);
 
@@ -36,11 +37,11 @@ const SectionOverview: FC<SectionProps> = ({className}) => {
                 </Grid>
 
                 <Grid item md={4} xs={12}>
-                    {(images === null || images.length === 0) && <UploadAction />}
+                    {images instanceof Array && images.length === 0 && <UploadAction />}
 
-                    {images !== null && images.length > 0 && totalLabelsCount === 0 && <LabelisatorAction />}
+                    {images instanceof Array && images.length > 0 && totalLabelsCount === 0 && <LabelisatorAction />}
 
-                    {images !== null && images.length > 0 && totalLabelsCount > 0 && <ExportAction />}
+                    {images instanceof Array && images.length > 0 && totalLabelsCount > 0 && <ExportAction />}
                 </Grid>
             </Grid>
         </div>

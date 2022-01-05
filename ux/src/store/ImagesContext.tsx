@@ -1,4 +1,6 @@
 import React, {createContext, FC, ReactNode, useCallback, useEffect, useState} from 'react';
+import NProgress from 'nprogress';
+
 import {Image} from 'src/types/image';
 import api from 'src/utils/api';
 import useDataset from 'src/hooks/useDataset';
@@ -28,7 +30,7 @@ export const ImagesContext = createContext<ImagesContextValue>({
 });
 
 export const ImagesProvider: FC<ImagesProviderProps> = ({children, pipeline_id, category_id, images = null}) => {
-    const [currentImages, setCurrentImages] = useState<Image[] | null>([]);
+    const [currentImages, setCurrentImages] = useState<Image[] | null>(null);
     const [currentOffset, setCurrentOffset] = useState<number>(0);
     const [totalImagesCount, setTotalImagesCount] = useState<number | null>(null);
 
@@ -39,6 +41,8 @@ export const ImagesProvider: FC<ImagesProviderProps> = ({children, pipeline_id, 
     };
 
     const fetchImages = useCallback(async () => {
+        NProgress.start();
+
         try {
             let response;
 
@@ -66,10 +70,12 @@ export const ImagesProvider: FC<ImagesProviderProps> = ({children, pipeline_id, 
                 setTotalImagesCount(null);
             }
 
-            handleSaveImages(response.data.images.length > 0 ? response.data.images : null);
+            handleSaveImages(response.data.images.length > 0 ? response.data.images : []);
         } catch (err) {
             handleSaveImages([]);
             console.error(err);
+        } finally {
+            NProgress.done();
         }
 
         // eslint-disable-next-line

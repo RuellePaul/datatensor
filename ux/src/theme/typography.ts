@@ -30,6 +30,7 @@ export default {
         letterSpacing: '-0.05px'
     },
     overline: {
-        fontWeight: 500
+        fontWeight: 500,
+        fontSize: 13
     }
 };
