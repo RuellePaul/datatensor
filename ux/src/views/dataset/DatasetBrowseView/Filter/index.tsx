@@ -5,9 +5,11 @@ import {
     Backdrop,
     Box,
     capitalize,
-    Chip, FormControl,
+    Chip,
+    FormControl,
     Hidden,
-    InputAdornment, InputLabel,
+    InputAdornment,
+    InputLabel,
     ListItem,
     MenuItem,
     Select,
@@ -171,7 +173,7 @@ const Filter: FC<FilterProps> = ({className, ...rest}) => {
             </Hidden>
             <Hidden smUp>
                 <FormControl fullWidth>
-                    <InputLabel>Search for categories...</InputLabel>
+                    <InputLabel >Search for categories...</InputLabel>
 
                     <Select
                         open={open}

@@ -2,7 +2,6 @@ import React, {FC, ReactNode, useEffect, useRef, useState} from 'react';
 import clsx from 'clsx';
 import {Box, ButtonBase, Skeleton} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import {useTabContext} from '@mui/lab';
 import {Theme} from 'src/theme';
 import {drawLabels, reset} from 'src/utils/labeling';
 import useCategory from 'src/hooks/useCategory';
@@ -71,9 +70,6 @@ const DTImage: FC<DTImageProps> = ({
     const imageRef = useRef<HTMLImageElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
-    const tabContext = useTabContext();
-    const currentTab = tabContext?.value || null;
-
     const [loaded, setLoaded] = useState<boolean>(false);
 
     const handleLoad = () => {
@@ -90,7 +86,7 @@ const DTImage: FC<DTImageProps> = ({
             reset(canvasRef.current);
             drawLabels(canvasRef.current, labels, categories, 0, 0, false, false, currentCategory);
         }
-    }, [labels, categories, currentTab, loaded, currentCategory]);
+    }, [labels, categories, loaded, currentCategory]);
 
     return (
         <Box className={clsx(classes.root, className)} style={{aspectRatio: `${image.width} / ${image.height}`}}>

@@ -12,12 +12,13 @@ import ImagesActionsMenu from './ImagesActionsMenu';
 import {ImagesProvider} from 'src/store/ImagesContext';
 import {Pipeline} from 'src/types/pipeline';
 import {LAZY_LOAD_BATCH} from 'src/constants';
+import useAuth from '../../../../../hooks/useAuth';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
     sticky: {
         position: 'sticky',
-        top: 49,
+        top: 0,
         zIndex: 1100,
         background: theme.palette.background.default,
         color: theme.palette.text.primary,
@@ -31,16 +32,18 @@ const useStyles = makeStyles((theme: Theme) => ({
         },
         [theme.breakpoints.down('md')]: {
             position: 'relative',
-            top: 0,
             zIndex: 1000,
-            flexDirection: 'column-reverse'
+            flexDirection: 'column',
+            justifyContent: 'center'
         }
     },
     wrapper: {
         display: 'flex',
         alignItems: 'center',
         [theme.breakpoints.down('md')]: {
-            marginBottom: theme.spacing(1.5)
+            width: '100%',
+            justifyContent: 'space-between',
+            marginTop: theme.spacing(1.5)
         }
     }
 }));
@@ -67,15 +70,13 @@ const Navigation: FC = () => {
 
     const handlePrevious = () => {
         saveOffset(offset => offset - LAZY_LOAD_BATCH);
-        document.querySelector('.scroller').scrollTo(0, 64);
     };
 
     const handleNext = () => {
         saveOffset(offset => offset + LAZY_LOAD_BATCH);
-        document.querySelector('.scroller').scrollTo(0, 64);
     };
 
-    if (images === null) return null;
+    if (images === null || images.length < LAZY_LOAD_BATCH) return null;
 
     return (
         <Box display="flex" alignItems="center" justifyContent="center" mt={4} mb={5}>
@@ -99,6 +100,7 @@ const Navigation: FC = () => {
 const DTImagesWrapper: FC<DTImagesWrapperProps> = ({pipeline_id}) => {
     const classes = useStyles();
 
+    const {user} = useAuth();
     const {dataset, pipelines} = useDataset();
     const {pipeline, savePipeline} = usePipeline();
 
@@ -108,13 +110,13 @@ const DTImagesWrapper: FC<DTImagesWrapperProps> = ({pipeline_id}) => {
                 <FilterCategories />
 
                 <div className={classes.wrapper}>
-                    {pipelines.length > 0 && (
+                    {pipelines.length > 0 ? (
                         <ButtonGroup color="inherit" size="small">
                             <Button
                                 onClick={() => savePipeline(null)}
                                 variant={pipeline === null ? 'contained' : 'outlined'}
                             >
-                                Original ({dataset.image_count})
+                                Original
                             </Button>
                             {pipelines.map(current => (
                                 <Button
@@ -122,15 +124,19 @@ const DTImagesWrapper: FC<DTImagesWrapperProps> = ({pipeline_id}) => {
                                     onClick={() => savePipeline(current)}
                                     variant={pipeline !== null ? 'contained' : 'outlined'}
                                 >
-                                    Augmented ({current.image_count})
+                                    Augmented
                                 </Button>
                             ))}
                         </ButtonGroup>
+                    ) : (
+                        <Box />
                     )}
 
-                    <Box ml={2}>
-                        <ImagesActionsMenu />
-                    </Box>
+                    {dataset.user_id === user.id && (
+                        <Box ml={2}>
+                            <ImagesActionsMenu />
+                        </Box>
+                    )}
                 </div>
             </div>
 

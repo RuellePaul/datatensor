@@ -95,6 +95,9 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
     const pipeline = useSelector<any>(state => state.pipeline);
     const operations: Operation[] = pipeline.operations.allIds.map(id => pipeline.operations.byId[id]);
 
+    if (images === null || images.length === 0)
+        return null;
+
     return (
         <div className={clsx(classes.root, className)}>
             <Box my={2}>

@@ -67,7 +67,6 @@ const AddCategoryAction: FC<AddCategoryActionProps> = ({className}) => {
                     label="New category"
                     icon={<AddIcon />}
                     onClick={() => setOpenCategoryCreation(true)}
-                    variant="outlined"
                 />
             </Box>
 

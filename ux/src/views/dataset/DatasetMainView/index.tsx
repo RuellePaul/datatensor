@@ -1,24 +1,16 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC} from 'react';
 import {useParams} from 'react-router';
-import clsx from 'clsx';
-import {Box, Container, Divider, Tab, Tabs, Tooltip, Typography} from '@mui/material';
+import {Box, Container} from '@mui/material';
 import {makeStyles} from '@mui/styles';
-import {TabContext} from '@mui/lab';
 import Header from './Header';
 import SectionOverview from './sections/SectionOverview';
 import SectionImages from './sections/SectionImages';
-import SectionAugmentation from './sections/SectionAugmentation';
 import SectionSettings from './sections/SectionSettings';
-import {
-    DashboardOutlined,
-    DynamicFeedOutlined as AugmentationIcon,
-    PhotoLibraryOutlined,
-    SettingsOutlined
-} from '@mui/icons-material';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
 import DTLabelisator from 'src/components/core/Labelisator';
-import {ImagesConsumer, ImagesProvider} from 'src/store/ImagesContext';
+import useAuth from 'src/hooks/useAuth';
+import {ImagesProvider} from 'src/store/ImagesContext';
 import {DatasetConsumer, DatasetProvider} from 'src/store/DatasetContext';
 import {UserProvider} from 'src/store/UserContext';
 import {CategoryProvider} from 'src/store/CategoryContext';
@@ -30,12 +22,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         backgroundColor: theme.palette.background.default,
         minHeight: '100%',
         padding: theme.spacing(3, 0)
-    },
-    sticky: {
-        position: 'sticky',
-        top: 0,
-        background: theme.palette.background.default,
-        zIndex: 1100
     },
     tab: {
         color: theme.palette.text.primary,
@@ -51,35 +37,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const DTTab = ({label, icon: Icon, ...rest}) => {
-    const classes = useStyles();
-
-    const TabLabel = (
-        <Box display="flex" alignItems="center" className={classes.wrapper}>
-            <Icon />
-
-            <Box className="label">{label}</Box>
-        </Box>
-    );
-
-    return <Tab {...rest} label={TabLabel} className={classes.tab} />;
-};
-
 const DatasetMainView: FC = () => {
     const classes = useStyles();
 
-    const [tab, setTab] = useState<number>(0);
-    const [openedTabs, setOpenedTabs] = useState<number[]>([0]);
-
-    const handleTabChange = (event: React.ChangeEvent<{}>, newTab: number) => {
-        setTab(newTab);
-    };
-
+    const {user} = useAuth();
     const {dataset_id} = useParams();
-
-    useEffect(() => {
-        setOpenedTabs(openedTabs => (openedTabs.includes(tab) ? openedTabs : [...openedTabs, tab]));
-    }, [tab]);
 
     if (!dataset_id) return null;
 
@@ -93,74 +55,19 @@ const DatasetMainView: FC = () => {
                                 <ImagesProvider>
                                     <PipelineProvider>
                                         <CategoryProvider>
-                                            <TabContext value={tab.toString()}>
-                                                <Container component="section" maxWidth="lg">
-                                                    <Header />
+                                            <Container component="section" maxWidth="lg">
+                                                <Header />
 
-                                                    <Box className={classes.sticky} mt={2}>
-                                                        <ImagesConsumer>
-                                                            {value => (
-                                                                <Tabs centered value={tab} onChange={handleTabChange}>
-                                                                    <DTTab label="Overview" icon={DashboardOutlined} />
-                                                                    <DTTab
-                                                                        label="Images"
-                                                                        icon={PhotoLibraryOutlined}
-                                                                        id="dt-tab-images"
-                                                                    />
-                                                                    <DTTab
-                                                                        label={
-                                                                            value.images === null ||
-                                                                            value.images.length === 0 ? (
-                                                                                <Tooltip
-                                                                                    title={
-                                                                                        <Typography variant="h6">
-                                                                                            You need to upload images
-                                                                                            first
-                                                                                        </Typography>
-                                                                                    }
-                                                                                >
-                                                                                    <span>Augmentation</span>
-                                                                                </Tooltip>
-                                                                            ) : (
-                                                                                'Augmentation'
-                                                                            )
-                                                                        }
-                                                                        disabled={
-                                                                            value.images === null ||
-                                                                            value.images.length === 0
-                                                                        }
-                                                                        style={{
-                                                                            pointerEvents: 'auto'
-                                                                        }}
-                                                                        icon={AugmentationIcon}
-                                                                    />
+                                                <Box my={4}>
+                                                    <SectionOverview />
 
-                                                                    <DTTab label="Settings" icon={SettingsOutlined} />
-                                                                </Tabs>
-                                                            )}
-                                                        </ImagesConsumer>
+                                                    <SectionImages />
 
-                                                        <Divider />
-                                                    </Box>
+                                                    {value.dataset.user_id === user.id && (<SectionSettings />)}
+                                                </Box>
+                                            </Container>
 
-                                                    {tab !== 1 && <Box mb={2} />}
-
-                                                    {openedTabs.includes(0) && (
-                                                        <SectionOverview className={clsx(tab !== 0 && 'hidden')} />
-                                                    )}
-                                                    {openedTabs.includes(1) && (
-                                                        <SectionImages className={clsx(tab !== 1 && 'hidden')} />
-                                                    )}
-                                                    {openedTabs.includes(2) && (
-                                                        <SectionAugmentation className={clsx(tab !== 2 && 'hidden')} />
-                                                    )}
-                                                    {openedTabs.includes(3) && (
-                                                        <SectionSettings className={clsx(tab !== 3 && 'hidden')} />
-                                                    )}
-                                                </Container>
-
-                                                <DTLabelisator />
-                                            </TabContext>
+                                            <DTLabelisator />
                                         </CategoryProvider>
                                     </PipelineProvider>
                                 </ImagesProvider>

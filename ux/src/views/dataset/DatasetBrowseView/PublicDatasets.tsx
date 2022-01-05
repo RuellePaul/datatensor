@@ -154,7 +154,7 @@ const PublicDatasets: FC<ResultsProps> = ({className, ...rest}) => {
                             md={4}
                             sm={6}
                             xs={12}
-                            sx={{display: 'flex', justifyContent: 'center'}}
+                            sx={{display: 'flex', justifyContent: 'center', height: '100%'}}
                         >
                             <DatasetProvider dataset={dataset} categories={dataset.categories}>
                                 <DTDataset />

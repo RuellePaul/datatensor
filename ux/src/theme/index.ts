@@ -272,13 +272,6 @@ const themesOptions: ThemeOptions[] = [
                         borderTop: 'none'
                     }
                 }
-            },
-            MuiList: {
-                styleOverrides: {
-                    root: {
-                        padding: 0
-                    }
-                }
             }
         }
     }

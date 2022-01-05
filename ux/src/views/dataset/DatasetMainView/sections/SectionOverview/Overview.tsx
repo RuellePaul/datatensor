@@ -54,9 +54,9 @@ const Overview: FC<OverviewProps> = ({className}) => {
                 <Box className={classes.wrapper}>
                     <ImagesIcon className={classes.icon} />
 
-                    <Typography fontWeight={600} color="textPrimary">
+                    <Typography variant="h4" fontWeight={600} color="textPrimary">
                         {dataset.image_count + dataset.augmented_count}{' '}
-                        <Typography variant="subtitle1" component="span" color="textSecondary" fontWeight={400}>
+                        <Typography variant="h5" component="span" color="textSecondary" fontWeight={400}>
                             images
                         </Typography>
                     </Typography>
@@ -64,9 +64,9 @@ const Overview: FC<OverviewProps> = ({className}) => {
                 <Box className={classes.wrapper}>
                     <CategoriesIcon className={classes.icon} />
 
-                    <Typography fontWeight={600} color="textPrimary">
+                    <Typography variant="h4" fontWeight={600} color="textPrimary">
                         {categories.length}{' '}
-                        <Typography variant="subtitle1" component="span" color="textSecondary" fontWeight={400}>
+                        <Typography variant="h5" component="span" color="textSecondary" fontWeight={400}>
                             categories
                         </Typography>
                     </Typography>
@@ -74,9 +74,9 @@ const Overview: FC<OverviewProps> = ({className}) => {
                 <Box className={classes.wrapper}>
                     <LabelsIcon className={classes.icon} />
 
-                    <Typography fontWeight={600} color="textPrimary">
+                    <Typography variant="h4" fontWeight={600} color="textPrimary">
                         {totalLabelsCount}{' '}
-                        <Typography variant="subtitle1" component="span" color="textSecondary" fontWeight={400}>
+                        <Typography variant="h5" component="span" color="textSecondary" fontWeight={400}>
                             labels
                         </Typography>
                     </Typography>

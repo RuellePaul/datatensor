@@ -9,7 +9,7 @@ exports = APIRouter()
 
 
 @exports.get('/', response_model=ExportsResponse)
-def get_exports(dataset_id, dataset=Depends(dataset_belongs_to_user)):
+def get_exports(dataset_id):
     """
     Get dataset exports.
     """

@@ -35,6 +35,10 @@ import getDateDiff from 'src/utils/getDateDiff';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
+    paper: {
+        background: '#191c27',
+        padding: 0
+    },
     alert: {
         marginTop: theme.spacing(2),
         '& .MuiAlert-message': {
@@ -61,7 +65,7 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
     const {enqueueSnackbar} = useSnackbar();
 
     const {tasks, saveTasks} = useTasks();
-    const {dataset, saveDataset} = useDataset();
+    const {dataset, saveDataset, categories} = useDataset();
     const {exports, saveExports, trigger, loading} = useExports();
 
     const [open, setOpen] = useState<boolean>(false);
@@ -97,8 +101,6 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
     const handleDownload = filename => {
         if (exports.length === 0) return;
 
-        console.log(exports[0].export_data)
-
         download(exports[0].export_data, `${filename || 'export'}.json`, 'application/json');
     };
 
@@ -110,6 +112,9 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
             task.dataset_id === dataset.id &&
             task.type === 'export'
     );
+
+    const isPoor =
+        categories.map(category => category.labels_count).reduce((acc, val) => acc + val, 0) / categories.length < 2000;
 
     return (
         <Formik
@@ -158,6 +163,15 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
                                 </Link>{' '}
                                 on documentation.
                             </Typography>
+
+                            {isPoor && !dataset.exported_at && (
+                                <Alert severity="warning" sx={{mt: 2}}>
+                                    You don't have enough images in this dataset to successfully converge an object
+                                    detection model.
+                                    <br />
+                                    You must at least get <strong>2000 labels per category</strong>
+                                </Alert>
+                            )}
 
                             {dataset.exported_at && !activeExportTask && (
                                 <Alert className={classes.alert}>
@@ -255,11 +269,11 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
                         </CardActions>
                     </Card>
 
-                    <Dialog open={open} onClose={handleClose} maxWidth="md">
+                    <Dialog classes={{paper: classes.paper}} open={open} onClose={handleClose} maxWidth="md">
                         <DialogContent className="scroll">
                             <pre>
                                 <code className="language-">
-                                    {exports.length > 0 && JSON.stringify(exports[0].export_data, null, 4)}
+                                    {exports.length > 0 && JSON.stringify(exports[0].export_data, null, 3)}
                                 </code>
                             </pre>
                         </DialogContent>

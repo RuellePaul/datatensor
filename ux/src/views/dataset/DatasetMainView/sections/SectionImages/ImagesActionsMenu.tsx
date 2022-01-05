@@ -17,17 +17,20 @@ import {
     ListItemIcon,
     Menu,
     MenuItem,
+    Tooltip,
     Typography
 } from '@mui/material';
 import {
     Close as CloseIcon,
     Delete as DeleteIcon,
+    DynamicFeedOutlined as AugmentationIcon,
     ExpandMore as ArrowDown,
     PublishOutlined as UploadIcon,
     VisibilityOutlined as ViewIcon
 } from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
+import SectionAugmentation from 'src/views/dataset/DatasetMainView/sections/SectionAugmentation';
 import useDataset from 'src/hooks/useDataset';
 import useImages from 'src/hooks/useImages';
 import useTasks from 'src/hooks/useTasks';
@@ -74,13 +77,72 @@ const UploadMenuItem: FC = () => {
             </MenuItem>
             <Dialog open={open} onClose={handleCloseUpload}>
                 <DialogTitle>
-                    Upload Images
+                    Upload images
                     <IconButton className={classes.close} onClick={handleCloseUpload}>
                         <CloseIcon />
                     </IconButton>
                 </DialogTitle>
                 <DialogContent>
                     <ImagesDropzone callback={handleCloseUpload} />
+                </DialogContent>
+            </Dialog>
+        </>
+    );
+};
+
+const AugmentationMenuItem: FC = () => {
+    const classes = useStyles();
+
+    const {dataset} = useDataset();
+    const {images} = useImages();
+
+    const [open, setOpen] = useState(false);
+
+    const handleOpenAugmentation = () => setOpen(true);
+    const handleCloseAugmentation = () => setOpen(false);
+
+    if (images.length === 0) return null;
+
+    return (
+        <>
+            {dataset.augmented_count > 0 ? (
+                <Tooltip title="You already have augmented images." disableInteractive>
+                    <MenuItem
+                        component="div"
+                        disabled
+                        sx={{
+                            // @ts-ignore
+                            pointerEvents: 'auto !important'
+                        }}
+                    >
+                        <ListItemIcon>
+                            <AugmentationIcon fontSize="small" />
+                        </ListItemIcon>
+                        <Typography variant="inherit" noWrap>
+                            Augment images
+                        </Typography>
+                    </MenuItem>
+                </Tooltip>
+            ) : (
+                <MenuItem onClick={handleOpenAugmentation}>
+                    <ListItemIcon>
+                        <AugmentationIcon fontSize="small" />
+                    </ListItemIcon>
+                    <Typography variant="inherit" noWrap>
+                        Augment images
+                    </Typography>
+                </MenuItem>
+            )}
+
+            <Dialog open={open} onClose={handleCloseAugmentation} fullWidth maxWidth="lg">
+                <DialogTitle>
+                    Augment images
+                    <IconButton className={classes.close} onClick={handleCloseAugmentation}>
+                        <CloseIcon />
+                    </IconButton>
+                </DialogTitle>
+                <DialogContent>
+                    <SectionAugmentation />
                 </DialogContent>
             </Dialog>
         </>
@@ -287,7 +349,7 @@ const DeleteImagesMenuItem: FC = () => {
                     <Typography gutterBottom>
                         This will delete {dataset.image_count + dataset.augmented_count} images.
                     </Typography>
-                    <Alert severity='error'>
+                    <Alert severity="error">
                         <AlertTitle>There is no way back</AlertTitle>
                         Your images and associated data (labels, categories...) will be deleted <strong>forever</strong>
                     </Alert>
@@ -325,6 +387,7 @@ const ImagesActionsMenu: FC<ImagesActionsMenuProps> = ({className}) => {
             </Button>
             <Menu anchorEl={anchorEl} open={open} onClose={handleCloseMenu} TransitionComponent={Fade}>
                 <UploadMenuItem />
+                <AugmentationMenuItem />
                 <ViewPipelineMenuItem />
                 <Divider sx={{my: 0.5}} />
                 <DeleteImagesMenuItem />

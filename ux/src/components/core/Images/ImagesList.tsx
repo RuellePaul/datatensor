@@ -27,7 +27,9 @@ interface ImageOverlayProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        overflow: 'hidden',
+        overflow: 'hidden'
+    },
+    filled: {
         minHeight: 600
     },
     grid: {
@@ -143,7 +145,7 @@ const DTImagesList: FC<ImagesListProps> = ({className, pipeline_id, ...rest}) =>
         );
 
     return (
-        <div className={clsx(classes.root, className)} {...rest}>
+        <div className={clsx(classes.root, className, images.length >= LAZY_LOAD_BATCH && classes.filled)} {...rest}>
             <Masonry columns={{xs: 2, sm: 3, md: 4}} spacing={1}>
                 {images.map((image: Image) => (
                     <MasonryItem key={image.id}>
