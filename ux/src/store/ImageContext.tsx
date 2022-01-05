@@ -1,5 +1,6 @@
 import React, {createContext, FC, ReactNode, useCallback, useEffect, useState} from 'react';
 import {useSnackbar} from 'notistack';
+import useImages from 'src/hooks/useImages';
 import {Label} from 'src/types/label';
 import {Image} from 'src/types/image';
 import api from 'src/utils/api';
@@ -33,6 +34,8 @@ export const ImageContext = createContext<ImageContextValue>({
 
 export const ImageProvider: FC<ImageProviderProps> = ({image, children, labels = null}) => {
     const {dataset, saveCategories} = useDataset();
+    const {saveImages} = useImages();
+
     const {enqueueSnackbar} = useSnackbar();
 
     const [currentLabels, setCurrentLabels] = useState<Label[]>(labels);
@@ -85,6 +88,11 @@ export const ImageProvider: FC<ImageProviderProps> = ({image, children, labels =
             enqueueSnackbar(error.message || 'Something went wrong', {
                 variant: 'error'
             });
+        } finally {
+            saveImages(images => images
+                .filter(current => current.id !== image.id)
+                .concat({...image, labels: currentLabels})
+            )
         }
     };
 
