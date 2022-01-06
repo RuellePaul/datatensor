@@ -3,7 +3,7 @@ import {AxiosResponse} from 'axios';
 import {useSnackbar} from 'notistack';
 import {Formik} from 'formik';
 import clsx from 'clsx';
-import {Box, Button, CircularProgress, FormHelperText, Grid} from '@mui/material';
+import {Box, Button, CircularProgress, FormHelperText, Skeleton} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import type {Theme} from 'src/theme';
 import {useSelector} from 'src/store';
@@ -41,6 +41,10 @@ const PipelineSample: FC<PipelineSampleProps> = ({ handler, className }) => {
     const [imagesLabels, setImagesLabels] = useState<Label[][]>([]);
 
     const doSample = useCallback(async () => {
+
+        setImagesBase64([]);
+        setImagesLabels([]);
+
         if (dataset.id && pipeline.isLoaded) {
             const operations: Operation[] = pipeline.operations.allIds.map(id => pipeline.operations.byId[id]);
 
@@ -63,86 +67,89 @@ const PipelineSample: FC<PipelineSampleProps> = ({ handler, className }) => {
 
     return (
         <div className={clsx(classes.root, className)}>
-            <Grid
-                container
-                spacing={1}
+            <Formik
+                initialValues={{
+                    submit: null
+                }}
+                onSubmit={async (values, {
+                    setErrors,
+                    setStatus,
+                    setSubmitting
+                }) => {
+                    try {
+                        await doSample();
+
+                        setStatus({ success: true });
+                        setSubmitting(false);
+                    } catch (err) {
+                        console.error(err);
+                        setStatus({ success: false });
+                        setErrors({ submit: err.message });
+                        setSubmitting(false);
+                    }
+                }}
             >
-                <Grid
-                    item
-                    xs={12}
-                >
-                    <Formik
-                        initialValues={{
-                            submit: null
-                        }}
-                        onSubmit={async (values, {
-                            setErrors,
-                            setStatus,
-                            setSubmitting
-                        }) => {
-                            try {
-                                await doSample();
-
-                                setStatus({ success: true });
-                                setSubmitting(false);
-                            } catch (err) {
-                                console.error(err);
-                                setStatus({ success: false });
-                                setErrors({ submit: err.message });
-                                setSubmitting(false);
-                            }
-                        }}
+                {({
+                      errors,
+                      handleSubmit,
+                      isSubmitting
+                  }) => (
+                    <form
+                        onSubmit={handleSubmit}
                     >
-                        {({
-                              errors,
-                              handleSubmit,
-                              isSubmitting
-                          }) => (
-                            <form
-                                onSubmit={handleSubmit}
-                            >
-
-                                <Box mb={1}>
-                                    <Button
-                                        fullWidth
-                                        size="small"
-                                        variant="contained"
-                                        type="submit"
-                                        disabled={isSubmitting}
-                                        endIcon={isSubmitting && (
-                                            <CircularProgress
-                                                className={classes.loader}
-                                                color="inherit"
-                                            />
-                                        )}
-                                    >
-                                        {isSubmitting ? 'Computing...' : 'Compute sample'}
-                                    </Button>
-                                </Box>
-
-                                {errors.submit && (
-                                    <Box mt={3}>
-                                        <FormHelperText error>
-                                            {errors.submit}
-                                        </FormHelperText>
-                                    </Box>
+                        <Box mb={1}>
+                            <Button
+                                fullWidth
+                                size="small"
+                                variant="contained"
+                                type="submit"
+                                disabled={isSubmitting}
+                                endIcon={isSubmitting && (
+                                    <CircularProgress
+                                        className={classes.loader}
+                                        color="inherit"
+                                    />
                                 )}
-                            </form>
-                        )}
-                    </Formik>
-                </Grid>
+                            >
+                                {isSubmitting ? 'Computing...' : 'Compute sample'}
+                            </Button>
+                        </Box>
 
-                <Masonry columns={{ xs: 2, sm: 3, }} spacing={1}>
-                    {imagesBase64.map((imageBase64, index) => (
-                        <MasonryItem key={`masonry_image_${index}`}>
-                            <ImageBase64
-                                imageBase64={imageBase64}
-                                labels={imagesLabels[index]}
-                            />
-                        </MasonryItem>
-                    ))}
-                </Masonry>
-            </Grid>
+                        {errors.submit && (
+                            <Box mt={3}>
+                                <FormHelperText error>
+                                    {errors.submit}
+                                </FormHelperText>
+                            </Box>
+                        )}
+
+                        {isSubmitting && (
+                            <Masonry columns={{ xs: 2, sm: 3 }} spacing={1}>
+                                {Array.from(Array(9), () => null).map(_ => (
+                                    <MasonryItem>
+                                        <Skeleton
+                                            width="100%"
+                                            height={150 + 100 * Math.random()}
+                                            sx={{ transform: 'none' }}
+                                        />
+                                    </MasonryItem>
+                                ))}
+                            </Masonry>
+                        )}
+
+                        <Masonry columns={{ xs: 2, sm: 3 }} spacing={1}>
+                            {imagesBase64.map((imageBase64, index) => (
+                                <MasonryItem key={`masonry_image_${index}`}>
+                                    <ImageBase64
+                                        imageBase64={imageBase64}
+                                        labels={imagesLabels[index]}
+                                    />
+                                </MasonryItem>
+                            ))}
+                        </Masonry>
+                    </form>
+                )}
+            </Formik>
         </div>
     );
 };
