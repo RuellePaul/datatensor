@@ -71,7 +71,7 @@ export const ImageProvider: FC<ImageProviderProps> = ({image, children, labels =
     }, [fetchLabels]);
 
     const validateLabels = async () => {
-        if (labels !== null) return;
+        if (labels !== null || positions.length <= 1) return;
 
         try {
             const response = await api.post<any>(`/datasets/${dataset.id}/images/${image.id}/labels/`, {
@@ -86,7 +86,7 @@ export const ImageProvider: FC<ImageProviderProps> = ({image, children, labels =
             saveImages(images => images
                 .map(current => current.id === image.id ? {...current, labels: currentLabels} : current)
             );
-            setPositions([]);
+            setPositions([currentLabels]);
             enqueueSnackbar('Labels updated', {variant: 'info'});
         } catch (error) {
             enqueueSnackbar(error.message || 'Something went wrong', {

@@ -6,6 +6,7 @@ import {Category} from 'src/types/category';
 import {COLORS} from 'src/utils/colors';
 import {capitalize} from '@mui/material';
 
+
 export const RESIZE_SIZE = 8;
 export const LABEL_MIN_WIDTH = 16;
 export const LABEL_MIN_HEIGHT = 16;
@@ -54,7 +55,7 @@ export const convertLabel = (canvas: HTMLCanvasElement, label: Label, offset = C
     let y = offset + label.y * (canvas.height - 2 * offset);
     let w = label.w * (canvas.width - 2 * offset);
     let h = label.h * (canvas.height - 2 * offset);
-    return {x, y, w, h};
+    return { x, y, w, h };
 };
 
 export const drawCursorLines = (canvas: HTMLCanvasElement, point: Point) => {
@@ -113,7 +114,7 @@ export const drawLabels = (
             .sort((a, b) => -b.name.localeCompare(a.name))
             .find(category => label.category_id === category.id);
 
-        const {x, y, w, h} = convertLabel(canvas, label, offset);
+        const { x, y, w, h } = convertLabel(canvas, label, offset);
 
         let color = COLORS[categories.sort((a, b) => -b.name.localeCompare(a.name)).indexOf(category)] || '#FFFFFF';
 
@@ -129,6 +130,16 @@ export const drawLabels = (
             context.fillRect(x + 0.5, y + 0.5, w, h);
         }
 
+        if (category && w > category.name.length * 8 && h > LABEL_MIN_HEIGHT) {
+            let fontSize = 14;
+            context.textBaseline = 'bottom';
+            context.font = `bold ${fontSize}px Roboto, Helvetica, Arial, sans-serif`;
+            context.fillStyle = color;
+            context.fillRect(x - 0.5, y - 20 - 0.5, context.measureText(category.name).width + 12, 20);
+            context.fillStyle = '#000000';
+            context.fillText(capitalize(category.name), x + 6, y);
+        }
+
         if (resize) {
             context.setLineDash([0]);
             context.fillStyle = '#286ed6';
@@ -137,14 +148,6 @@ export const drawLabels = (
             drawPoint(context, x + w, y);
             drawPoint(context, x, y + h);
             drawPoint(context, x + w, y + h);
-        }
-
-        if (category && w > category.name.length * 8 && h > LABEL_MIN_HEIGHT * 2) {
-            let fontSize = 16;
-            context.textBaseline = 'top';
-            context.font = `${fontSize}px Roboto, Helvetica, Arial, sans-serif`;
-            context.fillStyle = color;
-            context.fillText(capitalize(category.name), x + 8, y + 8);
         }
     }
 };
@@ -160,7 +163,7 @@ export const renderCursor = (
     if (!labels || !point) return;
 
     for (const label of labels) {
-        const {x, y, w, h} = convertLabel(canvas, label);
+        const { x, y, w, h } = convertLabel(canvas, label);
 
         if (point[0] > x - TOLERANCE && point[0] < x + RESIZE_SIZE) {
             if (point[1] > y - TOLERANCE && point[1] < y + RESIZE_SIZE) {
@@ -172,7 +175,7 @@ export const renderCursor = (
                 return;
             }
         } else if (point[0] > x + w - RESIZE_SIZE && point[0] < x + w + TOLERANCE) {
-            if (point[1] > y  - TOLERANCE && point[1] < y + RESIZE_SIZE) {
+            if (point[1] > y - TOLERANCE && point[1] < y + RESIZE_SIZE) {
                 callback(label, 'top-right');
                 return;
             }
@@ -190,7 +193,7 @@ export const isHoveringLabels = (canvas: HTMLCanvasElement, point: Point, labels
     if (!point || !labels) return false;
 
     for (const label of labels) {
-        const {x, y, w, h} = convertLabel(canvas, label);
+        const { x, y, w, h } = convertLabel(canvas, label);
 
         if (x <= point[0] + TOLERANCE) {
             if (y <= point[1] + TOLERANCE) {
@@ -210,7 +213,7 @@ export const currentLabelsHoverIds = (canvas: HTMLCanvasElement, point: Point, l
 
     let labelsHoverIds = [];
     for (const label of labels) {
-        const {x, y, w, h} = convertLabel(canvas, label);
+        const { x, y, w, h } = convertLabel(canvas, label);
 
         if (x <= point[0] + TOLERANCE) {
             if (y <= point[1] + TOLERANCE) {

@@ -365,6 +365,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                                             color="primary"
                                                             size="small"
                                                             onClick={value.validateLabels}
+                                                            disabled={value.positions.length <= 1}
                                                         >
                                                             Save
                                                         </Button>
