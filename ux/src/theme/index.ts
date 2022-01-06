@@ -70,7 +70,7 @@ const baseOptions: MuiThemeOptions = {
             sm: 600,
             md: 960,
             lg: 1380,
-            xl: 1920
+            xl: 1720
         }
     },
     zIndex: {

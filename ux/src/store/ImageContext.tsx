@@ -83,15 +83,15 @@ export const ImageProvider: FC<ImageProviderProps> = ({image, children, labels =
                     labels_count: category.labels_count + (response.data[category.id] ? response.data[category.id] : 0)
                 }))
             );
+            saveImages(images => images
+                .map(current => current.id === image.id ? {...current, labels: currentLabels} : current)
+            );
+            setPositions([]);
             enqueueSnackbar('Labels updated', {variant: 'info'});
         } catch (error) {
             enqueueSnackbar(error.message || 'Something went wrong', {
                 variant: 'error'
             });
-        } finally {
-            saveImages(images => images
-                .map(current => current.id === image.id ? {...current, labels: currentLabels} : current)
-            )
         }
     };
 
