@@ -1,6 +1,6 @@
 import React, {FC, useEffect, useState} from 'react';
 import clsx from 'clsx';
-import {Grid, Stack, Step, StepButton, StepContent, StepLabel, Stepper, Tooltip} from '@mui/material';
+import {Grid, Stack, Step, StepButton, StepContent, Stepper} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import {SectionProps} from '../SectionProps';
@@ -13,7 +13,6 @@ import EditAction from './EditAction';
 import Overview from './Overview';
 import useImages from 'src/hooks/useImages';
 import useDataset from 'src/hooks/useDataset';
-
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {}
@@ -38,10 +37,10 @@ const DATASET_ACTIONS = [
     }
 ];
 
-const SectionOverview: FC<SectionProps> = ({ className }) => {
+const SectionOverview: FC<SectionProps> = ({className}) => {
     const classes = useStyles();
-    const { categories, pipelines } = useDataset();
-    const { images } = useImages();
+    const {categories, pipelines} = useDataset();
+    const {images} = useImages();
 
     const totalLabelsCount = categories.map(category => category.labels_count || 0).reduce((acc, val) => acc + val, 0);
 
@@ -50,10 +49,10 @@ const SectionOverview: FC<SectionProps> = ({ className }) => {
             ? images.length === 0
                 ? 0
                 : totalLabelsCount === 0
-                    ? 1
-                    : pipelines.length === 0
-                        ? 2
-                        : 3
+                ? 1
+                : pipelines.length === 0
+                ? 2
+                : 3
             : 0;
 
     useEffect(() => {
@@ -78,9 +77,7 @@ const SectionOverview: FC<SectionProps> = ({ className }) => {
                         <Stepper activeStep={activeStep} orientation="vertical">
                             {DATASET_ACTIONS.map((action, index) => (
                                 <Step key={action.label} disabled={index > currentStep}>
-                                    <StepButton onClick={() => setActiveStep(index)}>
-                                        {action.label}
-                                    </StepButton>
+                                    <StepButton onClick={() => setActiveStep(index)}>{action.label}</StepButton>
                                     <StepContent>{action.component}</StepContent>
                                 </Step>
                             ))}

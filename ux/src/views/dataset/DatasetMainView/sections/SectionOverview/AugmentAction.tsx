@@ -16,7 +16,7 @@ import {
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import {Close as CloseIcon, PublishOutlined as UploadIcon} from '@mui/icons-material';
-import SectionAugmentation from '../SectionAugmentation';
+import SectionAugmentation from 'src/views/dataset/DatasetMainView/sections/SectionAugmentation';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},

@@ -4,6 +4,7 @@ import {makeStyles} from '@mui/styles';
 import DTImagesList from 'src/components/core/Images/ImagesList';
 import useDataset from 'src/hooks/useDataset';
 import {Theme} from 'src/theme';
+import useAuth from 'src/hooks/useAuth';
 import useCategory from 'src/hooks/useCategory';
 import useImages from 'src/hooks/useImages';
 import usePipeline from 'src/hooks/usePipeline';
@@ -12,7 +13,6 @@ import ImagesActionsMenu from './ImagesActionsMenu';
 import {ImagesProvider} from 'src/store/ImagesContext';
 import {Pipeline} from 'src/types/pipeline';
 import {LAZY_LOAD_BATCH} from 'src/constants';
-import useAuth from '../../../../../hooks/useAuth';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},

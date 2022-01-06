@@ -39,7 +39,7 @@ import {setDefaultPipeline, setPipeline} from 'src/slices/pipeline';
 import ImagesDropzone from 'src/components/ImagesDropzone';
 import Pipeline from 'src/components/core/Pipeline';
 import api from 'src/utils/api';
-import goToHash from '../../../../../utils/goToHash';
+import goToHash from 'src/utils/goToHash';
 
 interface ImagesActionsMenuProps {
     className?: string;
