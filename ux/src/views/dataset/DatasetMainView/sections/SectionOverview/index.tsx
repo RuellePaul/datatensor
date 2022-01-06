@@ -1,6 +1,6 @@
-import React, {FC} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import clsx from 'clsx';
-import {Grid, Stack} from '@mui/material';
+import {Grid, Stack, Step, StepButton, StepContent, Stepper} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import {SectionProps} from '../SectionProps';
@@ -8,22 +8,57 @@ import Categories from 'src/components/core/Dataset/Categories';
 import ExportAction from './ExportAction';
 import LabelisatorAction from './LabelisatorAction';
 import UploadAction from './UploadAction';
+import AugmentAction from './AugmentAction';
 import EditAction from './EditAction';
 import Overview from './Overview';
 import useImages from 'src/hooks/useImages';
 import useDataset from 'src/hooks/useDataset';
 
-
 const useStyles = makeStyles((theme: Theme) => ({
     root: {}
 }));
 
-const SectionOverview: FC<SectionProps> = ({ className }) => {
+const DATASET_ACTIONS = [
+    {
+        label: 'Upload images',
+        component: <UploadAction />
+    },
+    {
+        label: 'Label images',
+        component: <LabelisatorAction />
+    },
+    {
+        label: 'Augment images',
+        component: <AugmentAction />
+    },
+    {
+        label: 'Export dataset',
+        component: <ExportAction />
+    }
+];
+
+const SectionOverview: FC<SectionProps> = ({className}) => {
     const classes = useStyles();
-    const { categories } = useDataset();
-    const { images } = useImages();
+    const {categories, pipelines} = useDataset();
+    const {images} = useImages();
 
     const totalLabelsCount = categories.map(category => category.labels_count || 0).reduce((acc, val) => acc + val, 0);
+
+    const currentStep = (
+        images instanceof Array
+            ? images.length === 0
+                ? 0
+                : totalLabelsCount === 0
+                    ? 1
+                    : pipelines.length === 0 ? 2 : 3
+            : null
+    )
+    
+    useEffect(() => {
+        setActiveStep(currentStep);
+    }, [currentStep])
+    
+    const [activeStep, setActiveStep] = useState<number>(currentStep || 0);
 
     return (
         <div className={clsx(classes.root, className)}>
@@ -36,13 +71,20 @@ const SectionOverview: FC<SectionProps> = ({ className }) => {
                     </Stack>
                 </Grid>
 
-                <Grid item md={4} xs={12}>
-                    {images instanceof Array && images.length === 0 && <UploadAction />}
-
-                    {images instanceof Array && images.length > 0 && totalLabelsCount === 0 && <LabelisatorAction />}
-
-                    {images instanceof Array && images.length > 0 && totalLabelsCount > 0 && <ExportAction />}
-                </Grid>
+                {images instanceof Array && (
+                    <Grid item md={4} xs={12}>
+                        <Stepper activeStep={activeStep} orientation="vertical">
+                            {DATASET_ACTIONS.map((action, index) => (
+                                <Step key={action.label} disabled={index > currentStep}>
+                                    <StepButton onClick={() => setActiveStep(index)}>
+                                        {action.label}
+                                    </StepButton>
+                                    <StepContent>{action.component}</StepContent>
+                                </Step>
+                            ))}
+                        </Stepper>
+                    </Grid>
+                )}
             </Grid>
         </div>
     );

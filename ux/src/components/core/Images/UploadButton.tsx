@@ -1,9 +1,10 @@
 import React, {FC, useState} from 'react';
-import {Box, Button, Dialog, DialogContent, DialogTitle, IconButton} from '@mui/material';
+import {Button, Dialog, DialogContent, DialogTitle, IconButton} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import {Close as CloseIcon, PublishOutlined as UploadIcon} from '@mui/icons-material';
 import ImagesDropzone from 'src/components/ImagesDropzone';
 import {Theme} from 'src/theme';
+
 
 const useStyles = makeStyles((theme: Theme) => ({
     close: {
@@ -18,7 +19,7 @@ interface UploadButtonProps {
     size?: 'small' | 'medium' | 'large'
 }
 
-const UploadButton: FC<UploadButtonProps> = ({size = 'medium'}) => {
+const UploadButton: FC<UploadButtonProps> = ({ size = 'medium' }) => {
     const classes = useStyles();
 
     const [openUpload, setOpenUpload] = useState(false);
@@ -33,15 +34,13 @@ const UploadButton: FC<UploadButtonProps> = ({size = 'medium'}) => {
 
     return (
         <>
-            <Box display="flex">
-                <Button variant="contained" color="primary" endIcon={<UploadIcon />} onClick={handleUploadOpen} size={size}>
-                    Upload images
-                </Button>
-            </Box>
+            <Button variant="contained" color="primary" endIcon={<UploadIcon />} onClick={handleUploadOpen} size={size}>
+                Upload images
+            </Button>
 
             <Dialog open={openUpload} onClose={handleCloseUpload}>
                 <DialogTitle>
-                    Upload Images
+                    Upload images
                     <IconButton className={classes.close} onClick={handleCloseUpload} size="large">
                         <CloseIcon />
                     </IconButton>

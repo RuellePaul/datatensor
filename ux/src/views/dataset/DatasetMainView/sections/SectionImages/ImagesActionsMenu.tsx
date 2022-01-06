@@ -23,6 +23,7 @@ import {
 import {
     Close as CloseIcon,
     Delete as DeleteIcon,
+    BrandingWatermarkOutlined as LabelisatorIcon,
     DynamicFeedOutlined as AugmentationIcon,
     ExpandMore as ArrowDown,
     PublishOutlined as UploadIcon,
@@ -38,6 +39,7 @@ import {setDefaultPipeline, setPipeline} from 'src/slices/pipeline';
 import ImagesDropzone from 'src/components/ImagesDropzone';
 import Pipeline from 'src/components/core/Pipeline';
 import api from 'src/utils/api';
+import goToHash from '../../../../../utils/goToHash';
 
 interface ImagesActionsMenuProps {
     className?: string;
@@ -90,13 +92,28 @@ const UploadMenuItem: FC = () => {
     );
 };
 
+const LabelisatorMenuItem: FC = () => {
+    const {images} = useImages();
+
+    return (
+        <MenuItem onClick={() => goToHash(images[0].id, true)}>
+            <ListItemIcon>
+                <LabelisatorIcon fontSize="small" />
+            </ListItemIcon>
+            <Typography variant="inherit" noWrap>
+                Label images
+            </Typography>
+        </MenuItem>
+    );
+};
+
 const AugmentationMenuItem: FC = () => {
     const classes = useStyles();
 
     const {dataset} = useDataset();
     const {images} = useImages();
 
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState<boolean>(false);
 
     const handleOpenAugmentation = () => setOpen(true);
     const handleCloseAugmentation = () => setOpen(false);
@@ -388,6 +405,7 @@ const ImagesActionsMenu: FC<ImagesActionsMenuProps> = ({className}) => {
             </Button>
             <Menu anchorEl={anchorEl} open={open} onClose={handleCloseMenu} TransitionComponent={Fade}>
                 <UploadMenuItem />
+                <LabelisatorMenuItem />
                 <AugmentationMenuItem />
                 <ViewPipelineMenuItem />
                 <Divider sx={{my: 0.5}} />
