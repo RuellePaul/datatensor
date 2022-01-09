@@ -1,4 +1,6 @@
 import React, {FC} from 'react';
+import NProgress from 'nprogress';
+
 import {Button, capitalize, SvgIcon, Tooltip} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import api from 'src/utils/api';
@@ -76,6 +78,7 @@ const OAuthLoginButton: FC<OAuthLoginButtonProps> = ({scope}) => {
                 className={classes.root}
                 onClick={async () => {
                     try {
+                        NProgress.start();
                         const response = await api.get<{authorization_url: string}>(`/oauth/authorization/${scope}`);
                         const {authorization_url} = response.data;
                         window.location.href = authorization_url;

@@ -5,7 +5,7 @@ import {Formik} from 'formik';
 import clsx from 'clsx';
 import {Box, Button, CircularProgress, FormHelperText, Skeleton} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import type {Theme} from 'src/theme';
+import {Theme} from 'src/theme';
 import {useSelector} from 'src/store';
 import {Operation} from 'src/types/pipeline';
 import ImageBase64 from 'src/components/utils/ImageBase64';
@@ -14,7 +14,6 @@ import wait from 'src/utils/wait';
 import useDataset from 'src/hooks/useDataset';
 import Masonry from '@mui/lab/Masonry';
 import MasonryItem from '@mui/lab/MasonryItem';
-
 
 interface PipelineSampleProps {
     handler: (operations: Operation[]) => Promise<AxiosResponse>;
@@ -29,19 +28,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const PipelineSample: FC<PipelineSampleProps> = ({ handler, className }) => {
+const PipelineSample: FC<PipelineSampleProps> = ({handler, className}) => {
     const classes = useStyles();
-    const { enqueueSnackbar } = useSnackbar();
+    const {enqueueSnackbar} = useSnackbar();
 
-    const { dataset } = useDataset();
+    const {dataset} = useDataset();
 
-    const pipeline = useSelector<any>((state) => state.pipeline);
+    const pipeline = useSelector<any>(state => state.pipeline);
 
     const [imagesBase64, setImagesBase64] = useState<string[]>([]);
     const [imagesLabels, setImagesLabels] = useState<Label[][]>([]);
 
     const doSample = useCallback(async () => {
-
         setImagesBase64([]);
         setImagesLabels([]);
 
@@ -55,10 +53,9 @@ const PipelineSample: FC<PipelineSampleProps> = ({ handler, className }) => {
 
                 setImagesBase64(response.data.images);
                 setImagesLabels(response.data.images_labels);
-
             } catch (error) {
                 console.error(error);
-                enqueueSnackbar((error.message) || 'Something went wrong', { variant: 'error' });
+                enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
             }
         }
 
@@ -71,32 +68,22 @@ const PipelineSample: FC<PipelineSampleProps> = ({ handler, className }) => {
                 initialValues={{
                     submit: null
                 }}
-                onSubmit={async (values, {
-                    setErrors,
-                    setStatus,
-                    setSubmitting
-                }) => {
+                onSubmit={async (values, {setErrors, setStatus, setSubmitting}) => {
                     try {
                         await doSample();
 
-                        setStatus({ success: true });
+                        setStatus({success: true});
                         setSubmitting(false);
                     } catch (err) {
                         console.error(err);
-                        setStatus({ success: false });
-                        setErrors({ submit: err.message });
+                        setStatus({success: false});
+                        setErrors({submit: err.message});
                         setSubmitting(false);
                     }
                 }}
             >
-                {({
-                      errors,
-                      handleSubmit,
-                      isSubmitting
-                  }) => (
-                    <form
-                        onSubmit={handleSubmit}
-                    >
+                {({errors, handleSubmit, isSubmitting}) => (
+                    <form onSubmit={handleSubmit}>
                         <Box mb={1}>
                             <Button
                                 fullWidth
@@ -104,12 +91,9 @@ const PipelineSample: FC<PipelineSampleProps> = ({ handler, className }) => {
                                 variant="contained"
                                 type="submit"
                                 disabled={isSubmitting}
-                                endIcon={isSubmitting && (
-                                    <CircularProgress
-                                        className={classes.loader}
-                                        color="inherit"
-                                    />
-                                )}
+                                endIcon={
+                                    isSubmitting && <CircularProgress className={classes.loader} color="inherit" />
+                                }
                             >
                                 {isSubmitting ? 'Computing...' : 'Compute sample'}
                             </Button>
@@ -117,33 +101,24 @@ const PipelineSample: FC<PipelineSampleProps> = ({ handler, className }) => {
 
                         {errors.submit && (
                             <Box mt={3}>
-                                <FormHelperText error>
-                                    {errors.submit}
-                                </FormHelperText>
+                                <FormHelperText error>{errors.submit}</FormHelperText>
                             </Box>
                         )}
 
                         {isSubmitting && (
-                            <Masonry columns={{ xs: 2, sm: 3 }} spacing={1}>
-                                {Array.from(Array(9), () => null).map(_ => (
+                            <Masonry columns={{xs: 2, sm: 3}} spacing={1}>
+                                {Array.from(Array(6), () => null).map(_ => (
                                     <MasonryItem>
-                                        <Skeleton
-                                            width="100%"
-                                            height={150 + 100 * Math.random()}
-                                            sx={{ transform: 'none' }}
-                                        />
+                                        <Skeleton width="100%" height={180} sx={{transform: 'none'}} />
                                     </MasonryItem>
                                 ))}
                             </Masonry>
                         )}
 
-                        <Masonry columns={{ xs: 2, sm: 3 }} spacing={1}>
+                        <Masonry columns={{xs: 2, sm: 3}} spacing={1}>
                             {imagesBase64.map((imageBase64, index) => (
                                 <MasonryItem key={`masonry_image_${index}`}>
-                                    <ImageBase64
-                                        imageBase64={imageBase64}
-                                        labels={imagesLabels[index]}
-                                    />
+                                    <ImageBase64 imageBase64={imageBase64} labels={imagesLabels[index]} />
                                 </MasonryItem>
                             ))}
                         </Masonry>

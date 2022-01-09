@@ -34,7 +34,7 @@ def do_sample(dataset_id, payload: SampleBody, dataset=Depends(dataset_belongs_t
     augmented_labels = []
 
     for image in images:
-        current_images, current_labels = perform_sample(image, image.labels, operations, n=3)
+        current_images, current_labels = perform_sample(image, image.labels, operations, n=2)
         augmented_images.extend(current_images)
         augmented_labels.extend(current_labels)
 
