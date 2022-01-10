@@ -57,7 +57,7 @@ const Overview: FC<OverviewProps> = ({className}) => {
                     <Typography variant="h4" fontWeight={600} color="textPrimary">
                         {dataset.image_count + dataset.augmented_count}{' '}
                         <Typography variant="h5" component="span" color="textSecondary" fontWeight={400}>
-                            images
+                            {dataset.image_count + dataset.augmented_count > 1 ? 'images' : 'image'}
                         </Typography>
                     </Typography>
                 </Box>
@@ -67,7 +67,7 @@ const Overview: FC<OverviewProps> = ({className}) => {
                     <Typography variant="h4" fontWeight={600} color="textPrimary">
                         {categories.length}{' '}
                         <Typography variant="h5" component="span" color="textSecondary" fontWeight={400}>
-                            categories
+                            {categories.length > 1 ? 'categories' : 'category'}
                         </Typography>
                     </Typography>
                 </Box>
@@ -77,7 +77,7 @@ const Overview: FC<OverviewProps> = ({className}) => {
                     <Typography variant="h4" fontWeight={600} color="textPrimary">
                         {totalLabelsCount}{' '}
                         <Typography variant="h5" component="span" color="textSecondary" fontWeight={400}>
-                            labels
+                            {totalLabelsCount > 1 ? 'labels' : 'label'}
                         </Typography>
                     </Typography>
                 </Box>
