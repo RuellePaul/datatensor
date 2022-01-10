@@ -33,11 +33,7 @@ class TaskAugmentorProperties(BaseModel):
     operations: List[Operation]
 
 
-class TaskExportProperties(BaseModel):
-    pass
-
-
-TaskProperties = Union[TaskGeneratorProperties, TaskAugmentorProperties, TaskExportProperties]
+TaskProperties = Union[TaskGeneratorProperties, TaskAugmentorProperties]
 
 
 class Task(MongoModel):

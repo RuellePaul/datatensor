@@ -16,7 +16,6 @@ import {
     Dialog,
     DialogContent,
     InputAdornment,
-    LinearProgress,
     Link,
     TextField,
     Typography
@@ -25,10 +24,7 @@ import {Download as DownloadIcon, Downloading as ExportIcon, VisibilityOutlined 
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
-import useExports from 'src/hooks/useExports';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
-import useTasks from 'src/hooks/useTasks';
-import {Task} from 'src/types/task';
 import api from 'src/utils/api';
 import download from 'src/utils/download';
 import getDateDiff from 'src/utils/getDateDiff';
@@ -64,9 +60,7 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
     const isMountedRef = useIsMountedRef();
     const {enqueueSnackbar} = useSnackbar();
 
-    const {tasks, saveTasks} = useTasks();
     const {dataset, saveDataset, categories} = useDataset();
-    const {exports, saveExports, trigger, loading} = useExports();
 
     const [open, setOpen] = useState<boolean>(false);
 
@@ -78,40 +72,33 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
         setOpen(false);
     };
 
+    const [isExporting, setIsExporting] = useState<boolean>(false);
+    const [exportedDataset, setExportedDataset] = useState<object | null>(null);
+
     const handleExport = async () => {
         try {
-            const response = await api.post<{task: Task}>(`/datasets/${dataset.id}/tasks/`, {
-                type: 'export',
-                properties: {}
-            });
-            saveTasks(tasks => [...tasks, response.data.task]);
-            saveExports([]);
+            setIsExporting(true);
+            const response = await api.get(`/datasets/${dataset.id}/exports/`);
+            setExportedDataset(response.data);
             saveDataset(dataset => ({
                 ...dataset,
                 exported_at: new Date().toISOString()
             }));
-            trigger(false);
         } catch (error) {
             enqueueSnackbar(error.message || 'Something went wrong', {
                 variant: 'error'
             });
+        } finally {
+            setIsExporting(false);
         }
     };
 
     const handleDownload = filename => {
-        if (exports.length === 0) return;
-
-        download(exports[0].export_data, `${filename || 'export'}.json`, 'application/json');
+        if (exportedDataset === null) return;
+        download(exportedDataset, `${filename || 'export'}.json`, 'application/json');
     };
 
-    if (!dataset || tasks === null) return null;
-
-    const activeExportTask = tasks.find(
-        task =>
-            (task.status === 'pending' || task.status === 'active') &&
-            task.dataset_id === dataset.id &&
-            task.type === 'export'
-    );
+    if (!dataset) return null;
 
     const isPoor =
         categories.map(category => category.labels_count).reduce((acc, val) => acc + val, 0) / categories.length < 2000;
@@ -173,23 +160,14 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
                                 </Alert>
                             )}
 
-                            {dataset.exported_at && !activeExportTask && (
+                            {dataset.exported_at && (
                                 <Alert className={classes.alert}>
                                     <Typography variant="body2">
                                         Last export : {moment(dataset.exported_at).format('DD MMM')} (
                                         {getDateDiff(new Date(), dataset.exported_at, 'passed_event')})
-                                        <br />
-                                        {exports.length === 0 && (
-                                            <Link variant="subtitle1" color="primary" onClick={() => trigger(true)}>
-                                                View details{' '}
-                                                {loading && (
-                                                    <CircularProgress className={classes.loader} color="inherit" />
-                                                )}
-                                            </Link>
-                                        )}
                                     </Typography>
 
-                                    {exports.length > 0 && (
+                                    {exportedDataset !== null && (
                                         <>
                                             <TextField
                                                 error={Boolean(touched.filename && errors.filename)}
@@ -231,49 +209,33 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
                                     )}
                                 </Alert>
                             )}
-
-                            {activeExportTask && (
-                                <Box display="flex" alignItems="center">
-                                    <Box width="100%" mr={1}>
-                                        <LinearProgress
-                                            variant={
-                                                activeExportTask.progress <= 0 || activeExportTask.progress >= 1
-                                                    ? 'query'
-                                                    : 'determinate'
-                                            }
-                                            value={100 * activeExportTask.progress}
-                                        />
-                                    </Box>
-                                    <Typography variant="body2" color="textSecondary">
-                                        {`${(100 * activeExportTask.progress).toFixed(2)}%`}
-                                    </Typography>
-                                </Box>
-                            )}
                         </CardContent>
-                        <CardActions style={{justifyContent: 'flex-end'}}>
-                            <Button
-                                color="primary"
-                                disabled={!!activeExportTask}
-                                endIcon={
-                                    !!activeExportTask ? (
-                                        <CircularProgress className={classes.loader} color="inherit" />
-                                    ) : (
-                                        <ExportIcon />
-                                    )
-                                }
-                                onClick={handleExport}
-                                variant="contained"
-                            >
-                                Export
-                            </Button>
-                        </CardActions>
+                        {exportedDataset === null && (
+                            <CardActions style={{justifyContent: 'flex-end'}}>
+                                <Button
+                                    color="primary"
+                                    disabled={isExporting}
+                                    endIcon={
+                                        isExporting ? (
+                                            <CircularProgress className={classes.loader} color="inherit" />
+                                        ) : (
+                                            <ExportIcon />
+                                        )
+                                    }
+                                    onClick={handleExport}
+                                    variant="contained"
+                                >
+                                    Export
+                                </Button>
+                            </CardActions>
+                        )}
                     </Card>
 
                     <Dialog classes={{paper: classes.paper}} open={open} onClose={handleClose} maxWidth="md">
                         <DialogContent className="scroll">
                             <pre>
                                 <code className="language-">
-                                    {exports.length > 0 && JSON.stringify(exports[0].export_data, null, 3)}
+                                    {exportedDataset !== null && JSON.stringify(exportedDataset, null, 3)}
                                 </code>
                             </pre>
                         </DialogContent>

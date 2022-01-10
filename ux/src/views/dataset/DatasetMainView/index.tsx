@@ -15,7 +15,6 @@ import {DatasetConsumer, DatasetProvider} from 'src/store/DatasetContext';
 import {UserProvider} from 'src/store/UserContext';
 import {CategoryProvider} from 'src/store/CategoryContext';
 import {PipelineProvider} from 'src/store/PipelineContext';
-import {ExportsProvider} from 'src/store/ExportsContext';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -51,27 +50,25 @@ const DatasetMainView: FC = () => {
                 {value => (
                     <UserProvider user={value.dataset.user}>
                         <Page className={classes.root} title={`Dataset ${value.dataset.name}`}>
-                            <ExportsProvider>
-                                <ImagesProvider>
-                                    <PipelineProvider>
-                                        <CategoryProvider>
-                                            <Container component="section" maxWidth="lg">
-                                                <Header />
+                            <ImagesProvider>
+                                <PipelineProvider>
+                                    <CategoryProvider>
+                                        <Container component="section" maxWidth="lg">
+                                            <Header />
 
-                                                <Box my={4}>
-                                                    <SectionOverview />
+                                            <Box my={4}>
+                                                <SectionOverview />
 
-                                                    <SectionImages />
+                                                <SectionImages />
 
-                                                    {value.dataset.user_id === user.id && (<SectionSettings />)}
-                                                </Box>
-                                            </Container>
+                                                {value.dataset.user_id === user.id && <SectionSettings />}
+                                            </Box>
+                                        </Container>
 
-                                            <DTLabelisator />
-                                        </CategoryProvider>
-                                    </PipelineProvider>
-                                </ImagesProvider>
-                            </ExportsProvider>
+                                        <DTLabelisator />
+                                    </CategoryProvider>
+                                </PipelineProvider>
+                            </ImagesProvider>
                         </Page>
                     </UserProvider>
                 )}

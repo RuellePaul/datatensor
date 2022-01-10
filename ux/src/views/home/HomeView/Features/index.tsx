@@ -1,13 +1,14 @@
 import React, {cloneElement, FC, useCallback, useEffect, useMemo, useState} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
+import {Package as DatasetIcon} from 'react-feather';
 import {Box, ButtonBase, Container, Grid, Hidden, Link, Typography, useMediaQuery} from '@mui/material';
+import {BrandingWatermarkOutlined as LabelingIcon, DynamicFeedOutlined as AugmentationIcon} from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
 import {blueDark, Theme} from 'src/theme';
 import FeatureDatasets from './FeatureDatasets';
 import FeatureLabeling from './FeatureLabeling';
 import FeatureAugmentation from './FeatureAugmentation';
-import {BrandingWatermarkOutlined as LabelingIcon, DynamicFeedOutlined as AugmentationIcon} from '@mui/icons-material';
 import api from 'src/utils/api';
 import {Image} from 'src/types/image';
 import {Dataset} from 'src/types/dataset';
@@ -16,7 +17,6 @@ import {ImagesProvider} from 'src/store/ImagesContext';
 import {ImageProvider} from 'src/store/ImageContext';
 import useScroll from 'src/hooks/useScroll';
 import randomIndexes from 'src/utils/randomIndexes';
-import {Package as DatasetIcon} from 'react-feather';
 
 interface FeatureProps {
     className?: string;
