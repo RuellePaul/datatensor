@@ -32,11 +32,11 @@ interface Section {
 }
 
 const sections = (user: User): Section[] => [
-    {
-        subheader: 'Reports',
-        items: [
-            ...(user.is_admin
-                ? [
+    ...(user.is_admin
+        ? [
+              {
+                  subheader: 'Reports',
+                  items: [
                       {
                           title: 'App dashboard',
                           icon: AdminDashboardIcon,
@@ -44,11 +44,12 @@ const sections = (user: User): Section[] => [
                           info: () => <Chip size="small" label="Admin" variant="outlined" />
                       }
                   ]
-                : [])
-        ]
-    },
+              }
+          ]
+        : []
+    ),
     {
-        subheader: 'Manage',
+        subheader: 'Application',
         items: [
             ...(user.is_admin
                 ? [

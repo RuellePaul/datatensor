@@ -147,7 +147,7 @@ const ImagesDropzone: FC<ImagesDropzoneProps> = ({callback, className, ...rest})
             >
                 <input {...getInputProps()} />
                 <div>
-                    <img className={classes.image} src="/static/images/undraw_add_file2_gvbb.svg" alt="Select Images" />
+                    <img className={classes.image} src="/static/images/app/upload.svg" alt="Select Images" />
                 </div>
                 <div>
                     <Box mt={2}>

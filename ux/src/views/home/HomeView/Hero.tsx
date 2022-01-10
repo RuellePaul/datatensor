@@ -125,7 +125,7 @@ const Hero: FC<HeroProps> = ({className, ...rest}) => {
                                 <div className={classes.image}>
                                     <img
                                         alt="Presentation"
-                                        src="/static/images/yolov4.gif"
+                                        src="/static/images/home/yolov4.gif"
                                         draggable={false}
                                         loading="lazy"
                                     />
@@ -160,7 +160,7 @@ const Hero: FC<HeroProps> = ({className, ...rest}) => {
                                 <div className={classes.image}>
                                     <img
                                         alt="Presentation"
-                                        src="/static/images/yolov4.gif"
+                                        src="/static/images/home/yolov4.gif"
                                         draggable={false}
                                         loading="lazy"
                                     />
