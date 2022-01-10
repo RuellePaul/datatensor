@@ -29,6 +29,7 @@ import api from 'src/utils/api';
 import download from 'src/utils/download';
 import getDateDiff from 'src/utils/getDateDiff';
 
+
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
     paper: {
@@ -36,14 +37,15 @@ const useStyles = makeStyles((theme: Theme) => ({
         padding: 0
     },
     alert: {
-        marginTop: theme.spacing(2),
+        margin: theme.spacing(1, 0, 0),
+        alignItems: 'center',
         '& .MuiAlert-message': {
             width: '100%'
         }
     },
     loader: {
-        width: '20px !important',
-        height: '20px !important'
+        width: '16px !important',
+        height: '16px !important'
     },
     wrapper: {
         overflowX: 'hidden',
@@ -55,12 +57,12 @@ interface ExportActionProps {
     className?: string;
 }
 
-const ExportAction: FC<ExportActionProps> = ({className}) => {
+const ExportAction: FC<ExportActionProps> = ({ className }) => {
     const classes = useStyles();
     const isMountedRef = useIsMountedRef();
-    const {enqueueSnackbar} = useSnackbar();
+    const { enqueueSnackbar } = useSnackbar();
 
-    const {dataset, saveDataset, categories} = useDataset();
+    const { dataset, saveDataset, categories } = useDataset();
 
     const [open, setOpen] = useState<boolean>(false);
 
@@ -116,12 +118,12 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
                     .max(255)
                     .required('Filename is required')
             })}
-            onSubmit={async (values, {resetForm, setStatus, setSubmitting}) => {
+            onSubmit={async (values, { resetForm, setStatus, setSubmitting }) => {
                 try {
                     await handleDownload(values.filename);
 
                     if (isMountedRef.current) {
-                        setStatus({success: true});
+                        setStatus({ success: true });
                         setSubmitting(false);
                         resetForm();
                     }
@@ -131,13 +133,13 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
                     });
 
                     if (isMountedRef.current) {
-                        setStatus({success: false});
+                        setStatus({ success: false });
                         setSubmitting(false);
                     }
                 }
             }}
         >
-            {({errors, handleBlur, handleChange, handleSubmit, touched, values}) => (
+            {({ errors, handleBlur, handleChange, handleSubmit, touched, values }) => (
                 <form noValidate onSubmit={handleSubmit}>
                     <Card className={clsx(classes.root, className)} variant="outlined">
                         <CardContent>
@@ -152,7 +154,7 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
                             </Typography>
 
                             {isPoor && !dataset.exported_at && (
-                                <Alert severity="warning" sx={{mt: 2}}>
+                                <Alert severity="warning" sx={{ mt: 2 }}>
                                     You don't have enough images in this dataset to successfully converge an object
                                     detection model.
                                     <br />
@@ -160,7 +162,17 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
                                 </Alert>
                             )}
 
-                            {dataset.exported_at && (
+                            {isExporting && (
+                                <Alert className={classes.alert} severity="info">
+                                    <Typography variant="body2" component="span">
+                                        This operation might take a while.{' '}
+                                    </Typography>
+
+                                    <CircularProgress className={classes.loader} color="inherit" size={14} />
+                                </Alert>
+                            )}
+
+                            {dataset.exported_at && !isExporting && (
                                 <Alert className={classes.alert}>
                                     <Typography variant="body2">
                                         Last export : {moment(dataset.exported_at).format('DD MMM')} (
@@ -210,18 +222,13 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
                                 </Alert>
                             )}
                         </CardContent>
+
                         {exportedDataset === null && (
-                            <CardActions style={{justifyContent: 'flex-end'}}>
+                            <CardActions style={{ justifyContent: 'flex-end' }}>
                                 <Button
                                     color="primary"
                                     disabled={isExporting}
-                                    endIcon={
-                                        isExporting ? (
-                                            <CircularProgress className={classes.loader} color="inherit" />
-                                        ) : (
-                                            <ExportIcon />
-                                        )
-                                    }
+                                    endIcon={<ExportIcon />}
                                     onClick={handleExport}
                                     variant="contained"
                                 >
@@ -231,7 +238,7 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
                         )}
                     </Card>
 
-                    <Dialog classes={{paper: classes.paper}} open={open} onClose={handleClose} maxWidth="md">
+                    <Dialog classes={{ paper: classes.paper }} open={open} onClose={handleClose} maxWidth="md">
                         <DialogContent className="scroll">
                             <pre>
                                 <code className="language-">

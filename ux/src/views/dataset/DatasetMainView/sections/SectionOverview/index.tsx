@@ -78,7 +78,9 @@ const SectionOverview: FC<SectionProps> = ({className}) => {
                             {DATASET_ACTIONS.map((action, index) => (
                                 <Step key={action.label} disabled={index > currentStep}>
                                     <StepButton onClick={() => setActiveStep(index)}>{action.label}</StepButton>
-                                    <StepContent>{action.component}</StepContent>
+                                    <StepContent TransitionProps={{unmountOnExit: false}}>
+                                        {action.component}
+                                    </StepContent>
                                 </Step>
                             ))}
                         </Stepper>
