@@ -68,7 +68,7 @@ def insert_dataset(user_id, payload: DatasetPostBody) -> Dataset:
         user_id=user_id,
         name=payload.name,
         description=payload.description,
-        is_public=payload.is_public,
+        is_public=False,
         created_at=datetime.now(),
         image_count=0,
         augmented_count=0
