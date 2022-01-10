@@ -121,18 +121,13 @@ const routes: Routes = [
             },
             {
                 exact: true,
-                path: '/app/dashboard',
-                component: lazy(() => import('src/views/reports/DashboardView'))
-            },
-            {
-                exact: true,
                 path: '/app/admin/dashboard',
                 component: lazy(() => import('src/views/reports/AdminDashboardView'))
             },
             {
                 exact: true,
                 path: '/app',
-                component: () => <Redirect to="/app/dashboard" />
+                component: () => <Redirect to="/app/datasets" />
             },
             {
                 component: () => <Redirect to="/404" />

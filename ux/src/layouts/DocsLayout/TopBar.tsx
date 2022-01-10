@@ -57,7 +57,7 @@ const TopBar: FC<TopBarProps> = ({ onMobileNavOpen }) => {
                     ml={2}
                     flexGrow={1}
                 />
-                <Tooltip title={user === null ? 'Login to Datatensor' : 'Back to dashboard'}>
+                <Tooltip title={user === null ? 'Login to Datatensor' : 'Back to datasets'}>
                     <Button
                         color="primary"
                         component="a"
@@ -65,7 +65,7 @@ const TopBar: FC<TopBarProps> = ({ onMobileNavOpen }) => {
                         onClick={() => history.push('/app')}
                         endIcon={user !== null && <UserAvatar user={user} style={{ width: 30, height: 30 }} />}
                     >
-                        Dashboard
+                        Datasets
                     </Button>
                 </Tooltip>
             </Toolbar>
