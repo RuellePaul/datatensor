@@ -21,6 +21,8 @@ class Settings(BaseSettings):
     DATASOURCES_PATH: str = os.path.join(ROOT_PATH, 'api', 'workflows', 'generator', 'datasources')
 
     UI_URL: str = 'https://datatensor.io'
+    APP_URL: str = 'https://app.datatensor.io'
+    DOCS_URL: str = 'https://docs.datatensor.io'
     API_URI: str = 'https://api.datatensor.io'
 
     MAX_CONTENT_LENGTH: int = 1 * 1000 * 1024 * 1024  # 1 Go
