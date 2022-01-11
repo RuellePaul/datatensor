@@ -59,7 +59,7 @@ services:
       context: proxy
     network_mode: host
     volumes:
-      - '/root/letsencrypt:/var/www/certbot'
+      - '/var/www/letsencrypt:/var/www/letsencrypt'
 
 
   rabbitmq:
