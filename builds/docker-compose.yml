@@ -60,6 +60,7 @@ services:
     network_mode: host
     volumes:
       - '/var/www/letsencrypt:/var/www/letsencrypt'
+      - '/etc/letsencrypt:/etc/letsencrypt'
 
 
   rabbitmq:
