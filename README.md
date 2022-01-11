@@ -159,8 +159,14 @@ How would you like to authenticate with the ACME CA?
 ```
 Please enter in your domain name(s): 
 ```bash
-datatensor.io api.datatensor.io app.datatensor.io docs.datatensor.io
+datatensor.io www.datatensor.io
 ```
+Input the webroot:
+```bash
+/var/www/letsencrypt
+```
+
+Do the same for domains api.datatensor.io app.datatensor.io docs.datatensor.io
 
 Finally, deploy your tag :
 
