@@ -8,6 +8,7 @@ import LoadingScreen from 'src/components/screens/LoadingScreen';
 import AuthGuard from 'src/components/guards/AuthGuard';
 import GuestGuard from 'src/components/guards/GuestGuard';
 
+
 type Routes = {
     exact?: boolean;
     path?: string | string[];
@@ -86,43 +87,43 @@ const routes: Routes = [
         component: lazy(() => import('src/views/auth/EmailConfirmationView'))
     },
     {
-        path: ENVIRONMENT === 'production' ? '/' : '/app',
+        path: '/app',
         guard: AuthGuard,
         layout: DashboardLayout,
         routes: [
             {
                 exact: true,
-                path: ENVIRONMENT === 'production' ? '/account' : '/app/account',
+                path: '/app/account',
                 component: lazy(() => import('src/views/account/AccountView'))
             },
             {
                 exact: true,
-                path: ENVIRONMENT === 'production' ? '/users' : '/app/users',
+                path: '/app/users',
                 component: lazy(() => import('src/views/user/UserListView'))
             },
             {
                 exact: true,
-                path: ENVIRONMENT === 'production' ? '/users/:user_id' : '/app/users/:user_id',
+                path: '/app/users/:user_id',
                 component: lazy(() => import('src/views/user/UserDetailsView'))
             },
             {
                 exact: true,
-                path: ENVIRONMENT === 'production' ? '/datasets' : '/app/datasets',
+                path: '/app/datasets',
                 component: lazy(() => import('src/views/dataset/DatasetBrowseView'))
             },
             {
                 exact: true,
-                path: ENVIRONMENT === 'production' ? '/datasets/create' : '/app/datasets/create',
+                path: '/app/datasets/create',
                 component: lazy(() => import('src/views/dataset/DatasetCreateView'))
             },
             {
                 exact: true,
-                path: ENVIRONMENT === 'production' ? '/datasets/:dataset_id' : '/app/datasets/:dataset_id',
+                path: '/app/datasets/:dataset_id',
                 component: lazy(() => import('src/views/dataset/DatasetMainView'))
             },
             {
                 exact: true,
-                path: ENVIRONMENT === 'production' ? '/admin/dashboard' : '/app/admin/dashboard',
+                path: '/app/admin/dashboard',
                 component: lazy(() => import('src/views/reports/AdminDashboardView'))
             },
             {
@@ -136,7 +137,7 @@ const routes: Routes = [
         ]
     },
     {
-        path: ENVIRONMENT === 'production' ? '/' : '/docs',
+        path: '/docs',
         layout: DocsLayout,
         routes: [
             {
@@ -146,69 +147,57 @@ const routes: Routes = [
             },
             {
                 exact: true,
-                path: ENVIRONMENT === 'production' ? '/getting-started' : '/docs/getting-started',
+                path: '/docs/getting-started',
                 component: lazy(() => import('src/views/docs/GettingStartedView'))
             },
             {
                 exact: true,
-                path: ENVIRONMENT === 'production' ? '/about-datatensor' : '/docs/about-datatensor',
+                path: '/docs/about-datatensor',
                 component: lazy(() => import('src/views/docs/AboutDatatensorView'))
             },
             {
                 exact: true,
-                path: ENVIRONMENT === 'production' ? '/datasets/create-a-dataset' : '/docs/datasets/create-a-dataset',
+                path: '/docs/datasets/create-a-dataset',
                 component: lazy(() => import('src/views/docs/CreateDatasetView'))
             },
             {
                 exact: true,
-                path: ENVIRONMENT === 'production' ? '/getting-started' : '/docs/datasets/upload-images',
+                path: '/docs/datasets/upload-images',
                 component: lazy(() => import('src/views/docs/UploadImagesView'))
             },
             {
                 exact: true,
-                path: ENVIRONMENT === 'production' ? '/datasets/labeling' : '/docs/datasets/labeling',
+                path: '/docs/datasets/labeling',
                 component: lazy(() => import('src/views/docs/LabelingView'))
             },
             {
                 exact: true,
-                path: ENVIRONMENT === 'production' ? '/datasets/augmentation' : '/docs/datasets/augmentation',
+                path: '/docs/datasets/augmentation',
                 component: lazy(() => import('src/views/docs/AugmentationView'))
             },
             {
                 exact: true,
-                path: ENVIRONMENT === 'production' ? '/datasets/export' : '/docs/datasets/export',
+                path: '/docs/datasets/export',
                 component: lazy(() => import('src/views/docs/ExportView'))
             },
             {
                 exact: true,
-                path:
-                    ENVIRONMENT === 'production'
-                        ? '/computer-vision/using-an-exported-dataset'
-                        : '/docs/computer-vision/using-an-exported-dataset',
+                path: '/docs/computer-vision/using-an-exported-dataset',
                 component: lazy(() => import('src/views/docs/UsingExportedDatasetView'))
             },
             {
                 exact: true,
-                path:
-                    ENVIRONMENT === 'production'
-                        ? '/computer-vision/api-documentation'
-                        : '/docs/computer-vision/api-documentation',
+                path: '/docs/computer-vision/api-documentation',
                 component: lazy(() => import('src/views/docs/APIDocsView'))
             },
             {
                 exact: true,
-                path:
-                    ENVIRONMENT === 'production'
-                        ? '/contributing/project-architecture'
-                        : '/docs/contributing/project-architecture',
+                path: '/docs/contributing/project-architecture',
                 component: lazy(() => import('src/views/docs/ProjectArchitectureView'))
             },
             {
                 exact: true,
-                path:
-                    ENVIRONMENT === 'production'
-                        ? '/contributing/running-locally'
-                        : '/docs/contributing/running-locally',
+                path: '/docs/contributing/running-locally',
                 component: lazy(() => import('src/views/docs/RunningLocallyView'))
             },
             {
