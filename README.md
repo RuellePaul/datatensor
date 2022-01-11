@@ -145,6 +145,7 @@ nano deploy.sh
 ```
 
 Generate certificates for all domain/subdomains :
+⚠️&nbsp;&nbsp; You must authorize all trafic in DTProduction security group
 
 ```bash
 apt install certbot
