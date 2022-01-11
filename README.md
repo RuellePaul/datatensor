@@ -108,19 +108,14 @@ Next, on the machine, install `git`, `docker` and `docker-compose` :
 
 ```bash
 sudo -i
-yum install git
-yum install docker
-service docker start
- sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-sudo mv /usr/local/bin/docker-compose /usr/bin/docker-compose
-sudo chmod +x /usr/bin/docker-compose
-
+apt install docker.io
+apt install docker-compose
 ```
 
 Then, use login to Github Packages :
 
 ```bash
-cat ~/github_token.txt | docker login https://docker.pkg.github.com -u <username> --password-stdin
+cat ./github_token.txt | docker login https://docker.pkg.github.com -u <username> --password-stdin
 ```
 
 ⚠️&nbsp;&nbsp;`<username>` must be authorized to collaborate on Datatensor github project, and you must have a `github_token.txt` *with repo, workflow and packages* enabled. 
@@ -140,8 +135,34 @@ Fill the env with secret keys (copy from local) :
 ```bash
 cd ~/datatensor/builds/production
 nano init_env.sh
-nano cert.pem
-nano key.pem
+```
+
+Add the `deploy.sh` script :
+
+```bash
+cd ~/datatensor
+nano deploy.sh
+```
+
+Generate certificates for all domain/subdomains :
+
+```bash
+apt install certbot
+certbot certonly
+```
+
+How would you like to authenticate with the ACME CA?
+1: Spin up a temporary webserver (standalone)
+2: Place files in webroot directory (webroot)
+```bash
+2
+```Enter email address
+```bash
+paulruelle67500@gmail.com
+```
+Please enter in your domain name(s): 
+```bash
+datatensor.io api.datatensor.io app.datatensor.io docs.datatensor.io
 ```
 
 Finally, deploy your tag :
