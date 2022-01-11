@@ -156,9 +156,6 @@ How would you like to authenticate with the ACME CA?
 2: Place files in webroot directory (webroot)
 ```bash
 2
-```Enter email address
-```bash
-paulruelle67500@gmail.com
 ```
 Please enter in your domain name(s): 
 ```bash
