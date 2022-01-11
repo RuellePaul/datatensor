@@ -163,7 +163,7 @@ const DTDataset: FC<DatasetProps> = ({className, image = null, onClick, disabled
                                         color="inherit"
                                         component={RouterLink}
                                         onClick={event => event.stopPropagation()}
-                                        to={`/app/users/${value.user.id}/details`}
+                                        to={`/app/users/${value.user.id}`}
                                         variant="subtitle2"
                                     >
                                         {value.user.name}

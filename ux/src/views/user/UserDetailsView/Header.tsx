@@ -39,7 +39,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                                 <Link
                                     variant="body1"
                                     color="text.primary"
-                                    to={`/app/users/${value.user.id}/details`}
+                                    to={`/app/users/${value.user.id}`}
                                     component={RouterLink}
                                 >
                                     {value.user.name}

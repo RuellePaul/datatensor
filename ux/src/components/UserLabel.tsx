@@ -39,7 +39,7 @@ const UserLabel: FC<UserLabelProps> = ({children, user, className}) => {
                     color="inherit"
                     component={RouterLink}
                     onClick={event => event.stopPropagation()}
-                    to={`/app/users/${user.id}/details`}
+                    to={`/app/users/${user.id}`}
                     variant="h6"
                 >
                     {user.name}
