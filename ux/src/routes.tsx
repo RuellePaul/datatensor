@@ -86,7 +86,7 @@ const routes: Routes = [
         component: lazy(() => import('src/views/auth/EmailConfirmationView'))
     },
     {
-        path: '/app',
+        path: ENVIRONMENT === 'production' ? '/' : '/app',
         guard: AuthGuard,
         layout: DashboardLayout,
         routes: [
@@ -136,7 +136,7 @@ const routes: Routes = [
         ]
     },
     {
-        path: '/docs',
+        path: ENVIRONMENT === 'production' ? '/' : '/docs',
         layout: DocsLayout,
         routes: [
             {
