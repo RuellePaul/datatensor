@@ -8,8 +8,6 @@ import {AuthProvider} from 'src/store/AuthContext';
 import routes, {renderRoutes} from 'src/routes';
 import Providers from './providers';
 
-const ENVIRONMENT = process.env.REACT_APP_ENVIRONMENT;
-
 const history = createBrowserHistory();
 
 const App: FC = () => {
@@ -20,8 +18,9 @@ const App: FC = () => {
                 <AuthProvider>
                     <GlobalStyles />
                     <ScrollReset />
-                    {ENVIRONMENT === 'production' && <LocationReset />}
-                    {renderRoutes(routes)}
+                    <LocationReset>
+                        {renderRoutes(routes)}
+                    </LocationReset>
                 </AuthProvider>
             </Router>
         </Providers>

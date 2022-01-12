@@ -139,7 +139,6 @@ const routes: Routes = [
 
     // app.datatensor.io
     {
-        layout: MainLayout,
         exact: true,
         guard: GuestGuard,
         path: '/login',
