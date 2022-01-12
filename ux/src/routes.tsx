@@ -8,13 +8,14 @@ import LoadingScreen from 'src/components/screens/LoadingScreen';
 import AuthGuard from 'src/components/guards/AuthGuard';
 import GuestGuard from 'src/components/guards/GuestGuard';
 
+
 type Routes = {
     exact?: boolean;
     path?: string | string[];
     guard?: any;
     layout?: any;
     component?: any;
-    scope?: 'app' | 'docs'
+    scope?: 'app' | 'docs';
     routes?: Routes;
 }[];
 
@@ -55,42 +56,6 @@ const routes: Routes = [
         exact: true,
         path: '/',
         component: HomeView
-    },
-    {
-        layout: MainLayout,
-        exact: true,
-        guard: GuestGuard,
-        path: '/login',
-        component: lazy(() => import('src/views/auth/LoginView'))
-    },
-    {
-        exact: true,
-        guard: GuestGuard,
-        path: '/forgot-password',
-        component: lazy(() => import('src/views/auth/ForgotPasswordView'))
-    },
-    {
-        exact: true,
-        guard: GuestGuard,
-        path: '/reset-password',
-        component: lazy(() => import('src/views/auth/ResetPasswordView'))
-    },
-    {
-        exact: true,
-        guard: GuestGuard,
-        path: '/oauthcallback/:scope',
-        component: lazy(() => import('src/views/auth/OAuthCallbackView'))
-    },
-    {
-        exact: true,
-        guard: GuestGuard,
-        path: '/register',
-        component: lazy(() => import('src/views/auth/RegisterView'))
-    },
-    {
-        exact: true,
-        path: '/email-confirmation',
-        component: lazy(() => import('src/views/auth/EmailConfirmationView'))
     },
 
     // docs.datatensor.io
@@ -173,6 +138,49 @@ const routes: Routes = [
     },
 
     // app.datatensor.io
+    {
+        layout: MainLayout,
+        exact: true,
+        guard: GuestGuard,
+        path: '/login',
+        component: lazy(() => import('src/views/auth/LoginView')),
+        scope: 'app'
+    },
+    {
+        exact: true,
+        guard: GuestGuard,
+        path: '/forgot-password',
+        component: lazy(() => import('src/views/auth/ForgotPasswordView')),
+        scope: 'app'
+    },
+    {
+        exact: true,
+        guard: GuestGuard,
+        path: '/reset-password',
+        component: lazy(() => import('src/views/auth/ResetPasswordView')),
+        scope: 'app'
+    },
+    {
+        exact: true,
+        guard: GuestGuard,
+        path: '/oauthcallback/:scope',
+        component: lazy(() => import('src/views/auth/OAuthCallbackView')),
+        scope: 'app'
+    },
+    {
+        exact: true,
+        guard: GuestGuard,
+        path: '/register',
+        component: lazy(() => import('src/views/auth/RegisterView')),
+        scope: 'app'
+    },
+    {
+        exact: true,
+        path: '/email-confirmation',
+        component: lazy(() => import('src/views/auth/EmailConfirmationView')),
+        scope: 'app'
+    },
+
     {
         guard: AuthGuard,
         layout: DashboardLayout,

@@ -11,11 +11,11 @@ const LocationReset = () => {
 
     useEffect(() => {
         if (PUBLIC_PATHS.includes(location.pathname) && window.location.hostname !== 'datatensor.io')
-            window.location.href = `https://datatensor.io${location.pathname}`
+            window.location.replace(`https://datatensor.io${location.pathname}`);
         else if (DOCS_PATHS.includes(location.pathname) && window.location.hostname !== 'docs.datatensor.io')
-            window.location.href = `https://docs.datatensor.io${location.pathname}`
+            window.location.replace(`https://docs.datatensor.io${location.pathname}`);
         else if (APP_PATHS.includes(location.pathname) && window.location.hostname !== 'app.datatensor.io')
-            window.location.href = `https://app.datatensor.io${location.pathname}`
+            window.location.replace(`https://app.datatensor.io${location.pathname}`);
     }, [location.pathname])
 
     return null;
