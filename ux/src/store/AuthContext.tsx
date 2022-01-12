@@ -5,6 +5,7 @@ import SplashScreen from 'src/components/screens/SplashScreen';
 import api from 'src/utils/api';
 import {useHistory} from 'react-router-dom';
 import {useSnackbar} from 'notistack';
+import Cookies from 'js-cookie';
 
 interface AuthState {
     isInitialised: boolean;
@@ -77,11 +78,9 @@ const isValidToken = (accessToken: string): boolean => {
 
 const setSession = (accessToken: string | null): void => {
     if (accessToken) {
-        localStorage.setItem('accessToken', accessToken);
-        api.defaults.headers.common.Authorization = accessToken;
+        Cookies.set('access_token', accessToken);
     } else {
-        localStorage.removeItem('accessToken');
-        delete api.defaults.headers.common.Authorization;
+        Cookies.remove('access_token');
     }
 };
 
@@ -95,7 +94,7 @@ const reducer = (state: AuthState, action: Action): AuthState => {
                 isAuthenticated,
                 isInitialised: true,
                 user,
-                accessToken: localStorage.getItem('accessToken') || null
+                accessToken: Cookies.get('access_token') || null
             };
         }
         case 'LOGIN': {
@@ -253,7 +252,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
     useEffect(() => {
         const initialise = async () => {
             try {
-                const accessToken = window.localStorage.getItem('accessToken');
+                const accessToken = Cookies.get('access_token');
 
                 if (accessToken && isValidToken(accessToken)) {
                     setSession(accessToken);

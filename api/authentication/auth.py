@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Depends
+from fastapi.responses import JSONResponse
 
 import errors
 from authentication import core
 from authentication.models import *
+from config import Config
 from dependencies import logged_user
 from logger import logger
 from routers.notifications.core import insert_notification
@@ -28,15 +30,22 @@ def do_login(payload: AuthLoginBody):
     if not password_context.verify(payload.password, user_password):
         raise errors.InvalidAuthentication(errors.INVALID_CREDENTIALS)
 
+    access_token = core.encode_access_token(user_id)
+
+    response = JSONResponse(content={
+        'user': parse(user),
+        'accessToken': access_token
+    })
+    response.set_cookie(key='access_token',
+                        value=access_token,
+                        domain='datatensor.io' if Config.ENVIRONMENT == 'production' else None,
+                        httponly=False,
+                        secure=True,
+                        samesite="none")
+
     logger.info(f'Logged in as `{payload.email}`')
 
-    access_token = core.encode_access_token(user_id)
-    response = {
-        'accessToken': access_token,
-        'user': user
-    }
-
-    return parse(response)
+    return response
 
 
 @auth.post('/register', response_model=AuthResponse)
@@ -65,15 +74,22 @@ def do_register(payload: AuthRegisterBody):
         notification = NotificationPostBody(type=NotificationType('EMAIL_CONFIRM_REQUIRED'))
     insert_notification(user_id=user_id, notification=notification)
 
+    access_token = core.encode_access_token(user_id)
+
+    response = JSONResponse(content={
+        'user': parse(user),
+        'accessToken': access_token
+    })
+    response.set_cookie(key='access_token',
+                        value=access_token,
+                        domain='datatensor.io' if Config.ENVIRONMENT == 'production' else None,
+                        httponly=False,
+                        secure=True,
+                        samesite="none")
+
     logger.info(f'Registered user `{email}`')
 
-    access_token = core.encode_access_token(user_id)
-    response = {
-        'accessToken': access_token,
-        'user': user
-    }
-
-    return parse(response)
+    return response
 
 
 @auth.post('/send-password-recovery-link')
@@ -123,16 +139,23 @@ def do_email_confirmation(payload: AuthEmailConfirmBody):
     notification = NotificationPostBody(type=NotificationType('EMAIL_CONFIRM_DONE'))
     insert_notification(user_id=user.id, notification=notification)
 
-    logger.info(f"Verified email `{user.email}`")
-
-    response = {
-        'accessToken': access_token,
-        'user': {
+    response = JSONResponse(content={
+        'user': parse({
             **user.mongo(),
             'is_verified': True
-        }
-    }
-    return parse(response)
+        }),
+        'accessToken': access_token
+    })
+    response.set_cookie(key='access_token',
+                        value=access_token,
+                        domain='datatensor.io' if Config.ENVIRONMENT == 'production' else None,
+                        httponly=False,
+                        secure=True,
+                        samesite="none")
+
+    logger.info(f"Verified email `{user.email}`")
+
+    return response
 
 
 @auth.post('/unregister')

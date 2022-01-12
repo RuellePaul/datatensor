@@ -1,6 +1,6 @@
 from typing import Optional
 
-from fastapi import Depends, Header
+from fastapi import Depends, Cookie
 
 import errors
 from authentication.core import verify_access_token
@@ -10,8 +10,8 @@ from routers.datasets.models import Dataset
 from routers.users.models import User
 
 
-def logged_user(authorization: Optional[str] = Header(None)) -> User:
-    user = verify_access_token(access_token=authorization)
+def logged_user(access_token: Optional[str] = Cookie(None)) -> User:
+    user = verify_access_token(access_token=access_token)
     return user
 
 

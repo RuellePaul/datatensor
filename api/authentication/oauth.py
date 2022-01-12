@@ -1,10 +1,13 @@
 from fastapi import APIRouter
+from fastapi.responses import JSONResponse
 
 from authentication import core
 from authentication.models import *
+from config import Config
 from logger import logger
 from routers.notifications.core import insert_notification
 from routers.notifications.models import NotificationPostBody, NotificationType
+from utils import parse
 
 oauth = APIRouter()
 
@@ -41,12 +44,17 @@ def oauth_callback(payload: OAuthCallbackBody):
         insert_notification(user_id, notification)
         logger.info(f'Registered `{user.name}` from `{scope}`')
 
-    logger.info(f'Logged in as `{user.name}` from `{scope}`')
-
     access_token = core.encode_access_token(user_id)
-    response = {
-        'accessToken': access_token,
-        'user': user
-    }
+    response = JSONResponse(content={
+        'user': parse(user),
+        'accessToken': access_token
+    })
+    response.set_cookie(key='access_token',
+                        value=access_token,
+                        domain='datatensor.io' if Config.ENVIRONMENT == 'production' else None,
+                        httponly=True,
+                        secure=True,
+                        samesite="lax")
+    logger.info(f'Logged in as `{user.name}` from `{scope}`')
 
     return response
