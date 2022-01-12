@@ -15,7 +15,7 @@ import useCategory from 'src/hooks/useCategory';
 import api from 'src/utils/api';
 import {COLORS} from 'src/utils/colors';
 import {MAX_CATEGORIES_DISPLAYED} from 'src/config';
-import useAuth from '../../../hooks/useAuth';
+import useAuth from 'src/hooks/useAuth';
 
 interface CategoriesProps {
     className?: string;

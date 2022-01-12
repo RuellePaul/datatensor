@@ -87,7 +87,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     image: {
         zIndex: 0,
-        maxHeight: 300
+        maxHeight: 300,
+        minWidth: '100%',
+        overflow: 'hidden'
     }
 }));
 

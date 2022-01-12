@@ -63,7 +63,7 @@ type Action = InitialiseAction | LoginAction | LogoutAction | RegisterAction;
 const initialAuthState: AuthState = {
     isAuthenticated: false,
     isInitialised: false,
-    user: null,
+    user: Cookies.getJSON('user') || null,
     accessToken: null
 };
 
@@ -78,19 +78,31 @@ const isValidToken = (accessToken: string): boolean => {
     return decoded.exp > currentTime;
 };
 
-const setSession = (accessToken: string | null): void => {
+const setSession = (accessToken: string | null, user: User | null = null): void => {
     if (accessToken) {
         if (ENVIRONMENT === 'production') {
             Cookies.set('access_token', accessToken, {domain: 'datatensor.io'});
             Cookies.set('access_token', accessToken, {domain: 'app.datatensor.io'});
             Cookies.set('access_token', accessToken, {domain: 'docs.datatensor.io'});
-        } else Cookies.set('access_token', accessToken);
+            Cookies.set('user', user, {domain: 'datatensor.io'});
+            Cookies.set('user', user, {domain: 'app.datatensor.io'});
+            Cookies.set('user', user, {domain: 'docs.datatensor.io'});
+        } else {
+            Cookies.set('access_token', accessToken);
+            Cookies.set('user', user);
+        }
     } else {
         if (ENVIRONMENT === 'production') {
             Cookies.remove('access_token', {domain: 'datatensor.io'});
             Cookies.remove('access_token', {domain: 'app.datatensor.io'});
             Cookies.remove('access_token', {domain: 'docs.datatensor.io'});
-        } else Cookies.remove('access_token');
+            Cookies.remove('user', {domain: 'datatensor.io'});
+            Cookies.remove('user', {domain: 'app.datatensor.io'});
+            Cookies.remove('user', {domain: 'docs.datatensor.io'});
+        } else {
+            Cookies.remove('access_token');
+            Cookies.remove('user');
+        }
     }
 };
 
@@ -161,7 +173,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         const response = await api.post<{accessToken: string; user: User}>('/auth/login', {email, password});
         const {accessToken, user} = response.data;
 
-        setSession(accessToken);
+        setSession(accessToken, user);
         dispatch({
             type: 'LOGIN',
             payload: {
@@ -176,7 +188,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         const response = await api.post<{accessToken: string; user: User}>(`/oauth/callback`, {code, scope});
         const {accessToken, user} = response.data;
 
-        setSession(accessToken);
+        setSession(accessToken, user);
         dispatch({
             type: 'LOGIN',
             payload: {
@@ -200,8 +212,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         });
         const {accessToken, user} = response.data;
 
-        setSession(accessToken);
-
+        setSession(accessToken, user);
         dispatch({
             type: 'REGISTER',
             payload: {
@@ -219,8 +230,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
 
             const {accessToken, user} = response.data;
 
-            setSession(accessToken);
-
+            setSession(accessToken, user);
             dispatch({
                 type: 'LOGIN',
                 payload: {
@@ -266,10 +276,9 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
                 const accessToken = Cookies.get('access_token');
 
                 if (accessToken && isValidToken(accessToken)) {
-                    setSession(accessToken);
-
                     const response = await api.get<User>('/auth/me');
                     const user = response.data;
+                    setSession(accessToken, user);
 
                     dispatch({
                         type: 'INITIALISE',
