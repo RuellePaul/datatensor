@@ -40,7 +40,7 @@ const Logo: FC<LogoProps> = ({ className, ...rest }) => {
         >
             <title>Logo</title>
             <desc>Datatensor logo.</desc>
-            <g id="Landing" stroke="none" fill="none" fill-rule="evenodd">
+            <g id="Landing" stroke="none" fill="none">
                 <g id="Landing-page" transform="translate(-31.000000, -11.000000)">
                     <g id="topbar">
                         <g id="left" transform="translate(32.000000, 12.000000)">
