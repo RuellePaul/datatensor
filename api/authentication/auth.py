@@ -39,7 +39,7 @@ def do_login(payload: AuthLoginBody):
     response.set_cookie(key='access_token',
                         value=access_token,
                         domain='datatensor.io' if Config.ENVIRONMENT == 'production' else None,
-                        httponly=True,
+                        httponly=False,
                         secure=True,
                         samesite="lax")
 
@@ -83,7 +83,7 @@ def do_register(payload: AuthRegisterBody):
     response.set_cookie(key='access_token',
                         value=access_token,
                         domain='datatensor.io' if Config.ENVIRONMENT == 'production' else None,
-                        httponly=True,
+                        httponly=False,
                         secure=True,
                         samesite="lax")
 
@@ -149,7 +149,7 @@ def do_email_confirmation(payload: AuthEmailConfirmBody):
     response.set_cookie(key='access_token',
                         value=access_token,
                         domain='datatensor.io' if Config.ENVIRONMENT == 'production' else None,
-                        httponly=True,
+                        httponly=False,
                         secure=True,
                         samesite="lax")
 

@@ -80,7 +80,11 @@ const isValidToken = (accessToken: string): boolean => {
 
 const setSession = (accessToken: string | null): void => {
     if (accessToken) {
-        Cookies.set('access_token', accessToken, ENVIRONMENT === 'production' ? {domain: 'datatensor.io'} : {});
+        if (ENVIRONMENT === 'production') {
+            Cookies.set('access_token', accessToken, {domain: 'datatensor.io'});
+            Cookies.set('access_token', accessToken, {domain: 'app.datatensor.io'});
+            Cookies.set('access_token', accessToken, {domain: 'docs.datatensor.io'});
+        } else Cookies.set('access_token', accessToken);
     } else {
         Cookies.remove('access_token');
     }
