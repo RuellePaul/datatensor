@@ -52,7 +52,7 @@ def oauth_callback(payload: OAuthCallbackBody):
     response.set_cookie(key='access_token',
                         value=access_token,
                         domain='datatensor.io' if Config.ENVIRONMENT == 'production' else None,
-                        httponly=True,
+                        httponly=False,
                         secure=True,
                         samesite="lax" if Config.ENVIRONMENT == 'production' else "none")
     logger.info(f'Logged in as `{user.name}` from `{scope}`')
