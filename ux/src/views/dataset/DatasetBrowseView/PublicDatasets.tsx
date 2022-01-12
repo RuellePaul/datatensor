@@ -1,8 +1,9 @@
-import React, {FC, useEffect, useRef, useState} from 'react';
+import React, {FC, useRef, useState} from 'react';
 import clsx from 'clsx';
 import {
     Box,
-    Button, ClickAwayListener,
+    Button,
+    ClickAwayListener,
     Grid,
     IconButton,
     ListItemText,
@@ -19,7 +20,6 @@ import DTDataset from 'src/components/core/Dataset';
 import useDatasets from 'src/hooks/useDatasets';
 import {DatasetProvider} from 'src/store/DatasetContext';
 import {MAX_DATASETS_DISPLAYED} from 'src/config';
-import NProgress from 'nprogress';
 
 interface ResultsProps {
     className?: string;
@@ -82,15 +82,6 @@ const PublicDatasets: FC<ResultsProps> = ({className, ...rest}) => {
     const handlePaginationChange = (event: React.ChangeEvent<unknown>, value: number) => {
         setPage(value - 1);
     };
-
-    useEffect(() => {
-        if (displayedDatasets.length === 0) NProgress.start();
-        else NProgress.done();
-
-        return () => {
-            NProgress.done();
-        };
-    }, [displayedDatasets]);
 
     if (displayedDatasets === null || displayedDatasets.length === 0) return null;
 

@@ -193,7 +193,7 @@ const NavBar: FC<NavBarProps> = ({onMobileClose, openMobile}) => {
                         <Typography variant="h6" color="textPrimary">
                             Need Help?
                         </Typography>
-                        <Link variant="subtitle1" color="primary" component={RouterLink} to="/docs">
+                        <Link variant="subtitle1" color="primary" component={RouterLink} to="/getting-started">
                             Check our docs
                         </Link>
                     </Box>

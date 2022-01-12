@@ -7,6 +7,8 @@ import {useHistory} from 'react-router-dom';
 import {useSnackbar} from 'notistack';
 import Cookies from 'js-cookie';
 
+const ENVIRONMENT = process.env.REACT_APP_ENVIRONMENT;
+
 interface AuthState {
     isInitialised: boolean;
     isAuthenticated: boolean;
@@ -78,7 +80,7 @@ const isValidToken = (accessToken: string): boolean => {
 
 const setSession = (accessToken: string | null): void => {
     if (accessToken) {
-        Cookies.set('access_token', accessToken);
+        Cookies.set('access_token', accessToken, ENVIRONMENT === 'production' ? {domain: 'datatensor.io'} : {});
     } else {
         Cookies.remove('access_token');
     }
