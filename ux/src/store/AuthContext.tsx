@@ -86,7 +86,11 @@ const setSession = (accessToken: string | null): void => {
             Cookies.set('access_token', accessToken, {domain: 'docs.datatensor.io'});
         } else Cookies.set('access_token', accessToken);
     } else {
-        Cookies.remove('access_token');
+        if (ENVIRONMENT === 'production') {
+            Cookies.remove('access_token', {domain: 'datatensor.io'});
+            Cookies.remove('access_token', {domain: 'app.datatensor.io'});
+            Cookies.remove('access_token', {domain: 'docs.datatensor.io'});
+        } else Cookies.remove('access_token');
     }
 };
 
@@ -168,6 +172,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
     };
 
     const loginOAuth = async (code: string, scope: string) => {
+        setSession(null);
         const response = await api.post<{accessToken: string; user: User}>(`/oauth/callback`, {code, scope});
         const {accessToken, user} = response.data;
 
