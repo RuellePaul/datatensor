@@ -2,14 +2,13 @@ import axios from 'axios';
 
 const PREFIX = '/v2';
 
-export const API_HOSTNAME = process.env.REACT_APP_ENVIRONMENT === 'production' ? 'api.datatensor.io' : '127.0.0.1:4069';
-export const WS_HOSTNAME =
-    process.env.REACT_APP_ENVIRONMENT === 'production' ? `wss://${API_HOSTNAME}/ws` : `ws://${API_HOSTNAME}/ws`;
+const ENVIRONMENT = process.env.REACT_APP_ENVIRONMENT;
+
+export const API_HOSTNAME = ENVIRONMENT === 'production' ? 'api.datatensor.io' : '127.0.0.1:4069';
+export const WS_HOSTNAME = ENVIRONMENT === 'production' ? `wss://${API_HOSTNAME}/ws` : `ws://${API_HOSTNAME}/ws`;
 
 export const API_URI =
-    process.env.REACT_APP_ENVIRONMENT === 'development'
-        ? `http://${API_HOSTNAME}${PREFIX}`
-        : `https://${API_HOSTNAME}${PREFIX}`;
+    ENVIRONMENT === 'development' ? `http://${API_HOSTNAME}${PREFIX}` : `https://${API_HOSTNAME}${PREFIX}`;
 
 const api = axios.create({
     withCredentials: true,

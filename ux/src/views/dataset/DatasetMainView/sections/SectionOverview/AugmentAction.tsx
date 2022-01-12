@@ -46,7 +46,7 @@ const AugmentAction: FC<AugmentActionProps> = ({className}) => {
                 <Typography gutterBottom>Augment images</Typography>
                 <Typography variant="body2" color="textSecondary" gutterBottom>
                     Since there are labeled images on this dataset, you can use image augmentation to get more. See the{' '}
-                    <Link variant="body2" color="primary" component={RouterLink} to="/docs/datasets/upload-images">
+                    <Link variant="body2" color="primary" component={RouterLink} to="/upload-images">
                         dedicated section
                     </Link>{' '}
                     on documentation.

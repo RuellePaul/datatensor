@@ -55,7 +55,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
         >
             <Grid item>
                 <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
-                    <Link variant="body1" color="text.primary" to="/app/datasets" component={RouterLink}>
+                    <Link variant="body1" color="text.primary" to="/datasets" component={RouterLink}>
                         Datasets
                     </Link>
                     <UserConsumer>
@@ -65,7 +65,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                                 <Link
                                     variant="body1"
                                     color="text.primary"
-                                    to={`/app/users/${value.user.id}`}
+                                    to={`/users/${value.user.id}`}
                                     component={RouterLink}
                                 >
                                     {value.user.name}

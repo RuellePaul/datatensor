@@ -219,7 +219,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
                 }
             });
 
-            history.push('/app');
+            history.push('/datasets');
         } catch (error) {
             enqueueSnackbar(error.message || 'Something went wrong', {
                 variant: 'error'

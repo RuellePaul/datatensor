@@ -124,21 +124,21 @@ const FEATURES = [
     {
         title: 'Datasets',
         subtitle: 'Create, organize and share your labeled image datasets with the world',
-        docPath: '/docs/datasets',
+        docPath: '/create-a-dataset',
         icon: <DatasetIcon />,
         component: <FeatureDatasets datasets={[]} />
     },
     {
         title: 'Image labeling',
         subtitle: 'Ergonomic and intuitive tools for labeling your datasets.',
-        docPath: '/docs/datasets/labeling',
+        docPath: '/datasets/labeling',
         icon: <LabelingIcon />,
         component: <FeatureLabeling />
     },
     {
         title: 'Image augmentation',
         subtitle: 'Get more labeled images, without the tears.',
-        docPath: '/docs/datasets/augmentation',
+        docPath: '/datasets/augmentation',
         icon: <AugmentationIcon />,
         component: <FeatureAugmentation />
     }

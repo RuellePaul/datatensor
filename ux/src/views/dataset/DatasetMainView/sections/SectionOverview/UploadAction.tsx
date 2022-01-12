@@ -24,7 +24,7 @@ const UploadAction: FC<UploadActionProps> = ({ className }) => {
                 <Typography gutterBottom>Upload images</Typography>
                 <Typography variant="body2" color="textSecondary" gutterBottom>
                     A dataset should have enough images to train a computer vision AI model. See the{' '}
-                    <Link variant="body2" color="primary" component={RouterLink} to="/docs/datasets/upload-images">
+                    <Link variant="body2" color="primary" component={RouterLink} to="/upload-images">
                         dedicated section
                     </Link>{' '}
                     on documentation.

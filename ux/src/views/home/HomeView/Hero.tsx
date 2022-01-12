@@ -144,7 +144,7 @@ const Hero: FC<HeroProps> = ({className, ...rest}) => {
                             </Button>
 
                             <Button
-                                onClick={() => history.push('/docs')}
+                                onClick={() => history.push('/getting-started')}
                                 endIcon={<DocsIcon />}
                                 variant="outlined"
                                 size="large"

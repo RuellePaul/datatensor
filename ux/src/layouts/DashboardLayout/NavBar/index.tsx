@@ -40,7 +40,7 @@ const sections = (user: User): Section[] => [
                       {
                           title: 'App dashboard',
                           icon: AdminDashboardIcon,
-                          href: '/app/admin/dashboard',
+                          href: '/admin/dashboard',
                           info: () => <Chip size="small" label="Admin" variant="outlined" />
                       }
                   ]
@@ -56,7 +56,7 @@ const sections = (user: User): Section[] => [
                       {
                           title: 'Users',
                           icon: UsersIcon,
-                          href: '/app/users',
+                          href: '/users',
                           info: () => <Chip size="small" label="Admin" variant="outlined" />
                       }
                   ]
@@ -64,7 +64,7 @@ const sections = (user: User): Section[] => [
             {
                 title: 'Datasets',
                 icon: DatasetIcon,
-                href: '/app/datasets'
+                href: '/datasets'
             }
         ]
     }
@@ -152,14 +152,14 @@ const NavBar: FC<NavBarProps> = ({onMobileClose, openMobile}) => {
                 </Hidden>
                 <Box p={2}>
                     <Box display="flex" justifyContent="center">
-                        <RouterLink to="/app/account">
+                        <RouterLink to="/account">
                             <UserAvatar className={classes.avatar} />
                         </RouterLink>
                     </Box>
                     <Box mt={2} textAlign="center">
                         <Link
                             component={RouterLink}
-                            to="/app/account"
+                            to="/account"
                             variant="h5"
                             color="textPrimary"
                             underline="none"

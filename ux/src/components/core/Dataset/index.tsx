@@ -163,7 +163,7 @@ const DTDataset: FC<DatasetProps> = ({className, image = null, onClick, disabled
                                         color="inherit"
                                         component={RouterLink}
                                         onClick={event => event.stopPropagation()}
-                                        to={`/app/users/${value.user.id}`}
+                                        to={`/users/${value.user.id}`}
                                         variant="subtitle2"
                                     >
                                         {value.user.name}
@@ -184,7 +184,7 @@ const DTDataset: FC<DatasetProps> = ({className, image = null, onClick, disabled
             </UserProvider>
 
             <CardActionArea
-                onClick={onClick instanceof Function ? onClick : () => history.push(`/app/datasets/${dataset.id}#`)}
+                onClick={onClick instanceof Function ? onClick : () => history.push(`/datasets/${dataset.id}#`)}
                 disabled={disabled}
             >
                 {imagePreview ? (
