@@ -1,11 +1,12 @@
 import React, {createContext, FC, ReactNode, useEffect, useReducer} from 'react';
+import {useHistory} from 'react-router-dom';
+import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
+import {useSnackbar} from 'notistack';
 import {User} from 'src/types/user';
 import SplashScreen from 'src/components/screens/SplashScreen';
 import api from 'src/utils/api';
-import {useHistory} from 'react-router-dom';
-import {useSnackbar} from 'notistack';
-import Cookies from 'js-cookie';
+import useLocation from 'src/hooks/useLocation';
 
 const ENVIRONMENT = process.env.REACT_APP_ENVIRONMENT;
 
@@ -63,7 +64,7 @@ type Action = InitialiseAction | LoginAction | LogoutAction | RegisterAction;
 const initialAuthState: AuthState = {
     isAuthenticated: false,
     isInitialised: false,
-    user: Cookies.getJSON('user') || null,
+    user: null,
     accessToken: null
 };
 
@@ -78,30 +79,22 @@ const isValidToken = (accessToken: string): boolean => {
     return decoded.exp > currentTime;
 };
 
-const setSession = (accessToken: string | null, user: User | null = null): void => {
+const setSession = (accessToken: string | null): void => {
     if (accessToken) {
         if (ENVIRONMENT === 'production') {
             Cookies.set('access_token', accessToken, {domain: 'datatensor.io'});
             Cookies.set('access_token', accessToken, {domain: 'app.datatensor.io'});
             Cookies.set('access_token', accessToken, {domain: 'docs.datatensor.io'});
-            Cookies.set('user', user, {domain: 'datatensor.io'});
-            Cookies.set('user', user, {domain: 'app.datatensor.io'});
-            Cookies.set('user', user, {domain: 'docs.datatensor.io'});
         } else {
             Cookies.set('access_token', accessToken);
-            Cookies.set('user', user);
         }
     } else {
         if (ENVIRONMENT === 'production') {
             Cookies.remove('access_token', {domain: 'datatensor.io'});
             Cookies.remove('access_token', {domain: 'app.datatensor.io'});
             Cookies.remove('access_token', {domain: 'docs.datatensor.io'});
-            Cookies.remove('user', {domain: 'datatensor.io'});
-            Cookies.remove('user', {domain: 'app.datatensor.io'});
-            Cookies.remove('user', {domain: 'docs.datatensor.io'});
         } else {
             Cookies.remove('access_token');
-            Cookies.remove('user');
         }
     }
 };
@@ -169,11 +162,13 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
     const [state, dispatch] = useReducer(reducer, initialAuthState);
     const {enqueueSnackbar} = useSnackbar();
 
+    const location = useLocation();
+
     const login = async (email: string, password: string) => {
         const response = await api.post<{accessToken: string; user: User}>('/auth/login', {email, password});
         const {accessToken, user} = response.data;
 
-        setSession(accessToken, user);
+        setSession(accessToken);
         dispatch({
             type: 'LOGIN',
             payload: {
@@ -184,11 +179,10 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
     };
 
     const loginOAuth = async (code: string, scope: string) => {
-        setSession(null);
         const response = await api.post<{accessToken: string; user: User}>(`/oauth/callback`, {code, scope});
         const {accessToken, user} = response.data;
 
-        setSession(accessToken, user);
+        setSession(accessToken);
         dispatch({
             type: 'LOGIN',
             payload: {
@@ -212,7 +206,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         });
         const {accessToken, user} = response.data;
 
-        setSession(accessToken, user);
+        setSession(accessToken);
         dispatch({
             type: 'REGISTER',
             payload: {
@@ -230,7 +224,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
 
             const {accessToken, user} = response.data;
 
-            setSession(accessToken, user);
+            setSession(accessToken);
             dispatch({
                 type: 'LOGIN',
                 payload: {
@@ -278,7 +272,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
                 if (accessToken && isValidToken(accessToken)) {
                     const response = await api.get<User>('/auth/me');
                     const user = response.data;
-                    setSession(accessToken, user);
+                    setSession(accessToken);
 
                     dispatch({
                         type: 'INITIALISE',
@@ -308,8 +302,8 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
             }
         };
 
-        initialise();
-    }, []);
+        initialise(); // @ts-ignore
+    }, [location.hostname]);
 
     if (!state.isInitialised) {
         return <SplashScreen />;
