@@ -6,7 +6,6 @@ import {useSnackbar} from 'notistack';
 import {User} from 'src/types/user';
 import SplashScreen from 'src/components/screens/SplashScreen';
 import api from 'src/utils/api';
-import useLocation from 'src/hooks/useLocation';
 
 const ENVIRONMENT = process.env.REACT_APP_ENVIRONMENT;
 
@@ -162,8 +161,6 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
     const [state, dispatch] = useReducer(reducer, initialAuthState);
     const {enqueueSnackbar} = useSnackbar();
 
-    const location = useLocation();
-
     const login = async (email: string, password: string) => {
         const response = await api.post<{accessToken: string; user: User}>('/auth/login', {email, password});
         const {accessToken, user} = response.data;
@@ -302,8 +299,8 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
             }
         };
 
-        initialise(); // @ts-ignore
-    }, [location.hostname]);
+        initialise();
+    }, []);
 
     if (!state.isInitialised) {
         return <SplashScreen />;
