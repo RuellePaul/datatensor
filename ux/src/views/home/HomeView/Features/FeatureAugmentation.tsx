@@ -70,7 +70,7 @@ const FeatureAugmentation: FC<FeatureProps> = ({className, ...rest}) => {
                             Operations pipeline
                         </Button>
 
-                        {expand && <Pipeline />}
+                        <Pipeline className={clsx(!expand && 'hidden')}/>
                     </Hidden>
                 </Grid>
             </Grid>
