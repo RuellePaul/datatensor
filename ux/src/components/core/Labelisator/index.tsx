@@ -36,7 +36,6 @@ import {
 } from '@mui/icons-material';
 import DTCategories from 'src/components/core/Labelisator/Categories';
 import DTImage from 'src/components/core/Images/Image';
-import CategoriesDistribution from 'src/components/charts/CategoriesDistribution';
 import Scrollbar from 'src/components/utils/Scrollbar';
 import KeyboardListener from './KeyboardListener';
 import KeyboardShortcuts from './KeyboardShortcuts';
@@ -46,9 +45,9 @@ import ToolMove from './ToolMove';
 import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
 import useCategory from 'src/hooks/useCategory';
-import usePipeline from 'src/hooks/usePipeline';
 import {Image} from 'src/types/image';
 import api from 'src/utils/api';
+import {ImagesConsumer, ImagesProvider} from 'src/store/ImagesContext';
 import {ImageConsumer, ImageProvider} from 'src/store/ImageContext';
 import goToHash from 'src/utils/goToHash';
 import {CANVAS_OFFSET} from 'src/utils/labeling';
@@ -72,6 +71,14 @@ const useStyles = makeStyles((theme: Theme) => ({
             marginRight: -10,
             marginBottom: -10
         }
+    },
+    image: {
+        opacity: 0.5,
+        transition: 'all 0.15s ease-in-out'
+    },
+    selected: {
+        opacity: 1,
+        outline: `solid 3px ${theme.palette.primary.main}`
     },
     content: {
         padding: theme.spacing(2, 0)
@@ -99,7 +106,6 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
     const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
 
     const {dataset} = useDataset();
-    const {pipeline} = usePipeline();
     const {currentCategory, saveCurrentCategory} = useCategory();
 
     const [tool, setTool] = useState<'label' | 'move'>('label');
@@ -119,16 +125,12 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
     const fetchImageIds = useCallback(async () => {
         setImageIds([]);
         try {
-            const response = await api.get<{image_ids: string[]}>(`/datasets/${dataset.id}/images/ids`, {
-                params: {
-                    pipeline_id: pipeline?.id
-                }
-            });
+            const response = await api.get<{image_ids: string[]}>(`/datasets/${dataset.id}/images/ids`);
             setImageIds(response.data.image_ids);
         } catch (err) {
             console.error(err);
         }
-    }, [dataset.id, pipeline]);
+    }, [dataset.id]);
 
     useEffect(() => {
         fetchImageIds();
@@ -137,11 +139,13 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
     const image_id = window.location.hash.split('#')[1];
 
     const [image, setImage] = useState<Image>(null);
+    const [imageAugmented, setImageAugmented] = useState<Image>(null);
 
     const fetchImage = useCallback(async () => {
         if (!image_id) return;
 
         setImage(null);
+        setImageAugmented(null);
 
         try {
             const response = await api.get<{image: Image}>(`/datasets/${dataset.id}/images/${image_id}`);
@@ -153,6 +157,8 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
 
     const handleSliderChange = (event, value) => {
         try {
+            setImage(null);
+            setImageAugmented(null);
             goToHash(imageIds[value]);
         } catch (err) {
             console.error(err);
@@ -193,7 +199,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
             onClose={handleClose}
             TransitionComponent={Transition}
         >
-            <ImageProvider image={image}>
+            <ImageProvider image={imageAugmented || image}>
                 <Scrollbar>
                     <AppBar className={classes.header}>
                         <Toolbar className={classes.toolbar}>
@@ -240,7 +246,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                         onChange={(event, value) => setIndex(value as number)}
                                     />
 
-                                    <NextUnlabeledImageAction index={index} pipeline_id={pipeline?.id} />
+                                    <NextUnlabeledImageAction index={index} />
                                 </Box>
 
                                 <Divider sx={{my: 2}} />
@@ -376,7 +382,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                     </Tooltip>
                                 </Box>
 
-                                {image ? (
+                                {image || imageAugmented ? (
                                     <div className={classes.labelisator}>
                                         <div className={clsx(tool !== 'label' && 'hidden')}>
                                             <ToolLabel setTool={setTool} autoSwitch={autoSwitch} />
@@ -395,19 +401,80 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                             </Grid>
 
                             <Grid item lg={4} xs={12}>
-                                <DTCategories />
-
-                                <Hidden mdDown>
-                                    <Box my={2}>
-                                        <Divider />
-                                    </Box>
-
+                                <Box mb={2}>
                                     <Typography variant="overline" color="textPrimary">
-                                        Top 10 categories
+                                        Original
                                     </Typography>
 
-                                    <CategoriesDistribution />
-                                </Hidden>
+                                    {image && (
+                                        <Box width="50%">
+                                            {imageAugmented === null ? (
+                                                <DTImage
+                                                    className={clsx(classes.image, classes.selected)}
+                                                    clickable
+                                                    onClick={() => setImageAugmented(null)}
+                                                    skeleton
+                                                />
+                                            ) : (
+                                                <ImageProvider image={image}>
+                                                    <DTImage
+                                                        className={classes.image}
+                                                        clickable
+                                                        onClick={() => setImageAugmented(null)}
+                                                        skeleton
+                                                    />
+                                                </ImageProvider>
+                                            )}
+                                        </Box>
+                                    )}
+                                </Box>
+
+                                <Box mb={2}>
+                                    <Typography variant="overline" color="textPrimary">
+                                        Augmented
+                                    </Typography>
+
+                                    {image && (
+                                        <ImagesProvider original_image_id={image_id}>
+                                            <Grid container spacing={2}>
+                                                <ImagesConsumer>
+                                                    {value =>
+                                                        value.images &&
+                                                        value.images.map(current => (
+                                                            <Grid item xs={6} key={current.id}>
+                                                                {imageAugmented !== null &&
+                                                                imageAugmented.id === current.id ? (
+                                                                    <DTImage
+                                                                        className={clsx(
+                                                                            classes.image,
+                                                                            classes.selected
+                                                                        )}
+                                                                        clickable
+                                                                        onClick={() => setImageAugmented(current)}
+                                                                        skeleton
+                                                                    />
+                                                                ) : (
+                                                                    <ImageProvider image={current}>
+                                                                        <DTImage
+                                                                            className={classes.image}
+                                                                            clickable
+                                                                            onClick={() => setImageAugmented(current)}
+                                                                            skeleton
+                                                                        />
+                                                                    </ImageProvider>
+                                                                )}
+                                                            </Grid>
+                                                        ))
+                                                    }
+                                                </ImagesConsumer>
+                                            </Grid>
+                                        </ImagesProvider>
+                                    )}
+                                </Box>
+
+                                <Divider sx={{my: 2}} />
+
+                                <DTCategories />
                             </Grid>
                         </Grid>
                     </Container>

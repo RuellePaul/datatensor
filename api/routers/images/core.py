@@ -110,9 +110,23 @@ def find_all_images(dataset_id, include_labels=False, offset=0, limit=0) -> List
     return images
 
 
-def find_images(dataset_id, pipeline_id=None, include_labels=False, offset=0, limit=0) -> List[ImageExtended]:
+def find_images(dataset_id,
+                original_image_id=None,
+                pipeline_id=None,
+                include_labels=False,
+                offset=0,
+                limit=0) -> List[ImageExtended]:
+    if original_image_id and pipeline_id:
+        query = {'dataset_id': dataset_id, 'original_image_id': original_image_id, 'pipeline_id': pipeline_id}
+    elif pipeline_id:
+        query = {'dataset_id': dataset_id, 'pipeline_id': pipeline_id}
+    elif original_image_id:
+        query = {'dataset_id': dataset_id, 'original_image_id': original_image_id}
+    else:
+        query = {'dataset_id': dataset_id, 'original_image_id': None, 'pipeline_id': None}
+
     images = list(db.images
-                  .find({'dataset_id': dataset_id, 'pipeline_id': pipeline_id})
+                  .find(query)
                   .skip(offset)
                   .limit(limit))
     if images is None:
@@ -176,26 +190,6 @@ def remove_images(dataset_id, image_ids):
 
 
 def remove_image(dataset_id, image_id):
-    image_to_delete = find_image(dataset_id, image_id)
-    if not image_to_delete:
-        raise errors.Forbidden(errors.IMAGE_NOT_FOUND)
-
-    # Find labels of image to delete
-    labels = find_labels(image_id)
-
-    # Delete image and associated labels
-    delete_image_from_s3(image_id)
-    db.images.delete_one({'_id': image_id, 'dataset_id': dataset_id})
-    db.labels.delete_many({'image_id': image_id})
-
-    # Decrease labels_count on associated categories
-    for category_id, labels_count in regroup_labels_by_category(labels).items():
-        db.categories.find_one_and_update(
-            {'_id': category_id},
-            {'$inc': {'labels_count': -labels_count}}
-        )
-
-    # Decrease image_count on associated dataset
-    db.datasets.update_one({'_id': dataset_id},
-                           {'$inc': {'image_count': -1}},
-                           upsert=False)
+    augmented_images_to_delete = find_images(dataset_id, original_image_id=image_id)
+    image_ids_to_delete = [image_id] + [image.id for image in augmented_images_to_delete]
+    remove_images(dataset_id, image_ids_to_delete)

@@ -14,11 +14,10 @@ import {ImageProvider} from 'src/store/ImageContext';
 import {LAZY_LOAD_BATCH} from 'src/constants';
 import {Image} from 'src/types/image';
 import api from 'src/utils/api';
-import goToHash from 'src/utils/goToHash';
 
 interface ImagesListProps {
-    pipeline_id?: string;
     className?: string;
+    onClick?: (image: Image) => void;
 }
 
 interface ImageOverlayProps {
@@ -83,6 +82,7 @@ const ImageOverlay: FC<ImageOverlayProps> = ({image}) => {
         try {
             await api.delete(`/datasets/${dataset.id}/images/${image.id}`);
             saveImages(images.filter(current => current.id !== image.id));
+            // FIXME
             saveDataset({...dataset, image_count: dataset.image_count - 1});
             handleCloseMenu();
         } catch (error) {
@@ -118,7 +118,7 @@ const ImageOverlay: FC<ImageOverlayProps> = ({image}) => {
     );
 };
 
-const DTImagesList: FC<ImagesListProps> = ({className, pipeline_id, ...rest}) => {
+const DTImagesList: FC<ImagesListProps> = ({className, onClick = () => {}, ...rest}) => {
     const classes = useStyles();
 
     const {images} = useImages();
@@ -153,7 +153,7 @@ const DTImagesList: FC<ImagesListProps> = ({className, pipeline_id, ...rest}) =>
                             <DTImage
                                 className={classes.image}
                                 clickable
-                                onClick={() => goToHash(image.id, true)}
+                                onClick={() => onClick(image)}
                                 skeleton
                                 overlay={<ImageOverlay image={image} />}
                             />

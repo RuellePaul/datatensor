@@ -141,8 +141,8 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                                 }}
                                 validationSchema={Yup.object().shape({
                                     image_count: Yup.number()
-                                        .min(1)
-                                        .max(10 * dataset.image_count)
+                                        .min(dataset.image_count)
+                                        .max(dataset.image_count * 4)
                                 })}
                                 onSubmit={async (values, {setErrors, setStatus, setSubmitting}) => {
                                     try {
@@ -194,7 +194,7 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                                             <Alert severity="info">
                                                 There are <strong>{dataset.image_count} original images</strong> in your
                                                 dataset, so you can generate up to{' '}
-                                                <strong>{dataset.image_count * 10} new images</strong>.
+                                                <strong>{dataset.image_count * 4} new images</strong>.
                                             </Alert>
                                         </Box>
 

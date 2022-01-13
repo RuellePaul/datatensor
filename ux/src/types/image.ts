@@ -10,5 +10,6 @@ export interface Image {
     width: number;
     height: number;
     pipeline_id?: string;
+    original_image_id?: string;
     labels?: Label[];
 }

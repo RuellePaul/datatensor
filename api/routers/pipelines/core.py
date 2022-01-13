@@ -27,7 +27,7 @@ def find_pipelines(dataset_id, offset=0, limit=0) -> List[Label]:
 
 
 def delete_pipeline(dataset_id, pipeline_id):
-    images = find_images(dataset_id, pipeline_id)
+    images = find_images(dataset_id, pipeline_id=pipeline_id)
     image_ids = [image.id for image in images]
     if images:
         remove_images(dataset_id, image_ids)

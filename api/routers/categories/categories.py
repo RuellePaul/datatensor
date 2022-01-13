@@ -28,11 +28,11 @@ def get_category(dataset_id, category_id):
 
 
 @categories.get('/{category_id}/images', response_model=ImagesCategoryResponse)
-def get_category(dataset_id, category_id, pipeline_id=None, offset: int = 0, limit: int = 0):
+def get_category(dataset_id, category_id, offset: int = 0, limit: int = 0):
     """
     Fetch images of a given category.
     """
-    images, total_count = find_images_of_category(dataset_id, category_id, pipeline_id, offset, limit)
+    images, total_count = find_images_of_category(dataset_id, category_id, offset, limit)
     response = {'images': images, 'total_count': total_count}
     return parse(response)
 
