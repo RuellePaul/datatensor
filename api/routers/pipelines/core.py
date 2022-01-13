@@ -10,8 +10,8 @@ from PIL import Image as PILImage
 
 import errors
 from config import Config
-from routers.images.core import find_images, remove_images
-from routers.images.models import Image, ImageExtended
+from routers.images.core import find_images, remove_augmented_images
+from routers.images.models import Image
 from routers.labels.models import Label
 from routers.pipelines.models import Operation
 from routers.pipelines.models import Pipeline
@@ -28,9 +28,9 @@ def find_pipelines(dataset_id, offset=0, limit=0) -> List[Label]:
 
 def delete_pipeline(dataset_id, pipeline_id):
     images = find_images(dataset_id, pipeline_id=pipeline_id)
-    image_ids = [image.id for image in images]
+    augmented_image_ids = [image.id for image in images]
     if images:
-        remove_images(dataset_id, image_ids)
+        remove_augmented_images(dataset_id, augmented_image_ids)
     db.pipelines.delete_one({'_id': pipeline_id})
 
 

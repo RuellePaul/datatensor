@@ -161,12 +161,14 @@ def insert_images(dataset_id, request_files) -> List[Image]:
 
 def remove_all_images(dataset_id):
     images = find_all_images(dataset_id)
-    image_ids = [image.id for image in images]
-    remove_images(dataset_id, image_ids)
+    image_ids = [image.id for image in images if image.original_image_id is None]
+    augmented_image_ids = [image.id for image in images if image.original_image_id]
+    remove_original_images(dataset_id, image_ids)
+    remove_augmented_images(dataset_id, augmented_image_ids)
     db.pipelines.delete_many({'dataset_id': dataset_id})
 
 
-def remove_images(dataset_id, image_ids):
+def remove_original_images(dataset_id, image_ids):
     # Find labels of images to delete
     labels = list(db.labels.find({'image_id': {'$in': image_ids}}))
     labels = [Label.from_mongo(label) for label in labels]
@@ -183,14 +185,38 @@ def remove_images(dataset_id, image_ids):
             {'$inc': {'labels_count': -labels_count}}
         )
 
-    # Decrease image_count on associated dataset  # FIXME
+    # Decrease image_count on associated dataset
     db.datasets.update_one({'_id': dataset_id},
-                           {'$inc': {'augmented_count': -len(image_ids)}},
+                           {'$inc': {'image_count': -len(image_ids)}},
+                           upsert=False)
+
+
+def remove_augmented_images(dataset_id, augmented_image_ids):
+    # Find labels of augmented images to delete
+    labels = list(db.labels.find({'image_id': {'$in': augmented_image_ids}}))
+    labels = [Label.from_mongo(label) for label in labels]
+
+    # Delete augmented images and associated labels
+    delete_images_from_s3(augmented_image_ids)
+    db.images.delete_many({'dataset_id': dataset_id, '_id': {'$in': augmented_image_ids}})
+    db.labels.delete_many({'image_id': {'$in': augmented_image_ids}})
+
+    # Decrease labels_count on associated categories
+    for category_id, labels_count in regroup_labels_by_category(labels).items():
+        db.categories.find_one_and_update(
+            {'dataset_id': dataset_id, '_id': category_id},
+            {'$inc': {'labels_count': -labels_count}}
+        )
+
+    # Decrease augmented_count on associated dataset
+    db.datasets.update_one({'_id': dataset_id},
+                           {'$inc': {'augmented_count': -len(augmented_image_ids)}},
                            upsert=False)
 
 
 def remove_image(dataset_id, image_id) -> int:
-    augmented_images_to_delete = find_images(dataset_id, original_image_id=image_id)
-    image_ids_to_delete = [image_id] + [image.id for image in augmented_images_to_delete]
-    remove_images(dataset_id, image_ids_to_delete)
-    return len(image_ids_to_delete)
+    remove_original_images(dataset_id, [image_id])
+    augmented_image_ids_to_delete = [image.id for image in find_images(dataset_id, original_image_id=image_id)]
+    if augmented_image_ids_to_delete:
+        remove_augmented_images(dataset_id, augmented_image_ids_to_delete)
+    return 1 + len(augmented_image_ids_to_delete)

@@ -1,7 +1,6 @@
 from datetime import datetime
 
 from config import Config
-from routers.datasets.core import find_dataset
 from routers.datasets.models import DatasetExtended
 from routers.exports.models import Export
 from routers.images.core import find_all_images

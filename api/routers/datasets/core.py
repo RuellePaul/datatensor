@@ -7,7 +7,7 @@ from config import Config
 from routers.categories.core import find_categories
 from routers.datasets.models import Dataset, DatasetExtended, DatasetPostBody, DatasetPatchBody
 from routers.users.core import find_user
-from routers.images.core import find_all_images, remove_images
+from routers.images.core import remove_all_images
 
 db = Config.db
 
@@ -86,13 +86,9 @@ def remove_dataset(user_id, dataset_id):
     if dataset_to_remove['user_id'] != user_id:
         raise errors.Forbidden(errors.NOT_YOUR_DATASET)
 
-    images = find_all_images(dataset_id)
-    image_ids = [image.id for image in images]
-    remove_images(dataset_id, image_ids)
-
+    remove_all_images(dataset_id)
     db.categories.delete_many({'dataset_id': dataset_id})
     db.tasks.delete_many({'dataset_id': dataset_id})
-    db.pipelines.delete_many({'dataset_id': dataset_id})
     db.datasets.delete_one({'_id': dataset_id, 'user_id': user_id})
     # TODO : delete notifications (with their task_id)
 
