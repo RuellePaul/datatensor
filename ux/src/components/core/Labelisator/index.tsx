@@ -223,7 +223,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
 
                     <Container maxWidth="xl" className={classes.container}>
                         <Grid className={classes.content} container spacing={3}>
-                            <Grid item lg={8} xs={12}>
+                            <Grid item md={8} xs={12}>
                                 <Box display="flex" alignItems="center">
                                     <Box mr={1}>
                                         <ImageIcon />
@@ -400,7 +400,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                 )}
                             </Grid>
 
-                            <Grid item lg={4} xs={12}>
+                            <Grid item md={4} xs={12}>
                                 <Box mb={2}>
                                     <Typography variant="overline" color="textPrimary">
                                         Original
