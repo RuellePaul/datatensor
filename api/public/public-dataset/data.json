@@ -486,7 +486,7 @@
             "size": 119269,
             "width": 1186,
             "height": 720,
-            "pipeline_id": null,
+            "original_image_id": null,
             "labels": [
                 {
                     "id": "434c8d5c-da6d-406f-8625-61bfd99d544c",
@@ -534,7 +534,7 @@
             "size": 84027,
             "width": 612,
             "height": 408,
-            "pipeline_id": null,
+            "original_image_id": null,
             "labels": [
                 {
                     "id": "bb38ea8a-b438-44d2-8f8c-aba583c5fd91",

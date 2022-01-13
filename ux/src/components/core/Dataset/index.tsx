@@ -205,7 +205,7 @@ const DTDataset: FC<DatasetProps> = ({className, image = null, onClick, disabled
                         </ImageProvider>
                     </Box>
                 ) : (
-                    <Skeleton width="100%" height={270} sx={{transform: 'none'}}/>
+                    <Skeleton width="100%" height={270} sx={{transform: 'none'}} />
                 )}
                 <CardContent>
                     <Box display="flex" alignItems="flex-start" justifyContent="space-between">
@@ -232,15 +232,33 @@ const DTDataset: FC<DatasetProps> = ({className, image = null, onClick, disabled
                                     <ImagesIcon className={classes.icon} />
 
                                     <Typography fontWeight={600} color="textPrimary">
-                                        {dataset.image_count + dataset.augmented_count}{' '}
+                                        {dataset.image_count}{' '}
                                         <Typography
-                                            variant="subtitle1"
+                                            variant="h5"
                                             component="span"
                                             color="textSecondary"
                                             fontWeight={400}
                                         >
-                                            images
+                                            {dataset.image_count > 1 ? 'images' : 'image'}
                                         </Typography>
+                                        {dataset.augmented_count > 0 && (
+                                            <Typography
+                                                variant="caption"
+                                                component="p"
+                                                color="textSecondary"
+                                                fontWeight={400}
+                                            >
+                                                <Typography
+                                                    variant="caption"
+                                                    component="span"
+                                                    color="textPrimary"
+                                                    fontWeight={600}
+                                                >
+                                                    +{dataset.augmented_count}
+                                                </Typography>{' '}
+                                                augmented
+                                            </Typography>
+                                        )}
                                     </Typography>
                                 </Box>
                                 <Box className={classes.wrapper}>

@@ -4,8 +4,8 @@ from uuid import uuid4
 import errors
 from config import Config
 from routers.categories.models import Category, SuperCategory
-from routers.images.models import Image
-from routers.labels.core import find_labels_of_category
+from routers.images.models import ImageExtended
+from routers.labels.core import find_labels, find_labels_of_category
 
 db = Config.db
 
@@ -24,17 +24,19 @@ def find_category(dataset_id, category_id) -> Category:
     return Category.from_mongo(category)
 
 
-def find_images_of_category(dataset_id, category_id, pipeline_id, offset=0, limit=0) -> tuple[List[Image], int]:
+def find_images_of_category(dataset_id, category_id, include_labels=False, offset=0, limit=0) -> tuple[List[ImageExtended], int]:
     labels = find_labels_of_category(category_id)
     images = db.images.find({'dataset_id': dataset_id,
-                             'pipeline_id': pipeline_id,
+                             'pipeline_id': None,
                              '_id': {'$in': [label.image_id for label in labels]}}
                             ).skip(offset).limit(limit)
     total_count = db.images.count({'dataset_id': dataset_id,
-                                   'pipeline_id': pipeline_id,
-                                   '_id': {'$in': [label.image_id for label in labels]}}
-                                  )
-    images = [Image.from_mongo(image) for image in images]
+                                   'pipeline_id': None,
+                                   '_id': {'$in': [label.image_id for label in labels]}})
+    images = [ImageExtended.from_mongo(image) for image in images]
+    if include_labels:
+        for image in images:
+            image.labels = find_labels(image.id)
     return images, total_count
 
 

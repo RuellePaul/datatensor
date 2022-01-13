@@ -14,7 +14,7 @@ import {ImagesProvider} from 'src/store/ImagesContext';
 import {DatasetConsumer, DatasetProvider} from 'src/store/DatasetContext';
 import {UserProvider} from 'src/store/UserContext';
 import {CategoryProvider} from 'src/store/CategoryContext';
-import {PipelineProvider} from 'src/store/PipelineContext';
+
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -39,8 +39,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 const DatasetMainView: FC = () => {
     const classes = useStyles();
 
-    const {user} = useAuth();
-    const {dataset_id} = useParams();
+    const { user } = useAuth();
+    const { dataset_id } = useParams();
 
     if (!dataset_id) return null;
 
@@ -51,23 +51,21 @@ const DatasetMainView: FC = () => {
                     <UserProvider user={value.dataset.user}>
                         <Page className={classes.root} title={`Dataset ${value.dataset.name}`}>
                             <ImagesProvider>
-                                <PipelineProvider>
-                                    <CategoryProvider>
-                                        <Container component="section" maxWidth="lg">
-                                            <Header />
+                                <CategoryProvider>
+                                    <Container component="section" maxWidth="lg">
+                                        <Header />
 
-                                            <Box my={4}>
-                                                <SectionOverview />
+                                        <Box my={4}>
+                                            <SectionOverview />
 
-                                                <SectionImages />
+                                            <SectionImages />
 
-                                                {value.dataset.user_id === user.id && <SectionSettings />}
-                                            </Box>
-                                        </Container>
+                                            {value.dataset.user_id === user.id && <SectionSettings />}
+                                        </Box>
+                                    </Container>
 
-                                        <DTLabelisator />
-                                    </CategoryProvider>
-                                </PipelineProvider>
+                                    <DTLabelisator />
+                                </CategoryProvider>
                             </ImagesProvider>
                         </Page>
                     </UserProvider>

@@ -15,7 +15,7 @@ export interface ImagesContextValue {
 }
 
 interface ImagesProviderProps {
-    pipeline_id?: string;
+    original_image_id?: string;
     category_id?: string;
     children?: ReactNode;
     images?: Image[]; // for public data
@@ -29,7 +29,7 @@ export const ImagesContext = createContext<ImagesContextValue>({
     totalImagesCount: null
 });
 
-export const ImagesProvider: FC<ImagesProviderProps> = ({children, pipeline_id, category_id, images = null}) => {
+export const ImagesProvider: FC<ImagesProviderProps> = ({children, original_image_id, category_id, images = null}) => {
     const [currentImages, setCurrentImages] = useState<Image[] | null>(null);
     const [currentOffset, setCurrentOffset] = useState<number>(0);
     const [totalImagesCount, setTotalImagesCount] = useState<number | null>(null);
@@ -52,9 +52,9 @@ export const ImagesProvider: FC<ImagesProviderProps> = ({children, pipeline_id, 
                     total_count: number;
                 }>(`/datasets/${dataset.id}/categories/${category_id}/images`, {
                     params: {
+                        include_labels: true,
                         offset: currentOffset,
-                        limit: LAZY_LOAD_BATCH,
-                        pipeline_id
+                        limit: LAZY_LOAD_BATCH
                     }
                 });
                 setTotalImagesCount(response.data.total_count);
@@ -63,7 +63,7 @@ export const ImagesProvider: FC<ImagesProviderProps> = ({children, pipeline_id, 
                     params: {
                         offset: currentOffset,
                         limit: LAZY_LOAD_BATCH,
-                        pipeline_id,
+                        original_image_id,
                         include_labels: true
                     }
                 });
@@ -79,7 +79,7 @@ export const ImagesProvider: FC<ImagesProviderProps> = ({children, pipeline_id, 
         }
 
         // eslint-disable-next-line
-    }, [dataset.id, currentOffset, pipeline_id, category_id]);
+    }, [dataset.id, currentOffset, original_image_id, category_id]);
 
     useEffect(() => {
         images === null && fetchImages();

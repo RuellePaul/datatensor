@@ -15,7 +15,6 @@ import goToHash from 'src/utils/goToHash';
 
 interface NextUnlabeledImageActionProps {
     index: number;
-    pipeline_id?: string;
     className?: string;
 }
 
@@ -31,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const NextUnlabeledImageAction: FC<NextUnlabeledImageActionProps> = ({index, pipeline_id = null, className}) => {
+const NextUnlabeledImageAction: FC<NextUnlabeledImageActionProps> = ({index, className}) => {
     const classes = useStyles();
 
     const {enqueueSnackbar} = useSnackbar();
@@ -56,7 +55,6 @@ const NextUnlabeledImageAction: FC<NextUnlabeledImageActionProps> = ({index, pip
                         {},
                         {
                             params: {
-                                pipeline_id,
                                 offset: index
                             }
                         }

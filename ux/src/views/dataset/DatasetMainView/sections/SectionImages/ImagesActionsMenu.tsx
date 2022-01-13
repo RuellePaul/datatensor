@@ -21,9 +21,9 @@ import {
     Typography
 } from '@mui/material';
 import {
+    BrandingWatermarkOutlined as LabelisatorIcon,
     Close as CloseIcon,
     Delete as DeleteIcon,
-    BrandingWatermarkOutlined as LabelisatorIcon,
     DynamicFeedOutlined as AugmentationIcon,
     ExpandMore as ArrowDown,
     PublishOutlined as UploadIcon,
@@ -225,6 +225,8 @@ const DeletePipelineMenuItem: FC = () => {
 
     const [isDeleting, setIsDeleting] = useState(false);
 
+    const pipeline_id = pipelines.length > 0 && pipelines[0].id;
+
     const handleDeletePipeline = async () => {
         if (!pipeline_id) return;
 
@@ -249,8 +251,6 @@ const DeletePipelineMenuItem: FC = () => {
             setIsDeleting(false);
         }
     };
-
-    const pipeline_id = pipelines.length > 0 && pipelines[0].id;
 
     const [open, setOpen] = useState(false);
 

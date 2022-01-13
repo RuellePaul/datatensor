@@ -25,8 +25,8 @@ def search_dataset_ids_from_category_names(category_names: List[str]):
     return list(set(matched_datasets_ids))
 
 
-def search_unlabeled_image_id(dataset_id, pipeline_id, offset) -> Union[str, None]:
-    image_ids = [image.id for image in find_images(dataset_id, pipeline_id)]
+def search_unlabeled_image_id(dataset_id, offset) -> Union[str, None]:
+    image_ids = [image.id for image in find_images(dataset_id)]
     labels = list(db.labels.find({'image_id': {'$in': image_ids}}))
     labels = [Label.from_mongo(label) for label in labels]
 

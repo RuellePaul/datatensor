@@ -62,7 +62,8 @@ def process_augmentation(payload):
         size=len(image_bytes),
         width=augmented_images[0].width,
         height=augmented_images[0].height,
-        pipeline_id=pipeline_id
+        pipeline_id=pipeline_id,
+        original_image_id=image.id
     )
     db.images.insert_one(new_image.mongo())
     if new_labels:
