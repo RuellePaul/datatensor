@@ -3,7 +3,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
-from routers.images.models import Image
+from routers.images.models import ImageExtended
 from utils import MongoModel
 
 
@@ -40,7 +40,7 @@ class CategoryResponse(BaseModel):
 
 
 class ImagesCategoryResponse(BaseModel):
-    images: List[Image]
+    images: List[ImageExtended]
     total_count: int
 
 

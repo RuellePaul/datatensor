@@ -173,17 +173,17 @@ def remove_images(dataset_id, image_ids):
 
     # Delete images and associated labels
     delete_images_from_s3(image_ids)
-    db.images.delete_many({'_id': {'$in': image_ids}})
+    db.images.delete_many({'dataset_id': dataset_id, '_id': {'$in': image_ids}})
     db.labels.delete_many({'image_id': {'$in': image_ids}})
 
     # Decrease labels_count on associated categories
     for category_id, labels_count in regroup_labels_by_category(labels).items():
         db.categories.find_one_and_update(
-            {'_id': category_id},
+            {'dataset_id': dataset_id, '_id': category_id},
             {'$inc': {'labels_count': -labels_count}}
         )
 
-    # Decrease image_count on associated dataset
+    # Decrease image_count on associated dataset  # FIXME
     db.datasets.update_one({'_id': dataset_id},
                            {'$inc': {'augmented_count': -len(image_ids)}},
                            upsert=False)

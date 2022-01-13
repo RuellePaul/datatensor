@@ -52,6 +52,7 @@ export const ImagesProvider: FC<ImagesProviderProps> = ({children, original_imag
                     total_count: number;
                 }>(`/datasets/${dataset.id}/categories/${category_id}/images`, {
                     params: {
+                        include_labels: true,
                         offset: currentOffset,
                         limit: LAZY_LOAD_BATCH
                     }

@@ -2,7 +2,7 @@ import React, {FC} from 'react';
 import clsx from 'clsx';
 import {useSnackbar} from 'notistack';
 import {IconButton, ListItemIcon, Menu, MenuItem, Skeleton, Tooltip, Typography} from '@mui/material';
-import {Delete as DeleteIcon, MoreVert as MoreIcon} from '@mui/icons-material';
+import {CreateOutlined as EditIcon, Delete as DeleteIcon, MoreVert as MoreIcon} from '@mui/icons-material';
 import Masonry from '@mui/lab/Masonry';
 import MasonryItem from '@mui/lab/MasonryItem';
 import makeStyles from '@mui/styles/makeStyles';
@@ -14,6 +14,7 @@ import {ImageProvider} from 'src/store/ImageContext';
 import {LAZY_LOAD_BATCH} from 'src/constants';
 import {Image} from 'src/types/image';
 import api from 'src/utils/api';
+import goToHash from 'src/utils/goToHash';
 
 interface ImagesListProps {
     className?: string;
@@ -78,11 +79,14 @@ const ImageOverlay: FC<ImageOverlayProps> = ({image}) => {
     const {dataset, saveDataset} = useDataset();
     const {images, saveImages} = useImages();
 
+    const handleOpenLabelisator = () => {
+        goToHash(image.id);
+        handleCloseMenu();
+    };
+
     const handleDelete = async () => {
         try {
-            const response = await api.delete<{deleted_count: number}>(
-                `/datasets/${dataset.id}/images/${image.id}`
-            );
+            const response = await api.delete<{deleted_count: number}>(`/datasets/${dataset.id}/images/${image.id}`);
             saveImages(images.filter(current => current.id !== image.id));
             saveDataset({
                 ...dataset,
@@ -112,6 +116,12 @@ const ImageOverlay: FC<ImageOverlayProps> = ({image}) => {
             </Tooltip>
 
             <Menu anchorEl={anchorEl} open={open} onClose={handleCloseMenu}>
+                <MenuItem key="Edit" onClick={handleOpenLabelisator}>
+                    <ListItemIcon>
+                        <EditIcon />
+                    </ListItemIcon>
+                    Edit
+                </MenuItem>
                 <MenuItem key="Delete" onClick={handleDelete}>
                     <ListItemIcon>
                         <DeleteIcon />

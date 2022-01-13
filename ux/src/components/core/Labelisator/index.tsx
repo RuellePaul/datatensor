@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         }
     },
     image: {
-        opacity: 0.5,
+        opacity: 0.75,
         transition: 'all 0.15s ease-in-out'
     },
     selected: {
