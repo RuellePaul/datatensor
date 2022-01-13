@@ -436,38 +436,53 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
 
                                     {image && (
                                         <ImagesProvider original_image_id={image_id}>
-                                            <Grid container spacing={2}>
-                                                <ImagesConsumer>
-                                                    {value =>
-                                                        value.images &&
-                                                        value.images.map(current => (
-                                                            <Grid item xs={6} key={current.id}>
-                                                                {imageAugmented !== null &&
-                                                                imageAugmented.id === current.id ? (
-                                                                    <DTImage
-                                                                        className={clsx(
-                                                                            classes.image,
-                                                                            classes.selected
-                                                                        )}
-                                                                        clickable
-                                                                        onClick={() => setImageAugmented(current)}
-                                                                        skeleton
-                                                                    />
-                                                                ) : (
-                                                                    <ImageProvider image={current}>
+                                            <ImagesConsumer>
+                                                {value =>
+                                                    value.images instanceof Array && value.images.length > 0 ? (
+                                                        <Grid container spacing={1}>
+                                                            {value.images.map(current => (
+                                                                <Grid
+                                                                    item // @ts-ignore
+                                                                    xs={parseInt(12 / value.images.length)}
+                                                                    key={current.id}
+                                                                >
+                                                                    {imageAugmented !== null &&
+                                                                    imageAugmented.id === current.id ? (
                                                                         <DTImage
-                                                                            className={classes.image}
+                                                                            className={clsx(
+                                                                                classes.image,
+                                                                                classes.selected
+                                                                            )}
                                                                             clickable
                                                                             onClick={() => setImageAugmented(current)}
                                                                             skeleton
                                                                         />
-                                                                    </ImageProvider>
-                                                                )}
-                                                            </Grid>
-                                                        ))
-                                                    }
-                                                </ImagesConsumer>
-                                            </Grid>
+                                                                    ) : (
+                                                                        <ImageProvider image={current}>
+                                                                            <DTImage
+                                                                                className={classes.image}
+                                                                                clickable
+                                                                                onClick={() =>
+                                                                                    setImageAugmented(current)
+                                                                                }
+                                                                                skeleton
+                                                                            />
+                                                                        </ImageProvider>
+                                                                    )}
+                                                                </Grid>
+                                                            ))}
+                                                        </Grid>
+                                                    ) : (
+                                                        <Typography
+                                                            variant="caption"
+                                                            component="p"
+                                                            color="textSecondary"
+                                                        >
+                                                            No augmented images found.
+                                                        </Typography>
+                                                    )
+                                                }
+                                            </ImagesConsumer>
                                         </ImagesProvider>
                                     )}
                                 </Box>

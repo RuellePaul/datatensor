@@ -32,3 +32,7 @@ class ImageIdsResponse(BaseModel):
 
 class ImageResponse(BaseModel):
     image: Image
+
+
+class ImageDeleteResponse(BaseModel):
+    deleted_count: int

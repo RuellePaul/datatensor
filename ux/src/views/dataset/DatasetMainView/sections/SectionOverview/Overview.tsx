@@ -10,6 +10,7 @@ import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
 import getDateDiff from 'src/utils/getDateDiff';
 
+
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
     icon: {
@@ -36,10 +37,10 @@ interface OverviewProps {
     className?: string;
 }
 
-const Overview: FC<OverviewProps> = ({className}) => {
+const Overview: FC<OverviewProps> = ({ className }) => {
     const classes = useStyles();
 
-    const {dataset, categories} = useDataset();
+    const { dataset, categories } = useDataset();
 
     const totalLabelsCount = categories.map(category => category.labels_count || 0).reduce((acc, val) => acc + val, 0);
 
@@ -55,10 +56,18 @@ const Overview: FC<OverviewProps> = ({className}) => {
                     <ImagesIcon className={classes.icon} />
 
                     <Typography variant="h4" fontWeight={600} color="textPrimary">
-                        {dataset.image_count + dataset.augmented_count}{' '}
+                        {dataset.image_count}{' '}
                         <Typography variant="h5" component="span" color="textSecondary" fontWeight={400}>
-                            {dataset.image_count + dataset.augmented_count > 1 ? 'images' : 'image'}
+                            {dataset.image_count > 1 ? 'images' : 'image'}
                         </Typography>
+                        {dataset.augmented_count > 0 && (
+                            <Typography variant="caption" component="p" color="textSecondary" fontWeight={400}>
+                                <Typography variant="caption" component="span" color="textPrimary" fontWeight={600}>
+                                    +{dataset.augmented_count}
+                                </Typography>{' '}
+                                augmented
+                            </Typography>
+                        )}
                     </Typography>
                 </Box>
                 <Box className={classes.wrapper}>

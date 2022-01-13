@@ -60,9 +60,10 @@ def delete_images(dataset_id, dataset=Depends(dataset_belongs_to_user)):
     remove_all_images(dataset_id)
 
 
-@images.delete('/{image_id}')
+@images.delete('/{image_id}', response_model=ImageDeleteResponse)
 def delete_image(dataset_id, image_id, dataset=Depends(dataset_belongs_to_user)):
     """
     Delete given image of given dataset.
     """
-    remove_image(dataset_id, image_id)
+    response = {'deleted_count': remove_image(dataset_id, image_id)}
+    return parse(response)

@@ -80,10 +80,15 @@ const ImageOverlay: FC<ImageOverlayProps> = ({image}) => {
 
     const handleDelete = async () => {
         try {
-            await api.delete(`/datasets/${dataset.id}/images/${image.id}`);
+            const response = await api.delete<{deleted_count: number}>(
+                `/datasets/${dataset.id}/images/${image.id}`
+            );
             saveImages(images.filter(current => current.id !== image.id));
-            // FIXME
-            saveDataset({...dataset, image_count: dataset.image_count - 1});
+            saveDataset({
+                ...dataset,
+                image_count: dataset.image_count - 1,
+                augmented_count: dataset.augmented_count - (response.data.deleted_count - 1)
+            });
             handleCloseMenu();
         } catch (error) {
             enqueueSnackbar(error.message || 'Something went wrong', {

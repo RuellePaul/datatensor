@@ -189,7 +189,8 @@ def remove_images(dataset_id, image_ids):
                            upsert=False)
 
 
-def remove_image(dataset_id, image_id):
+def remove_image(dataset_id, image_id) -> int:
     augmented_images_to_delete = find_images(dataset_id, original_image_id=image_id)
     image_ids_to_delete = [image_id] + [image.id for image in augmented_images_to_delete]
     remove_images(dataset_id, image_ids_to_delete)
+    return len(image_ids_to_delete)
