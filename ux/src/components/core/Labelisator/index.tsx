@@ -122,19 +122,31 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
 
     const [imageIds, setImageIds] = useState<string[]>([]);
 
+    const [open, setOpen] = useState<boolean>(window.location.hash.length > 0);
+
+    const handleClose = () => {
+        setOpen(false);
+        saveCurrentCategory(null);
+        window.location.replace(`#`);
+    };
+
     const fetchImageIds = useCallback(async () => {
-        setImageIds([]);
+        if (imageIds.length > 0)
+            return;
+
         try {
             const response = await api.get<{image_ids: string[]}>(`/datasets/${dataset.id}/images/ids`);
             setImageIds(response.data.image_ids);
         } catch (err) {
             console.error(err);
         }
-    }, [dataset.id]);
+
+    }, [dataset.id, imageIds]);
 
     useEffect(() => {
-        fetchImageIds();
-    }, [fetchImageIds]);
+        if (open)
+            fetchImageIds();
+    }, [fetchImageIds, open]);
 
     const image_id = window.location.hash.split('#')[1];
 
@@ -169,14 +181,6 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
         fetchImage();
     }, [fetchImage]);
 
-    const handleClose = () => {
-        setOpen(false);
-        saveCurrentCategory(null);
-        window.location.replace(`#`);
-    };
-
-    const [open, setOpen] = useState<boolean>(window.location.hash.length > 0);
-
     useEffect(() => {
         const onHashChange = () => setOpen(window.location.hash.length > 0);
         window.addEventListener('hashchange', onHashChange);
@@ -198,6 +202,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
             open={open}
             onClose={handleClose}
             TransitionComponent={Transition}
+            keepMounted
         >
             <ImageProvider image={imageAugmented || image}>
                 <Scrollbar>
@@ -443,7 +448,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                                             {value.images.map(current => (
                                                                 <Grid
                                                                     item // @ts-ignore
-                                                                    xs={parseInt(12 / value.images.length)}
+                                                                    xs={Math.min(parseInt(12 / value.images.length), 6)}
                                                                     key={current.id}
                                                                 >
                                                                     {imageAugmented !== null &&

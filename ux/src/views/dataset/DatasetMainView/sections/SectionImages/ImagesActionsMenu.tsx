@@ -46,7 +46,9 @@ interface ImagesActionsMenuProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {},
+    root: {
+        marginLeft: theme.spacing(2)
+    },
     close: {
         position: 'absolute',
         right: theme.spacing(1),

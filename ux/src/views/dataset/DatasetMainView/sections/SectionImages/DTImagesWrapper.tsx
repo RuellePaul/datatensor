@@ -28,9 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         },
         [theme.breakpoints.down('md')]: {
             position: 'relative',
-            zIndex: 1000,
-            flexDirection: 'column',
-            justifyContent: 'center'
+            zIndex: 1000
         }
     }
 }));
