@@ -1,4 +1,7 @@
 const getInitials = (name: string = '') => {
+    if (!name)
+        return '';
+
     return name
         .replace(/\s+/, ' ')
         .split(' ')

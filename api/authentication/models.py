@@ -16,7 +16,7 @@ class Scope(str, Enum):
 class User(MongoModel):
     id: str = Field()
     email: Optional[str] = None  # github oauth users doesn't have an email
-    name: str
+    name: Optional[str] = None  # github users can have a non specified name
     created_at: datetime
     is_verified: bool
     is_admin: bool
