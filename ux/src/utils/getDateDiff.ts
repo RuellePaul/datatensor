@@ -3,8 +3,8 @@ const getDateDiff = (date1, date2, format: 'duration' | 'passed_event' = 'durati
     diff = Math.abs(Math.floor(diff / 1000));
 
     const sec = diff % 60;
-    const min = Math.floor((diff - sec) / 60);
-    const hours = Math.floor((diff - min) / (60 * 60));
+    const min = Math.floor((diff - sec) / 60) % 60;
+    const hours = Math.floor((diff - min) / (60 * 60)) % 24;
     const days = Math.floor((diff - hours) / (24 * 60 * 60));
 
     if (format === 'duration') {
