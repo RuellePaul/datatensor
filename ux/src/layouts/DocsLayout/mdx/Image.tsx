@@ -1,7 +1,8 @@
 import type {FC} from 'react';
-import React from 'react';
+import React, {useRef} from 'react';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
+import requestFullScreen from 'src/utils/requestFullScreen';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -17,9 +18,18 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Image: FC = (props) => {
     const classes = useStyles();
 
+    const imageRef = useRef();
+
+    const handleFullScreen = () => {
+        requestFullScreen(imageRef.current)
+    }
+
     return (  // eslint-disable-next-line
         <img
             className={classes.root}
+            onDoubleClick={handleFullScreen}
+            draggable={false}
+            ref={imageRef}
             {...props}
         />
     );
