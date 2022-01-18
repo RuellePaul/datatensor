@@ -41,7 +41,7 @@ class Task(MongoModel):
     user_id: str
     dataset_id: Optional[str] = None
     type: TaskType
-    properties: TaskProperties
+    properties: Optional[TaskProperties] = None
     status: TaskStatus
     progress: float
     created_at: datetime

@@ -83,6 +83,7 @@ const OAuthLoginButton: FC<OAuthLoginButtonProps> = ({scope}) => {
                         const {authorization_url} = response.data;
                         window.location.href = authorization_url;
                     } catch (error) {
+                        NProgress.done();
                         enqueueSnackbar(error.message || 'Something went wrong', {
                             variant: 'error'
                         });

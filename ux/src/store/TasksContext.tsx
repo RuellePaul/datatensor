@@ -13,6 +13,8 @@ export interface TasksContextValue {
     saveTasks: (update: Task[] | ((tasks: Task[]) => Task[])) => void;
     selectedTask: Task | null;
     saveSelectedTask: (update: Task | ((tasks: Task) => Task)) => void;
+    isPaused: boolean;
+    savePaused: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface TasksProviderProps {
@@ -23,7 +25,9 @@ export const TasksContext = createContext<TasksContextValue>({
     tasks: null,
     saveTasks: () => {},
     selectedTask: null,
-    saveSelectedTask: () => {}
+    saveSelectedTask: () => {},
+    isPaused: false,
+    savePaused: () => {}
 });
 
 let tasksIntervalID;
@@ -143,7 +147,9 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
                 tasks: currentTasks,
                 saveTasks: handleSaveTasks,
                 selectedTask: selectedTask,
-                saveSelectedTask: handleSaveSelectedTask
+                saveSelectedTask: handleSaveSelectedTask,
+                isPaused: isPaused,
+                savePaused: setPaused
             }}
         >
             {children}

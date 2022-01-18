@@ -11,6 +11,7 @@ from config import Config
 from routers.images.models import Image, ImageExtended
 from routers.labels.core import find_labels_from_image_ids, regroup_labels_by_category
 from routers.labels.models import Label
+from utils import update_task, increment_task_progress
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
@@ -96,7 +97,7 @@ def delete_image_from_s3(image_id):
         raise errors.InternalError(f'Cannot delete file from S3, {str(e)}')
 
 
-def find_all_images(dataset_id, include_labels=False, offset=0, limit=0) -> List[ImageExtended]:
+def find_all_images(dataset_id, include_labels=False, task_id=None, offset=0, limit=0) -> List[ImageExtended]:
     images = list(db.images
                   .find({'dataset_id': dataset_id})
                   .skip(offset)
@@ -109,6 +110,8 @@ def find_all_images(dataset_id, include_labels=False, offset=0, limit=0) -> List
         if labels is not None:
             for image in images:
                 image.labels = [label for label in labels if label.image_id == image.id]
+                if task_id:
+                    increment_task_progress(task_id, 1 / len(images))
     return images
 
 

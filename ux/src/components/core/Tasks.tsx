@@ -95,8 +95,6 @@ const columns: GridColDef[] = [
     }
 ];
 
-interface TaskProps {}
-
 const LoadingOverlay: FC = () => (
     <GridOverlay>
         <div style={{position: 'absolute', top: 0, width: '100%'}}>
@@ -105,7 +103,7 @@ const LoadingOverlay: FC = () => (
     </GridOverlay>
 );
 
-const DTTasks: FC<TaskProps> = () => {
+const DTTasks: FC = () => {
     const classes = useStyles();
 
     const {tasks, saveSelectedTask} = useTasks();

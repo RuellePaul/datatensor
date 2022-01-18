@@ -12,7 +12,6 @@ import {
     Card,
     CardActions,
     CardContent,
-    CircularProgress,
     Dialog,
     DialogContent,
     InputAdornment,
@@ -28,7 +27,8 @@ import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import api from 'src/utils/api';
 import download from 'src/utils/download';
 import getDateDiff from 'src/utils/getDateDiff';
-
+import TaskProgress from 'src/components/core/TaskProgress';
+import useTasks from '../../../../../hooks/useTasks';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
@@ -43,10 +43,6 @@ const useStyles = makeStyles((theme: Theme) => ({
             width: '100%'
         }
     },
-    loader: {
-        width: '16px !important',
-        height: '16px !important'
-    },
     wrapper: {
         overflowX: 'hidden',
         overflowY: 'auto'
@@ -57,12 +53,13 @@ interface ExportActionProps {
     className?: string;
 }
 
-const ExportAction: FC<ExportActionProps> = ({ className }) => {
+const ExportAction: FC<ExportActionProps> = ({className}) => {
     const classes = useStyles();
     const isMountedRef = useIsMountedRef();
-    const { enqueueSnackbar } = useSnackbar();
+    const {enqueueSnackbar} = useSnackbar();
 
-    const { dataset, saveDataset, categories } = useDataset();
+    const {tasks, savePaused} = useTasks();
+    const {dataset, saveDataset, categories} = useDataset();
 
     const [open, setOpen] = useState<boolean>(false);
 
@@ -80,6 +77,7 @@ const ExportAction: FC<ExportActionProps> = ({ className }) => {
     const handleExport = async () => {
         try {
             setIsExporting(true);
+            savePaused(false);
             const response = await api.get(`/datasets/${dataset.id}/exports/`);
             setExportedDataset(response.data);
             saveDataset(dataset => ({
@@ -105,6 +103,11 @@ const ExportAction: FC<ExportActionProps> = ({ className }) => {
     const isPoor =
         categories.map(category => category.labels_count).reduce((acc, val) => acc + val, 0) / categories.length < 2000;
 
+    const exportTask =
+        tasks instanceof Array
+            ? tasks.find(task => task.type === 'export' && ['pending', 'active'].includes(task.status))
+            : null;
+
     return (
         <Formik
             initialValues={{
@@ -118,12 +121,12 @@ const ExportAction: FC<ExportActionProps> = ({ className }) => {
                     .max(255)
                     .required('Filename is required')
             })}
-            onSubmit={async (values, { resetForm, setStatus, setSubmitting }) => {
+            onSubmit={async (values, {resetForm, setStatus, setSubmitting}) => {
                 try {
                     await handleDownload(values.filename);
 
                     if (isMountedRef.current) {
-                        setStatus({ success: true });
+                        setStatus({success: true});
                         setSubmitting(false);
                         resetForm();
                     }
@@ -133,13 +136,13 @@ const ExportAction: FC<ExportActionProps> = ({ className }) => {
                     });
 
                     if (isMountedRef.current) {
-                        setStatus({ success: false });
+                        setStatus({success: false});
                         setSubmitting(false);
                     }
                 }
             }}
         >
-            {({ errors, handleBlur, handleChange, handleSubmit, touched, values }) => (
+            {({errors, handleBlur, handleChange, handleSubmit, touched, values}) => (
                 <form noValidate onSubmit={handleSubmit}>
                     <Card className={clsx(classes.root, className)} variant="outlined">
                         <CardContent>
@@ -154,7 +157,7 @@ const ExportAction: FC<ExportActionProps> = ({ className }) => {
                             </Typography>
 
                             {isPoor && !dataset.exported_at && (
-                                <Alert severity="warning" sx={{ mt: 2 }}>
+                                <Alert severity="warning" sx={{mt: 2}}>
                                     You don't have enough images in this dataset to successfully converge an object
                                     detection model.
                                     <br />
@@ -165,10 +168,10 @@ const ExportAction: FC<ExportActionProps> = ({ className }) => {
                             {isExporting && (
                                 <Alert className={classes.alert} severity="info">
                                     <Typography variant="body2" component="span">
-                                        This operation might take a while.{' '}
+                                        Please keep this tab open while we're getting done.
                                     </Typography>
 
-                                    <CircularProgress className={classes.loader} color="inherit" size={14} />
+                                    <TaskProgress task={exportTask} />
                                 </Alert>
                             )}
 
@@ -224,7 +227,7 @@ const ExportAction: FC<ExportActionProps> = ({ className }) => {
                         </CardContent>
 
                         {exportedDataset === null && (
-                            <CardActions style={{ justifyContent: 'flex-end' }}>
+                            <CardActions style={{justifyContent: 'flex-end'}}>
                                 <Button
                                     color="primary"
                                     disabled={isExporting}
@@ -238,7 +241,7 @@ const ExportAction: FC<ExportActionProps> = ({ className }) => {
                         )}
                     </Card>
 
-                    <Dialog classes={{ paper: classes.paper }} open={open} onClose={handleClose} maxWidth="md">
+                    <Dialog classes={{paper: classes.paper}} open={open} onClose={handleClose} maxWidth="md">
                         <DialogContent className="scroll">
                             <pre>
                                 <code className="language-">
