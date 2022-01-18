@@ -1,10 +1,8 @@
-export const APP_VERSION = '0.9.36';
-
 export const ENABLE_REDUX_DEV_TOOLS = true;
 
 export const LAZY_LOAD_BATCH = 14;
 
-export const HEARTBEAT_DELAY = 1000; // in ms
+export const HEARTBEAT_DELAY = process.env.ENVIRONMENT === 'production' ? 3000 : 1000; // in ms
 
 export const THEMES = {
     LIGHT: 'LIGHT',
