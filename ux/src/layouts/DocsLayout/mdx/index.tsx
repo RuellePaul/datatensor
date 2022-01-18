@@ -8,6 +8,7 @@ import Blockquote from './Blockquote';
 import Code from './Code';
 import InlineCode from './InlineCode';
 import Image from './Image';
+import Video from './Video';
 
 const components = {
     h1: props => <Heading variant="h1" {...props} />,
@@ -24,7 +25,8 @@ const components = {
     blockquote: Blockquote,
     code: Code,
     inlineCode: InlineCode,
-    img: Image
+    img: Image,
+    video: Video
 };
 
 export default components;
