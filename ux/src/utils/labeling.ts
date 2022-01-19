@@ -137,7 +137,7 @@ export const drawLabels = (
             context.fillStyle = color;
             context.fillRect(x - 0.5, y - 20 - 0.5, context.measureText(category.name).width + 12, 20);
             context.fillStyle = '#000000';
-            context.fillText(capitalize(category.name), x + 6, y);
+            context.fillText(capitalize(category.name), x + 4, y - 2);
         }
 
         if (resize) {
