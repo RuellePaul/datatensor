@@ -249,6 +249,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                         valueLabelFormat={x => x + 1}
                                         value={index}
                                         onChange={(event, value) => setIndex(value as number)}
+                                        disabled={imageIds.length === 0}
                                     />
 
                                     <NextUnlabeledImageAction index={index} />

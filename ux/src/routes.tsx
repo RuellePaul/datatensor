@@ -4,10 +4,9 @@ import DashboardLayout from 'src/layouts/DashboardLayout';
 import MainLayout from 'src/layouts/MainLayout';
 import DocsLayout from 'src/layouts/DocsLayout';
 import HomeView from 'src/views/home/HomeView';
-import LoadingScreen from 'src/components/screens/LoadingScreen';
 import AuthGuard from 'src/components/guards/AuthGuard';
 import GuestGuard from 'src/components/guards/GuestGuard';
-
+import SplashScreen from 'src/components/screens/SplashScreen';
 
 type Routes = {
     exact?: boolean;
@@ -20,7 +19,7 @@ type Routes = {
 }[];
 
 export const renderRoutes = (routes: Routes = []): JSX.Element => (
-    <Suspense fallback={<LoadingScreen />}>
+    <Suspense fallback={<SplashScreen />}>
         <Switch>
             {routes.map((route, i) => {
                 const Guard = route.guard || Fragment;
