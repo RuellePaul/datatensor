@@ -22,13 +22,13 @@ import {
 import {Download as DownloadIcon, Downloading as ExportIcon, VisibilityOutlined as ViewIcon} from '@mui/icons-material';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
+import TaskProgress from 'src/components/core/TaskProgress';
+import useTasks from 'src/hooks/useTasks';
 import useDataset from 'src/hooks/useDataset';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import api from 'src/utils/api';
 import download from 'src/utils/download';
 import getDateDiff from 'src/utils/getDateDiff';
-import TaskProgress from 'src/components/core/TaskProgress';
-import useTasks from '../../../../../hooks/useTasks';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},

@@ -31,10 +31,13 @@ async def get_tasks(websocket: WebSocket):
             break
         except WebSocketDisconnect:
             logger.info('Tasks websocket | disconnected.')
-            if tasks and user:
-                for task in tasks:
-                    if task.user_id == user.id and task.type == 'export' and task.status in ['pending', 'active']:
-                        update_task(task.id, status="failed", error="Operation cancelled")
+            try:
+                if tasks and user:
+                    for task in tasks:
+                        if task.user_id == user.id and task.type == 'export' and task.status in ['pending', 'active']:
+                            update_task(task.id, status="failed", error="Operation cancelled")
+            except UnboundLocalError:
+                pass
             break
 
 

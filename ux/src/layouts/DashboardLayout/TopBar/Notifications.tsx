@@ -27,8 +27,8 @@ import useTasks from 'src/hooks/useTasks';
 import {Notification} from 'src/types/notification';
 import {User} from 'src/types/user';
 import getDateDiff from 'src/utils/getDateDiff';
-import {WS_HOSTNAME} from '../../../utils/api';
-import {HEARTBEAT_DELAY} from '../../../constants';
+import {WS_HOSTNAME} from 'src/utils/api';
+import {HEARTBEAT_DELAY} from 'src/constants';
 
 const titlesMap = {
     TASK_SUCCEED: 'Task succeeded ✅',
