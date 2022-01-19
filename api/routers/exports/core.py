@@ -17,5 +17,5 @@ def process_export(dataset: DatasetExtended, task_id) -> Export:
     })
     db.datasets.find_one_and_update({'_id': dataset.id},
                                     {'$set': {'exported_at': datetime.now()}})
-    update_task(task_id, status='success', progress=1)
+    update_task(task_id, status='success', progress=1, ended_at=datetime.now())
     return export
