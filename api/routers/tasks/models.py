@@ -49,10 +49,6 @@ class Task(MongoModel):
     error: Optional[str] = None
 
 
-class TaskResponse(BaseModel):
-    task: Task
-
-
 class TaskPostBody(BaseModel):
     type: TaskType
     properties: TaskProperties

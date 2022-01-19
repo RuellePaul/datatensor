@@ -176,7 +176,7 @@ const DTDataset: FC<DatasetProps> = ({className, image = null, onClick, disabled
                                         label={dataset.is_public ? 'Public' : 'Private'}
                                         icon={dataset.is_public ? <PublicIcon /> : <PrivateIcon />}
                                         size="small"
-                                        variant="outlined"
+                                        variant={dataset.is_public ? 'outlined' : 'filled'}
                                     />
                                 </Box>
                             }

@@ -93,7 +93,7 @@ datasets.include_router(tasks, prefix='/{dataset_id}/tasks', tags=['tasks'])
 # Dataset ➤ Exports
 datasets.include_router(exports, prefix='/{dataset_id}/exports', tags=['exports'])
 
-# Users ➤ Tasks 🔒 Admin partially
+# Users ➤ Tasks 🔒 Admin partially (for generator)
 app.include_router(tasks, prefix=f'{PREFIX}/tasks', tags=['tasks'], dependencies=[Depends(logged_user)])
 
 
