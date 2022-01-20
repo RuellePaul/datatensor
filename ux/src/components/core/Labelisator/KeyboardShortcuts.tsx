@@ -95,6 +95,8 @@ const KeyboardShortcuts: FC = () => {
                                 <Divider />
                                 <Shortcut keyDesc="z">Change tool (move)</Shortcut>
                                 <Divider />
+                                <Shortcut keyDesc="SHIFT">Multi labels selection</Shortcut>
+                                <Divider />
                                 <Shortcut keyDesc="CTRL + Z">Restore previous state</Shortcut>
                                 <Divider />
                             </Grid>

@@ -6,7 +6,6 @@ import {Category} from 'src/types/category';
 import {COLORS} from 'src/utils/colors';
 import {capitalize} from '@mui/material';
 
-
 export const RESIZE_SIZE = 8;
 export const LABEL_MIN_WIDTH = 16;
 export const LABEL_MIN_HEIGHT = 16;
@@ -55,7 +54,7 @@ export const convertLabel = (canvas: HTMLCanvasElement, label: Label, offset = C
     let y = offset + label.y * (canvas.height - 2 * offset);
     let w = label.w * (canvas.width - 2 * offset);
     let h = label.h * (canvas.height - 2 * offset);
-    return { x, y, w, h };
+    return {x, y, w, h};
 };
 
 export const drawCursorLines = (canvas: HTMLCanvasElement, point: Point) => {
@@ -114,7 +113,7 @@ export const drawLabels = (
             .sort((a, b) => -b.name.localeCompare(a.name))
             .find(category => label.category_id === category.id);
 
-        const { x, y, w, h } = convertLabel(canvas, label, offset);
+        const {x, y, w, h} = convertLabel(canvas, label, offset);
 
         let color = COLORS[categories.sort((a, b) => -b.name.localeCompare(a.name)).indexOf(category)] || '#FFFFFF';
 
@@ -163,7 +162,7 @@ export const renderCursor = (
     if (!labels || !point) return;
 
     for (const label of labels) {
-        const { x, y, w, h } = convertLabel(canvas, label);
+        const {x, y, w, h} = convertLabel(canvas, label);
 
         if (point[0] > x - TOLERANCE && point[0] < x + RESIZE_SIZE) {
             if (point[1] > y - TOLERANCE && point[1] < y + RESIZE_SIZE) {
@@ -193,7 +192,7 @@ export const isHoveringLabels = (canvas: HTMLCanvasElement, point: Point, labels
     if (!point || !labels) return false;
 
     for (const label of labels) {
-        const { x, y, w, h } = convertLabel(canvas, label);
+        const {x, y, w, h} = convertLabel(canvas, label);
 
         if (x <= point[0] + TOLERANCE) {
             if (y <= point[1] + TOLERANCE) {
@@ -212,6 +211,7 @@ export const currentLabelsHoverIds = (canvas: HTMLCanvasElement, point: Point, l
     if (!point || !labels) return [];
 
     let labelsHoverIds = [];
+
     for (const label of labels) {
         const { x, y, w, h } = convertLabel(canvas, label);
 
@@ -225,7 +225,28 @@ export const currentLabelsHoverIds = (canvas: HTMLCanvasElement, point: Point, l
             }
         }
     }
+
     return labelsHoverIds;
+};
+
+export const currentSmallestLabelHoverIds = (canvas: HTMLCanvasElement, point: Point, labels: Label[]) => {
+    if (!point || !labels) return [];
+
+    for (const label of labels) {
+        const {x, y, w, h} = convertLabel(canvas, label);
+
+        if (x <= point[0] + TOLERANCE) {
+            if (y <= point[1] + TOLERANCE) {
+                if (x + w >= point[0] - TOLERANCE) {
+                    if (y + h >= point[1] - TOLERANCE) {
+                        return [label.id];
+                    }
+                }
+            }
+        }
+    }
+
+    return [];
 };
 
 export const currentLabelsTranslated = (canvas: HTMLCanvasElement, labels: Label[], pointA: Point, pointB: Point) => {

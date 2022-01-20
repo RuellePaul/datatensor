@@ -6,6 +6,7 @@ import {Image} from 'src/types/image';
 import api from 'src/utils/api';
 import useDataset from 'src/hooks/useDataset';
 
+
 export interface ImageContextValue {
     image: Image;
     labels: Label[];
@@ -25,25 +26,30 @@ interface ImageProviderProps {
 export const ImageContext = createContext<ImageContextValue>({
     image: null,
     labels: [],
-    saveLabels: () => {},
-    validateLabels: () => {},
+    saveLabels: () => {
+    },
+    validateLabels: () => {
+    },
     positions: [],
-    storePosition: () => {},
-    previousPosition: () => {}
+    storePosition: () => {
+    },
+    previousPosition: () => {
+    }
 });
 
-export const ImageProvider: FC<ImageProviderProps> = ({image, children, labels = null}) => {
-    const {dataset, saveCategories} = useDataset();
-    const {saveImages} = useImages();
+export const ImageProvider: FC<ImageProviderProps> = ({ image, children, labels = null }) => {
+    const { dataset, saveCategories } = useDataset();
+    const { saveImages } = useImages();
 
-    const {enqueueSnackbar} = useSnackbar();
+    const { enqueueSnackbar } = useSnackbar();
 
     const [currentLabels, setCurrentLabels] = useState<Label[]>(labels);
 
     const [positions, setPositions] = useState<Label[][]>([]);
 
     const handleSaveLabels = (update: Label[] | ((labels: Label[]) => Label[])): void => {
-        setCurrentLabels(update);
+        if (update instanceof Array) setCurrentLabels(update.sort((a, b) => (a.w * a.h > b.w * b.h ? 1 : -1)));
+        else setCurrentLabels(update);
     };
 
     const fetchLabels = useCallback(async () => {
@@ -57,7 +63,7 @@ export const ImageProvider: FC<ImageProviderProps> = ({image, children, labels =
 
         if (image) {
             try {
-                const response = await api.get<{labels: Label[]}>(`/datasets/${dataset.id}/images/${image.id}/labels/`);
+                const response = await api.get<{ labels: Label[] }>(`/datasets/${dataset.id}/images/${image.id}/labels/`);
                 handleSaveLabels(response.data.labels);
                 setPositions([response.data.labels]);
             } catch (err) {
@@ -83,11 +89,11 @@ export const ImageProvider: FC<ImageProviderProps> = ({image, children, labels =
                     labels_count: category.labels_count + (response.data[category.id] ? response.data[category.id] : 0)
                 }))
             );
-            saveImages(images => images
-                .map(current => current.id === image.id ? {...current, labels: currentLabels} : current)
+            saveImages(images =>
+                images.map(current => (current.id === image.id ? { ...current, labels: currentLabels } : current))
             );
             setPositions([currentLabels]);
-            enqueueSnackbar('Labels updated', {variant: 'info'});
+            enqueueSnackbar('Labels updated', { variant: 'info' });
         } catch (error) {
             enqueueSnackbar(error.message || 'Something went wrong', {
                 variant: 'error'
