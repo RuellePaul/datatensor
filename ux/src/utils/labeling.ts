@@ -106,9 +106,9 @@ export const drawLabels = (
 
     let context = canvas.getContext('2d');
     context.lineWidth = 2;
-    context.setLineDash([dash]);
 
     for (const label of labels) {
+        context.setLineDash([dash]);
         const category = categories
             .sort((a, b) => -b.name.localeCompare(a.name))
             .find(category => label.category_id === category.id);
@@ -213,7 +213,7 @@ export const currentLabelsHoverIds = (canvas: HTMLCanvasElement, point: Point, l
     let labelsHoverIds = [];
 
     for (const label of labels) {
-        const { x, y, w, h } = convertLabel(canvas, label);
+        const {x, y, w, h} = convertLabel(canvas, label);
 
         if (x <= point[0] + TOLERANCE) {
             if (y <= point[1] + TOLERANCE) {
