@@ -12,6 +12,7 @@ import {
     Card,
     CardActions,
     CardContent,
+    CircularProgress,
     Dialog,
     DialogContent,
     InputAdornment,
@@ -22,8 +23,6 @@ import {
 import {Download as DownloadIcon, Downloading as ExportIcon, VisibilityOutlined as ViewIcon} from '@mui/icons-material';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
-import TaskProgress from 'src/components/core/TaskProgress';
-import useTasks from 'src/hooks/useTasks';
 import useDataset from 'src/hooks/useDataset';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import api from 'src/utils/api';
@@ -43,6 +42,10 @@ const useStyles = makeStyles((theme: Theme) => ({
             width: '100%'
         }
     },
+    loader: {
+        width: '16px !important',
+        height: '16px !important'
+    },
     wrapper: {
         overflowX: 'hidden',
         overflowY: 'auto'
@@ -58,7 +61,6 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
     const isMountedRef = useIsMountedRef();
     const {enqueueSnackbar} = useSnackbar();
 
-    const {tasks, savePaused} = useTasks();
     const {dataset, saveDataset, categories} = useDataset();
 
     const [open, setOpen] = useState<boolean>(false);
@@ -77,7 +79,6 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
     const handleExport = async () => {
         try {
             setIsExporting(true);
-            savePaused(false);
             const response = await api.get(`/datasets/${dataset.id}/exports/`);
             setExportedDataset(response.data);
             saveDataset(dataset => ({
@@ -102,11 +103,6 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
 
     const isPoor =
         categories.map(category => category.labels_count).reduce((acc, val) => acc + val, 0) / categories.length < 2000;
-
-    const exportTask =
-        tasks instanceof Array
-            ? tasks.find(task => task.type === 'export' && ['pending', 'active'].includes(task.status))
-            : null;
 
     return (
         <Formik
@@ -171,7 +167,7 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
                                         Please keep this tab open while we're getting done.
                                     </Typography>
 
-                                    <TaskProgress task={exportTask} />
+                                    <CircularProgress className={classes.loader} />
                                 </Alert>
                             )}
 

@@ -97,7 +97,7 @@ def delete_image_from_s3(image_id):
         raise errors.InternalError(f'Cannot delete file from S3, {str(e)}')
 
 
-def find_all_images(dataset_id, include_labels=False, task_id=None, offset=0, limit=0) -> List[ImageExtended]:
+def find_all_images(dataset_id, offset=0, limit=0) -> List[Image]:
     images = list(db.images
                   .find({'dataset_id': dataset_id})
                   .skip(offset)
@@ -105,13 +105,6 @@ def find_all_images(dataset_id, include_labels=False, task_id=None, offset=0, li
     if images is None:
         raise errors.NotFound(errors.IMAGE_NOT_FOUND)
     images = [ImageExtended.from_mongo(image) for image in images]
-    if include_labels:
-        labels = find_labels_from_image_ids([image.id for image in images])
-        if labels is not None:
-            for image in images:
-                image.labels = [label for label in labels if label.image_id == image.id]
-                if task_id:
-                    increment_task_progress(task_id, 1 / len(images))
     return images
 
 
