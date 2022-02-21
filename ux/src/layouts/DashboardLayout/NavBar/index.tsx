@@ -5,7 +5,7 @@ import {Link as RouterLink, matchPath, useLocation} from 'react-router-dom';
 import Scrollbar from 'src/components/utils/Scrollbar';
 import {Box, Chip, Divider, Drawer, Hidden, Link, List, ListSubheader, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import {DeveloperBoard as AdminDashboardIcon} from '@mui/icons-material';
+import {AutoStories as DocsIcon, DeveloperBoard as AdminDashboardIcon} from '@mui/icons-material';
 import {Package as DatasetIcon, Users as UsersIcon} from 'react-feather';
 import Logo from 'src/components/utils/Logo';
 import UserAvatar from 'src/components/UserAvatar';
@@ -46,8 +46,7 @@ const sections = (user: User): Section[] => [
                   ]
               }
           ]
-        : []
-    ),
+        : []),
     {
         subheader: 'Application',
         items: [
@@ -157,13 +156,7 @@ const NavBar: FC<NavBarProps> = ({onMobileClose, openMobile}) => {
                         </RouterLink>
                     </Box>
                     <Box mt={2} textAlign="center">
-                        <Link
-                            component={RouterLink}
-                            to="/account"
-                            variant="h5"
-                            color="textPrimary"
-                            underline="none"
-                        >
+                        <Link component={RouterLink} to="/account" variant="h5" color="textPrimary" underline="none">
                             {user.name}
                         </Link>
                     </Box>
@@ -190,9 +183,14 @@ const NavBar: FC<NavBarProps> = ({onMobileClose, openMobile}) => {
                 <Divider />
                 <Box p={2}>
                     <Box p={2} borderRadius={1} bgcolor="background.default">
-                        <Typography variant="h6" color="textPrimary">
-                            Need Help?
-                        </Typography>
+                        <Box display="flex" justifyContent="space-between">
+                            <Typography variant="h6" color="textPrimary">
+                                Need Help?
+                            </Typography>
+
+                            <DocsIcon fontSize="small" />
+                        </Box>
+
                         <Link variant="subtitle1" color="primary" component={RouterLink} to="/getting-started">
                             Check our docs
                         </Link>

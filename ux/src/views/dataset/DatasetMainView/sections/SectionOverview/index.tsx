@@ -1,6 +1,6 @@
 import React, {FC, useEffect, useState} from 'react';
 import clsx from 'clsx';
-import {Grid, Stack, Step, StepButton, StepContent, Stepper} from '@mui/material';
+import {Box, Grid, Stack, Step, StepButton, StepContent, Stepper, Typography} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import {SectionProps} from '../SectionProps';
@@ -13,6 +13,8 @@ import EditAction from './EditAction';
 import Overview from './Overview';
 import useImages from 'src/hooks/useImages';
 import useDataset from 'src/hooks/useDataset';
+import AnimatedLogo from 'src/components/utils/AnimatedLogo';
+
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {}
@@ -37,10 +39,10 @@ const DATASET_ACTIONS = [
     }
 ];
 
-const SectionOverview: FC<SectionProps> = ({className}) => {
+const SectionOverview: FC<SectionProps> = ({ className }) => {
     const classes = useStyles();
-    const {categories, pipelines} = useDataset();
-    const {images} = useImages();
+    const { categories, pipelines } = useDataset();
+    const { images } = useImages();
 
     const totalLabelsCount = categories.map(category => category.labels_count || 0).reduce((acc, val) => acc + val, 0);
 
@@ -49,10 +51,10 @@ const SectionOverview: FC<SectionProps> = ({className}) => {
             ? images.length === 0
                 ? 0
                 : totalLabelsCount === 0
-                ? 1
-                : pipelines.length === 0
-                ? 2
-                : 3
+                    ? 1
+                    : pipelines.length === 0
+                        ? 2
+                        : 3
             : 0;
 
     useEffect(() => {
@@ -72,20 +74,42 @@ const SectionOverview: FC<SectionProps> = ({className}) => {
                     </Stack>
                 </Grid>
 
-                {images instanceof Array && (
-                    <Grid item md={4} xs={12}>
-                        <Stepper activeStep={activeStep} orientation="vertical">
-                            {DATASET_ACTIONS.map((action, index) => (
-                                <Step key={action.label} disabled={index > currentStep}>
-                                    <StepButton onClick={() => setActiveStep(index)}>{action.label}</StepButton>
-                                    <StepContent TransitionProps={{unmountOnExit: false}}>
-                                        {action.component}
-                                    </StepContent>
-                                </Step>
-                            ))}
-                        </Stepper>
-                    </Grid>
-                )}
+                <Grid item md={4} xs={12}>
+                    {images instanceof Array
+                        ? (
+                            <Stepper activeStep={activeStep} orientation="vertical">
+                                {DATASET_ACTIONS.map((action, index) => (
+                                    <Step key={action.label} disabled={index > currentStep}>
+                                        <StepButton onClick={() => setActiveStep(index)}>{action.label}</StepButton>
+                                        <StepContent TransitionProps={{ unmountOnExit: false }}>
+                                            {action.component}
+                                        </StepContent>
+                                    </Step>
+                                ))}
+                            </Stepper>
+                        ) : (
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    flexDirection: 'column',
+                                    width: '100%',
+                                    height: 150,
+                                    backgroundColor: 'background.paper',
+                                    borderRadius: 8,
+                                    p: 3
+                                }}
+                            >
+                                <AnimatedLogo />
+
+                                <Typography variant='body2' sx={{my: 2}} color='textSecondary'>
+                                    Loading actions...
+                                </Typography>
+                            </Box>
+                        )
+                    }
+                </Grid>
             </Grid>
         </div>
     );

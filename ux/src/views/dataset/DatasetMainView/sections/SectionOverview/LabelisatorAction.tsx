@@ -33,11 +33,10 @@ const LabelisatorAction: FC<LabelisatorActionProps> = ({ className }) => {
             <CardContent>
                 <Typography gutterBottom>Label images</Typography>
                 <Typography variant="body2" color="textSecondary" gutterBottom>
-                    {totalLabelsCount > 0 ? 'Edit labels' : 'Start labeling'} with our labelisator tool. See the{' '}
+                    {totalLabelsCount > 0 ? 'Edit labels' : 'Start labeling'} with our labelisator tool.{' '}
                     <Link variant="body2" color="primary" component={RouterLink} to="/datasets/labeling">
-                        dedicated section
-                    </Link>{' '}
-                    on documentation.
+                        Learn more
+                    </Link>
                 </Typography>
             </CardContent>
             <CardActions style={{ justifyContent: 'flex-end' }}>

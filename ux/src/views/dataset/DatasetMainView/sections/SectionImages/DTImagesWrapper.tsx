@@ -11,6 +11,7 @@ import ImagesActionsMenu from './ImagesActionsMenu';
 import {LAZY_LOAD_BATCH} from 'src/constants';
 import goToHash from 'src/utils/goToHash';
 
+
 const useStyles = makeStyles((theme: Theme) => ({
     sticky: {
         position: 'sticky',
@@ -34,9 +35,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const Navigation: FC = () => {
-    const {dataset} = useDataset();
-    const {images, offset, saveOffset, totalImagesCount} = useImages();
-    const {currentCategory} = useCategory();
+    const { dataset } = useDataset();
+    const { images, offset, saveOffset, totalImagesCount } = useImages();
+    const { currentCategory } = useCategory();
 
     const imagesCount = currentCategory ? totalImagesCount : dataset.image_count;
 

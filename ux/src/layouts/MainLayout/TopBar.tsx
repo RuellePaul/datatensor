@@ -22,9 +22,6 @@ const useStyles = makeStyles(theme => ({
     toolbar: {
         height: 64
     },
-    logo: {
-        marginRight: theme.spacing(2)
-    },
     link: {
         fontWeight: theme.typography.fontWeightMedium,
         '& + &': {
@@ -54,7 +51,9 @@ const TopBar: FC<TopBarProps> = ({className, ...rest}) => {
         <AppBar className={clsx(classes.root, className)} color="default" {...rest}>
             <Toolbar className={classes.toolbar}>
                 <RouterLink to="/">
-                    <Logo className={classes.logo} />
+                    <Box mr={2}>
+                        <Logo />
+                    </Box>
                 </RouterLink>
                 <Hidden smDown>
                     <Box>

@@ -45,11 +45,10 @@ const AugmentAction: FC<AugmentActionProps> = ({className}) => {
             <CardContent>
                 <Typography gutterBottom>Augment images</Typography>
                 <Typography variant="body2" color="textSecondary" gutterBottom>
-                    Since there are labeled images on this dataset, you can use image augmentation to get more. See the{' '}
+                    Since there are labeled images on this dataset, you can use image augmentation to get more.{' '}
                     <Link variant="body2" color="primary" component={RouterLink} to="/upload-images">
-                        dedicated section
-                    </Link>{' '}
-                    on documentation.
+                        Learn more
+                    </Link>
                 </Typography>
             </CardContent>
             <CardActions style={{justifyContent: 'flex-end'}}>

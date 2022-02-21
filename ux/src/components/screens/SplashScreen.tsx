@@ -1,35 +1,27 @@
-import React, {FC} from 'react';
-import {Box, LinearProgress} from '@mui/material';
-import {makeStyles} from '@mui/styles';
-import {Theme} from 'src/theme';
+import React from 'react';
+import type {FC} from 'react';
+import {Box} from '@mui/material';
+import AnimatedLogo from 'src/components/utils/AnimatedLogo';
 
-const useStyles = makeStyles((theme: Theme) => ({
-    root: {
-        alignItems: 'center',
-        backgroundColor: theme.palette.background.default,
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        justifyContent: 'center',
-        left: 0,
-        padding: theme.spacing(3),
-        position: 'fixed',
-        top: 0,
-        width: '100%',
-        zIndex: 2000
-    }
-}));
-
-const SplashScreen: FC = () => {
-    const classes = useStyles();
-
-    return (
-        <div className={classes.root}>
-            <Box maxWidth={400} width="100%">
-                <LinearProgress />
-            </Box>
-        </div>
-    );
-};
+const SplashScreen: FC = () => (
+    <Box
+        sx={{
+            alignItems: 'center',
+            backgroundColor: 'background.default',
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100vh',
+            justifyContent: 'center',
+            left: 0,
+            p: 3,
+            position: 'fixed',
+            top: 0,
+            width: '100vw',
+            zIndex: 2000
+        }}
+    >
+        <AnimatedLogo/>
+    </Box>
+);
 
 export default SplashScreen;

@@ -138,9 +138,7 @@ const DTImagesList: FC<ImagesListProps> = ({className, onClick = () => {}, ...re
 
     const {images} = useImages();
 
-    if (images === null) return null;
-
-    if (images.length === 0)
+    if (images === null)
         return (
             <div className={clsx(classes.root, className)} {...rest}>
                 <Masonry columns={{xs: 2, sm: 3, md: 4}} spacing={1}>
@@ -158,6 +156,8 @@ const DTImagesList: FC<ImagesListProps> = ({className, onClick = () => {}, ...re
                 </Masonry>
             </div>
         );
+
+    if (images.length === 0) return null;
 
     return (
         <div className={clsx(classes.root, className, images.length >= LAZY_LOAD_BATCH && classes.filled)} {...rest}>
