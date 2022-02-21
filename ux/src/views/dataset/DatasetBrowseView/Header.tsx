@@ -41,7 +41,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                 <Button
                     color="primary"
                     component={RouterLink}
-                    to="/app/datasets/create"
+                    to="/datasets/create"
                     variant="contained"
                     startIcon={
                         <SvgIcon fontSize="small">
@@ -49,7 +49,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                         </SvgIcon>
                     }
                 >
-                    Add new dataset
+                    New dataset
                 </Button>
             </Grid>
         </Grid>

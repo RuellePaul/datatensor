@@ -80,7 +80,7 @@ const Account: FC = () => {
                 anchorEl={ref.current}
                 open={isOpen}
             >
-                <MenuItem component={RouterLink} to="/app/account">
+                <MenuItem component={RouterLink} to="/account">
                     <ListItemIcon>
                         <AccountIcon fontSize="small" />
                     </ListItemIcon>

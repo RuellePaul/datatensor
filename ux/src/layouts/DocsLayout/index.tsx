@@ -1,11 +1,12 @@
 import type {FC, ReactNode} from 'react';
-import React, {useState} from 'react';
-import Scrollbar from 'src/components/utils/Scrollbar';
-import PropTypes from 'prop-types';
+import React, {useMemo, useState} from 'react';
+import {Link as RouterLink, useLocation} from 'react-router-dom';
 import {MDXProvider} from '@mdx-js/react';
-import {Container} from '@mui/material';
+import Scrollbar from 'src/components/utils/Scrollbar';
+import {Box, Button, Container} from '@mui/material';
+import {KeyboardArrowLeft as BackIcon, KeyboardArrowRight as NextIcon} from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
-import NavBar from './NavBar';
+import NavBar, {items} from './NavBar';
 import TopBar from './TopBar';
 import components from './mdx';
 
@@ -31,8 +32,62 @@ const useStyles = makeStyles((theme) => ({
     },
     content: {
         paddingBottom: 120
+    },
+    buttons: {
+        display: 'flex',
+        alignItems: 'center',
+        margin: theme.spacing(5, 0, 2),
+        [theme.breakpoints.down('sm')]: {
+            flexDirection: 'column',
+            '& > a': {
+                width: '100%',
+                '&:first-child': {
+                    marginBottom: theme.spacing(3)
+                }
+            }
+        }
     }
 }));
+
+const DocsButtons: FC = () => {
+    const classes = useStyles();
+    const { pathname } = useLocation();
+
+    const pages = useMemo(() => items.map(item => item.items).flat(), []);
+    const index = pages.map(page => page.href).indexOf(pathname);
+
+    return (
+        <div className={classes.buttons}>
+            {index > 0 && (
+                <Button
+                    color="primary"
+                    component={RouterLink}
+                    to={pages[index - 1].href}
+                    startIcon={<BackIcon />}
+                    size="large"
+                    variant="outlined"
+                >
+                    {pages[index - 1].title}
+                </Button>
+            )}
+
+            <Box flexGrow={1} />
+
+            {index < pages.length - 1 && (
+                <Button
+                    color="primary"
+                    component={RouterLink}
+                    to={pages[index + 1].href}
+                    endIcon={<NextIcon />}
+                    size="large"
+                    variant="contained"
+                >
+                    {pages[index + 1].title}
+                </Button>
+            )}
+        </div>
+    );
+};
 
 const DocsLayout: FC<DocsLayoutProps> = ({ children }) => {
     const classes = useStyles();
@@ -55,16 +110,14 @@ const DocsLayout: FC<DocsLayoutProps> = ({ children }) => {
                             <MDXProvider components={components}>
                                 {children}
                             </MDXProvider>
+
+                            <DocsButtons />
                         </Container>
                     </div>
                 </Scrollbar>
             </div>
         </>
     );
-};
-
-DocsLayout.propTypes = {
-    children: PropTypes.node
 };
 
 export default DocsLayout;

@@ -39,7 +39,7 @@ def get_dataset(dataset_id,
     return parse(response)
 
 
-@datasets.post('/')
+@datasets.post('/', response_model=DatasetResponse)
 def post_dataset(payload: DatasetPostBody, user: User = Depends(logged_user)):
     """
     Create a new dataset.
@@ -47,7 +47,8 @@ def post_dataset(payload: DatasetPostBody, user: User = Depends(logged_user)):
     """
     if not user.is_verified:
         raise errors.Forbidden(errors.USER_NOT_VERIFIED, data='ERR_VERIFY')
-    insert_dataset(user.id, payload)
+    response = {'dataset': insert_dataset(user.id, payload)}
+    return parse(response)
 
 
 @datasets.patch('/{dataset_id}')

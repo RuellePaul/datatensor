@@ -1,12 +1,22 @@
-import React, {useImperativeHandle, useRef, useState} from 'react';
-import makeStyles from '@mui/styles/makeStyles';
-import {Menu, MenuItem, MenuItemProps, MenuProps} from '@mui/material';
+import React, {
+    ElementType,
+    FocusEvent,
+    forwardRef,
+    HTMLAttributes,
+    KeyboardEvent,
+    MouseEvent,
+    ReactNode,
+    RefAttributes,
+    useImperativeHandle,
+    useRef,
+    useState
+} from 'react';
+import {Menu, MenuItem, MenuItemProps, MenuProps, styled} from '@mui/material';
 import {ArrowRight} from '@mui/icons-material';
-import clsx from 'clsx';
 
 export interface NestedMenuItemProps extends Omit<MenuItemProps, 'button'> {
     /**
-     * Open state of parent `<Menu />`, used to close decendent menus when the
+     * Open state of parent `<Menu />`, used to close descendent menus when the
      * root menu is closed.
      */
     parentMenuOpen: boolean;
@@ -14,42 +24,48 @@ export interface NestedMenuItemProps extends Omit<MenuItemProps, 'button'> {
      * Component for the container element.
      * @default 'div'
      */
-    component?: React.ElementType;
+    component?: ElementType;
     /**
      * Effectively becomes the `children` prop passed to the `<MenuItem/>`
      * element.
      */
-    label?: React.ReactNode;
+    label?: ReactNode;
     /**
      * @default <ArrowRight />
      */
-    rightIcon?: React.ReactNode;
+    rightIcon?: ReactNode;
     /**
      * Props passed to container element.
      */
-    ContainerProps?: React.HTMLAttributes<HTMLElement> & React.RefAttributes<HTMLElement | null>;
+    ContainerProps?: HTMLAttributes<HTMLElement> & RefAttributes<HTMLElement | null>;
     /**
      * Props passed to sub `<Menu/>` element
      */
     MenuProps?: Omit<MenuProps, 'children'>;
     /**
-     * @see https://material-ui.com/api/list-item/
+     * @see https://mui.com/api/list-item/
      */
     button?: true | undefined;
+    /**
+     *
+     */
+    rightAnchored?: boolean;
 }
 
 const TRANSPARENT = 'rgba(0,0,0,0)';
-const useMenuItemStyles = makeStyles(theme => ({
-    root: (props: any) => ({
-        backgroundColor: props.open ? theme.palette.action.hover : TRANSPARENT
-    })
+
+const StyledMenuItem = styled(MenuItem)(({theme}) => ({
+    backgroundColor: TRANSPARENT,
+    '&[data-open]': {
+        backgroundColor: theme.palette.action.hover
+    }
 }));
 
 /**
  * Use as a drop-in replacement for `<MenuItem>` when you need to add cascading
  * menu elements as children to this component.
  */
-const NestedMenuItem = React.forwardRef<HTMLLIElement | null, NestedMenuItemProps>(function NestedMenuItem(props, ref) {
+const NestedMenuItem = forwardRef<HTMLLIElement | null, NestedMenuItemProps>(function NestedMenuItem(props, ref) {
     const {
         parentMenuOpen,
         label,
@@ -58,12 +74,13 @@ const NestedMenuItem = React.forwardRef<HTMLLIElement | null, NestedMenuItemProp
         className,
         tabIndex: tabIndexProp,
         ContainerProps: ContainerPropsProp = {},
+        rightAnchored,
         ...MenuItemProps
     } = props;
 
     const {ref: containerRefProp, ...ContainerProps} = ContainerPropsProp;
 
-    const menuItemRef = useRef<HTMLLIElement>(null);
+    const menuItemRef = useRef<HTMLLIElement>((null as unknown) as HTMLLIElement);
     useImperativeHandle(ref, () => menuItemRef.current);
 
     const containerRef = useRef<HTMLDivElement>(null);
@@ -73,14 +90,14 @@ const NestedMenuItem = React.forwardRef<HTMLLIElement | null, NestedMenuItemProp
 
     const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
 
-    const handleMouseEnter = (event: React.MouseEvent<HTMLElement>) => {
+    const handleMouseEnter = (event: MouseEvent<HTMLElement>) => {
         setIsSubMenuOpen(true);
 
         if (ContainerProps?.onMouseEnter) {
             ContainerProps.onMouseEnter(event);
         }
     };
-    const handleMouseLeave = (event: React.MouseEvent<HTMLElement>) => {
+    const handleMouseLeave = (event: MouseEvent<HTMLElement>) => {
         setIsSubMenuOpen(false);
 
         if (ContainerProps?.onMouseLeave) {
@@ -100,7 +117,7 @@ const NestedMenuItem = React.forwardRef<HTMLLIElement | null, NestedMenuItemProp
         return false;
     };
 
-    const handleFocus = (event: React.FocusEvent<HTMLElement>) => {
+    const handleFocus = (event: FocusEvent<HTMLElement>) => {
         if (event.target === containerRef.current) {
             setIsSubMenuOpen(true);
         }
@@ -110,7 +127,7 @@ const NestedMenuItem = React.forwardRef<HTMLLIElement | null, NestedMenuItemProp
         }
     };
 
-    const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
         if (event.key === 'Escape') {
             return;
         }
@@ -132,7 +149,6 @@ const NestedMenuItem = React.forwardRef<HTMLLIElement | null, NestedMenuItemProp
     };
 
     const open = isSubMenuOpen && parentMenuOpen;
-    const menuItemClasses = useMenuItemStyles({open});
 
     // Root element must have a `tabIndex` attribute for keyboard navigation
     let tabIndex;
@@ -150,10 +166,11 @@ const NestedMenuItem = React.forwardRef<HTMLLIElement | null, NestedMenuItemProp
             onMouseLeave={handleMouseLeave}
             onKeyDown={handleKeyDown}
         >
-            <MenuItem {...MenuItemProps} className={clsx(menuItemClasses.root, className)} ref={menuItemRef}>
+            <StyledMenuItem {...MenuItemProps} data-open={open || undefined} className={className} ref={menuItemRef}>
                 {label}
+                <div style={{flexGrow: 1}} />
                 {rightIcon}
-            </MenuItem>
+            </StyledMenuItem>
             <Menu
                 // Set pointer events to 'none' to prevent the invisible Popover div
                 // from capturing events for clicks and hovers
@@ -161,11 +178,11 @@ const NestedMenuItem = React.forwardRef<HTMLLIElement | null, NestedMenuItemProp
                 anchorEl={menuItemRef.current}
                 anchorOrigin={{
                     vertical: 'top',
-                    horizontal: 'right'
+                    horizontal: rightAnchored ? 'left' : 'right'
                 }}
                 transformOrigin={{
                     vertical: 'top',
-                    horizontal: 'left'
+                    horizontal: rightAnchored ? 'right' : 'left'
                 }}
                 open={open}
                 autoFocus={false}

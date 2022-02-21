@@ -16,7 +16,6 @@ import {
     Dialog,
     DialogContent,
     InputAdornment,
-    LinearProgress,
     Link,
     TextField,
     Typography
@@ -25,25 +24,27 @@ import {Download as DownloadIcon, Downloading as ExportIcon, VisibilityOutlined 
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import useDataset from 'src/hooks/useDataset';
-import useExports from 'src/hooks/useExports';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
-import useTasks from 'src/hooks/useTasks';
-import {Task} from 'src/types/task';
 import api from 'src/utils/api';
 import download from 'src/utils/download';
 import getDateDiff from 'src/utils/getDateDiff';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
+    paper: {
+        background: '#191c27',
+        padding: 0
+    },
     alert: {
-        marginTop: theme.spacing(2),
+        margin: theme.spacing(1, 0, 0),
+        alignItems: 'center',
         '& .MuiAlert-message': {
             width: '100%'
         }
     },
     loader: {
-        width: '20px !important',
-        height: '20px !important'
+        width: '16px !important',
+        height: '16px !important'
     },
     wrapper: {
         overflowX: 'hidden',
@@ -60,9 +61,7 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
     const isMountedRef = useIsMountedRef();
     const {enqueueSnackbar} = useSnackbar();
 
-    const {tasks, saveTasks} = useTasks();
-    const {dataset, saveDataset} = useDataset();
-    const {exports, saveExports, trigger, loading} = useExports();
+    const {dataset, saveDataset, categories} = useDataset();
 
     const [open, setOpen] = useState<boolean>(false);
 
@@ -74,42 +73,36 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
         setOpen(false);
     };
 
+    const [isExporting, setIsExporting] = useState<boolean>(false);
+    const [exportedDataset, setExportedDataset] = useState<object | null>(null);
+
     const handleExport = async () => {
         try {
-            const response = await api.post<{task: Task}>(`/datasets/${dataset.id}/tasks/`, {
-                type: 'export',
-                properties: {}
-            });
-            saveTasks(tasks => [...tasks, response.data.task]);
-            saveExports([]);
+            setIsExporting(true);
+            const response = await api.get(`/datasets/${dataset.id}/exports/`);
+            setExportedDataset(response.data);
             saveDataset(dataset => ({
                 ...dataset,
                 exported_at: new Date().toISOString()
             }));
-            trigger(false);
         } catch (error) {
             enqueueSnackbar(error.message || 'Something went wrong', {
                 variant: 'error'
             });
+        } finally {
+            setIsExporting(false);
         }
     };
 
     const handleDownload = filename => {
-        if (exports.length === 0) return;
-
-        console.log(exports[0].export_data)
-
-        download(exports[0].export_data, `${filename || 'export'}.json`, 'application/json');
+        if (exportedDataset === null) return;
+        download(exportedDataset, `${filename || 'export'}.json`, 'application/json');
     };
 
-    if (!dataset || tasks === null) return null;
+    if (!dataset) return null;
 
-    const activeExportTask = tasks.find(
-        task =>
-            (task.status === 'pending' || task.status === 'active') &&
-            task.dataset_id === dataset.id &&
-            task.type === 'export'
-    );
+    const isPoor =
+        categories.map(category => category.labels_count).reduce((acc, val) => acc + val, 0) / categories.length < 2000;
 
     return (
         <Formik
@@ -152,30 +145,39 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
                             <Typography gutterBottom>Export dataset</Typography>
                             <Typography variant="body2" color="textSecondary" gutterBottom>
                                 Download this dataset in JSON format. An exported dataset allows you to use it in your
-                                own computer vision pipeline. See the{' '}
-                                <Link variant="body2" color="primary" component={RouterLink} to="/docs">
-                                    dedicated section
-                                </Link>{' '}
-                                on documentation.
+                                own computer vision pipeline.{' '}
+                                <Link variant="body2" color="primary" component={RouterLink} to="/datasets/export">
+                                    Learn more
+                                </Link>
                             </Typography>
 
-                            {dataset.exported_at && !activeExportTask && (
+                            {isPoor && !dataset.exported_at && (
+                                <Alert severity="warning" sx={{mt: 2}}>
+                                    You don't have enough images in this dataset to successfully converge an object
+                                    detection model.
+                                    <br />
+                                    You must at least get <strong>2000 labels per category</strong>
+                                </Alert>
+                            )}
+
+                            {isExporting && (
+                                <Alert className={classes.alert} severity="info">
+                                    <Typography variant="body2" component="span">
+                                        Please keep this tab open while we're getting done.
+                                    </Typography>
+
+                                    <CircularProgress className={classes.loader} />
+                                </Alert>
+                            )}
+
+                            {dataset.exported_at && !isExporting && (
                                 <Alert className={classes.alert}>
                                     <Typography variant="body2">
                                         Last export : {moment(dataset.exported_at).format('DD MMM')} (
                                         {getDateDiff(new Date(), dataset.exported_at, 'passed_event')})
-                                        <br />
-                                        {exports.length === 0 && (
-                                            <Link variant="subtitle1" color="primary" onClick={() => trigger(true)}>
-                                                View details{' '}
-                                                {loading && (
-                                                    <CircularProgress className={classes.loader} color="inherit" />
-                                                )}
-                                            </Link>
-                                        )}
                                     </Typography>
 
-                                    {exports.length > 0 && (
+                                    {exportedDataset !== null && (
                                         <>
                                             <TextField
                                                 error={Boolean(touched.filename && errors.filename)}
@@ -217,49 +219,28 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
                                     )}
                                 </Alert>
                             )}
-
-                            {activeExportTask && (
-                                <Box display="flex" alignItems="center">
-                                    <Box width="100%" mr={1}>
-                                        <LinearProgress
-                                            variant={
-                                                activeExportTask.progress <= 0 || activeExportTask.progress >= 1
-                                                    ? 'query'
-                                                    : 'determinate'
-                                            }
-                                            value={100 * activeExportTask.progress}
-                                        />
-                                    </Box>
-                                    <Typography variant="body2" color="textSecondary">
-                                        {`${(100 * activeExportTask.progress).toFixed(2)}%`}
-                                    </Typography>
-                                </Box>
-                            )}
                         </CardContent>
-                        <CardActions style={{justifyContent: 'flex-end'}}>
-                            <Button
-                                color="primary"
-                                disabled={!!activeExportTask}
-                                endIcon={
-                                    !!activeExportTask ? (
-                                        <CircularProgress className={classes.loader} color="inherit" />
-                                    ) : (
-                                        <ExportIcon />
-                                    )
-                                }
-                                onClick={handleExport}
-                                variant="contained"
-                            >
-                                Export
-                            </Button>
-                        </CardActions>
+
+                        {exportedDataset === null && (
+                            <CardActions style={{justifyContent: 'flex-end'}}>
+                                <Button
+                                    color="primary"
+                                    disabled={isExporting}
+                                    endIcon={<ExportIcon />}
+                                    onClick={handleExport}
+                                    variant="contained"
+                                >
+                                    Export
+                                </Button>
+                            </CardActions>
+                        )}
                     </Card>
 
-                    <Dialog open={open} onClose={handleClose} maxWidth="md">
+                    <Dialog classes={{paper: classes.paper}} open={open} onClose={handleClose} maxWidth="md">
                         <DialogContent className="scroll">
                             <pre>
                                 <code className="language-">
-                                    {exports.length > 0 && JSON.stringify(exports[0].export_data, null, 4)}
+                                    {exportedDataset !== null && JSON.stringify(exportedDataset, null, 3)}
                                 </code>
                             </pre>
                         </DialogContent>

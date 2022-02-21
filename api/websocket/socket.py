@@ -6,7 +6,7 @@ from authentication.core import verify_access_token
 from logger import logger
 from routers.notifications.core import find_notifications
 from routers.tasks.core import find_tasks, find_users_tasks
-from utils import parse
+from utils import parse, update_task
 
 sockets = APIRouter()
 
@@ -31,6 +31,13 @@ async def get_tasks(websocket: WebSocket):
             break
         except WebSocketDisconnect:
             logger.info('Tasks websocket | disconnected.')
+            try:
+                if tasks and user:
+                    for task in tasks:
+                        if task.user_id == user.id and task.type == 'export' and task.status in ['pending', 'active']:
+                            update_task(task.id, status="failed", error="Operation cancelled")
+            except UnboundLocalError:
+                pass
             break
 
 

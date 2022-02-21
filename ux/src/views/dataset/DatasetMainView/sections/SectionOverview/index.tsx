@@ -1,45 +1,114 @@
-import React, {FC} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import clsx from 'clsx';
-import {Grid, Stack} from '@mui/material';
+import {Box, Grid, Stack, Step, StepButton, StepContent, Stepper, Typography} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import {SectionProps} from '../SectionProps';
 import Categories from 'src/components/core/Dataset/Categories';
-import ImagesSlideshow from 'src/components/core/Images/ImagesSlideshow';
 import ExportAction from './ExportAction';
 import LabelisatorAction from './LabelisatorAction';
 import UploadAction from './UploadAction';
+import AugmentAction from './AugmentAction';
 import EditAction from './EditAction';
 import Overview from './Overview';
+import useImages from 'src/hooks/useImages';
+import useDataset from 'src/hooks/useDataset';
+import AnimatedLogo from 'src/components/utils/AnimatedLogo';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {}
 }));
 
+const DATASET_ACTIONS = [
+    {
+        label: 'Upload images',
+        component: <UploadAction />
+    },
+    {
+        label: 'Label images',
+        component: <LabelisatorAction />
+    },
+    {
+        label: 'Augment images',
+        component: <AugmentAction />
+    },
+    {
+        label: 'Export dataset',
+        component: <ExportAction />
+    }
+];
+
 const SectionOverview: FC<SectionProps> = ({ className }) => {
     const classes = useStyles();
+    const { categories, pipelines } = useDataset();
+    const { images } = useImages();
+
+    const totalLabelsCount = categories.map(category => category.labels_count || 0).reduce((acc, val) => acc + val, 0);
+
+    const currentStep =
+        images instanceof Array
+            ? images.length === 0
+                ? 0
+                : totalLabelsCount === 0
+                    ? 1
+                    : pipelines.length === 0
+                        ? 2
+                        : 3
+            : 0;
+
+    useEffect(() => {
+        setActiveStep(currentStep);
+    }, [currentStep]);
+
+    const [activeStep, setActiveStep] = useState<number>(currentStep);
 
     return (
         <div className={clsx(classes.root, className)}>
-            <Grid container spacing={5} justifyContent="space-between">
-                <Grid item md={8} xs={12}>
+            <Grid container spacing={2} justifyContent="space-between">
+                <Grid item md={7} xs={12}>
                     <Stack spacing={3}>
                         <EditAction />
                         <Overview />
-                        <ImagesSlideshow />
                         <Categories />
                     </Stack>
                 </Grid>
 
                 <Grid item md={4} xs={12}>
-                    <Stack spacing={4}>
-                        <UploadAction />
+                    {images instanceof Array
+                        ? (
+                            <Stepper activeStep={activeStep} orientation="vertical">
+                                {DATASET_ACTIONS.map((action, index) => (
+                                    <Step key={action.label} disabled={index > currentStep}>
+                                        <StepButton onClick={() => setActiveStep(index)}>{action.label}</StepButton>
+                                        <StepContent TransitionProps={{ unmountOnExit: false }}>
+                                            {action.component}
+                                        </StepContent>
+                                    </Step>
+                                ))}
+                            </Stepper>
+                        ) : (
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    flexDirection: 'column',
+                                    width: '100%',
+                                    height: 150,
+                                    backgroundColor: 'background.paper',
+                                    borderRadius: 8,
+                                    p: 3
+                                }}
+                            >
+                                <AnimatedLogo />
 
-                        <LabelisatorAction />
-
-                        <ExportAction />
-                    </Stack>
+                                <Typography variant='body2' sx={{my: 2}} color='textSecondary'>
+                                    Loading actions...
+                                </Typography>
+                            </Box>
+                        )
+                    }
                 </Grid>
             </Grid>
         </div>

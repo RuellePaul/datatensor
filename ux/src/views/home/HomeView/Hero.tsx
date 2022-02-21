@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         [theme.breakpoints.down('lg')]: {
             '& h1': {
                 fontSize: 46
-            },
+            }
         },
         [theme.breakpoints.down('md')]: {
             '& h1': {
@@ -115,7 +115,7 @@ const Hero: FC<HeroProps> = ({className, ...rest}) => {
                         </Typography>
                         <Box mt={3} mb={4}>
                             <Typography color="textSecondary">
-                                Datatensor provides a powerful and accessible website of images datasets management,
+                                Datatensor provides a powerful and accessible website of image datasets management,
                                 enabling you to build your own computer vision models faster.
                             </Typography>
                         </Box>
@@ -123,7 +123,12 @@ const Hero: FC<HeroProps> = ({className, ...rest}) => {
                         <Hidden mdUp>
                             <Box position="relative" display="flex" alignItems="center" justifyContent="center">
                                 <div className={classes.image}>
-                                    <img alt="Presentation" src="/static/images/yolov4.gif" draggable={false} />
+                                    <img
+                                        alt="Presentation"
+                                        src="/static/images/home/yolov4.gif"
+                                        draggable={false}
+                                        loading="lazy"
+                                    />
                                 </div>
                             </Box>
                         </Hidden>
@@ -139,7 +144,7 @@ const Hero: FC<HeroProps> = ({className, ...rest}) => {
                             </Button>
 
                             <Button
-                                onClick={() => history.push('/docs')}
+                                onClick={() => history.push('/getting-started')}
                                 endIcon={<DocsIcon />}
                                 variant="outlined"
                                 size="large"
@@ -153,7 +158,12 @@ const Hero: FC<HeroProps> = ({className, ...rest}) => {
                         <Grid item xs={12} md={7}>
                             <Box position="relative">
                                 <div className={classes.image}>
-                                    <img alt="Presentation" src="/static/images/yolov4.gif" draggable={false} />
+                                    <img
+                                        alt="Presentation"
+                                        src="/static/images/home/yolov4.gif"
+                                        draggable={false}
+                                        loading="lazy"
+                                    />
                                 </div>
                             </Box>
                         </Grid>

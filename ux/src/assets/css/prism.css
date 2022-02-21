@@ -13,6 +13,7 @@
 
 .invisible {
     opacity: 0 !important;
+    z-index: -10 !important;
 }
 
 .relative {
@@ -55,22 +56,6 @@
     70% {
         opacity: 1;
     }
-}
-
-@keyframes fadein {
-    0% {
-        opacity: 0;
-    }
-    75% {
-        opacity: 0.5;
-    }
-    100% {
-        opacity: 1;
-    }
-}
-
-img {
-    user-select: none;
 }
 
 kbd {

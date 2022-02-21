@@ -2,8 +2,8 @@ import React, {createContext, FC, ReactNode, useCallback, useEffect, useState} f
 import {Category} from 'src/types/category';
 import {Dataset} from 'src/types/dataset';
 import api from 'src/utils/api';
-import {Box, CircularProgress} from '@mui/material';
 import {Pipeline} from 'src/types/pipeline';
+import NProgress from 'nprogress';
 
 export interface DatasetContextValue {
     dataset: Dataset;
@@ -78,12 +78,19 @@ export const DatasetProvider: FC<DatasetProviderProps> = ({dataset_id, dataset =
         }
     }, [fetchDataset, fetchPipelines, dataset]);
 
+    useEffect(() => {
+        if (currentDataset === null)
+            NProgress.start();
+        else
+            NProgress.done();
+
+        return () => {
+            NProgress.done();
+        };
+    }, [currentDataset])
+
     if (currentDataset === null)
-        return (
-            <Box display="flex" justifyContent="center">
-                <CircularProgress />
-            </Box>
-        );
+        return null;
 
     return (
         <DatasetContext.Provider

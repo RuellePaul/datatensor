@@ -10,23 +10,27 @@ images = APIRouter()
 
 @images.get('/', response_model=ImagesResponse)
 def get_images(dataset_id: str,
-               pipeline_id: Optional[str] = None,
+               original_image_id: Optional[str] = None,
                include_labels=False,
                offset: int = 0,
                limit: int = 0):
     """
     Fetch paginated images list of given dataset.
     """
-    response = {'images': find_images(dataset_id, pipeline_id, include_labels, offset, limit)}
+    response = {'images': find_images(dataset_id,
+                                      original_image_id,
+                                      include_labels=include_labels,
+                                      offset=offset,
+                                      limit=limit)}
     return parse(response)
 
 
 @images.get('/ids', response_model=ImageIdsResponse)
-def get_image_ids(dataset_id: str, pipeline_id: Optional[str] = None):
+def get_image_ids(dataset_id: str):
     """
     Fetch all image_ids of given dataset (original image_ids or <pipeline> image ids).
     """
-    response = {'image_ids': [image.id for image in find_images(dataset_id, pipeline_id)]}
+    response = {'image_ids': [image.id for image in find_images(dataset_id)]}
     return parse(response)
 
 
@@ -56,9 +60,10 @@ def delete_images(dataset_id, dataset=Depends(dataset_belongs_to_user)):
     remove_all_images(dataset_id)
 
 
-@images.delete('/{image_id}')
+@images.delete('/{image_id}', response_model=ImageDeleteResponse)
 def delete_image(dataset_id, image_id, dataset=Depends(dataset_belongs_to_user)):
     """
     Delete given image of given dataset.
     """
-    remove_image(dataset_id, image_id)
+    response = {'deleted_count': remove_image(dataset_id, image_id)}
+    return parse(response)

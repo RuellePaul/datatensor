@@ -5,7 +5,8 @@ import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
 import Header from './Header';
 import Filter from './Filter';
-import Results from './Results';
+import OwnDatasets from './OwnDatasets';
+import PublicDatasets from './PublicDatasets';
 import {DatasetsProvider} from 'src/store/DatasetsContext';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -24,11 +25,14 @@ const DatasetBrowseView: FC = () => {
             <DatasetsProvider>
                 <Container component="section" maxWidth="lg">
                     <Header />
-                    <Box mt={4}>
+
+                    <OwnDatasets />
+
+                    <Box mt={3}>
                         <Filter />
                     </Box>
                     <Box mt={3}>
-                        <Results />
+                        <PublicDatasets />
                     </Box>
                 </Container>
             </DatasetsProvider>

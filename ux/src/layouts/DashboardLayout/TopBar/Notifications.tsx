@@ -1,4 +1,4 @@
-import React, {FC, useRef, useState} from 'react';
+import React, {FC, useEffect, useRef, useState} from 'react';
 import clsx from 'clsx';
 import {useSnackbar} from 'notistack';
 import {
@@ -21,12 +21,14 @@ import {FiberManualRecord} from '@mui/icons-material';
 import {Bell as BellIcon} from 'react-feather';
 import {Theme} from 'src/theme';
 import {useDispatch, useSelector} from 'src/store';
-import {deleteNotifications, readNotifications} from 'src/slices/notification';
+import {deleteNotifications, readNotifications, setNotifications} from 'src/slices/notification';
 import useAuth from 'src/hooks/useAuth';
 import useTasks from 'src/hooks/useTasks';
 import {Notification} from 'src/types/notification';
 import {User} from 'src/types/user';
 import getDateDiff from 'src/utils/getDateDiff';
+import {WS_HOSTNAME} from 'src/utils/api';
+import {HEARTBEAT_DELAY} from 'src/constants';
 
 const titlesMap = {
     TASK_SUCCEED: 'Task succeeded ✅',
@@ -62,11 +64,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
+let notificationsIntervalID;
+
 const Notifications: FC = () => {
     const classes = useStyles();
     const theme = useTheme();
 
-    const {user} = useAuth();
+    const {user, accessToken} = useAuth();
     const {tasks, saveSelectedTask} = useTasks();
 
     const {notifications} = useSelector(state => state.notifications);
@@ -74,6 +78,42 @@ const Notifications: FC = () => {
     const dispatch = useDispatch();
     const [isOpen, setOpen] = useState<boolean>(false);
     const {enqueueSnackbar} = useSnackbar();
+
+    const wsNotifications = useRef(null);
+
+    // Send
+    useEffect(() => {
+        wsNotifications.current = new WebSocket(`${WS_HOSTNAME}/notifications`);
+        wsNotifications.current.onopen = () => {
+            console.info('Notifications websocket opened.');
+        };
+        wsNotifications.current.onclose = () => {
+            console.info('Notifications websocket closed.');
+        };
+
+        return () => {
+            wsNotifications.current.close();
+            clearInterval(notificationsIntervalID);
+        };
+    }, []);
+
+    // Receive notifications
+    useEffect(() => {
+        if (!wsNotifications.current) return;
+
+        function sendNotificationsMessage() {
+            console.log('Send notifications poll...');
+            if (wsNotifications.current && wsNotifications.current.readyState === WebSocket.OPEN) {
+                wsNotifications.current.send(accessToken);
+            }
+        }
+
+        notificationsIntervalID = setInterval(sendNotificationsMessage, HEARTBEAT_DELAY);
+
+        wsNotifications.current.onmessage = event => {
+            dispatch(setNotifications(JSON.parse(event.data)));
+        };
+    }, [dispatch, accessToken]);
 
     const handleReadNotifications = async () => {
         try {
@@ -92,6 +132,8 @@ const Notifications: FC = () => {
             enqueueSnackbar(error.message || 'Something went wrong', {
                 variant: 'error'
             });
+        } finally {
+            handleClose();
         }
     };
 

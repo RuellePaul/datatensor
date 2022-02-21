@@ -42,7 +42,6 @@ class PipelinesResponse(BaseModel):
 
 
 class SampleBody(BaseModel):
-    image_id: str
     operations: List[Operation]
 
 

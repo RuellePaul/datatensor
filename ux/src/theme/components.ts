@@ -31,5 +31,20 @@ export default {
                 fontSize: 18
             }
         }
+    },
+    MuiTooltip: {
+        styleOverrides: {
+            tooltip: {
+                fontSize: 14
+            }
+        }
+    },
+    MuiSelect: {
+        styleOverrides: {
+            select: {
+                paddingTop: 12,
+                paddingBottom: 12,
+            }
+        }
     }
 };

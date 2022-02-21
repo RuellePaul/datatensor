@@ -10,9 +10,9 @@ const useStyles = makeStyles((theme: Theme) => ({
         paddingBottom: theme.spacing(1),
         paddingTop: theme.spacing(1),
         marginBottom: theme.spacing(2),
-        borderLeft: `4px solid ${theme.palette.text.primary}`,
+        borderLeft: `4px solid ${theme.palette.text.secondary}`,
         '& > p': {
-            color: theme.palette.text.primary,
+            color: theme.palette.text.secondary,
             marginBottom: 0
         }
     }

@@ -6,7 +6,6 @@ import {Category} from 'src/types/category';
 import {COLORS} from 'src/utils/colors';
 import {capitalize} from '@mui/material';
 
-
 export const RESIZE_SIZE = 8;
 export const LABEL_MIN_WIDTH = 16;
 export const LABEL_MIN_HEIGHT = 16;
@@ -18,8 +17,7 @@ const drawPoint = (context, x, y) => {
     context.arc(x, y, RESIZE_DOT_WIDTH, 0, 2 * Math.PI, false);
     context.fill();
     context.stroke();
-
-}
+};
 
 export const distance = (pointA, pointB) => {
     if (pointA === null) return 0;
@@ -56,7 +54,7 @@ export const convertLabel = (canvas: HTMLCanvasElement, label: Label, offset = C
     let y = offset + label.y * (canvas.height - 2 * offset);
     let w = label.w * (canvas.width - 2 * offset);
     let h = label.h * (canvas.height - 2 * offset);
-    return { x, y, w, h };
+    return {x, y, w, h};
 };
 
 export const drawCursorLines = (canvas: HTMLCanvasElement, point: Point) => {
@@ -87,11 +85,11 @@ export const drawRect = (canvas: HTMLCanvasElement, pointA: Point, pointB: Point
     let context = canvas.getContext('2d');
     context.lineWidth = 1;
     context.strokeStyle = color;
-    context.strokeRect(x + .5, y + .5, w, h);
+    context.strokeRect(x + 0.5, y + 0.5, w, h);
     context.shadowColor = '#000000';
     context.shadowBlur = 1;
     context.fillStyle = `${color}22`;
-    context.fillRect(x + .5, y + .5, w, h);
+    context.fillRect(x + 0.5, y + 0.5, w, h);
 };
 
 export const drawLabels = (
@@ -107,46 +105,53 @@ export const drawLabels = (
     if (!labels) return;
 
     let context = canvas.getContext('2d');
-    context.lineWidth = 1;
-    context.setLineDash([dash]);
+    context.lineWidth = 2;
 
     for (const label of labels) {
-        const category = categories.sort((a, b) => -b.name.localeCompare(a.name)).find(category => label.category_id === category.id);
+        context.setLineDash([dash]);
+        const category = categories
+            .sort((a, b) => -b.name.localeCompare(a.name))
+            .find(category => label.category_id === category.id);
 
-        const { x, y, w, h } = convertLabel(canvas, label, offset);
+        const {x, y, w, h} = convertLabel(canvas, label, offset);
 
         let color = COLORS[categories.sort((a, b) => -b.name.localeCompare(a.name)).indexOf(category)] || '#FFFFFF';
 
         context.strokeStyle = color;
         context.shadowColor = `${color}55`;
         context.shadowBlur = 1;
-        context.strokeRect(x + .5, y + .5, w, h);
+        context.strokeRect(x + 0.5, y + 0.5, w, h);
 
         context.fillStyle = `${color}05`;
         context.fillRect(x, y, w, h);
         if (filled || (category && categorySelected && categorySelected.id === category.id)) {
             context.fillStyle = `${color}05`;
-            context.fillRect(x + .5, y + .5, w, h);
+            context.fillRect(x + 0.5, y + 0.5, w, h);
+        }
+
+        if (category && w > category.name.length * 8 && h > LABEL_MIN_HEIGHT) {
+            let fontSize = 14;
+            context.textBaseline = 'bottom';
+            context.font = `bold ${fontSize}px Roboto, Helvetica, Arial, sans-serif`;
+            context.fillStyle = color;
+            context.fillRect(x - 0.5, y - 20 - 0.5, context.measureText(category.name).width + 12, 20);
+            context.fillStyle = '#000000';
+            context.fillText(capitalize(category.name), x + 4, y - 2);
         }
 
         if (resize) {
-            context.fillStyle = '#90caf9';
+            context.setLineDash([0]);
+            context.fillStyle = '#286ed6';
             context.strokeStyle = '#FFFFFF';
             drawPoint(context, x, y);
             drawPoint(context, x + w, y);
             drawPoint(context, x, y + h);
             drawPoint(context, x + w, y + h);
         }
-
-        if (category && w > category.name.length * 8 && h > LABEL_MIN_HEIGHT * 2) {
-            let fontSize = 16;
-            context.textBaseline = 'top';
-            context.font = `${fontSize}px Roboto, Helvetica, Arial, sans-serif`;
-            context.fillStyle = color;
-            context.fillText(capitalize(category.name), x + 8, y + 8);
-        }
     }
 };
+
+const TOLERANCE = 5;
 
 export const renderCursor = (
     canvas: HTMLCanvasElement,
@@ -157,23 +162,23 @@ export const renderCursor = (
     if (!labels || !point) return;
 
     for (const label of labels) {
-        const { x, y, w, h } = convertLabel(canvas, label);
+        const {x, y, w, h} = convertLabel(canvas, label);
 
-        if (point[0] > x && point[0] < x + RESIZE_SIZE) {
-            if (point[1] > y && point[1] < y + RESIZE_SIZE) {
+        if (point[0] > x - TOLERANCE && point[0] < x + RESIZE_SIZE) {
+            if (point[1] > y - TOLERANCE && point[1] < y + RESIZE_SIZE) {
                 callback(label, 'top-left');
                 return;
             }
-            if (point[1] > y + h - RESIZE_SIZE && point[1] < y + h) {
+            if (point[1] > y + h - RESIZE_SIZE && point[1] < y + h + TOLERANCE) {
                 callback(label, 'bottom-left');
                 return;
             }
-        } else if (point[0] > x + w - RESIZE_SIZE && point[0] < x + w) {
-            if (point[1] > y && point[1] < y + RESIZE_SIZE) {
+        } else if (point[0] > x + w - RESIZE_SIZE && point[0] < x + w + TOLERANCE) {
+            if (point[1] > y - TOLERANCE && point[1] < y + RESIZE_SIZE) {
                 callback(label, 'top-right');
                 return;
             }
-            if (point[1] > y + h - RESIZE_SIZE && point[1] < y + h) {
+            if (point[1] > y + h - RESIZE_SIZE && point[1] < y + h + TOLERANCE) {
                 callback(label, 'bottom-right');
                 return;
             }
@@ -187,12 +192,12 @@ export const isHoveringLabels = (canvas: HTMLCanvasElement, point: Point, labels
     if (!point || !labels) return false;
 
     for (const label of labels) {
-        const { x, y, w, h } = convertLabel(canvas, label);
+        const {x, y, w, h} = convertLabel(canvas, label);
 
-        if (x <= point[0]) {
-            if (y <= point[1]) {
-                if (x + w >= point[0]) {
-                    if (y + h >= point[1]) {
+        if (x <= point[0] + TOLERANCE) {
+            if (y <= point[1] + TOLERANCE) {
+                if (x + w >= point[0] - TOLERANCE) {
+                    if (y + h >= point[1] - TOLERANCE) {
                         return true;
                     }
                 }
@@ -206,20 +211,42 @@ export const currentLabelsHoverIds = (canvas: HTMLCanvasElement, point: Point, l
     if (!point || !labels) return [];
 
     let labelsHoverIds = [];
-    for (const label of labels) {
-        const { x, y, w, h } = convertLabel(canvas, label);
 
-        if (x <= point[0]) {
-            if (y <= point[1]) {
-                if (x + w >= point[0]) {
-                    if (y + h >= point[1]) {
+    for (const label of labels) {
+        const {x, y, w, h} = convertLabel(canvas, label);
+
+        if (x <= point[0] + TOLERANCE) {
+            if (y <= point[1] + TOLERANCE) {
+                if (x + w >= point[0] - TOLERANCE) {
+                    if (y + h >= point[1] - TOLERANCE) {
                         labelsHoverIds.push(label.id);
                     }
                 }
             }
         }
     }
+
     return labelsHoverIds;
+};
+
+export const currentSmallestLabelHoverIds = (canvas: HTMLCanvasElement, point: Point, labels: Label[]) => {
+    if (!point || !labels) return [];
+
+    for (const label of labels) {
+        const {x, y, w, h} = convertLabel(canvas, label);
+
+        if (x <= point[0] + TOLERANCE) {
+            if (y <= point[1] + TOLERANCE) {
+                if (x + w >= point[0] - TOLERANCE) {
+                    if (y + h >= point[1] - TOLERANCE) {
+                        return [label.id];
+                    }
+                }
+            }
+        }
+    }
+
+    return [];
 };
 
 export const currentLabelsTranslated = (canvas: HTMLCanvasElement, labels: Label[], pointA: Point, pointB: Point) => {

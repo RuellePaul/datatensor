@@ -39,7 +39,7 @@ config_name = os.getenv('FLASK_UI_CONFIGURATION', 'development')
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[Config.UI_URL],
+    allow_origins=[Config.UI_URL, Config.APP_URL, Config.DOCS_URL],
     allow_credentials=True,
     allow_methods=['*'],
     allow_headers=['*'],
@@ -93,7 +93,7 @@ datasets.include_router(tasks, prefix='/{dataset_id}/tasks', tags=['tasks'])
 # Dataset ➤ Exports
 datasets.include_router(exports, prefix='/{dataset_id}/exports', tags=['exports'])
 
-# Users ➤ Tasks 🔒 Admin partially
+# Users ➤ Tasks 🔒 Admin partially (for generator)
 app.include_router(tasks, prefix=f'{PREFIX}/tasks', tags=['tasks'], dependencies=[Depends(logged_user)])
 
 

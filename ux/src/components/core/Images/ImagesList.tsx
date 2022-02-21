@@ -2,7 +2,7 @@ import React, {FC} from 'react';
 import clsx from 'clsx';
 import {useSnackbar} from 'notistack';
 import {IconButton, ListItemIcon, Menu, MenuItem, Skeleton, Tooltip, Typography} from '@mui/material';
-import {Delete as DeleteIcon, MoreVert as MoreIcon} from '@mui/icons-material';
+import {CreateOutlined as EditIcon, Delete as DeleteIcon, MoreVert as MoreIcon} from '@mui/icons-material';
 import Masonry from '@mui/lab/Masonry';
 import MasonryItem from '@mui/lab/MasonryItem';
 import makeStyles from '@mui/styles/makeStyles';
@@ -17,8 +17,8 @@ import api from 'src/utils/api';
 import goToHash from 'src/utils/goToHash';
 
 interface ImagesListProps {
-    pipeline_id?: string;
     className?: string;
+    onClick?: (image: Image) => void;
 }
 
 interface ImageOverlayProps {
@@ -27,7 +27,9 @@ interface ImageOverlayProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        overflow: 'hidden',
+        overflow: 'hidden'
+    },
+    filled: {
         minHeight: 600
     },
     grid: {
@@ -77,11 +79,20 @@ const ImageOverlay: FC<ImageOverlayProps> = ({image}) => {
     const {dataset, saveDataset} = useDataset();
     const {images, saveImages} = useImages();
 
+    const handleOpenLabelisator = () => {
+        goToHash(image.id);
+        handleCloseMenu();
+    };
+
     const handleDelete = async () => {
         try {
-            await api.delete(`/datasets/${dataset.id}/images/${image.id}`);
+            const response = await api.delete<{deleted_count: number}>(`/datasets/${dataset.id}/images/${image.id}`);
             saveImages(images.filter(current => current.id !== image.id));
-            saveDataset({...dataset, image_count: dataset.image_count - 1});
+            saveDataset({
+                ...dataset,
+                image_count: dataset.image_count - 1,
+                augmented_count: dataset.augmented_count - (response.data.deleted_count - 1)
+            });
             handleCloseMenu();
         } catch (error) {
             enqueueSnackbar(error.message || 'Something went wrong', {
@@ -105,6 +116,12 @@ const ImageOverlay: FC<ImageOverlayProps> = ({image}) => {
             </Tooltip>
 
             <Menu anchorEl={anchorEl} open={open} onClose={handleCloseMenu}>
+                <MenuItem key="Edit" onClick={handleOpenLabelisator}>
+                    <ListItemIcon>
+                        <EditIcon />
+                    </ListItemIcon>
+                    Edit
+                </MenuItem>
                 <MenuItem key="Delete" onClick={handleDelete}>
                     <ListItemIcon>
                         <DeleteIcon />
@@ -116,14 +133,12 @@ const ImageOverlay: FC<ImageOverlayProps> = ({image}) => {
     );
 };
 
-const DTImagesList: FC<ImagesListProps> = ({className, pipeline_id, ...rest}) => {
+const DTImagesList: FC<ImagesListProps> = ({className, onClick = () => {}, ...rest}) => {
     const classes = useStyles();
 
     const {images} = useImages();
 
-    if (images === null) return null;
-
-    if (images.length === 0)
+    if (images === null)
         return (
             <div className={clsx(classes.root, className)} {...rest}>
                 <Masonry columns={{xs: 2, sm: 3, md: 4}} spacing={1}>
@@ -142,8 +157,10 @@ const DTImagesList: FC<ImagesListProps> = ({className, pipeline_id, ...rest}) =>
             </div>
         );
 
+    if (images.length === 0) return null;
+
     return (
-        <div className={clsx(classes.root, className)} {...rest}>
+        <div className={clsx(classes.root, className, images.length >= LAZY_LOAD_BATCH && classes.filled)} {...rest}>
             <Masonry columns={{xs: 2, sm: 3, md: 4}} spacing={1}>
                 {images.map((image: Image) => (
                     <MasonryItem key={image.id}>
@@ -151,7 +168,7 @@ const DTImagesList: FC<ImagesListProps> = ({className, pipeline_id, ...rest}) =>
                             <DTImage
                                 className={classes.image}
                                 clickable
-                                onClick={() => goToHash(image.id, true)}
+                                onClick={() => onClick(image)}
                                 skeleton
                                 overlay={<ImageOverlay image={image} />}
                             />

@@ -14,6 +14,7 @@ import {
     currentLabelsResized,
     currentLabelsTranslated,
     currentPoint,
+    currentSmallestLabelHoverIds,
     distance,
     drawLabels,
     drawRect,
@@ -94,7 +95,9 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
         if (event.nativeEvent.which === 1) {
             reset(canvas);
 
-            let labelsHoverIds = currentLabelsHoverIds(canvasRef.current, point, labels);
+            let labelsHoverIds = event.shiftKey
+                ? currentLabelsHoverIds(canvas, point, labels)
+                : currentSmallestLabelHoverIds(canvas, point, labels);
             if (labelsHoverIds.length > 0) {
                 setStoredPoint(point);
                 renderCursor(canvas, point, labels, (resizeLabel, direction) => {
@@ -136,7 +139,10 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
         if (event.nativeEvent.which === 0) {
             reset(canvas);
             // IDLE
-            let labelsHoverIds = currentLabelsHoverIds(canvas, point, labels);
+            let labelsHoverIds = event.shiftKey
+                ? currentLabelsHoverIds(canvas, point, labels)
+                : currentSmallestLabelHoverIds(canvas, point, labels);
+
             if (autoSwitch && labelsHoverIds.length === 0) {
                 setTool('label');
                 return;
@@ -202,7 +208,10 @@ const ToolMove: FC<ToolMoveProps> = ({setTool, autoSwitch}) => {
         setContextMenuPoint([event.clientX, event.clientY]);
         let point = currentPoint(event.nativeEvent);
         setStoredPoint(point);
-        let labelsHoverIds = currentLabelsHoverIds(canvasRef.current, point, labels);
+        let canvas = canvasRef.current;
+        let labelsHoverIds = event.shiftKey
+            ? currentLabelsHoverIds(canvas, point, labels)
+            : currentSmallestLabelHoverIds(canvas, point, labels);
         setStoredLabels(labels.filter(label => labelsHoverIds.includes(label.id)));
     };
 

@@ -1,9 +1,9 @@
-import datetime
 import json
 from uuid import UUID
 
 from bson import json_util
 from bson.objectid import ObjectId
+from datetime import date, datetime
 from passlib.context import CryptContext
 from pydantic import BaseModel, BaseConfig
 from pymongo.encryption import Algorithm
@@ -24,7 +24,7 @@ def encrypt_field(data):
 
 
 def default(value):
-    if isinstance(value, (datetime.date, datetime.datetime)):
+    if isinstance(value, (datetime, date)):
         return value.isoformat()
     elif isinstance(value, ObjectId):
         return str(value)

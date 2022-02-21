@@ -4,12 +4,10 @@ from datetime import datetime
 from celery import Celery
 
 import errors
-from config import Config
 from routers.notifications.core import insert_notification
 from routers.notifications.models import NotificationPostBody, NotificationType
 from utils import update_task
 from workflows.augmentor import augmentor
-from workflows.export import export
 from workflows.generator import generator
 
 app = Celery('worker', broker='pyamqp://', backend='rpc://')
@@ -66,9 +64,3 @@ def run_generator(user_id, task_id, properties):
 @handle_task_error
 def run_augmentor(user_id, task_id, dataset_id, properties):
     augmentor.main(user_id, task_id, dataset_id, properties)
-
-
-@app.task
-@handle_task_error
-def run_export(user_id, task_id, dataset_id, properties):
-    export.main(user_id, task_id, dataset_id, properties)

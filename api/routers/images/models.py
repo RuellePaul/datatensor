@@ -15,6 +15,7 @@ class Image(MongoModel):
     width: int
     height: int
     pipeline_id: Optional[str] = None
+    original_image_id: Optional[str] = None
 
 
 class ImageExtended(Image):
@@ -31,3 +32,7 @@ class ImageIdsResponse(BaseModel):
 
 class ImageResponse(BaseModel):
     image: Image
+
+
+class ImageDeleteResponse(BaseModel):
+    deleted_count: int

@@ -1,10 +1,13 @@
 import React, {createContext, FC, ReactNode, useEffect, useReducer} from 'react';
+import {useHistory} from 'react-router-dom';
+import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
+import {useSnackbar} from 'notistack';
 import {User} from 'src/types/user';
 import SplashScreen from 'src/components/screens/SplashScreen';
 import api from 'src/utils/api';
-import {useHistory} from 'react-router-dom';
-import {useSnackbar} from 'notistack';
+
+const ENVIRONMENT = process.env.REACT_APP_ENVIRONMENT;
 
 interface AuthState {
     isInitialised: boolean;
@@ -77,11 +80,21 @@ const isValidToken = (accessToken: string): boolean => {
 
 const setSession = (accessToken: string | null): void => {
     if (accessToken) {
-        localStorage.setItem('accessToken', accessToken);
-        api.defaults.headers.common.Authorization = accessToken;
+        if (ENVIRONMENT === 'production') {
+            Cookies.set('access_token', accessToken, {domain: 'datatensor.io'});
+            Cookies.set('access_token', accessToken, {domain: 'app.datatensor.io'});
+            Cookies.set('access_token', accessToken, {domain: 'docs.datatensor.io'});
+        } else {
+            Cookies.set('access_token', accessToken);
+        }
     } else {
-        localStorage.removeItem('accessToken');
-        delete api.defaults.headers.common.Authorization;
+        if (ENVIRONMENT === 'production') {
+            Cookies.remove('access_token', {domain: 'datatensor.io'});
+            Cookies.remove('access_token', {domain: 'app.datatensor.io'});
+            Cookies.remove('access_token', {domain: 'docs.datatensor.io'});
+        } else {
+            Cookies.remove('access_token');
+        }
     }
 };
 
@@ -95,7 +108,7 @@ const reducer = (state: AuthState, action: Action): AuthState => {
                 isAuthenticated,
                 isInitialised: true,
                 user,
-                accessToken: localStorage.getItem('accessToken') || null
+                accessToken: Cookies.get('access_token') || null
             };
         }
         case 'LOGIN': {
@@ -191,7 +204,6 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         const {accessToken, user} = response.data;
 
         setSession(accessToken);
-
         dispatch({
             type: 'REGISTER',
             payload: {
@@ -210,7 +222,6 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
             const {accessToken, user} = response.data;
 
             setSession(accessToken);
-
             dispatch({
                 type: 'LOGIN',
                 payload: {
@@ -219,7 +230,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
                 }
             });
 
-            history.push('/app');
+            history.push('/datasets');
         } catch (error) {
             enqueueSnackbar(error.message || 'Something went wrong', {
                 variant: 'error'
@@ -253,13 +264,12 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
     useEffect(() => {
         const initialise = async () => {
             try {
-                const accessToken = window.localStorage.getItem('accessToken');
+                const accessToken = Cookies.get('access_token');
 
                 if (accessToken && isValidToken(accessToken)) {
-                    setSession(accessToken);
-
                     const response = await api.get<User>('/auth/me');
                     const user = response.data;
+                    setSession(accessToken);
 
                     dispatch({
                         type: 'INITIALISE',

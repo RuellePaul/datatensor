@@ -1,13 +1,14 @@
 import React, {cloneElement, FC, useCallback, useEffect, useMemo, useState} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
+import {Package as DatasetIcon} from 'react-feather';
 import {Box, ButtonBase, Container, Grid, Hidden, Link, Typography, useMediaQuery} from '@mui/material';
+import {BrandingWatermarkOutlined as LabelingIcon, DynamicFeedOutlined as AugmentationIcon} from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
 import {blueDark, Theme} from 'src/theme';
 import FeatureDatasets from './FeatureDatasets';
 import FeatureLabeling from './FeatureLabeling';
 import FeatureAugmentation from './FeatureAugmentation';
-import {BrandingWatermarkOutlined as LabelingIcon, DynamicFeedOutlined as AugmentationIcon} from '@mui/icons-material';
 import api from 'src/utils/api';
 import {Image} from 'src/types/image';
 import {Dataset} from 'src/types/dataset';
@@ -16,7 +17,6 @@ import {ImagesProvider} from 'src/store/ImagesContext';
 import {ImageProvider} from 'src/store/ImageContext';
 import useScroll from 'src/hooks/useScroll';
 import randomIndexes from 'src/utils/randomIndexes';
-import {Package as DatasetIcon} from 'react-feather';
 
 interface FeatureProps {
     className?: string;
@@ -124,21 +124,21 @@ const FEATURES = [
     {
         title: 'Datasets',
         subtitle: 'Create, organize and share your labeled image datasets with the world',
-        docPath: '/docs/datasets',
+        docPath: '/create-a-dataset',
         icon: <DatasetIcon />,
         component: <FeatureDatasets datasets={[]} />
     },
     {
         title: 'Image labeling',
         subtitle: 'Ergonomic and intuitive tools for labeling your datasets.',
-        docPath: '/docs/datasets/labeling',
+        docPath: '/datasets/labeling',
         icon: <LabelingIcon />,
         component: <FeatureLabeling />
     },
     {
         title: 'Image augmentation',
         subtitle: 'Get more labeled images, without the tears.',
-        docPath: '/docs/datasets/augmentation',
+        docPath: '/datasets/augmentation',
         icon: <AugmentationIcon />,
         component: <FeatureAugmentation />
     }
@@ -200,7 +200,7 @@ const Features: FC<FeatureProps> = ({className, ...rest}) => {
 
     const [selected, setSelected] = useState(0);
 
-     // for preventing scroll selection after FeatureButton click
+    // for preventing scroll selection after FeatureButton click
     const [animated, setAnimated] = useState<boolean>(false);
 
     const [datasets, setDatasets] = useState<Dataset[]>(null);
@@ -247,6 +247,33 @@ const Features: FC<FeatureProps> = ({className, ...rest}) => {
         <div className={clsx(classes.root, className)} {...rest}>
             <Container component="section" maxWidth="lg">
                 <Grid className={classes.container} container spacing={isMobile ? 0 : 6}>
+                    <Grid className={clsx(!isMobile && classes.sticky)} item md={5} xs={12}>
+                        <Typography variant="overline" color="primary" fontSize={16}>
+                            Features
+                        </Typography>
+                        <Typography variant="h1" color="textPrimary">
+                            A wide range of tools{' '}
+                            <Typography component="span" color="primary">
+                                to build faster
+                            </Typography>
+                        </Typography>
+
+                        <Box height={24} />
+
+                        <Hidden mdDown>
+                            {FEATURES.map((feature, index) => (
+                                <FeatureButton
+                                    key={`feature-button-${index}`}
+                                    feature={feature}
+                                    index={index}
+                                    selected={selected}
+                                    setSelected={setSelected}
+                                    setAnimated={setAnimated}
+                                />
+                            ))}
+                        </Hidden>
+                    </Grid>
+
                     <Grid item md={7} xs={12} id="features">
                         {datasets !== null && images.length > 0 && (
                             <DatasetProvider dataset={datasets[0]} categories={datasets[0].categories}>
@@ -279,33 +306,6 @@ const Features: FC<FeatureProps> = ({className, ...rest}) => {
                                 </ImagesProvider>
                             </DatasetProvider>
                         )}
-                    </Grid>
-
-                    <Grid className={clsx(!isMobile && classes.sticky)} item md={5} xs={12}>
-                        <Typography variant="overline" color="primary" fontSize={16}>
-                            Features
-                        </Typography>
-                        <Typography variant="h1" color="textPrimary">
-                            A wide range of tools{' '}
-                            <Typography component="span" color="primary">
-                                to build faster
-                            </Typography>
-                        </Typography>
-
-                        <Box height={24} />
-
-                        <Hidden mdDown>
-                            {FEATURES.map((feature, index) => (
-                                <FeatureButton
-                                    key={`feature-button-${index}`}
-                                    feature={feature}
-                                    index={index}
-                                    selected={selected}
-                                    setSelected={setSelected}
-                                    setAnimated={setAnimated}
-                                />
-                            ))}
-                        </Hidden>
                     </Grid>
                 </Grid>
             </Container>

@@ -1,8 +1,6 @@
 import React, {createContext, FC, ReactNode, useEffect, useRef, useState} from 'react';
 import {useLocation} from 'react-router-dom';
 import {Task} from 'src/types/task';
-import {setNotifications} from 'src/slices/notification';
-import {useDispatch} from 'src/store';
 import TaskDetails from 'src/components/core/TaskDetails';
 import useAuth from 'src/hooks/useAuth';
 import {HEARTBEAT_DELAY} from 'src/constants';
@@ -13,6 +11,8 @@ export interface TasksContextValue {
     saveTasks: (update: Task[] | ((tasks: Task[]) => Task[])) => void;
     selectedTask: Task | null;
     saveSelectedTask: (update: Task | ((tasks: Task) => Task)) => void;
+    isPaused: boolean;
+    savePaused: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface TasksProviderProps {
@@ -23,20 +23,19 @@ export const TasksContext = createContext<TasksContextValue>({
     tasks: null,
     saveTasks: () => {},
     selectedTask: null,
-    saveSelectedTask: () => {}
+    saveSelectedTask: () => {},
+    isPaused: false,
+    savePaused: () => {}
 });
 
 let tasksIntervalID;
-let notificationsIntervalID;
 
 export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
     const {accessToken} = useAuth();
-    const dispatch = useDispatch();
 
     const location = useLocation();
 
     const wsTask = useRef(null);
-    const wsNotifications = useRef(null);
     const [isPaused, setPaused] = useState(false);
 
     const [currentTasks, setCurrentTasks] = useState<Task[]>(null);
@@ -61,21 +60,9 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
             console.info('Task websocket closed.');
         };
 
-        wsNotifications.current = new WebSocket(`${WS_HOSTNAME}/notifications`);
-        wsNotifications.current.onopen = () => {
-            console.info('Notifications websocket opened.');
-            setPaused(false);
-        };
-        wsNotifications.current.onclose = () => {
-            console.info('Notifications websocket closed.');
-            // TODO : TRY RECONNECTING WORKFLOW
-        };
-
         return () => {
             wsTask.current.close();
             clearInterval(tasksIntervalID);
-            wsNotifications.current.close();
-            clearInterval(notificationsIntervalID);
         };
     }, []);
 
@@ -98,29 +85,12 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
         };
     }, [isPaused, accessToken]);
 
-    // Receive notifications
-    useEffect(() => {
-        if (!wsNotifications.current) return;
-
-        function sendNotificationsMessage() {
-            console.log('Send notifications poll...');
-            if (wsNotifications.current && wsNotifications.current.readyState === WebSocket.OPEN) {
-                wsNotifications.current.send(accessToken);
-            }
-        }
-
-        if (isPaused) clearInterval(notificationsIntervalID);
-        else notificationsIntervalID = setInterval(sendNotificationsMessage, HEARTBEAT_DELAY);
-
-        wsNotifications.current.onmessage = event => {
-            dispatch(setNotifications(JSON.parse(event.data)));
-        };
-    }, [isPaused, dispatch, accessToken]);
-
     useEffect(() => {
         if (currentTasks && accessToken) {
             let hasPendingOrActiveTasks =
-                currentTasks.filter(task => ['pending', 'active'].includes(task.status)).length > 0;
+                currentTasks
+                    .filter(task => ['pending', 'active'].includes(task.status))
+                    .length > 0;
             setPaused(!hasPendingOrActiveTasks);
         }
     }, [currentTasks, accessToken]);
@@ -143,7 +113,9 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
                 tasks: currentTasks,
                 saveTasks: handleSaveTasks,
                 selectedTask: selectedTask,
-                saveSelectedTask: handleSaveSelectedTask
+                saveSelectedTask: handleSaveSelectedTask,
+                isPaused: isPaused,
+                savePaused: setPaused
             }}
         >
             {children}

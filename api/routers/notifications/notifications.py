@@ -18,6 +18,6 @@ def patch_notifications(user: User = Depends(logged_user)):
 @notifications.delete('/')
 def delete_notifications(user: User = Depends(logged_user)):
     """
-    Fetch notifications of logged user
+    Delete notifications of logged user
     """
     remove_notifications(user.id)

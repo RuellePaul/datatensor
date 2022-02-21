@@ -1,25 +1,8 @@
-from datetime import datetime
-from typing import Any, List, Optional
+from typing import Any, List
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
-from authentication.models import Scope
-from utils import MongoModel
-
-
-class User(MongoModel):
-    id: str = Field()
-    email: Optional[str] = None  # github oauth users doesn't have an email
-    name: str
-    created_at: datetime
-    is_verified: bool
-    is_admin: bool
-    scope: Optional[Scope] = None
-    avatar: Optional[str] = None
-    phone: Optional[str] = None
-    country: Optional[str] = None
-    city: Optional[str] = None
-    is_public: Optional[bool] = True
+from authentication.models import User
 
 
 class UserWithPassword(User):

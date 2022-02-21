@@ -4,10 +4,9 @@ import DashboardLayout from 'src/layouts/DashboardLayout';
 import MainLayout from 'src/layouts/MainLayout';
 import DocsLayout from 'src/layouts/DocsLayout';
 import HomeView from 'src/views/home/HomeView';
-import LoadingScreen from 'src/components/screens/LoadingScreen';
 import AuthGuard from 'src/components/guards/AuthGuard';
 import GuestGuard from 'src/components/guards/GuestGuard';
-
+import SplashScreen from 'src/components/screens/SplashScreen';
 
 type Routes = {
     exact?: boolean;
@@ -15,11 +14,12 @@ type Routes = {
     guard?: any;
     layout?: any;
     component?: any;
+    scope?: 'app' | 'docs';
     routes?: Routes;
 }[];
 
 export const renderRoutes = (routes: Routes = []): JSX.Element => (
-    <Suspense fallback={<LoadingScreen />}>
+    <Suspense fallback={<SplashScreen />}>
         <Switch>
             {routes.map((route, i) => {
                 const Guard = route.guard || Fragment;
@@ -44,138 +44,217 @@ export const renderRoutes = (routes: Routes = []): JSX.Element => (
 );
 
 const routes: Routes = [
+    // datatensor.io
     {
         exact: true,
         path: '/404',
         component: lazy(() => import('src/views/errors/NotFoundView'))
     },
     {
+        layout: MainLayout,
+        exact: true,
+        path: '/',
+        component: HomeView
+    },
+
+    // docs.datatensor.io
+    {
+        layout: DocsLayout,
+        exact: true,
+        path: '/getting-started',
+        component: lazy(() => import('src/views/docs/GettingStartedView')),
+        scope: 'docs'
+    },
+    {
+        layout: DocsLayout,
+        exact: true,
+        path: '/about-datatensor',
+        component: lazy(() => import('src/views/docs/AboutDatatensorView')),
+        scope: 'docs'
+    },
+    {
+        layout: DocsLayout,
+        exact: true,
+        path: '/create-a-dataset',
+        component: lazy(() => import('src/views/docs/CreateDatasetView')),
+        scope: 'docs'
+    },
+    {
+        layout: DocsLayout,
+        exact: true,
+        path: '/upload-images',
+        component: lazy(() => import('src/views/docs/UploadImagesView')),
+        scope: 'docs'
+    },
+    {
+        layout: DocsLayout,
+        exact: true,
+        path: '/datasets/labeling',
+        component: lazy(() => import('src/views/docs/LabelingView')),
+        scope: 'docs'
+    },
+    {
+        layout: DocsLayout,
+        exact: true,
+        path: '/datasets/augmentation',
+        component: lazy(() => import('src/views/docs/AugmentationView')),
+        scope: 'docs'
+    },
+    {
+        layout: DocsLayout,
+        exact: true,
+        path: '/datasets/export',
+        component: lazy(() => import('src/views/docs/ExportView')),
+        scope: 'docs'
+    },
+    {
+        layout: DocsLayout,
+        exact: true,
+        path: '/computer-vision/using-an-exported-dataset',
+        component: lazy(() => import('src/views/docs/UsingExportedDatasetView')),
+        scope: 'docs'
+    },
+    {
+        layout: DocsLayout,
+        exact: true,
+        path: '/computer-vision/api-documentation',
+        component: lazy(() => import('src/views/docs/APIDocsView')),
+        scope: 'docs'
+    },
+    {
+        layout: DocsLayout,
+        exact: true,
+        path: '/contributing/project-architecture',
+        component: lazy(() => import('src/views/docs/ProjectArchitectureView')),
+        scope: 'docs'
+    },
+    {
+        layout: DocsLayout,
+        exact: true,
+        path: '/contributing/running-locally',
+        component: lazy(() => import('src/views/docs/RunningLocallyView')),
+        scope: 'docs'
+    },
+
+    // app.datatensor.io
+    {
         exact: true,
         guard: GuestGuard,
         path: '/login',
-        component: lazy(() => import('src/views/auth/LoginView'))
+        component: lazy(() => import('src/views/auth/LoginView')),
+        scope: 'app'
     },
     {
         exact: true,
         guard: GuestGuard,
         path: '/forgot-password',
-        component: lazy(() => import('src/views/auth/ForgotPasswordView'))
+        component: lazy(() => import('src/views/auth/ForgotPasswordView')),
+        scope: 'app'
     },
     {
         exact: true,
         guard: GuestGuard,
         path: '/reset-password',
-        component: lazy(() => import('src/views/auth/ResetPasswordView'))
+        component: lazy(() => import('src/views/auth/ResetPasswordView')),
+        scope: 'app'
     },
     {
         exact: true,
         guard: GuestGuard,
         path: '/oauthcallback/:scope',
-        component: lazy(() => import('src/views/auth/OAuthCallbackView'))
+        component: lazy(() => import('src/views/auth/OAuthCallbackView')),
+        scope: 'app'
     },
     {
         exact: true,
         guard: GuestGuard,
         path: '/register',
-        component: lazy(() => import('src/views/auth/RegisterView'))
+        component: lazy(() => import('src/views/auth/RegisterView')),
+        scope: 'app'
     },
     {
         exact: true,
         path: '/email-confirmation',
-        component: lazy(() => import('src/views/auth/EmailConfirmationView'))
+        component: lazy(() => import('src/views/auth/EmailConfirmationView')),
+        scope: 'app'
     },
+
     {
-        path: '/app',
         guard: AuthGuard,
         layout: DashboardLayout,
-        routes: [
-            {
-                exact: true,
-                path: '/app/account',
-                component: lazy(() => import('src/views/account/AccountView'))
-            },
-            {
-                exact: true,
-                path: '/app/users',
-                component: lazy(() => import('src/views/user/UserListView'))
-            },
-            {
-                exact: true,
-                path: '/app/users/:user_id/details',
-                component: lazy(() => import('src/views/user/UserDetailsView'))
-            },
-            {
-                exact: true,
-                path: '/app/datasets',
-                component: lazy(() => import('src/views/dataset/DatasetBrowseView'))
-            },
-            {
-                exact: true,
-                path: '/app/datasets/create',
-                component: lazy(() => import('src/views/dataset/DatasetCreateView'))
-            },
-            {
-                exact: true,
-                path: '/app/datasets/:dataset_id',
-                component: lazy(() => import('src/views/dataset/DatasetMainView'))
-            },
-            {
-                exact: true,
-                path: '/app/dashboard',
-                component: lazy(() => import('src/views/reports/DashboardView'))
-            },
-            {
-                exact: true,
-                path: '/app/admin/dashboard',
-                component: lazy(() => import('src/views/reports/AdminDashboardView'))
-            },
-            {
-                exact: true,
-                path: '/app',
-                component: () => <Redirect to="/app/dashboard" />
-            },
-            {
-                component: () => <Redirect to="/404" />
-            }
-        ]
+        exact: true,
+        path: '/account',
+        component: lazy(() => import('src/views/account/AccountView')),
+        scope: 'app'
     },
     {
-        path: '/docs',
-        layout: DocsLayout,
-        routes: [
-            {
-                exact: true,
-                path: '/docs',
-                component: () => <Redirect to="/docs/getting-started" />
-            },
-            {
-                exact: true,
-                path: '/docs/getting-started',
-                component: lazy(() => import('src/views/docs/GettingStartedView'))
-            },
-            {
-                exact: true,
-                path: '/docs/swagger-api',
-                component: lazy(() => import('src/views/docs/SwaggerAPI'))
-            },
-            {
-                component: () => <Redirect to="/404" />
-            }
-        ]
+        guard: AuthGuard,
+        layout: DashboardLayout,
+        exact: true,
+        path: '/users',
+        component: lazy(() => import('src/views/user/UserListView')),
+        scope: 'app'
     },
     {
-        path: '*',
-        layout: MainLayout,
-        routes: [
-            {
-                exact: true,
-                path: '/',
-                component: HomeView
-            },
-            {
-                component: () => <Redirect to="/404" />
-            }
-        ]
+        guard: AuthGuard,
+        layout: DashboardLayout,
+        exact: true,
+        path: '/account',
+        component: lazy(() => import('src/views/account/AccountView')),
+        scope: 'app'
+    },
+    {
+        guard: AuthGuard,
+        layout: DashboardLayout,
+        exact: true,
+        path: '/users',
+        component: lazy(() => import('src/views/user/UserListView')),
+        scope: 'app'
+    },
+    {
+        guard: AuthGuard,
+        layout: DashboardLayout,
+        exact: true,
+        path: '/users/:user_id',
+        component: lazy(() => import('src/views/user/UserDetailsView')),
+        scope: 'app'
+    },
+    {
+        guard: AuthGuard,
+        layout: DashboardLayout,
+        exact: true,
+        path: '/datasets',
+        component: lazy(() => import('src/views/dataset/DatasetBrowseView')),
+        scope: 'app'
+    },
+    {
+        guard: AuthGuard,
+        layout: DashboardLayout,
+        exact: true,
+        path: '/datasets/create',
+        component: lazy(() => import('src/views/dataset/DatasetCreateView')),
+        scope: 'app'
+    },
+    {
+        guard: AuthGuard,
+        layout: DashboardLayout,
+        exact: true,
+        path: '/datasets/:dataset_id',
+        component: lazy(() => import('src/views/dataset/DatasetMainView')),
+        scope: 'app'
+    },
+    {
+        guard: AuthGuard,
+        layout: DashboardLayout,
+        exact: true,
+        path: '/admin/dashboard',
+        component: lazy(() => import('src/views/reports/AdminDashboardView')),
+        scope: 'app'
+    },
+
+    // 404
+    {
+        component: () => <Redirect to="/404" />
     }
 ];
 

@@ -18,11 +18,11 @@ import {CreateOutlined as EditIcon} from '@mui/icons-material';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import QuillEditor from 'src/components/QuillEditor';
+import useAuth from 'src/hooks/useAuth';
 import useDataset from 'src/hooks/useDataset';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import api from 'src/utils/api';
 import {EMPTY_DESCRIPTIONS} from 'src/constants';
-
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -38,22 +38,23 @@ interface EditProps {
     className?: string;
 }
 
-const EditAction: FC<EditProps> = ({ className }) => {
+const EditAction: FC<EditProps> = ({className}) => {
     const classes = useStyles();
 
     const isMountedRef = useIsMountedRef();
-    const { enqueueSnackbar } = useSnackbar();
+    const {enqueueSnackbar} = useSnackbar();
 
     const [editing, setEditing] = useState<boolean>(false);
 
-    const { dataset, saveDataset } = useDataset();
+    const {user} = useAuth();
+    const {dataset, saveDataset} = useDataset();
 
     if (!dataset) return null;
 
     if (!editing) {
         return (
             <Box display="flex" alignItems="center" justifyContent="space-between">
-                <div>
+                <Box pr={1}>
                     <Typography variant="h1" color="textPrimary" gutterBottom>
                         {capitalize(dataset.name)}
                     </Typography>
@@ -67,12 +68,14 @@ const EditAction: FC<EditProps> = ({ className }) => {
                                 : dataset.description
                         }}
                     />
-                </div>
-                <Tooltip title="Edit">
-                    <IconButton onClick={() => setEditing(true)}>
-                        <EditIcon />
-                    </IconButton>
-                </Tooltip>
+                </Box>
+                {dataset.user_id === user.id && (
+                    <Tooltip title="Edit">
+                        <IconButton onClick={() => setEditing(true)}>
+                            <EditIcon />
+                        </IconButton>
+                    </Tooltip>
+                )}
             </Box>
         );
     }
@@ -89,7 +92,7 @@ const EditAction: FC<EditProps> = ({ className }) => {
                     .required('Filename is required'),
                 description: Yup.string().max(5000)
             })}
-            onSubmit={async (values, { setStatus, setSubmitting }) => {
+            onSubmit={async (values, {setStatus, setSubmitting}) => {
                 try {
                     try {
                         await api.patch(`/datasets/${dataset.id}`, {
@@ -103,11 +106,11 @@ const EditAction: FC<EditProps> = ({ className }) => {
                         setEditing(false);
                         enqueueSnackbar('Edited dataset');
                     } catch (error) {
-                        enqueueSnackbar(error.message || 'Something went wrong', { variant: 'error' });
+                        enqueueSnackbar(error.message || 'Something went wrong', {variant: 'error'});
                     }
 
                     if (isMountedRef.current) {
-                        setStatus({ success: true });
+                        setStatus({success: true});
                         setSubmitting(false);
                     }
                 } catch (error) {
@@ -116,13 +119,13 @@ const EditAction: FC<EditProps> = ({ className }) => {
                     });
 
                     if (isMountedRef.current) {
-                        setStatus({ success: false });
+                        setStatus({success: false});
                         setSubmitting(false);
                     }
                 }
             }}
         >
-            {({ errors, handleBlur, handleChange, handleSubmit, touched, isSubmitting, values, setFieldValue }) => (
+            {({errors, handleBlur, handleChange, handleSubmit, touched, isSubmitting, values, setFieldValue}) => (
                 <form noValidate onSubmit={handleSubmit}>
                     <div className={clsx(classes.root, className)}>
                         <Typography variant="subtitle2" color="textSecondary">

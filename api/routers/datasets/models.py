@@ -36,7 +36,6 @@ class DatasetResponse(BaseModel):
 class DatasetPostBody(BaseModel):
     name: str
     description: str
-    is_public: bool = False
 
 
 class DatasetPatchBody(BaseModel):

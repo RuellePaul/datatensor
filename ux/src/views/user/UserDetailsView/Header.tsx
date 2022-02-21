@@ -28,7 +28,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
         <Grid container spacing={3} justifyContent="space-between" className={clsx(classes.root, className)} {...rest}>
             <Grid item>
                 <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
-                    <Link variant="body1" color="text.primary" to="/app/datasets" component={RouterLink}>
+                    <Link variant="body1" color="text.primary" to="/datasets" component={RouterLink}>
                         Datasets
                     </Link>
 
@@ -39,7 +39,7 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                                 <Link
                                     variant="body1"
                                     color="text.primary"
-                                    to={`/app/users/${value.user.id}/details`}
+                                    to={`/users/${value.user.id}`}
                                     component={RouterLink}
                                 >
                                     {value.user.name}

@@ -59,7 +59,8 @@ services:
       context: proxy
     network_mode: host
     volumes:
-      - '/root/letsencrypt:/etc/letsencrypt'
+      - '/var/www/letsencrypt:/var/www/letsencrypt'
+      - '/etc/letsencrypt:/etc/letsencrypt'
 
 
   rabbitmq:

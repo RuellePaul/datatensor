@@ -24,6 +24,7 @@ import useDataset from 'src/hooks/useDataset';
 import {Dataset} from 'src/types/dataset';
 import useDatasets from 'src/hooks/useDatasets';
 
+
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
     deleteAction: {
@@ -49,14 +50,14 @@ interface ChangeNameActionProps {
     className?: string;
 }
 
-const ChangeNameAction: FC<ChangeNameActionProps> = ({className}) => {
+const ChangeNameAction: FC<ChangeNameActionProps> = ({ className }) => {
     const classes = useStyles();
     const history = useHistory();
 
-    const {enqueueSnackbar} = useSnackbar();
+    const { enqueueSnackbar } = useSnackbar();
 
-    const {saveDatasets} = useDatasets();
-    const {dataset, categories} = useDataset();
+    const { saveDatasets } = useDatasets();
+    const { dataset, categories } = useDataset();
 
     const [openDeleteDataset, setOpenDeleteDataset] = useState(false);
     const handleOpenDeleteDataset = () => {
@@ -73,8 +74,8 @@ const ChangeNameAction: FC<ChangeNameActionProps> = ({className}) => {
             handleCloseDeleteDataset();
             await api.delete(`/datasets/${dataset.id}`);
             saveDatasets(datasets => datasets.filter((current: Dataset) => current.id !== dataset.id));
-            enqueueSnackbar(`Deleted dataset ${capitalize(dataset.name)}`, {variant: 'info'});
-            history.push('/app/datasets');
+            enqueueSnackbar(`Deleted dataset ${capitalize(dataset.name)}`, { variant: 'info' });
+            history.push('/datasets');
         } catch (error) {
             enqueueSnackbar(error.message || 'Something went wrong', {
                 variant: 'error'
@@ -107,33 +108,36 @@ const ChangeNameAction: FC<ChangeNameActionProps> = ({className}) => {
             <Dialog disableRestoreFocus fullWidth open={openDeleteDataset} onClose={handleCloseDeleteDataset}>
                 <DialogTitle>
                     Delete dataset
-
                     <IconButton className={classes.close} onClick={handleCloseDeleteDataset} size="large">
                         <CloseIcon />
                     </IconButton>
                 </DialogTitle>
                 <DialogContent>
                     <Typography color="textPrimary" gutterBottom>
-                        You're about to delete, <strong>definitely</strong> this dataset.
+                        Are you sure you want to delete <strong>definitely</strong> this dataset ?
                     </Typography>
-                    <Box mb={2}>
-                        <Alert severity="warning">
-                            This will also delete{' '}
-                            <Typography component="span" style={{fontWeight: 'bold'}}>
-                                {dataset.image_count + dataset.augmented_count} image
-                                {dataset.image_count > 1 ? 's' : ''}
-                            </Typography>
-                            ,{' '}
-                            <Typography component="span" style={{fontWeight: 'bold'}}>
-                                {categories.length} categories
-                            </Typography>
-                            , and{' '}
-                            <Typography component="span" style={{fontWeight: 'bold'}}>
-                                {categories.map(category => category.labels_count).reduce((acc, val) => acc + val, 0)}{' '}
-                                labels
-                            </Typography>
-                        </Alert>
-                    </Box>
+                    {dataset.image_count > 0 && categories.length > 0 && (
+                        <Box mb={2}>
+                            <Alert severity="warning">
+                                This will also delete{' '}
+                                <Typography component="span" style={{ fontWeight: 'bold' }}>
+                                    {dataset.image_count + dataset.augmented_count} image
+                                    {dataset.image_count > 1 ? 's' : ''}
+                                </Typography>
+                                ,{' '}
+                                <Typography component="span" style={{ fontWeight: 'bold' }}>
+                                    {categories.length} categories
+                                </Typography>
+                                , and{' '}
+                                <Typography component="span" style={{ fontWeight: 'bold' }}>
+                                    {categories
+                                        .map(category => category.labels_count)
+                                        .reduce((acc, val) => acc + val, 0)}{' '}
+                                    labels
+                                </Typography>
+                            </Alert>
+                        </Box>
+                    )}
                 </DialogContent>
                 <DialogActions>
                     <Box display="flex" justifyContent="flex-end">

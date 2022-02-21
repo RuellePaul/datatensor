@@ -33,11 +33,7 @@ class TaskAugmentorProperties(BaseModel):
     operations: List[Operation]
 
 
-class TaskExportProperties(BaseModel):
-    pass
-
-
-TaskProperties = Union[TaskGeneratorProperties, TaskAugmentorProperties, TaskExportProperties]
+TaskProperties = Union[TaskGeneratorProperties, TaskAugmentorProperties]
 
 
 class Task(MongoModel):
@@ -45,16 +41,12 @@ class Task(MongoModel):
     user_id: str
     dataset_id: Optional[str] = None
     type: TaskType
-    properties: TaskProperties
+    properties: Optional[TaskProperties] = None
     status: TaskStatus
     progress: float
     created_at: datetime
     ended_at: Optional[datetime] = None
     error: Optional[str] = None
-
-
-class TaskResponse(BaseModel):
-    task: Task
 
 
 class TaskPostBody(BaseModel):

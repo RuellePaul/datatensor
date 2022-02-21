@@ -10,7 +10,7 @@ from PIL import Image as PILImage
 
 import errors
 from config import Config
-from routers.images.core import find_images, remove_images
+from routers.images.core import find_images, remove_augmented_images
 from routers.images.models import Image
 from routers.labels.models import Label
 from routers.pipelines.models import Operation
@@ -27,10 +27,10 @@ def find_pipelines(dataset_id, offset=0, limit=0) -> List[Label]:
 
 
 def delete_pipeline(dataset_id, pipeline_id):
-    images = find_images(dataset_id, pipeline_id)
-    image_ids = [image.id for image in images]
+    images = find_images(dataset_id, pipeline_id=pipeline_id)
+    augmented_image_ids = [image.id for image in images]
     if images:
-        remove_images(dataset_id, image_ids)
+        remove_augmented_images(dataset_id, augmented_image_ids)
     db.pipelines.delete_one({'_id': pipeline_id})
 
 
@@ -115,12 +115,14 @@ class AugmentorPipeline(DataPipeline):
         return output_images, output_images_labels
 
 
-def perform_sample(image: Image, labels: List[Label], operations: List[Operation], cv2image=None):
+def perform_sample(image: Image, labels: List[Label], operations: List[Operation], cv2image=None, n=None):
     pipeline = AugmentorPipeline(image, labels)
     for operation in operations:
         getattr(pipeline, operation.type)(probability=operation.probability, **operation.properties)
     if cv2image is not None:
-        return pipeline.sample(1, cv2image=cv2image)
+        return pipeline.sample(6, cv2image=cv2image)
+    elif n:
+        return pipeline.sample(n)
     elif image.width > image.height:
         return pipeline.sample(4)
     else:

@@ -13,7 +13,7 @@ interface ShortcutProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     button: {
-        color: theme.palette.getContrastText(theme.palette.background.paper)
+        color: theme.palette.getContrastText(theme.palette.primary.main)
     },
     dialog: {
         padding: theme.spacing(1, 2, 2)
@@ -94,6 +94,8 @@ const KeyboardShortcuts: FC = () => {
                                 <Shortcut keyDesc="a">Change tool (draw)</Shortcut>
                                 <Divider />
                                 <Shortcut keyDesc="z">Change tool (move)</Shortcut>
+                                <Divider />
+                                <Shortcut keyDesc="SHIFT">Multi labels selection</Shortcut>
                                 <Divider />
                                 <Shortcut keyDesc="CTRL + Z">Restore previous state</Shortcut>
                                 <Divider />

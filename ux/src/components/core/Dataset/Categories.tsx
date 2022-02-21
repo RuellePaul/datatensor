@@ -15,6 +15,7 @@ import useCategory from 'src/hooks/useCategory';
 import api from 'src/utils/api';
 import {COLORS} from 'src/utils/colors';
 import {MAX_CATEGORIES_DISPLAYED} from 'src/config';
+import useAuth from 'src/hooks/useAuth';
 
 interface CategoriesProps {
     className?: string;
@@ -27,7 +28,12 @@ interface CategoryProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {},
+    root: {
+        padding: theme.spacing(2, 0),
+        [theme.breakpoints.down('sm')]: {
+            padding: theme.spacing(0)
+        }
+    },
     categories: {
         display: 'flex',
         flexWrap: 'wrap',
@@ -71,7 +77,7 @@ const DTCategory: FC<CategoryProps> = ({category, index, edit}) => {
                     <Typography variant="body2">
                         <strong>
                             {capitalize(category.name)}
-                            {category.labels_count && ` • ${category.labels_count}`}
+                            {category.labels_count > 0 && ` • ${category.labels_count}`}
                         </strong>
                     </Typography>
                 }
@@ -102,7 +108,8 @@ const DTCategory: FC<CategoryProps> = ({category, index, edit}) => {
 const DTCategories: FC<CategoriesProps> = ({className}) => {
     const classes = useStyles();
 
-    const {categories} = useDataset();
+    const {user} = useAuth();
+    const {dataset, categories} = useDataset();
 
     const [expand, setExpand] = useState<boolean>(false);
     const [edit, setEdit] = useState<boolean>(false);
@@ -113,27 +120,31 @@ const DTCategories: FC<CategoriesProps> = ({className}) => {
 
     return (
         <div className={clsx(classes.root, className)}>
-            <Box display="flex" justifyContent="space-between" mb={1}>
+            <Box display="flex" justifyContent="space-between" mt={1}>
                 <Typography variant="overline" color="textPrimary">
                     Labels per category
                 </Typography>
 
-                <Button onClick={toggleEdit} endIcon={<EditIcon />} size="small" disabled={edit}>
-                    Edit
-                </Button>
+                {dataset.user_id === user.id && categories.length > 0 && (
+                    <Button onClick={toggleEdit} endIcon={<EditIcon />} size="small" disabled={edit}>
+                        Edit
+                    </Button>
+                )}
             </Box>
 
             <div className={classes.categories}>
                 {expand ? (
                     <>
-                        {categories.map(category => (
-                            <DTCategory
-                                category={category}
-                                key={category.id}
-                                index={categories.indexOf(category)}
-                                edit={edit}
-                            />
-                        ))}
+                        {categories
+                            .sort((a, b) => (a.labels_count > b.labels_count ? -1 : 1))
+                            .map(category => (
+                                <DTCategory
+                                    category={category}
+                                    key={category.id}
+                                    index={categories.indexOf(category)}
+                                    edit={edit}
+                                />
+                            ))}
 
                         <AddCategoryAction />
                     </>

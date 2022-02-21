@@ -1,20 +1,20 @@
-import type {FC} from 'react';
-import React, {useEffect} from 'react';
-import type {DropResult} from 'react-beautiful-dnd';
+import React, {useEffect, FC} from 'react';
+import {DropResult} from 'react-beautiful-dnd';
 import {DragDropContext} from 'react-beautiful-dnd';
+import clsx from 'clsx';
 import makeStyles from '@mui/styles/makeStyles';
-import type {Theme} from 'src/theme';
+import {Theme} from 'src/theme';
 import {useDispatch} from 'src/store';
 import {moveOperation, setDefaultPipeline} from 'src/slices/pipeline';
 import OperationsPipeline from './OperationsPipeline';
 
-
 interface PipelineProps {
+    className?: string;
     readOnly?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    content: {
+    root: {
         width: '100%',
         flexGrow: 1,
         flexShrink: 1,
@@ -23,31 +23,27 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const Pipeline: FC<PipelineProps> = ({ readOnly = false }) => {
+const Pipeline: FC<PipelineProps> = ({className, readOnly = false}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
-    const handleDragEnd = async ({ source, destination, draggableId }: DropResult): Promise<void> => {
+    const handleDragEnd = async ({source, destination, draggableId}: DropResult): Promise<void> => {
         try {
             // Dropped outside the list
-            if (!destination)
-                return;
+            if (!destination) return;
 
             // Operation has not been moved
-            if (source.droppableId === destination.droppableId && source.index === destination.index)
-                return;
+            if (source.droppableId === destination.droppableId && source.index === destination.index) return;
 
             await dispatch(moveOperation(draggableId, destination.index));
         } catch (err) {
             console.error(err);
             try {
                 // Dropped outside the list
-                if (!destination)
-                    return;
+                if (!destination) return;
 
                 // Operation has not been moved
-                if (source.droppableId === destination.droppableId && source.index === destination.index)
-                    return;
+                if (source.droppableId === destination.droppableId && source.index === destination.index) return;
 
                 await dispatch(moveOperation(draggableId, destination.index));
             } catch (err) {
@@ -57,13 +53,12 @@ const Pipeline: FC<PipelineProps> = ({ readOnly = false }) => {
     };
 
     useEffect(() => {
-        if (!readOnly)
-            dispatch(setDefaultPipeline());
+        if (!readOnly) dispatch(setDefaultPipeline());
     }, [dispatch, readOnly]);
 
     return (
         <DragDropContext onDragEnd={handleDragEnd}>
-            <div className={classes.content}>
+            <div className={clsx(classes.root, className)}>
                 <OperationsPipeline readOnly={readOnly} />
             </div>
         </DragDropContext>

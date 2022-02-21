@@ -1,4 +1,6 @@
-import React, {FC} from 'react';
+import React, {FC, useState} from 'react';
+import NProgress from 'nprogress';
+
 import {Button, capitalize, SvgIcon, Tooltip} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import api from 'src/utils/api';
@@ -70,16 +72,22 @@ const OAuthLoginButton: FC<OAuthLoginButtonProps> = ({scope}) => {
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
 
+    const [disabled, setDisabled] = useState<boolean>(false);
+
     return (
         <Tooltip title={`Login using ${capitalize(scope)}`}>
             <Button
                 className={classes.root}
                 onClick={async () => {
                     try {
+                        NProgress.start();
+                        setDisabled(true);
                         const response = await api.get<{authorization_url: string}>(`/oauth/authorization/${scope}`);
                         const {authorization_url} = response.data;
                         window.location.href = authorization_url;
                     } catch (error) {
+                        NProgress.done();
+                        setDisabled(false);
                         enqueueSnackbar(error.message || 'Something went wrong', {
                             variant: 'error'
                         });
@@ -89,6 +97,7 @@ const OAuthLoginButton: FC<OAuthLoginButtonProps> = ({scope}) => {
                 startIcon={OAUTH_ICONS[scope]}
                 size="large"
                 variant="outlined"
+                disabled={disabled}
             >
                 {scope}
             </Button>

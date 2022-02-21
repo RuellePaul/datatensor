@@ -9,8 +9,9 @@ import numpy
 import errors
 from config import Config
 from routers.images.models import Image, ImageExtended
-from routers.labels.core import find_labels, regroup_labels_by_category
+from routers.labels.core import find_labels_from_image_ids, regroup_labels_by_category
 from routers.labels.models import Label
+from utils import update_task, increment_task_progress
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
@@ -103,20 +104,37 @@ def find_all_images(dataset_id, offset=0, limit=0) -> List[Image]:
                   .limit(limit))
     if images is None:
         raise errors.NotFound(errors.IMAGE_NOT_FOUND)
-    return [Image.from_mongo(image) for image in images]
+    images = [ImageExtended.from_mongo(image) for image in images]
+    return images
 
 
-def find_images(dataset_id, pipeline_id=None, include_labels=False, offset=0, limit=0) -> List[ImageExtended]:
+def find_images(dataset_id,
+                original_image_id=None,
+                pipeline_id=None,
+                include_labels=False,
+                offset=0,
+                limit=0) -> List[ImageExtended]:
+    if original_image_id and pipeline_id:
+        query = {'dataset_id': dataset_id, 'original_image_id': original_image_id, 'pipeline_id': pipeline_id}
+    elif pipeline_id:
+        query = {'dataset_id': dataset_id, 'pipeline_id': pipeline_id}
+    elif original_image_id:
+        query = {'dataset_id': dataset_id, 'original_image_id': original_image_id}
+    else:
+        query = {'dataset_id': dataset_id, 'original_image_id': None, 'pipeline_id': None}
+
     images = list(db.images
-                  .find({'dataset_id': dataset_id, 'pipeline_id': pipeline_id})
+                  .find(query)
                   .skip(offset)
                   .limit(limit))
     if images is None:
         raise errors.NotFound(errors.IMAGE_NOT_FOUND)
     images = [ImageExtended.from_mongo(image) for image in images]
     if include_labels:
-        for image in images:
-            image.labels = find_labels(image.id)
+        labels = find_labels_from_image_ids([image.id for image in images])
+        if labels is not None:
+            for image in images:
+                image.labels = [label for label in labels if label.image_id == image.id]
     return images
 
 
@@ -143,55 +161,62 @@ def insert_images(dataset_id, request_files) -> List[Image]:
 
 def remove_all_images(dataset_id):
     images = find_all_images(dataset_id)
-    image_ids = [image.id for image in images]
-    remove_images(dataset_id, image_ids)
+    image_ids = [image.id for image in images if image.original_image_id is None]
+    augmented_image_ids = [image.id for image in images if image.original_image_id]
+    remove_original_images(dataset_id, image_ids)
+    remove_augmented_images(dataset_id, augmented_image_ids)
     db.pipelines.delete_many({'dataset_id': dataset_id})
 
 
-def remove_images(dataset_id, image_ids):
+def remove_original_images(dataset_id, image_ids):
     # Find labels of images to delete
     labels = list(db.labels.find({'image_id': {'$in': image_ids}}))
     labels = [Label.from_mongo(label) for label in labels]
 
     # Delete images and associated labels
     delete_images_from_s3(image_ids)
-    db.images.delete_many({'_id': {'$in': image_ids}})
+    db.images.delete_many({'dataset_id': dataset_id, '_id': {'$in': image_ids}})
     db.labels.delete_many({'image_id': {'$in': image_ids}})
 
     # Decrease labels_count on associated categories
     for category_id, labels_count in regroup_labels_by_category(labels).items():
         db.categories.find_one_and_update(
-            {'_id': category_id},
+            {'dataset_id': dataset_id, '_id': category_id},
             {'$inc': {'labels_count': -labels_count}}
         )
 
     # Decrease image_count on associated dataset
     db.datasets.update_one({'_id': dataset_id},
-                           {'$inc': {'augmented_count': -len(image_ids)}},
+                           {'$inc': {'image_count': -len(image_ids)}},
                            upsert=False)
 
 
-def remove_image(dataset_id, image_id):
-    image_to_delete = find_image(dataset_id, image_id)
-    if not image_to_delete:
-        raise errors.Forbidden(errors.IMAGE_NOT_FOUND)
+def remove_augmented_images(dataset_id, augmented_image_ids):
+    # Find labels of augmented images to delete
+    labels = list(db.labels.find({'image_id': {'$in': augmented_image_ids}}))
+    labels = [Label.from_mongo(label) for label in labels]
 
-    # Find labels of image to delete
-    labels = find_labels(image_id)
-
-    # Delete image and associated labels
-    delete_image_from_s3(image_id)
-    db.images.delete_one({'_id': image_id, 'dataset_id': dataset_id})
-    db.labels.delete_many({'image_id': image_id})
+    # Delete augmented images and associated labels
+    delete_images_from_s3(augmented_image_ids)
+    db.images.delete_many({'dataset_id': dataset_id, '_id': {'$in': augmented_image_ids}})
+    db.labels.delete_many({'image_id': {'$in': augmented_image_ids}})
 
     # Decrease labels_count on associated categories
     for category_id, labels_count in regroup_labels_by_category(labels).items():
         db.categories.find_one_and_update(
-            {'_id': category_id},
+            {'dataset_id': dataset_id, '_id': category_id},
             {'$inc': {'labels_count': -labels_count}}
         )
 
-    # Decrease image_count on associated dataset
+    # Decrease augmented_count on associated dataset
     db.datasets.update_one({'_id': dataset_id},
-                           {'$inc': {'image_count': -1}},
+                           {'$inc': {'augmented_count': -len(augmented_image_ids)}},
                            upsert=False)
+
+
+def remove_image(dataset_id, image_id) -> int:
+    remove_original_images(dataset_id, [image_id])
+    augmented_image_ids_to_delete = [image.id for image in find_images(dataset_id, original_image_id=image_id)]
+    if augmented_image_ids_to_delete:
+        remove_augmented_images(dataset_id, augmented_image_ids_to_delete)
+    return 1 + len(augmented_image_ids_to_delete)

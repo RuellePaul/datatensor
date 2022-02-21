@@ -11,6 +11,7 @@ import {
     CardHeader,
     Chip,
     Link,
+    Skeleton,
     Stack,
     Typography
 } from '@mui/material';
@@ -37,12 +38,14 @@ interface DatasetProps {
     image?: Image;
     className?: string;
     onClick?: () => void;
+    disabled?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         position: 'relative',
-        maxWidth: 400
+        maxWidth: 400,
+        width: '100%'
     },
     media: {
         height: 200
@@ -84,7 +87,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     image: {
         zIndex: 0,
-        maxHeight: 300
+        maxHeight: 300,
+        minWidth: '100%',
+        overflow: 'hidden'
     }
 }));
 
@@ -115,7 +120,7 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
     );
 };
 
-const DTDataset: FC<DatasetProps> = ({className, image = null, onClick, ...rest}) => {
+const DTDataset: FC<DatasetProps> = ({className, image = null, onClick, disabled = false, ...rest}) => {
     const classes = useStyles();
     const history = useHistory();
 
@@ -160,7 +165,7 @@ const DTDataset: FC<DatasetProps> = ({className, image = null, onClick, ...rest}
                                         color="inherit"
                                         component={RouterLink}
                                         onClick={event => event.stopPropagation()}
-                                        to={`/app/users/${value.user.id}/details`}
+                                        to={`/users/${value.user.id}`}
                                         variant="subtitle2"
                                     >
                                         {value.user.name}
@@ -171,7 +176,7 @@ const DTDataset: FC<DatasetProps> = ({className, image = null, onClick, ...rest}
                                         label={dataset.is_public ? 'Public' : 'Private'}
                                         icon={dataset.is_public ? <PublicIcon /> : <PrivateIcon />}
                                         size="small"
-                                        variant="outlined"
+                                        variant={dataset.is_public ? 'outlined' : 'filled'}
                                     />
                                 </Box>
                             }
@@ -181,9 +186,10 @@ const DTDataset: FC<DatasetProps> = ({className, image = null, onClick, ...rest}
             </UserProvider>
 
             <CardActionArea
-                onClick={onClick instanceof Function ? onClick : () => history.push(`/app/datasets/${dataset.id}#`)}
+                onClick={onClick instanceof Function ? onClick : () => history.push(`/datasets/${dataset.id}#`)}
+                disabled={disabled}
             >
-                {imagePreview && (
+                {imagePreview ? (
                     <Box position="relative">
                         <ImageProvider image={imagePreview} labels={imagePreview.labels}>
                             <DTImage className={classes.image} skeleton />
@@ -198,6 +204,8 @@ const DTDataset: FC<DatasetProps> = ({className, image = null, onClick, ...rest}
                             </div>
                         </ImageProvider>
                     </Box>
+                ) : (
+                    <Skeleton width="100%" height={270} sx={{transform: 'none'}} />
                 )}
                 <CardContent>
                     <Box display="flex" alignItems="flex-start" justifyContent="space-between">
@@ -212,8 +220,8 @@ const DTDataset: FC<DatasetProps> = ({className, image = null, onClick, ...rest}
                                 dangerouslySetInnerHTML={{
                                     __html: EMPTY_DESCRIPTIONS.includes(dataset.description)
                                         ? '<i>No description provided</i>'
-                                        : dataset.description.length > 100
-                                        ? `${dataset.description.slice(0, 100)}...`
+                                        : dataset.description.length > 70
+                                        ? `${dataset.description.slice(0, 70)}...`
                                         : dataset.description
                                 }}
                             />
@@ -224,15 +232,33 @@ const DTDataset: FC<DatasetProps> = ({className, image = null, onClick, ...rest}
                                     <ImagesIcon className={classes.icon} />
 
                                     <Typography fontWeight={600} color="textPrimary">
-                                        {dataset.image_count + dataset.augmented_count}{' '}
+                                        {dataset.image_count}{' '}
                                         <Typography
-                                            variant="subtitle1"
+                                            variant="h5"
                                             component="span"
                                             color="textSecondary"
                                             fontWeight={400}
                                         >
-                                            images
+                                            {dataset.image_count > 1 ? 'images' : 'image'}
                                         </Typography>
+                                        {dataset.augmented_count > 0 && (
+                                            <Typography
+                                                variant="caption"
+                                                component="p"
+                                                color="textSecondary"
+                                                fontWeight={400}
+                                            >
+                                                <Typography
+                                                    variant="caption"
+                                                    component="span"
+                                                    color="textPrimary"
+                                                    fontWeight={600}
+                                                >
+                                                    +{dataset.augmented_count}
+                                                </Typography>{' '}
+                                                augmented
+                                            </Typography>
+                                        )}
                                     </Typography>
                                 </Box>
                                 <Box className={classes.wrapper}>

@@ -10,7 +10,6 @@ import {
     Divider,
     Grid,
     IconButton,
-    LinearProgress,
     Link,
     Typography
 } from '@mui/material';
@@ -26,6 +25,7 @@ import FancyLabel from 'src/components/FancyLabel';
 import UserLabel from 'src/components/UserLabel';
 import getDateDiff from 'src/utils/getDateDiff';
 import {MAX_CATEGORIES_DISPLAYED} from 'src/config';
+import TaskProgress from 'src/components/core/TaskProgress';
 
 interface TaskDetailsProps {}
 
@@ -179,21 +179,7 @@ const TaskDetails: FC<TaskDetailsProps> = () => {
                             </IconButton>
                         </DialogTitle>
                         <DialogContent className="scroll">
-                            {(task.status === 'pending' || task.status === 'active') && (
-                                <Box display="flex" alignItems="center">
-                                    <Box width="100%" mr={1}>
-                                        <LinearProgress
-                                            variant={
-                                                (task.progress <= 0 || task.progress) >= 1 ? 'query' : 'determinate'
-                                            }
-                                            value={100 * task.progress}
-                                        />
-                                    </Box>
-                                    <Typography variant="body2" color="textSecondary">
-                                        {`${(100 * task.progress).toFixed(2)}%`}
-                                    </Typography>
-                                </Box>
-                            )}
+                            <TaskProgress task={task} />
                             <Grid container spacing={2}>
                                 <Grid item xs={12}>
                                     <Typography variant="overline" color="inherit" gutterBottom>

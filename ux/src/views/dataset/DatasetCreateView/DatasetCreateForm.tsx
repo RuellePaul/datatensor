@@ -4,27 +4,12 @@ import clsx from 'clsx';
 import * as Yup from 'yup';
 import {Formik} from 'formik';
 import {useSnackbar} from 'notistack';
-import {
-    Box,
-    Button,
-    Card,
-    CardContent,
-    CardHeader,
-    Checkbox,
-    Divider,
-    FormControlLabel,
-    FormHelperText,
-    Grid,
-    Paper,
-    TextField,
-    Typography
-} from '@mui/material';
+import {Box, Button, Card, CardContent, FormHelperText, Grid, Paper, TextField, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 import QuillEditor from 'src/components/QuillEditor';
 import api from 'src/utils/api';
 import {Dataset} from 'src/types/dataset';
-
 
 interface ProductCreateFormProps {
     className?: string;
@@ -51,27 +36,23 @@ const DatasetCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
             initialValues={{
                 description: '',
                 name: '',
-                submit: null,
-                is_public: true
+                submit: null
             }}
             validationSchema={Yup.object().shape({
                 description: Yup.string().max(5000),
                 name: Yup.string()
                     .max(255)
-                    .required(),
-                is_public: Yup.boolean().required()
+                    .required("Dataset name is required.")
             })}
             onSubmit={async (values, {setErrors, setStatus, setSubmitting}) => {
                 try {
                     const {submit, ...payload} = values;
-                    const response = await api.post<Dataset>('/datasets/', payload);
-                    const dataset = response.data;
-                    console.info(dataset);
-
+                    const response = await api.post<{dataset: Dataset}>('/datasets/', payload);
+                    const dataset = response.data.dataset;
                     setStatus({success: true});
                     setSubmitting(false);
-                    enqueueSnackbar('Dataset Created', {variant: 'info'});
-                    history.push('/app/datasets');
+                    enqueueSnackbar(`Dataset ${dataset.name} created`);
+                    history.push(`/datasets/${dataset.id}`);
                 } catch (err) {
                     console.error(err);
                     setStatus({success: false});
@@ -80,7 +61,7 @@ const DatasetCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
                 }
             }}
         >
-            {({errors, handleBlur, handleChange, handleSubmit, isSubmitting, setFieldValue, touched, values}) => (
+            {({errors, handleChange, handleSubmit, isSubmitting, setFieldValue, touched, values}) => (
                 <form onSubmit={handleSubmit} className={clsx(classes.root, className)} {...rest}>
                     <Grid container spacing={3}>
                         <Grid item xs={12} lg={8}>
@@ -92,7 +73,6 @@ const DatasetCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
                                         helperText={touched.name && errors.name}
                                         label="Dataset Name"
                                         name="name"
-                                        onBlur={handleBlur}
                                         onChange={handleChange}
                                         value={values.name}
                                         variant="outlined"
@@ -116,37 +96,6 @@ const DatasetCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
                                     )}
                                 </CardContent>
                             </Card>
-
-                            <Box mt={3}>
-                                <Card>
-                                    <CardHeader title="Models" />
-                                    <Divider />
-                                    <CardContent></CardContent>
-                                </Card>
-                            </Box>
-
-                            <Box mt={3}>
-                                <Card>
-                                    <CardHeader title="Settings" />
-                                    <Divider />
-                                    <CardContent>
-                                        <Box mt={2}>
-                                            <FormControlLabel
-                                                control={
-                                                    <Checkbox
-                                                        checked={values.is_public}
-                                                        onChange={handleChange}
-                                                        value={values.is_public}
-                                                        name="is_public"
-                                                    />
-                                                }
-                                                label="Public dataset"
-                                            />
-                                            <FormHelperText>A public dataset is visible by anyone.</FormHelperText>
-                                        </Box>
-                                    </CardContent>
-                                </Card>
-                            </Box>
                         </Grid>
                     </Grid>
 
