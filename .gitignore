@@ -18,6 +18,7 @@ builds/development/init_env.sh
 builds/development/development.env
 builds/production/init_env.sh
 builds/production/login.sh
+builds/elk/**
 
 
 ## React dependencies
