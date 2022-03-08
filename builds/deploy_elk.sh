@@ -7,12 +7,12 @@ service=0
 while [ "$environment" != "recette" ] && [ "$environment" != "preproduction" ] && [ "$environment" != "production" ]; do
   read -p "Which ENVIRONMENT are you deploying in ? " environment
 done
-while [ "$service" != "all" ] && [ "$service" != "metricbeat" ] && [ "$service" != "filebeat" ] && [ "$service" != "logstash" ]; do
+while [ "$service" != "all" ] && [ "$service" != "filebeat" ] && [ "$service" != "logstash" ]; do
   read -p "Which ELK SERVICE do you want to deploy ? " service
 done
 if [ "$service" = "all" ]
 then
-  service=metricbeat\ filebeat\ logstash
+  service=filebeat\ logstash
 fi
 
 printf "\n⚙  Deploying ELK in $environment environment...\n\n"
