@@ -2,15 +2,6 @@ filebeat.inputs:
 - type: container
   paths:
     - '/var/lib/docker/containers/*/*.log'
-- type: container
-  paths:
-    - '/var/lib/docker/containers/*/*.log'
-  multiline:
-    pattern : '^Traceback'
-    negate: true
-    match: after
-    flush_pattern: 'Error: '
-  tags: ['multiline']
 
 processors:
 - add_docker_metadata: ~

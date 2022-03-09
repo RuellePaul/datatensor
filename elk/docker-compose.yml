@@ -1,89 +1,34 @@
-version: '2.2'
+version: '3.7'
 
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.12.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.0
     environment:
-      - node.name=elasticsearch
-      - discovery.seed_hosts=elasticsearch
-      - cluster.initial_master_nodes=elasticsearch
-      - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
-      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
-      - xpack.license.self_generated.type=trial
-      - xpack.security.enabled=true
-      - xpack.security.http.ssl.enabled=true
-      - xpack.security.http.ssl.key=$CERTS_DIR/elasticsearch/elasticsearch.key
-      - xpack.security.http.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
-      - xpack.security.http.ssl.certificate=$CERTS_DIR/elasticsearch/elasticsearch.crt
-      - xpack.security.transport.ssl.enabled=true
-      - xpack.security.transport.ssl.verification_mode=certificate
-      - xpack.security.transport.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
-      - xpack.security.transport.ssl.certificate=$CERTS_DIR/elasticsearch/elasticsearch.crt
-      - xpack.security.transport.ssl.key=$CERTS_DIR/elasticsearch/elasticsearch.key
-    volumes: [ 'data01:/usr/share/elasticsearch/data', 'certs:$CERTS_DIR' ]
-    ports:
-      - 9200:9200
-    healthcheck:
-      test: curl --cacert $CERTS_DIR/ca/ca.crt -s https://localhost:9200 >/dev/null; if [[ $$? == 52 ]]; then echo 0; else echo 1; fi
-      interval: 30s
-      timeout: 10s
-      retries: 5
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-      nofile:
-        soft: 200000
-        hard: 200000
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    volumes:
+      - '/elk-data:/usr/share/elasticsearch/data:rw'
     networks:
-      - elastic
-
+      - logging-network
   logstash:
-    image: docker.elastic.co/logstash/logstash:7.12.0
-    ports:
-      - 5044:5044
-    environment:
-      LOGSTASH_PASSWORD: $LOGSTASH_PASSWORD
-      SERVER_SSL_CERTIFICATE: $CERTS_DIR/ca/ca.crt
+    image: docker.elastic.co/logstash/logstash:7.6.0
     volumes:
-      - certs:$CERTS_DIR
-      - ./logstash/pipeline:/usr/share/logstash/pipeline
+      - './logstash/pipeline:/usr/share/logstash/pipeline'
+    ports:
+      - '5044:5044'
+    depends_on:
+      - elasticsearch
     networks:
-      - elastic
-
+      - logging-network
   kibana:
-    image: docker.elastic.co/kibana/kibana:7.12.0
+    image: docker.elastic.co/kibana/kibana:7.6.0
     ports:
-      - 5601:5601
-    environment:
-      SERVERNAME: kibana
-      ELASTICSEARCH_URL: https://elasticsearch:9200
-      ELASTICSEARCH_HOSTS: https://elasticsearch:9200
-      ELASTICSEARCH_USERNAME: kibana_system
-      ELASTICSEARCH_PASSWORD: $KIBANA_SYSTEM_PASSWORD
-      ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES: $CERTS_DIR/ca/ca.crt
-      SERVER_SSL_ENABLED: 'true'
-      SERVER_SSL_KEY: $CERTS_DIR/kibana/kibana.key
-      SERVER_SSL_CERTIFICATE: $CERTS_DIR/kibana/kibana.crt
-    volumes:
-      - certs:$CERTS_DIR
+      - '5601:5601'
+    depends_on:
+      - logstash
     networks:
-      - elastic
-
-
-  proxy:
-    build:
-      context: proxy
-    volumes:
-      - '/root/letsencrypt:/etc/letsencrypt'
-    ports:
-      - 443:443
-    networks:
-      - elastic
-
-
-volumes: {'data01', 'certs'}
+      - logging-network
 
 networks:
-  elastic:
+  logging-network:
     driver: bridge
