@@ -2,12 +2,14 @@ version: '3.7'
 
 services:
   elasticsearch:
+    user: $USER
     image: docker.elastic.co/elasticsearch/elasticsearch:7.6.0
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
     volumes:
       - '/elk-data:/usr/share/elasticsearch/data:rw'
+      - '/srv/graylog/es_data:/usr/share/elasticsearch/data'
     networks:
       - logging-network
   logstash:
