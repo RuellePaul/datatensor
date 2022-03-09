@@ -9,7 +9,6 @@ services:
       - xpack.security.enabled=false
     volumes:
       - '/elk-data:/usr/share/elasticsearch/data:rw'
-      - '/srv/graylog/es_data:/usr/share/elasticsearch/data'
     networks:
       - logging-network
   logstash:
