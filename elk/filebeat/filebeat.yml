@@ -8,5 +8,5 @@ processors:
 
 output:
   logstash:
-    hosts: ['35.181.88.143:5044']
+    hosts: ['127.0.0.1:5044']
     enabled: true
