@@ -98,6 +98,7 @@ services:
     environment:
       - 'LOGSTASH_PASSWORD=password'
     volumes:
+      - certs:/usr/share/elasticsearch/config/certs
       - ./logstash/pipeline:/usr/share/logstash/pipeline
     network_mode: host
 
