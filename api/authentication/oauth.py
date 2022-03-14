@@ -19,9 +19,10 @@ def oauth_authorization(scope: str):
     """
 
     authorization_url = core.authorization_url_from_scope(scope)
-    logger.info(f'Fetch OAuth authorization url for `{scope}`')
-
     response = {'authorization_url': authorization_url}
+
+    logger.info(f'OAuth | Fetch OAuth authorization url for `{scope}`')
+
     return response
 
 
@@ -55,6 +56,7 @@ def oauth_callback(payload: OAuthCallbackBody):
                         httponly=False,
                         secure=True,
                         samesite="lax" if Config.ENVIRONMENT == 'production' else "none")
-    logger.info(f'Logged in as `{user.name}` from `{scope}`')
+
+    logger.info(f'OAuth | Logged in user `{user.id}` from `{scope}`')
 
     return response

@@ -7,6 +7,7 @@ import cv2
 from fastapi import APIRouter
 
 from config import Config
+from logger import logger
 from routers.images.models import Image
 from routers.labels.models import Label
 from routers.pipelines.core import perform_sample
@@ -33,6 +34,7 @@ def _find_public_labels(image_id) -> List[Label]:
 
 @public.get('/', response_model=PublicDatasetResponse)
 def get_public_data():
+    logger.info(f'Public | Fetch public data')
     return public_data
 
 
@@ -57,6 +59,9 @@ def get_public_sample(payload: PublicSampleBody):
     encoded_images = [cv2.imencode('.jpg', augmented_image)[1].tostring()
                       for augmented_image in augmented_images]
     base64_encoded_images = [base64.b64encode(image) for image in encoded_images]
+
+    logger.info(f'Public | Fetch public sample on image `{image.name}`')
+
     return {
         'images': base64_encoded_images,
         'images_labels': parse(augmented_labels)

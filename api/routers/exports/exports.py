@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends
 import errors
 from config import Config
 from dependencies import logged_user
+from logger import logger
 from routers.datasets.core import find_dataset
 from routers.exports.core import process_export
 from routers.exports.models import *
@@ -25,4 +26,5 @@ def get_export(dataset_id, user: User = Depends(logged_user)):
         raise errors.Forbidden(errors.NOT_YOUR_DATASET)
 
     response = process_export(dataset)
+    logger.info(f'Exports | Process export of dataset `{dataset.id}`')
     return parse(response)

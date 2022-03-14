@@ -43,7 +43,7 @@ def do_login(payload: AuthLoginBody):
                         secure=True,
                         samesite="lax" if Config.ENVIRONMENT == 'production' else "none")
 
-    logger.info(f'Logged in as `{payload.email}`')
+    logger.info(f'Auth | Logged in as `{payload.email}`')
 
     return response
 
@@ -87,7 +87,7 @@ def do_register(payload: AuthRegisterBody):
                         secure=True,
                         samesite="lax" if Config.ENVIRONMENT == 'production' else "none")
 
-    logger.info(f'Registered user `{email}`')
+    logger.info(f'Auth | Registered user `{email}`')
 
     return response
 
@@ -106,6 +106,8 @@ def send_password_recovery_link(payload: AuthSendPasswordRecoveryBody):
     core.store_recovery_code(email, recovery_code)
     core.send_email_with_recovery_link(email, recovery_code)
 
+    logger.info(f'Auth | Send password recovery link to `{email}`')
+
 
 @auth.post('/reset-password')
 def do_reset_password(payload: AuthResetPasswordBody):
@@ -118,12 +120,17 @@ def do_reset_password(payload: AuthResetPasswordBody):
     user = find_user_by_recovery_code(recovery_code)
     reset_user_password(user, new_password)
 
+    logger.info(f'Auth | Send password recovery to user `{user.id}`')
+
 
 @auth.get('/me', response_model=User)
 def me(user: User = Depends(logged_user)):
     """
     Return user from access token
     """
+
+    logger.info(f'Auth | Fetch whoami for user `{user.id}`')
+
     return parse(user)
 
 
@@ -153,7 +160,7 @@ def do_email_confirmation(payload: AuthEmailConfirmBody):
                         secure=True,
                         samesite="lax" if Config.ENVIRONMENT == 'production' else "none")
 
-    logger.info(f"Verified email `{user.email}`")
+    logger.info(f"Auth | Verified email `{user.email}`")
 
     return response
 
@@ -164,4 +171,4 @@ def do_unregister(user: User = Depends(logged_user)):
     Unregister logged user
     """
     core.unregister_user(user.id)
-    logger.info(f'Unregister user `{user.email}` (scope: {user.scope})')
+    logger.info(f'Auth | Unregister user `{user.id}`')

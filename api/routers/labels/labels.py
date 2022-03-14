@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends
 from typing import Dict
 
 from dependencies import dataset_belongs_to_user
+from logger import logger
 from routers.labels.core import find_labels, find_label, replace_labels
 from routers.labels.models import *
 from utils import parse
@@ -15,6 +16,7 @@ def get_labels(image_id, offset: int = 0, limit: int = 0):
     Fetch paginated labels list of given image.
     """
     response = {'labels': find_labels(image_id, offset, limit)}
+    logger.info(f'Labels | Fetch labels of image `{image_id}`')
     return parse(response)
 
 
@@ -24,6 +26,7 @@ def get_label(image_id, label_id):
     Fetch given label of given image.
     """
     response = {'label': find_label(image_id, label_id)}
+    logger.info(f'Labels | Fetch label `{label_id}` of image `{image_id}`')
     return parse(response)
 
 
@@ -33,4 +36,5 @@ def post_labels(image_id, payload: LabelPostBody, dataset=Depends(dataset_belong
     Replace labels to a given image.
     """
     response = replace_labels(image_id, payload.labels)
+    logger.info(f'Labels | Update labels of image `{image_id}`')
     return parse(response)
