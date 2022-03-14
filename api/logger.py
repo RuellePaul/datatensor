@@ -1,4 +1,14 @@
 import logging
+from datetime import datetime
+
+from pytz import timezone
+
+
+def timetz(*args):
+    return datetime.now(tz).timetuple()
+
+
+tz = timezone('Europe/Paris')
 
 
 def create_logger():
