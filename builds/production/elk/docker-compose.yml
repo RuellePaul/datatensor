@@ -96,7 +96,7 @@ services:
   logstash:
     image: docker.elastic.co/logstash/logstash:${STACK_VERSION}
     environment:
-      - 'LOGSTASH_PASSWORD=password'
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
     volumes:
       - ./logstash/pipeline:/usr/share/logstash/pipeline
       - ./ca.crt:/usr/share/logstash/config/certs/ca/ca.crt
