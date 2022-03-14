@@ -99,6 +99,7 @@ services:
       - 'LOGSTASH_PASSWORD=password'
     volumes:
       - ./logstash/pipeline:/usr/share/logstash/pipeline
+      - config:/usr/share/logstash/config
     network_mode: host
 
   kibana:
