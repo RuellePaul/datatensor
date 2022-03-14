@@ -93,15 +93,6 @@ services:
       timeout: 10s
       retries: 120
 
-  logstash:
-    image: docker.elastic.co/logstash/logstash:${STACK_VERSION}
-    environment:
-      - 'LOGSTASH_PASSWORD=password'
-    volumes:
-      - ./logstash/pipeline:/usr/share/logstash/pipeline
-      - ./ca.crt:/usr/share/logstash/config/certs/ca/ca.crt
-    network_mode: host
-
   kibana:
     depends_on:
       es01:
