@@ -52,3 +52,8 @@ class Task(MongoModel):
 class TaskPostBody(BaseModel):
     type: TaskType
     properties: TaskProperties
+
+
+class TaskResponse(BaseModel):
+    task: Task
+
