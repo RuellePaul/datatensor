@@ -180,3 +180,29 @@ source deploy.sh
 >>> no
 ```
 
+### Deploy ELK
+
+Hydrate `~/datatensor/builds/production/elk/.env` with production values.
+
+Deploy filebeat :
+
+```
+cd ~/datatensor/builds
+docker-compose up -d filebeat
+```
+
+Deploy elasticsearch and kibana :
+
+```
+cd ~/datatensor/builds/production/elk
+docker-compose up -d elasticsearch kibana
+```
+
+In `certs` docker volume, copy/paste `ca.crt` certificate in path `~/datatensor/builds/production/elk`, then deploy logstash :
+
+```
+cd ~/datatensor/builds/production/elk
+docker-compose up -d logstash
+```
+
+Kibana is visible at URL `https://kibana.datatensor.io`
