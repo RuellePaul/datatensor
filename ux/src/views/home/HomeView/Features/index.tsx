@@ -57,11 +57,6 @@ const useStyles = makeStyles((theme: Theme) => ({
             }
         }
     },
-    container: {
-        [theme.breakpoints.down('md')]: {
-            flexDirection: 'column-reverse'
-        }
-    },
     sticky: {
         zIndex: 1050,
         position: 'sticky',
@@ -246,7 +241,7 @@ const Features: FC<FeatureProps> = ({className, ...rest}) => {
     return (
         <div className={clsx(classes.root, className)} {...rest}>
             <Container component="section" maxWidth="lg">
-                <Grid className={classes.container} container spacing={isMobile ? 0 : 6}>
+                <Grid container spacing={isMobile ? 0 : 6}>
                     <Grid className={clsx(!isMobile && classes.sticky)} item md={5} xs={12}>
                         <Typography variant="overline" color="primary" fontSize={16}>
                             Features
