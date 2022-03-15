@@ -31,7 +31,7 @@ PREFIX = '/v2'
 
 app = FastAPI(
     title='Datatensor API',
-    version='0.7.1',
+    version='1.0.0',
     docs_url=f'{PREFIX}/docs'
 )
 
@@ -53,7 +53,7 @@ app.include_router(auth, prefix=f'{PREFIX}/auth', tags=['auth'])
 app.include_router(oauth, prefix=f'{PREFIX}/oauth', tags=['oauth'])
 
 # Public dataset
-app.include_router(public, prefix=f'{PREFIX}/public',  tags=['public'])
+app.include_router(public, prefix=f'{PREFIX}/public', tags=['public'])
 
 # Users | 🔒 Admin partially
 app.include_router(users, prefix=f'{PREFIX}/users',
@@ -97,15 +97,23 @@ datasets.include_router(exports, prefix='/{dataset_id}/exports', tags=['exports'
 app.include_router(tasks, prefix=f'{PREFIX}/tasks', tags=['tasks'], dependencies=[Depends(logged_user)])
 
 
+@app.get('/traceback')
+def traceback_generator():
+    """
+    Used for log parsing in ELK stack
+    """
+    return 1 / 0
+
+
 @app.exception_handler(HTTPException)
 def handle_api_error(request: Request, error: APIError):
-    logger.error(error)
+    logger.notify(error.router, error.detail, level='error')
     return JSONResponse(status_code=error.status_code, content={'message': error.detail, 'data': error.data})
 
 
 @app.exception_handler(ValidationError)
 def handle_api_error(request: Request, error: ValidationError):
-    logger.error(error)
+    logger.notify('ValidationError', f'{error.json()}', level='error')
     return JSONResponse(status_code=500, content={'message': error.json()})
 
 

@@ -13,14 +13,14 @@ db = Config.db
 def find_categories(dataset_id, offset=0, limit=0) -> List[Category]:
     categories = list(db.categories.find({'dataset_id': dataset_id}).skip(offset).limit(limit))
     if categories is None:
-        raise errors.NotFound(errors.CATEGORY_NOT_FOUND)
+        raise errors.NotFound('Categories', errors.CATEGORY_NOT_FOUND)
     return [Category.from_mongo(category) for category in categories]
 
 
 def find_category(dataset_id, category_id) -> Category:
     category = db.categories.find_one({'_id': category_id, 'dataset_id': dataset_id})
     if category is None:
-        raise errors.NotFound(errors.CATEGORY_NOT_FOUND)
+        raise errors.NotFound('Categories', errors.CATEGORY_NOT_FOUND)
     return Category.from_mongo(category)
 
 
@@ -44,7 +44,7 @@ def find_images_of_category(dataset_id, category_id, include_labels=False, offse
 
 def insert_category(dataset_id, category) -> Category:
     if db.categories.find_one({'dataset_id': dataset_id, 'name': category.name}):
-        raise errors.Forbidden(errors.CATEGORY_ALREADY_EXISTS)
+        raise errors.Forbidden('Categories', errors.CATEGORY_ALREADY_EXISTS)
     category = Category(
         id=str(uuid4()),
         dataset_id=dataset_id,

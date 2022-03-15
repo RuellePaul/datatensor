@@ -11,7 +11,8 @@ os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'  # to use OAuth2 without https
 
 if 'ACCESS_TOKEN_KEY' not in os.environ:
     raise errors.InternalError(
-        'Environment variable are not set. Use init_env.sh script, or edit Pycharm configuration')
+        detail='Environment variable are not set. Use init_env.sh script'
+    )
 
 
 class Settings(BaseSettings):

@@ -4,6 +4,7 @@ import cv2
 from fastapi import APIRouter, Depends
 
 from dependencies import dataset_belongs_to_user
+from logger import logger
 from routers.images.core import find_images
 from routers.pipelines.core import find_pipelines, perform_sample, delete_pipeline
 from routers.pipelines.models import *
@@ -18,6 +19,7 @@ def get_dataset_pipelines(dataset_id, offset: int = 0, limit: int = 0):
     Fetch paginated pipelines list of given dataset.
     """
     response = {'pipelines': find_pipelines(dataset_id, offset, limit)}
+    logger.notify('Pipelines', f'Fetch pipelines of dataset `{dataset_id}`')
     return parse(response)
 
 
@@ -41,6 +43,9 @@ def do_sample(dataset_id, payload: SampleBody, dataset=Depends(dataset_belongs_t
     encoded_images = [cv2.imencode('.jpg', augmented_image)[1].tostring()
                       for augmented_image in augmented_images]
     base64_encoded_images = [base64.b64encode(image) for image in encoded_images]
+
+    logger.notify('Pipelines', f'Do sample with {len(operations)} operations for dataset `{dataset_id}`')
+
     return {
         'images': base64_encoded_images,
         'images_labels': parse(augmented_labels)
@@ -53,3 +58,4 @@ def delete_dataset_pipeline(dataset_id, pipeline_id, dataset=Depends(dataset_bel
     Delete a pipeline & associated images, labels, and task
     """
     delete_pipeline(dataset_id, pipeline_id)
+    logger.notify('Pipelines', f'Delete pipeline `{pipeline_id}` of dataset `{dataset_id}`')

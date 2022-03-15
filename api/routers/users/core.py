@@ -16,7 +16,7 @@ def find_users(offset=0, limit=0) -> List[User]:
 def find_user(user_id) -> User:
     user = db.users.find_one({'_id': user_id})
     if not user:
-        raise errors.NotFound(errors.USER_NOT_FOUND)
+        raise errors.NotFound('Users', errors.USER_NOT_FOUND)
     return User.from_mongo(user)
 
 
@@ -30,7 +30,7 @@ def find_user_by_email(email) -> Union[User, None]:
 def find_user_by_recovery_code(recovery_code) -> User:
     user = db.users.find_one_and_update({'recovery_code': recovery_code}, {'$set': {'recovery_code': None}})
     if not user:
-        raise errors.Forbidden('Invalid recovery code. Please try again.')
+        raise errors.Forbidden('Users', 'Invalid recovery code. Please try again.')
     return User.from_mongo(user)
 
 
@@ -45,12 +45,12 @@ def update_user_password(user, password, new_password):
     user_password_encrypted = user_full.get('password')
 
     if user.scope or not user_password_encrypted:
-        raise errors.BadRequest(errors.USER_HAS_A_SCOPE)
+        raise errors.BadRequest('Users', errors.USER_HAS_A_SCOPE)
 
     user_password = bytes(user_password_encrypted, 'utf-8')
 
     if not password_context.verify(password, user_password):
-        raise errors.InvalidAuthentication(errors.INVALID_PASSWORD)
+        raise errors.InvalidAuthentication('Users', errors.INVALID_PASSWORD)
 
     encrypted_password = password_context.hash(new_password)
     db.users.find_one_and_update({'_id': user.id},
@@ -59,7 +59,7 @@ def update_user_password(user, password, new_password):
 
 def reset_user_password(user, new_password):
     if user.scope:
-        raise errors.BadRequest(errors.USER_HAS_A_SCOPE)
+        raise errors.BadRequest('Users', errors.USER_HAS_A_SCOPE)
 
     encrypted_password = password_context.hash(new_password)
     db.users.find_one_and_update({'_id': user.id},
@@ -74,9 +74,9 @@ def remove_users(user_ids):
 def remove_user(user_id):
     user_to_delete = find_user(user_id)
     if not user_to_delete:
-        raise errors.NotFound(errors.USER_NOT_FOUND)
+        raise errors.NotFound('Users', errors.USER_NOT_FOUND)
     if user_to_delete.is_admin:
-        raise errors.Forbidden(errors.USER_IS_ADMIN)
+        raise errors.Forbidden('Users', errors.USER_IS_ADMIN)
 
     db.notifications.delete_many({'user_id': user_id})
     db.users.delete_one({'_id': user_id, 'is_admin': False})

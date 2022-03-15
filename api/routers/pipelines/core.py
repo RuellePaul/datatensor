@@ -22,7 +22,7 @@ db = Config.db
 def find_pipelines(dataset_id, offset=0, limit=0) -> List[Label]:
     pipelines = list(db.pipelines.find({'dataset_id': dataset_id}).skip(offset).limit(limit))
     if pipelines is None:
-        raise errors.NotFound(errors.PIPELINE_NOT_FOUND)
+        raise errors.NotFound('Pipelines', errors.PIPELINE_NOT_FOUND)
     return [Pipeline.from_mongo(pipeline) for pipeline in pipelines]
 
 

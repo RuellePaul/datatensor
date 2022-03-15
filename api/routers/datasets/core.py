@@ -18,7 +18,7 @@ def find_datasets(user_id, offset=0, limit=0, include_user=False, include_catego
                     .skip(offset)
                     .limit(limit))
     if datasets is None:
-        raise errors.NotFound(errors.DATASET_NOT_FOUND)
+        raise errors.NotFound('Datasets', errors.DATASET_NOT_FOUND)
     datasets = [DatasetExtended.from_mongo(dataset) for dataset in datasets]
     if include_user:
         for dataset in datasets:
@@ -33,14 +33,14 @@ def find_own_datasets(user_id) -> List[Dataset]:
     datasets = list(db.datasets
                     .find({'user_id': user_id}))
     if datasets is None:
-        raise errors.NotFound(errors.DATASET_NOT_FOUND)
+        raise errors.NotFound('Datasets', errors.DATASET_NOT_FOUND)
     return [Dataset.from_mongo(dataset) for dataset in datasets]
 
 
 def find_dataset(dataset_id, include_user=False, include_categories=False) -> DatasetExtended:
     dataset = db.datasets.find_one({'_id': dataset_id})
     if dataset is None:
-        raise errors.NotFound(errors.DATASET_NOT_FOUND)
+        raise errors.NotFound('Datasets', errors.DATASET_NOT_FOUND)
     dataset = DatasetExtended.from_mongo(dataset)
     if include_user:
         dataset.user = find_user(dataset.user_id)
@@ -53,10 +53,10 @@ def update_dataset(user_id, dataset_id, payload: DatasetPatchBody):
     dataset_to_update = db.datasets.find_one({'_id': dataset_id})
 
     if not dataset_to_update:
-        raise errors.NotFound(errors.DATASET_NOT_FOUND)
+        raise errors.NotFound('Datasets', errors.DATASET_NOT_FOUND)
 
     if dataset_to_update['user_id'] != user_id:
-        raise errors.Forbidden(errors.NOT_YOUR_DATASET)
+        raise errors.Forbidden('Datasets', errors.NOT_YOUR_DATASET)
 
     db.datasets.find_one_and_update({'_id': dataset_id},
                                     {'$set': {k: v for k, v in payload.dict().items() if v is not None}})
@@ -81,10 +81,10 @@ def remove_dataset(user_id, dataset_id):
     dataset_to_remove = db.datasets.find_one({'_id': dataset_id})
 
     if not dataset_to_remove:
-        raise errors.NotFound(errors.DATASET_NOT_FOUND)
+        raise errors.NotFound('Datasets', errors.DATASET_NOT_FOUND)
 
     if dataset_to_remove['user_id'] != user_id:
-        raise errors.Forbidden(errors.NOT_YOUR_DATASET)
+        raise errors.Forbidden('Datasets', errors.NOT_YOUR_DATASET)
 
     remove_all_images(dataset_id)
     db.categories.delete_many({'dataset_id': dataset_id})

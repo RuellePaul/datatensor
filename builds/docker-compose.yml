@@ -79,3 +79,11 @@ services:
     volumes:
       - '/ux/node_modules'
     network_mode: host
+
+  filebeat:
+    build:
+      context: ./production/elk/filebeat
+    volumes:
+      - '/var/lib/docker:/var/lib/docker:ro'
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    network_mode: host

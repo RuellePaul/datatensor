@@ -19,9 +19,10 @@ def oauth_authorization(scope: str):
     """
 
     authorization_url = core.authorization_url_from_scope(scope)
-    logger.info(f'Fetch OAuth authorization url for `{scope}`')
-
     response = {'authorization_url': authorization_url}
+
+    logger.notify('OAuth', f'Fetch OAuth authorization url for `{scope}`')
+
     return response
 
 
@@ -42,7 +43,7 @@ def oauth_callback(payload: OAuthCallbackBody):
         user = core.register_user_from_profile(profile, scope)
         notification = NotificationPostBody(type=NotificationType('REGISTRATION'))
         insert_notification(user_id, notification)
-        logger.info(f'Registered `{user.name}` from `{scope}`')
+        logger.notify(f'Registered `{user.name}` from `{scope}`')
 
     access_token = core.encode_access_token(user_id)
     response = JSONResponse(content={
@@ -55,6 +56,7 @@ def oauth_callback(payload: OAuthCallbackBody):
                         httponly=False,
                         secure=True,
                         samesite="lax" if Config.ENVIRONMENT == 'production' else "none")
-    logger.info(f'Logged in as `{user.name}` from `{scope}`')
+
+    logger.notify('OAuth', f'Logged in user `{user.id}` from `{scope}`')
 
     return response

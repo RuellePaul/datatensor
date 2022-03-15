@@ -1,0 +1,19 @@
+filebeat.inputs:
+- type: container
+  paths:
+    - '/var/lib/docker/containers/*/*.log'
+
+- type: container
+  paths:
+    - '/var/lib/docker/containers/*/*.log'
+  multiline:
+    pattern : '^Traceback'
+    negate: true
+    match: after
+    flush_pattern: 'Error: '
+  tags: ['multiline']
+
+output:
+  logstash:
+    hosts: ['127.0.0.1:5044']
+    enabled: true

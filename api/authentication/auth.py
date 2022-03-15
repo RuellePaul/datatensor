@@ -24,11 +24,11 @@ def do_login(payload: AuthLoginBody):
     user_id = core.user_id_hash(payload.email)
     user = core.user_with_password_from_user_id(user_id)
     if not user:
-        raise errors.InvalidAuthentication(errors.INVALID_CREDENTIALS)
+        raise errors.InvalidAuthentication('Auth', errors.INVALID_CREDENTIALS)
 
     user_password = bytes(user.password, 'utf-8')
     if not password_context.verify(payload.password, user_password):
-        raise errors.InvalidAuthentication(errors.INVALID_CREDENTIALS)
+        raise errors.InvalidAuthentication('Auth', errors.INVALID_CREDENTIALS)
 
     access_token = core.encode_access_token(user_id)
 
@@ -43,7 +43,7 @@ def do_login(payload: AuthLoginBody):
                         secure=True,
                         samesite="lax" if Config.ENVIRONMENT == 'production' else "none")
 
-    logger.info(f'Logged in as `{payload.email}`')
+    logger.notify('Auth', f'Logged in as `{payload.email}`')
 
     return response
 
@@ -61,7 +61,7 @@ def do_register(payload: AuthRegisterBody):
     user = core.user_from_user_id(user_id)
 
     if user:
-        raise errors.Forbidden(errors.USER_ALREADY_EXISTS)
+        raise errors.Forbidden('Auth', errors.USER_ALREADY_EXISTS)
 
     activation_code = core.generate_code()
 
@@ -87,7 +87,7 @@ def do_register(payload: AuthRegisterBody):
                         secure=True,
                         samesite="lax" if Config.ENVIRONMENT == 'production' else "none")
 
-    logger.info(f'Registered user `{email}`')
+    logger.notify('Auth', f'Registered user `{email}`')
 
     return response
 
@@ -106,6 +106,8 @@ def send_password_recovery_link(payload: AuthSendPasswordRecoveryBody):
     core.store_recovery_code(email, recovery_code)
     core.send_email_with_recovery_link(email, recovery_code)
 
+    logger.notify('Auth', f'Send password recovery link to `{email}`')
+
 
 @auth.post('/reset-password')
 def do_reset_password(payload: AuthResetPasswordBody):
@@ -118,12 +120,17 @@ def do_reset_password(payload: AuthResetPasswordBody):
     user = find_user_by_recovery_code(recovery_code)
     reset_user_password(user, new_password)
 
+    logger.notify('Auth', f'Send password recovery to user `{user.id}`')
+
 
 @auth.get('/me', response_model=User)
 def me(user: User = Depends(logged_user)):
     """
     Return user from access token
     """
+
+    logger.notify('Auth', f'Fetch whoami for user `{user.id}`')
+
     return parse(user)
 
 
@@ -153,7 +160,7 @@ def do_email_confirmation(payload: AuthEmailConfirmBody):
                         secure=True,
                         samesite="lax" if Config.ENVIRONMENT == 'production' else "none")
 
-    logger.info(f"Verified email `{user.email}`")
+    logger.notify('Auth', f'Verified email `{user.email}`')
 
     return response
 
@@ -164,4 +171,4 @@ def do_unregister(user: User = Depends(logged_user)):
     Unregister logged user
     """
     core.unregister_user(user.id)
-    logger.info(f'Unregister user `{user.email}` (scope: {user.scope})')
+    logger.notify('Auth', f'Unregister user `{user.id}`')
