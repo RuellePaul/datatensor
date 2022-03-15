@@ -120,7 +120,7 @@ def main(user_id, task_id, properties: TaskGeneratorProperties):
     try:
         download_annotations(datasource_key)
     except Exception as e:
-        raise errors.InternalError(f'Download of {datasource_key} failed, {str(e)}')
+        raise errors.InternalError('Datasources', f'Download of {datasource_key} failed, {str(e)}')
 
     datasource = [datasource for datasource in Config.DATASOURCES if datasource['key'] == datasource_key][0]
 

@@ -33,14 +33,14 @@ def merge_regrouped_labels(old, new) -> Dict[str, int]:
 def find_labels(image_id, offset=0, limit=0) -> List[Label]:
     labels = list(db.labels.find({'image_id': image_id}).skip(offset).limit(limit))
     if labels is None:
-        raise errors.NotFound(errors.LABEL_NOT_FOUND)
+        raise errors.NotFound('Labels', errors.LABEL_NOT_FOUND)
     return [Label.from_mongo(label) for label in labels]
 
 
 def find_labels_from_image_ids(image_ids, offset=0, limit=0) -> List[Label]:
     labels = list(db.labels.find({'image_id': {'$in': image_ids}}).skip(offset).limit(limit))
     if labels is None:
-        raise errors.NotFound(errors.LABEL_NOT_FOUND)
+        raise errors.NotFound('Labels', errors.LABEL_NOT_FOUND)
     return [Label.from_mongo(label) for label in labels]
 
 
@@ -48,7 +48,7 @@ def find_label(image_id, label_id) -> Label:
     label = db.labels.find_one({'_id': label_id,
                                 'image_id': image_id})
     if label is None:
-        raise errors.NotFound(errors.LABEL_NOT_FOUND)
+        raise errors.NotFound('Labels', errors.LABEL_NOT_FOUND)
     return Label.from_mongo(label)
 
 

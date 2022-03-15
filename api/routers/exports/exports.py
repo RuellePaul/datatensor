@@ -23,8 +23,8 @@ def get_export(dataset_id, user: User = Depends(logged_user)):
     dataset = find_dataset(dataset_id, include_categories=True)
 
     if not dataset.is_public and dataset.user_id != user.id:
-        raise errors.Forbidden(errors.NOT_YOUR_DATASET)
+        raise errors.Forbidden('Auth', errors.NOT_YOUR_DATASET)
 
     response = process_export(dataset)
-    logger.info(f'Exports | Process export of dataset `{dataset.id}`')
+    logger.notify('Exports', f'Process export of dataset `{dataset.id}`')
     return parse(response)

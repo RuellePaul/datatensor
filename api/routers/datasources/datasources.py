@@ -15,7 +15,7 @@ def get_datasources():
     🔒️ Admin only
     """
     response = {'datasources': find_datasources()}
-    logger.info(f'Datasources | Fetch datasources')
+    logger.notify('Datasources', f'Fetch datasources')
     return parse(response)
 
 
@@ -26,7 +26,7 @@ def get_categories(datasource_key: DatasourceKey):
     🔒️ Admin only
     """
     response = {'categories': find_categories(datasource_key)}
-    logger.info(f'Datasources | Fetch categories for datasource `{datasource_key}`')
+    logger.notify('Datasources', f'Fetch categories for datasource `{datasource_key}`')
     return parse(response)
 
 
@@ -38,5 +38,5 @@ def post_image_count(payload: DatasourceMaxImageCountBody):
     """
     result = find_max_image_count(payload.datasource_key, payload.selected_categories)
     response = {'max_image_count': result}
-    logger.info(f'Datasources | Fetch image_count ({result}) for datasource `{payload.datasource_key}`')
+    logger.notify('Datasources', f'Fetch image_count ({result}) for datasource `{payload.datasource_key}`')
     return parse(response)

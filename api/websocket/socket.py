@@ -27,10 +27,10 @@ async def get_tasks(websocket: WebSocket):
                 tasks = find_users_tasks(user.id)
             await websocket.send_json(parse(tasks))
         except ConnectionClosedOK:
-            logger.info('Tasks websocket | closed')
+            logger.notify('Websocket', f'Tasks websocket closed')
             break
         except WebSocketDisconnect:
-            logger.info('Tasks websocket | disconnected.')
+            logger.notify('Websocket', f'Tasks websocket disconnected')
             try:
                 if tasks and user:
                     for task in tasks:
@@ -55,8 +55,8 @@ async def get_tasks(websocket: WebSocket):
             response = {'notifications': result}
             await websocket.send_json(parse(response))
         except ConnectionClosedOK:
-            logger.info('Notifications closed.')
+            logger.notify('Websocket', f'Notifications closed')
             break
         except WebSocketDisconnect:
-            logger.info('Notifications websocket | disconnected.')
+            logger.notify('Websocket', f'Notifications websocket disconnected')
             break

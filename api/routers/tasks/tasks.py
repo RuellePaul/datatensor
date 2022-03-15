@@ -15,4 +15,4 @@ def post_task(payload: TaskPostBody, dataset_id=None, user: User = Depends(logge
     Create a new pending task
     """
     insert_task(user, dataset_id, payload.type, payload.properties)
-    logger.info(f'Tasks | Add task `{payload.type}` for user `{user.id}`')
+    logger.notify('Tasks', f'Add task `{payload.type}` for user `{user.id}`')

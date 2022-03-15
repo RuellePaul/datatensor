@@ -14,7 +14,7 @@ def search_unique_public_categories(user: User = Depends(logged_user)):
     response = {
         'categories': search_categories(user.id)
     }
-    logger.info(f'Search | Fetch categories')
+    logger.notify('Search', f'Fetch categories')
     return parse(response)
 
 
@@ -23,7 +23,7 @@ def search_datasets_from_category_names(payload: SearchDatasetsPayload):
     response = {
         'dataset_ids': search_dataset_ids_from_category_names(payload.category_names)
     }
-    logger.info(f'Search | Fetch dataset ids for category names {payload.category_names}')
+    logger.notify('Search', f'Fetch dataset ids for category names {payload.category_names}')
     return parse(response)
 
 
@@ -34,5 +34,5 @@ def search_next_unlabeled_image(dataset_id,
     response = {
         'image_id': search_unlabeled_image_id(dataset_id, offset)
     }
-    logger.info(f'Search | Fetch unlabeled image id for dataset `{dataset_id}`')
+    logger.notify('Search', f'Fetch unlabeled image id for dataset `{dataset_id}`')
     return parse(response)

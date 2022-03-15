@@ -12,6 +12,7 @@ tz = timezone('Europe/Paris')
 
 
 def create_logger():
+    logging.setLoggerClass(DatatensorLogger)
     _logger = logging.getLogger('api_logger')
     console_handler = logging.StreamHandler()
 
@@ -23,6 +24,12 @@ def create_logger():
     _logger.setLevel(logging.INFO)
 
     return _logger
+
+
+class DatatensorLogger(logging.Logger):
+
+    def notify(self, router, message, level='info'):
+        getattr(logger, level)(f'{router} | {message}')
 
 
 logger = create_logger()

@@ -16,7 +16,7 @@ def get_users(offset: int = 0, limit: int = 0):
     🔒️ Admin only
     """
     response = {'users': find_users(offset, limit)}
-    logger.info(f'Users | Fetch users')
+    logger.notify('Users', f'Fetch users')
     return parse(response)
 
 
@@ -26,7 +26,7 @@ def get_user(user_id):
     Fetch user, given `user_id`
     """
     response = {'user': find_user(user_id)}
-    logger.info(f'Users | Fetch user `{user_id}`')
+    logger.notify('Users', f'Fetch user `{user_id}`')
     return parse(response)
 
 
@@ -36,7 +36,7 @@ def patch_user(update: UserUpdateProfileBody, user: User = Depends(logged_user))
     Update logged user profile
     """
     update_user(user, update)
-    logger.info(f'Users | Update user profile of user `{user.id}`')
+    logger.notify('Users', f'Update user profile of user `{user.id}`')
 
 
 @users.patch('/me/password')
@@ -45,7 +45,7 @@ def patch_user_password(payload: UserUpdatePasswordBody, user: User = Depends(lo
     Update logged user password
     """
     update_user_password(user, payload.password, payload.new_password)
-    logger.info(f'Users | Update user password of user `{user.id}`')
+    logger.notify('Users', f'Update user password of user `{user.id}`')
 
 
 @users.delete('/', dependencies=[Depends(logged_admin)])
@@ -55,7 +55,7 @@ def delete_users(payload: UserDeleteBody):
     🔒️ Admin only
     """
     remove_users(payload.user_ids)
-    logger.info(f'Users | Removed {len(payload.user_ids)} users')
+    logger.notify('Users', f'Removed {len(payload.user_ids)} users')
 
 
 @users.delete('/{user_id}', dependencies=[Depends(logged_admin)])
@@ -65,4 +65,4 @@ def delete_user(user_id):
     🔒️ Admin only
     """
     remove_user(user_id)
-    logger.info(f'Users | Removed user `{user_id}`')
+    logger.notify('Users', f'Removed user `{user_id}`')

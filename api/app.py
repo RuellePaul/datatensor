@@ -99,13 +99,13 @@ app.include_router(tasks, prefix=f'{PREFIX}/tasks', tags=['tasks'], dependencies
 
 @app.exception_handler(HTTPException)
 def handle_api_error(request: Request, error: APIError):
-    logger.error(error)
+    logger.notify(error.router, error.detail)
     return JSONResponse(status_code=error.status_code, content={'message': error.detail, 'data': error.data})
 
 
 @app.exception_handler(ValidationError)
 def handle_api_error(request: Request, error: ValidationError):
-    logger.error(error)
+    logger.notify('ValidationError', f'{error.json()}')
     return JSONResponse(status_code=500, content={'message': error.json()})
 
 

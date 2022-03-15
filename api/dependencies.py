@@ -17,12 +17,12 @@ def logged_user(access_token: Optional[str] = Cookie(None)) -> User:
 
 def logged_admin(user: User = Depends(logged_user)) -> User:
     if user.id not in Config.ADMIN_USER_IDS:
-        raise errors.Forbidden(errors.USER_NOT_ADMIN)
+        raise errors.Forbidden('Auth', errors.USER_NOT_ADMIN)
     return user
 
 
 def dataset_belongs_to_user(dataset_id, user: User = Depends(logged_user)) -> Dataset:
     dataset = find_dataset(dataset_id)
     if dataset.user_id != user.id:
-        raise errors.Forbidden(errors.NOT_YOUR_DATASET)
+        raise errors.Forbidden('Auth', errors.NOT_YOUR_DATASET)
     return Dataset.parse_obj(dataset)

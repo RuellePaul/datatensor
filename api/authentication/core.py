@@ -43,7 +43,7 @@ def verify_access_token(access_token) -> User:
 
     user = db.users.find_one({'_id': user_id}, {'password': 0})
     if not user:
-        raise errors.InvalidAuthentication(errors.USER_NOT_FOUND)
+        raise errors.InvalidAuthentication('Auth', errors.USER_NOT_FOUND)
 
     return User.from_mongo(user)
 
@@ -77,7 +77,7 @@ def profile_from_code(code, scope):
     try:
         client.parse_request_body_response(response.text)
     except oauthlib.oauth2.rfc6749.errors.OAuth2Error as e:
-        raise errors.InternalError(f'Cannot fetch OAuth2 profile : {str(e)}')
+        raise errors.InternalError('OAuth', f'Cannot fetch OAuth2 profile : {str(e)}')
     uri, headers, body = client.add_token(Config.OAUTH[scope]['USER_URL'])
     profile = requests.get(uri, headers=headers, data=body, params={
         'access_token': response.json()['access_token'],
@@ -187,9 +187,9 @@ def check_captcha(captcha):
     }
     r = requests.post(url, data=data)
     if r.status_code != 200:
-        raise errors.InternalError(errors.CAPTCHA_INVALID)
+        raise errors.InternalError('Auth', errors.CAPTCHA_INVALID)
     if not r.json().get('success'):
-        raise errors.BadRequest(errors.CAPTCHA_INVALID)
+        raise errors.BadRequest('Auth', errors.CAPTCHA_INVALID)
 
 
 def send_email_with_activation_code(email, activation_code):
@@ -215,7 +215,7 @@ def send_email_with_activation_code(email, activation_code):
         sg = SendGridAPIClient(Config.SENDGRID_API_KEY)
         sg.send(message)
     except Exception as e:
-        raise errors.InternalError(f'Unable to send email | {str(e)}')
+        raise errors.InternalError('Auth', f'Unable to send email | {str(e)}')
     
 
 def store_recovery_code(email, recovery_code):
@@ -246,17 +246,17 @@ def send_email_with_recovery_link(email, recovery_code):
         sg = SendGridAPIClient(Config.SENDGRID_API_KEY)
         sg.send(message)
     except Exception as e:
-        raise errors.InternalError(f'Unable to send email | {str(e)}')
+        raise errors.InternalError('Auth', f'Unable to send email | {str(e)}')
 
 
 def verify_user_email(activation_code) -> User:
     user = user_from_activation_code(activation_code)
 
     if not user:
-        raise errors.Forbidden(errors.INVALID_CODE)
+        raise errors.Forbidden('Auth', errors.INVALID_CODE)
 
     if user.is_verified:
-        raise errors.BadRequest(errors.ALREADY_VERIFIED)
+        raise errors.BadRequest('Auth', errors.ALREADY_VERIFIED)
 
     db.users.find_one_and_update({'_id': user.id},
                                  {'$set': {'is_verified': True, 'activation_code': None}})

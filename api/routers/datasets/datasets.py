@@ -24,7 +24,7 @@ def get_datasets(user: User = Depends(logged_user),
     response = {'datasets': find_datasets(user.id, offset, limit,
                                           include_user=include_user,
                                           include_categories=include_categories)}
-    logger.info(f'Datasets | Fetch datasets for user `{user.id}`')
+    logger.notify('Datasets', f'Fetch datasets for user `{user.id}`')
     return parse(response)
 
 
@@ -38,7 +38,7 @@ def get_dataset(dataset_id,
     response = {'dataset': find_dataset(dataset_id,
                                         include_user=include_user,
                                         include_categories=include_categories)}
-    logger.info(f'Datasets | Fetch dataset `{dataset_id}`')
+    logger.notify('Datasets', f'Fetch dataset `{dataset_id}`')
     return parse(response)
 
 
@@ -49,9 +49,9 @@ def post_dataset(payload: DatasetPostBody, user: User = Depends(logged_user)):
     🔒️ Verified users
     """
     if not user.is_verified:
-        raise errors.Forbidden(errors.USER_NOT_VERIFIED, data='ERR_VERIFY')
+        raise errors.Forbidden('Auth', errors.USER_NOT_VERIFIED, data='ERR_VERIFY')
     response = {'dataset': insert_dataset(user.id, payload)}
-    logger.info(f'Datasets | Add dataset `{payload.name}` for user `{user.id}`')
+    logger.notify('Datasets', f'Add dataset `{payload.name}` for user `{user.id}`')
     return parse(response)
 
 
@@ -61,7 +61,7 @@ def patch_dataset(dataset_id, payload: DatasetPatchBody, user: User = Depends(lo
     Update dataset (name, description & privacy)..
     """
     update_dataset(user.id, dataset_id, payload)
-    logger.info(f'Datasets | Update dataset `{dataset_id}` for user `{user.id}`')
+    logger.notify('Datasets', f'Update dataset `{dataset_id}` for user `{user.id}`')
 
 
 @datasets.delete('/')
@@ -71,7 +71,7 @@ def delete_datasets(admin: User = Depends(logged_admin)):
     🔒️ Admin only
     """
     remove_datasets(admin.id)
-    logger.info(f'Datasets | Delete datasets for admin `{admin.id}`')
+    logger.notify('Datasets', f'Delete datasets for admin `{admin.id}`')
 
 
 @datasets.delete('/{dataset_id}')
@@ -80,4 +80,4 @@ def delete_dataset(dataset_id, user: User = Depends(logged_user)):
     Delete a dataset, and other linked collections (`images`, `labels`, `tasks`...)
     """
     remove_dataset(user.id, dataset_id)
-    logger.info(f'Datasets | Delete dataset for user `{user.id}`')
+    logger.notify('Datasets', f'Delete dataset for user `{user.id}`')

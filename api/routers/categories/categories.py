@@ -16,7 +16,7 @@ def get_categories(dataset_id, offset: int = 0, limit: int = 0):
     Fetch paginated categories list of given dataset.
     """
     response = {'categories': find_categories(dataset_id, offset, limit)}
-    logger.info(f'Categories | Fetch categories for dataset `{dataset_id}`')
+    logger.notify('Categories', f'Fetch categories for dataset `{dataset_id}`')
     return parse(response)
 
 
@@ -26,7 +26,7 @@ def get_category(dataset_id, category_id):
     Fetch given category of given dataset.
     """
     response = {'category': find_category(dataset_id, category_id)}
-    logger.info(f'Categories | Fetch category `{category_id}` for dataset `{dataset_id}`')
+    logger.notify('Categories', f'Fetch category `{category_id}` for dataset `{dataset_id}`')
     return parse(response)
 
 
@@ -37,7 +37,7 @@ def get_category(dataset_id, category_id, include_labels=False, offset: int = 0,
     """
     images, total_count = find_images_of_category(dataset_id, category_id, include_labels, offset, limit)
     response = {'images': images, 'total_count': total_count}
-    logger.info(f'Images | Fetch images for category `{category_id}` of dataset `{dataset_id}`')
+    logger.notify('Images', f'Fetch images for category `{category_id}` of dataset `{dataset_id}`')
     return parse(response)
 
 
@@ -47,7 +47,7 @@ def post_category(category: CategoryPostBody, dataset_id, dataset=Depends(datase
     Create a new category on given dataset, and returns it.
     """
     response = {'category': insert_category(dataset_id, category)}
-    logger.info(f'Categories | Add category `{category.name}` for dataset `{dataset_id}`')
+    logger.notify('Categories', f'Add category `{category.name}` for dataset `{dataset_id}`')
     return parse(response)
 
 
@@ -57,4 +57,4 @@ def delete_category(dataset_id, category_id, dataset=Depends(dataset_belongs_to_
     Delete given category of given dataset.
     """
     remove_category(dataset_id, category_id)
-    logger.info(f'Categories | Delete category `{category_id}` for dataset `{dataset_id}`')
+    logger.notify('Categories', f'Delete category `{category_id}` for dataset `{dataset_id}`')

@@ -19,7 +19,7 @@ def get_dataset_pipelines(dataset_id, offset: int = 0, limit: int = 0):
     Fetch paginated pipelines list of given dataset.
     """
     response = {'pipelines': find_pipelines(dataset_id, offset, limit)}
-    logger.info(f'Pipelines | Fetch pipelines of dataset `{dataset_id}`')
+    logger.notify('Pipelines', f'Fetch pipelines of dataset `{dataset_id}`')
     return parse(response)
 
 
@@ -44,7 +44,7 @@ def do_sample(dataset_id, payload: SampleBody, dataset=Depends(dataset_belongs_t
                       for augmented_image in augmented_images]
     base64_encoded_images = [base64.b64encode(image) for image in encoded_images]
 
-    logger.info(f'Pipelines | Do sample with {len(operations)} operations for dataset `{dataset_id}`')
+    logger.notify('Pipelines', f'Do sample with {len(operations)} operations for dataset `{dataset_id}`')
 
     return {
         'images': base64_encoded_images,
@@ -58,4 +58,4 @@ def delete_dataset_pipeline(dataset_id, pipeline_id, dataset=Depends(dataset_bel
     Delete a pipeline & associated images, labels, and task
     """
     delete_pipeline(dataset_id, pipeline_id)
-    logger.info(f'Pipelines | Delete pipeline `{pipeline_id}` of dataset `{dataset_id}`')
+    logger.notify('Pipelines', f'Delete pipeline `{pipeline_id}` of dataset `{dataset_id}`')

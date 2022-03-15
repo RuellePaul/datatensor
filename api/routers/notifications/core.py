@@ -12,7 +12,7 @@ db = Config.db
 def find_notifications(user_id) -> List[Notification]:
     notifications = list(db.notifications.find({'user_id': user_id}))
     if notifications is None:
-        raise errors.NotFound(errors.NOTIFICATION_NOT_FOUND)
+        raise errors.NotFound('Notifications', errors.NOTIFICATION_NOT_FOUND)
     return [Notification.from_mongo(notification) for notification in notifications]
 
 

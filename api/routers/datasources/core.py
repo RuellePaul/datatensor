@@ -28,11 +28,11 @@ def download_annotations(datasource_key: DatasourceKey):
     if os.path.exists(annotations_path):
         return annotations_path, datasource
 
-    logger.info(f"Downloading {datasource['name']}...")
+    logger.notify('Datasources', f'Downloading {datasource["name"]}...')
 
     response = requests.get(datasource['download_url'], stream=True)
     if response.status_code != 200:
-        raise errors.APIError(503, f"Datasource {datasource['name']} unreachable")
+        raise errors.APIError(503, 'Datasources', f"Datasource {datasource['name']} unreachable")
 
     datasource_path = os.path.join(Config.DATASOURCES_PATH, datasource_key)
     zip_path = os.path.join(datasource_path, f'{datasource_key}.zip')
@@ -55,7 +55,7 @@ def find_categories(datasource_key: DatasourceKey):
     try:
         annotations_path, datasource = download_annotations(datasource_key)
     except Exception as e:
-        raise errors.InternalError(f'Download of {datasource_key} failed, {str(e)}')
+        raise errors.InternalError('Datasoures', f'Download of {datasource_key} failed, {str(e)}')
 
     filename = datasource['filenames'][0]
     try:
@@ -65,7 +65,7 @@ def find_categories(datasource_key: DatasourceKey):
         datasource_annotations = datasource_content['annotations']
         json_file.close()
     except FileNotFoundError:
-        raise errors.InternalError(f'Filename {filename} not found for datasource {datasource_key}')
+        raise errors.InternalError('Datasoures', f'Filename {filename} not found for datasource {datasource_key}')
 
     for category in categories:
         category['labels_count'] = 0
@@ -101,6 +101,6 @@ def find_max_image_count(datasource_key, selected_categories):
 
         image_remote_ids = [label['image_id'] for label in labels_remote]
     except FileNotFoundError:
-        raise errors.InternalError(f'Filename {filename} not found for datasource {datasource_key}')
+        raise errors.InternalError('Datasoures', f'Filename {filename} not found for datasource {datasource_key}')
 
     return len(set(image_remote_ids))

@@ -34,7 +34,7 @@ def _find_public_labels(image_id) -> List[Label]:
 
 @public.get('/', response_model=PublicDatasetResponse)
 def get_public_data():
-    logger.info(f'Public | Fetch public data')
+    logger.notify('Public', f'Fetch public data')
     return public_data
 
 
@@ -60,7 +60,7 @@ def get_public_sample(payload: PublicSampleBody):
                       for augmented_image in augmented_images]
     base64_encoded_images = [base64.b64encode(image) for image in encoded_images]
 
-    logger.info(f'Public | Fetch public sample on image `{image.name}`')
+    logger.notify('Public', f'Fetch public sample on image `{image.name}`')
 
     return {
         'images': base64_encoded_images,

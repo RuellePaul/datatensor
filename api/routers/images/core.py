@@ -47,7 +47,7 @@ def upload_image(image_bytes, image_id):
         path = f"{Config.S3_LOCATION}{image_id}"
         return path
     except Exception as e:
-        raise errors.InternalError(f'Cannot upload file to S3, {str(e)}')
+        raise errors.InternalError('Images', f'Cannot upload file to S3, {str(e)}')
 
 
 def upload_file(payload) -> Image:
@@ -84,7 +84,7 @@ def delete_images_from_s3(image_ids):
                 Delete={'Objects': [{'Key': image_id} for image_id in image_ids_to_delete]}
             )
     except Exception as e:
-        raise errors.InternalError(f'Cannot delete file from S3, {str(e)}')
+        raise errors.InternalError('Images', f'Cannot delete file from S3, {str(e)}')
 
 
 def delete_image_from_s3(image_id):
@@ -94,7 +94,7 @@ def delete_image_from_s3(image_id):
             Key=image_id
         )
     except Exception as e:
-        raise errors.InternalError(f'Cannot delete file from S3, {str(e)}')
+        raise errors.InternalError('Images', f'Cannot delete file from S3, {str(e)}')
 
 
 def find_all_images(dataset_id, offset=0, limit=0) -> List[Image]:
@@ -103,7 +103,7 @@ def find_all_images(dataset_id, offset=0, limit=0) -> List[Image]:
                   .skip(offset)
                   .limit(limit))
     if images is None:
-        raise errors.NotFound(errors.IMAGE_NOT_FOUND)
+        raise errors.NotFound('Images', errors.IMAGE_NOT_FOUND)
     images = [ImageExtended.from_mongo(image) for image in images]
     return images
 
@@ -128,7 +128,7 @@ def find_images(dataset_id,
                   .skip(offset)
                   .limit(limit))
     if images is None:
-        raise errors.NotFound(errors.IMAGE_NOT_FOUND)
+        raise errors.NotFound('Images', errors.IMAGE_NOT_FOUND)
     images = [ImageExtended.from_mongo(image) for image in images]
     if include_labels:
         labels = find_labels_from_image_ids([image.id for image in images])
@@ -141,7 +141,7 @@ def find_images(dataset_id,
 def find_image(dataset_id, image_id) -> Image:
     image = db.images.find_one({'_id': image_id, 'dataset_id': dataset_id})
     if image is None:
-        raise errors.NotFound(errors.IMAGE_NOT_FOUND)
+        raise errors.NotFound('Images', errors.IMAGE_NOT_FOUND)
     return Image.from_mongo(image)
 
 
