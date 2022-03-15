@@ -53,7 +53,7 @@ app.include_router(auth, prefix=f'{PREFIX}/auth', tags=['auth'])
 app.include_router(oauth, prefix=f'{PREFIX}/oauth', tags=['oauth'])
 
 # Public dataset
-app.include_router(public, prefix=f'{PREFIX}/public',  tags=['public'])
+app.include_router(public, prefix=f'{PREFIX}/public', tags=['public'])
 
 # Users | 🔒 Admin partially
 app.include_router(users, prefix=f'{PREFIX}/users',
@@ -95,6 +95,14 @@ datasets.include_router(exports, prefix='/{dataset_id}/exports', tags=['exports'
 
 # Users ➤ Tasks 🔒 Admin partially (for generator)
 app.include_router(tasks, prefix=f'{PREFIX}/tasks', tags=['tasks'], dependencies=[Depends(logged_user)])
+
+
+@app.get('/traceback')
+def traceback_generator():
+    """
+    Used for log parsing in ELK stack
+    """
+    return 1 / 0
 
 
 @app.exception_handler(HTTPException)
