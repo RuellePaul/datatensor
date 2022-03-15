@@ -31,7 +31,7 @@ PREFIX = '/v2'
 
 app = FastAPI(
     title='Datatensor API',
-    version='0.7.1',
+    version='1.0.0',
     docs_url=f'{PREFIX}/docs'
 )
 
