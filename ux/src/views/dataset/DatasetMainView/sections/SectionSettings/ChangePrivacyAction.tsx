@@ -32,7 +32,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     privacyAction: {
         color: theme.palette.warning.main,
-        borderColor: theme.palette.warning.main
+        borderColor: theme.palette.warning.main,
+        '&:hover': {
+            borderColor: theme.palette.warning.main,
+        }
     },
     close: {
         position: 'absolute',

@@ -14,7 +14,14 @@ import Overview from './Overview';
 import useImages from 'src/hooks/useImages';
 import useDataset from 'src/hooks/useDataset';
 import AnimatedLogo from 'src/components/utils/AnimatedLogo';
-
+import {
+    BrandingWatermarkOutlined as LabelingIcon,
+    Check as CheckIcon,
+    Downloading as ExportIcon,
+    DynamicFeedOutlined as AugmentationIcon,
+    LockOutlined as LockIcon,
+    PublishOutlined as UploadIcon
+} from '@mui/icons-material';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {}
@@ -22,27 +29,35 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const DATASET_ACTIONS = [
     {
-        label: 'Upload images',
-        component: <UploadAction />
+        label: 'Upload',
+        component: <UploadAction />,
+        icon: <UploadIcon sx={{color: 'text.primary'}} />,
+        description: 'Add images to your dataset'
     },
     {
-        label: 'Label images',
-        component: <LabelisatorAction />
+        label: 'Labelisation',
+        component: <LabelisatorAction />,
+        icon: <LabelingIcon sx={{color: 'text.primary'}} />,
+        description: 'Frame your objects on your images'
     },
     {
-        label: 'Augment images',
-        component: <AugmentAction />
+        label: 'Augmentation',
+        component: <AugmentAction />,
+        icon: <AugmentationIcon sx={{color: 'text.primary'}} />,
+        description: 'Get more labeled images'
     },
     {
-        label: 'Export dataset',
-        component: <ExportAction />
+        label: 'Export',
+        component: <ExportAction />,
+        icon: <ExportIcon sx={{color: 'text.primary'}} />,
+        description: 'Download .json state of your dataset'
     }
 ];
 
-const SectionOverview: FC<SectionProps> = ({ className }) => {
+const SectionOverview: FC<SectionProps> = ({className}) => {
     const classes = useStyles();
-    const { categories, pipelines } = useDataset();
-    const { images } = useImages();
+    const {categories, pipelines} = useDataset();
+    const {images} = useImages();
 
     const totalLabelsCount = categories.map(category => category.labels_count || 0).reduce((acc, val) => acc + val, 0);
 
@@ -51,10 +66,10 @@ const SectionOverview: FC<SectionProps> = ({ className }) => {
             ? images.length === 0
                 ? 0
                 : totalLabelsCount === 0
-                    ? 1
-                    : pipelines.length === 0
-                        ? 2
-                        : 3
+                ? 1
+                : pipelines.length === 0
+                ? 2
+                : 3
             : 0;
 
     useEffect(() => {
@@ -75,40 +90,55 @@ const SectionOverview: FC<SectionProps> = ({ className }) => {
                 </Grid>
 
                 <Grid item md={4} xs={12}>
-                    {images instanceof Array
-                        ? (
-                            <Stepper activeStep={activeStep} orientation="vertical">
-                                {DATASET_ACTIONS.map((action, index) => (
-                                    <Step key={action.label} disabled={index > currentStep}>
-                                        <StepButton onClick={() => setActiveStep(index)}>{action.label}</StepButton>
-                                        <StepContent TransitionProps={{ unmountOnExit: false }}>
-                                            {action.component}
-                                        </StepContent>
-                                    </Step>
-                                ))}
-                            </Stepper>
-                        ) : (
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    flexDirection: 'column',
-                                    width: '100%',
-                                    height: 150,
-                                    backgroundColor: 'background.paper',
-                                    borderRadius: 8,
-                                    p: 3
-                                }}
-                            >
-                                <AnimatedLogo />
+                    {images instanceof Array ? (
+                        <Stepper activeStep={activeStep} orientation="vertical">
+                            {DATASET_ACTIONS.map((action, index) => (
+                                <Step key={action.label} disabled={index > currentStep}>
+                                    <StepButton
+                                        icon={action.icon}
+                                        onClick={() => setActiveStep(index)}
+                                        optional={
+                                            <Box display="flex" alignItems="center">
+                                                <Typography variant="caption">{action.description} </Typography>
 
-                                <Typography variant='body2' sx={{my: 2}} color='textSecondary'>
-                                    Loading actions...
-                                </Typography>
-                            </Box>
-                        )
-                    }
+                                                {index < currentStep && (
+                                                    <CheckIcon sx={{color: 'success.main', fontSize: 18, pl: 0.25}} />
+                                                )}
+                                                {index > currentStep && (
+                                                    <LockIcon sx={{color: 'disabled', fontSize: 16, pl: 0.25}} />
+                                                )}
+                                            </Box>
+                                        }
+                                    >
+                                        {action.label}
+                                    </StepButton>
+                                    <StepContent TransitionProps={{unmountOnExit: false}}>
+                                        <Box my={2}>{action.component}</Box>
+                                    </StepContent>
+                                </Step>
+                            ))}
+                        </Stepper>
+                    ) : (
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                flexDirection: 'column',
+                                width: '100%',
+                                height: 300,
+                                backgroundColor: 'background.paper',
+                                borderRadius: 8,
+                                p: 3
+                            }}
+                        >
+                            <AnimatedLogo />
+
+                            <Typography variant="body2" sx={{my: 2}} color="textSecondary">
+                                Loading actions...
+                            </Typography>
+                        </Box>
+                    )}
                 </Grid>
             </Grid>
         </div>

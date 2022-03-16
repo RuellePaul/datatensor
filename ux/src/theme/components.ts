@@ -46,5 +46,14 @@ export default {
                 paddingBottom: 12,
             }
         }
+    },
+    MuiStepButton: {
+        styleOverrides: {
+            root: {
+                '&.Mui-disabled': {
+                    opacity: 0.3
+                }
+            }
+        }
     }
 };
