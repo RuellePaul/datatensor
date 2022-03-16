@@ -1,5 +1,6 @@
-import React, {createContext, FC, ReactNode, useEffect, useReducer} from 'react';
+import React, {createContext, FC, ReactNode, useEffect, useReducer, useState} from 'react';
 import {useHistory} from 'react-router-dom';
+import GoogleOneTapLogin from 'react-google-one-tap-login';
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import {useSnackbar} from 'notistack';
@@ -19,6 +20,7 @@ interface AuthState {
 interface AuthContextValue extends AuthState {
     login: (email: string, password: string) => Promise<void>;
     loginOAuth: (code: string, scope: string) => Promise<void>;
+    loginGoogleOneTap: (googleAccessToken: string) => Promise<void>;
     logout: () => void;
     register: (email: string, name: string, password: string, recaptcha: string) => Promise<void>;
     confirmEmail: (activation_code: string) => Promise<void>;
@@ -149,6 +151,7 @@ const AuthContext = createContext<AuthContextValue>({
     ...initialAuthState,
     login: () => Promise.resolve(),
     loginOAuth: () => Promise.resolve(),
+    loginGoogleOneTap: () => Promise.resolve(),
     logout: () => {},
     register: () => Promise.resolve(),
     confirmEmail: () => Promise.resolve(),
@@ -187,6 +190,27 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
                 accessToken
             }
         });
+    };
+
+    const [isDoingOneTap, setIsDoingOneTap] = useState<boolean>(false);
+
+    const loginGoogleOneTap = async (googleAccessToken: string) => {
+        setIsDoingOneTap(true)
+        const response = await api.post<{accessToken: string; user: User}>(`/oauth/google-one-tap`, {
+            google_access_token: googleAccessToken
+        });
+        const {accessToken, user} = response.data;
+
+        setSession(accessToken);
+        dispatch({
+            type: 'LOGIN',
+            payload: {
+                user,
+                accessToken
+            }
+        });
+        history.push('/datasets');
+        setIsDoingOneTap(false);
     };
 
     const logout = () => {
@@ -306,12 +330,17 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         return <SplashScreen />;
     }
 
+    if (isDoingOneTap) {
+        return <SplashScreen />;
+    }
+
     return (
         <AuthContext.Provider
             value={{
                 ...state,
                 login,
                 loginOAuth,
+                loginGoogleOneTap,
                 logout,
                 register,
                 confirmEmail,
@@ -320,6 +349,21 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
             }}
         >
             {children}
+
+            <GoogleOneTapLogin
+                googleAccountConfigs={{
+                    client_id: process.env.REACT_APP_OAUTH_GOOGLE_CLIENT_ID,
+                    context: 'use',
+                    cancel_on_tap_outside: false,
+                    callback: async data => {
+                        const googleAccessToken = data.credential;
+                        await loginGoogleOneTap(googleAccessToken);
+                    }
+                }}
+                disabled={state.isAuthenticated}
+                disableCancelOnUnmount
+                onError={error => console.error(error)}
+            />
         </AuthContext.Provider>
     );
 };

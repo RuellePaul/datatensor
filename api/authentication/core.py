@@ -100,6 +100,11 @@ def user_id_from_profile(profile, scope):
     return user_id
 
 
+def google_profile_from_google_access_token(google_access_token):
+    google_profile = jwt.decode(google_access_token, options={"verify_signature": False})
+    return google_profile
+
+
 def user_id_hash(identifier):
     user_id = hashlib.sha256(str(identifier).encode('utf-8')).hexdigest()
     return user_id
@@ -216,7 +221,7 @@ def send_email_with_activation_code(email, activation_code):
         sg.send(message)
     except Exception as e:
         raise errors.InternalError('Auth', f'Unable to send email | {str(e)}')
-    
+
 
 def store_recovery_code(email, recovery_code):
     db.users.find_one_and_update({'email': email},
