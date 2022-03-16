@@ -66,3 +66,7 @@ class OAuthAuthorizationResponse(BaseModel):
 class OAuthCallbackBody(BaseModel):
     code: str
     scope: Scope
+
+
+class OAuthGoogleOneTap(BaseModel):
+    google_access_token: str

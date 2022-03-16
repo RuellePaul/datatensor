@@ -46,6 +46,15 @@
     animation: blinker 1.5s ease infinite;
 }
 
+/* Google One Tap */
+#credential_picker_container {
+    top: unset !important;
+    left: unset !important;
+    bottom: 16px;
+    right: 16px;
+}
+
+
 @keyframes blinker {
     30% {
         opacity: 1;

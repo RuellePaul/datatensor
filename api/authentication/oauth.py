@@ -43,7 +43,7 @@ def oauth_callback(payload: OAuthCallbackBody):
         user = core.register_user_from_profile(profile, scope)
         notification = NotificationPostBody(type=NotificationType('REGISTRATION'))
         insert_notification(user_id, notification)
-        logger.notify(f'Registered `{user.name}` from `{scope}`')
+        logger.notify('OAuth', f'Registered `{user.name}` from `{scope}`')
 
     access_token = core.encode_access_token(user_id)
     response = JSONResponse(content={
@@ -58,5 +58,41 @@ def oauth_callback(payload: OAuthCallbackBody):
                         samesite="lax" if Config.ENVIRONMENT == 'production' else "none")
 
     logger.notify('OAuth', f'Logged in user `{user.id}` from `{scope}`')
+
+    return response
+
+
+@oauth.post('/google-one-tap', response_model=AuthResponse)
+def oauth_callback(payload: OAuthGoogleOneTap):
+    """
+    Decoding google access token provided by Google One Tap workflow, retrieve use and access_token
+    """
+
+    google_access_token = payload.google_access_token
+
+    google_profile = core.google_profile_from_google_access_token(google_access_token)
+
+    user_id = core.user_id_from_profile(google_profile, 'google')
+    user = core.user_from_user_id(user_id)
+
+    if not user:
+        user = core.register_user_from_profile(google_profile, 'google')
+        notification = NotificationPostBody(type=NotificationType('REGISTRATION'))
+        insert_notification(user_id, notification)
+        logger.notify('OAuth', f'Registered `{user.name}` from `google` using `Google One Tap`')
+
+    access_token = core.encode_access_token(user_id)
+    response = JSONResponse(content={
+        'user': parse(user),
+        'accessToken': access_token
+    })
+    response.set_cookie(key='access_token',
+                        value=access_token,
+                        domain='datatensor.io' if Config.ENVIRONMENT == 'production' else None,
+                        httponly=False,
+                        secure=True,
+                        samesite="lax" if Config.ENVIRONMENT == 'production' else "none")
+
+    logger.notify('OAuth', f'Logged in user `{user.id}` from `google` using `Google One Tap`')
 
     return response
