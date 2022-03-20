@@ -1,11 +1,12 @@
 import React, {createContext, FC, ReactNode, useEffect, useReducer, useState} from 'react';
-import {useHistory} from 'react-router-dom';
+import {useHistory, useLocation} from 'react-router-dom';
 import GoogleOneTapLogin from 'react-google-one-tap-login';
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import {useSnackbar} from 'notistack';
 import {User} from 'src/types/user';
 import SplashScreen from 'src/components/screens/SplashScreen';
+import {PUBLIC_PATHS} from 'src/components/utils/LocationReset';
 import api from 'src/utils/api';
 
 const ENVIRONMENT = process.env.REACT_APP_ENVIRONMENT;
@@ -164,6 +165,8 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
     const [state, dispatch] = useReducer(reducer, initialAuthState);
     const {enqueueSnackbar} = useSnackbar();
 
+    const location = useLocation();
+
     const login = async (email: string, password: string) => {
         const response = await api.post<{accessToken: string; user: User}>('/auth/login', {email, password});
         const {accessToken, user} = response.data;
@@ -195,7 +198,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
     const [isDoingOneTap, setIsDoingOneTap] = useState<boolean>(false);
 
     const loginGoogleOneTap = async (googleAccessToken: string) => {
-        setIsDoingOneTap(true)
+        setIsDoingOneTap(true);
         const response = await api.post<{accessToken: string; user: User}>(`/oauth/google-one-tap`, {
             google_access_token: googleAccessToken
         });
@@ -350,20 +353,22 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         >
             {children}
 
-            <GoogleOneTapLogin
-                googleAccountConfigs={{
-                    client_id: process.env.REACT_APP_OAUTH_GOOGLE_CLIENT_ID,
-                    context: 'use',
-                    cancel_on_tap_outside: false,
-                    callback: async data => {
-                        const googleAccessToken = data.credential;
-                        await loginGoogleOneTap(googleAccessToken);
-                    }
-                }}
-                disabled={state.isAuthenticated}
-                disableCancelOnUnmount
-                onError={error => console.error(error)}
-            />
+            {PUBLIC_PATHS.includes(location.pathname) && (
+                <GoogleOneTapLogin
+                    googleAccountConfigs={{
+                        client_id: process.env.REACT_APP_OAUTH_GOOGLE_CLIENT_ID,
+                        context: 'use',
+                        cancel_on_tap_outside: false,
+                        callback: async data => {
+                            const googleAccessToken = data.credential;
+                            await loginGoogleOneTap(googleAccessToken);
+                        }
+                    }}
+                    disabled={state.isAuthenticated}
+                    disableCancelOnUnmount
+                    onError={error => console.error(error)}
+                />
+            )}
         </AuthContext.Provider>
     );
 };

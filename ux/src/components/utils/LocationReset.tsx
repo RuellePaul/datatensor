@@ -3,9 +3,9 @@ import {useLocation} from 'react-router-dom';
 import routes from 'src/routes';
 import SplashScreen from 'src/components/screens/SplashScreen';
 
-const PUBLIC_PATHS = routes.filter(route => route.scope === undefined).map(route => route.path);
-const DOCS_PATHS = routes.filter(route => route.scope === 'docs').map(route => route.path);
-const APP_PATHS = routes.filter(route => route.scope === 'app').map(route => route.path);
+export const PUBLIC_PATHS = routes.filter(route => route.scope === undefined).map(route => route.path);
+export const DOCS_PATHS = routes.filter(route => route.scope === 'docs').map(route => route.path);
+export const APP_PATHS = routes.filter(route => route.scope === 'app').map(route => route.path);
 
 const ENVIRONMENT = process.env.REACT_APP_ENVIRONMENT;
 
