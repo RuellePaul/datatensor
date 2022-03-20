@@ -41,7 +41,7 @@ const OperationsPipeline: FC<ListProps> = ({ className, readOnly, ...rest }) => 
 
     const [dragDisabled, setDragDisabled] = useState<boolean>(false);
 
-    const pipeline = useSelector<any>((state) => state.pipeline);
+    const pipeline = useSelector((state) => state.pipeline);
 
     return (
         <div

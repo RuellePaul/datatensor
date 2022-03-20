@@ -1,32 +1,36 @@
 import React from 'react';
 import * as Yup from 'yup';
 import {
-    EmojiPeopleOutlined as PersonIcon,
-    CommuteOutlined as VehicleIcon,
-    MemoryOutlined as ElectronicIcon,
-    HomeOutlined as IndoorIcon,
-    EmojiNature as OutdoorIcon,
-    SportsFootball as SportsIcon,
-    PetsOutlined as AnimalIcon,
-    Deck as FurnitureIcon,
-    BeachAccess as AccessoryIcon,
-    Kitchen as KitchenIcon,
-    Devices as ApplianceIcon,
-    Fastfood as FoodIcon,
     AutoAwesome as MiscelleanousIcon,
+    BeachAccess as AccessoryIcon,
+    BlurCircularOutlined as GaussianDistortionIcon,
     BlurOn as DistortionIcon,
     Brightness7 as BrightnessIcon,
+    CommuteOutlined as VehicleIcon,
+    CompareArrowsOutlined as ShearIcon,
+    ContrastOutlined as ContrastIcon,
     CropRotate as RotateIcon,
+    Deck as FurnitureIcon,
+    Devices as ApplianceIcon,
+    EmojiNature as OutdoorIcon,
+    EmojiPeopleOutlined as PersonIcon,
     Equalizer as HistogramIcon,
+    Fastfood as FoodIcon,
     FiberManualRecord as GreyScaleIcon,
     Flip as FlipIcon,
     FormatItalic as SkewIcon,
+    HomeOutlined as IndoorIcon,
     InvertColors as InvertIcon,
+    Kitchen as KitchenIcon,
+    MemoryOutlined as ElectronicIcon,
     PaletteOutlined as ColorIcon,
-    PhotoSizeSelectLarge as CropIcon
+    PetsOutlined as AnimalIcon,
+    PhotoSizeSelectLarge as CropIcon,
+    SportsFootball as SportsIcon
 } from '@mui/icons-material';
 import {OperationType, Pipeline} from './types/pipeline';
 import {SuperCategory} from 'src/types/category';
+
 
 export const MAX_DATASETS_DISPLAYED = 6;
 export const MAX_CATEGORIES_DISPLAYED = 16;
@@ -64,19 +68,19 @@ export const OPERATIONS_TYPES: OperationType[] = [
 ];
 
 export const SUPERCATEGORIES_ICONS = {
-    person: <PersonIcon color="inherit" fontSize="small"/>,
-    vehicle: <VehicleIcon color="inherit" fontSize="small"/>,
-    electronic: <ElectronicIcon color="inherit" fontSize="small"/>,
-    indoor: <IndoorIcon color="inherit" fontSize="small"/>,
-    outdoor: <OutdoorIcon color="inherit" fontSize="small"/>,
-    sports: <SportsIcon color="inherit" fontSize="small"/>,
-    furniture: <FurnitureIcon color="inherit" fontSize="small"/>,
-    accessory: <AccessoryIcon color="inherit" fontSize="small"/>,
-    kitchen: <KitchenIcon color="inherit" fontSize="small"/>,
-    animal: <AnimalIcon color="inherit" fontSize="small"/>,
-    appliance: <ApplianceIcon color="inherit" fontSize="small"/>,
-    food: <FoodIcon color="inherit" fontSize="small"/>,
-    miscellaneous: <MiscelleanousIcon color="inherit" fontSize="small"/>,
+    person: <PersonIcon color="inherit" fontSize="small" />,
+    vehicle: <VehicleIcon color="inherit" fontSize="small" />,
+    electronic: <ElectronicIcon color="inherit" fontSize="small" />,
+    indoor: <IndoorIcon color="inherit" fontSize="small" />,
+    outdoor: <OutdoorIcon color="inherit" fontSize="small" />,
+    sports: <SportsIcon color="inherit" fontSize="small" />,
+    furniture: <FurnitureIcon color="inherit" fontSize="small" />,
+    accessory: <AccessoryIcon color="inherit" fontSize="small" />,
+    kitchen: <KitchenIcon color="inherit" fontSize="small" />,
+    animal: <AnimalIcon color="inherit" fontSize="small" />,
+    appliance: <ApplianceIcon color="inherit" fontSize="small" />,
+    food: <FoodIcon color="inherit" fontSize="small" />,
+    miscellaneous: <MiscelleanousIcon color="inherit" fontSize="small" />,
 }
 
 export const OPERATIONS_ICONS = {
@@ -84,12 +88,12 @@ export const OPERATIONS_ICONS = {
     flip_random: <FlipIcon />,
     skew: <SkewIcon />,
     crop_random: <CropIcon />,
-    shear: <RotateIcon />,
+    shear: <ShearIcon />,
     random_distortion: <DistortionIcon />,
-    gaussian_distortion: <DistortionIcon />,
+    gaussian_distortion: <GaussianDistortionIcon />,
     random_brightness: <BrightnessIcon />,
     random_color: <ColorIcon />,
-    random_contrast: <RotateIcon />,
+    random_contrast: <ContrastIcon />,
     histogram_equalisation: <HistogramIcon />,
     invert: <InvertIcon />,
     greyscale: <GreyScaleIcon />
@@ -270,12 +274,6 @@ export const DEFAULT_PIPELINE: Pipeline = {
             type: 'random_distortion',
             probability: 0.35,
             properties: OPERATIONS_INITIAL_PROPERTIES.random_distortion
-        },
-        {
-            id: 'c552d61e-4b85-4b3d-b76a-9504a2bc22d9',
-            type: 'random_contrast',
-            probability: 0.55,
-            properties: OPERATIONS_INITIAL_PROPERTIES.random_contrast
         },
     ]
 };

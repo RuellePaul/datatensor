@@ -34,7 +34,7 @@ const PipelineSample: FC<PipelineSampleProps> = ({handler, className}) => {
 
     const {dataset} = useDataset();
 
-    const pipeline = useSelector<any>(state => state.pipeline);
+    const pipeline = useSelector(state => state.pipeline);
 
     const [imagesBase64, setImagesBase64] = useState<string[]>([]);
     const [imagesLabels, setImagesLabels] = useState<Label[][]>([]);

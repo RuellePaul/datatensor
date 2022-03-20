@@ -1,22 +1,12 @@
 import React, {FC, useState} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
-import {
-    Button,
-    Card,
-    CardActions,
-    CardContent,
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    IconButton,
-    Link,
-    Typography
-} from '@mui/material';
+import {Button, Card, CardActions, CardContent, Dialog, DialogContent, Link, Typography} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
-import {Close as CloseIcon, DynamicFeedOutlined as AugmentationIcon} from '@mui/icons-material';
+import {DynamicFeedOutlined as AugmentationIcon} from '@mui/icons-material';
 import SectionAugmentation from 'src/views/dataset/DatasetMainView/sections/SectionAugmentation';
+
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
@@ -32,7 +22,7 @@ interface AugmentActionProps {
     className?: string;
 }
 
-const AugmentAction: FC<AugmentActionProps> = ({className}) => {
+const AugmentAction: FC<AugmentActionProps> = ({ className }) => {
     const classes = useStyles();
 
     const [open, setOpen] = useState<boolean>(false);
@@ -51,7 +41,7 @@ const AugmentAction: FC<AugmentActionProps> = ({className}) => {
                     </Link>
                 </Typography>
             </CardContent>
-            <CardActions style={{justifyContent: 'flex-end'}}>
+            <CardActions style={{ justifyContent: 'flex-end' }}>
                 <Button
                     variant="contained"
                     color="primary"
@@ -62,13 +52,7 @@ const AugmentAction: FC<AugmentActionProps> = ({className}) => {
                 </Button>
             </CardActions>
 
-            <Dialog open={open} onClose={handleCloseAugmentation} fullWidth maxWidth="lg">
-                <DialogTitle>
-                    Augment images
-                    <IconButton className={classes.close} onClick={handleCloseAugmentation}>
-                        <CloseIcon />
-                    </IconButton>
-                </DialogTitle>
+            <Dialog open={open} onClose={handleCloseAugmentation} fullWidth maxWidth="md">
                 <DialogContent>
                     <SectionAugmentation />
                 </DialogContent>
