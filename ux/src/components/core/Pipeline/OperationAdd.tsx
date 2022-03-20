@@ -4,7 +4,7 @@ import {Box, Button, capitalize, FormControl, MenuItem, Select} from '@mui/mater
 import {Add as AddIcon} from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
-import {useDispatch} from 'src/store';
+import {useDispatch, useSelector} from 'src/store';
 import {createOperation} from 'src/slices/pipeline';
 import {OperationType} from 'src/types/pipeline';
 import {OPERATIONS_ICONS, OPERATIONS_TYPES} from 'src/config';
@@ -45,6 +45,8 @@ const OperationAdd: FC<OperationAddProps> = ({className, ...rest}) => {
         setOperationType(OPERATIONS_TYPES[0]);
     };
 
+    const pipeline = useSelector(state => state.pipeline);
+
     return (
         <div className={clsx(classes.root, className)} {...rest}>
             {isExpanded ? (
@@ -61,7 +63,11 @@ const OperationAdd: FC<OperationAddProps> = ({className, ...rest}) => {
                             renderValue={() => capitalize(operationType).replaceAll('_', ' ')}
                         >
                             {OPERATIONS_TYPES.map(type => (
-                                <MenuItem key={type} value={type}>
+                                <MenuItem
+                                    key={type}
+                                    value={type}
+                                    disabled={pipeline.operations.allTypes.includes(type)}
+                                >
                                     <Box mr={1}>{OPERATIONS_ICONS[type]}</Box>
 
                                     {capitalize(type).replaceAll('_', ' ')}

@@ -14,7 +14,7 @@ import ProbabilitySlider from './OperationEditModal/ProbabilitySlider';
 
 interface OperationProps {
     className?: string;
-    operationId: string;
+    operationType: string;
     dragging: boolean;
     readOnly?: boolean;
     setDragDisabled?: (update: boolean | ((dataset: boolean) => boolean)) => void;
@@ -26,9 +26,9 @@ interface PopulatedOperation extends OperationType {
 
 }
 
-const operationSelector = (state: RootState, operationId: string): PopulatedOperation => {
+const operationSelector = (state: RootState, operationType: string): PopulatedOperation => {
     const { operations } = state.pipeline;
-    return operations.byId[operationId];
+    return operations.byType[operationType];
 };
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const Operation: FC<OperationProps> = forwardRef(({
-                                                      operationId,
+                                                      operationType,
                                                       className,
                                                       readOnly,
                                                       dragging,
@@ -61,7 +61,7 @@ const Operation: FC<OperationProps> = forwardRef(({
                                                   }, ref) => {
     const classes = useStyles();
 
-    const operation = useSelector((state) => operationSelector(state, operationId));
+    const operation = useSelector((state) => operationSelector(state, operationType));
 
     const [isOpened, setOpened] = useState<boolean>(false);
 

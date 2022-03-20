@@ -30,7 +30,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
 
     const handlePropertiesChange = async (properties): Promise<void> => {
         try {
-            await dispatch(updateOperation(operation.id, { properties }));
+            await dispatch(updateOperation(operation.type, { properties }));
         } catch (err) {
             console.error(err);
         }

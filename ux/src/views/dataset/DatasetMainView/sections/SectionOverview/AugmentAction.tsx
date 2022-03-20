@@ -52,7 +52,7 @@ const AugmentAction: FC<AugmentActionProps> = ({ className }) => {
                 </Button>
             </CardActions>
 
-            <Dialog open={open} onClose={handleCloseAugmentation} fullWidth maxWidth="md">
+            <Dialog open={open} onClose={handleCloseAugmentation} fullWidth maxWidth="md" keepMounted>
                 <DialogContent>
                     <SectionAugmentation />
                 </DialogContent>

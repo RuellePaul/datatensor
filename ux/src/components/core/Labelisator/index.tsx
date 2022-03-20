@@ -90,6 +90,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     toolbar: {
         alignItems: 'center',
         color: theme.palette.getContrastText(theme.palette.text.primary)
+    },
+    loader: {
+        display: 'block',
+        width: '20px !important',
+        height: '20px !important'
     }
 }));
 
@@ -131,8 +136,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
     };
 
     const fetchImageIds = useCallback(async () => {
-        if (imageIds.length > 0)
-            return;
+        if (imageIds.length > 0) return;
 
         try {
             const response = await api.get<{image_ids: string[]}>(`/datasets/${dataset.id}/images/ids`);
@@ -140,12 +144,10 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
         } catch (err) {
             console.error(err);
         }
-
     }, [dataset.id, imageIds]);
 
     useEffect(() => {
-        if (open)
-            fetchImageIds();
+        if (open) fetchImageIds();
     }, [fetchImageIds, open]);
 
     const image_id = window.location.hash.split('#')[1];
@@ -443,51 +445,67 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
                                     {image && (
                                         <ImagesProvider original_image_id={image_id}>
                                             <ImagesConsumer>
-                                                {value =>
-                                                    value.images instanceof Array && value.images.length > 0 ? (
-                                                        <Grid container spacing={1}>
-                                                            {value.images.map(current => (
-                                                                <Grid
-                                                                    item // @ts-ignore
-                                                                    xs={Math.min(parseInt(12 / value.images.length), 6)}
-                                                                    key={current.id}
-                                                                >
-                                                                    {imageAugmented !== null &&
-                                                                    imageAugmented.id === current.id ? (
-                                                                        <DTImage
-                                                                            className={clsx(
-                                                                                classes.image,
-                                                                                classes.selected
-                                                                            )}
-                                                                            clickable
-                                                                            onClick={() => setImageAugmented(current)}
-                                                                            skeleton
-                                                                        />
-                                                                    ) : (
-                                                                        <ImageProvider image={current}>
+                                                {value => (
+                                                    <>
+                                                        {value.images instanceof Array && value.images.length > 0 && (
+                                                            <Grid container spacing={1}>
+                                                                {value.images.map(current => (
+                                                                    <Grid
+                                                                        key={current.id}
+                                                                        item // @ts-ignore
+                                                                        xs={Math.min(
+                                                                            // @ts-ignore
+                                                                            parseInt(12 / value.images.length),
+                                                                            6
+                                                                        )}
+                                                                    >
+                                                                        {imageAugmented !== null &&
+                                                                        imageAugmented.id === current.id ? (
                                                                             <DTImage
-                                                                                className={classes.image}
+                                                                                className={clsx(
+                                                                                    classes.image,
+                                                                                    classes.selected
+                                                                                )}
                                                                                 clickable
                                                                                 onClick={() =>
                                                                                     setImageAugmented(current)
                                                                                 }
                                                                                 skeleton
                                                                             />
-                                                                        </ImageProvider>
-                                                                    )}
-                                                                </Grid>
-                                                            ))}
-                                                        </Grid>
-                                                    ) : (
-                                                        <Typography
-                                                            variant="caption"
-                                                            component="p"
-                                                            color="textSecondary"
-                                                        >
-                                                            No augmented images found.
-                                                        </Typography>
-                                                    )
-                                                }
+                                                                        ) : (
+                                                                            <ImageProvider image={current}>
+                                                                                <DTImage
+                                                                                    className={classes.image}
+                                                                                    clickable
+                                                                                    onClick={() =>
+                                                                                        setImageAugmented(current)
+                                                                                    }
+                                                                                    skeleton
+                                                                                />
+                                                                            </ImageProvider>
+                                                                        )}
+                                                                    </Grid>
+                                                                ))}
+                                                            </Grid>
+                                                        )}
+                                                        {value.images instanceof Array && value.images.length === 0 && (
+                                                            <Typography
+                                                                variant="caption"
+                                                                component="p"
+                                                                color="textSecondary"
+                                                            >
+                                                                No augmented images found.
+                                                            </Typography>
+                                                        )}
+                                                        {value.images === null && (
+                                                            <CircularProgress
+                                                                className={classes.loader}
+                                                                color="inherit"
+                                                                disableShrink
+                                                            />
+                                                        )}
+                                                    </>
+                                                )}
                                             </ImagesConsumer>
                                         </ImagesProvider>
                                     )}

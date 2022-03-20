@@ -44,7 +44,7 @@ const PipelineSample: FC<PipelineSampleProps> = ({handler, className}) => {
         setImagesLabels([]);
 
         if (dataset.id && pipeline.isLoaded) {
-            const operations: Operation[] = pipeline.operations.allIds.map(id => pipeline.operations.byId[id]);
+            const operations: Operation[] = pipeline.operations.allTypes.map(type => pipeline.operations.byType[type]);
 
             try {
                 await wait(10);

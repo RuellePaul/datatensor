@@ -264,13 +264,11 @@ export const OPERATIONS_SHAPES = {
 export const DEFAULT_PIPELINE: Pipeline = {
     operations: [
         {
-            id: '6e72802f-e64e-4ad9-8dc6-ede3fa2f498b',
             type: 'rotate',
             probability: 0.8,
             properties: OPERATIONS_INITIAL_PROPERTIES.rotate
         },
         {
-            id: '100af1ba-9cd7-44c5-9f31-223996f916f7',
             type: 'random_distortion',
             probability: 0.35,
             properties: OPERATIONS_INITIAL_PROPERTIES.random_distortion

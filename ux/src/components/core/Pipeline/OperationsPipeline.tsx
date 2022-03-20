@@ -57,11 +57,11 @@ const OperationsPipeline: FC<ListProps> = ({ className, readOnly, ...rest }) => 
                             ref={provided.innerRef}
                             className={clsx(classes.droppableArea, 'scroll')}
                         >
-                            {pipeline.operations.allIds.map((operationId, index) => (
+                            {pipeline.operations.allTypes.map((operationType, index) => (
                                 <Draggable
-                                    draggableId={operationId}
+                                    draggableId={operationType}
                                     index={index}
-                                    key={operationId}
+                                    key={operationType}
                                     isDragDisabled={readOnly || dragDisabled}
                                 >
                                     {(provided, snapshot) => {
@@ -71,10 +71,10 @@ const OperationsPipeline: FC<ListProps> = ({ className, readOnly, ...rest }) => 
                                         }
                                         return (
                                             <Operation
-                                                operationId={operationId}
+                                                operationType={operationType}
                                                 dragging={snapshot.isDragging}
                                                 index={index}
-                                                key={operationId}
+                                                key={operationType}
                                                 setDragDisabled={setDragDisabled}
                                                 // @ts-ignore
                                                 ref={provided.innerRef}

@@ -76,7 +76,6 @@ export type OperationProperties =
     | RandomContrastProperties;
 
 export interface Operation {
-    id: string;
     type: OperationType;
     probability: number;
     properties: OperationProperties;

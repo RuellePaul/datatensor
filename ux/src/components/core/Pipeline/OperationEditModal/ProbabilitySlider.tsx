@@ -17,7 +17,7 @@ const ProbabilitySlider: FC<ProbabilitySliderProps> = ({ operation, setDragDisab
 
     const handleProbabilityChange = async (event, value): Promise<void> => {
         try {
-            await dispatch(updateOperation(operation.id, { probability: value }));
+            await dispatch(updateOperation(operation.type, { probability: value }));
         } catch (err) {
             console.error(err);
         }

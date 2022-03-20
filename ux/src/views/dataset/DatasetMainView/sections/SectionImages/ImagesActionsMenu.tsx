@@ -153,7 +153,7 @@ const AugmentationMenuItem: FC = () => {
                 </MenuItem>
             )}
 
-            <Dialog open={open} onClose={handleCloseAugmentation} fullWidth maxWidth="lg">
+            <Dialog open={open} onClose={handleCloseAugmentation} fullWidth maxWidth="lg" keepMounted>
                 <DialogTitle>
                     Augment images
                     <IconButton className={classes.close} onClick={handleCloseAugmentation}>

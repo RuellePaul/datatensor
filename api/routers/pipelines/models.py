@@ -24,7 +24,6 @@ class OperationType(str, Enum):
 
 
 class Operation(BaseModel):
-    id: str
     type: OperationType
     probability: float
     properties: dict

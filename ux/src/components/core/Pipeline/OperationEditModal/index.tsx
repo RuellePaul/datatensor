@@ -55,7 +55,7 @@ const OperationEditModal: FC<OperationEditModalProps> = ({
 
     const handleDelete = async (): Promise<void> => {
         try {
-            await dispatch(deleteOperation(operation.id));
+            await dispatch(deleteOperation(operation.type));
             enqueueSnackbar('Operation deleted');
         } catch (err) {
             console.error(err);

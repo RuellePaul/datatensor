@@ -48,7 +48,7 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
     const {saveTasks} = useTasks();
 
     const pipeline = useSelector(state => state.pipeline);
-    const operations: Operation[] = pipeline.operations.allIds.map(id => pipeline.operations.byId[id]);
+    const operations: Operation[] = pipeline.operations.allTypes.map(type => pipeline.operations.byType[type]);
 
     const [activeStep, setActiveStep] = React.useState(0);
 
