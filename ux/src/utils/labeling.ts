@@ -105,7 +105,7 @@ export const drawLabels = (
     if (!labels) return;
 
     let context = canvas.getContext('2d');
-    context.lineWidth = 2;
+    context.lineWidth = 3;
 
     for (const label of labels) {
         context.setLineDash([dash]);

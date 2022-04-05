@@ -122,5 +122,5 @@ if __name__ == '__main__':
     uvicorn.run('app:app',
                 host='127.0.0.1',
                 port=4069,
-                debug=Config.ENVIRONMENT != 'production',
+                debug=Config.ENVIRONMENT == 'development',
                 reload=Config.ENVIRONMENT == 'development')
