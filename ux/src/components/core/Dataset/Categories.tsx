@@ -1,4 +1,4 @@
-import React, {FC, useState} from 'react';
+import React, {FC, cloneElement, useState} from 'react';
 import clsx from 'clsx';
 import {useSnackbar} from 'notistack';
 
@@ -14,7 +14,7 @@ import useImage from 'src/hooks/useImage';
 import useCategory from 'src/hooks/useCategory';
 import api from 'src/utils/api';
 import {COLORS} from 'src/utils/colors';
-import {MAX_CATEGORIES_DISPLAYED} from 'src/config';
+import {MAX_CATEGORIES_DISPLAYED, SUPERCATEGORIES_ICONS} from 'src/config';
 import useAuth from 'src/hooks/useAuth';
 
 interface CategoriesProps {
@@ -73,6 +73,12 @@ const DTCategory: FC<CategoryProps> = ({category, index, edit}) => {
     return (
         <Box mb={1.5} mr={1.5}>
             <Chip
+                icon={
+                    cloneElement(
+                        SUPERCATEGORIES_ICONS[category.supercategory],
+                        {style: {color: theme.palette.getContrastText(COLORS[index])}}
+                    )
+                }
                 label={
                     <Typography variant="body2">
                         <strong>

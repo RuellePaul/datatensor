@@ -15,7 +15,6 @@ import {Task} from 'src/types/task';
 import useTasks from 'src/hooks/useTasks';
 import useDataset from 'src/hooks/useDataset';
 import {useSelector} from 'src/store';
-import {ImageConsumer, ImageProvider} from 'src/store/ImageContext';
 import {Operation} from 'src/types/pipeline';
 import {Label} from 'src/types/label';
 

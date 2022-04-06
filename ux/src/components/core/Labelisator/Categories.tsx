@@ -1,4 +1,4 @@
-import React, {FC, useMemo, useState} from 'react';
+import React, {cloneElement, FC, useMemo, useState} from 'react';
 import clsx from 'clsx';
 import {Box, ButtonBase, capitalize, Chip, Link, Typography, useTheme} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
@@ -9,7 +9,7 @@ import useDataset from 'src/hooks/useDataset';
 import useImage from 'src/hooks/useImage';
 import useCategory from 'src/hooks/useCategory';
 import {currentCategoryCount} from 'src/utils/labeling';
-import {MAX_CATEGORIES_DISPLAYED} from 'src/config';
+import {MAX_CATEGORIES_DISPLAYED, SUPERCATEGORIES_ICONS} from 'src/config';
 import {COLORS} from 'src/utils/colors';
 
 interface CategoriesProps {
@@ -61,6 +61,12 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
         >
             <Chip
                 clickable
+                icon={
+                    cloneElement(
+                        SUPERCATEGORIES_ICONS[category.supercategory],
+                        {style: {color: theme.palette.getContrastText(COLORS[index])}}
+                    )
+                }
                 label={
                     <Typography variant="body2">
                         <strong>

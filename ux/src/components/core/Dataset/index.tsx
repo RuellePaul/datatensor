@@ -33,6 +33,7 @@ import DTImage from 'src/components/core/Images/Image';
 import {ImageProvider} from 'src/store/ImageContext';
 import useDataset from 'src/hooks/useDataset';
 import {Category} from 'src/types/category';
+import {SUPERCATEGORIES_ICONS} from 'src/config';
 
 interface DatasetProps {
     image?: Image;
@@ -103,6 +104,7 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
 
     return (
         <Chip
+            icon={SUPERCATEGORIES_ICONS[category.supercategory]}
             className={classes.category}
             label={
                 <Typography variant="body2">
