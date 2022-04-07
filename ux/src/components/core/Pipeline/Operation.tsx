@@ -71,7 +71,7 @@ const Operation: FC<OperationProps> = forwardRef(
         const handleDelete = async (): Promise<void> => {
             try {
                 await dispatch(deleteOperation(operation.type));
-                enqueueSnackbar('Operation deleted');
+                handleClose();
             } catch (err) {
                 console.error(err);
                 enqueueSnackbar('Something went wrong', {
