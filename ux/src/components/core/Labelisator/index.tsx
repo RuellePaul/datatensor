@@ -105,6 +105,17 @@ const Transition = forwardRef(function Transition(
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+const hasUUIDHashes = () => {
+    if (window.location.hash.length === 0) return false;
+
+    for (const hash of window.location.hash.split('#')) {
+        if (UUID_REGEX.test(hash)) return true;
+    }
+    return false;
+};
+
 const DTLabelisator: FC<DTLabelisatorProps> = () => {
     const classes = useStyles();
 
@@ -127,7 +138,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
 
     const [imageIds, setImageIds] = useState<string[]>([]);
 
-    const [open, setOpen] = useState<boolean>(window.location.hash.length > 0);
+    const [open, setOpen] = useState<boolean>(hasUUIDHashes());
 
     const handleClose = () => {
         setOpen(false);
@@ -184,7 +195,7 @@ const DTLabelisator: FC<DTLabelisatorProps> = () => {
     }, [fetchImage]);
 
     useEffect(() => {
-        const onHashChange = () => setOpen(window.location.hash.length > 0);
+        const onHashChange = () => setOpen(hasUUIDHashes());
         window.addEventListener('hashchange', onHashChange);
         return () => window.removeEventListener('hashchange', onHashChange);
 

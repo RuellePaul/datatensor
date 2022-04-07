@@ -15,7 +15,6 @@ import {DatasetConsumer, DatasetProvider} from 'src/store/DatasetContext';
 import {UserProvider} from 'src/store/UserContext';
 import {CategoryProvider} from 'src/store/CategoryContext';
 
-
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         backgroundColor: theme.palette.background.default,
@@ -39,8 +38,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 const DatasetMainView: FC = () => {
     const classes = useStyles();
 
-    const { user } = useAuth();
-    const { dataset_id } = useParams();
+    const {user} = useAuth();
+    const {dataset_id} = useParams();
 
     if (!dataset_id) return null;
 

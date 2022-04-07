@@ -1,4 +1,4 @@
-import React, {FC, useCallback, useEffect, useState} from 'react';
+import React, {FC} from 'react';
 import clsx from 'clsx';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const steps = ['Select pipeline settings', 'Visualize a sample', 'Augment dataset images'];
+const steps = ['Set operations pipeline', 'Visualize a sample', 'Augment dataset'];
 
 const SectionAugmentation: FC<SectionProps> = ({className}) => {
     const classes = useStyles();
@@ -67,24 +67,6 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
     const handleBack = () => {
         setActiveStep(prevActiveStep => prevActiveStep - 1);
     };
-
-    const [randomIndex, setRandomIndex] = useState<number | null>(0);
-
-    const pickRandomImage = useCallback(() => {
-        if (images && images.length > 1) {
-            let random = Math.floor(Math.random() * images.length);
-
-            while (random === randomIndex) {
-                random = Math.floor(Math.random() * images.length);
-            }
-
-            setRandomIndex(random);
-        }
-    }, [images, randomIndex]);
-
-    useEffect(() => {
-        pickRandomImage();
-    }, [pickRandomImage]);
 
     if (images === null || images.length === 0) return null;
 
@@ -139,17 +121,18 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                         })}
                     </Stepper>
                     <Grid container spacing={2} sx={{my: 2}}>
-                        <Grid item sm={6} xs={12}>
-                            <Typography variant="overline" color="textPrimary" align="center" gutterBottom>
-                                Operations pipeline
-                            </Typography>
-
-                            <Pipeline readOnly={activeStep > 0} />
-                        </Grid>
-
-                        {activeStep === 0 && <Grid item sm={6} xs={12} />}
-                        {activeStep === 1 && (
+                        {activeStep === 0 && (
                             <Grid item sm={6} xs={12}>
+                                <Typography variant="overline" color="textPrimary" align="center" gutterBottom>
+                                    Operations pipeline
+                                </Typography>
+
+                                <Pipeline />
+                            </Grid>
+                        )}
+
+                        {activeStep === 1 && (
+                            <Grid item xs={12}>
                                 <PipelineSample
                                     handler={operations =>
                                         api.post<{images: string[]; images_labels: Label[][]}>(

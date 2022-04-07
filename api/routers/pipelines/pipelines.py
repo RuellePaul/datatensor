@@ -30,13 +30,13 @@ def do_sample(dataset_id, payload: SampleBody, dataset=Depends(dataset_belongs_t
     """
     operations = payload.operations
 
-    images = find_images(dataset_id, limit=3, include_labels=True)
+    images = find_images(dataset_id, limit=1, include_labels=True)
 
     augmented_images = []
     augmented_labels = []
 
     for image in images:
-        current_images, current_labels = perform_sample(image, image.labels, operations, n=2)
+        current_images, current_labels = perform_sample(image, image.labels, operations)
         augmented_images.extend(current_images)
         augmented_labels.extend(current_labels)
 

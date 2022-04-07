@@ -43,6 +43,7 @@ const ProbabilitySlider: FC<ProbabilitySliderProps> = ({ operation, setDragDisab
                 onChangeCommitted={handleProbabilityChange}
                 onMouseEnter={() => setDragDisabled && setDragDisabled(true)}
                 onMouseLeave={() => setDragDisabled && setDragDisabled(false)}
+                sx={{py: 1}}
                 {...rest}
             />
         </>

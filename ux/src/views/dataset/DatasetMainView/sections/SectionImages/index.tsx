@@ -17,7 +17,7 @@ const SectionImages: FC<SectionProps> = ({ className }) => {
     const classes = useStyles();
 
     return (
-        <div className={clsx(classes.root, className)}>
+        <div className={clsx(classes.root, className)} id="images">
             <Divider sx={{ mt: 2 }}>
                 <Typography variant="overline" color="textPrimary">
                     Images & labels

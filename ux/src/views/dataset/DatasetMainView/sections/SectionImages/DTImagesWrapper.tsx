@@ -43,10 +43,12 @@ const Navigation: FC = () => {
 
     const handlePrevious = () => {
         saveOffset(offset => offset - LAZY_LOAD_BATCH);
+        goToHash('images');
     };
 
     const handleNext = () => {
         saveOffset(offset => offset + LAZY_LOAD_BATCH);
+        goToHash('images');
     };
 
     if (images === null || images.length < 1) return null;
