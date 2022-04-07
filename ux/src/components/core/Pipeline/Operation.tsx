@@ -1,15 +1,16 @@
-import React, {forwardRef, useState, FC} from 'react';
+import React, {FC, forwardRef, useState} from 'react';
 import clsx from 'clsx';
-import {Box, capitalize, Card, CardContent, IconButton, Tooltip, Typography} from '@mui/material';
-import {Settings as SettingsIcon} from '@mui/icons-material';
+import {useSnackbar} from 'notistack';
+import {Box, capitalize, Card, CardContent, IconButton, Fade, Tooltip, Typography} from '@mui/material';
+import {DeleteOutline as DeleteIcon, Settings as SettingsIcon} from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
-import {RootState} from 'src/store';
-import {useSelector} from 'src/store';
+import {RootState, useDispatch, useSelector} from 'src/store';
 import {Operation as OperationType} from 'src/types/pipeline';
-import OperationEditModal from './OperationEditModal';
+import OperationEdit from './OperationEdit';
 import {OPERATIONS_ICONS} from 'src/config';
-import ProbabilitySlider from './OperationEditModal/ProbabilitySlider';
+import ProbabilitySlider from './OperationEdit/ProbabilitySlider';
+import {deleteOperation} from 'src/slices/pipeline';
 
 interface OperationProps {
     className?: string;
@@ -43,6 +44,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     dragging: {
         backgroundColor: theme.palette.background.default
+    },
+    tooltip: {
+        padding: 0
     }
 }));
 
@@ -51,15 +55,29 @@ const Operation: FC<OperationProps> = forwardRef(
         const classes = useStyles();
 
         const operation = useSelector(state => operationSelector(state, operationType));
+        const dispatch = useDispatch();
+        const {enqueueSnackbar} = useSnackbar();
 
         const [isOpened, setOpened] = useState<boolean>(false);
 
-        const handleOpen = (): void => {
-            setOpened(true);
+        const handleToggle = () => {
+            setOpened(!isOpened);
         };
 
-        const handleClose = (): void => {
+        const handleClose = () => {
             setOpened(false);
+        };
+
+        const handleDelete = async (): Promise<void> => {
+            try {
+                await dispatch(deleteOperation(operation.type));
+                enqueueSnackbar('Operation deleted');
+            } catch (err) {
+                console.error(err);
+                enqueueSnackbar('Something went wrong', {
+                    variant: 'error'
+                });
+            }
         };
 
         return (
@@ -71,35 +89,48 @@ const Operation: FC<OperationProps> = forwardRef(
                 style={style}
                 {...rest}
             >
-                <Card
-                    className={clsx(classes.operation, {[classes.dragging]: dragging})}
-                    raised={dragging}
-                    variant={dragging ? 'elevation' : 'outlined'}
+                <Tooltip
+                    disableHoverListener
+                    open={isOpened}
+                    TransitionComponent={Fade}
+                    classes={{tooltip: classes.tooltip}}
+                    title={<OperationEdit operation={operation} handleClose={handleClose} />}
+                    placement="right"
                 >
-                    <CardContent className={classes.content}>
-                        <Box display="flex" alignItems="center">
-                            <Box mr={2}>{OPERATIONS_ICONS[operation.type]}</Box>
-                            <Typography variant="h5" color="textPrimary">
-                                {capitalize(operation.type).replaceAll('_', ' ')}
-                            </Typography>
-                            <Box flexGrow={1} />
-                            {readOnly === false && (
-                                <Tooltip title="Settings">
-                                    <IconButton onClick={handleOpen}>
-                                        <SettingsIcon />
+                    <Card
+                        className={clsx(classes.operation, {[classes.dragging]: dragging})}
+                        raised={dragging}
+                        variant={dragging ? 'elevation' : 'outlined'}
+                    >
+                        <CardContent className={classes.content}>
+                            <Box display="flex" alignItems="center">
+                                <Box mr={2}>{OPERATIONS_ICONS[operation.type]}</Box>
+                                <Typography variant="h5" color="textPrimary">
+                                    {capitalize(operation.type).replaceAll('_', ' ')}
+                                </Typography>
+                                <Box flexGrow={1} />
+                                {readOnly === false && (
+                                    <Tooltip title={isOpened ? 'Close settings' : 'Settings'}>
+                                        <IconButton onClick={handleToggle}>
+                                            <SettingsIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                )}
+                                <Tooltip title="Delete">
+                                    <IconButton onClick={handleDelete}>
+                                        <DeleteIcon />
                                     </IconButton>
                                 </Tooltip>
-                            )}
-                        </Box>
+                            </Box>
 
-                        <ProbabilitySlider
-                            operation={operation}
-                            setDragDisabled={setDragDisabled}
-                            disabled={readOnly}
-                        />
-                    </CardContent>
-                </Card>
-                <OperationEditModal open={isOpened} onClose={handleClose} operation={operation} />
+                            <ProbabilitySlider
+                                operation={operation}
+                                setDragDisabled={setDragDisabled}
+                                disabled={readOnly}
+                            />
+                        </CardContent>
+                    </Card>
+                </Tooltip>
             </div>
         );
     }

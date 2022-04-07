@@ -3,7 +3,19 @@ import clsx from 'clsx';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {useSnackbar} from 'notistack';
-import {Alert, Box, Button, FormHelperText, Grid, Step, StepLabel, Stepper, TextField, Typography} from '@mui/material';
+import {
+    Alert,
+    Box,
+    Button,
+    FormHelperText,
+    Grid,
+    Link,
+    Step,
+    StepLabel,
+    Stepper,
+    TextField,
+    Typography
+} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import Pipeline from 'src/components/core/Pipeline';
@@ -17,6 +29,8 @@ import useDataset from 'src/hooks/useDataset';
 import {useSelector} from 'src/store';
 import {Operation} from 'src/types/pipeline';
 import {Label} from 'src/types/label';
+import {Link as RouterLink} from 'react-router-dom';
+
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
@@ -47,13 +61,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const steps = ['Set operations pipeline', 'Visualize a sample', 'Augment dataset'];
 
-const SectionAugmentation: FC<SectionProps> = ({className}) => {
+const SectionAugmentation: FC<SectionProps> = ({ className }) => {
     const classes = useStyles();
-    const {enqueueSnackbar} = useSnackbar();
+    const { enqueueSnackbar } = useSnackbar();
 
-    const {dataset} = useDataset();
-    const {images} = useImages();
-    const {saveTasks} = useTasks();
+    const { dataset } = useDataset();
+    const { images } = useImages();
+    const { saveTasks } = useTasks();
 
     const pipeline = useSelector(state => state.pipeline);
     const operations: Operation[] = pipeline.operations.allTypes.map(type => pipeline.operations.byType[type]);
@@ -81,7 +95,7 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                     .min(dataset.image_count)
                     .max(dataset.image_count * 4)
             })}
-            onSubmit={async (values, {setErrors, setStatus, setSubmitting}) => {
+            onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
                 try {
                     const response = await api.post<{
                         task: Task;
@@ -94,22 +108,22 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                     });
                     saveTasks(tasks => [...tasks, response.data.task]);
 
-                    setStatus({success: true});
+                    setStatus({ success: true });
                     setSubmitting(false);
-                    enqueueSnackbar('Augmentation task created', {variant: 'info'});
+                    enqueueSnackbar('Augmentation task created', { variant: 'info' });
                 } catch (err) {
                     console.error(err);
-                    setStatus({success: false});
-                    setErrors({submit: err.message});
+                    setStatus({ success: false });
+                    setErrors({ submit: err.message });
                     setSubmitting(false);
                 }
             }}
         >
-            {({errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values}) => (
+            {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
                 <form onSubmit={handleSubmit} className={clsx(classes.root, className)}>
                     <Stepper activeStep={activeStep}>
                         {steps.map(label => {
-                            const stepProps: {completed?: boolean} = {};
+                            const stepProps: { completed?: boolean } = {};
                             const labelProps: {
                                 optional?: React.ReactNode;
                             } = {};
@@ -120,31 +134,58 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                             );
                         })}
                     </Stepper>
-                    <Grid container spacing={2} sx={{my: 2}}>
-                        {activeStep === 0 && (
-                            <Grid item sm={6} xs={12}>
-                                <Typography variant="overline" color="textPrimary" align="center" gutterBottom>
-                                    Operations pipeline
-                                </Typography>
+                    <Grid container spacing={2} sx={{ my: 2 }}>
+                        <Grid item sm={5} xs={12}>
+                            <Typography variant="overline" color="textPrimary" align="center" gutterBottom>
+                                Operations pipeline
+                            </Typography>
 
-                                <Pipeline />
-                            </Grid>
+                            <Pipeline />
+                        </Grid>
+
+                        {activeStep === 0 && (
+                            <>
+                                <Grid item sm={7} xs={12}>
+                                    <Typography variant="body2" gutterBottom>
+                                        First, configure your operations pipeline to fit your need. It will apply on all
+                                        images of your dataset.
+                                    </Typography>
+                                    <Typography variant="body2" gutterBottom>
+                                        Every operation has at minimum a probability parameter, which controls how
+                                        likely the operation will be applied to each image that is seen as the image
+                                        passes through the pipeline.{' '}
+                                        <Link
+                                            variant="body2"
+                                            color="primary"
+                                            component={RouterLink}
+                                            to="/datasets/augmentation"
+                                        >
+                                            Learn more
+                                        </Link>
+                                    </Typography>
+                                </Grid>
+                            </>
                         )}
 
                         {activeStep === 1 && (
-                            <Grid item xs={12}>
+                            <Grid item sm={7} xs={12}>
+                                <Typography variant="body2" gutterBottom>
+                                    A sample is the result of your operations pipeline applied to the first image of
+                                    your dataset.
+                                </Typography>
+
                                 <PipelineSample
                                     handler={operations =>
-                                        api.post<{images: string[]; images_labels: Label[][]}>(
+                                        api.post<{ images: string[]; images_labels: Label[][] }>(
                                             `/datasets/${dataset.id}/pipelines/sample`,
-                                            {operations}
+                                            { operations }
                                         )
                                     }
                                 />
                             </Grid>
                         )}
                         {activeStep === 2 && (
-                            <Grid item sm={6} xs={12}>
+                            <Grid item sm={7} xs={12}>
                                 <Typography variant="overline" color="textPrimary" align="center" gutterBottom>
                                     Properties
                                 </Typography>
@@ -183,7 +224,7 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
 
                     <Box className={classes.actions}>
                         {activeStep > 0 && (
-                            <Button onClick={handleBack} sx={{mr: 2}}>
+                            <Button onClick={handleBack} sx={{ mr: 2 }}>
                                 Back
                             </Button>
                         )}

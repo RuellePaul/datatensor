@@ -90,7 +90,7 @@ const PipelineSample: FC<PipelineSampleProps> = ({handler, className}) => {
                 {({errors, handleSubmit, isSubmitting}) => (
                     <form onSubmit={handleSubmit}>
                         {isSubmitting && (
-                            <Masonry columns={{xs: 2, sm: 3}} spacing={1}>
+                            <Masonry columns={{xs: image.width > image.height ? 2 : 3}} spacing={1}>
                                 {Array.from(Array(image.width > image.height ? 4 : 3), () => null).map(_ => (
                                     <MasonryItem>
                                         <Box
@@ -111,7 +111,7 @@ const PipelineSample: FC<PipelineSampleProps> = ({handler, className}) => {
                             </Masonry>
                         )}
 
-                        <Masonry columns={{xs: 2, sm: 3}} spacing={1}>
+                        <Masonry columns={{xs: image.width > image.height ? 2 : 3}} spacing={1}>
                             {imagesBase64.map((imageBase64, index) => (
                                 <MasonryItem key={`masonry_image_${index}`}>
                                     <ImageBase64 imageBase64={imageBase64} labels={imagesLabels[index]} />

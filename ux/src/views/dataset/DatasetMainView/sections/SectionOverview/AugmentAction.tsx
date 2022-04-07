@@ -35,8 +35,8 @@ const AugmentAction: FC<AugmentActionProps> = ({ className }) => {
             <CardContent>
                 <Typography gutterBottom>Augment images</Typography>
                 <Typography variant="body2" color="textSecondary" gutterBottom>
-                    Since there are labeled images on this dataset, you can use image augmentation to get more.{' '}
-                    <Link variant="body2" color="primary" component={RouterLink} to="/upload-images">
+                    Use dataset augmentation tool to get more images.{' '}
+                    <Link variant="body2" color="primary" component={RouterLink} to="/datasets/augmentation">
                         Learn more
                     </Link>
                 </Typography>
