@@ -1,20 +1,17 @@
-import type {FC} from 'react';
-import React, {useState} from 'react';
+import React, {FC, useState} from 'react';
 import clsx from 'clsx';
 import {Draggable, Droppable} from 'react-beautiful-dnd';
-import {Box, Divider, Paper} from '@mui/material';
+import {Box, Divider} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {useSelector} from 'src/store';
-import type {Theme} from 'src/theme';
+import {Theme} from 'src/theme';
 import Operation from './Operation';
 import OperationAdd from './OperationAdd';
-
 
 interface ListProps {
     className?: string;
     readOnly?: boolean;
 }
-
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -31,32 +28,23 @@ const useStyles = makeStyles((theme: Theme) => ({
         minHeight: 80,
         maxHeight: 620,
         flexGrow: 1,
-        overflowY: 'auto',
-        padding: theme.spacing(1, 2)
+        overflowY: 'auto'
     }
 }));
 
-const OperationsPipeline: FC<ListProps> = ({ className, readOnly, ...rest }) => {
+const OperationsPipeline: FC<ListProps> = ({className, readOnly, ...rest}) => {
     const classes = useStyles();
 
     const [dragDisabled, setDragDisabled] = useState<boolean>(false);
 
-    const pipeline = useSelector((state) => state.pipeline);
+    const pipeline = useSelector(state => state.pipeline);
 
     return (
-        <div
-            className={clsx(classes.root, className)}
-            {...rest}
-        >
-            <Paper className={classes.inner}>
-                <Droppable
-                    droppableId="operationsPipeline"
-                >
-                    {(provided) => (
-                        <div
-                            ref={provided.innerRef}
-                            className={clsx(classes.droppableArea, 'scroll')}
-                        >
+        <div className={clsx(classes.root, className)} {...rest}>
+            <div className={classes.inner}>
+                <Droppable droppableId="operationsPipeline">
+                    {provided => (
+                        <div ref={provided.innerRef} className={clsx(classes.droppableArea, 'scroll')}>
                             {pipeline.operations.allTypes.map((operationType, index) => (
                                 <Draggable
                                     draggableId={operationType}
@@ -65,7 +53,8 @@ const OperationsPipeline: FC<ListProps> = ({ className, readOnly, ...rest }) => 
                                     isDragDisabled={readOnly || dragDisabled}
                                 >
                                     {(provided, snapshot) => {
-                                        if (snapshot.isDragging) {// @ts-ignore
+                                        if (snapshot.isDragging) {
+                                            // @ts-ignore
                                             provided.draggableProps.style.left = undefined; // @ts-ignore
                                             provided.draggableProps.style.top = undefined;
                                         }
@@ -79,7 +68,7 @@ const OperationsPipeline: FC<ListProps> = ({ className, readOnly, ...rest }) => 
                                                 // @ts-ignore
                                                 ref={provided.innerRef}
                                                 readOnly={readOnly}
-                                                style={{ ...provided.draggableProps.style }}
+                                                style={{...provided.draggableProps.style}}
                                                 {...provided.draggableProps}
                                                 {...provided.dragHandleProps}
                                             />
@@ -93,13 +82,13 @@ const OperationsPipeline: FC<ListProps> = ({ className, readOnly, ...rest }) => 
                 </Droppable>
                 {!readOnly && (
                     <>
-                        <Divider />
-                        <Box p={2}>
+                        <Divider light/>
+                        <Box pt={2}>
                             <OperationAdd />
                         </Box>
                     </>
                 )}
-            </Paper>
+            </div>
         </div>
     );
 };

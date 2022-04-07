@@ -77,7 +77,7 @@ const Operation: FC<OperationProps> = forwardRef(
                     variant={dragging ? 'elevation' : 'outlined'}
                 >
                     <CardContent className={classes.content}>
-                        <Box display="flex" alignItems="center" mb={1.5}>
+                        <Box display="flex" alignItems="center">
                             <Box mr={2}>{OPERATIONS_ICONS[operation.type]}</Box>
                             <Typography variant="h5" color="textPrimary">
                                 {capitalize(operation.type).replaceAll('_', ' ')}

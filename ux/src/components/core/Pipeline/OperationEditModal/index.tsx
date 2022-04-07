@@ -15,13 +15,12 @@ import {
 } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Close, Delete} from '@mui/icons-material';
-import type {Theme} from 'src/theme';
+import {Theme} from 'src/theme';
 import {useDispatch} from 'src/store';
 import {deleteOperation} from 'src/slices/pipeline';
-import type {Operation} from 'src/types/pipeline';
+import {Operation} from 'src/types/pipeline';
 import OperationProperties from './OperationProperties';
 import {OPERATIONS_DESCRIPTION, OPERATIONS_ICONS} from 'src/config';
-
 
 interface OperationEditModalProps {
     className?: string;
@@ -40,16 +39,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const OperationEditModal: FC<OperationEditModalProps> = ({
-                                                             operation,
-                                                             className,
-                                                             onClose,
-                                                             open,
-                                                             ...rest
-                                                         }) => {
+const OperationEditModal: FC<OperationEditModalProps> = ({operation, className, onClose, open, ...rest}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const { enqueueSnackbar } = useSnackbar();
+    const {enqueueSnackbar} = useSnackbar();
 
     const handleDelete = async (): Promise<void> => {
         try {
@@ -64,26 +57,11 @@ const OperationEditModal: FC<OperationEditModalProps> = ({
     };
 
     return (
-        <Dialog
-            onClose={onClose}
-            open={open}
-            maxWidth="xs"
-            fullWidth
-            {...rest}
-        >
+        <Dialog onClose={onClose} open={open} maxWidth="xs" fullWidth {...rest}>
             <DialogContent>
-                <Box
-                    display="flex"
-                    mb={2}
-                >
-                    <Box mr={2}>
-                        {OPERATIONS_ICONS[operation.type]}
-                    </Box>
-                    <Typography
-                        variant="h5"
-                    >
-                        {capitalize(operation.type).replaceAll('_', ' ')}
-                    </Typography>
+                <Box display="flex" mb={2}>
+                    <Box mr={2}>{OPERATIONS_ICONS[operation.type]}</Box>
+                    <Typography variant="h5">{capitalize(operation.type).replaceAll('_', ' ')}</Typography>
                     <Box flexGrow={1} />
                     <IconButton size="small" onClick={onClose}>
                         <SvgIcon>
@@ -92,15 +70,11 @@ const OperationEditModal: FC<OperationEditModalProps> = ({
                     </IconButton>
                 </Box>
 
-                <OperationProperties
-                    operation={operation}
-                />
+                <OperationProperties operation={operation} />
 
                 <Box mt={2}>
                     <Alert icon={false}>
-                        <AlertTitle>
-                            Details
-                        </AlertTitle>
+                        <AlertTitle>Details</AlertTitle>
 
                         {OPERATIONS_DESCRIPTION[operation.type]}
 
@@ -108,12 +82,11 @@ const OperationEditModal: FC<OperationEditModalProps> = ({
                             <img
                                 src={`/static/images/augmentation/operations/${operation.type}.gif`}
                                 alt={`${operation.type}.gif`}
-                                width='100%'
+                                width="100%"
                             />
                         </Box>
                     </Alert>
                 </Box>
-
             </DialogContent>
 
             <DialogActions>
