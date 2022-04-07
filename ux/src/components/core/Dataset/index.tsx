@@ -16,6 +16,9 @@ import {
     Typography
 } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
+import Masonry from '@mui/lab/Masonry';
+import MasonryItem from '@mui/lab/MasonryItem';
+
 import {
     LocalOfferOutlined as LabelsIcon,
     Lock as PrivateIcon,
@@ -36,7 +39,7 @@ import {Category} from 'src/types/category';
 import {SUPERCATEGORIES_ICONS} from 'src/config';
 
 interface DatasetProps {
-    image?: Image;
+    images?: Image[];
     className?: string;
     onClick?: () => void;
     disabled?: boolean;
@@ -122,7 +125,7 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
     );
 };
 
-const DTDataset: FC<DatasetProps> = ({className, image = null, onClick, disabled = false, ...rest}) => {
+const DTDataset: FC<DatasetProps> = ({className, images = null, onClick, disabled = false, ...rest}) => {
     const classes = useStyles();
     const history = useHistory();
 
@@ -130,25 +133,25 @@ const DTDataset: FC<DatasetProps> = ({className, image = null, onClick, disabled
 
     const {dataset, categories} = useDataset();
 
-    const [imagePreview, setImagePreview] = useState<Image>(image);
+    const [imagesPreview, setImagesPreview] = useState<Image[]>(images);
 
-    const fetchImage = useCallback(async () => {
+    const fetchImages = useCallback(async () => {
         try {
             const response = await api.get<{images: Image[]}>(`/datasets/${dataset.id}/images/`, {
                 params: {
                     include_labels: true,
-                    limit: 1
+                    limit: 4
                 }
             });
-            setImagePreview(response.data.images[0]);
+            setImagesPreview(response.data.images);
         } catch (err) {
             console.error(err);
         }
     }, [dataset.id]);
 
     useEffect(() => {
-        if (image === null) fetchImage();
-    }, [fetchImage, image]);
+        if (imagesPreview === null) fetchImages();
+    }, [fetchImages, imagesPreview]);
 
     const totalLabelsCount = categories.map(category => category.labels_count || 0).reduce((acc, val) => acc + val, 0);
 
@@ -191,23 +194,29 @@ const DTDataset: FC<DatasetProps> = ({className, image = null, onClick, disabled
                 onClick={onClick instanceof Function ? onClick : () => history.push(`/datasets/${dataset.id}#`)}
                 disabled={disabled}
             >
-                {imagePreview ? (
-                    <Box position="relative">
-                        <ImageProvider image={imagePreview} labels={imagePreview.labels}>
-                            <DTImage className={classes.image} skeleton />
+                {imagesPreview instanceof Array ? (
+                    <Box position="relative" maxHeight={240} overflow="hidden">
+                        <Masonry columns={2} spacing={0.5}>
+                            {imagesPreview.map(imagePreview => (
+                                <MasonryItem>
+                                    <ImageProvider image={imagePreview} labels={imagePreview.labels}>
+                                        <DTImage className={classes.image} skeleton />
 
-                            <div className={classes.categories}>
-                                {categories
-                                    .sort((a, b) => (a.labels_count > b.labels_count ? -1 : 1))
-                                    .slice(0, 4)
-                                    .map((category, index) => (
-                                        <DTCategory category={category} index={index} key={category.id} />
-                                    ))}
-                            </div>
-                        </ImageProvider>
+                                        <div className={classes.categories}>
+                                            {categories
+                                                .sort((a, b) => (a.labels_count > b.labels_count ? -1 : 1))
+                                                .slice(0, 4)
+                                                .map((category, index) => (
+                                                    <DTCategory category={category} index={index} key={category.id} />
+                                                ))}
+                                        </div>
+                                    </ImageProvider>
+                                </MasonryItem>
+                            ))}
+                        </Masonry>
                     </Box>
                 ) : (
-                    <Skeleton width="100%" height={270} sx={{transform: 'none'}} />
+                    <Skeleton width="100%" height={250} sx={{transform: 'none'}} />
                 )}
                 <CardContent>
                     <Box display="flex" alignItems="flex-start" justifyContent="space-between">
