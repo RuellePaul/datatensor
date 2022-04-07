@@ -126,7 +126,7 @@ const PublicDatasets: FC<ResultsProps> = ({className, ...rest}) => {
                 </Box>
             </Box>
 
-            <Grid container columnSpacing={3} rowSpacing={2}>
+            <Grid container columnSpacing={2} rowSpacing={3}>
                 {displayedDatasets
                     .sort((a, b) => {
                         if (selectedSort === 'Most images')

@@ -56,7 +56,7 @@ const OwnDatasets: FC<ResultsProps> = ({className, ...rest}) => {
                 </Typography>
             </Box>
 
-            <Grid container columnSpacing={3} rowSpacing={2}>
+            <Grid container columnSpacing={2} rowSpacing={3}>
                 {ownDatasets
                     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
                     .slice(page * MAX_DATASETS_DISPLAYED, page * MAX_DATASETS_DISPLAYED + MAX_DATASETS_DISPLAYED)
