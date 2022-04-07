@@ -100,17 +100,17 @@ export const OPERATIONS_ICONS = {
 };
 
 export const OPERATIONS_DESCRIPTION = {
-    rotate: `The operation will rotate an image by an random amount, within a range specified.
+    rotate: `Rotate an image by an random amount, within a range specified.
              The parameters max_left_rotation and max_right_rotation allow you to control this range.`,
     flip_random: `Flip (mirror) the image along either its horizontal or vertical axis.`,
     skew: `Skew an image in a random direction, either left to right, top to bottom, or one of 8 corner directions.`,
     crop_random: `Crop a random area of an image, based on the percentage area to be returned.`,
     shear: `Shear the image by a specified number of degrees.`,
-    random_distortion: `This function performs a randomised, elastic distortion controlled by the parameters specified. 
+    random_distortion: `Performs a randomised, elastic distortion controlled by the parameters specified. 
                         The grid width and height controls how fine the distortions are. Smaller sizes will result in 
                         larger, more pronounced, and less granular distortions. Larger numbers will result in finer, 
                         more granular distortions. The magnitude of the distortions can be controlled using magnitude.`,
-    gaussian_distortion: `This function performs a randomised, elastic distortion controlled by the parameters specified. 
+    gaussian_distortion: `Performs a randomised, elastic gaussian distortion controlled by the parameters specified. 
                           The grid width and height controls how fine the distortions are. Smaller sizes will result in 
                           larger, more pronounced, and less granular distortions. Larger numbers will result in finer, 
                           more granular distortions. The magnitude of the distortions can be controlled using magnitude.`,

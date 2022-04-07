@@ -1,43 +1,36 @@
-import type {FC} from 'react';
-import React from 'react';
+import React, {FC, useCallback, useEffect} from 'react';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-import {
-    Alert,
-    Box,
-    Button,
-    capitalize,
-    Grid,
-    InputLabel,
-    MenuItem,
-    Select,
-    Slider,
-    TextField,
-    Typography
-} from '@mui/material';
+import {Alert, Box, capitalize, Grid, InputLabel, MenuItem, Select, Slider, TextField, Typography} from '@mui/material';
 import {useDispatch} from 'src/store';
-import type {Operation} from 'src/types/pipeline';
+import {Operation} from 'src/types/pipeline';
 import {updateOperation} from 'src/slices/pipeline';
 import {OPERATIONS_INITIAL_PROPERTIES, OPERATIONS_SHAPES} from 'src/config';
 
-
 interface OperationPropertiesProps {
-    operation: Operation,
+    operation: Operation;
 }
 
-const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
+const UpdateOnChange = ({operation, values}) => {
     const dispatch = useDispatch();
 
-    const handlePropertiesChange = async (properties): Promise<void> => {
+    const handlePropertiesChange = useCallback(async (properties): Promise<void> => {
         try {
-            await dispatch(updateOperation(operation.type, { properties }));
+            await dispatch(updateOperation(operation.type, {properties}));
         } catch (err) {
             console.error(err);
         }
-    };
+    }, [dispatch, operation.type]);
 
-    if (Object.keys(operation.properties).length === 0)
-        return null;
+    useEffect(() => {
+        handlePropertiesChange(values);
+    }, [values, handlePropertiesChange]);
+
+    return null;
+};
+
+const OperationProperties: FC<OperationPropertiesProps> = ({operation}) => {
+    if (Object.keys(operation.properties).length === 0) return null;
 
     return (
         <Formik
@@ -46,48 +39,20 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                 ...operation.properties
             }}
             validationSchema={Yup.object().shape(OPERATIONS_SHAPES[operation.type] || {})}
-            onSubmit={async (values) => {
-                try {
-                    await handlePropertiesChange(values);
-                } catch (error) {
-                    console.error(error);
-                }
-            }}
+            onSubmit={async () => {}}
         >
-            {({
-                  errors,
-                  handleBlur,
-                  handleChange,
-                  handleSubmit,
-                  isSubmitting,
-                  setFieldValue,
-                  touched,
-                  values
-              }) => (
-                <form
-                    noValidate
-                    onSubmit={handleSubmit}
-                >
+            {({errors, handleBlur, handleChange, handleSubmit, setFieldValue, touched, values}) => (
+                <form noValidate onSubmit={handleSubmit}>
                     <Box mb={1}>
-                        <Typography
-                            variant="overline"
-                            color="textSecondary"
-                        >
+                        <Typography variant="overline" color="textSecondary">
                             Properties
                         </Typography>
                     </Box>
 
-                    <Grid
-                        container
-                        spacing={4}
-                    >
+                    <Grid container spacing={4}>
                         {operation.type === 'rotate' && (
                             <>
-                                <Grid
-                                    item
-                                    sm={6}
-                                    xs={12}
-                                >
+                                <Grid item sm={6} xs={12}>
                                     <TextField
                                         error={Boolean(touched.max_left_rotation && errors.max_left_rotation)}
                                         fullWidth
@@ -98,15 +63,11 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                                         type="number"
                                         value={values.max_left_rotation}
                                         variant="outlined"
-                                        InputProps={{ inputProps: { min: 0, max: 25 } }}
+                                        InputProps={{inputProps: {min: 0, max: 25}}}
                                         size="small"
                                     />
                                 </Grid>
-                                <Grid
-                                    item
-                                    sm={6}
-                                    xs={12}
-                                >
+                                <Grid item sm={6} xs={12}>
                                     <TextField
                                         error={Boolean(touched.max_right_rotation && errors.max_right_rotation)}
                                         fullWidth
@@ -117,7 +78,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                                         type="number"
                                         value={values.max_right_rotation}
                                         variant="outlined"
-                                        InputProps={{ inputProps: { min: 0, max: 25 } }}
+                                        InputProps={{inputProps: {min: 0, max: 25}}}
                                         size="small"
                                     />
                                 </Grid>
@@ -125,15 +86,8 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                         )}
                         {operation.type === 'skew' && (
                             <>
-                                <Grid
-                                    item
-                                    sm={6}
-                                    xs={12}
-                                >
-                                    <Typography
-                                        color="textPrimary"
-                                        variant="subtitle2"
-                                    >
+                                <Grid item sm={6} xs={12}>
+                                    <Typography color="textPrimary" variant="subtitle2">
                                         Magnitude
                                     </Typography>
                                     <Slider
@@ -152,15 +106,8 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                         )}
                         {operation.type === 'crop_random' && (
                             <>
-                                <Grid
-                                    item
-                                    sm={6}
-                                    xs={12}
-                                >
-                                    <Typography
-                                        color="textPrimary"
-                                        variant="subtitle2"
-                                    >
+                                <Grid item sm={6} xs={12}>
+                                    <Typography color="textPrimary" variant="subtitle2">
                                         Percentage_area
                                     </Typography>
                                     <Slider
@@ -179,11 +126,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                         )}
                         {operation.type === 'shear' && (
                             <>
-                                <Grid
-                                    item
-                                    sm={6}
-                                    xs={12}
-                                >
+                                <Grid item sm={6} xs={12}>
                                     <TextField
                                         error={Boolean(touched.max_shear_left && errors.max_shear_left)}
                                         fullWidth
@@ -194,15 +137,11 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                                         type="number"
                                         value={values.max_shear_left}
                                         variant="outlined"
-                                        InputProps={{ inputProps: { min: 1, max: 25 } }}
+                                        InputProps={{inputProps: {min: 1, max: 25}}}
                                         size="small"
                                     />
                                 </Grid>
-                                <Grid
-                                    item
-                                    sm={6}
-                                    xs={12}
-                                >
+                                <Grid item sm={6} xs={12}>
                                     <TextField
                                         error={Boolean(touched.max_shear_right && errors.max_shear_right)}
                                         fullWidth
@@ -213,7 +152,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                                         type="number"
                                         value={values.max_shear_right}
                                         variant="outlined"
-                                        InputProps={{ inputProps: { min: 1, max: 25 } }}
+                                        InputProps={{inputProps: {min: 1, max: 25}}}
                                         size="small"
                                     />
                                 </Grid>
@@ -221,11 +160,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                         )}
                         {operation.type === 'random_distortion' && (
                             <>
-                                <Grid
-                                    item
-                                    sm={6}
-                                    xs={12}
-                                >
+                                <Grid item sm={6} xs={12}>
                                     <TextField
                                         error={Boolean(touched.grid_width && errors.grid_width)}
                                         fullWidth
@@ -236,15 +171,11 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                                         type="number"
                                         value={values.grid_width}
                                         variant="outlined"
-                                        InputProps={{ inputProps: { min: 1, max: 20 } }}
+                                        InputProps={{inputProps: {min: 1, max: 20}}}
                                         size="small"
                                     />
                                 </Grid>
-                                <Grid
-                                    item
-                                    sm={6}
-                                    xs={12}
-                                >
+                                <Grid item sm={6} xs={12}>
                                     <TextField
                                         error={Boolean(touched.grid_height && errors.grid_height)}
                                         fullWidth
@@ -255,18 +186,12 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                                         type="number"
                                         value={values.grid_height}
                                         variant="outlined"
-                                        InputProps={{ inputProps: { min: 1, max: 20 } }}
+                                        InputProps={{inputProps: {min: 1, max: 20}}}
                                         size="small"
                                     />
                                 </Grid>
-                                <Grid
-                                    item
-                                    xs={12}
-                                >
-                                    <Typography
-                                        color="textPrimary"
-                                        variant="subtitle2"
-                                    >
+                                <Grid item xs={12}>
+                                    <Typography color="textPrimary" variant="subtitle2">
                                         Magnitude
                                     </Typography>
                                     <Slider
@@ -285,11 +210,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                         )}
                         {operation.type === 'gaussian_distortion' && (
                             <>
-                                <Grid
-                                    item
-                                    sm={6}
-                                    xs={12}
-                                >
+                                <Grid item sm={6} xs={12}>
                                     <TextField
                                         error={Boolean(touched.grid_width && errors.grid_width)}
                                         fullWidth
@@ -300,15 +221,11 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                                         type="number"
                                         value={values.grid_width}
                                         variant="outlined"
-                                        InputProps={{ inputProps: { min: 1, max: 20 } }}
+                                        InputProps={{inputProps: {min: 1, max: 20}}}
                                         size="small"
                                     />
                                 </Grid>
-                                <Grid
-                                    item
-                                    sm={6}
-                                    xs={12}
-                                >
+                                <Grid item sm={6} xs={12}>
                                     <TextField
                                         error={Boolean(touched.grid_height && errors.grid_height)}
                                         fullWidth
@@ -319,18 +236,12 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                                         type="number"
                                         value={values.grid_height}
                                         variant="outlined"
-                                        InputProps={{ inputProps: { min: 1, max: 20 } }}
+                                        InputProps={{inputProps: {min: 1, max: 20}}}
                                         size="small"
                                     />
                                 </Grid>
-                                <Grid
-                                    item
-                                    xs={12}
-                                >
-                                    <Typography
-                                        color="textPrimary"
-                                        variant="subtitle2"
-                                    >
+                                <Grid item xs={12}>
+                                    <Typography color="textPrimary" variant="subtitle2">
                                         Magnitude
                                     </Typography>
                                     <Slider
@@ -345,11 +256,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                                         valueLabelDisplay="auto"
                                     />
                                 </Grid>
-                                <Grid
-                                    item
-                                    sm={6}
-                                    xs={12}
-                                >
+                                <Grid item sm={6} xs={12}>
                                     <InputLabel>Corner</InputLabel>
                                     <Select
                                         fullWidth
@@ -359,20 +266,13 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                                         variant="outlined"
                                     >
                                         {['bell', 'ul', 'ur', 'dl', 'dr'].map(corner => (
-                                            <MenuItem
-                                                key={corner}
-                                                value={corner}
-                                            >
+                                            <MenuItem key={corner} value={corner}>
                                                 {capitalize(corner)}
                                             </MenuItem>
                                         ))}
                                     </Select>
                                 </Grid>
-                                <Grid
-                                    item
-                                    sm={6}
-                                    xs={12}
-                                >
+                                <Grid item sm={6} xs={12}>
                                     <InputLabel>Method</InputLabel>
                                     <Select
                                         fullWidth
@@ -382,10 +282,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                                         variant="outlined"
                                     >
                                         {['in', 'out'].map(method => (
-                                            <MenuItem
-                                                key={method}
-                                                value={method}
-                                            >
+                                            <MenuItem key={method} value={method}>
                                                 {capitalize(method)}
                                             </MenuItem>
                                         ))}
@@ -396,15 +293,8 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
 
                         {['random_brightness', 'random_color', 'random_contrast'].includes(operation.type) && (
                             <>
-                                <Grid
-                                    item
-                                    sm={6}
-                                    xs={12}
-                                >
-                                    <Typography
-                                        color="textPrimary"
-                                        variant="subtitle2"
-                                    >
+                                <Grid item sm={6} xs={12}>
+                                    <Typography color="textPrimary" variant="subtitle2">
                                         Min factor
                                     </Typography>
                                     <Slider
@@ -419,15 +309,8 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                                         valueLabelDisplay="auto"
                                     />
                                 </Grid>
-                                <Grid
-                                    item
-                                    sm={6}
-                                    xs={12}
-                                >
-                                    <Typography
-                                        color="textPrimary"
-                                        variant="subtitle2"
-                                    >
+                                <Grid item sm={6} xs={12}>
+                                    <Typography color="textPrimary" variant="subtitle2">
                                         Max factor
                                     </Typography>
                                     <Slider
@@ -452,21 +335,12 @@ const OperationProperties: FC<OperationPropertiesProps> = ({ operation }) => {
                                 <>
                                     {error}
                                     <br />
-                                </>))}
+                                </>
+                            ))}
                         </Alert>
                     )}
 
-                    <Box my={2}>
-                        <Button
-                            color="primary"
-                            disabled={isSubmitting || Object.keys(errors).length > 0}
-                            type="submit"
-                            variant="contained"
-                            size="small"
-                        >
-                            Update properties
-                        </Button>
-                    </Box>
+                    <UpdateOnChange operation={operation} values={values} />
                 </form>
             )}
         </Formik>

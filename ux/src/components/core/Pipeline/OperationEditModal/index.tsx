@@ -1,5 +1,4 @@
-import type {FC} from 'react';
-import React from 'react';
+import React, {FC} from 'react';
 import {useSnackbar} from 'notistack';
 import {
     Alert,
@@ -20,7 +19,6 @@ import type {Theme} from 'src/theme';
 import {useDispatch} from 'src/store';
 import {deleteOperation} from 'src/slices/pipeline';
 import type {Operation} from 'src/types/pipeline';
-import ProbabilitySlider from './ProbabilitySlider';
 import OperationProperties from './OperationProperties';
 import {OPERATIONS_DESCRIPTION, OPERATIONS_ICONS} from 'src/config';
 
@@ -94,27 +92,28 @@ const OperationEditModal: FC<OperationEditModalProps> = ({
                     </IconButton>
                 </Box>
 
-                <ProbabilitySlider
-                    operation={operation}
-                />
-
-                <Box
-                    my={1}
-                >
-                    <Alert
-                        severity="info"
-                        variant="filled"
-                    >
-                        <AlertTitle>
-                            Informations
-                        </AlertTitle>
-                        {OPERATIONS_DESCRIPTION[operation.type]}
-                    </Alert>
-                </Box>
-
                 <OperationProperties
                     operation={operation}
                 />
+
+                <Box mt={2}>
+                    <Alert icon={false}>
+                        <AlertTitle>
+                            Details
+                        </AlertTitle>
+
+                        {OPERATIONS_DESCRIPTION[operation.type]}
+
+                        <Box mt={1}>
+                            <img
+                                src={`/static/images/augmentation/operations/${operation.type}.gif`}
+                                alt={`${operation.type}.gif`}
+                                width='100%'
+                            />
+                        </Box>
+                    </Alert>
+                </Box>
+
             </DialogContent>
 
             <DialogActions>

@@ -206,7 +206,12 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                         )}
 
                         {activeStep === 0 && (
-                            <Button color="primary" variant="contained" onClick={handleNext}>
+                            <Button
+                                color="primary"
+                                variant="contained"
+                                onClick={handleNext}
+                                disabled={operations.length === 0}
+                            >
                                 Visualize a sample
                             </Button>
                         )}

@@ -1,16 +1,15 @@
-import type {FC} from 'react';
-import React, {forwardRef, useState} from 'react';
+import React, {forwardRef, useState, FC} from 'react';
 import clsx from 'clsx';
-import {Box, capitalize, Card, CardContent, Typography} from '@mui/material';
+import {Box, capitalize, Card, CardContent, IconButton, Tooltip, Typography} from '@mui/material';
+import {Settings as SettingsIcon} from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
-import type {Theme} from 'src/theme';
-import type {RootState} from 'src/store';
+import {Theme} from 'src/theme';
+import {RootState} from 'src/store';
 import {useSelector} from 'src/store';
-import type {Operation as OperationType} from 'src/types/pipeline';
+import {Operation as OperationType} from 'src/types/pipeline';
 import OperationEditModal from './OperationEditModal';
 import {OPERATIONS_ICONS} from 'src/config';
 import ProbabilitySlider from './OperationEditModal/ProbabilitySlider';
-
 
 interface OperationProps {
     className?: string;
@@ -22,12 +21,10 @@ interface OperationProps {
     style?: {};
 }
 
-interface PopulatedOperation extends OperationType {
-
-}
+interface PopulatedOperation extends OperationType {}
 
 const operationSelector = (state: RootState, operationType: string): PopulatedOperation => {
-    const { operations } = state.pipeline;
+    const {operations} = state.pipeline;
     return operations.byType[operationType];
 };
 
@@ -49,82 +46,63 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const Operation: FC<OperationProps> = forwardRef(({
-                                                      operationType,
-                                                      className,
-                                                      readOnly,
-                                                      dragging,
-                                                      setDragDisabled,
-                                                      index,
-                                                      style,
-                                                      ...rest
-                                                  }, ref) => {
-    const classes = useStyles();
+const Operation: FC<OperationProps> = forwardRef(
+    ({operationType, className, readOnly, dragging, setDragDisabled, index, style, ...rest}, ref) => {
+        const classes = useStyles();
 
-    const operation = useSelector((state) => operationSelector(state, operationType));
+        const operation = useSelector(state => operationSelector(state, operationType));
 
-    const [isOpened, setOpened] = useState<boolean>(false);
+        const [isOpened, setOpened] = useState<boolean>(false);
 
-    const handleOpen = (): void => {
-        setOpened(true);
-    };
+        const handleOpen = (): void => {
+            setOpened(true);
+        };
 
-    const handleClose = (): void => {
-        setOpened(false);
-    };
+        const handleClose = (): void => {
+            setOpened(false);
+        };
 
-
-    return (
-        <div
-            className={clsx(classes.root, className)}
-            index={index}
-            // @ts-ignore
-            ref={ref}
-            style={style}
-            {...rest}
-        >
-            <Card
-                className={clsx(
-                    classes.operation,
-                    { [classes.dragging]: dragging }
-                )}
-                raised={dragging}
-                variant={dragging ? 'elevation' : 'outlined'}
-                onClick={handleOpen}
+        return (
+            <div
+                className={clsx(classes.root, className)}
+                index={index}
+                // @ts-ignore
+                ref={ref}
+                style={style}
+                {...rest}
             >
-                <CardContent
-                    className={classes.content}
+                <Card
+                    className={clsx(classes.operation, {[classes.dragging]: dragging})}
+                    raised={dragging}
+                    variant={dragging ? 'elevation' : 'outlined'}
                 >
-                    <Box
-                        display="flex"
-                        alignItems="center"
-                        mb={1.5}
-                    >
-                        <Box mr={2}>
-                            {OPERATIONS_ICONS[operation.type]}
+                    <CardContent className={classes.content}>
+                        <Box display="flex" alignItems="center" mb={1.5}>
+                            <Box mr={2}>{OPERATIONS_ICONS[operation.type]}</Box>
+                            <Typography variant="h5" color="textPrimary">
+                                {capitalize(operation.type).replaceAll('_', ' ')}
+                            </Typography>
+                            <Box flexGrow={1} />
+                            {readOnly === false && (
+                                <Tooltip title="Settings">
+                                    <IconButton onClick={handleOpen}>
+                                        <SettingsIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            )}
                         </Box>
-                        <Typography
-                            variant="h5"
-                            color="textPrimary"
-                        >
-                            {capitalize(operation.type).replaceAll('_', ' ')}
-                        </Typography>
-                    </Box>
 
-                    <ProbabilitySlider
-                        operation={operation}
-                        setDragDisabled={setDragDisabled}
-                        disabled={readOnly}
-                    />
-                </CardContent>
-            </Card>
-            <OperationEditModal
-                open={isOpened}
-                onClose={handleClose}
-                operation={operation}
-            />
-        </div>
-    );
-});
+                        <ProbabilitySlider
+                            operation={operation}
+                            setDragDisabled={setDragDisabled}
+                            disabled={readOnly}
+                        />
+                    </CardContent>
+                </Card>
+                <OperationEditModal open={isOpened} onClose={handleClose} operation={operation} />
+            </div>
+        );
+    }
+);
 
 export default Operation;
