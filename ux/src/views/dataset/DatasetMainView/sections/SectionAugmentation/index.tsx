@@ -221,7 +221,7 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                                 Operations pipeline
                             </Typography>
 
-                            <Pipeline readOnly={activeStep > 0} />
+                            <Pipeline />
                         </Grid>
                     </Grid>
 

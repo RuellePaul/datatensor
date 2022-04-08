@@ -140,7 +140,7 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({className, user, ...rest}) =
                                         Make Contact Info Public
                                     </Typography>
                                     <Typography variant="body2" color="textSecondary">
-                                        Means that anyone viewing your profile will be able to see your contacts details
+                                        Means that anyone viewing your profile will be able to see your datasets
                                     </Typography>
                                     <Switch
                                         checked={values.is_public}

@@ -33,9 +33,8 @@ const useStyles = makeStyles((theme: Theme) => ({
         marginLeft: theme.spacing(1)
     },
     avatar: {
-        width: 24,
-        height: 24,
-        marginRight: theme.spacing(1)
+        width: '100%',
+        height: '100%'
     }
 }));
 
@@ -61,7 +60,15 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
                     <UserConsumer>
                         {value => (
                             <Box display="flex" alignItems="center">
-                                <UserAvatar className={classes.avatar} user={value.user} disableBadge />
+                                <Box
+                                    sx={{
+                                        width: 26,
+                                        height: 26,
+                                        mr: 1.5
+                                    }}
+                                >
+                                    <UserAvatar user={value.user} className={classes.avatar} />
+                                </Box>
                                 <Link
                                     variant="body1"
                                     color="text.primary"
