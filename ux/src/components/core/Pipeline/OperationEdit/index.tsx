@@ -11,6 +11,7 @@ interface OperationEditProps {
     className?: string;
     operation: Operation;
     handleClose: () => void;
+    readOnly: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -30,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const OperationEdit: FC<OperationEditProps> = ({operation, className, handleClose, ...rest}) => {
+const OperationEdit: FC<OperationEditProps> = ({operation, className, handleClose, readOnly = false, ...rest}) => {
     const classes = useStyles();
 
     if (!operation) return null;
@@ -49,7 +50,7 @@ const OperationEdit: FC<OperationEditProps> = ({operation, className, handleClos
                     </IconButton>
                 </Box>
 
-                <OperationProperties operation={operation} />
+                <OperationProperties operation={operation} readOnly={readOnly} />
 
                 <Box mt={2}>
                     <Alert icon={false}>

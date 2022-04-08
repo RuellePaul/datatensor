@@ -1,7 +1,7 @@
 import React, {FC, forwardRef, useState} from 'react';
 import clsx from 'clsx';
 import {useSnackbar} from 'notistack';
-import {Box, capitalize, Card, CardContent, IconButton, Fade, Tooltip, Typography} from '@mui/material';
+import {Box, capitalize, Card, CardContent, Fade, IconButton, Tooltip, Typography, useMediaQuery} from '@mui/material';
 import {DeleteOutline as DeleteIcon, Settings as SettingsIcon} from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
@@ -53,6 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Operation: FC<OperationProps> = forwardRef(
     ({operationType, className, readOnly, dragging, setDragDisabled, index, style, ...rest}, ref) => {
         const classes = useStyles();
+        const isLargeScreen = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'));
 
         const operation = useSelector(state => operationSelector(state, operationType));
         const dispatch = useDispatch();
@@ -91,11 +92,11 @@ const Operation: FC<OperationProps> = forwardRef(
             >
                 <Tooltip
                     disableHoverListener
-                    open={isOpened}
+                    open={!readOnly && isOpened}
                     TransitionComponent={Fade}
                     classes={{tooltip: classes.tooltip}}
-                    title={<OperationEdit operation={operation} handleClose={handleClose} />}
-                    placement="right"
+                    title={<OperationEdit operation={operation} handleClose={handleClose} readOnly={readOnly} />}
+                    placement={isLargeScreen ? 'right' : 'left'}
                 >
                     <Card
                         className={clsx(classes.operation, {[classes.dragging]: dragging})}
@@ -110,17 +111,19 @@ const Operation: FC<OperationProps> = forwardRef(
                                 </Typography>
                                 <Box flexGrow={1} />
                                 {readOnly === false && (
-                                    <Tooltip title={isOpened ? 'Close settings' : 'Settings'}>
-                                        <IconButton onClick={handleToggle}>
-                                            <SettingsIcon />
-                                        </IconButton>
-                                    </Tooltip>
+                                    <>
+                                        <Tooltip title={isOpened ? 'Close settings' : 'Settings'}>
+                                            <IconButton onClick={handleToggle}>
+                                                <SettingsIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Tooltip title="Delete">
+                                            <IconButton onClick={handleDelete}>
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </>
                                 )}
-                                <Tooltip title="Delete">
-                                    <IconButton onClick={handleDelete}>
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </Tooltip>
                             </Box>
 
                             <ProbabilitySlider

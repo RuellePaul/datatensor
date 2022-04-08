@@ -31,7 +31,6 @@ import {Operation} from 'src/types/pipeline';
 import {Label} from 'src/types/label';
 import {Link as RouterLink} from 'react-router-dom';
 
-
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
     wrapper: {
@@ -61,13 +60,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const steps = ['Set operations pipeline', 'Visualize a sample', 'Augment dataset'];
 
-const SectionAugmentation: FC<SectionProps> = ({ className }) => {
+const SectionAugmentation: FC<SectionProps> = ({className}) => {
     const classes = useStyles();
-    const { enqueueSnackbar } = useSnackbar();
+    const {enqueueSnackbar} = useSnackbar();
 
-    const { dataset } = useDataset();
-    const { images } = useImages();
-    const { saveTasks } = useTasks();
+    const {dataset} = useDataset();
+    const {images} = useImages();
+    const {saveTasks} = useTasks();
 
     const pipeline = useSelector(state => state.pipeline);
     const operations: Operation[] = pipeline.operations.allTypes.map(type => pipeline.operations.byType[type]);
@@ -95,7 +94,7 @@ const SectionAugmentation: FC<SectionProps> = ({ className }) => {
                     .min(dataset.image_count)
                     .max(dataset.image_count * 4)
             })}
-            onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+            onSubmit={async (values, {setErrors, setStatus, setSubmitting}) => {
                 try {
                     const response = await api.post<{
                         task: Task;
@@ -108,22 +107,22 @@ const SectionAugmentation: FC<SectionProps> = ({ className }) => {
                     });
                     saveTasks(tasks => [...tasks, response.data.task]);
 
-                    setStatus({ success: true });
+                    setStatus({success: true});
                     setSubmitting(false);
-                    enqueueSnackbar('Augmentation task created', { variant: 'info' });
+                    enqueueSnackbar('Augmentation task created', {variant: 'info'});
                 } catch (err) {
                     console.error(err);
-                    setStatus({ success: false });
-                    setErrors({ submit: err.message });
+                    setStatus({success: false});
+                    setErrors({submit: err.message});
                     setSubmitting(false);
                 }
             }}
         >
-            {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+            {({errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values}) => (
                 <form onSubmit={handleSubmit} className={clsx(classes.root, className)}>
                     <Stepper activeStep={activeStep}>
                         {steps.map(label => {
-                            const stepProps: { completed?: boolean } = {};
+                            const stepProps: {completed?: boolean} = {};
                             const labelProps: {
                                 optional?: React.ReactNode;
                             } = {};
@@ -134,15 +133,7 @@ const SectionAugmentation: FC<SectionProps> = ({ className }) => {
                             );
                         })}
                     </Stepper>
-                    <Grid container spacing={2} sx={{ my: 2 }}>
-                        <Grid item sm={5} xs={12}>
-                            <Typography variant="overline" color="textPrimary" align="center" gutterBottom>
-                                Operations pipeline
-                            </Typography>
-
-                            <Pipeline />
-                        </Grid>
-
+                    <Grid container spacing={2} sx={{my: 2}}>
                         {activeStep === 0 && (
                             <>
                                 <Grid item sm={7} xs={12}>
@@ -176,14 +167,15 @@ const SectionAugmentation: FC<SectionProps> = ({ className }) => {
 
                                 <PipelineSample
                                     handler={operations =>
-                                        api.post<{ images: string[]; images_labels: Label[][] }>(
+                                        api.post<{images: string[]; images_labels: Label[][]}>(
                                             `/datasets/${dataset.id}/pipelines/sample`,
-                                            { operations }
+                                            {operations}
                                         )
                                     }
                                 />
                             </Grid>
                         )}
+
                         {activeStep === 2 && (
                             <Grid item sm={7} xs={12}>
                                 <Typography variant="overline" color="textPrimary" align="center" gutterBottom>
@@ -220,11 +212,19 @@ const SectionAugmentation: FC<SectionProps> = ({ className }) => {
                                 )}
                             </Grid>
                         )}
+
+                        <Grid item sm={5} xs={12}>
+                            <Typography variant="overline" color="textPrimary" align="center" gutterBottom>
+                                Operations pipeline
+                            </Typography>
+
+                            <Pipeline readOnly={activeStep > 0}/>
+                        </Grid>
                     </Grid>
 
                     <Box className={classes.actions}>
                         {activeStep > 0 && (
-                            <Button onClick={handleBack} sx={{ mr: 2 }}>
+                            <Button onClick={handleBack} sx={{mr: 2}}>
                                 Back
                             </Button>
                         )}

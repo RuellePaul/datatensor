@@ -9,6 +9,7 @@ import {OPERATIONS_INITIAL_PROPERTIES, OPERATIONS_SHAPES} from 'src/config';
 
 interface OperationPropertiesProps {
     operation: Operation;
+    readOnly: boolean;
 }
 
 const UpdateOnChange = ({operation, values}) => {
@@ -29,7 +30,7 @@ const UpdateOnChange = ({operation, values}) => {
     return null;
 };
 
-const OperationProperties: FC<OperationPropertiesProps> = ({operation}) => {
+const OperationProperties: FC<OperationPropertiesProps> = ({operation, readOnly = false}) => {
     if (Object.keys(operation.properties).length === 0) return null;
 
     return (
@@ -65,6 +66,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({operation}) => {
                                         variant="outlined"
                                         InputProps={{inputProps: {min: 0, max: 25}}}
                                         size="small"
+                                        disabled={readOnly}
                                     />
                                 </Grid>
                                 <Grid item sm={6} xs={12}>
@@ -80,6 +82,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({operation}) => {
                                         variant="outlined"
                                         InputProps={{inputProps: {min: 0, max: 25}}}
                                         size="small"
+                                        disabled={readOnly}
                                     />
                                 </Grid>
                             </>
@@ -100,6 +103,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({operation}) => {
                                         step={0.05}
                                         marks
                                         valueLabelDisplay="auto"
+                                        disabled={readOnly}
                                     />
                                 </Grid>
                             </>
@@ -120,6 +124,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({operation}) => {
                                         step={0.05}
                                         marks
                                         valueLabelDisplay="auto"
+                                        disabled={readOnly}
                                     />
                                 </Grid>
                             </>
@@ -139,6 +144,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({operation}) => {
                                         variant="outlined"
                                         InputProps={{inputProps: {min: 1, max: 25}}}
                                         size="small"
+                                        disabled={readOnly}
                                     />
                                 </Grid>
                                 <Grid item sm={6} xs={12}>
@@ -154,6 +160,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({operation}) => {
                                         variant="outlined"
                                         InputProps={{inputProps: {min: 1, max: 25}}}
                                         size="small"
+                                        disabled={readOnly}
                                     />
                                 </Grid>
                             </>
@@ -173,6 +180,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({operation}) => {
                                         variant="outlined"
                                         InputProps={{inputProps: {min: 1, max: 20}}}
                                         size="small"
+                                        disabled={readOnly}
                                     />
                                 </Grid>
                                 <Grid item sm={6} xs={12}>
@@ -188,6 +196,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({operation}) => {
                                         variant="outlined"
                                         InputProps={{inputProps: {min: 1, max: 20}}}
                                         size="small"
+                                        disabled={readOnly}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -204,6 +213,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({operation}) => {
                                         step={1}
                                         marks
                                         valueLabelDisplay="auto"
+                                        disabled={readOnly}
                                     />
                                 </Grid>
                             </>
@@ -223,6 +233,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({operation}) => {
                                         variant="outlined"
                                         InputProps={{inputProps: {min: 1, max: 20}}}
                                         size="small"
+                                        disabled={readOnly}
                                     />
                                 </Grid>
                                 <Grid item sm={6} xs={12}>
@@ -238,6 +249,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({operation}) => {
                                         variant="outlined"
                                         InputProps={{inputProps: {min: 1, max: 20}}}
                                         size="small"
+                                        disabled={readOnly}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -254,6 +266,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({operation}) => {
                                         step={1}
                                         marks
                                         valueLabelDisplay="auto"
+                                        disabled={readOnly}
                                     />
                                 </Grid>
                                 <Grid item sm={6} xs={12}>
@@ -264,6 +277,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({operation}) => {
                                         onChange={handleChange}
                                         value={values.corner || 'bell'}
                                         variant="outlined"
+                                        disabled={readOnly}
                                     >
                                         {['bell', 'ul', 'ur', 'dl', 'dr'].map(corner => (
                                             <MenuItem key={corner} value={corner}>
@@ -280,6 +294,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({operation}) => {
                                         onChange={handleChange}
                                         value={values.method || 'in'}
                                         variant="outlined"
+                                        disabled={readOnly}
                                     >
                                         {['in', 'out'].map(method => (
                                             <MenuItem key={method} value={method}>
@@ -307,6 +322,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({operation}) => {
                                         step={0.05}
                                         marks
                                         valueLabelDisplay="auto"
+                                        disabled={readOnly}
                                     />
                                 </Grid>
                                 <Grid item sm={6} xs={12}>
@@ -323,6 +339,7 @@ const OperationProperties: FC<OperationPropertiesProps> = ({operation}) => {
                                         step={0.05}
                                         marks
                                         valueLabelDisplay="auto"
+                                        disabled={readOnly}
                                     />
                                 </Grid>
                             </>

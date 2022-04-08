@@ -4,6 +4,7 @@ import {useSnackbar} from 'notistack';
 import {Formik} from 'formik';
 import clsx from 'clsx';
 import {Box, Button, CircularProgress, FormHelperText, Skeleton} from '@mui/material';
+import {Refresh as RefreshIcon} from '@mui/icons-material';
 import Masonry from '@mui/lab/Masonry';
 import MasonryItem from '@mui/lab/MasonryItem';
 import makeStyles from '@mui/styles/makeStyles';
@@ -126,7 +127,9 @@ const PipelineSample: FC<PipelineSampleProps> = ({handler, className}) => {
                                 type="submit"
                                 disabled={isSubmitting}
                                 endIcon={
-                                    isSubmitting && <CircularProgress className={classes.loader} color="inherit" />
+                                    isSubmitting
+                                        ? <CircularProgress className={classes.loader} color="inherit" />
+                                        : <RefreshIcon className={classes.loader} color="inherit" />
                                 }
                             >
                                 {isSubmitting ? 'Computing...' : 'Compute sample'}
