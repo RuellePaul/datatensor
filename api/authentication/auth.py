@@ -38,10 +38,22 @@ def do_login(payload: AuthLoginBody):
     })
     response.set_cookie(key='access_token',
                         value=access_token,
-                        domain='.datatensor.io' if Config.ENVIRONMENT == 'production' else None,
+                        domain='datatensor.io' if Config.ENVIRONMENT == 'production' else None,
                         httponly=True,
                         secure=True,
-                        samesite="lax" if Config.ENVIRONMENT == 'production' else "none")
+                        samesite="none")
+    response.set_cookie(key='access_token',
+                        value=access_token,
+                        domain='app.datatensor.io' if Config.ENVIRONMENT == 'production' else None,
+                        httponly=True,
+                        secure=True,
+                        samesite="none")
+    response.set_cookie(key='access_token',
+                        value=access_token,
+                        domain='docs.datatensor.io' if Config.ENVIRONMENT == 'production' else None,
+                        httponly=True,
+                        secure=True,
+                        samesite="none")
 
     logger.notify('Auth', f'Logged in as `{payload.email}`')
 
