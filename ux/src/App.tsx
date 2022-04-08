@@ -3,7 +3,6 @@ import {Router} from 'react-router-dom';
 import {createBrowserHistory} from 'history';
 import GlobalStyles from 'src/components/utils/GlobalStyles';
 import ScrollReset from 'src/components/utils/ScrollReset';
-import LocationReset from 'src/components/utils/LocationReset';
 import {AuthProvider} from 'src/store/AuthContext';
 import routes, {renderRoutes} from 'src/routes';
 import Providers from './providers';
@@ -18,9 +17,7 @@ const App: FC = () => {
                 <AuthProvider>
                     <GlobalStyles />
                     <ScrollReset />
-                    <LocationReset>
-                        {renderRoutes(routes)}
-                    </LocationReset>
+                    {renderRoutes(routes)}
                 </AuthProvider>
             </Router>
         </Providers>

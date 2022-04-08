@@ -1,11 +1,10 @@
 from fastapi import APIRouter, Depends
-from fastapi.responses import JSONResponse, Response
+from fastapi.responses import JSONResponse
 
 import errors
 from authentication import core
 from authentication.models import *
-from config import Config
-from dependencies import get_access_token, logged_user
+from dependencies import logged_user
 from logger import logger
 from routers.notifications.core import insert_notification
 from routers.notifications.models import NotificationPostBody, NotificationType
@@ -36,24 +35,6 @@ def do_login(payload: AuthLoginBody):
         'user': parse(user),
         'accessToken': access_token
     })
-    response.set_cookie(key='access_token',
-                        value=access_token,
-                        domain='datatensor.io' if Config.ENVIRONMENT == 'production' else None,
-                        httponly=True,
-                        secure=True,
-                        samesite="none")
-    response.set_cookie(key='access_token',
-                        value=access_token,
-                        domain='app.datatensor.io' if Config.ENVIRONMENT == 'production' else None,
-                        httponly=True,
-                        secure=True,
-                        samesite="none")
-    response.set_cookie(key='access_token',
-                        value=access_token,
-                        domain='docs.datatensor.io' if Config.ENVIRONMENT == 'production' else None,
-                        httponly=True,
-                        secure=True,
-                        samesite="none")
 
     logger.notify('Auth', f'Logged in as `{payload.email}`')
 
@@ -92,12 +73,6 @@ def do_register(payload: AuthRegisterBody):
         'user': parse(user),
         'accessToken': access_token
     })
-    response.set_cookie(key='access_token',
-                        value=access_token,
-                        domain='.datatensor.io' if Config.ENVIRONMENT == 'production' else None,
-                        httponly=True,
-                        secure=True,
-                        samesite="lax" if Config.ENVIRONMENT == 'production' else "none")
 
     logger.notify('Auth', f'Registered user `{email}`')
 
@@ -165,26 +140,9 @@ def do_email_confirmation(payload: AuthEmailConfirmBody):
         }),
         'accessToken': access_token
     })
-    response.set_cookie(key='access_token',
-                        value=access_token,
-                        domain='.datatensor.io' if Config.ENVIRONMENT == 'production' else None,
-                        httponly=True,
-                        secure=True,
-                        samesite="lax" if Config.ENVIRONMENT == 'production' else "none")
 
     logger.notify('Auth', f'Verified email `{user.email}`')
 
-    return response
-
-
-@auth.post('/logout')
-def do_logout(access_token: str = Depends(get_access_token)):
-    """
-    Logout logged user
-    """
-    response = Response()
-    response.delete_cookie(key='access_token',
-                           domain='.datatensor.io' if Config.ENVIRONMENT == 'production' else None)
     return response
 
 

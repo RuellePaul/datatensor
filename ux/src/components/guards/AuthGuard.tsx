@@ -12,7 +12,7 @@ const AuthGuard: FC<AuthGuardProps> = ({children}) => {
     const {isAuthenticated} = useAuth();
 
     if (!isAuthenticated) {
-        return <Redirect to="/login" />;
+        return <Redirect to="/auth/login" />;
     }
 
     return <TasksProvider>{children}</TasksProvider>;

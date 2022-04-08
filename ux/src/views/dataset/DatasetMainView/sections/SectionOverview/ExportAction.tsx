@@ -146,7 +146,7 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
                             <Typography variant="body2" color="textSecondary" gutterBottom>
                                 Download this dataset in JSON format. An exported dataset allows you to use it in your
                                 own computer vision pipeline.{' '}
-                                <Link variant="body2" color="primary" component={RouterLink} to="/datasets/export">
+                                <Link variant="body2" color="primary" component={RouterLink} to="/docs/datasets/export">
                                     Learn more
                                 </Link>
                             </Typography>

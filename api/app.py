@@ -39,7 +39,7 @@ config_name = os.getenv('FLASK_UI_CONFIGURATION', 'development')
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[Config.UI_URL, Config.APP_URL, Config.DOCS_URL],
+    allow_origins=[Config.UI_URL],
     allow_credentials=True,
     allow_methods=['*'],
     allow_headers=['*'],

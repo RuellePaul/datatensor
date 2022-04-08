@@ -135,7 +135,7 @@ const Hero: FC<HeroProps> = ({className, ...rest}) => {
 
                         <Box className={classes.actions}>
                             <Button
-                                onClick={() => history.push('/login')}
+                                onClick={() => history.push('/auth/login')}
                                 endIcon={<ArrowIcon />}
                                 variant="contained"
                                 size="large"
@@ -144,7 +144,7 @@ const Hero: FC<HeroProps> = ({className, ...rest}) => {
                             </Button>
 
                             <Button
-                                onClick={() => history.push('/getting-started')}
+                                onClick={() => history.push('/docs/getting-started')}
                                 endIcon={<DocsIcon />}
                                 variant="outlined"
                                 size="large"

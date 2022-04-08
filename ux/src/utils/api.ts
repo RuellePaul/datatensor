@@ -24,12 +24,12 @@ api.interceptors.response.use(
     response => response,
     error => {
         if (error.response?.data?.data === 'ERR_VERIFY') {
-            if (window.location.pathname !== '/email-confirmation') window.location.replace('/email-confirmation');
+            if (window.location.pathname !== '/email-confirmation') window.location.replace('/auth/email-confirmation');
         }
 
         if (error.response?.data?.data === 'ERR_EXPIRED') {
-            if (window.location.pathname !== '/login')
-                window.location.href = '/login?expired';
+            if (window.location.pathname !== '/auth/login')
+                window.location.href = '/auth/login?expired';
         }
 
         return Promise.reject((error.response && error.response.data) || 'Something went wrong');

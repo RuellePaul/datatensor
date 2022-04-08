@@ -36,7 +36,7 @@ const AugmentAction: FC<AugmentActionProps> = ({ className }) => {
                 <Typography gutterBottom>Augment images</Typography>
                 <Typography variant="body2" color="textSecondary" gutterBottom>
                     Use dataset augmentation tool to get more images.{' '}
-                    <Link variant="body2" color="primary" component={RouterLink} to="/datasets/augmentation">
+                    <Link variant="body2" color="primary" component={RouterLink} to="/docs/datasets/augmentation">
                         Learn more
                     </Link>
                 </Typography>

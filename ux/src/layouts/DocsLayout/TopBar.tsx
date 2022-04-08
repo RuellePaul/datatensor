@@ -56,7 +56,7 @@ const TopBar: FC<TopBarProps> = ({onMobileNavOpen}) => {
                         color="primary"
                         component="a"
                         variant="contained"
-                        onClick={() => history.push('/datasets')}
+                        onClick={() => history.push('/app/datasets')}
                         endIcon={user !== null && <UserAvatar user={user} style={{width: 30, height: 30}} />}
                     >
                         Datasets

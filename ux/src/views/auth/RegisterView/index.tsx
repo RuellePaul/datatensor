@@ -79,7 +79,7 @@ const RegisterView: FC = () => {
                             <Divider />
                         </Box>
 
-                        <Link component={RouterLink} to="/login" variant="body2" color="primary">
+                        <Link component={RouterLink} to="/auth/login" variant="body2" color="primary">
                             Having an account ?
                         </Link>
                     </CardContent>

@@ -40,7 +40,7 @@ const sections = (user: User): Section[] => [
                       {
                           title: 'App dashboard',
                           icon: AdminDashboardIcon,
-                          href: '/admin/dashboard',
+                          href: '/app/admin/dashboard',
                           info: () => <Chip size="small" label="Admin" variant="outlined" />
                       }
                   ]
@@ -55,7 +55,7 @@ const sections = (user: User): Section[] => [
                       {
                           title: 'Users',
                           icon: UsersIcon,
-                          href: '/users',
+                          href: '/app/users',
                           info: () => <Chip size="small" label="Admin" variant="outlined" />
                       }
                   ]
@@ -63,7 +63,7 @@ const sections = (user: User): Section[] => [
             {
                 title: 'Datasets',
                 icon: DatasetIcon,
-                href: '/datasets'
+                href: '/app/datasets'
             }
         ]
     }
@@ -151,12 +151,12 @@ const NavBar: FC<NavBarProps> = ({onMobileClose, openMobile}) => {
                 </Hidden>
                 <Box p={2}>
                     <Box display="flex" justifyContent="center">
-                        <RouterLink to="/account">
+                        <RouterLink to="/app/account">
                             <UserAvatar className={classes.avatar} />
                         </RouterLink>
                     </Box>
                     <Box mt={2} textAlign="center">
-                        <Link component={RouterLink} to="/account" variant="h5" color="textPrimary" underline="none">
+                        <Link component={RouterLink} to="/app/account" variant="h5" color="textPrimary" underline="none">
                             {user.name}
                         </Link>
                     </Box>
@@ -191,7 +191,7 @@ const NavBar: FC<NavBarProps> = ({onMobileClose, openMobile}) => {
                             <DocsIcon fontSize="small" />
                         </Box>
 
-                        <Link variant="subtitle1" color="primary" component={RouterLink} to="/getting-started">
+                        <Link variant="subtitle1" color="primary" component={RouterLink} to="/docs/getting-started">
                             Check our docs
                         </Link>
                     </Box>

@@ -25,11 +25,11 @@ export const items: Item[] = [
         items: [
             {
                 title: 'Getting started',
-                href: '/getting-started'
+                href: '/docs/getting-started'
             },
             {
                 title: 'About Datatensor',
-                href: '/about-datatensor'
+                href: '/docs/about-datatensor'
             }
         ]
     },
@@ -38,23 +38,23 @@ export const items: Item[] = [
         items: [
             {
                 title: 'Create a dataset',
-                href: '/create-a-dataset'
+                href: '/docs/create-a-dataset'
             },
             {
                 title: 'Upload images',
-                href: '/upload-images'
+                href: '/docs/upload-images'
             },
             {
                 title: 'Labeling',
-                href: '/datasets/labeling'
+                href: '/docs/datasets/labeling'
             },
             {
                 title: 'Augmentation',
-                href: '/datasets/augmentation'
+                href: '/docs/datasets/augmentation'
             },
             {
                 title: 'Export',
-                href: '/datasets/export'
+                href: '/docs/datasets/export'
             }
         ]
     },
@@ -63,11 +63,11 @@ export const items: Item[] = [
         items: [
             {
                 title: 'Using an exported dataset',
-                href: '/computer-vision/using-an-exported-dataset'
+                href: '/docs/computer-vision/using-an-exported-dataset'
             },
             {
                 title: 'API documentation',
-                href: '/computer-vision/api-documentation'
+                href: '/docs/computer-vision/api-documentation'
             }
         ]
     },
@@ -76,11 +76,11 @@ export const items: Item[] = [
         items: [
             {
                 title: 'Project architecture',
-                href: '/contributing/project-architecture'
+                href: '/docs/contributing/project-architecture'
             },
             {
                 title: 'Running locally',
-                href: '/contributing/running-locally'
+                href: '/docs/contributing/running-locally'
             }
         ]
     }

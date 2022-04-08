@@ -63,7 +63,7 @@ const TopBar: FC<TopBarProps> = ({className, ...rest}) => {
                     </Box>
                 </Hidden>
                 <Box flexGrow={1} />
-                <Button className={classes.link} component="a" onClick={() => history.push('/getting-started')}>
+                <Button className={classes.link} component="a" onClick={() => history.push('/docs/getting-started')}>
                     {isDesktop ? 'Documentation' : 'Docs'}
                 </Button>
                 <Divider className={classes.divider} />
@@ -72,7 +72,7 @@ const TopBar: FC<TopBarProps> = ({className, ...rest}) => {
                         color="primary"
                         component="a"
                         variant="contained"
-                        onClick={() => history.push('/datasets')}
+                        onClick={() => history.push('/app/datasets')}
                         endIcon={isAuthenticated && <UserAvatar user={user} style={{ width: 30, height: 30 }} />}
                     >
                         Datasets

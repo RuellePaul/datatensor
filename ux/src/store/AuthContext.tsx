@@ -1,13 +1,13 @@
 import React, {createContext, FC, ReactNode, useEffect, useReducer, useState} from 'react';
 import {useHistory, useLocation} from 'react-router-dom';
 import GoogleOneTapLogin from 'react-google-one-tap-login';
-import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import {useSnackbar} from 'notistack';
 import {User} from 'src/types/user';
 import SplashScreen from 'src/components/screens/SplashScreen';
-import {PUBLIC_PATHS} from 'src/components/utils/LocationReset';
 import api from 'src/utils/api';
+
+const GOOGLE_ONE_TAP_PATHS = ['/', '/auth/login', '/auth/register'];
 
 interface AuthState {
     isInitialised: boolean;
@@ -68,6 +68,16 @@ const initialAuthState: AuthState = {
     accessToken: null
 };
 
+const setSession = (accessToken: string | null): void => {
+    if (accessToken) {
+        localStorage.setItem('access_token', accessToken);
+        api.defaults.headers.common.Authorization = accessToken;
+    } else {
+        localStorage.removeItem('access_token');
+        delete api.defaults.headers.common.Authorization;
+    }
+};
+
 const isValidToken = (accessToken: string): boolean => {
     if (!accessToken) {
         return false;
@@ -89,7 +99,7 @@ const reducer = (state: AuthState, action: Action): AuthState => {
                 isAuthenticated,
                 isInitialised: true,
                 user,
-                accessToken: Cookies.get('access_token') || null
+                accessToken: localStorage.getItem('access_token') || null
             };
         }
         case 'LOGIN': {
@@ -149,6 +159,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         const response = await api.post<{accessToken: string; user: User}>('/auth/login', {email, password});
         const {accessToken, user} = response.data;
 
+        setSession(accessToken);
         dispatch({
             type: 'LOGIN',
             payload: {
@@ -162,6 +173,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         const response = await api.post<{accessToken: string; user: User}>(`/oauth/callback`, {code, scope});
         const {accessToken, user} = response.data;
 
+        setSession(accessToken);
         dispatch({
             type: 'LOGIN',
             payload: {
@@ -180,6 +192,8 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         });
         const {accessToken, user} = response.data;
 
+        setSession(accessToken);
+        setIsDoingOneTap(false);
         dispatch({
             type: 'LOGIN',
             payload: {
@@ -187,12 +201,11 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
                 accessToken
             }
         });
-        history.push('/datasets');
-        setIsDoingOneTap(false);
+        history.push('/app/datasets');
     };
 
     const logout = async () => {
-        await api.post('/auth/logout');
+        setSession(null);
         dispatch({type: 'LOGOUT'});
     };
 
@@ -204,6 +217,8 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
             recaptcha
         });
         const {accessToken, user} = response.data;
+
+        setSession(accessToken);
 
         dispatch({
             type: 'REGISTER',
@@ -229,8 +244,9 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
                     accessToken
                 }
             });
+            setSession(accessToken);
 
-            history.push('/datasets');
+            history.push('/app/datasets');
         } catch (error) {
             enqueueSnackbar(error.message || 'Something went wrong', {
                 variant: 'error'
@@ -264,7 +280,8 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
     useEffect(() => {
         const initialise = async () => {
             try {
-                const accessToken = Cookies.get('access_token');
+                const accessToken = localStorage.getItem('access_token');
+                setSession(accessToken);
 
                 if (accessToken && isValidToken(accessToken)) {
                     const response = await api.get<User>('/auth/me');
@@ -325,7 +342,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         >
             {children}
 
-            {PUBLIC_PATHS.includes(location.pathname) && (
+            {GOOGLE_ONE_TAP_PATHS.includes(location.pathname) && (
                 <GoogleOneTapLogin
                     googleAccountConfigs={{
                         client_id: process.env.REACT_APP_OAUTH_GOOGLE_CLIENT_ID,
@@ -337,7 +354,6 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
                         }
                     }}
                     disabled={state.isAuthenticated}
-                    disableCancelOnUnmount
                     onError={error => console.error(error)}
                 />
             )}

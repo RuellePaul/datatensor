@@ -22,8 +22,6 @@ class Settings(BaseSettings):
     DATASOURCES_PATH: str = os.path.join(ROOT_PATH, 'api', 'workflows', 'generator', 'datasources')
 
     UI_URL: str = 'https://localhost:5069'
-    APP_URL: str = UI_URL
-    DOCS_URL: str = UI_URL
     API_URI: str = 'http://127.0.0.1:4069'
 
     MAX_CONTENT_LENGTH: int = 1 * 1000 * 1024 * 1024  # 1 Go

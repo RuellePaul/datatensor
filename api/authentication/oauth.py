@@ -3,7 +3,6 @@ from fastapi.responses import JSONResponse
 
 from authentication import core
 from authentication.models import *
-from config import Config
 from logger import logger
 from routers.notifications.core import insert_notification
 from routers.notifications.models import NotificationPostBody, NotificationType
@@ -50,12 +49,6 @@ def oauth_callback(payload: OAuthCallbackBody):
         'user': parse(user),
         'accessToken': access_token
     })
-    response.set_cookie(key='access_token',
-                        value=access_token,
-                        domain='.datatensor.io' if Config.ENVIRONMENT == 'production' else None,
-                        httponly=True,
-                        secure=True,
-                        samesite="lax" if Config.ENVIRONMENT == 'production' else "none")
 
     logger.notify('OAuth', f'Logged in user `{user.id}` from `{scope}`')
 
@@ -86,12 +79,6 @@ def oauth_callback(payload: OAuthGoogleOneTap):
         'user': parse(user),
         'accessToken': access_token
     })
-    response.set_cookie(key='access_token',
-                        value=access_token,
-                        domain='.datatensor.io' if Config.ENVIRONMENT == 'production' else None,
-                        httponly=True,
-                        secure=True,
-                        samesite="lax" if Config.ENVIRONMENT == 'production' else "none")
 
     logger.notify('OAuth', f'Logged in user `{user.id}` from `google` using `Google One Tap`')
 

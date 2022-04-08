@@ -152,7 +152,7 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                                             variant="body2"
                                             color="primary"
                                             component={RouterLink}
-                                            to="/datasets/augmentation"
+                                            to="/docs/datasets/augmentation"
                                         >
                                             Learn more
                                         </Link>

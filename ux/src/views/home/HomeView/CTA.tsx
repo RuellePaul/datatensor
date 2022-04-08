@@ -32,7 +32,7 @@ const CTA: FC<CTAProps> = ({className, ...rest}) => {
                 </Typography>
                 <Button
                     color="primary"
-                    onClick={() => history.push('/register')}
+                    onClick={() => history.push('/auth/register')}
                     size="large"
                     variant="contained"
                     sx={{mt: 2}}

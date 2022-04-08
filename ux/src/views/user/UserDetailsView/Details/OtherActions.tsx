@@ -34,7 +34,7 @@ const OtherActions: FC<OtherActionsProps> = ({className, ...rest}) => {
 
     const handleDeleteUser = async () => {
         await api.delete(`/users/${user_id}`);
-        history.push('/users');
+        history.push('/app/users');
     };
 
     return (

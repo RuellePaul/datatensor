@@ -75,7 +75,7 @@ const ChangeNameAction: FC<ChangeNameActionProps> = ({ className }) => {
             await api.delete(`/datasets/${dataset.id}`);
             saveDatasets(datasets => datasets.filter((current: Dataset) => current.id !== dataset.id));
             enqueueSnackbar(`Deleted dataset ${capitalize(dataset.name)}`, { variant: 'info' });
-            history.push('/datasets');
+            history.push('/app/datasets');
         } catch (error) {
             enqueueSnackbar(error.message || 'Something went wrong', {
                 variant: 'error'

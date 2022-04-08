@@ -167,8 +167,6 @@ Input the webroot:
 /var/www/letsencrypt
 ```
 
-Do the same for domains api.datatensor.io app.datatensor.io docs.datatensor.io
-
 Finally, deploy your tag :
 
 ```

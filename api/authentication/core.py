@@ -53,7 +53,7 @@ def authorization_url_from_scope(scope):
     client = WebApplicationClient(Config.OAUTH[scope]['CLIENT_ID'])
     authorization_url = client.prepare_request_uri(
         Config.OAUTH[scope]['AUTHORIZATION_URL'],
-        redirect_uri=f'{Config.APP_URL}/oauthcallback/{scope}',
+        redirect_uri=f'{Config.UI_URL}/auth/callback/{scope}',
         scope=Config.OAUTH[scope]['SCOPES']
     )
     return authorization_url
@@ -63,7 +63,7 @@ def profile_from_code(code, scope):
     client = WebApplicationClient(Config.OAUTH[scope]['CLIENT_ID'])
     token_url, headers, body = client.prepare_token_request(
         Config.OAUTH[scope]['TOKEN_URL'],
-        redirect_url=f"{Config.APP_URL}/oauthcallback/{scope}",
+        redirect_url=f"{Config.UI_URL}/auth/callback/{scope}",
         code=code
     )
     response = requests.post(
@@ -199,7 +199,7 @@ def check_captcha(captcha):
 
 def send_email_with_activation_code(email, activation_code):
     subject = "Welcome to Datatensor ! Confirm your email"
-    activation_url = f'{Config.APP_URL}/email-confirmation?activation_code={activation_code}'
+    activation_url = f'{Config.UI_URL}/auth/email-confirmation?activation_code={activation_code}'
     html_content = f"""
         <h5>Welcome to Datatensor !</h5>
         By clicking on the following link, you are confirming your email address.
@@ -230,7 +230,7 @@ def store_recovery_code(email, recovery_code):
 
 def send_email_with_recovery_link(email, recovery_code):
     subject = "Datatensor | Forgot password"
-    recovery_url = f'{Config.APP_URL}/forgot-password?recovery_code={recovery_code}'
+    recovery_url = f'{Config.UI_URL}/auth/forgot-password?recovery_code={recovery_code}'
     html_content = f"""
          <h5>Forgot password</h5>
          Reset password of your Datatensor account by clinking the following link :

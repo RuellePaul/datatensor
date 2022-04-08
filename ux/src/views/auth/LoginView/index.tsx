@@ -43,7 +43,7 @@ const LoginView: FC = () => {
     useEffect(() => {
         if (parseQueryArgs('expired')) {
             enqueueSnackbar(`Session expired.`, { variant: 'warning' });
-            history.replace('/login');
+            history.replace('/auth/login');
         }
 
         // eslint-disable-next-line
@@ -93,7 +93,7 @@ const LoginView: FC = () => {
                         <Box my={3}>
                             <Divider />
                         </Box>
-                        <Link color="primary" component={RouterLink} to="/register" variant="body2">
+                        <Link color="primary" component={RouterLink} to="/auth/register" variant="body2">
                             Create an account
                         </Link>
                     </CardContent>

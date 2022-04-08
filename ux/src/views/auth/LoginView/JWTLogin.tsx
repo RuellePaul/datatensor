@@ -98,7 +98,7 @@ const JWTLogin: FC<JWTLoginProps> = ({className, ...rest}) => {
                         }}
                     />
                     <Box display="flex" justifyContent="flex-end">
-                        <Link color="primary" component={RouterLink} to="/forgot-password" variant="body2">
+                        <Link color="primary" component={RouterLink} to="/auth/forgot-password" variant="body2">
                             Forgot password ?
                         </Link>
                     </Box>
