@@ -100,7 +100,8 @@ export const drawLabels = (
     dash = 0,
     filled = false,
     resize = false,
-    categorySelected: Category = null
+    categorySelected: Category = null,
+    categoryHighlight: Category = null
 ) => {
     if (!labels) return;
 
@@ -112,6 +113,9 @@ export const drawLabels = (
         const category = categories
             .sort((a, b) => -b.name.localeCompare(a.name))
             .find(category => label.category_id === category.id);
+
+        if (categoryHighlight && category.name !== categoryHighlight.name)
+            continue;
 
         const {x, y, w, h} = convertLabel(canvas, label, offset);
 
@@ -125,7 +129,7 @@ export const drawLabels = (
         context.fillStyle = `${color}05`;
         context.fillRect(x, y, w, h);
         if (filled || (category && categorySelected && categorySelected.id === category.id)) {
-            context.fillStyle = `${color}05`;
+            context.fillStyle = `${color}20`;
             context.fillRect(x + 0.5, y + 0.5, w, h);
         }
 

@@ -46,14 +46,9 @@
     animation: blinker 1.5s ease infinite;
 }
 
-/* Google One Tap */
-#credential_picker_container {
-    top: unset !important;
-    left: unset !important;
-    bottom: 16px;
-    right: 16px;
+.labelHighlight {
+    animation: labelHighlight 2.7s ease-in-out infinite;
 }
-
 
 @keyframes blinker {
     30% {
@@ -65,6 +60,32 @@
     70% {
         opacity: 1;
     }
+}
+
+@keyframes labelHighlight {
+    50% {
+        opacity: 1;
+    }
+    53% {
+        opacity: 0.5;
+    }
+    56% {
+        opacity: 1;
+    }
+    59% {
+        opacity: 0.5;
+    }
+    65% {
+        opacity: 1;
+    }
+}
+
+/* Google One Tap */
+#credential_picker_container {
+    top: unset !important;
+    left: unset !important;
+    bottom: 16px;
+    right: 16px;
 }
 
 kbd {

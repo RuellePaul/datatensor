@@ -15,6 +15,7 @@ import {LAZY_LOAD_BATCH} from 'src/constants';
 import {Image} from 'src/types/image';
 import api from 'src/utils/api';
 import goToHash from 'src/utils/goToHash';
+import useCategory from '../../../hooks/useCategory';
 
 interface ImagesListProps {
     className?: string;
@@ -137,6 +138,7 @@ const DTImagesList: FC<ImagesListProps> = ({className, onClick = () => {}, ...re
     const classes = useStyles();
 
     const {images} = useImages();
+    const {currentCategory} = useCategory();
 
     if (images === null)
         return (
@@ -171,6 +173,7 @@ const DTImagesList: FC<ImagesListProps> = ({className, onClick = () => {}, ...re
                                 onClick={() => onClick(image)}
                                 skeleton
                                 overlay={<ImageOverlay image={image} />}
+                                highlightCategory={currentCategory}
                             />
                         </ImageProvider>
                     </MasonryItem>

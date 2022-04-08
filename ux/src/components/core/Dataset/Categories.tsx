@@ -1,4 +1,4 @@
-import React, {FC, cloneElement, useState} from 'react';
+import React, {cloneElement, FC, useState} from 'react';
 import clsx from 'clsx';
 import {useSnackbar} from 'notistack';
 
@@ -73,12 +73,9 @@ const DTCategory: FC<CategoryProps> = ({category, index, edit}) => {
     return (
         <Box mb={1.5} mr={1.5}>
             <Chip
-                icon={
-                    cloneElement(
-                        SUPERCATEGORIES_ICONS[category.supercategory],
-                        {style: {color: theme.palette.getContrastText(COLORS[index])}}
-                    )
-                }
+                icon={cloneElement(SUPERCATEGORIES_ICONS[category.supercategory], {
+                    style: {color: theme.palette.getContrastText(COLORS[index])}
+                })}
                 label={
                     <Typography variant="body2">
                         <strong>
@@ -96,6 +93,8 @@ const DTCategory: FC<CategoryProps> = ({category, index, edit}) => {
                     boxShadow: theme.shadows[1]
                 }}
                 variant="outlined"
+                clickable
+                onClick={() => saveCurrentCategory(category)}
                 onDelete={edit ? () => handleDeleteCategory(category.id) : null}
                 deleteIcon={
                     edit ? (
@@ -142,7 +141,7 @@ const DTCategories: FC<CategoriesProps> = ({className}) => {
                 {expand ? (
                     <>
                         {categories
-                            .sort((a, b) => (a.labels_count > b.labels_count ? -1 : 1))
+                            .sort((a, b) => -b.name.localeCompare(a.name))
                             .map(category => (
                                 <DTCategory
                                     category={category}
@@ -157,7 +156,7 @@ const DTCategories: FC<CategoriesProps> = ({className}) => {
                 ) : (
                     <>
                         {categories
-                            .sort((a, b) => (a.labels_count > b.labels_count ? -1 : 1))
+                            .sort((a, b) => -b.name.localeCompare(a.name))
                             .slice(0, MAX_CATEGORIES_DISPLAYED)
                             .map(category => (
                                 <DTCategory

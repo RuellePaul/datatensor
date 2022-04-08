@@ -62,7 +62,8 @@ const DatasetMainView: FC = () => {
                                             {value.dataset.user_id === user.id && <SectionSettings />}
                                         </Box>
                                     </Container>
-
+                                </CategoryProvider>
+                                <CategoryProvider>
                                     <DTLabelisator />
                                 </CategoryProvider>
                             </ImagesProvider>

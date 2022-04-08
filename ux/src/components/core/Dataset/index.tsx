@@ -204,7 +204,7 @@ const DTDataset: FC<DatasetProps> = ({className, images = null, onClick, disable
 
                                         <div className={classes.categories}>
                                             {categories
-                                                .sort((a, b) => (a.labels_count > b.labels_count ? -1 : 1))
+                                                .sort((a, b) => -b.name.localeCompare(a.name))
                                                 .slice(0, 4)
                                                 .map((category, index) => (
                                                     <DTCategory category={category} index={index} key={category.id} />

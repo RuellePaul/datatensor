@@ -217,7 +217,7 @@ const Generator: FC = () => {
                                                 }}
                                             >
                                                 {eligibleCategories
-                                                    .sort((a, b) => (a.labels_count > b.labels_count ? -1 : 1))
+                                                    .sort((a, b) => -b.name.localeCompare(a.name))
                                                     .map(category => (
                                                         <MenuItem value={category.name} key={category.name}>
                                                             {capitalize(category.name)} ({category.labels_count})
