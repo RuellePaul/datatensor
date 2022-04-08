@@ -38,8 +38,8 @@ def do_login(payload: AuthLoginBody):
     })
     response.set_cookie(key='access_token',
                         value=access_token,
-                        domain='datatensor.io' if Config.ENVIRONMENT == 'production' else None,
-                        httponly=False,
+                        domain='.datatensor.io' if Config.ENVIRONMENT == 'production' else None,
+                        httponly=True,
                         secure=True,
                         samesite="lax" if Config.ENVIRONMENT == 'production' else "none")
 
@@ -82,8 +82,8 @@ def do_register(payload: AuthRegisterBody):
     })
     response.set_cookie(key='access_token',
                         value=access_token,
-                        domain='datatensor.io' if Config.ENVIRONMENT == 'production' else None,
-                        httponly=False,
+                        domain='.datatensor.io' if Config.ENVIRONMENT == 'production' else None,
+                        httponly=True,
                         secure=True,
                         samesite="lax" if Config.ENVIRONMENT == 'production' else "none")
 
@@ -155,8 +155,8 @@ def do_email_confirmation(payload: AuthEmailConfirmBody):
     })
     response.set_cookie(key='access_token',
                         value=access_token,
-                        domain='datatensor.io' if Config.ENVIRONMENT == 'production' else None,
-                        httponly=False,
+                        domain='.datatensor.io' if Config.ENVIRONMENT == 'production' else None,
+                        httponly=True,
                         secure=True,
                         samesite="lax" if Config.ENVIRONMENT == 'production' else "none")
 

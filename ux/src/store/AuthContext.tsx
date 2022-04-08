@@ -9,8 +9,6 @@ import SplashScreen from 'src/components/screens/SplashScreen';
 import {PUBLIC_PATHS} from 'src/components/utils/LocationReset';
 import api from 'src/utils/api';
 
-const ENVIRONMENT = process.env.REACT_APP_ENVIRONMENT;
-
 interface AuthState {
     isInitialised: boolean;
     isAuthenticated: boolean;
@@ -79,26 +77,6 @@ const isValidToken = (accessToken: string): boolean => {
     const currentTime = Date.now() / 1000;
 
     return decoded.exp > currentTime;
-};
-
-const setSession = (accessToken: string | null): void => {
-    if (accessToken) {
-        if (ENVIRONMENT === 'production') {
-            Cookies.set('access_token', accessToken, {domain: 'datatensor.io'});
-            Cookies.set('access_token', accessToken, {domain: 'app.datatensor.io'});
-            Cookies.set('access_token', accessToken, {domain: 'docs.datatensor.io'});
-        } else {
-            Cookies.set('access_token', accessToken);
-        }
-    } else {
-        if (ENVIRONMENT === 'production') {
-            Cookies.remove('access_token', {domain: 'datatensor.io'});
-            Cookies.remove('access_token', {domain: 'app.datatensor.io'});
-            Cookies.remove('access_token', {domain: 'docs.datatensor.io'});
-        } else {
-            Cookies.remove('access_token');
-        }
-    }
 };
 
 const reducer = (state: AuthState, action: Action): AuthState => {
@@ -171,7 +149,6 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         const response = await api.post<{accessToken: string; user: User}>('/auth/login', {email, password});
         const {accessToken, user} = response.data;
 
-        setSession(accessToken);
         dispatch({
             type: 'LOGIN',
             payload: {
@@ -185,7 +162,6 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         const response = await api.post<{accessToken: string; user: User}>(`/oauth/callback`, {code, scope});
         const {accessToken, user} = response.data;
 
-        setSession(accessToken);
         dispatch({
             type: 'LOGIN',
             payload: {
@@ -204,7 +180,6 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         });
         const {accessToken, user} = response.data;
 
-        setSession(accessToken);
         dispatch({
             type: 'LOGIN',
             payload: {
@@ -217,7 +192,6 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
     };
 
     const logout = () => {
-        setSession(null);
         dispatch({type: 'LOGOUT'});
     };
 
@@ -230,7 +204,6 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         });
         const {accessToken, user} = response.data;
 
-        setSession(accessToken);
         dispatch({
             type: 'REGISTER',
             payload: {
@@ -248,7 +221,6 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
 
             const {accessToken, user} = response.data;
 
-            setSession(accessToken);
             dispatch({
                 type: 'LOGIN',
                 payload: {
@@ -296,7 +268,6 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
                 if (accessToken && isValidToken(accessToken)) {
                     const response = await api.get<User>('/auth/me');
                     const user = response.data;
-                    setSession(accessToken);
 
                     dispatch({
                         type: 'INITIALISE',
