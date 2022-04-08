@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         background: theme.palette.background.default,
         opacity: 0.8,
         '& svg': {
-            padding: 3,
+            padding: 2,
             color: theme.palette.background.default,
             fill: theme.palette.text.primary,
             width: 'auto !important',
