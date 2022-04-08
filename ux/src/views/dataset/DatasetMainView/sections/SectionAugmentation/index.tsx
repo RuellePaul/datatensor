@@ -16,6 +16,7 @@ import {
     TextField,
     Typography
 } from '@mui/material';
+import {KeyboardArrowLeft as BackIcon, KeyboardArrowRight as NextIcon} from '@mui/icons-material';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import Pipeline from 'src/components/core/Pipeline';
@@ -51,6 +52,8 @@ const useStyles = makeStyles((theme: Theme) => ({
         color: theme.palette.grey[500]
     },
     actions: {
+        paddingTop: theme.spacing(2),
+        borderTop: `solid 1px #7f8e9d`,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-end',
@@ -133,7 +136,7 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                             );
                         })}
                     </Stepper>
-                    <Grid container spacing={2} sx={{my: 2}}>
+                    <Grid container columnSpacing={3} rowSpacing={1} sx={{my: 2}}>
                         {activeStep === 0 && (
                             <>
                                 <Grid item sm={7} xs={12}>
@@ -218,13 +221,13 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                                 Operations pipeline
                             </Typography>
 
-                            <Pipeline readOnly={activeStep > 0}/>
+                            <Pipeline readOnly={activeStep > 0} />
                         </Grid>
                     </Grid>
 
                     <Box className={classes.actions}>
                         {activeStep > 0 && (
-                            <Button onClick={handleBack} sx={{mr: 2}}>
+                            <Button startIcon={<BackIcon />} onClick={handleBack} sx={{mr: 2}}>
                                 Back
                             </Button>
                         )}
@@ -235,17 +238,24 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                                 variant="contained"
                                 onClick={handleNext}
                                 disabled={operations.length === 0}
+                                endIcon={<NextIcon />}
                             >
                                 Visualize a sample
                             </Button>
                         )}
                         {activeStep === 1 && (
-                            <Button color="primary" variant="contained" onClick={handleNext}>
+                            <Button color="primary" variant="contained" onClick={handleNext} endIcon={<NextIcon />}>
                                 Continue
                             </Button>
                         )}
                         {activeStep === 2 && (
-                            <Button color="primary" variant="contained" type="submit" disabled={isSubmitting}>
+                            <Button
+                                color="primary"
+                                variant="contained"
+                                type="submit"
+                                disabled={isSubmitting}
+                                endIcon={<NextIcon />}
+                            >
                                 Create task
                             </Button>
                         )}

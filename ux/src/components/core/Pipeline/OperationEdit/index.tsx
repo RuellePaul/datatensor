@@ -16,7 +16,7 @@ interface OperationEditProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        width: 530,
+        width: '100%',
         background: 'rgb(0 0 0 / 85%)',
         boxShadow: '0 0px 5px rgba(255, 255, 255, 0.2)',
         backdropFilter: 'blur(7px)',

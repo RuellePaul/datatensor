@@ -83,7 +83,7 @@ const OperationsPipeline: FC<ListProps> = ({className, readOnly, ...rest}) => {
                 {!readOnly && (
                     <>
                         <Divider light/>
-                        <Box pt={2}>
+                        <Box pt={1}>
                             <OperationAdd />
                         </Box>
                     </>

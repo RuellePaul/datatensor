@@ -1,7 +1,18 @@
 import React, {FC, forwardRef, useState} from 'react';
 import clsx from 'clsx';
 import {useSnackbar} from 'notistack';
-import {Box, capitalize, Card, CardContent, Fade, IconButton, Tooltip, Typography, useMediaQuery} from '@mui/material';
+import {
+    Box,
+    capitalize,
+    Card,
+    CardContent,
+    Dialog,
+    Fade,
+    IconButton,
+    Tooltip,
+    Typography,
+    useMediaQuery
+} from '@mui/material';
 import {DeleteOutline as DeleteIcon, Settings as SettingsIcon} from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
@@ -46,6 +57,8 @@ const useStyles = makeStyles((theme: Theme) => ({
         backgroundColor: theme.palette.background.default
     },
     tooltip: {
+        width: '100%',
+        maxWidth: 530,
         padding: 0
     }
 }));
@@ -54,6 +67,7 @@ const Operation: FC<OperationProps> = forwardRef(
     ({operationType, className, readOnly, dragging, setDragDisabled, index, style, ...rest}, ref) => {
         const classes = useStyles();
         const isLargeScreen = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'));
+        const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
 
         const operation = useSelector(state => operationSelector(state, operationType));
         const dispatch = useDispatch();
@@ -92,7 +106,7 @@ const Operation: FC<OperationProps> = forwardRef(
             >
                 <Tooltip
                     disableHoverListener
-                    open={!readOnly && isOpened}
+                    open={!isMobile && !readOnly && isOpened}
                     TransitionComponent={Fade}
                     classes={{tooltip: classes.tooltip}}
                     title={<OperationEdit operation={operation} handleClose={handleClose} readOnly={readOnly} />}
@@ -134,6 +148,9 @@ const Operation: FC<OperationProps> = forwardRef(
                         </CardContent>
                     </Card>
                 </Tooltip>
+                <Dialog open={isMobile && isOpened && !readOnly} onClose={handleClose}>
+                    <OperationEdit operation={operation} handleClose={handleClose} readOnly={readOnly} />
+                </Dialog>
             </div>
         );
     }
