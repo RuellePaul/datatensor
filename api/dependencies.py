@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 
 from fastapi import Depends, Cookie
 
@@ -10,7 +10,11 @@ from routers.datasets.models import Dataset
 from routers.users.models import User
 
 
-def logged_user(access_token: Optional[str] = Cookie(None)) -> User:
+def get_access_token(access_token: Optional[str] = Cookie(None)) -> Union[str, None]:
+    return access_token
+
+
+def logged_user(access_token: str = Depends(get_access_token)) -> User:
     user = verify_access_token(access_token=access_token)
     return user
 

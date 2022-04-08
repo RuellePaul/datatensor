@@ -40,7 +40,7 @@ const Account: FC = () => {
         try {
             handleClose();
             await logout();
-            history.push('/');
+            window.location.href = '/';
         } catch (err) {
             console.error(err);
             enqueueSnackbar('Unable to logout', {

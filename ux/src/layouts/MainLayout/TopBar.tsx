@@ -44,7 +44,7 @@ const TopBar: FC<TopBarProps> = ({className, ...rest}) => {
     const classes = useStyles();
     const history = useHistory();
 
-    const {user} = useAuth();
+    const {isAuthenticated, user} = useAuth();
     const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
 
     return (
@@ -67,13 +67,13 @@ const TopBar: FC<TopBarProps> = ({className, ...rest}) => {
                     {isDesktop ? 'Documentation' : 'Docs'}
                 </Button>
                 <Divider className={classes.divider} />
-                <Tooltip title={user === null ? 'Login to Datatensor' : 'Back to datasets'}>
+                <Tooltip title={isAuthenticated ? 'Browse datasets' : 'Login to Datatensor'}>
                     <Button
                         color="primary"
                         component="a"
                         variant="contained"
                         onClick={() => history.push('/datasets')}
-                        endIcon={user !== null && <UserAvatar user={user} style={{ width: 30, height: 30 }} />}
+                        endIcon={isAuthenticated && <UserAvatar user={user} style={{ width: 30, height: 30 }} />}
                     >
                         Datasets
                     </Button>

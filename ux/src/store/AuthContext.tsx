@@ -191,7 +191,8 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         setIsDoingOneTap(false);
     };
 
-    const logout = () => {
+    const logout = async () => {
+        await api.post('/auth/logout');
         dispatch({type: 'LOGOUT'});
     };
 

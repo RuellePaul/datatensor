@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 
 import errors
 from authentication import core
 from authentication.models import *
 from config import Config
-from dependencies import logged_user
+from dependencies import get_access_token, logged_user
 from logger import logger
 from routers.notifications.core import insert_notification
 from routers.notifications.models import NotificationPostBody, NotificationType
@@ -162,6 +162,17 @@ def do_email_confirmation(payload: AuthEmailConfirmBody):
 
     logger.notify('Auth', f'Verified email `{user.email}`')
 
+    return response
+
+
+@auth.post('/logout')
+def do_logout(access_token: str = Depends(get_access_token)):
+    """
+    Logout logged user
+    """
+    response = Response()
+    response.delete_cookie(key='access_token',
+                           domain='.datatensor.io' if Config.ENVIRONMENT == 'production' else None)
     return response
 
 
