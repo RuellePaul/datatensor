@@ -1,8 +1,8 @@
-export const ENABLE_REDUX_DEV_TOOLS = true;
+export const ENABLE_REDUX_DEV_TOOLS = process.env.REACT_APP_ENVIRONMENT === 'development';
 
-export const LAZY_LOAD_BATCH = 14;
+export const LAZY_LOAD_BATCH = 15;
 
-export const HEARTBEAT_DELAY = process.env.REACT_APP_ENVIRONMENT === 'production' ? 3000 : 1000; // in ms
+export const HEARTBEAT_DELAY = 4000; // in ms
 
 export const THEMES = {
     LIGHT: 'LIGHT',

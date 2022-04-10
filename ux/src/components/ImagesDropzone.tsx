@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         margin: theme.spacing(0, 0, 1)
     },
     dropZone: {
-        border: `1px dashed ${theme.palette.divider}`,
+        border: `2px dashed #6e7f90`,
         padding: theme.spacing(6),
         display: 'flex',
         justifyContent: 'center',

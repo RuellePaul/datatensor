@@ -122,8 +122,6 @@ export const drawLabels = (
         let color = COLORS[categories.sort((a, b) => -b.name.localeCompare(a.name)).indexOf(category)] || '#FFFFFF';
 
         context.strokeStyle = color;
-        context.shadowColor = `${color}55`;
-        context.shadowBlur = 1;
         context.strokeRect(x + 0.5, y + 0.5, w, h);
 
         context.fillStyle = `${color}05`;
