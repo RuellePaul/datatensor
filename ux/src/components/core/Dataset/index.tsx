@@ -29,7 +29,6 @@ import {Theme} from 'src/theme';
 import api from 'src/utils/api';
 import {Image} from 'src/types/image';
 import UserAvatar from 'src/components/UserAvatar';
-import WorkingAlert from 'src/components/core/WorkingAlert';
 import {UserConsumer, UserProvider} from 'src/store/UserContext';
 import {EMPTY_DESCRIPTIONS} from 'src/constants';
 import DTImage from 'src/components/core/Images/Image';
@@ -290,8 +289,6 @@ const DTDataset: FC<DatasetProps> = ({className, images = null, onClick, disable
                             </Stack>
                         </Box>
                     </Box>
-
-                    <WorkingAlert dataset_id={dataset.id} />
                 </CardContent>
             </CardActionArea>
         </Card>

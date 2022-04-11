@@ -16,6 +16,7 @@ export interface TasksContextValue {
 }
 
 interface TasksProviderProps {
+    dataset_id: string;
     children?: ReactNode;
 }
 
@@ -30,7 +31,7 @@ export const TasksContext = createContext<TasksContextValue>({
 
 let tasksIntervalID;
 
-export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
+export const TasksProvider: FC<TasksProviderProps> = ({dataset_id, children}) => {
     const {accessToken} = useAuth();
 
     const location = useLocation();
@@ -51,7 +52,7 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
 
     // Send
     useEffect(() => {
-        wsTask.current = new WebSocket(`${WS_HOSTNAME}/tasks`);
+        wsTask.current = new WebSocket(`${WS_HOSTNAME}/datasets/${dataset_id}/tasks`);
         wsTask.current.onopen = () => {
             console.info('Task websocket opened.');
             setPaused(false);
@@ -64,15 +65,15 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
             wsTask.current.close();
             clearInterval(tasksIntervalID);
         };
-    }, []);
+    }, [dataset_id]);
 
     // Receive tasks
     useEffect(() => {
         if (!wsTask.current) return;
 
         function sendTaskMessage() {
-            console.log('Send tasks poll...');
             if (wsTask.current && wsTask.current.readyState === WebSocket.OPEN) {
+                console.log('Send tasks poll...');
                 wsTask.current.send(accessToken);
             }
         }
@@ -88,9 +89,7 @@ export const TasksProvider: FC<TasksProviderProps> = ({children}) => {
     useEffect(() => {
         if (currentTasks && accessToken) {
             let hasPendingOrActiveTasks =
-                currentTasks
-                    .filter(task => ['pending', 'active'].includes(task.status))
-                    .length > 0;
+                currentTasks.filter(task => ['pending', 'active'].includes(task.status)).length > 0;
             setPaused(!hasPendingOrActiveTasks);
         }
     }, [currentTasks, accessToken]);

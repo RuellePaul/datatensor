@@ -14,6 +14,7 @@ import {ImagesProvider} from 'src/store/ImagesContext';
 import {DatasetConsumer, DatasetProvider} from 'src/store/DatasetContext';
 import {UserProvider} from 'src/store/UserContext';
 import {CategoryProvider} from 'src/store/CategoryContext';
+import {TasksProvider} from '../../../store/TasksContext';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -44,34 +45,36 @@ const DatasetMainView: FC = () => {
     if (!dataset_id) return null;
 
     return (
-        <DatasetProvider dataset_id={dataset_id}>
-            <DatasetConsumer>
-                {value => (
-                    <UserProvider user={value.dataset.user}>
-                        <Page className={classes.root} title={`Dataset ${value.dataset.name}`}>
-                            <ImagesProvider>
-                                <CategoryProvider>
-                                    <Container component="section" maxWidth="lg">
-                                        <Header />
+        <TasksProvider dataset_id={dataset_id}>
+            <DatasetProvider dataset_id={dataset_id}>
+                <DatasetConsumer>
+                    {value => (
+                        <UserProvider user={value.dataset.user}>
+                            <Page className={classes.root} title={`Dataset ${value.dataset.name}`}>
+                                <ImagesProvider>
+                                    <CategoryProvider>
+                                        <Container component="section" maxWidth="lg">
+                                            <Header />
 
-                                        <Box my={4}>
-                                            <SectionOverview />
+                                            <Box my={4}>
+                                                <SectionOverview />
 
-                                            <SectionImages />
+                                                <SectionImages />
 
-                                            {value.dataset.user_id === user.id && <SectionSettings />}
-                                        </Box>
-                                    </Container>
-                                </CategoryProvider>
-                                <CategoryProvider>
-                                    <DTLabelisator />
-                                </CategoryProvider>
-                            </ImagesProvider>
-                        </Page>
-                    </UserProvider>
-                )}
-            </DatasetConsumer>
-        </DatasetProvider>
+                                                {value.dataset.user_id === user.id && <SectionSettings />}
+                                            </Box>
+                                        </Container>
+                                    </CategoryProvider>
+                                    <CategoryProvider>
+                                        <DTLabelisator />
+                                    </CategoryProvider>
+                                </ImagesProvider>
+                            </Page>
+                        </UserProvider>
+                    )}
+                </DatasetConsumer>
+            </DatasetProvider>
+        </TasksProvider>
     );
 };
 

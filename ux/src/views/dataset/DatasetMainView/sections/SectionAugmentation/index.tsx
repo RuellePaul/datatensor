@@ -108,7 +108,7 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
                             image_count: values.image_count
                         }
                     });
-                    saveTasks(tasks => [...tasks, response.data.task]);
+                    saveTasks(tasks => [...(tasks || []), response.data.task]);
 
                     setStatus({success: true});
                     setSubmitting(false);

@@ -32,7 +32,7 @@ import {OperationType, Pipeline} from './types/pipeline';
 import {SuperCategory} from 'src/types/category';
 
 
-export const MAX_DATASETS_DISPLAYED = 6;
+export const MAX_DATASETS_DISPLAYED = 3;
 export const MAX_CATEGORIES_DISPLAYED = 16;
 
 export const SUPERCATEGORIES: SuperCategory[] = [
