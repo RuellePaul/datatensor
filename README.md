@@ -160,7 +160,7 @@ How would you like to authenticate with the ACME CA?
 ```
 Please enter in your domain name(s): 
 ```bash
-datatensor.io www.datatensor.io
+datatensor.io www.datatensor.io api.datatensor.io kibana.datatensor.io
 ```
 Input the webroot:
 ```bash
