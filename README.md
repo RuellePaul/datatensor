@@ -144,39 +144,59 @@ cd ~/datatensor
 nano deploy.sh
 ```
 
-Generate certificates for all domain/subdomains :
-⚠️&nbsp;&nbsp; You must authorize all trafic in DTProduction security group
+### Renew certificates for all domain/subdomains 
+
+
+- In all `conf.d/<domain>.conf` files, comment the line :
+
+```bash
+# return 301 https://$server_name$request_uri;
+```
+
+Then deploy `proxy`
+
+- Run certbot :
 
 ```bash
 apt install certbot
-certbot certonly
+certbot certonly --dry-run
 ```
 
-How would you like to authenticate with the ACME CA?
-1: Spin up a temporary webserver (standalone)
-2: Place files in webroot directory (webroot)
-```bash
-2
+Select option :
 ```
+2: Place files in webroot directory (webroot)
+```
+
 Please enter in your domain name(s): 
 ```bash
 datatensor.io www.datatensor.io api.datatensor.io kibana.datatensor.io
 ```
-Input the webroot:
+
+Input the `webroot`:
 ```bash
 /var/www/letsencrypt
 ```
 
-Finally, deploy your tag :
+If the dry run is successful, run in `/etc/letsencrypt`
 
+```bash
+rm -rfd archive
+mkdir archive
+rm -rfd live
+mkdir live
 ```
-cd ~/datatensor
-source deploy.sh
->>> dev
->>> v_0.0.1
->>> all
->>> no
+then run the same as above without `--dry-run` argument.
+
+- Rename generated certs directory in `/etc/letsencrypt/live` :
+```bash
+mv datatensor.io-0004/ datatensor.io
 ```
+- Replace the line in all `conf.d/<domain>.conf`:
+```
+return 301 https://$server_name$request_uri;
+```
+
+and re-deploy `proxy` service
 
 ### Deploy ELK
 
