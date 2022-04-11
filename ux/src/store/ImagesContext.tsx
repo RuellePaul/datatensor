@@ -5,6 +5,7 @@ import {Image} from 'src/types/image';
 import api from 'src/utils/api';
 import useDataset from 'src/hooks/useDataset';
 import {LAZY_LOAD_BATCH} from 'src/constants';
+import goToHash from 'src/utils/goToHash';
 
 export interface ImagesContextValue {
     images: Image[] | null;
@@ -58,6 +59,7 @@ export const ImagesProvider: FC<ImagesProviderProps> = ({children, original_imag
                     }
                 });
                 setTotalImagesCount(response.data.total_count);
+                goToHash('images');
             } else {
                 response = await api.get<{images: Image[]}>(`/datasets/${dataset.id}/images/`, {
                     params: {

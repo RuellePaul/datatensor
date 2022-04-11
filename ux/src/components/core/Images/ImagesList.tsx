@@ -8,6 +8,7 @@ import MasonryItem from '@mui/lab/MasonryItem';
 import makeStyles from '@mui/styles/makeStyles';
 import DTImage from 'src/components/core/Images/Image';
 import useDataset from 'src/hooks/useDataset';
+import useCategory from 'src/hooks/useCategory';
 import useImages from 'src/hooks/useImages';
 import {Theme} from 'src/theme';
 import {ImageProvider} from 'src/store/ImageContext';
@@ -15,7 +16,6 @@ import {LAZY_LOAD_BATCH} from 'src/constants';
 import {Image} from 'src/types/image';
 import api from 'src/utils/api';
 import goToHash from 'src/utils/goToHash';
-import useCategory from '../../../hooks/useCategory';
 
 interface ImagesListProps {
     className?: string;

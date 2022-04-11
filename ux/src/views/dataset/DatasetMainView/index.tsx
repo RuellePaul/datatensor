@@ -14,7 +14,7 @@ import {ImagesProvider} from 'src/store/ImagesContext';
 import {DatasetConsumer, DatasetProvider} from 'src/store/DatasetContext';
 import {UserProvider} from 'src/store/UserContext';
 import {CategoryProvider} from 'src/store/CategoryContext';
-import {TasksProvider} from '../../../store/TasksContext';
+import {TasksProvider} from 'src/store/TasksContext';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {

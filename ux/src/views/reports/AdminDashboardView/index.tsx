@@ -12,7 +12,6 @@ import Generator from './Generator';
 import UsersOverTime from 'src/components/charts/UsersOverTime';
 import UserScopes from 'src/components/charts/UserScopes';
 import {TimeRange} from 'src/types/timeRange';
-import useTasks from 'src/hooks/useTasks';
 
 const timeRanges: TimeRange[] = [
     {
@@ -51,8 +50,6 @@ const AdminDashboardView: FC = () => {
 
     const isMountedRef = useIsMountedRef();
     const [users, setUsers] = useState<User[]>([]);
-
-    const {tasks} = useTasks();
 
     const getUsers = useCallback(async () => {
         try {

@@ -8,29 +8,32 @@ import {ImagesProvider} from 'src/store/ImagesContext';
 import DTImagesWrapper from './DTImagesWrapper';
 import useCategory from 'src/hooks/useCategory';
 
+
 const useStyles = makeStyles((theme: Theme) => ({
     root: {}
 }));
 
-const SectionImages: FC<SectionProps> = ({className}) => {
+const SectionImages: FC<SectionProps> = ({ className }) => {
     const classes = useStyles();
 
-    const {currentCategory} = useCategory();
+    const { currentCategory } = useCategory();
 
     return (
-        <div className={clsx(classes.root, className)} id="images">
-            <Divider sx={{mt: 2}}>
+        <div className={clsx(classes.root, className)}>
+            <Divider sx={{ mt: 2 }}>
                 <Typography variant="overline" color="textPrimary">
                     Images & labels
                 </Typography>
             </Divider>
-            {currentCategory === null ? (
-                <DTImagesWrapper />
-            ) : (
-                <ImagesProvider category_id={currentCategory.id}>
+            <div id="images">
+                {currentCategory === null ? (
                     <DTImagesWrapper />
-                </ImagesProvider>
-            )}
+                ) : (
+                    <ImagesProvider category_id={currentCategory.id}>
+                        <DTImagesWrapper />
+                    </ImagesProvider>
+                )}
+            </div>
         </div>
     );
 };

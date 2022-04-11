@@ -94,11 +94,20 @@ const UploadMenuItem: FC = () => {
     );
 };
 
-const LabelisatorMenuItem: FC = () => {
+interface LabelisatorMenuItemProps {
+    handleCloseMenu: () => void;
+}
+
+const LabelisatorMenuItem: FC<LabelisatorMenuItemProps> = ({handleCloseMenu}) => {
     const {images} = useImages();
 
     return (
-        <MenuItem onClick={() => goToHash(images[0].id, true)}>
+        <MenuItem
+            onClick={() => {
+                goToHash(images[0].id, true);
+                handleCloseMenu();
+            }}
+        >
             <ListItemIcon>
                 <LabelisatorIcon fontSize="small" />
             </ListItemIcon>
@@ -407,7 +416,7 @@ const ImagesActionsMenu: FC<ImagesActionsMenuProps> = ({className}) => {
             </Button>
             <Menu anchorEl={anchorEl} open={open} onClose={handleCloseMenu} TransitionComponent={Fade}>
                 <UploadMenuItem />
-                <LabelisatorMenuItem />
+                <LabelisatorMenuItem handleCloseMenu={handleCloseMenu}/>
                 <AugmentationMenuItem />
                 <ViewPipelineMenuItem />
                 <Divider sx={{my: 0.5}} />
