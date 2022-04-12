@@ -39,7 +39,7 @@ config_name = os.getenv('FLASK_UI_CONFIGURATION', 'development')
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[Config.UI_URL, Config.APP_URL, Config.DOCS_URL],
+    allow_origins=[Config.UI_URL],
     allow_credentials=True,
     allow_methods=['*'],
     allow_headers=['*'],
@@ -122,5 +122,5 @@ if __name__ == '__main__':
     uvicorn.run('app:app',
                 host='127.0.0.1',
                 port=4069,
-                debug=Config.ENVIRONMENT != 'production',
+                debug=Config.ENVIRONMENT == 'development',
                 reload=Config.ENVIRONMENT == 'development')

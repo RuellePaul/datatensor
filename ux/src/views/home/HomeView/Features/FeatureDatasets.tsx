@@ -75,7 +75,7 @@ const FeatureDatasets: FC<FeatureProps> = ({className, datasets = null, ...rest}
             >
                 <DTDataset
                     className={classes.dataset}
-                    image={images.filter(image => image.dataset_id === dataset.id)[0]}
+                    images={images.filter(image => image.dataset_id === dataset.id).slice(0, 3)}
                     onClick={() => {}}
                     disabled
                 />
@@ -83,7 +83,7 @@ const FeatureDatasets: FC<FeatureProps> = ({className, datasets = null, ...rest}
                     <DatasetProvider dataset={dataset} categories={dataset.categories} key={dataset.id}>
                         <DTDataset
                             className={classes.dataset}
-                            image={images.filter(image => image.dataset_id === dataset.id)[0]}
+                            images={images.filter(image => image.dataset_id === dataset.id).slice(0, 3)}
                             onClick={() => {}}
                             disabled
                         />

@@ -100,12 +100,13 @@ export const drawLabels = (
     dash = 0,
     filled = false,
     resize = false,
-    categorySelected: Category = null
+    categorySelected: Category = null,
+    categoryHighlight: Category = null
 ) => {
     if (!labels) return;
 
     let context = canvas.getContext('2d');
-    context.lineWidth = 2;
+    context.lineWidth = 3;
 
     for (const label of labels) {
         context.setLineDash([dash]);
@@ -113,19 +114,20 @@ export const drawLabels = (
             .sort((a, b) => -b.name.localeCompare(a.name))
             .find(category => label.category_id === category.id);
 
+        if (categoryHighlight && category.name !== categoryHighlight.name)
+            continue;
+
         const {x, y, w, h} = convertLabel(canvas, label, offset);
 
         let color = COLORS[categories.sort((a, b) => -b.name.localeCompare(a.name)).indexOf(category)] || '#FFFFFF';
 
         context.strokeStyle = color;
-        context.shadowColor = `${color}55`;
-        context.shadowBlur = 1;
         context.strokeRect(x + 0.5, y + 0.5, w, h);
 
         context.fillStyle = `${color}05`;
         context.fillRect(x, y, w, h);
         if (filled || (category && categorySelected && categorySelected.id === category.id)) {
-            context.fillStyle = `${color}05`;
+            context.fillStyle = `${color}20`;
             context.fillRect(x + 0.5, y + 0.5, w, h);
         }
 

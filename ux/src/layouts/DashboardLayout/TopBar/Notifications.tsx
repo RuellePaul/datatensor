@@ -71,7 +71,7 @@ const Notifications: FC = () => {
     const theme = useTheme();
 
     const {user, accessToken} = useAuth();
-    const {tasks, saveSelectedTask} = useTasks();
+    const {tasks} = useTasks();
 
     const {notifications} = useSelector(state => state.notifications);
     const ref = useRef<any>(null);
@@ -102,8 +102,8 @@ const Notifications: FC = () => {
         if (!wsNotifications.current) return;
 
         function sendNotificationsMessage() {
-            console.log('Send notifications poll...');
             if (wsNotifications.current && wsNotifications.current.readyState === WebSocket.OPEN) {
+                console.log('Send notifications poll...');
                 wsNotifications.current.send(accessToken);
             }
         }
@@ -150,10 +150,7 @@ const Notifications: FC = () => {
         if (notification.task_id) {
             handleClose();
 
-            // @ts-ignore
-            const task = tasks.find(task => task.id === notification.task_id);
-
-            if (task) saveSelectedTask(task);
+            // TODO : handle this
         }
     };
 

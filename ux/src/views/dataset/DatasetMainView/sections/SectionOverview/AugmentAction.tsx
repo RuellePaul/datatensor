@@ -1,22 +1,10 @@
 import React, {FC, useState} from 'react';
-import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
-import {
-    Button,
-    Card,
-    CardActions,
-    CardContent,
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    IconButton,
-    Link,
-    Typography
-} from '@mui/material';
+import {Button, Card, CardActions, CardContent, Link, Typography} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
-import {Close as CloseIcon, DynamicFeedOutlined as AugmentationIcon} from '@mui/icons-material';
-import SectionAugmentation from 'src/views/dataset/DatasetMainView/sections/SectionAugmentation';
+import {DynamicFeedOutlined as AugmentationIcon} from '@mui/icons-material';
+import Augmentor from 'src/components/core/Augmentor';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
@@ -45,8 +33,12 @@ const AugmentAction: FC<AugmentActionProps> = ({className}) => {
             <CardContent>
                 <Typography gutterBottom>Augment images</Typography>
                 <Typography variant="body2" color="textSecondary" gutterBottom>
-                    Since there are labeled images on this dataset, you can use image augmentation to get more.{' '}
-                    <Link variant="body2" color="primary" component={RouterLink} to="/upload-images">
+                    Use dataset augmentation tool to get more images.{' '}
+                    <Link
+                        variant="body2"
+                        color="primary"
+                        onClick={() => window.open('/docs/datasets/augmentation', '_blank')}
+                    >
                         Learn more
                     </Link>
                 </Typography>
@@ -62,17 +54,7 @@ const AugmentAction: FC<AugmentActionProps> = ({className}) => {
                 </Button>
             </CardActions>
 
-            <Dialog open={open} onClose={handleCloseAugmentation} fullWidth maxWidth="lg">
-                <DialogTitle>
-                    Augment images
-                    <IconButton className={classes.close} onClick={handleCloseAugmentation}>
-                        <CloseIcon />
-                    </IconButton>
-                </DialogTitle>
-                <DialogContent>
-                    <SectionAugmentation />
-                </DialogContent>
-            </Dialog>
+            <Augmentor open={open} handleClose={handleCloseAugmentation} />
         </Card>
     );
 };

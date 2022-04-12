@@ -31,11 +31,11 @@ import {
 } from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
-import SectionAugmentation from 'src/views/dataset/DatasetMainView/sections/SectionAugmentation';
 import useDataset from 'src/hooks/useDataset';
 import useImages from 'src/hooks/useImages';
 import useTasks from 'src/hooks/useTasks';
 import {setDefaultPipeline, setPipeline} from 'src/slices/pipeline';
+import Augmentor from 'src/components/core/Augmentor';
 import ImagesDropzone from 'src/components/ImagesDropzone';
 import Pipeline from 'src/components/core/Pipeline';
 import api from 'src/utils/api';
@@ -94,11 +94,20 @@ const UploadMenuItem: FC = () => {
     );
 };
 
-const LabelisatorMenuItem: FC = () => {
+interface LabelisatorMenuItemProps {
+    handleCloseMenu: () => void;
+}
+
+const LabelisatorMenuItem: FC<LabelisatorMenuItemProps> = ({handleCloseMenu}) => {
     const {images} = useImages();
 
     return (
-        <MenuItem onClick={() => goToHash(images[0].id, true)}>
+        <MenuItem
+            onClick={() => {
+                goToHash(images[0].id, true);
+                handleCloseMenu();
+            }}
+        >
             <ListItemIcon>
                 <LabelisatorIcon fontSize="small" />
             </ListItemIcon>
@@ -110,8 +119,6 @@ const LabelisatorMenuItem: FC = () => {
 };
 
 const AugmentationMenuItem: FC = () => {
-    const classes = useStyles();
-
     const {dataset} = useDataset();
     const {images} = useImages();
 
@@ -153,17 +160,7 @@ const AugmentationMenuItem: FC = () => {
                 </MenuItem>
             )}
 
-            <Dialog open={open} onClose={handleCloseAugmentation} fullWidth maxWidth="lg">
-                <DialogTitle>
-                    Augment images
-                    <IconButton className={classes.close} onClick={handleCloseAugmentation}>
-                        <CloseIcon />
-                    </IconButton>
-                </DialogTitle>
-                <DialogContent>
-                    <SectionAugmentation />
-                </DialogContent>
-            </Dialog>
+            <Augmentor open={open} handleClose={handleCloseAugmentation} />
         </>
     );
 };
@@ -407,7 +404,7 @@ const ImagesActionsMenu: FC<ImagesActionsMenuProps> = ({className}) => {
             </Button>
             <Menu anchorEl={anchorEl} open={open} onClose={handleCloseMenu} TransitionComponent={Fade}>
                 <UploadMenuItem />
-                <LabelisatorMenuItem />
+                <LabelisatorMenuItem handleCloseMenu={handleCloseMenu} />
                 <AugmentationMenuItem />
                 <ViewPipelineMenuItem />
                 <Divider sx={{my: 0.5}} />

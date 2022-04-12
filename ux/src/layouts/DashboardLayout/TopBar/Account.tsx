@@ -1,5 +1,5 @@
 import React, {FC, useRef, useState} from 'react';
-import {Link as RouterLink, useHistory} from 'react-router-dom';
+import {Link as RouterLink} from 'react-router-dom';
 import {useSnackbar} from 'notistack';
 import {Box, ButtonBase, Divider, Hidden, ListItemIcon, ListItemText, Menu, MenuItem, Typography} from '@mui/material';
 import {AccountBox as AccountIcon, Logout as LogoutIcon} from '@mui/icons-material';
@@ -10,10 +10,7 @@ import useAuth from 'src/hooks/useAuth';
 const useStyles = makeStyles(theme => ({
     avatar: {
         height: 32,
-        width: 32,
-        '& + span > .MuiAvatar-root': {
-            border: `solid 1px ${theme.palette.primary.main}`
-        }
+        width: 32
     },
     username: {
         marginLeft: '8px !important'
@@ -25,7 +22,6 @@ const useStyles = makeStyles(theme => ({
 
 const Account: FC = () => {
     const classes = useStyles();
-    const history = useHistory();
     const ref = useRef<any>(null);
     const {user, logout} = useAuth();
     const {enqueueSnackbar} = useSnackbar();
@@ -43,7 +39,7 @@ const Account: FC = () => {
         try {
             handleClose();
             await logout();
-            history.push('/');
+            window.location.href = '/';
         } catch (err) {
             console.error(err);
             enqueueSnackbar('Unable to logout', {
@@ -80,7 +76,7 @@ const Account: FC = () => {
                 anchorEl={ref.current}
                 open={isOpen}
             >
-                <MenuItem component={RouterLink} to="/account">
+                <MenuItem component={RouterLink} to="/app/account">
                     <ListItemIcon>
                         <AccountIcon fontSize="small" />
                     </ListItemIcon>

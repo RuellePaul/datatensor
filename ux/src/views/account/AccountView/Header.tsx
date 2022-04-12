@@ -19,9 +19,9 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
 
     return (
         <div className={clsx(classes.root, className)} {...rest}>
-            <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
-                <Link color="inherit" to="/app" component={RouterLink}>
-                    Dashboard
+            <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb" sx={{mb: 1}}>
+                <Link color="inherit" to="/datasets" component={RouterLink}>
+                    Datasets
                 </Link>
                 <Typography color="textPrimary">Account</Typography>
             </Breadcrumbs>

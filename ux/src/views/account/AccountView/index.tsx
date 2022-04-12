@@ -5,7 +5,6 @@ import {makeStyles} from '@mui/styles';
 
 import Header from './Header';
 import General from './General';
-import Notifications from './Notifications';
 import Security from './Security';
 import Unregister from './Unregister';
 import Page from 'src/components/Page';
@@ -30,7 +29,6 @@ const AccountView: FC = () => {
 
     const tabs = [
         {value: 'general', label: 'General'},
-        {value: 'notifications', label: 'Notifications'},
         ...(!user.scope ? [{value: 'security', label: 'Security'}] : []),
         {value: 'unregister', label: 'Unregister'}
     ];
@@ -59,7 +57,6 @@ const AccountView: FC = () => {
                 <Divider />
                 <Box mt={3}>
                     {currentTab === 'general' && <General />}
-                    {currentTab === 'notifications' && <Notifications />}
                     {currentTab === 'security' && <Security />}
                     {currentTab === 'unregister' && <Unregister />}
                 </Box>

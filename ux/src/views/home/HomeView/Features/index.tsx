@@ -1,5 +1,4 @@
 import React, {cloneElement, FC, useCallback, useEffect, useMemo, useState} from 'react';
-import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
 import {Package as DatasetIcon} from 'react-feather';
 import {Box, ButtonBase, Container, Grid, Hidden, Link, Typography, useMediaQuery} from '@mui/material';
@@ -119,21 +118,21 @@ const FEATURES = [
     {
         title: 'Datasets',
         subtitle: 'Create, organize and share your labeled image datasets with the world',
-        docPath: '/create-a-dataset',
+        docPath: '/docs/create-a-dataset',
         icon: <DatasetIcon />,
         component: <FeatureDatasets datasets={[]} />
     },
     {
         title: 'Image labeling',
         subtitle: 'Ergonomic and intuitive tools for labeling your datasets.',
-        docPath: '/datasets/labeling',
+        docPath: '/docs/datasets/labeling',
         icon: <LabelingIcon />,
         component: <FeatureLabeling />
     },
     {
         title: 'Image augmentation',
         subtitle: 'Get more labeled images, without the tears.',
-        docPath: '/datasets/augmentation',
+        docPath: '/docs/datasets/augmentation',
         icon: <AugmentationIcon />,
         component: <FeatureAugmentation />
     }
@@ -180,9 +179,7 @@ const FeatureButton: FC<FeatureButtonProps> = ({feature, index, selected, setSel
                 <Typography color="textSecondary" gutterBottom>
                     {feature.subtitle}
                 </Typography>
-                <Link component={RouterLink} to={feature.docPath}>
-                    Learn more
-                </Link>
+                <Link onClick={() => window.open(feature.docPath, '_blank')}>Learn more</Link>
             </Box>
         </ButtonBase>
     );

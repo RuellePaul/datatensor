@@ -1,5 +1,4 @@
 import React, {FC, useState} from 'react';
-import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
 import moment from 'moment';
 import {useSnackbar} from 'notistack';
@@ -28,6 +27,7 @@ import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import api from 'src/utils/api';
 import download from 'src/utils/download';
 import getDateDiff from 'src/utils/getDateDiff';
+import {MIN_LABELS_WARNING_EXPORT} from 'src/config';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
@@ -102,7 +102,8 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
     if (!dataset) return null;
 
     const isPoor =
-        categories.map(category => category.labels_count).reduce((acc, val) => acc + val, 0) / categories.length < 2000;
+        categories.map(category => category.labels_count).reduce((acc, val) => acc + val, 0) / categories.length <
+        MIN_LABELS_WARNING_EXPORT;
 
     return (
         <Formik
@@ -146,7 +147,11 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
                             <Typography variant="body2" color="textSecondary" gutterBottom>
                                 Download this dataset in JSON format. An exported dataset allows you to use it in your
                                 own computer vision pipeline.{' '}
-                                <Link variant="body2" color="primary" component={RouterLink} to="/datasets/export">
+                                <Link
+                                    variant="body2"
+                                    color="primary"
+                                    onClick={() => window.open('/docs/datasets/export', '_blank')}
+                                >
                                     Learn more
                                 </Link>
                             </Typography>
@@ -156,7 +161,8 @@ const ExportAction: FC<ExportActionProps> = ({className}) => {
                                     You don't have enough images in this dataset to successfully converge an object
                                     detection model.
                                     <br />
-                                    You must at least get <strong>2000 labels per category</strong>
+                                    You must at least get{' '}
+                                    <strong>{MIN_LABELS_WARNING_EXPORT} labels per category</strong>
                                 </Alert>
                             )}
 

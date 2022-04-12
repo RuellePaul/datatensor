@@ -16,6 +16,9 @@ import {
     Typography
 } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
+import Masonry from '@mui/lab/Masonry';
+import MasonryItem from '@mui/lab/MasonryItem';
+
 import {
     LocalOfferOutlined as LabelsIcon,
     Lock as PrivateIcon,
@@ -26,16 +29,16 @@ import {Theme} from 'src/theme';
 import api from 'src/utils/api';
 import {Image} from 'src/types/image';
 import UserAvatar from 'src/components/UserAvatar';
-import WorkingAlert from 'src/components/core/WorkingAlert';
 import {UserConsumer, UserProvider} from 'src/store/UserContext';
 import {EMPTY_DESCRIPTIONS} from 'src/constants';
 import DTImage from 'src/components/core/Images/Image';
 import {ImageProvider} from 'src/store/ImageContext';
 import useDataset from 'src/hooks/useDataset';
 import {Category} from 'src/types/category';
+import {SUPERCATEGORIES_ICONS} from 'src/config';
 
 interface DatasetProps {
-    image?: Image;
+    images?: Image[];
     className?: string;
     onClick?: () => void;
     disabled?: boolean;
@@ -103,6 +106,7 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
 
     return (
         <Chip
+            icon={SUPERCATEGORIES_ICONS[category.supercategory]}
             className={classes.category}
             label={
                 <Typography variant="body2">
@@ -120,7 +124,7 @@ const DTCategory: FC<CategoryProps> = ({category, index}) => {
     );
 };
 
-const DTDataset: FC<DatasetProps> = ({className, image = null, onClick, disabled = false, ...rest}) => {
+const DTDataset: FC<DatasetProps> = ({className, images = null, onClick, disabled = false, ...rest}) => {
     const classes = useStyles();
     const history = useHistory();
 
@@ -128,25 +132,25 @@ const DTDataset: FC<DatasetProps> = ({className, image = null, onClick, disabled
 
     const {dataset, categories} = useDataset();
 
-    const [imagePreview, setImagePreview] = useState<Image>(image);
+    const [imagesPreview, setImagesPreview] = useState<Image[]>(images);
 
-    const fetchImage = useCallback(async () => {
+    const fetchImages = useCallback(async () => {
         try {
             const response = await api.get<{images: Image[]}>(`/datasets/${dataset.id}/images/`, {
                 params: {
                     include_labels: true,
-                    limit: 1
+                    limit: 4
                 }
             });
-            setImagePreview(response.data.images[0]);
+            setImagesPreview(response.data.images);
         } catch (err) {
             console.error(err);
         }
     }, [dataset.id]);
 
     useEffect(() => {
-        if (image === null) fetchImage();
-    }, [fetchImage, image]);
+        if (imagesPreview === null) fetchImages();
+    }, [fetchImages, imagesPreview]);
 
     const totalLabelsCount = categories.map(category => category.labels_count || 0).reduce((acc, val) => acc + val, 0);
 
@@ -165,7 +169,7 @@ const DTDataset: FC<DatasetProps> = ({className, image = null, onClick, disabled
                                         color="inherit"
                                         component={RouterLink}
                                         onClick={event => event.stopPropagation()}
-                                        to={`/users/${value.user.id}`}
+                                        to={`/app/users/${value.user.id}`}
                                         variant="subtitle2"
                                     >
                                         {value.user.name}
@@ -186,26 +190,32 @@ const DTDataset: FC<DatasetProps> = ({className, image = null, onClick, disabled
             </UserProvider>
 
             <CardActionArea
-                onClick={onClick instanceof Function ? onClick : () => history.push(`/datasets/${dataset.id}#`)}
+                onClick={onClick instanceof Function ? onClick : () => history.push(`/app/datasets/${dataset.id}#`)}
                 disabled={disabled}
             >
-                {imagePreview ? (
-                    <Box position="relative">
-                        <ImageProvider image={imagePreview} labels={imagePreview.labels}>
-                            <DTImage className={classes.image} skeleton />
+                {imagesPreview instanceof Array ? (
+                    <Box position="relative" maxHeight={240} overflow="hidden">
+                        <Masonry columns={2} spacing={0.5}>
+                            {imagesPreview.map((imagePreview, index) => (
+                                <MasonryItem key={`masonry-${index}`}>
+                                    <ImageProvider image={imagePreview} labels={imagePreview.labels}>
+                                        <DTImage className={classes.image} skeleton />
 
-                            <div className={classes.categories}>
-                                {categories
-                                    .sort((a, b) => (a.labels_count > b.labels_count ? -1 : 1))
-                                    .slice(0, 4)
-                                    .map((category, index) => (
-                                        <DTCategory category={category} index={index} key={category.id} />
-                                    ))}
-                            </div>
-                        </ImageProvider>
+                                        <div className={classes.categories}>
+                                            {categories
+                                                .sort((a, b) => -b.name.localeCompare(a.name))
+                                                .slice(0, 4)
+                                                .map((category, index) => (
+                                                    <DTCategory category={category} index={index} key={category.id} />
+                                                ))}
+                                        </div>
+                                    </ImageProvider>
+                                </MasonryItem>
+                            ))}
+                        </Masonry>
                     </Box>
                 ) : (
-                    <Skeleton width="100%" height={270} sx={{transform: 'none'}} />
+                    <Skeleton width="100%" height={250} sx={{transform: 'none'}} />
                 )}
                 <CardContent>
                     <Box display="flex" alignItems="flex-start" justifyContent="space-between">
@@ -279,8 +289,6 @@ const DTDataset: FC<DatasetProps> = ({className, image = null, onClick, disabled
                             </Stack>
                         </Box>
                     </Box>
-
-                    <WorkingAlert dataset_id={dataset.id} />
                 </CardContent>
             </CardActionArea>
         </Card>

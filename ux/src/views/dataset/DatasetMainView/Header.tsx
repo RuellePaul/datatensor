@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import {Box, Breadcrumbs, capitalize, Chip, Grid, Link, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Lock as PrivateIcon, NavigateNext as NavigateNextIcon, Public as PublicIcon} from '@mui/icons-material';
-import WorkingAlert from 'src/components/core/WorkingAlert';
 import useDataset from 'src/hooks/useDataset';
 import {UserConsumer} from 'src/store/UserContext';
 import UserAvatar from 'src/components/UserAvatar';
@@ -23,19 +22,12 @@ const useStyles = makeStyles((theme: Theme) => ({
             }
         }
     },
-    alert: {
-        position: 'absolute',
-        top: 4,
-        right: 0,
-        margin: 0
-    },
     chip: {
         marginLeft: theme.spacing(1)
     },
     avatar: {
-        width: 24,
-        height: 24,
-        marginRight: theme.spacing(1)
+        width: '100%',
+        height: '100%'
     }
 }));
 
@@ -55,17 +47,25 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
         >
             <Grid item>
                 <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
-                    <Link variant="body1" color="text.primary" to="/datasets" component={RouterLink}>
+                    <Link variant="body1" color="text.primary" to="/app/datasets" component={RouterLink}>
                         Datasets
                     </Link>
                     <UserConsumer>
                         {value => (
                             <Box display="flex" alignItems="center">
-                                <UserAvatar className={classes.avatar} user={value.user} disableBadge />
+                                <Box
+                                    sx={{
+                                        width: 26,
+                                        height: 26,
+                                        mr: 1.5
+                                    }}
+                                >
+                                    <UserAvatar user={value.user} className={classes.avatar} />
+                                </Box>
                                 <Link
                                     variant="body1"
                                     color="text.primary"
-                                    to={`/users/${value.user.id}`}
+                                    to={`/app/users/${value.user.id}`}
                                     component={RouterLink}
                                 >
                                     {value.user.name}
@@ -89,8 +89,6 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
             </Grid>
 
             <Box flexGrow={1} />
-
-            <WorkingAlert className={classes.alert} dataset_id={dataset.id} />
         </Grid>
     );
 };

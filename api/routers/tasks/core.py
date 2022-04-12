@@ -29,22 +29,8 @@ def user_is_allowed_to_create_task(user, dataset_id, task_type) -> bool:
     return True
 
 
-def find_tasks() -> List[Task]:
-    tasks = list(db.tasks.find())
-    if tasks is None:
-        raise errors.NotFound('Tasks', errors.TASK_NOT_FOUND)
-    return [Task.from_mongo(task) for task in tasks]
-
-
-def find_users_tasks(user_id) -> List[Task]:
-    tasks = list(db.tasks.find({'user_id': user_id}))
-    if tasks is None:
-        raise errors.NotFound('Tasks', errors.TASK_NOT_FOUND)
-    return [Task.from_mongo(task) for task in tasks]
-
-
-def find_dataset_tasks(dataset_id) -> List[Task]:
-    tasks = list(db.tasks.find({'dataset_id': dataset_id}))
+def find_dataset_tasks(user_id, dataset_id) -> List[Task]:
+    tasks = list(db.tasks.find({'user_id': user_id, 'dataset_id': dataset_id}))
     if tasks is None:
         raise errors.NotFound('Tasks', errors.TASK_NOT_FOUND)
     return [Task.from_mongo(task) for task in tasks]

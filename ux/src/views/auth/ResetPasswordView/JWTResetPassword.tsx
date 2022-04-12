@@ -51,7 +51,7 @@ const JWTResetPassword: FC<JWTResetPasswordProps> = ({className, ...rest}) => {
                     if (isMountedRef.current) {
                         setStatus({success: true});
                         setSubmitting(false);
-                        history.push('/login');
+                        history.push('/auth/login');
                     }
                 } catch (error) {
                     console.error(error);

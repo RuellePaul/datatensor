@@ -4,7 +4,6 @@ from fastapi.responses import JSONResponse
 import errors
 from authentication import core
 from authentication.models import *
-from config import Config
 from dependencies import logged_user
 from logger import logger
 from routers.notifications.core import insert_notification
@@ -36,12 +35,6 @@ def do_login(payload: AuthLoginBody):
         'user': parse(user),
         'accessToken': access_token
     })
-    response.set_cookie(key='access_token',
-                        value=access_token,
-                        domain='datatensor.io' if Config.ENVIRONMENT == 'production' else None,
-                        httponly=False,
-                        secure=True,
-                        samesite="lax" if Config.ENVIRONMENT == 'production' else "none")
 
     logger.notify('Auth', f'Logged in as `{payload.email}`')
 
@@ -80,12 +73,6 @@ def do_register(payload: AuthRegisterBody):
         'user': parse(user),
         'accessToken': access_token
     })
-    response.set_cookie(key='access_token',
-                        value=access_token,
-                        domain='datatensor.io' if Config.ENVIRONMENT == 'production' else None,
-                        httponly=False,
-                        secure=True,
-                        samesite="lax" if Config.ENVIRONMENT == 'production' else "none")
 
     logger.notify('Auth', f'Registered user `{email}`')
 
@@ -153,12 +140,6 @@ def do_email_confirmation(payload: AuthEmailConfirmBody):
         }),
         'accessToken': access_token
     })
-    response.set_cookie(key='access_token',
-                        value=access_token,
-                        domain='datatensor.io' if Config.ENVIRONMENT == 'production' else None,
-                        httponly=False,
-                        secure=True,
-                        samesite="lax" if Config.ENVIRONMENT == 'production' else "none")
 
     logger.notify('Auth', f'Verified email `{user.email}`')
 

@@ -4,6 +4,9 @@ import {useSnackbar} from 'notistack';
 import {Formik} from 'formik';
 import clsx from 'clsx';
 import {Box, Button, CircularProgress, FormHelperText, Skeleton} from '@mui/material';
+import {Refresh as RefreshIcon} from '@mui/icons-material';
+import Masonry from '@mui/lab/Masonry';
+import MasonryItem from '@mui/lab/MasonryItem';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
 import {useSelector} from 'src/store';
@@ -12,8 +15,8 @@ import ImageBase64 from 'src/components/utils/ImageBase64';
 import {Label} from 'src/types/label';
 import wait from 'src/utils/wait';
 import useDataset from 'src/hooks/useDataset';
-import Masonry from '@mui/lab/Masonry';
-import MasonryItem from '@mui/lab/MasonryItem';
+import useImages from 'src/hooks/useImages';
+import SubmitFormikOnRender from 'src/components/utils/SubmitFormikOnRender';
 
 interface PipelineSampleProps {
     handler: (operations: Operation[]) => Promise<AxiosResponse>;
@@ -21,10 +24,12 @@ interface PipelineSampleProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {},
+    root: {
+        padding: theme.spacing(1, 0, 0)
+    },
     loader: {
         width: '20px !important',
-        height: '20px !important'
+        height: '20px !important',
     }
 }));
 
@@ -33,8 +38,9 @@ const PipelineSample: FC<PipelineSampleProps> = ({handler, className}) => {
     const {enqueueSnackbar} = useSnackbar();
 
     const {dataset} = useDataset();
+    const {images} = useImages();
 
-    const pipeline = useSelector<any>(state => state.pipeline);
+    const pipeline = useSelector(state => state.pipeline);
 
     const [imagesBase64, setImagesBase64] = useState<string[]>([]);
     const [imagesLabels, setImagesLabels] = useState<Label[][]>([]);
@@ -44,7 +50,7 @@ const PipelineSample: FC<PipelineSampleProps> = ({handler, className}) => {
         setImagesLabels([]);
 
         if (dataset.id && pipeline.isLoaded) {
-            const operations: Operation[] = pipeline.operations.allIds.map(id => pipeline.operations.byId[id]);
+            const operations: Operation[] = pipeline.operations.allTypes.map(type => pipeline.operations.byType[type]);
 
             try {
                 await wait(10);
@@ -61,6 +67,8 @@ const PipelineSample: FC<PipelineSampleProps> = ({handler, className}) => {
 
         // eslint-disable-next-line
     }, [pipeline.isLoaded, dataset.id, pipeline.operations]);
+
+    const image = images[0];
 
     return (
         <div className={clsx(classes.root, className)}>
@@ -84,15 +92,46 @@ const PipelineSample: FC<PipelineSampleProps> = ({handler, className}) => {
             >
                 {({errors, handleSubmit, isSubmitting}) => (
                     <form onSubmit={handleSubmit}>
-                        <Box mb={1}>
+                        {isSubmitting && (
+                            <Masonry columns={{xs: image.width > image.height ? 2 : 3}} spacing={1}>
+                                {Array.from(Array(image.width > image.height ? 4 : 3), () => null).map((_, index) => (
+                                    <MasonryItem key={`masonry-${index}`}>
+                                        <Box
+                                            sx={{
+                                                aspectRatio: `${image.width} / ${image.height}`,
+                                                width: '100%',
+                                                position: 'relative'
+                                            }}
+                                        >
+                                            <Skeleton
+                                                animation="wave"
+                                                height="100%"
+                                                variant="rectangular"
+                                            />
+                                        </Box>
+                                    </MasonryItem>
+                                ))}
+                            </Masonry>
+                        )}
+
+                        <Masonry columns={{xs: image.width > image.height ? 2 : 3}} spacing={1}>
+                            {imagesBase64.map((imageBase64, index) => (
+                                <MasonryItem key={`masonry_image_${index}`}>
+                                    <ImageBase64 imageBase64={imageBase64} labels={imagesLabels[index]} />
+                                </MasonryItem>
+                            ))}
+                        </Masonry>
+
+                        <Box mt={1}>
                             <Button
                                 fullWidth
                                 size="small"
-                                variant="contained"
                                 type="submit"
                                 disabled={isSubmitting}
                                 endIcon={
-                                    isSubmitting && <CircularProgress className={classes.loader} color="inherit" />
+                                    isSubmitting
+                                        ? <CircularProgress className={classes.loader} color="inherit" />
+                                        : <RefreshIcon className={classes.loader} color="inherit" />
                                 }
                             >
                                 {isSubmitting ? 'Computing...' : 'Compute sample'}
@@ -105,23 +144,7 @@ const PipelineSample: FC<PipelineSampleProps> = ({handler, className}) => {
                             </Box>
                         )}
 
-                        {isSubmitting && (
-                            <Masonry columns={{xs: 2, sm: 3}} spacing={1}>
-                                {Array.from(Array(6), () => null).map(_ => (
-                                    <MasonryItem>
-                                        <Skeleton width="100%" height={180} sx={{transform: 'none'}} />
-                                    </MasonryItem>
-                                ))}
-                            </Masonry>
-                        )}
-
-                        <Masonry columns={{xs: 2, sm: 3}} spacing={1}>
-                            {imagesBase64.map((imageBase64, index) => (
-                                <MasonryItem key={`masonry_image_${index}`}>
-                                    <ImageBase64 imageBase64={imageBase64} labels={imagesLabels[index]} />
-                                </MasonryItem>
-                            ))}
-                        </Masonry>
+                        <SubmitFormikOnRender />
                     </form>
                 )}
             </Formik>

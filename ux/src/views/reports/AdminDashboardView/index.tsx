@@ -9,12 +9,9 @@ import api from 'src/utils/api';
 import Header from './Header';
 import Actions from './Actions';
 import Generator from './Generator';
-import TasksOverTime from 'src/components/charts/TasksOverTime';
 import UsersOverTime from 'src/components/charts/UsersOverTime';
 import UserScopes from 'src/components/charts/UserScopes';
-import DTTasks from 'src/components/core/Tasks';
 import {TimeRange} from 'src/types/timeRange';
-import useTasks from 'src/hooks/useTasks';
 
 const timeRanges: TimeRange[] = [
     {
@@ -54,8 +51,6 @@ const AdminDashboardView: FC = () => {
     const isMountedRef = useIsMountedRef();
     const [users, setUsers] = useState<User[]>([]);
 
-    const {tasks} = useTasks();
-
     const getUsers = useCallback(async () => {
         try {
             const response = await api.get<{users: User[]}>('/users/');
@@ -79,17 +74,11 @@ const AdminDashboardView: FC = () => {
             <Container component="section" maxWidth="lg">
                 <Header timeRange={timeRange} setTimeRange={setTimeRange} timeRanges={timeRanges} />
                 <Grid container spacing={3}>
-                    <Grid item md={7} xs={12}>
-                        <TasksOverTime tasks={tasks} timeRange={timeRange} />
-                    </Grid>
-                    <Grid item md={5} xs={12}>
-                        <Generator />
-                    </Grid>
-                    <Grid item lg={3} xs={12}>
+                    <Grid item lg={4} xs={12}>
                         <Actions />
                     </Grid>
-                    <Grid item lg={9} xs={12}>
-                        <DTTasks />
+                    <Grid item md={8} xs={12}>
+                        <Generator />
                     </Grid>
                     <Grid item md={7} xs={12}>
                         <UsersOverTime users={users} timeRange={timeRange} />

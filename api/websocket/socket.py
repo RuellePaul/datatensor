@@ -5,14 +5,14 @@ from websockets.exceptions import ConnectionClosedOK
 from authentication.core import verify_access_token
 from logger import logger
 from routers.notifications.core import find_notifications
-from routers.tasks.core import find_tasks, find_users_tasks
+from routers.tasks.core import find_dataset_tasks
 from utils import parse, update_task
 
 sockets = APIRouter()
 
 
-@sockets.websocket('/ws/tasks')
-async def get_tasks(websocket: WebSocket):
+@sockets.websocket('/ws/datasets/{dataset_id}/tasks')
+async def get_tasks(dataset_id: str, websocket: WebSocket):
     """
     Websocket | paginated list of tasks.
     """
@@ -21,23 +21,13 @@ async def get_tasks(websocket: WebSocket):
         try:
             access_token = await websocket.receive_text()
             user = verify_access_token(access_token)
-            if user.is_admin:
-                tasks = find_tasks()
-            else:
-                tasks = find_users_tasks(user.id)
+            tasks = find_dataset_tasks(user.id, dataset_id)
             await websocket.send_json(parse(tasks))
         except ConnectionClosedOK:
             logger.notify('Websocket', f'Tasks websocket closed')
             break
         except WebSocketDisconnect:
             logger.notify('Websocket', f'Tasks websocket disconnected')
-            try:
-                if tasks and user:
-                    for task in tasks:
-                        if task.user_id == user.id and task.type == 'export' and task.status in ['pending', 'active']:
-                            update_task(task.id, status="failed", error="Operation cancelled")
-            except UnboundLocalError:
-                pass
             break
 
 

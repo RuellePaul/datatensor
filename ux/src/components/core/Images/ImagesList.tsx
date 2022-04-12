@@ -8,6 +8,7 @@ import MasonryItem from '@mui/lab/MasonryItem';
 import makeStyles from '@mui/styles/makeStyles';
 import DTImage from 'src/components/core/Images/Image';
 import useDataset from 'src/hooks/useDataset';
+import useCategory from 'src/hooks/useCategory';
 import useImages from 'src/hooks/useImages';
 import {Theme} from 'src/theme';
 import {ImageProvider} from 'src/store/ImageContext';
@@ -137,6 +138,7 @@ const DTImagesList: FC<ImagesListProps> = ({className, onClick = () => {}, ...re
     const classes = useStyles();
 
     const {images} = useImages();
+    const {currentCategory} = useCategory();
 
     if (images === null)
         return (
@@ -171,6 +173,7 @@ const DTImagesList: FC<ImagesListProps> = ({className, onClick = () => {}, ...re
                                 onClick={() => onClick(image)}
                                 skeleton
                                 overlay={<ImageOverlay image={image} />}
+                                highlightCategory={currentCategory}
                             />
                         </ImageProvider>
                     </MasonryItem>

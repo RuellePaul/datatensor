@@ -1,13 +1,13 @@
-import React, {createContext, FC, ReactNode, useEffect, useReducer} from 'react';
-import {useHistory} from 'react-router-dom';
-import Cookies from 'js-cookie';
+import React, {createContext, FC, ReactNode, useEffect, useReducer, useState} from 'react';
+import {useHistory, useLocation} from 'react-router-dom';
+import GoogleOneTapLogin from 'react-google-one-tap-login';
 import jwtDecode from 'jwt-decode';
 import {useSnackbar} from 'notistack';
 import {User} from 'src/types/user';
 import SplashScreen from 'src/components/screens/SplashScreen';
 import api from 'src/utils/api';
 
-const ENVIRONMENT = process.env.REACT_APP_ENVIRONMENT;
+const GOOGLE_ONE_TAP_PATHS = ['/', '/auth/login', '/auth/register'];
 
 interface AuthState {
     isInitialised: boolean;
@@ -19,6 +19,7 @@ interface AuthState {
 interface AuthContextValue extends AuthState {
     login: (email: string, password: string) => Promise<void>;
     loginOAuth: (code: string, scope: string) => Promise<void>;
+    loginGoogleOneTap: (googleAccessToken: string) => Promise<void>;
     logout: () => void;
     register: (email: string, name: string, password: string, recaptcha: string) => Promise<void>;
     confirmEmail: (activation_code: string) => Promise<void>;
@@ -67,6 +68,16 @@ const initialAuthState: AuthState = {
     accessToken: null
 };
 
+const setSession = (accessToken: string | null): void => {
+    if (accessToken) {
+        localStorage.setItem('access_token', accessToken);
+        api.defaults.headers.common.Authorization = accessToken;
+    } else {
+        localStorage.removeItem('access_token');
+        delete api.defaults.headers.common.Authorization;
+    }
+};
+
 const isValidToken = (accessToken: string): boolean => {
     if (!accessToken) {
         return false;
@@ -76,26 +87,6 @@ const isValidToken = (accessToken: string): boolean => {
     const currentTime = Date.now() / 1000;
 
     return decoded.exp > currentTime;
-};
-
-const setSession = (accessToken: string | null): void => {
-    if (accessToken) {
-        if (ENVIRONMENT === 'production') {
-            Cookies.set('access_token', accessToken, {domain: 'datatensor.io'});
-            Cookies.set('access_token', accessToken, {domain: 'app.datatensor.io'});
-            Cookies.set('access_token', accessToken, {domain: 'docs.datatensor.io'});
-        } else {
-            Cookies.set('access_token', accessToken);
-        }
-    } else {
-        if (ENVIRONMENT === 'production') {
-            Cookies.remove('access_token', {domain: 'datatensor.io'});
-            Cookies.remove('access_token', {domain: 'app.datatensor.io'});
-            Cookies.remove('access_token', {domain: 'docs.datatensor.io'});
-        } else {
-            Cookies.remove('access_token');
-        }
-    }
 };
 
 const reducer = (state: AuthState, action: Action): AuthState => {
@@ -108,7 +99,7 @@ const reducer = (state: AuthState, action: Action): AuthState => {
                 isAuthenticated,
                 isInitialised: true,
                 user,
-                accessToken: Cookies.get('access_token') || null
+                accessToken: localStorage.getItem('access_token') || null
             };
         }
         case 'LOGIN': {
@@ -149,6 +140,7 @@ const AuthContext = createContext<AuthContextValue>({
     ...initialAuthState,
     login: () => Promise.resolve(),
     loginOAuth: () => Promise.resolve(),
+    loginGoogleOneTap: () => Promise.resolve(),
     logout: () => {},
     register: () => Promise.resolve(),
     confirmEmail: () => Promise.resolve(),
@@ -160,6 +152,8 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
     const history = useHistory();
     const [state, dispatch] = useReducer(reducer, initialAuthState);
     const {enqueueSnackbar} = useSnackbar();
+
+    const location = useLocation();
 
     const login = async (email: string, password: string) => {
         const response = await api.post<{accessToken: string; user: User}>('/auth/login', {email, password});
@@ -189,7 +183,28 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         });
     };
 
-    const logout = () => {
+    const [isDoingOneTap, setIsDoingOneTap] = useState<boolean>(false);
+
+    const loginGoogleOneTap = async (googleAccessToken: string) => {
+        setIsDoingOneTap(true);
+        const response = await api.post<{accessToken: string; user: User}>(`/oauth/google-one-tap`, {
+            google_access_token: googleAccessToken
+        });
+        const {accessToken, user} = response.data;
+
+        setSession(accessToken);
+        setIsDoingOneTap(false);
+        dispatch({
+            type: 'LOGIN',
+            payload: {
+                user,
+                accessToken
+            }
+        });
+        history.push('/app/datasets');
+    };
+
+    const logout = async () => {
         setSession(null);
         dispatch({type: 'LOGOUT'});
     };
@@ -204,6 +219,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         const {accessToken, user} = response.data;
 
         setSession(accessToken);
+
         dispatch({
             type: 'REGISTER',
             payload: {
@@ -221,7 +237,6 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
 
             const {accessToken, user} = response.data;
 
-            setSession(accessToken);
             dispatch({
                 type: 'LOGIN',
                 payload: {
@@ -229,8 +244,9 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
                     accessToken
                 }
             });
+            setSession(accessToken);
 
-            history.push('/datasets');
+            history.push('/app/datasets');
         } catch (error) {
             enqueueSnackbar(error.message || 'Something went wrong', {
                 variant: 'error'
@@ -264,12 +280,12 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
     useEffect(() => {
         const initialise = async () => {
             try {
-                const accessToken = Cookies.get('access_token');
+                const accessToken = localStorage.getItem('access_token');
+                setSession(accessToken);
 
                 if (accessToken && isValidToken(accessToken)) {
                     const response = await api.get<User>('/auth/me');
                     const user = response.data;
-                    setSession(accessToken);
 
                     dispatch({
                         type: 'INITIALISE',
@@ -306,12 +322,17 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
         return <SplashScreen />;
     }
 
+    if (isDoingOneTap) {
+        return <SplashScreen />;
+    }
+
     return (
         <AuthContext.Provider
             value={{
                 ...state,
                 login,
                 loginOAuth,
+                loginGoogleOneTap,
                 logout,
                 register,
                 confirmEmail,
@@ -320,6 +341,22 @@ export const AuthProvider: FC<AuthProviderProps> = ({children}) => {
             }}
         >
             {children}
+
+            {GOOGLE_ONE_TAP_PATHS.includes(location.pathname) && (
+                <GoogleOneTapLogin
+                    googleAccountConfigs={{
+                        client_id: process.env.REACT_APP_OAUTH_GOOGLE_CLIENT_ID,
+                        context: 'use',
+                        cancel_on_tap_outside: false,
+                        callback: async data => {
+                            const googleAccessToken = data.credential;
+                            await loginGoogleOneTap(googleAccessToken);
+                        }
+                    }}
+                    disabled={state.isAuthenticated}
+                    onError={error => console.error(error)}
+                />
+            )}
         </AuthContext.Provider>
     );
 };

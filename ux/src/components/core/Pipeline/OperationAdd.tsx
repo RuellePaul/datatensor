@@ -1,14 +1,13 @@
-import type {ChangeEvent, FC} from 'react';
-import React, {useState} from 'react';
+import React, {ChangeEvent, FC, useState} from 'react';
 import clsx from 'clsx';
-import {Box, Button, capitalize, FormControl, InputLabel, MenuItem, Select} from '@mui/material';
+import {Box, Button, capitalize, FormControl, MenuItem, Select} from '@mui/material';
+import {Add as AddIcon} from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
-import {useDispatch} from 'src/store';
+import {useDispatch, useSelector} from 'src/store';
 import {createOperation} from 'src/slices/pipeline';
 import {OperationType} from 'src/types/pipeline';
-import {OPERATIONS_ICONS, OPERATIONS_TYPES} from 'src/config';
-
+import {MAX_OPERATIONS_PER_PIPELINE, OPERATIONS_ICONS, OPERATIONS_TYPES} from 'src/config';
 
 interface OperationAddProps {
     className?: string;
@@ -18,17 +17,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     root: {},
     select: {
         paddingLeft: theme.spacing(1)
-    },
-    adornment: {
-        marginLeft: theme.spacing(4)
     }
 }));
 
-
-const OperationAdd: FC<OperationAddProps> = ({
-                                                 className,
-                                                 ...rest
-                                             }) => {
+const OperationAdd: FC<OperationAddProps> = ({className, ...rest}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const [isExpanded, setExpanded] = useState<boolean>(false);
@@ -53,22 +45,15 @@ const OperationAdd: FC<OperationAddProps> = ({
         setOperationType(OPERATIONS_TYPES[0]);
     };
 
+    const pipeline = useSelector(state => state.pipeline);
+
     return (
-        <div
-            className={clsx(classes.root, className)}
-            {...rest}
-        >
+        <div className={clsx(classes.root, className)} {...rest}>
             {isExpanded ? (
                 <>
-                    <FormControl
-                        fullWidth
-                        variant="filled"
-                    >
-                        <InputLabel className={classes.adornment}>
-                            Operation type
-                        </InputLabel>
+                    <FormControl fullWidth variant="filled">
                         <Select
-                            classes={{ select: classes.select }}
+                            classes={{select: classes.select}}
                             fullWidth
                             name="type"
                             onChange={handleChange}
@@ -81,10 +66,9 @@ const OperationAdd: FC<OperationAddProps> = ({
                                 <MenuItem
                                     key={type}
                                     value={type}
+                                    disabled={pipeline.operations.allTypes.includes(type)}
                                 >
-                                    <Box mr={1}>
-                                        {OPERATIONS_ICONS[type]}
-                                    </Box>
+                                    <Box mr={1}>{OPERATIONS_ICONS[type]}</Box>
 
                                     {capitalize(type).replaceAll('_', ' ')}
                                 </MenuItem>
@@ -92,33 +76,23 @@ const OperationAdd: FC<OperationAddProps> = ({
                         </Select>
                     </FormControl>
 
-                    <Box
-                        mt={2}
-                        display="flex"
-                        justifyContent="space-between"
-                    >
-                        <Button
-                            onClick={handleAddCancel}
-                            variant="text"
-                        >
+                    <Box mt={2} display="flex" justifyContent="space-between">
+                        <Button onClick={handleAddCancel} variant="text">
                             Cancel
                         </Button>
-                        <Button
-                            onClick={handleAddConfirm}
-                            variant="contained"
-                            color="primary"
-                        >
+                        <Button onClick={handleAddConfirm} variant="contained" color="primary">
                             Add
                         </Button>
                     </Box>
                 </>
             ) : (
-                <Box
-                    display="flex"
-                    justifyContent="center"
-                >
-                    <Button onClick={handleAddInit}>
-                        Add another operation
+                <Box display="flex" justifyContent="center">
+                    <Button
+                        startIcon={<AddIcon />}
+                        onClick={handleAddInit}
+                        disabled={pipeline.operations.allTypes.length >= MAX_OPERATIONS_PER_PIPELINE}
+                    >
+                        Add operation
                     </Button>
                 </Box>
             )}

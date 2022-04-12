@@ -33,7 +33,7 @@ const ForgotPasswordView: FC = () => {
     const recovery_code = parseQueryArgs('recovery_code');
 
     useEffect(() => {
-        if (recovery_code) history.push(`/reset-password?recovery_code=${recovery_code}`);
+        if (recovery_code) history.push(`/auth/reset-password?recovery_code=${recovery_code}`);
     }, [recovery_code, history]);
 
     if (recovery_code) return null;

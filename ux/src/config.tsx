@@ -1,35 +1,41 @@
 import React from 'react';
 import * as Yup from 'yup';
 import {
-    EmojiPeopleOutlined as PersonIcon,
-    CommuteOutlined as VehicleIcon,
-    MemoryOutlined as ElectronicIcon,
-    HomeOutlined as IndoorIcon,
-    EmojiNature as OutdoorIcon,
-    SportsFootball as SportsIcon,
-    PetsOutlined as AnimalIcon,
-    Deck as FurnitureIcon,
-    BeachAccess as AccessoryIcon,
-    Kitchen as KitchenIcon,
-    Devices as ApplianceIcon,
-    Fastfood as FoodIcon,
     AutoAwesome as MiscelleanousIcon,
+    BeachAccess as AccessoryIcon,
+    BlurCircularOutlined as GaussianDistortionIcon,
     BlurOn as DistortionIcon,
     Brightness7 as BrightnessIcon,
+    CommuteOutlined as VehicleIcon,
+    CompareArrowsOutlined as ShearIcon,
+    ContrastOutlined as ContrastIcon,
     CropRotate as RotateIcon,
+    Deck as FurnitureIcon,
+    Devices as ApplianceIcon,
+    EmojiNature as OutdoorIcon,
+    EmojiPeopleOutlined as PersonIcon,
     Equalizer as HistogramIcon,
+    Fastfood as FoodIcon,
     FiberManualRecord as GreyScaleIcon,
     Flip as FlipIcon,
-    FormatItalic as SkewIcon,
+    FilterTiltShiftTwoTone as SkewIcon,
+    HomeOutlined as IndoorIcon,
     InvertColors as InvertIcon,
+    Kitchen as KitchenIcon,
+    MemoryOutlined as ElectronicIcon,
     PaletteOutlined as ColorIcon,
-    PhotoSizeSelectLarge as CropIcon
+    PetsOutlined as AnimalIcon,
+    PhotoSizeSelectLarge as CropIcon,
+    SportsFootball as SportsIcon
 } from '@mui/icons-material';
 import {OperationType, Pipeline} from './types/pipeline';
 import {SuperCategory} from 'src/types/category';
 
-export const MAX_DATASETS_DISPLAYED = 6;
+
+export const MAX_DATASETS_DISPLAYED = 3;
 export const MAX_CATEGORIES_DISPLAYED = 16;
+export const MIN_LABELS_WARNING_EXPORT = 500;
+export const MAX_OPERATIONS_PER_PIPELINE = 5;
 
 export const SUPERCATEGORIES: SuperCategory[] = [
     'person',
@@ -64,19 +70,19 @@ export const OPERATIONS_TYPES: OperationType[] = [
 ];
 
 export const SUPERCATEGORIES_ICONS = {
-    person: <PersonIcon color="inherit" fontSize="small"/>,
-    vehicle: <VehicleIcon color="inherit" fontSize="small"/>,
-    electronic: <ElectronicIcon color="inherit" fontSize="small"/>,
-    indoor: <IndoorIcon color="inherit" fontSize="small"/>,
-    outdoor: <OutdoorIcon color="inherit" fontSize="small"/>,
-    sports: <SportsIcon color="inherit" fontSize="small"/>,
-    furniture: <FurnitureIcon color="inherit" fontSize="small"/>,
-    accessory: <AccessoryIcon color="inherit" fontSize="small"/>,
-    kitchen: <KitchenIcon color="inherit" fontSize="small"/>,
-    animal: <AnimalIcon color="inherit" fontSize="small"/>,
-    appliance: <ApplianceIcon color="inherit" fontSize="small"/>,
-    food: <FoodIcon color="inherit" fontSize="small"/>,
-    miscellaneous: <MiscelleanousIcon color="inherit" fontSize="small"/>,
+    person: <PersonIcon color="inherit" fontSize="small" />,
+    vehicle: <VehicleIcon color="inherit" fontSize="small" />,
+    electronic: <ElectronicIcon color="inherit" fontSize="small" />,
+    indoor: <IndoorIcon color="inherit" fontSize="small" />,
+    outdoor: <OutdoorIcon color="inherit" fontSize="small" />,
+    sports: <SportsIcon color="inherit" fontSize="small" />,
+    furniture: <FurnitureIcon color="inherit" fontSize="small" />,
+    accessory: <AccessoryIcon color="inherit" fontSize="small" />,
+    kitchen: <KitchenIcon color="inherit" fontSize="small" />,
+    animal: <AnimalIcon color="inherit" fontSize="small" />,
+    appliance: <ApplianceIcon color="inherit" fontSize="small" />,
+    food: <FoodIcon color="inherit" fontSize="small" />,
+    miscellaneous: <MiscelleanousIcon color="inherit" fontSize="small" />,
 }
 
 export const OPERATIONS_ICONS = {
@@ -84,29 +90,29 @@ export const OPERATIONS_ICONS = {
     flip_random: <FlipIcon />,
     skew: <SkewIcon />,
     crop_random: <CropIcon />,
-    shear: <RotateIcon />,
+    shear: <ShearIcon />,
     random_distortion: <DistortionIcon />,
-    gaussian_distortion: <DistortionIcon />,
+    gaussian_distortion: <GaussianDistortionIcon />,
     random_brightness: <BrightnessIcon />,
     random_color: <ColorIcon />,
-    random_contrast: <RotateIcon />,
+    random_contrast: <ContrastIcon />,
     histogram_equalisation: <HistogramIcon />,
     invert: <InvertIcon />,
     greyscale: <GreyScaleIcon />
 };
 
 export const OPERATIONS_DESCRIPTION = {
-    rotate: `The operation will rotate an image by an random amount, within a range specified.
+    rotate: `Rotate an image by an random amount, within a range specified.
              The parameters max_left_rotation and max_right_rotation allow you to control this range.`,
     flip_random: `Flip (mirror) the image along either its horizontal or vertical axis.`,
     skew: `Skew an image in a random direction, either left to right, top to bottom, or one of 8 corner directions.`,
     crop_random: `Crop a random area of an image, based on the percentage area to be returned.`,
     shear: `Shear the image by a specified number of degrees.`,
-    random_distortion: `This function performs a randomised, elastic distortion controlled by the parameters specified. 
+    random_distortion: `Performs a randomised, elastic distortion controlled by the parameters specified. 
                         The grid width and height controls how fine the distortions are. Smaller sizes will result in 
                         larger, more pronounced, and less granular distortions. Larger numbers will result in finer, 
                         more granular distortions. The magnitude of the distortions can be controlled using magnitude.`,
-    gaussian_distortion: `This function performs a randomised, elastic distortion controlled by the parameters specified. 
+    gaussian_distortion: `Performs a randomised, elastic gaussian distortion controlled by the parameters specified. 
                           The grid width and height controls how fine the distortions are. Smaller sizes will result in 
                           larger, more pronounced, and less granular distortions. Larger numbers will result in finer, 
                           more granular distortions. The magnitude of the distortions can be controlled using magnitude.`,
@@ -260,22 +266,14 @@ export const OPERATIONS_SHAPES = {
 export const DEFAULT_PIPELINE: Pipeline = {
     operations: [
         {
-            id: '6e72802f-e64e-4ad9-8dc6-ede3fa2f498b',
             type: 'rotate',
             probability: 0.8,
             properties: OPERATIONS_INITIAL_PROPERTIES.rotate
         },
         {
-            id: '100af1ba-9cd7-44c5-9f31-223996f916f7',
             type: 'random_distortion',
             probability: 0.35,
             properties: OPERATIONS_INITIAL_PROPERTIES.random_distortion
-        },
-        {
-            id: 'c552d61e-4b85-4b3d-b76a-9504a2bc22d9',
-            type: 'random_contrast',
-            probability: 0.55,
-            properties: OPERATIONS_INITIAL_PROPERTIES.random_contrast
         },
     ]
 };

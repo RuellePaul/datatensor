@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import clsx from 'clsx';
-import {Box, Button, Card, CardActions, CardContent, Typography} from '@mui/material';
+import {Box, Card, CardContent, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import UserAvatar from 'src/components/UserAvatar';
 import {Theme} from 'src/theme';
@@ -18,7 +18,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     avatar: {
         height: 100,
-        width: 100
+        width: 100,
+        marginBottom: theme.spacing(2)
     }
 }));
 
@@ -35,11 +36,6 @@ const ProfileDetails: FC<ProfileDetailsProps> = ({className, user, ...rest}) => 
                     </Typography>
                 </Box>
             </CardContent>
-            <CardActions>
-                <Button fullWidth variant="text">
-                    Remove picture
-                </Button>
-            </CardActions>
         </Card>
     );
 };

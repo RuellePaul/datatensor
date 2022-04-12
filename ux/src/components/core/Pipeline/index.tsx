@@ -16,6 +16,7 @@ interface PipelineProps {
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         width: '100%',
+        maxWidth: 380,
         flexGrow: 1,
         flexShrink: 1,
         display: 'flex',

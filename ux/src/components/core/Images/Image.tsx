@@ -3,10 +3,11 @@ import clsx from 'clsx';
 import {Box, ButtonBase, Skeleton} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
-import {drawLabels, reset} from 'src/utils/labeling';
 import useCategory from 'src/hooks/useCategory';
 import useDataset from 'src/hooks/useDataset';
 import useImage from 'src/hooks/useImage';
+import {Category} from 'src/types/category';
+import {drawLabels, reset} from 'src/utils/labeling';
 
 interface DTImageProps {
     className?: string;
@@ -14,6 +15,7 @@ interface DTImageProps {
     skeleton?: boolean;
     overlay?: ReactNode;
     onClick?: () => void;
+    highlightCategory?: Category;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -60,7 +62,8 @@ const DTImage: FC<DTImageProps> = ({
     clickable = false,
     skeleton = false,
     overlay = null,
-    onClick = () => {}
+    onClick = () => {},
+    highlightCategory = null
 }) => {
     const classes = useStyles();
 
@@ -78,16 +81,16 @@ const DTImage: FC<DTImageProps> = ({
 
         if (canvasRef.current && imageRef.current.complete) {
             reset(canvasRef.current);
-            drawLabels(canvasRef.current, labels, categories, 0, 0, false, false, currentCategory);
+            drawLabels(canvasRef.current, labels, categories, 0, 0, false, false, currentCategory, highlightCategory);
         }
     };
 
     useEffect(() => {
         if (canvasRef.current && imageRef.current.complete) {
             reset(canvasRef.current);
-            drawLabels(canvasRef.current, labels, categories, 0, 0, false, false, currentCategory);
+            drawLabels(canvasRef.current, labels, categories, 0, 0, false, false, currentCategory, highlightCategory);
         }
-    }, [labels, categories, loaded, currentCategory]);
+    }, [labels, categories, loaded, currentCategory, highlightCategory]);
 
     return (
         <Box className={clsx(classes.root, className)} style={{aspectRatio: `${image.width} / ${image.height}`}}>
@@ -107,7 +110,7 @@ const DTImage: FC<DTImageProps> = ({
                         onLoad={handleLoad}
                         ref={imageRef}
                     />
-                    <canvas className={clsx(classes.canvas)} ref={canvasRef} />
+                    <canvas className={clsx(classes.canvas, highlightCategory && 'labelHighlight')} ref={canvasRef} />
                 </ButtonBase>
             ) : (
                 <div className={clsx(classes.wrapper, skeleton && !loaded && 'hidden')}>
@@ -119,7 +122,7 @@ const DTImage: FC<DTImageProps> = ({
                         onLoad={handleLoad}
                         ref={imageRef}
                     />
-                    <canvas className={clsx(classes.canvas)} ref={canvasRef} />
+                    <canvas className={clsx(classes.canvas, highlightCategory && 'labelHighlight')} ref={canvasRef} />
                 </div>
             )}
             {overlay && loaded && <div className="overlay">{overlay}</div>}

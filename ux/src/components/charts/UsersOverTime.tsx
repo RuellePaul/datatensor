@@ -83,7 +83,7 @@ const UsersOverTime: FC<UsersOverTimeProps> = ({className, users, timeRange, ...
             <CardHeader
                 action={
                     <GenericMoreButton>
-                        <MenuItem onClick={() => history.push('/users')}>
+                        <MenuItem onClick={() => history.push('/app/users')}>
                             <ListItemIcon>
                                 <UsersIcon />
                             </ListItemIcon>

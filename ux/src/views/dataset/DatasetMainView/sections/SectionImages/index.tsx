@@ -2,11 +2,11 @@ import React, {FC} from 'react';
 import clsx from 'clsx';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
-import {CategoryConsumer, CategoryProvider} from 'src/store/CategoryContext';
 import {SectionProps} from '../SectionProps';
 import {Divider, Typography} from '@mui/material';
 import {ImagesProvider} from 'src/store/ImagesContext';
 import DTImagesWrapper from './DTImagesWrapper';
+import useCategory from 'src/hooks/useCategory';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -16,6 +16,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 const SectionImages: FC<SectionProps> = ({ className }) => {
     const classes = useStyles();
 
+    const { currentCategory } = useCategory();
+
     return (
         <div className={clsx(classes.root, className)}>
             <Divider sx={{ mt: 2 }}>
@@ -23,19 +25,15 @@ const SectionImages: FC<SectionProps> = ({ className }) => {
                     Images & labels
                 </Typography>
             </Divider>
-            <CategoryProvider>
-                <CategoryConsumer>
-                    {value =>
-                        value.currentCategory === null ? (
-                            <DTImagesWrapper />
-                        ) : (
-                            <ImagesProvider category_id={value.currentCategory.id}>
-                                <DTImagesWrapper />
-                            </ImagesProvider>
-                        )
-                    }
-                </CategoryConsumer>
-            </CategoryProvider>
+            <div id="images">
+                {currentCategory === null ? (
+                    <DTImagesWrapper />
+                ) : (
+                    <ImagesProvider category_id={currentCategory.id}>
+                        <DTImagesWrapper />
+                    </ImagesProvider>
+                )}
+            </div>
         </div>
     );
 };
