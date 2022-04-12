@@ -1,4 +1,4 @@
-export type TaskType = 'generator' | 'augmentor' | 'export';
+export type TaskType = 'generator' | 'augmentor';
 
 export type TaskStatus = 'pending' | 'active' | 'success' | 'failed';
 

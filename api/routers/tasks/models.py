@@ -12,7 +12,6 @@ from utils import MongoModel
 class TaskType(str, Enum):
     generator = 'generator'
     augmentor = 'augmentor'
-    export = 'export'
 
 
 class TaskStatus(str, Enum):

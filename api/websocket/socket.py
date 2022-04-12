@@ -28,13 +28,6 @@ async def get_tasks(dataset_id: str, websocket: WebSocket):
             break
         except WebSocketDisconnect:
             logger.notify('Websocket', f'Tasks websocket disconnected')
-            try:
-                if tasks and user:
-                    for task in tasks:
-                        if task.user_id == user.id and task.type == 'export' and task.status in ['pending', 'active']:
-                            update_task(task.id, status="failed", error="Operation cancelled")
-            except UnboundLocalError:
-                pass
             break
 
 
