@@ -1,11 +1,10 @@
 import React, {FC, useState} from 'react';
 import clsx from 'clsx';
-import {Button, Card, CardActions, CardContent, Dialog, DialogContent, Link, Typography} from '@mui/material';
+import {Button, Card, CardActions, CardContent, Link, Typography} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import {DynamicFeedOutlined as AugmentationIcon} from '@mui/icons-material';
-import SectionAugmentation from 'src/views/dataset/DatasetMainView/sections/SectionAugmentation';
-
+import Augmentor from 'src/components/core/Augmentor';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
@@ -21,7 +20,7 @@ interface AugmentActionProps {
     className?: string;
 }
 
-const AugmentAction: FC<AugmentActionProps> = ({ className }) => {
+const AugmentAction: FC<AugmentActionProps> = ({className}) => {
     const classes = useStyles();
 
     const [open, setOpen] = useState<boolean>(false);
@@ -44,7 +43,7 @@ const AugmentAction: FC<AugmentActionProps> = ({ className }) => {
                     </Link>
                 </Typography>
             </CardContent>
-            <CardActions style={{ justifyContent: 'flex-end' }}>
+            <CardActions style={{justifyContent: 'flex-end'}}>
                 <Button
                     variant="contained"
                     color="primary"
@@ -55,11 +54,7 @@ const AugmentAction: FC<AugmentActionProps> = ({ className }) => {
                 </Button>
             </CardActions>
 
-            <Dialog open={open} onClose={handleCloseAugmentation} fullWidth maxWidth="md">
-                <DialogContent>
-                    <SectionAugmentation />
-                </DialogContent>
-            </Dialog>
+            <Augmentor open={open} handleClose={handleCloseAugmentation} />
         </Card>
     );
 };
