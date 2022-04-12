@@ -26,9 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     droppableArea: {
         minHeight: 80,
-        maxHeight: 620,
-        flexGrow: 1,
-        overflowY: 'auto'
+        flexGrow: 1
     }
 }));
 

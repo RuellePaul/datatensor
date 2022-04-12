@@ -3,12 +3,8 @@ import clsx from 'clsx';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {useSnackbar} from 'notistack';
-import {Alert, Box, Button, FormHelperText, Grid, Link, TextField, Typography} from '@mui/material';
-import {
-    DynamicFeedOutlined as AugmentationIcon,
-    KeyboardArrowLeft as BackIcon,
-    KeyboardArrowRight as NextIcon
-} from '@mui/icons-material';
+import {Alert, Box, Button, capitalize, Chip, FormHelperText, Grid, Link, TextField, Typography} from '@mui/material';
+import {KeyboardArrowLeft as BackIcon, KeyboardArrowRight as NextIcon} from '@mui/icons-material';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import Pipeline from 'src/components/core/Pipeline';
@@ -20,8 +16,9 @@ import {Task} from 'src/types/task';
 import useTasks from 'src/hooks/useTasks';
 import useDataset from 'src/hooks/useDataset';
 import {useSelector} from 'src/store';
-import {Operation} from 'src/types/pipeline';
+import {Operation, OperationType} from 'src/types/pipeline';
 import {Label} from 'src/types/label';
+import {OPERATIONS_ICONS, OPERATIONS_TYPES} from 'src/config';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
@@ -74,6 +71,8 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
         setActiveStep(prevActiveStep => prevActiveStep - 1);
     };
 
+    const [operationType, setOperationType] = useState<OperationType>(OPERATIONS_TYPES[0]);
+
     if (images === null || images.length === 0) return null;
 
     return (
@@ -113,33 +112,57 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
         >
             {({errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values}) => (
                 <form onSubmit={handleSubmit} className={clsx(classes.root, className)}>
-                    <Grid container columnSpacing={3} rowSpacing={1}>
+                    <Grid container columnSpacing={4} rowSpacing={1}>
                         {activeStep === 0 && (
                             <Grid item sm={7} xs={12}>
-                                <Box py={5}>
-                                    <Box display="flex" alignItems="center" mb={2}>
-                                        <Box mr={1}>
-                                            <AugmentationIcon />
-                                        </Box>
-                                        <Typography variant="h3">Augmentation tool</Typography>
-                                    </Box>
-                                    <Typography gutterBottom>
-                                        The image augmentation process allows you to{' '}
-                                        <strong>generate new images</strong> in order to get a richer dataset, without
-                                        having to re-label anything.
-                                    </Typography>
-                                    <Typography variant="body2" gutterBottom>
-                                        To get augmented images of each original labeled image in your dataset, you need
-                                        to set up a pipeline of operations to apply.{' '}
-                                        <Link
-                                            variant="body2"
-                                            color="primary"
-                                            onClick={() => window.open('/docs/datasets/augmentation', '_blank')}
-                                        >
-                                            Learn more
-                                        </Link>
-                                    </Typography>
+                                <Typography variant="overline" color="textPrimary" align="center" gutterBottom>
+                                    Introduction
+                                </Typography>
+
+                                <Typography variant="body1" gutterBottom>
+                                    The image augmentation process allows you to <strong>generate new images</strong> in
+                                    order to get a richer dataset, without having to re-label anything.
+                                </Typography>
+
+                                <Typography variant="body2" gutterBottom color='textSecondary'>
+                                    To get augmented images of each original labeled image in your dataset, you need to
+                                    set up a pipeline of operations to apply.{' '}
+                                    <Link
+                                        variant="caption"
+                                        color="primary"
+                                        onClick={() => window.open('/docs/datasets/augmentation', '_blank')}
+                                    >
+                                        Learn more
+                                    </Link>
+                                </Typography>
+
+                                <Box display="flex" flexWrap="wrap" mt={1.5} mb={1}>
+                                    {OPERATIONS_TYPES.slice(0, 7).map(operation_type => (
+                                        <Chip
+                                            key={operation_type}
+                                            label={capitalize(operation_type).replaceAll('_', ' ')}
+                                            icon={OPERATIONS_ICONS[operation_type]}
+                                            clickable
+                                            onClick={() => setOperationType(operation_type)}
+                                            sx={{mb: 0.5, mr: 0.5}}
+                                            variant={operation_type === operationType ? 'filled' : 'outlined'}
+                                        />
+                                    ))}
                                 </Box>
+
+                                <Box my={1} height={200} sx={{aspectRatio: '1 / 1'}}>
+                                    <img
+                                        src={`/static/images/augmentation/operations/${operationType}.gif`}
+                                        alt={`${operationType}.gif`}
+                                        width="100%"
+                                    />
+                                </Box>
+
+                                <Typography variant="caption">
+                                    Every operation has at minimum a probability parameter, which controls how likely
+                                    the operation will be applied to each image that is seen as the image passes through
+                                    the pipeline.
+                                </Typography>
                             </Grid>
                         )}
 

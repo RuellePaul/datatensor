@@ -18,7 +18,7 @@ import {
     Fastfood as FoodIcon,
     FiberManualRecord as GreyScaleIcon,
     Flip as FlipIcon,
-    FormatItalic as SkewIcon,
+    FilterTiltShiftTwoTone as SkewIcon,
     HomeOutlined as IndoorIcon,
     InvertColors as InvertIcon,
     Kitchen as KitchenIcon,
@@ -35,6 +35,7 @@ import {SuperCategory} from 'src/types/category';
 export const MAX_DATASETS_DISPLAYED = 3;
 export const MAX_CATEGORIES_DISPLAYED = 16;
 export const MIN_LABELS_WARNING_EXPORT = 500;
+export const MAX_OPERATIONS_PER_PIPELINE = 5;
 
 export const SUPERCATEGORIES: SuperCategory[] = [
     'person',

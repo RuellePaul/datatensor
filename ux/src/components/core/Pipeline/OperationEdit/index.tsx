@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, forwardRef} from 'react';
 import {Alert, AlertTitle, Box, capitalize, Card, CardContent, IconButton, SvgIcon, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Close} from '@mui/icons-material';
@@ -31,49 +31,51 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const OperationEdit: FC<OperationEditProps> = ({operation, className, handleClose, readOnly = false, ...rest}) => {
-    const classes = useStyles();
+const OperationEdit: FC<OperationEditProps> = forwardRef(
+    ({operation, className, handleClose, readOnly = false, ...rest}, ref) => {
+        const classes = useStyles();
 
-    if (!operation) return null;
+        if (!operation) return null;
 
-    return (
-        <Card className={classes.root} {...rest}>
-            <CardContent>
-                <Box display="flex" mb={2}>
-                    <Box mr={2}>{OPERATIONS_ICONS[operation.type]}</Box>
-                    <Typography variant="h5">{capitalize(operation.type).replaceAll('_', ' ')}</Typography>
-                    <Box flexGrow={1} />
-                    <IconButton size="small" onClick={handleClose}>
-                        <SvgIcon>
-                            <Close />
-                        </SvgIcon>
-                    </IconButton>
-                </Box>
+        return (
+            <Card className={classes.root} {...rest}>
+                <CardContent>
+                    <Box display="flex" mb={2}>
+                        <Box mr={2}>{OPERATIONS_ICONS[operation.type]}</Box>
+                        <Typography variant="h5">{capitalize(operation.type).replaceAll('_', ' ')}</Typography>
+                        <Box flexGrow={1} />
+                        <IconButton size="small" onClick={handleClose}>
+                            <SvgIcon>
+                                <Close />
+                            </SvgIcon>
+                        </IconButton>
+                    </Box>
 
-                <OperationProperties operation={operation} readOnly={readOnly} />
+                    <OperationProperties operation={operation} readOnly={readOnly} />
 
-                <Box mt={2}>
-                    <Alert icon={false}>
-                        <Box display="flex">
-                            <Box>
-                                <AlertTitle>Details</AlertTitle>
+                    <Box mt={2}>
+                        <Alert icon={false}>
+                            <Box display="flex">
+                                <Box>
+                                    <AlertTitle>Details</AlertTitle>
 
-                                {OPERATIONS_DESCRIPTION[operation.type]}
+                                    {OPERATIONS_DESCRIPTION[operation.type]}
+                                </Box>
+
+                                <Box mt={1} ml={2} height={190} sx={{aspectRatio: '1 / 1'}}>
+                                    <img
+                                        src={`/static/images/augmentation/operations/${operation.type}.gif`}
+                                        alt={`${operation.type}.gif`}
+                                        width="100%"
+                                    />
+                                </Box>
                             </Box>
-
-                            <Box mt={1} ml={2} height={190} sx={{aspectRatio: '1 / 1'}}>
-                                <img
-                                    src={`/static/images/augmentation/operations/${operation.type}.gif`}
-                                    alt={`${operation.type}.gif`}
-                                    width="100%"
-                                />
-                            </Box>
-                        </Box>
-                    </Alert>
-                </Box>
-            </CardContent>
-        </Card>
-    );
-};
+                        </Alert>
+                    </Box>
+                </CardContent>
+            </Card>
+        );
+    }
+);
 
 export default OperationEdit;

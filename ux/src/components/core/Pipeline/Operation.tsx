@@ -6,6 +6,7 @@ import {
     capitalize,
     Card,
     CardContent,
+    ClickAwayListener,
     Dialog,
     Fade,
     IconButton,
@@ -104,50 +105,53 @@ const Operation: FC<OperationProps> = forwardRef(
                 style={style}
                 {...rest}
             >
-                <Tooltip
-                    disableHoverListener
-                    open={!isMobile && !readOnly && isOpened}
-                    TransitionComponent={Fade}
-                    classes={{tooltip: classes.tooltip}}
-                    title={<OperationEdit operation={operation} handleClose={handleClose} readOnly={readOnly} />}
-                    placement={isLargeScreen ? 'right' : 'left'}
-                >
-                    <Card
-                        className={clsx(classes.operation, {[classes.dragging]: dragging})}
-                        raised={dragging}
-                        variant={dragging ? 'elevation' : 'outlined'}
+                <ClickAwayListener onClickAway={handleClose}>
+                    <Tooltip
+                        disableHoverListener
+                        open={!isMobile && !readOnly && isOpened}
+                        TransitionComponent={Fade}
+                        classes={{tooltip: classes.tooltip}}
+                        title={<OperationEdit operation={operation} handleClose={handleClose} readOnly={readOnly} />}
+                        placement={isLargeScreen ? 'right' : 'left'}
                     >
-                        <CardContent className={classes.content}>
-                            <Box display="flex" alignItems="center">
-                                <Box mr={2}>{OPERATIONS_ICONS[operation.type]}</Box>
-                                <Typography variant="h5" color="textPrimary">
-                                    {capitalize(operation.type).replaceAll('_', ' ')}
-                                </Typography>
-                                <Box flexGrow={1} />
-                                {readOnly === false && (
-                                    <>
-                                        <Tooltip title={isOpened ? 'Close settings' : 'Settings'}>
-                                            <IconButton onClick={handleToggle}>
-                                                <SettingsIcon />
-                                            </IconButton>
-                                        </Tooltip>
-                                        <Tooltip title="Delete">
-                                            <IconButton onClick={handleDelete}>
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </>
-                                )}
-                            </Box>
+                        <Card
+                            className={clsx(classes.operation, {[classes.dragging]: dragging})}
+                            raised={dragging}
+                            variant={dragging ? 'elevation' : 'outlined'}
+                        >
+                            <CardContent className={classes.content}>
+                                <Box display="flex" alignItems="center">
+                                    <Box mr={2}>{OPERATIONS_ICONS[operation.type]}</Box>
+                                    <Typography variant="h5" color="textPrimary">
+                                        {capitalize(operation.type).replaceAll('_', ' ')}
+                                    </Typography>
+                                    <Box flexGrow={1} />
+                                    {readOnly === false && (
+                                        <>
+                                            <Tooltip title={isOpened ? 'Close settings' : 'Settings'}>
+                                                <IconButton onClick={handleToggle}>
+                                                    <SettingsIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Tooltip title="Delete">
+                                                <IconButton onClick={handleDelete}>
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </>
+                                    )}
+                                </Box>
 
-                            <ProbabilitySlider
-                                operation={operation}
-                                setDragDisabled={setDragDisabled}
-                                disabled={readOnly}
-                            />
-                        </CardContent>
-                    </Card>
-                </Tooltip>
+                                <ProbabilitySlider
+                                    operation={operation}
+                                    setDragDisabled={setDragDisabled}
+                                    disabled={readOnly}
+                                />
+                            </CardContent>
+                        </Card>
+                    </Tooltip>
+                </ClickAwayListener>
+
                 <Dialog open={isMobile && isOpened && !readOnly} onClose={handleClose}>
                     <OperationEdit operation={operation} handleClose={handleClose} readOnly={readOnly} />
                 </Dialog>

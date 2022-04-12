@@ -7,7 +7,7 @@ import {Theme} from 'src/theme';
 import {useDispatch, useSelector} from 'src/store';
 import {createOperation} from 'src/slices/pipeline';
 import {OperationType} from 'src/types/pipeline';
-import {OPERATIONS_ICONS, OPERATIONS_TYPES} from 'src/config';
+import {MAX_OPERATIONS_PER_PIPELINE, OPERATIONS_ICONS, OPERATIONS_TYPES} from 'src/config';
 
 interface OperationAddProps {
     className?: string;
@@ -87,7 +87,11 @@ const OperationAdd: FC<OperationAddProps> = ({className, ...rest}) => {
                 </>
             ) : (
                 <Box display="flex" justifyContent="center">
-                    <Button startIcon={<AddIcon />} onClick={handleAddInit}>
+                    <Button
+                        startIcon={<AddIcon />}
+                        onClick={handleAddInit}
+                        disabled={pipeline.operations.allTypes.length >= MAX_OPERATIONS_PER_PIPELINE}
+                    >
                         Add operation
                     </Button>
                 </Box>
