@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import {Box, Breadcrumbs, capitalize, Chip, Grid, Link, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Lock as PrivateIcon, NavigateNext as NavigateNextIcon, Public as PublicIcon} from '@mui/icons-material';
-import WorkingAlert from 'src/components/core/WorkingAlert';
 import useDataset from 'src/hooks/useDataset';
 import {UserConsumer} from 'src/store/UserContext';
 import UserAvatar from 'src/components/UserAvatar';
@@ -22,12 +21,6 @@ const useStyles = makeStyles((theme: Theme) => ({
                 display: 'none'
             }
         }
-    },
-    alert: {
-        position: 'absolute',
-        top: 4,
-        right: 0,
-        margin: 0
     },
     chip: {
         marginLeft: theme.spacing(1)
@@ -96,8 +89,6 @@ const Header: FC<HeaderProps> = ({className, ...rest}) => {
             </Grid>
 
             <Box flexGrow={1} />
-
-            <WorkingAlert className={classes.alert} dataset_id={dataset.id} />
         </Grid>
     );
 };

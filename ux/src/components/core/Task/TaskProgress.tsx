@@ -21,7 +21,7 @@ const TaskProgress: FC<TaskProgressProps> = ({task}) => {
                     />
                 </Box>
                 <Typography variant="body2" color="textSecondary">
-                    {`${(100 * task.progress).toFixed(2)}%`}
+                    {`${(100 * task.progress).toFixed(1)}%`}
                 </Typography>
             </Box>
         );

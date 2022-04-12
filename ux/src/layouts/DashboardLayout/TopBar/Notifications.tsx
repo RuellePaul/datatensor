@@ -30,7 +30,6 @@ import getDateDiff from 'src/utils/getDateDiff';
 import {WS_HOSTNAME} from 'src/utils/api';
 import {HEARTBEAT_DELAY} from 'src/constants';
 
-
 const titlesMap = {
     TASK_SUCCEED: 'Task succeeded ✅',
     TASK_FAILED: 'Task failed ❌',
@@ -71,14 +70,14 @@ const Notifications: FC = () => {
     const classes = useStyles();
     const theme = useTheme();
 
-    const { user, accessToken } = useAuth();
-    const { tasks, saveSelectedTask } = useTasks();
+    const {user, accessToken} = useAuth();
+    const {tasks} = useTasks();
 
-    const { notifications } = useSelector(state => state.notifications);
+    const {notifications} = useSelector(state => state.notifications);
     const ref = useRef<any>(null);
     const dispatch = useDispatch();
     const [isOpen, setOpen] = useState<boolean>(false);
-    const { enqueueSnackbar } = useSnackbar();
+    const {enqueueSnackbar} = useSnackbar();
 
     const wsNotifications = useRef(null);
 
@@ -151,10 +150,7 @@ const Notifications: FC = () => {
         if (notification.task_id) {
             handleClose();
 
-            // @ts-ignore
-            const task = tasks.find(task => task.id === notification.task_id);
-
-            if (task) saveSelectedTask(task);
+            // TODO : handle this
         }
     };
 
@@ -178,7 +174,7 @@ const Notifications: FC = () => {
                     vertical: 'bottom',
                     horizontal: 'center'
                 }}
-                classes={{ paper: clsx(classes.popover, 'scroll') }}
+                classes={{paper: clsx(classes.popover, 'scroll')}}
                 anchorEl={ref.current}
                 onClose={handleClose}
                 open={isOpen}

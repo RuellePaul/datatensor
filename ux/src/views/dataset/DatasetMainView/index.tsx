@@ -1,6 +1,8 @@
-import React, {FC} from 'react';
+import React, {FC, useEffect} from 'react';
 import {useParams} from 'react-router';
-import {Box, Container} from '@mui/material';
+import {useSnackbar} from 'notistack';
+
+import {Box, Collapse, Container} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import Header from './Header';
 import SectionOverview from './sections/SectionOverview';
@@ -9,12 +11,15 @@ import SectionSettings from './sections/SectionSettings';
 import {Theme} from 'src/theme';
 import Page from 'src/components/Page';
 import DTLabelisator from 'src/components/core/Labelisator';
+import TaskSnackbar from 'src/components/core/Task/TaskSnackbar';
 import useAuth from 'src/hooks/useAuth';
 import {ImagesProvider} from 'src/store/ImagesContext';
 import {DatasetConsumer, DatasetProvider} from 'src/store/DatasetContext';
 import {UserProvider} from 'src/store/UserContext';
 import {CategoryProvider} from 'src/store/CategoryContext';
 import {TasksProvider} from 'src/store/TasksContext';
+import useTasks from 'src/hooks/useTasks';
+import useDataset from 'src/hooks/useDataset';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -35,6 +40,32 @@ const useStyles = makeStyles((theme: Theme) => ({
         }
     }
 }));
+
+const TriggerTaskSnackbar: FC = () => {
+    const {enqueueSnackbar} = useSnackbar();
+
+    const {tasks} = useTasks();
+    const {dataset} = useDataset();
+
+    const activeTask = (tasks || []).find(
+        task => task.dataset_id === dataset.id && ['pending', 'active'].includes(task.status)
+    );
+
+    useEffect(() => {
+        if (activeTask)
+            enqueueSnackbar(activeTask.id, {
+                anchorOrigin: {
+                    vertical: 'bottom',
+                    horizontal: 'right'
+                },
+                content: key => <TaskSnackbar id={key} dataset_id={dataset.id} task={activeTask} />,
+                TransitionComponent: Collapse,
+                persist: true
+            });
+    }, [activeTask, enqueueSnackbar, dataset.id]);
+
+    return null;
+};
 
 const DatasetMainView: FC = () => {
     const classes = useStyles();
@@ -73,6 +104,8 @@ const DatasetMainView: FC = () => {
                         </UserProvider>
                     )}
                 </DatasetConsumer>
+
+                <TriggerTaskSnackbar />
             </DatasetProvider>
         </TasksProvider>
     );

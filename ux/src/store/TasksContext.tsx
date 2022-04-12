@@ -1,16 +1,14 @@
 import React, {createContext, FC, ReactNode, useEffect, useRef, useState} from 'react';
-import {useLocation} from 'react-router-dom';
 import {Task} from 'src/types/task';
-import TaskDetails from 'src/components/core/TaskDetails';
 import useAuth from 'src/hooks/useAuth';
 import {HEARTBEAT_DELAY} from 'src/constants';
 import {WS_HOSTNAME} from 'src/utils/api';
+import {setTasks} from 'src/slices/tasks';
+import {useDispatch} from 'react-redux';
 
 export interface TasksContextValue {
     tasks: Task[] | null;
     saveTasks: (update: Task[] | ((tasks: Task[]) => Task[])) => void;
-    selectedTask: Task | null;
-    saveSelectedTask: (update: Task | ((tasks: Task) => Task)) => void;
     isPaused: boolean;
     savePaused: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -23,8 +21,6 @@ interface TasksProviderProps {
 export const TasksContext = createContext<TasksContextValue>({
     tasks: null,
     saveTasks: () => {},
-    selectedTask: null,
-    saveSelectedTask: () => {},
     isPaused: false,
     savePaused: () => {}
 });
@@ -32,22 +28,17 @@ export const TasksContext = createContext<TasksContextValue>({
 let tasksIntervalID;
 
 export const TasksProvider: FC<TasksProviderProps> = ({dataset_id, children}) => {
-    const {accessToken} = useAuth();
+    const dispatch = useDispatch();
 
-    const location = useLocation();
+    const {accessToken} = useAuth();
 
     const wsTask = useRef(null);
     const [isPaused, setPaused] = useState(false);
 
     const [currentTasks, setCurrentTasks] = useState<Task[]>(null);
-    const [selectedTask, setSelectedTask] = useState<Task>(null);
 
     const handleSaveTasks = (update: Task[] | ((tasks: Task[]) => Task[])): void => {
         setCurrentTasks(update);
-    };
-
-    const handleSaveSelectedTask = (update: Task | ((tasks: Task) => Task)): void => {
-        setSelectedTask(update);
     };
 
     // Send
@@ -82,9 +73,11 @@ export const TasksProvider: FC<TasksProviderProps> = ({dataset_id, children}) =>
         else tasksIntervalID = setInterval(sendTaskMessage, HEARTBEAT_DELAY);
 
         wsTask.current.onmessage = event => {
-            handleSaveTasks(JSON.parse(event.data));
+            let tasksReceived = JSON.parse(event.data);
+            handleSaveTasks(tasksReceived);
+            dispatch(setTasks({tasks: tasksReceived}));
         };
-    }, [isPaused, accessToken]);
+    }, [isPaused, accessToken, dispatch]);
 
     useEffect(() => {
         if (currentTasks && accessToken) {
@@ -94,16 +87,6 @@ export const TasksProvider: FC<TasksProviderProps> = ({dataset_id, children}) =>
         }
     }, [currentTasks, accessToken]);
 
-    useEffect(() => {
-        if (selectedTask) setSelectedTask(currentTasks.find(task => task.id === selectedTask.id));
-
-        // eslint-disable-next-line
-    }, [currentTasks]);
-
-    useEffect(() => {
-        setSelectedTask(null);
-    }, [location]);
-
     if (!accessToken) return null;
 
     return (
@@ -111,15 +94,11 @@ export const TasksProvider: FC<TasksProviderProps> = ({dataset_id, children}) =>
             value={{
                 tasks: currentTasks,
                 saveTasks: handleSaveTasks,
-                selectedTask: selectedTask,
-                saveSelectedTask: handleSaveSelectedTask,
                 isPaused: isPaused,
                 savePaused: setPaused
             }}
         >
             {children}
-
-            <TaskDetails />
         </TasksContext.Provider>
     );
 };

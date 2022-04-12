@@ -26,10 +26,11 @@ import api from 'src/utils/api';
 import {Task} from 'src/types/task';
 import useTasks from 'src/hooks/useTasks';
 import useDataset from 'src/hooks/useDataset';
-import {useSelector} from 'src/store';
+import {useDispatch, useSelector} from 'src/store';
 import {Operation, OperationType} from 'src/types/pipeline';
 import {Label} from 'src/types/label';
 import {OPERATIONS_ICONS, OPERATIONS_TYPES} from 'src/config';
+import {addTask} from 'src/slices/tasks';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
@@ -69,6 +70,7 @@ interface AugmentorProps {
 const Augmentor: FC<AugmentorProps> = ({open, handleClose}) => {
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
+    const dispatch = useDispatch();
 
     const {dataset} = useDataset();
     const {images} = useImages();
@@ -116,6 +118,7 @@ const Augmentor: FC<AugmentorProps> = ({open, handleClose}) => {
                                 }
                             });
                             saveTasks(tasks => [...(tasks || []), response.data.task]);
+                            dispatch(addTask(response.data.task));
 
                             setStatus({success: true});
                             setSubmitting(false);

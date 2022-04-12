@@ -94,8 +94,8 @@ const PipelineSample: FC<PipelineSampleProps> = ({handler, className}) => {
                     <form onSubmit={handleSubmit}>
                         {isSubmitting && (
                             <Masonry columns={{xs: image.width > image.height ? 2 : 3}} spacing={1}>
-                                {Array.from(Array(image.width > image.height ? 4 : 3), () => null).map(_ => (
-                                    <MasonryItem>
+                                {Array.from(Array(image.width > image.height ? 4 : 3), () => null).map((_, index) => (
+                                    <MasonryItem key={`masonry-${index}`}>
                                         <Box
                                             sx={{
                                                 aspectRatio: `${image.width} / ${image.height}`,

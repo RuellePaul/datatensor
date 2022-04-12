@@ -196,8 +196,8 @@ const DTDataset: FC<DatasetProps> = ({className, images = null, onClick, disable
                 {imagesPreview instanceof Array ? (
                     <Box position="relative" maxHeight={240} overflow="hidden">
                         <Masonry columns={2} spacing={0.5}>
-                            {imagesPreview.map(imagePreview => (
-                                <MasonryItem>
+                            {imagesPreview.map((imagePreview, index) => (
+                                <MasonryItem key={`masonry-${index}`}>
                                     <ImageProvider image={imagePreview} labels={imagePreview.labels}>
                                         <DTImage className={classes.image} skeleton />
 
