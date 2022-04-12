@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import clsx from 'clsx';
 import {Box, Button, Container, Grid, Hidden, Typography} from '@mui/material';
@@ -69,19 +69,20 @@ const useStyles = makeStyles((theme: Theme) => ({
             }
         }
     },
-    image: {
+    video: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         perspectiveOrigin: 'left center',
         transformStyle: 'preserve-3d',
         perspective: 1500,
-        '& > img': {
+        '& > *': {
             maxWidth: '90%',
             height: 'auto',
             transform: 'rotateY(-35deg) rotateX(15deg)',
             backfaceVisibility: 'hidden',
-            boxShadow: theme.shadows[16]
+            boxShadow: theme.shadows[16],
+            aspectRatio: '640/360'
         }
     },
     shape: {
@@ -94,6 +95,26 @@ const useStyles = makeStyles((theme: Theme) => ({
         }
     }
 }));
+
+const MainVideo = () => {
+    const classes = useStyles();
+
+    const [videoLoaded, setVideoLoaded] = useState(false);
+
+    return (
+        <div className={classes.video}>
+            <video
+                className={clsx(videoLoaded === false && 'hide')}
+                src="/static/images/home/yolov4.mp4"
+                autoPlay
+                draggable={false}
+                loop
+                muted
+                onLoadedDataCapture={() => setVideoLoaded(true)}
+            />
+        </div>
+    );
+};
 
 const Hero: FC<HeroProps> = ({className, ...rest}) => {
     const classes = useStyles();
@@ -122,14 +143,7 @@ const Hero: FC<HeroProps> = ({className, ...rest}) => {
 
                         <Hidden mdUp>
                             <Box position="relative" display="flex" alignItems="center" justifyContent="center">
-                                <div className={classes.image}>
-                                    <img
-                                        alt="Presentation"
-                                        src="/static/images/home/yolov4.gif"
-                                        draggable={false}
-                                        loading="lazy"
-                                    />
-                                </div>
+                                <MainVideo />
                             </Box>
                         </Hidden>
 
@@ -157,14 +171,7 @@ const Hero: FC<HeroProps> = ({className, ...rest}) => {
                     <Hidden mdDown>
                         <Grid item xs={12} md={7}>
                             <Box position="relative">
-                                <div className={classes.image}>
-                                    <img
-                                        alt="Presentation"
-                                        src="/static/images/home/yolov4.gif"
-                                        draggable={false}
-                                        loading="lazy"
-                                    />
-                                </div>
+                                <MainVideo />
                             </Box>
                         </Grid>
                     </Hidden>
