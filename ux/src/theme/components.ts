@@ -55,5 +55,14 @@ export default {
                 }
             }
         }
+    },
+    MuiStepIcon: {
+        styleOverrides: {
+            root: {
+                '&.Mui-active': {
+                    color: 'white'
+                }
+            }
+        }
     }
 };

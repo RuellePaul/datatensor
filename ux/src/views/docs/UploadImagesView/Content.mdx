@@ -1,10 +1,13 @@
+import {MIN_LABELS_WARNING_EXPORT} from 'src/config';
+import Paragraph from 'src/layouts/DocsLayout/mdx/Paragraph'
+
 # Upload images
 
 Upload images of objects you want to detect on your dataset.
 
 <video src="/static/images/docs/upload_images.mp4" />
 
-You should have at least `2000 labels per category` (including labels on augmented images), so you should have at least several hundred images per object to detect.
+<Paragraph>You should have at least {MIN_LABELS_WARNING_EXPORT} labels per category (including labels on augmented images), so you should have at least several hundred images per object to detect.</Paragraph>
 
 You can upload `.jpg` or `.png` images. Datatensor will convert and compress images for an optimal result on the training of a detection model.
 

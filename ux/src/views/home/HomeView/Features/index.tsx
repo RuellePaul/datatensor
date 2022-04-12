@@ -1,5 +1,4 @@
 import React, {cloneElement, FC, useCallback, useEffect, useMemo, useState} from 'react';
-import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
 import {Package as DatasetIcon} from 'react-feather';
 import {Box, ButtonBase, Container, Grid, Hidden, Link, Typography, useMediaQuery} from '@mui/material';
@@ -180,9 +179,7 @@ const FeatureButton: FC<FeatureButtonProps> = ({feature, index, selected, setSel
                 <Typography color="textSecondary" gutterBottom>
                     {feature.subtitle}
                 </Typography>
-                <Link component={RouterLink} to={feature.docPath}>
-                    Learn more
-                </Link>
+                <Link onClick={() => window.open(feature.docPath, '_blank')}>Learn more</Link>
             </Box>
         </ButtonBase>
     );

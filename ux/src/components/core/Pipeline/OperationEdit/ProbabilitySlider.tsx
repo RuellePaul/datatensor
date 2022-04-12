@@ -1,23 +1,21 @@
-import type {FC} from 'react';
-import React from 'react';
+import React, {FC} from 'react';
 import {Slider, Typography} from '@mui/material';
 import {useDispatch} from 'src/store';
-import type {Operation} from 'src/types/pipeline';
+import {Operation} from 'src/types/pipeline';
 import {updateOperation} from 'src/slices/pipeline';
 
-
 interface ProbabilitySliderProps {
-    operation: Operation,
-    setDragDisabled?: (update: boolean) => void
-    disabled?: boolean
+    operation: Operation;
+    setDragDisabled?: (update: boolean) => void;
+    disabled?: boolean;
 }
 
-const ProbabilitySlider: FC<ProbabilitySliderProps> = ({ operation, setDragDisabled, ...rest }) => {
+const ProbabilitySlider: FC<ProbabilitySliderProps> = ({operation, setDragDisabled, ...rest}) => {
     const dispatch = useDispatch();
 
     const handleProbabilityChange = async (event, value): Promise<void> => {
         try {
-            await dispatch(updateOperation(operation.type, { probability: value }));
+            await dispatch(updateOperation(operation.type, {probability: value}));
         } catch (err) {
             console.error(err);
         }
@@ -25,10 +23,7 @@ const ProbabilitySlider: FC<ProbabilitySliderProps> = ({ operation, setDragDisab
 
     return (
         <>
-            <Typography
-                variant="overline"
-                color="textSecondary"
-            >
+            <Typography variant="overline" color="textSecondary">
                 Probability
             </Typography>
 

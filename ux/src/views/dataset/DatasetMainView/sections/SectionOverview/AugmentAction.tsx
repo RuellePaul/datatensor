@@ -1,5 +1,4 @@
 import React, {FC, useState} from 'react';
-import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
 import {Button, Card, CardActions, CardContent, Dialog, DialogContent, Link, Typography} from '@mui/material';
 import {makeStyles} from '@mui/styles';
@@ -36,7 +35,11 @@ const AugmentAction: FC<AugmentActionProps> = ({ className }) => {
                 <Typography gutterBottom>Augment images</Typography>
                 <Typography variant="body2" color="textSecondary" gutterBottom>
                     Use dataset augmentation tool to get more images.{' '}
-                    <Link variant="body2" color="primary" component={RouterLink} to="/docs/datasets/augmentation">
+                    <Link
+                        variant="body2"
+                        color="primary"
+                        onClick={() => window.open('/docs/datasets/augmentation', '_blank')}
+                    >
                         Learn more
                     </Link>
                 </Typography>

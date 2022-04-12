@@ -24,10 +24,12 @@ interface PipelineSampleProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    root: {},
+    root: {
+        padding: theme.spacing(1, 0, 0)
+    },
     loader: {
         width: '20px !important',
-        height: '20px !important'
+        height: '20px !important',
     }
 }));
 

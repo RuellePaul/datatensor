@@ -1,22 +1,14 @@
-import React, {FC} from 'react';
+import React, {FC, useState} from 'react';
 import clsx from 'clsx';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {useSnackbar} from 'notistack';
+import {Alert, Box, Button, FormHelperText, Grid, Link, TextField, Typography} from '@mui/material';
 import {
-    Alert,
-    Box,
-    Button,
-    FormHelperText,
-    Grid,
-    Link,
-    Step,
-    StepLabel,
-    Stepper,
-    TextField,
-    Typography
-} from '@mui/material';
-import {KeyboardArrowLeft as BackIcon, KeyboardArrowRight as NextIcon} from '@mui/icons-material';
+    DynamicFeedOutlined as AugmentationIcon,
+    KeyboardArrowLeft as BackIcon,
+    KeyboardArrowRight as NextIcon
+} from '@mui/icons-material';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import Pipeline from 'src/components/core/Pipeline';
@@ -30,7 +22,6 @@ import useDataset from 'src/hooks/useDataset';
 import {useSelector} from 'src/store';
 import {Operation} from 'src/types/pipeline';
 import {Label} from 'src/types/label';
-import {Link as RouterLink} from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
@@ -52,16 +43,15 @@ const useStyles = makeStyles((theme: Theme) => ({
         color: theme.palette.grey[500]
     },
     actions: {
+        marginTop: theme.spacing(2),
         paddingTop: theme.spacing(2),
-        borderTop: `solid 1px #7f8e9d`,
+        borderTop: `dashed 1px #7f8e9d`,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-end',
         width: '100%'
     }
 }));
-
-const steps = ['Set operations pipeline', 'Visualize a sample', 'Augment dataset'];
 
 const SectionAugmentation: FC<SectionProps> = ({className}) => {
     const classes = useStyles();
@@ -74,7 +64,7 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
     const pipeline = useSelector(state => state.pipeline);
     const operations: Operation[] = pipeline.operations.allTypes.map(type => pipeline.operations.byType[type]);
 
-    const [activeStep, setActiveStep] = React.useState(0);
+    const [activeStep, setActiveStep] = useState(0);
 
     const handleNext = () => {
         setActiveStep(prevActiveStep => prevActiveStep + 1);
@@ -123,49 +113,45 @@ const SectionAugmentation: FC<SectionProps> = ({className}) => {
         >
             {({errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values}) => (
                 <form onSubmit={handleSubmit} className={clsx(classes.root, className)}>
-                    <Stepper activeStep={activeStep}>
-                        {steps.map(label => {
-                            const stepProps: {completed?: boolean} = {};
-                            const labelProps: {
-                                optional?: React.ReactNode;
-                            } = {};
-                            return (
-                                <Step key={label} {...stepProps}>
-                                    <StepLabel {...labelProps}>{label}</StepLabel>
-                                </Step>
-                            );
-                        })}
-                    </Stepper>
-                    <Grid container columnSpacing={3} rowSpacing={1} sx={{my: 2}}>
+                    <Grid container columnSpacing={3} rowSpacing={1}>
                         {activeStep === 0 && (
-                            <>
-                                <Grid item sm={7} xs={12}>
-                                    <Typography variant="body2" gutterBottom>
-                                        First, configure your operations pipeline to fit your need. It will apply on all
-                                        images of your dataset.
+                            <Grid item sm={7} xs={12}>
+                                <Box py={5}>
+                                    <Box display="flex" alignItems="center" mb={2}>
+                                        <Box mr={1}>
+                                            <AugmentationIcon />
+                                        </Box>
+                                        <Typography variant="h3">Augmentation tool</Typography>
+                                    </Box>
+                                    <Typography gutterBottom>
+                                        The image augmentation process allows you to{' '}
+                                        <strong>generate new images</strong> in order to get a richer dataset, without
+                                        having to re-label anything.
                                     </Typography>
                                     <Typography variant="body2" gutterBottom>
-                                        Every operation has at minimum a probability parameter, which controls how
-                                        likely the operation will be applied to each image that is seen as the image
-                                        passes through the pipeline.{' '}
+                                        To get augmented images of each original labeled image in your dataset, you need
+                                        to set up a pipeline of operations to apply.{' '}
                                         <Link
                                             variant="body2"
                                             color="primary"
-                                            component={RouterLink}
-                                            to="/docs/datasets/augmentation"
+                                            onClick={() => window.open('/docs/datasets/augmentation', '_blank')}
                                         >
                                             Learn more
                                         </Link>
                                     </Typography>
-                                </Grid>
-                            </>
+                                </Box>
+                            </Grid>
                         )}
 
                         {activeStep === 1 && (
                             <Grid item sm={7} xs={12}>
+                                <Typography variant="overline" color="textPrimary" align="center" gutterBottom>
+                                    Sample
+                                </Typography>
+
                                 <Typography variant="body2" gutterBottom>
-                                    A sample is the result of your operations pipeline applied to the first image of
-                                    your dataset.
+                                    A sample is the result of your operations pipeline applied to one image of your
+                                    dataset.
                                 </Typography>
 
                                 <PipelineSample

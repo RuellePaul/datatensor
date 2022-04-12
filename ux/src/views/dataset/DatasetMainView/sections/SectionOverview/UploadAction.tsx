@@ -4,7 +4,6 @@ import {Card, CardActions, CardContent, Link, Typography} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import {Theme} from 'src/theme';
 import UploadButton from 'src/components/core/Images/UploadButton';
-import {Link as RouterLink} from 'react-router-dom';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -24,7 +23,11 @@ const UploadAction: FC<UploadActionProps> = ({ className }) => {
                 <Typography gutterBottom>Upload images</Typography>
                 <Typography variant="body2" color="textSecondary" gutterBottom>
                     A dataset should have enough images to train a computer vision AI model.{' '}
-                    <Link variant="body2" color="primary" component={RouterLink} to="/docs/upload-images">
+                    <Link
+                        variant="body2"
+                        color="primary"
+                        onClick={() => window.open('/docs/upload-images', '_blank')}
+                    >
                         Learn more
                     </Link>
                 </Typography>
