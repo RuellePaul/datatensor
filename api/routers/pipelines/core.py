@@ -120,7 +120,10 @@ def perform_sample(image: Image, labels: List[Label], operations: List[Operation
     for operation in operations:
         getattr(pipeline, operation.type)(probability=operation.probability, **operation.properties)
     if cv2image is not None:
-        return pipeline.sample(6, cv2image=cv2image)
+        if cv2image.shape[1] > cv2image.shape[0]:
+            return pipeline.sample(4, cv2image=cv2image)
+        else:
+            return pipeline.sample(3, cv2image=cv2image)
     elif n:
         return pipeline.sample(n)
     elif image.width > image.height:

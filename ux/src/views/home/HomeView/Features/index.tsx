@@ -222,15 +222,12 @@ const Features: FC<FeatureProps> = ({className, ...rest}) => {
                                             image={images[indexes[index]]}
                                             labels={images[indexes[index]].labels}
                                         >
-                                            {cloneElement(feature.component, {
-                                                className: clsx(
-                                                    classes.feature,
-                                                    selected === index && 'selected',
-                                                    selected !== index && 'hide'
-                                                ),
-                                                key: feature.title,
-                                                datasets
-                                            })}
+                                            {selected === index &&
+                                                cloneElement(feature.component, {
+                                                    className: clsx(classes.feature, selected === index && 'selected'),
+                                                    key: feature.title,
+                                                    datasets
+                                                })}
                                         </ImageProvider>
                                     ))}
                                 </ImagesProvider>
