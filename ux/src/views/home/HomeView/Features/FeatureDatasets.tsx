@@ -21,6 +21,7 @@ interface FeatureProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
+        position: 'relative',
         color: theme.palette.text.primary,
         display: 'flex',
         alignItems: 'center',
@@ -28,7 +29,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         background: `${theme.palette.background.default} !important`,
         border: 'none !important',
         padding: `0px !important`,
-        margin: theme.spacing(6, 'auto'),
         maxWidth: 500
     },
     dataset: {
@@ -75,7 +75,7 @@ const FeatureDatasets: FC<FeatureProps> = ({className, datasets = null, ...rest}
             >
                 <DTDataset
                     className={classes.dataset}
-                    images={images.filter(image => image.dataset_id === dataset.id).slice(0, 3)}
+                    images={images.filter(image => image.dataset_id === dataset.id)}
                     onClick={() => {}}
                     disabled
                 />
@@ -83,7 +83,7 @@ const FeatureDatasets: FC<FeatureProps> = ({className, datasets = null, ...rest}
                     <DatasetProvider dataset={dataset} categories={dataset.categories} key={dataset.id}>
                         <DTDataset
                             className={classes.dataset}
-                            images={images.filter(image => image.dataset_id === dataset.id).slice(0, 3)}
+                            images={images.filter(image => image.dataset_id === dataset.id)}
                             onClick={() => {}}
                             disabled
                         />

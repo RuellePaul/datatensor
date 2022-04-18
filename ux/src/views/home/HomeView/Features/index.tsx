@@ -56,14 +56,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     feature: {
         padding: theme.spacing(2, 2, 0.5),
-        marginBottom: theme.spacing(8),
         background: theme.palette.background.paper,
         border: `solid 1px ${theme.palette.divider}`,
         borderRadius: 8,
         transition: 'all 0.15s ease-out',
         [theme.breakpoints.down('md')]: {
             padding: theme.spacing(1.5),
-            marginBottom: theme.spacing(6),
             background: 'none !important'
         }
     },
@@ -212,7 +210,13 @@ const Features: FC<FeatureProps> = ({className, ...rest}) => {
                         ))}
                     </Grid>
 
-                    <Grid item md={7} xs={12} id="features">
+                    <Grid
+                        item
+                        md={7}
+                        xs={12}
+                        id="features"
+                        sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}
+                    >
                         {datasets !== null && images.length > 0 && (
                             <DatasetProvider dataset={datasets[0]} categories={datasets[0].categories}>
                                 <ImagesProvider images={images}>

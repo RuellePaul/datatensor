@@ -5,7 +5,6 @@ import {
     Backdrop,
     Box,
     capitalize,
-    CircularProgress,
     FormControl,
     Hidden,
     InputAdornment,
@@ -49,11 +48,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     chip: {
         margin: theme.spacing(1)
     },
-    loader: {
-        marginTop: theme.spacing(1),
-        width: '16px !important',
-        height: '16px !important'
-    },
     group: {
         position: 'sticky',
         top: 0,
@@ -85,7 +79,7 @@ const FilterCategories: FC<FilterCategoriesProps> = ({className, ...rest}) => {
     const {saveOffset} = useImages();
 
     const {currentCategory, saveCurrentCategory} = useCategory();
-    const {images, totalImagesCount} = useImages();
+    const {totalImagesCount} = useImages();
 
     const categoriesCopy = categories;
 
@@ -205,7 +199,7 @@ const FilterCategories: FC<FilterCategoriesProps> = ({className, ...rest}) => {
                                                 value={category.name}
                                                 key={category.name}
                                                 onClick={() => {
-                                                    handleCategoryChange(category)
+                                                    handleCategoryChange(category);
                                                 }}
                                                 selected={categories
                                                     .map(category => category.name)
@@ -231,8 +225,6 @@ const FilterCategories: FC<FilterCategoriesProps> = ({className, ...rest}) => {
                     No images found
                 </Typography>
             )}
-
-            {images?.length === 0 && <CircularProgress className={classes.loader} color="primary" disableShrink />}
 
             <Backdrop open={open} className={classes.backdrop} />
         </div>

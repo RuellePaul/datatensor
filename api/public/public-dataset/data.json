@@ -529,8 +529,8 @@
         {
             "id": "becfcbb8-a1ca-466b-93e6-2fc4b02b91e3",
             "dataset_id": "00000000-0000-0000-0000-000000000002",
-            "path": "/public-data/datasets/bullets.jpeg",
-            "name": "bullets.jpeg",
+            "path": "/public-data/datasets/bullets-1.jpeg",
+            "name": "bullets-1.jpeg",
             "size": 84027,
             "width": 612,
             "height": 408,
@@ -561,6 +561,225 @@
                     "w": 0.18871,
                     "h": 0.184116,
                     "image_id": "becfcbb8-a1ca-466b-93e6-2fc4b02b91e3",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                }
+            ]
+        },
+        {
+            "id": "c82e9722-f478-4108-9466-ec27a687f872",
+            "dataset_id": "00000000-0000-0000-0000-000000000002",
+            "path": "/public-data/datasets/bullets-2.jpeg",
+            "name": "bullets-2.jpeg",
+            "size": 77258,
+            "width": 600,
+            "height": 338,
+            "pipeline_id": null,
+            "original_image_id": null,
+            "labels": [
+                {
+                    "id": "1516b3b5-904d-44d7-a7f7-65cad0215d3a",
+                    "x": 0.149051,
+                    "y": 0.522293,
+                    "w": 0.052394,
+                    "h": 0.08758,
+                    "image_id": "c82e9722-f478-4108-9466-ec27a687f872",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "06868321-dc98-43a0-84d8-20f92e2a045a",
+                    "x": 0.676603315266486,
+                    "y": 0.14331192993630573,
+                    "w": 0.065041,
+                    "h": 0.106688,
+                    "image_id": "c82e9722-f478-4108-9466-ec27a687f872",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "6414d222-bd94-46e2-a63b-d01dfa1aaa6a",
+                    "x": 0.611563,
+                    "y": 0.234076,
+                    "w": 0.077687,
+                    "h": 0.128981,
+                    "image_id": "c82e9722-f478-4108-9466-ec27a687f872",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "b539167c-e2e8-490a-b493-5c5bc8d09297",
+                    "x": 0.172538342366757,
+                    "y": 0.5828025732484076,
+                    "w": 0.080397630532972,
+                    "h": 0.13535035668789808,
+                    "image_id": "c82e9722-f478-4108-9466-ec27a687f872",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "eb9c5782-8706-4929-b2c5-8fa76729f150",
+                    "x": 0.781391315266486,
+                    "y": 0.14012764331210192,
+                    "w": 0.081301,
+                    "h": 0.13535,
+                    "image_id": "c82e9722-f478-4108-9466-ec27a687f872",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "405da1db-6453-40bb-a0d7-4598efab026a",
+                    "x": 0.866305,
+                    "y": 0.04777028662420382,
+                    "w": 0.085818,
+                    "h": 0.183121,
+                    "image_id": "c82e9722-f478-4108-9466-ec27a687f872",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "529d62ac-dc53-4900-97fb-cc58a05bd554",
+                    "x": 0.448058,
+                    "y": 0.4156052866242038,
+                    "w": 0.098464,
+                    "h": 0.178344,
+                    "image_id": "c82e9722-f478-4108-9466-ec27a687f872",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                }
+            ]
+        },
+        {
+            "id": "2e9487a2-3b4f-4cb8-963b-303e1db67177",
+            "dataset_id": "00000000-0000-0000-0000-000000000002",
+            "path": "/public-data/datasets/bullets-3.jpeg",
+            "name": "bullets-3.jpeg",
+            "size": 172800,
+            "width": 600,
+            "height": 400,
+            "pipeline_id": null,
+            "original_image_id": null,
+            "labels": [
+                {
+                    "id": "0c1c690a-1ef3-471b-a752-a8d1335a9be7",
+                    "x": 0.831978711833785,
+                    "y": 0.32345054447439353,
+                    "w": 0.04878026106594399,
+                    "h": 0.07142832884097036,
+                    "image_id": "2e9487a2-3b4f-4cb8-963b-303e1db67177",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "155cf005-5edb-4d35-85ef-097756e1fe4d",
+                    "x": 0.915989054200542,
+                    "y": 0.10242612668463612,
+                    "w": 0.04878060343270099,
+                    "h": 0.07277645552560646,
+                    "image_id": "2e9487a2-3b4f-4cb8-963b-303e1db67177",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "3bb43e7a-ac7d-4bac-a2e4-1b81b434333c",
+                    "x": 0.737127,
+                    "y": 0.429919,
+                    "w": 0.046070684733514,
+                    "h": 0.07816716442048517,
+                    "image_id": "2e9487a2-3b4f-4cb8-963b-303e1db67177",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "114d1bf4-f273-4bd6-9f33-abd142bfd4b6",
+                    "x": 0.41011702710027104,
+                    "y": 0.6361184177897573,
+                    "w": 0.05239394579945799,
+                    "h": 0.07816745552560646,
+                    "image_id": "2e9487a2-3b4f-4cb8-963b-303e1db67177",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "03bf8bd6-8aa0-4e38-97d3-4599a0a0e689",
+                    "x": 0.700090342366757,
+                    "y": 0.385445,
+                    "w": 0.052393972899729,
+                    "h": 0.08220987331536388,
+                    "image_id": "2e9487a2-3b4f-4cb8-963b-303e1db67177",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "282b1792-e68a-4c71-b5eb-0d81a4c48097",
+                    "x": 0.145438,
+                    "y": 0.622642,
+                    "w": 0.056911,
+                    "h": 0.091644,
+                    "image_id": "2e9487a2-3b4f-4cb8-963b-303e1db67177",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "c86c3e80-7087-4b30-9cae-b011d231fe53",
+                    "x": 0.5582653423667571,
+                    "y": 0.38274883557951483,
+                    "w": 0.060523603432700995,
+                    "h": 0.08894916442048517,
+                    "image_id": "2e9487a2-3b4f-4cb8-963b-303e1db67177",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "1a0f9ff6-e2ee-4a19-ba06-b93088a8cdf1",
+                    "x": 0.43541068473351396,
+                    "y": 0.443396,
+                    "w": 0.059621,
+                    "h": 0.092992,
+                    "image_id": "2e9487a2-3b4f-4cb8-963b-303e1db67177",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "ad649d91-aa51-483a-9db2-8eced8888a19",
+                    "x": 0.339657,
+                    "y": 0.673854,
+                    "w": 0.064137,
+                    "h": 0.102426,
+                    "image_id": "2e9487a2-3b4f-4cb8-963b-303e1db67177",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "98a39321-a4c6-4d2d-a6f3-18f889be8fbc",
+                    "x": 0.08672065763324299,
+                    "y": 0.770889,
+                    "w": 0.065041,
+                    "h": 0.101078,
+                    "image_id": "2e9487a2-3b4f-4cb8-963b-303e1db67177",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                }
+            ]
+        },
+        {
+            "id": "f8acaba0-9e65-49f0-9f07-40af8b4fe1b7",
+            "dataset_id": "00000000-0000-0000-0000-000000000002",
+            "path": "/public-data/datasets/bullets-4.jpeg",
+            "name": "bullets-4.jpeg",
+            "size": 50238,
+            "width": 600,
+            "height": 400,
+            "pipeline_id": null,
+            "original_image_id": null,
+            "labels": [
+                {
+                    "id": "9bbfe9e5-e7e0-4ceb-8a8b-098bcb5ce70a",
+                    "x": 0.861788684733514,
+                    "y": 0.15633383557951483,
+                    "w": 0.08401128816621499,
+                    "h": 0.10646916442048518,
+                    "image_id": "f8acaba0-9e65-49f0-9f07-40af8b4fe1b7",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "e3d5a2b2-3e8d-44b0-a1c9-8122d8659b24",
+                    "x": 0.186991945799458,
+                    "y": 0.0795147088948787,
+                    "w": 0.222222,
+                    "h": 0.297844,
+                    "image_id": "f8acaba0-9e65-49f0-9f07-40af8b4fe1b7",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "e813c0f3-16ca-472a-b5b8-74aa1cdf42e4",
+                    "x": 0.563686,
+                    "y": 0.590296,
+                    "w": 0.238482,
+                    "h": 0.30593,
+                    "image_id": "f8acaba0-9e65-49f0-9f07-40af8b4fe1b7",
                     "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
                 }
             ]
