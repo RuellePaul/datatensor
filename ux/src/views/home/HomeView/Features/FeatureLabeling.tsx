@@ -37,7 +37,9 @@ const useStyles = makeStyles((theme: Theme) => ({
         [theme.breakpoints.down('sm')]: {
             padding: '0px !important',
             border: 'none !important'
-        }
+        },
+        transform: 'rotateY(-35deg) rotateX(-15deg)',
+        backfaceVisibility: 'hidden'
     },
     labelisator: {
         position: 'relative',

@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         maxWidth: 500
     },
     dataset: {
-        background: alpha(theme.palette.background.paper, 0.8),
+        background: alpha(theme.palette.background.paper, 0.7),
         margin: 'auto',
         borderRadius: 8,
         [theme.breakpoints.down('xs')]: {
@@ -71,7 +71,7 @@ const FeatureDatasets: FC<FeatureProps> = ({className, datasets = null, ...rest}
                 index={activeStep}
                 onChangeIndex={handleStepChange}
                 enableMouseEvents
-                interval={5000}
+                interval={8000}
             >
                 <DTDataset
                     className={classes.dataset}

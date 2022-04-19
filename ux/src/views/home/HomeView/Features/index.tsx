@@ -105,6 +105,7 @@ const FEATURES = [
         title: 'Image labeling',
         subtitle: 'Ergonomic and intuitive tools for labeling your datasets.',
         docPath: '/docs/datasets/labeling',
+        background: 'labeling.svg',
         icon: <LabelingIcon />,
         component: <FeatureLabeling />
     },
@@ -221,7 +222,10 @@ const Features: FC<FeatureProps> = ({className, ...rest}) => {
                             backgroundImage: `url(/static/images/app/${FEATURES[selected].background})`,
                             backgroundPosition: 'center',
                             backgroundSize: 'contain',
-                            backgroundRepeat: 'no-repeat'
+                            backgroundRepeat: 'no-repeat',
+                            perspectiveOrigin: 'left center',
+                            transformStyle: 'preserve-3d',
+                            perspective: 1500,
                         }}
                     >
                         {datasets !== null && images.length > 0 && (
