@@ -1,4 +1,4 @@
-import React, {ChangeEvent, FC, useState} from 'react';
+import React, {ChangeEvent, FC, useEffect, useState} from 'react';
 import clsx from 'clsx';
 import {Box, Button, capitalize, FormControl, MenuItem, Select} from '@mui/material';
 import {Add as AddIcon} from '@mui/icons-material';
@@ -36,16 +36,21 @@ const OperationAdd: FC<OperationAddProps> = ({className, ...rest}) => {
 
     const handleAddCancel = (): void => {
         setExpanded(false);
-        setOperationType(OPERATIONS_TYPES[0]);
     };
 
     const handleAddConfirm = async (): Promise<void> => {
         await dispatch(createOperation(operationType));
         setExpanded(false);
-        setOperationType(OPERATIONS_TYPES[0]);
     };
 
     const pipeline = useSelector(state => state.pipeline);
+
+    useEffect(() => {
+        if (pipeline.operations.allTypes.includes(operationType))
+            setOperationType(OPERATIONS_TYPES.find(type => !pipeline.operations.allTypes.includes(type)))
+
+        // eslint-disable-next-line
+    }, [pipeline.operations]);
 
     return (
         <div className={clsx(classes.root, className)} {...rest}>
@@ -57,7 +62,7 @@ const OperationAdd: FC<OperationAddProps> = ({className, ...rest}) => {
                             fullWidth
                             name="type"
                             onChange={handleChange}
-                            value={operationType || OPERATIONS_TYPES[0]}
+                            value={operationType}
                             variant="filled"
                             startAdornment={OPERATIONS_ICONS[operationType]}
                             renderValue={() => capitalize(operationType).replaceAll('_', ' ')}

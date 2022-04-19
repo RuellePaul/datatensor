@@ -21,7 +21,6 @@ import {Theme} from 'src/theme';
 import DTImage from 'src/components/core/Images/Image';
 import ToolLabel from 'src/components/core/Labelisator/ToolLabel';
 import ToolMove from 'src/components/core/Labelisator/ToolMove';
-import {CANVAS_OFFSET} from 'src/utils/labeling';
 import {MouseOutlined as MouseIcon, Restore as RestoreIcon} from '@mui/icons-material';
 import KeyboardListener from 'src/components/core/Labelisator/KeyboardListener';
 import useImages from 'src/hooks/useImages';
