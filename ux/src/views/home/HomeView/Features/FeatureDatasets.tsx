@@ -2,7 +2,7 @@ import React, {FC, useState} from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import {autoPlay} from 'react-swipeable-views-utils';
 import clsx from 'clsx';
-import {Hidden, IconButton} from '@mui/material';
+import {alpha, Hidden, IconButton} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {KeyboardArrowLeft, KeyboardArrowRight} from '@mui/icons-material';
 import {Theme} from 'src/theme';
@@ -26,12 +26,12 @@ const useStyles = makeStyles((theme: Theme) => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: `${theme.palette.background.default} !important`,
         border: 'none !important',
         padding: `0px !important`,
         maxWidth: 500
     },
     dataset: {
+        background: alpha(theme.palette.background.paper, 0.8),
         margin: 'auto',
         borderRadius: 8,
         [theme.breakpoints.down('xs')]: {

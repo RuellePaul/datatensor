@@ -56,13 +56,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     feature: {
         padding: theme.spacing(2, 2, 0.5),
-        background: theme.palette.background.paper,
         border: `solid 1px ${theme.palette.divider}`,
         borderRadius: 8,
         transition: 'all 0.15s ease-out',
         [theme.breakpoints.down('md')]: {
-            padding: theme.spacing(1.5),
-            background: 'none !important'
+            padding: theme.spacing(1.5)
         }
     },
     button: {
@@ -98,6 +96,7 @@ const FEATURES = [
     {
         title: 'Datasets',
         subtitle: 'Create, organize and share your labeled image datasets with the world',
+        background: 'share.svg',
         docPath: '/docs/create-a-dataset',
         icon: <DatasetIcon />,
         component: <FeatureDatasets datasets={[]} />
@@ -215,7 +214,15 @@ const Features: FC<FeatureProps> = ({className, ...rest}) => {
                         md={7}
                         xs={12}
                         id="features"
-                        sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            backgroundImage: `url(/static/images/app/${FEATURES[selected].background})`,
+                            backgroundPosition: 'center',
+                            backgroundSize: 'contain',
+                            backgroundRepeat: 'no-repeat'
+                        }}
                     >
                         {datasets !== null && images.length > 0 && (
                             <DatasetProvider dataset={datasets[0]} categories={datasets[0].categories}>
