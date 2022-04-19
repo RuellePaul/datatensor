@@ -54,15 +54,6 @@ const useStyles = makeStyles((theme: Theme) => ({
             }
         }
     },
-    feature: {
-        padding: theme.spacing(2, 2, 0.5),
-        border: `solid 1px ${theme.palette.divider}`,
-        borderRadius: 8,
-        transition: 'all 0.15s ease-out',
-        [theme.breakpoints.down('md')]: {
-            padding: theme.spacing(1.5)
-        }
-    },
     button: {
         width: '100%',
         display: 'flex',
@@ -96,7 +87,6 @@ const FEATURES = [
     {
         title: 'Datasets',
         subtitle: 'Create, organize and share your labeled image datasets with the world',
-        background: 'share.svg',
         docPath: '/docs/create-a-dataset',
         icon: <DatasetIcon />,
         component: <FeatureDatasets datasets={[]} />
@@ -105,7 +95,6 @@ const FEATURES = [
         title: 'Image labeling',
         subtitle: 'Ergonomic and intuitive tools for labeling your datasets.',
         docPath: '/docs/datasets/labeling',
-        background: 'labeling.svg',
         icon: <LabelingIcon />,
         component: <FeatureLabeling />
     },
@@ -210,45 +199,25 @@ const Features: FC<FeatureProps> = ({className, ...rest}) => {
                         ))}
                     </Grid>
 
-                    <Grid
-                        item
-                        md={7}
-                        xs={12}
-                        id="features"
-                        sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            backgroundImage: `url(/static/images/app/${FEATURES[selected].background})`,
-                            backgroundPosition: 'center',
-                            backgroundSize: 'contain',
-                            backgroundRepeat: 'no-repeat',
-                            perspectiveOrigin: 'left center',
-                            transformStyle: 'preserve-3d',
-                            perspective: 1500,
-                        }}
-                    >
-                        {datasets !== null && images.length > 0 && (
-                            <DatasetProvider dataset={datasets[0]} categories={datasets[0].categories}>
-                                <ImagesProvider images={images}>
-                                    {FEATURES.map((feature, index) => (
-                                        <ImageProvider
-                                            key={feature.docPath}
-                                            image={images[indexes[index]]}
-                                            labels={images[indexes[index]].labels}
-                                        >
-                                            {selected === index &&
-                                                cloneElement(feature.component, {
-                                                    className: clsx(classes.feature, selected === index && 'selected'),
-                                                    key: feature.title,
-                                                    datasets
-                                                })}
-                                        </ImageProvider>
-                                    ))}
-                                </ImagesProvider>
-                            </DatasetProvider>
-                        )}
-                    </Grid>
+                    {datasets !== null && images.length > 0 && (
+                        <DatasetProvider dataset={datasets[0]} categories={datasets[0].categories}>
+                            <ImagesProvider images={images}>
+                                {FEATURES.map((feature, index) => (
+                                    <ImageProvider
+                                        key={feature.docPath}
+                                        image={images[indexes[index]]}
+                                        labels={images[indexes[index]].labels}
+                                    >
+                                        {selected === index &&
+                                            cloneElement(feature.component, {
+                                                key: feature.title,
+                                                datasets
+                                            })}
+                                    </ImageProvider>
+                                ))}
+                            </ImagesProvider>
+                        </DatasetProvider>
+                    )}
                 </Grid>
             </Container>
         </div>
