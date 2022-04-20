@@ -1,7 +1,8 @@
 import React, {cloneElement, FC, useCallback, useEffect, useMemo, useState} from 'react';
 import clsx from 'clsx';
 import {Package as DatasetIcon} from 'react-feather';
-import {Box, ButtonBase, Container, Grid, Link, Typography, useMediaQuery} from '@mui/material';
+import SwipeableViews from 'react-swipeable-views';
+import {Box, ButtonBase, Container, Grid, Hidden, Link, Typography, useMediaQuery} from '@mui/material';
 import {BrandingWatermarkOutlined as LabelingIcon, DynamicFeedOutlined as AugmentationIcon} from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
 import {blueDark, Theme} from 'src/theme';
@@ -54,13 +55,19 @@ const useStyles = makeStyles((theme: Theme) => ({
             }
         }
     },
+    swipeableContainer: {
+        marginBottom: theme.spacing(2.5),
+        '& > div': {
+            width: '75%'
+        }
+    },
     button: {
         width: '100%',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-start',
         borderRadius: 10,
-        padding: 20,
+        padding: theme.spacing(2.5),
         marginBottom: theme.spacing(3),
         border: `solid 1px transparent`,
         '&:hover': {
@@ -79,6 +86,15 @@ const useStyles = makeStyles((theme: Theme) => ({
             fontSize: 28,
             color: theme.palette.primary.main,
             minWidth: 25
+        },
+        [theme.breakpoints.down('md')]: {
+            padding: theme.spacing(1.5, 2, 2),
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            margin: 0,
+            '& svg': {
+                margin: theme.spacing(0, 0, 1)
+            }
         }
     }
 }));
@@ -188,15 +204,36 @@ const Features: FC<FeatureProps> = ({className, ...rest}) => {
 
                         <Box height={24} />
 
-                        {FEATURES.map((feature, index) => (
-                            <FeatureButton
-                                key={`feature-button-${index}`}
-                                feature={feature}
-                                index={index}
-                                selected={selected}
-                                setSelected={setSelected}
-                            />
-                        ))}
+                        <Hidden mdDown>
+                            {FEATURES.map((feature, index) => (
+                                <FeatureButton
+                                    key={`feature-button-${index}`}
+                                    feature={feature}
+                                    index={index}
+                                    selected={selected}
+                                    setSelected={setSelected}
+                                />
+                            ))}
+                        </Hidden>
+                        <Hidden mdUp>
+                            <SwipeableViews
+                                className={classes.swipeableContainer}
+                                index={selected}
+                                onChangeIndex={setSelected}
+                                enableMouseEvents
+                                animateHeight
+                            >
+                                {FEATURES.map((feature, index) => (
+                                    <FeatureButton
+                                        key={`feature-button-${index}`}
+                                        feature={feature}
+                                        index={index}
+                                        selected={selected}
+                                        setSelected={setSelected}
+                                    />
+                                ))}
+                            </SwipeableViews>
+                        </Hidden>
                     </Grid>
 
                     {datasets !== null && images.length > 0 && (

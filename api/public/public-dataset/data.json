@@ -479,52 +479,166 @@
             ]
         },
         {
-            "id": "94084595-1981-44c2-beec-548422723fd8",
+            "id": "6cac9b6b-73ac-4253-b065-61996ab7022c",
             "dataset_id": "00000000-0000-0000-0000-000000000001",
-            "path": "/public-data/datasets/brain.jpeg",
-            "name": "brain.jpeg",
-            "size": 119269,
-            "width": 1186,
-            "height": 720,
+            "path": "/public-data/datasets/brain-1.jpeg",
+            "name": "brain-1.jpeg",
+            "size": 36356,
+            "width": 600,
+            "height": 364,
+            "pipeline_id": null,
             "original_image_id": null,
             "labels": [
                 {
-                    "id": "434c8d5c-da6d-406f-8625-61bfd99d544c",
-                    "x": 0.6072584516129033,
-                    "y": 0.28496073878627964,
-                    "w": 0.025,
-                    "h": 0.050132,
-                    "image_id": "94084595-1981-44c2-beec-548422723fd8",
+                    "id": "75f9ed99-eb27-412e-9e72-33bf1bc75efb",
+                    "x": 0.536585,
+                    "y": 0.451183,
+                    "w": 0.022584,
+                    "h": 0.025148,
+                    "image_id": "6cac9b6b-73ac-4253-b065-61996ab7022c",
                     "category_id": "673eef6c-2b33-4702-8ece-55c86228f78c"
                 },
                 {
-                    "id": "c697b34c-f9c1-44ef-9dfa-919c7f675cc8",
-                    "x": 0.37338719354838706,
-                    "y": 0.271768,
-                    "w": 0.03145135483870968,
-                    "h": 0.04089678364116095,
-                    "image_id": "94084595-1981-44c2-beec-548422723fd8",
-                    "category_id": "673eef6c-2b33-4702-8ece-55c86228f78c"
-                },
-                {
-                    "id": "0bd60e7c-1dc8-410e-a260-37f4b4ab15ae",
-                    "x": 0.422581,
-                    "y": 0.488127,
-                    "w": 0.029839,
-                    "h": 0.03562,
-                    "image_id": "94084595-1981-44c2-beec-548422723fd8",
-                    "category_id": "673eef6c-2b33-4702-8ece-55c86228f78c"
-                },
-                {
-                    "id": "f83b47c0-28cc-4406-96b4-35d9e1e5891c",
-                    "x": 0.473387,
-                    "y": 0.203166,
-                    "w": 0.022581,
-                    "h": 0.072559,
-                    "image_id": "94084595-1981-44c2-beec-548422723fd8",
+                    "id": "6abc024c-e54b-433c-82d7-caaf754b23fa",
+                    "x": 0.470641,
+                    "y": 0.377219,
+                    "w": 0.026197,
+                    "h": 0.032544,
+                    "image_id": "6cac9b6b-73ac-4253-b065-61996ab7022c",
                     "category_id": "673eef6c-2b33-4702-8ece-55c86228f78c"
                 }
             ]
+        },
+        {
+            "id": "e410ddc6-d61d-457d-a933-388e71d0dc2a",
+            "dataset_id": "00000000-0000-0000-0000-000000000001",
+            "path": "/public-data/datasets/brain-2.jpeg",
+            "name": "brain-2.jpeg",
+            "size": 31546,
+            "width": 350,
+            "height": 350,
+            "pipeline_id": null,
+            "original_image_id": null,
+            "labels": [
+                {
+                    "id": "1a457ab7-7d41-4e5f-8dc0-24b08ddd7d61",
+                    "x": 0.565492,
+                    "y": 0.128713,
+                    "w": 0.030714,
+                    "h": 0.027903,
+                    "image_id": "e410ddc6-d61d-457d-a933-388e71d0dc2a",
+                    "category_id": "673eef6c-2b33-4702-8ece-55c86228f78c"
+                },
+                {
+                    "id": "d53584f1-282b-48c8-92b8-94c3687ccd33",
+                    "x": 0.599819,
+                    "y": 0.429343,
+                    "w": 0.049684,
+                    "h": 0.048605,
+                    "image_id": "e410ddc6-d61d-457d-a933-388e71d0dc2a",
+                    "category_id": "673eef6c-2b33-4702-8ece-55c86228f78c"
+                },
+                {
+                    "id": "ab2386d9-1001-471d-81af-4f4ab4820dfe",
+                    "x": 0.754291,
+                    "y": 0.587759,
+                    "w": 0.051491,
+                    "h": 0.056706,
+                    "image_id": "e410ddc6-d61d-457d-a933-388e71d0dc2a",
+                    "category_id": "673eef6c-2b33-4702-8ece-55c86228f78c"
+                }
+            ]
+        },
+        {
+            "id": "4a812c52-2d4e-4b55-9d3f-bcb8b585cc91",
+            "dataset_id": "00000000-0000-0000-0000-000000000001",
+            "path": "/public-data/datasets/brain-3.jpeg",
+            "name": "brain-3.jpeg",
+            "size": 20343,
+            "width": 256,
+            "height": 192,
+            "pipeline_id": null,
+            "original_image_id": null,
+            "labels": [
+                {
+                    "id": "3b6032d8-9cff-4db6-97f7-95f68bcc98f1",
+                    "x": 0.553749,
+                    "y": 0.155875,
+                    "w": 0.04607,
+                    "h": 0.058753,
+                    "image_id": "4a812c52-2d4e-4b55-9d3f-bcb8b585cc91",
+                    "category_id": "673eef6c-2b33-4702-8ece-55c86228f78c"
+                },
+                {
+                    "id": "1558629f-3aee-4957-ae07-9e5037b4ed0b",
+                    "x": 0.535682,
+                    "y": 0.450839,
+                    "w": 0.053297,
+                    "h": 0.073141,
+                    "image_id": "4a812c52-2d4e-4b55-9d3f-bcb8b585cc91",
+                    "category_id": "673eef6c-2b33-4702-8ece-55c86228f78c"
+                },
+                {
+                    "id": "980561e2-a3a3-46a9-8503-3f58df91d32d",
+                    "x": 0.355917,
+                    "y": 0.420863,
+                    "w": 0.084914,
+                    "h": 0.052758,
+                    "image_id": "4a812c52-2d4e-4b55-9d3f-bcb8b585cc91",
+                    "category_id": "673eef6c-2b33-4702-8ece-55c86228f78c"
+                }
+            ]
+        },
+        {
+            "id": "0bfe5684-5785-4166-9c06-3d1580077f94",
+            "dataset_id": "00000000-0000-0000-0000-000000000001",
+            "path": "/public-data/datasets/brain-4.jpeg",
+            "name": "brain-4.jpeg",
+            "size": 85777,
+            "width": 704,
+            "height": 704,
+            "pipeline_id": null,
+            "original_image_id": null,
+            "labels": [
+                {
+                    "id": "5e20cc88-6698-42f5-ad10-7314935bc173",
+                    "x": 0.750678,
+                    "y": 0.180018,
+                    "w": 0.077687,
+                    "h": 0.036904,
+                    "image_id": "0bfe5684-5785-4166-9c06-3d1580077f94",
+                    "category_id": "673eef6c-2b33-4702-8ece-55c86228f78c"
+                },
+                {
+                    "id": "01078b3b-709e-4879-a9a3-e28a354f757b",
+                    "x": 0.816621,
+                    "y": 0.349235,
+                    "w": 0.036134,
+                    "h": 0.082808,
+                    "image_id": "0bfe5684-5785-4166-9c06-3d1580077f94",
+                    "category_id": "673eef6c-2b33-4702-8ece-55c86228f78c"
+                },
+                {
+                    "id": "e6526470-88f8-48b7-8963-ba763363792e",
+                    "x": 0.560072,
+                    "y": 0.346535,
+                    "w": 0.112014,
+                    "h": 0.055806,
+                    "image_id": "0bfe5684-5785-4166-9c06-3d1580077f94",
+                    "category_id": "673eef6c-2b33-4702-8ece-55c86228f78c"
+                }
+            ]
+        },
+        {
+            "id": "e5d2eda0-5308-41fa-b9d1-b2cd595e47ac",
+            "dataset_id": "00000000-0000-0000-0000-000000000001",
+            "path": "http://dtservertestbucket.s3.amazonaws.com/e5d2eda0-5308-41fa-b9d1-b2cd595e47ac",
+            "name": "augmented-brain-2.jpeg",
+            "size": 33944,
+            "width": 350,
+            "height": 350,
+            "pipeline_id": "7ddb5716-6e12-48ac-98a1-7833e53899b5",
+            "original_image_id": "e410ddc6-d61d-457d-a933-388e71d0dc2a"
         },
         {
             "id": "becfcbb8-a1ca-466b-93e6-2fc4b02b91e3",
