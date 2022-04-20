@@ -34,18 +34,22 @@ interface FeatureProps {
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         width: '100%',
-        backgroundImage: `url(/static/images/app/labeling.svg)`,
+        backgroundImage: `url(/static/images/app/space-girl.svg)`,
         backgroundPosition: 'left bottom',
         backgroundSize: '50%',
         backgroundRepeat: 'no-repeat',
         perspectiveOrigin: 'center',
-        perspective: 3000
+        perspective: 3000,
+        [theme.breakpoints.down('md')]: {
+            backgroundImage: 'none',
+            perspective: 0
+        }
     },
     feature: {
         position: 'relative',
         padding: theme.spacing(1),
         width: '100%',
-        maxWidth: 580,
+        maxWidth: 570,
         transform: 'rotateY(330deg) rotateX(342deg) rotateZ(3deg)',
         marginLeft: 'auto',
         backfaceVisibility: 'hidden',
@@ -53,9 +57,9 @@ const useStyles = makeStyles((theme: Theme) => ({
         border: `solid 1px ${theme.palette.divider}`,
         borderRadius: 8,
         touchAction: 'pan-y',
-        [theme.breakpoints.down('sm')]: {
-            padding: '0px !important',
-            border: 'none !important'
+        [theme.breakpoints.down('md')]: {
+            transform: 'none',
+            margin: 'auto'
         }
     },
     labelisator: {

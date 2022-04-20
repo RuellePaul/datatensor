@@ -26,7 +26,10 @@ const useStyles = makeStyles((theme: Theme) => ({
         backgroundImage: `url(/static/images/app/share.svg)`,
         backgroundPosition: 'center',
         backgroundSize: 'contain',
-        backgroundRepeat: 'no-repeat'
+        backgroundRepeat: 'no-repeat',
+        [theme.breakpoints.down('sm')]: {
+            backgroundImage: 'none'
+        }
     },
     feature: {
         position: 'relative',
