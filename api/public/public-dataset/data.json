@@ -630,17 +630,6 @@
             ]
         },
         {
-            "id": "e5d2eda0-5308-41fa-b9d1-b2cd595e47ac",
-            "dataset_id": "00000000-0000-0000-0000-000000000001",
-            "path": "http://dtservertestbucket.s3.amazonaws.com/e5d2eda0-5308-41fa-b9d1-b2cd595e47ac",
-            "name": "augmented-brain-2.jpeg",
-            "size": 33944,
-            "width": 350,
-            "height": 350,
-            "pipeline_id": "7ddb5716-6e12-48ac-98a1-7833e53899b5",
-            "original_image_id": "e410ddc6-d61d-457d-a933-388e71d0dc2a"
-        },
-        {
             "id": "becfcbb8-a1ca-466b-93e6-2fc4b02b91e3",
             "dataset_id": "00000000-0000-0000-0000-000000000002",
             "path": "/public-data/datasets/bullets-1.jpeg",
