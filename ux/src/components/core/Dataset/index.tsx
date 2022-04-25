@@ -16,8 +16,6 @@ import {
     Typography
 } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import Masonry from '@mui/lab/Masonry';
-import MasonryItem from '@mui/lab/MasonryItem';
 
 import {
     LocalOfferOutlined as LabelsIcon,
@@ -139,7 +137,7 @@ const DTDataset: FC<DatasetProps> = ({className, images = null, onClick, disable
             const response = await api.get<{images: Image[]}>(`/datasets/${dataset.id}/images/`, {
                 params: {
                     include_labels: true,
-                    limit: 4
+                    limit: 1
                 }
             });
             setImagesPreview(response.data.images);
@@ -195,24 +193,20 @@ const DTDataset: FC<DatasetProps> = ({className, images = null, onClick, disable
             >
                 {imagesPreview instanceof Array ? (
                     <Box position="relative" maxHeight={240} overflow="hidden">
-                        <Masonry columns={2} spacing={0.5}>
-                            {imagesPreview.map((imagePreview, index) => (
-                                <MasonryItem key={`masonry-${index}`}>
-                                    <ImageProvider image={imagePreview} labels={imagePreview.labels}>
-                                        <DTImage className={classes.image} skeleton />
+                        {imagesPreview.map((imagePreview, index) => (
+                            <ImageProvider image={imagePreview} labels={imagePreview.labels}>
+                                <DTImage className={classes.image} skeleton />
 
-                                        <div className={classes.categories}>
-                                            {categories
-                                                .sort((a, b) => -b.name.localeCompare(a.name))
-                                                .slice(0, 4)
-                                                .map((category, index) => (
-                                                    <DTCategory category={category} index={index} key={category.id} />
-                                                ))}
-                                        </div>
-                                    </ImageProvider>
-                                </MasonryItem>
-                            ))}
-                        </Masonry>
+                                <div className={classes.categories}>
+                                    {categories
+                                        .sort((a, b) => -b.name.localeCompare(a.name))
+                                        .slice(0, 4)
+                                        .map((category, index) => (
+                                            <DTCategory category={category} index={index} key={category.id} />
+                                        ))}
+                                </div>
+                            </ImageProvider>
+                        ))}
                     </Box>
                 ) : (
                     <Skeleton width="100%" height={250} sx={{transform: 'none'}} />
