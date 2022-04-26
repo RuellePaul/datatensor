@@ -1,3 +1,7 @@
+.hide {
+    display: none !important;
+}
+
 .hidden {
     position: absolute !important;
     overflow: hidden !important;

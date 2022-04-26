@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         opacity: 0.5
     },
     image: {
-        width: 80
+        width: 200
     },
     info: {
         marginTop: theme.spacing(1)

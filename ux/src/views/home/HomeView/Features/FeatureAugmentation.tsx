@@ -1,9 +1,8 @@
-import React, {FC, useCallback, useState} from 'react';
+import React, {FC, useCallback} from 'react';
 import clsx from 'clsx';
 import makeStyles from '@mui/styles/makeStyles';
 import {Theme} from 'src/theme';
-import {Box, Button, Grid, Hidden, Typography} from '@mui/material';
-import {ExpandLess, ExpandMore} from '@mui/icons-material';
+import {Box, Grid, Typography} from '@mui/material';
 import PipelineSample from 'src/components/core/PipelineSample';
 import Pipeline from 'src/components/core/Pipeline';
 import api from 'src/utils/api';
@@ -17,7 +16,35 @@ interface FeatureProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        padding: `${theme.spacing(2)} !important`
+        width: '100%',
+        backgroundImage: `url(/static/images/app/space-girl.svg)`,
+        backgroundPosition: 'left bottom',
+        backgroundSize: '50%',
+        backgroundRepeat: 'no-repeat',
+        perspectiveOrigin: 'center',
+        perspective: 3000,
+        [theme.breakpoints.down('md')]: {
+            backgroundImage: 'none',
+            perspective: 0
+        }
+    },
+    feature: {
+        position: 'relative',
+        padding: theme.spacing(1),
+        width: '100%',
+        maxWidth: 570,
+        transform: 'rotateY(330deg) rotateX(342deg) rotateZ(3deg)',
+        marginLeft: 'auto',
+        backfaceVisibility: 'hidden',
+        background: theme.palette.background.paper,
+        color: theme.palette.text.primary,
+        border: `solid 1px ${theme.palette.divider}`,
+        borderRadius: 8,
+        touchAction: 'pan-y',
+        [theme.breakpoints.down('md')]: {
+            transform: 'none',
+            margin: 'auto'
+        }
     }
 }));
 
@@ -36,45 +63,27 @@ const FeatureAugmentation: FC<FeatureProps> = ({className, ...rest}) => {
         [image, labels]
     );
 
-    const [expand, setExpand] = useState<boolean>(false);
-    const handleTogglePipeline = () => {
-        setExpand(expand => !expand);
-    };
-
     return (
-        <div className={clsx(classes.root, className)} {...rest}>
-            <Grid container spacing={2}>
-                <Grid item sm={7} xs={12}>
-                    <Box mb={1}>
-                        <DTImage skeleton />
-                    </Box>
+        <Grid item md={7} xs={12} className={clsx(classes.root, className)} {...rest}>
+            <Box className={classes.feature}>
+                <Grid container spacing={2}>
+                    <Grid item sm={7} xs={12}>
+                        <Box mb={1}>
+                            <DTImage skeleton />
+                        </Box>
 
-                    <PipelineSample handler={handleSample} />
-                </Grid>
-                <Grid item sm={5} xs={12}>
-                    <Hidden smDown>
+                        <PipelineSample handler={handleSample} />
+                    </Grid>
+                    <Grid item sm={5} xs={12}>
                         <Typography variant="overline" color="textPrimary" gutterBottom>
                             Operations pipeline
                         </Typography>
 
                         <Pipeline />
-                    </Hidden>
-                    <Hidden smUp>
-                        <Button
-                            fullWidth
-                            size="small"
-                            endIcon={expand ? <ExpandLess /> : <ExpandMore />}
-                            onClick={handleTogglePipeline}
-                            sx={{mb: 1}}
-                        >
-                            Operations pipeline
-                        </Button>
-
-                        <Pipeline className={clsx(!expand && 'hidden')}/>
-                    </Hidden>
+                    </Grid>
                 </Grid>
-            </Grid>
-        </div>
+            </Box>
+        </Grid>
     );
 };
 

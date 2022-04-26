@@ -70,7 +70,7 @@ const SectionOverview: FC<SectionProps> = ({className}) => {
                 : pipelines.length === 0
                 ? 2
                 : 3
-            : 0;
+            : null;
 
     useEffect(() => {
         setActiveStep(currentStep);
@@ -96,7 +96,7 @@ const SectionOverview: FC<SectionProps> = ({className}) => {
                                 <Step key={action.label} disabled={index > currentStep}>
                                     <StepButton
                                         icon={action.icon}
-                                        onClick={() => setActiveStep(index)}
+                                        onClick={() => setActiveStep(activeStep !== index ? index : null)}
                                         optional={
                                             <Box display="flex" alignItems="center">
                                                 <Typography variant="caption">{action.description} </Typography>

@@ -1,6 +1,7 @@
 import React, {cloneElement, FC, useCallback, useEffect, useMemo, useState} from 'react';
 import clsx from 'clsx';
 import {Package as DatasetIcon} from 'react-feather';
+import SwipeableViews from 'react-swipeable-views';
 import {Box, ButtonBase, Container, Grid, Hidden, Link, Typography, useMediaQuery} from '@mui/material';
 import {BrandingWatermarkOutlined as LabelingIcon, DynamicFeedOutlined as AugmentationIcon} from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
@@ -14,7 +15,6 @@ import {Dataset} from 'src/types/dataset';
 import {DatasetProvider} from 'src/store/DatasetContext';
 import {ImagesProvider} from 'src/store/ImagesContext';
 import {ImageProvider} from 'src/store/ImageContext';
-import useScroll from 'src/hooks/useScroll';
 import randomIndexes from 'src/utils/randomIndexes';
 
 interface FeatureProps {
@@ -26,7 +26,6 @@ interface FeatureButtonProps {
     index: number;
     selected: number;
     setSelected: React.Dispatch<React.SetStateAction<number>>;
-    setAnimated: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -56,31 +55,10 @@ const useStyles = makeStyles((theme: Theme) => ({
             }
         }
     },
-    sticky: {
-        zIndex: 1050,
-        position: 'sticky',
-        top: 100,
-        display: 'flex',
-        flexDirection: 'column',
-        height: 'fit-content',
-        paddingBottom: 60,
-        background: theme.palette.background.default,
-        [theme.breakpoints.down('md')]: {
-            paddingBottom: 0,
-            top: -86
-        }
-    },
-    feature: {
-        padding: theme.spacing(2, 2, 0.5),
-        marginBottom: theme.spacing(8),
-        background: theme.palette.background.paper,
-        border: `solid 1px ${theme.palette.divider}`,
-        borderRadius: 8,
-        transition: 'all 0.15s ease-out',
-        [theme.breakpoints.down('md')]: {
-            padding: theme.spacing(1.5),
-            marginBottom: theme.spacing(6),
-            background: 'none !important'
+    swipeableContainer: {
+        marginBottom: theme.spacing(2.5),
+        '& > div': {
+            width: '75%'
         }
     },
     button: {
@@ -89,7 +67,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         alignItems: 'center',
         justifyContent: 'flex-start',
         borderRadius: 10,
-        padding: 20,
+        padding: theme.spacing(2.5),
         marginBottom: theme.spacing(3),
         border: `solid 1px transparent`,
         '&:hover': {
@@ -108,11 +86,18 @@ const useStyles = makeStyles((theme: Theme) => ({
             fontSize: 28,
             color: theme.palette.primary.main,
             minWidth: 25
+        },
+        [theme.breakpoints.down('md')]: {
+            padding: theme.spacing(1.5, 2, 2),
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            margin: 0,
+            '& svg': {
+                margin: theme.spacing(0, 0, 1)
+            }
         }
     }
 }));
-
-const OFFSET = 900 - 64;
 
 const FEATURES = [
     {
@@ -138,34 +123,18 @@ const FEATURES = [
     }
 ];
 
-const FeatureButton: FC<FeatureButtonProps> = ({feature, index, selected, setSelected, setAnimated}) => {
+const FeatureButton: FC<FeatureButtonProps> = ({feature, index, selected, setSelected}) => {
     const classes = useStyles();
-
-    const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
 
     const handleChangeIndex = index => {
         if (index === selected) return;
 
-        setAnimated(true);
-        setTimeout(() => setAnimated(false), 500);
-
         setSelected(index);
-
-        // @ts-ignore
-        const heights = [...document.querySelectorAll('#features > div')].map(x => x.clientHeight + 64);
-        if (heights.length === 0) return;
-
-        if (index > 0)
-            document.querySelector('.scroller').scrollTo({
-                top: OFFSET + heights.slice(0, index).reduce((acc, val) => acc + val, 0),
-                behavior: 'smooth'
-            });
-        else document.querySelector('.scroller').scrollTo({top: OFFSET, behavior: 'smooth'});
     };
 
     return (
         <ButtonBase
-            className={clsx(classes.button, isMobile ? 'selected' : selected === index && 'selected')}
+            className={clsx(classes.button, selected === index && 'selected')}
             disableRipple
             key={`feature-${index}`}
             onClick={() => handleChangeIndex(index)}
@@ -192,9 +161,6 @@ const Features: FC<FeatureProps> = ({className, ...rest}) => {
 
     const [selected, setSelected] = useState(0);
 
-    // for preventing scroll selection after FeatureButton click
-    const [animated, setAnimated] = useState<boolean>(false);
-
     const [datasets, setDatasets] = useState<Dataset[]>(null);
     const [images, setImages] = useState<Image[]>([]);
 
@@ -216,20 +182,6 @@ const Features: FC<FeatureProps> = ({className, ...rest}) => {
         handleFetchPublic();
     }, [handleFetchPublic]);
 
-    const {scrollTop} = useScroll(document.querySelector('.scroller'));
-
-    useEffect(() => {
-        if (!isMobile && !animated) {
-            // @ts-ignore
-            const heights = [...document.querySelectorAll('#features > div')].map(x => x.clientHeight);
-            if (heights.length === 0) return;
-
-            if (scrollTop < OFFSET + heights[0] * 0.66) setSelected(0);
-            else if (scrollTop < OFFSET + heights[0] + heights[1] * 0.66) setSelected(1);
-            else setSelected(2);
-        }
-    }, [scrollTop, isMobile, animated]);
-
     const indexes = useMemo(
         () => randomIndexes(FEATURES.length, 1, images.filter(image => image.dataset_id === datasets[0].id).length),
         [datasets, images]
@@ -239,7 +191,7 @@ const Features: FC<FeatureProps> = ({className, ...rest}) => {
         <div className={clsx(classes.root, className)} {...rest}>
             <Container component="section" maxWidth="lg">
                 <Grid container spacing={isMobile ? 0 : 6}>
-                    <Grid className={clsx(!isMobile && classes.sticky)} item md={5} xs={12}>
+                    <Grid item md={5} xs={12}>
                         <Typography variant="overline" color="primary" fontSize={16}>
                             Features
                         </Typography>
@@ -260,45 +212,49 @@ const Features: FC<FeatureProps> = ({className, ...rest}) => {
                                     index={index}
                                     selected={selected}
                                     setSelected={setSelected}
-                                    setAnimated={setAnimated}
                                 />
                             ))}
                         </Hidden>
+                        <Hidden mdUp>
+                            <SwipeableViews
+                                className={classes.swipeableContainer}
+                                index={selected}
+                                onChangeIndex={setSelected}
+                                enableMouseEvents
+                                animateHeight
+                            >
+                                {FEATURES.map((feature, index) => (
+                                    <FeatureButton
+                                        key={`feature-button-${index}`}
+                                        feature={feature}
+                                        index={index}
+                                        selected={selected}
+                                        setSelected={setSelected}
+                                    />
+                                ))}
+                            </SwipeableViews>
+                        </Hidden>
                     </Grid>
 
-                    <Grid item md={7} xs={12} id="features">
-                        {datasets !== null && images.length > 0 && (
-                            <DatasetProvider dataset={datasets[0]} categories={datasets[0].categories}>
-                                <ImagesProvider images={images}>
-                                    {FEATURES.map((feature, index) => (
-                                        <ImageProvider
-                                            key={feature.docPath}
-                                            image={images[indexes[index]]}
-                                            labels={images[indexes[index]].labels}
-                                        >
-                                            <Hidden mdUp>
-                                                <FeatureButton
-                                                    feature={feature}
-                                                    index={index}
-                                                    selected={selected}
-                                                    setSelected={setSelected}
-                                                    setAnimated={setAnimated}
-                                                />
-                                            </Hidden>
-                                            {cloneElement(feature.component, {
-                                                className: clsx(
-                                                    classes.feature,
-                                                    isMobile ? 'selected' : selected === index && 'selected'
-                                                ),
+                    {datasets !== null && images.length > 0 && (
+                        <DatasetProvider dataset={datasets[0]} categories={datasets[0].categories}>
+                            <ImagesProvider images={images}>
+                                {FEATURES.map((feature, index) => (
+                                    <ImageProvider
+                                        key={feature.docPath}
+                                        image={images[indexes[index]]}
+                                        labels={images[indexes[index]].labels}
+                                    >
+                                        {selected === index &&
+                                            cloneElement(feature.component, {
                                                 key: feature.title,
                                                 datasets
                                             })}
-                                        </ImageProvider>
-                                    ))}
-                                </ImagesProvider>
-                            </DatasetProvider>
-                        )}
-                    </Grid>
+                                    </ImageProvider>
+                                ))}
+                            </ImagesProvider>
+                        </DatasetProvider>
+                    )}
                 </Grid>
             </Container>
         </div>
