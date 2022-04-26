@@ -17,7 +17,14 @@ interface ProductCreateFormProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        margin: theme.spacing(2, 0)
+        margin: theme.spacing(2, 0),
+        backgroundImage: 'url(/static/images/app/create-dataset.svg)',
+        backgroundPosition: 'bottom right',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: '40%',
+        [theme.breakpoints.down('lg')]: {
+            backgroundImage: 'none'
+        }
     },
     editor: {
         '& .ql-editor': {
@@ -42,7 +49,7 @@ const DatasetCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
                 description: Yup.string().max(5000),
                 name: Yup.string()
                     .max(255)
-                    .required("Dataset name is required.")
+                    .required('Dataset name is required.')
             })}
             onSubmit={async (values, {setErrors, setStatus, setSubmitting}) => {
                 try {
@@ -64,7 +71,7 @@ const DatasetCreateForm: FC<ProductCreateFormProps> = ({className, ...rest}) => 
             {({errors, handleChange, handleSubmit, isSubmitting, setFieldValue, touched, values}) => (
                 <form onSubmit={handleSubmit} className={clsx(classes.root, className)} {...rest}>
                     <Grid container spacing={3}>
-                        <Grid item xs={12} lg={8}>
+                        <Grid item xs={12} lg={7}>
                             <Card>
                                 <CardContent>
                                     <TextField
