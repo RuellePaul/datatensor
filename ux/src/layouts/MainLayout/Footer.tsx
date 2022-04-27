@@ -6,6 +6,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import Logo from 'src/components/utils/Logo';
 import goToHash from 'src/utils/goToHash';
 
+
 const useStyles = makeStyles(theme => ({
     root: {
         background: theme.palette.background.paper,
@@ -42,7 +43,7 @@ const Footer: FC = () => {
                             <Box display="flex" alignItems="center" mb={2.5}>
                                 <Logo />
 
-                                <Typography variant="overline" component="p" color="textPrimary" sx={{ml: 2}}>
+                                <Typography variant="overline" component="p" color="textPrimary" sx={{ ml: 2 }}>
                                     Datatensor
                                 </Typography>
                             </Box>
@@ -62,7 +63,7 @@ const Footer: FC = () => {
                                 name="email"
                                 variant="filled"
                                 size="small"
-                                sx={{mr: 2}}
+                                sx={{ mr: 2 }}
                             />
                             <Button>Subscribe</Button>
                         </Box>
@@ -70,33 +71,45 @@ const Footer: FC = () => {
 
                     <Box flexGrow={1} />
 
-                    <Box className={classes.block}>
-                        <Typography variant="body1" color="textPrimary" fontWeight={600} gutterBottom>
-                            Product
-                        </Typography>
-                        <Link onClick={() => goToHash('features')} variant="body1" color="textSecondary">
-                            Features
-                        </Link>
-                        <Link component={RouterLink} to="/docs/getting-started" variant="body1" color="textSecondary">
-                            Documentation
-                        </Link>
-                        <Link component={RouterLink} to="/" variant="body1" color="textSecondary">
-                            Roadmap
-                        </Link>
-                    </Box>
-                    <Box className={classes.block}>
-                        <Typography variant="body1" color="textPrimary" fontWeight={600} gutterBottom>
-                            Company
-                        </Typography>
-                        <Link component={RouterLink} to="/docs/about-datatensor" variant="body1" color="textSecondary">
-                            About
-                        </Link>
-                        <Link component={RouterLink} to="/terms" variant="body1" color="textSecondary">
-                            Terms
-                        </Link>
-                        <Link component={RouterLink} to="/privacy" variant="body1" color="textSecondary">
-                            Privacy
-                        </Link>
+                    <Box display="flex">
+                        <Box className={classes.block}>
+                            <Typography variant="body1" color="textPrimary" fontWeight={600} gutterBottom>
+                                Product
+                            </Typography>
+                            <Link onClick={() => goToHash('features')} variant="body1" color="textSecondary">
+                                Features
+                            </Link>
+                            <Link
+                                component={RouterLink}
+                                to="/docs/getting-started"
+                                variant="body1"
+                                color="textSecondary"
+                            >
+                                Documentation
+                            </Link>
+                            <Link component={RouterLink} to="/" variant="body1" color="textSecondary">
+                                Roadmap
+                            </Link>
+                        </Box>
+                        <Box className={classes.block}>
+                            <Typography variant="body1" color="textPrimary" fontWeight={600} gutterBottom>
+                                Company
+                            </Typography>
+                            <Link
+                                component={RouterLink}
+                                to="/docs/about-datatensor"
+                                variant="body1"
+                                color="textSecondary"
+                            >
+                                About
+                            </Link>
+                            <Link component={RouterLink} to="/terms" variant="body1" color="textSecondary">
+                                Terms
+                            </Link>
+                            <Link component={RouterLink} to="/privacy" variant="body1" color="textSecondary">
+                                Privacy
+                            </Link>
+                        </Box>
                     </Box>
                 </Box>
 
