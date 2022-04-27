@@ -4,7 +4,7 @@ import {Box, Button, Container, Divider, IconButton, Link, TextField, Typography
 import {Coffee as CoffeeIcon, GitHub as GithubIcon, LinkedIn as LinkedInIcon} from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
 import Logo from 'src/components/utils/Logo';
-
+import goToHash from 'src/utils/goToHash';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -42,7 +42,7 @@ const Footer: FC = () => {
                             <Box display="flex" alignItems="center" mb={2.5}>
                                 <Logo />
 
-                                <Typography variant="overline" component="p" color="textPrimary" sx={{ ml: 2 }}>
+                                <Typography variant="overline" component="p" color="textPrimary" sx={{ml: 2}}>
                                     Datatensor
                                 </Typography>
                             </Box>
@@ -62,7 +62,7 @@ const Footer: FC = () => {
                                 name="email"
                                 variant="filled"
                                 size="small"
-                                sx={{ mr: 2 }}
+                                sx={{mr: 2}}
                             />
                             <Button>Subscribe</Button>
                         </Box>
@@ -74,10 +74,10 @@ const Footer: FC = () => {
                         <Typography variant="body1" color="textPrimary" fontWeight={600} gutterBottom>
                             Product
                         </Typography>
-                        <Link component={RouterLink} to="/" variant="body1" color="textSecondary">
+                        <Link onClick={() => goToHash('features')} variant="body1" color="textSecondary">
                             Features
                         </Link>
-                        <Link component={RouterLink} to="/" variant="body1" color="textSecondary">
+                        <Link component={RouterLink} to="/docs/getting-started" variant="body1" color="textSecondary">
                             Documentation
                         </Link>
                         <Link component={RouterLink} to="/" variant="body1" color="textSecondary">
@@ -88,13 +88,13 @@ const Footer: FC = () => {
                         <Typography variant="body1" color="textPrimary" fontWeight={600} gutterBottom>
                             Company
                         </Typography>
-                        <Link component={RouterLink} to="/" variant="body1" color="textSecondary">
+                        <Link component={RouterLink} to="/docs/about-datatensor" variant="body1" color="textSecondary">
                             About
                         </Link>
-                        <Link component={RouterLink} to="/" variant="body1" color="textSecondary">
+                        <Link component={RouterLink} to="/terms" variant="body1" color="textSecondary">
                             Terms
                         </Link>
-                        <Link component={RouterLink} to="/" variant="body1" color="textSecondary">
+                        <Link component={RouterLink} to="/privacy" variant="body1" color="textSecondary">
                             Privacy
                         </Link>
                     </Box>
@@ -117,13 +117,21 @@ const Footer: FC = () => {
                     </Typography>
 
                     <Box display="flex" alignItems="center">
-                        <IconButton component={RouterLink} to="/">
+                        <IconButton
+                            onClick={() =>
+                                window.open('https://github.com/RuellePaul/datatensor.git', '_blank', 'noopener')
+                            }
+                        >
                             <GithubIcon />
                         </IconButton>
-                        <IconButton component={RouterLink} to="/">
+                        <IconButton
+                            onClick={() => window.open('https://www.linkedin.com/in/paulruelle/', '_blank', 'noopener')}
+                        >
                             <LinkedInIcon />
                         </IconButton>
-                        <IconButton component={RouterLink} to="/">
+                        <IconButton
+                            onClick={() => window.open('https://www.buymeacoffee.com/ruellepaul', '_blank', 'noopener')}
+                        >
                             <CoffeeIcon />
                         </IconButton>
                     </Box>

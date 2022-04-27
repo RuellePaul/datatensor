@@ -1,12 +1,10 @@
-import type {FC} from 'react';
-import React, {useEffect} from 'react';
+import React, {FC, useEffect} from 'react';
 import Scrollbar from 'src/components/utils/Scrollbar';
 import {Link as RouterLink, useLocation} from 'react-router-dom';
 import {Box, Drawer, Hidden, List} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import Logo from 'src/components/utils/Logo';
 import NavItem from './NavItem';
-
 
 interface NavBarProps {
     onMobileClose: () => void;
@@ -86,33 +84,18 @@ export const items: Item[] = [
     }
 ];
 
-function renderNavItems({ items, depth = 0 }: { items: Item[], depth?: number }) {
+function renderNavItems({items, depth = 0}: {items: Item[]; depth?: number}) {
     return (
         <List disablePadding sx={{mb: 4}}>
-            {items.reduce(
-                (acc, item) => reduceChildRoutes({ acc, item, depth }),
-                []
-            )}
+            {items.reduce((acc, item) => reduceChildRoutes({acc, item, depth}), [])}
         </List>
     );
 }
 
-function reduceChildRoutes({
-                               acc,
-                               item,
-                               depth = 0
-                           }: {
-    acc: any[];
-    item: Item;
-    depth: number;
-}) {
+function reduceChildRoutes({acc, item, depth = 0}: {acc: any[]; item: Item; depth: number}) {
     if (item.items) {
         acc.push(
-            <NavItem
-                depth={depth}
-                key={item.href}
-                title={item.title}
-            >
+            <NavItem depth={depth} key={item.href} title={item.title}>
                 {renderNavItems({
                     items: item.items,
                     depth: depth + 1
@@ -120,14 +103,7 @@ function reduceChildRoutes({
             </NavItem>
         );
     } else {
-        acc.push(
-            <NavItem
-                depth={depth}
-                href={item.href}
-                key={item.href}
-                title={item.title}
-            />
-        );
+        acc.push(<NavItem depth={depth} href={item.href} key={item.href} title={item.title} />);
     }
 
     return acc;
@@ -144,7 +120,7 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-const NavBar: FC<NavBarProps> = ({ onMobileClose, openMobile }) => {
+const NavBar: FC<NavBarProps> = ({onMobileClose, openMobile}) => {
     const classes = useStyles();
     const location = useLocation();
 
@@ -156,11 +132,7 @@ const NavBar: FC<NavBarProps> = ({ onMobileClose, openMobile }) => {
     }, [location.pathname]);
 
     const content = (
-        <Box
-            height="100%"
-            display="flex"
-            flexDirection="column"
-        >
+        <Box height="100%" display="flex" flexDirection="column">
             <Scrollbar>
                 <Hidden lgUp>
                     <Box p={2}>
@@ -169,9 +141,7 @@ const NavBar: FC<NavBarProps> = ({ onMobileClose, openMobile }) => {
                         </RouterLink>
                     </Box>
                 </Hidden>
-                <Box p={2}>
-                    {renderNavItems({ items })}
-                </Box>
+                <Box p={2}>{renderNavItems({items})}</Box>
             </Scrollbar>
         </Box>
     );
@@ -181,7 +151,7 @@ const NavBar: FC<NavBarProps> = ({ onMobileClose, openMobile }) => {
             <Hidden lgUp>
                 <Drawer
                     anchor="left"
-                    classes={{ paper: classes.mobileDrawer }}
+                    classes={{paper: classes.mobileDrawer}}
                     onClose={onMobileClose}
                     open={openMobile}
                     variant="temporary"
@@ -190,12 +160,7 @@ const NavBar: FC<NavBarProps> = ({ onMobileClose, openMobile }) => {
                 </Drawer>
             </Hidden>
             <Hidden lgDown>
-                <Drawer
-                    anchor="left"
-                    classes={{ paper: classes.desktopDrawer }}
-                    open
-                    variant="persistent"
-                >
+                <Drawer anchor="left" classes={{paper: classes.desktopDrawer}} open variant="persistent">
                     {content}
                 </Drawer>
             </Hidden>
