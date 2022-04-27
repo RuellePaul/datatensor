@@ -1,15 +1,31 @@
 import React, {FC} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
-import {Box, Button, Container, Divider, Grid, IconButton, Link, TextField, Typography} from '@mui/material';
-import {Coffee as CoffeIcon, GitHub as GithubIcon, LinkedIn as LinkedInIcon} from '@mui/icons-material';
+import {Box, Button, Container, Divider, IconButton, Link, TextField, Typography} from '@mui/material';
+import {Coffee as CoffeeIcon, GitHub as GithubIcon, LinkedIn as LinkedInIcon} from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
 import Logo from 'src/components/utils/Logo';
+
 
 const useStyles = makeStyles(theme => ({
     root: {
         background: theme.palette.background.paper,
         '& .MuiLink-root': {
             display: 'block'
+        }
+    },
+    wrapper: {
+        padding: theme.spacing(6, 0),
+        display: 'flex',
+        [theme.breakpoints.down('md')]: {
+            flexDirection: 'column'
+        }
+    },
+    block: {
+        padding: theme.spacing(2),
+        minWidth: 200,
+        [theme.breakpoints.down('md')]: {
+            padding: 0,
+            paddingTop: theme.spacing(3)
         }
     }
 }));
@@ -19,14 +35,14 @@ const Footer: FC = () => {
 
     return (
         <div className={classes.root}>
-            <Container component="section" maxWidth="lg">
-                <Grid container sx={{pt: 8, pb: 4}}>
-                    <Grid item xs={12} md={5}>
+            <Container component="section" maxWidth="md">
+                <Box className={classes.wrapper}>
+                    <Box>
                         <RouterLink to="/">
-                            <Box display="flex" alignItems="center" mb={3}>
+                            <Box display="flex" alignItems="center" mb={2.5}>
                                 <Logo />
 
-                                <Typography variant="overline" component="p" color="textPrimary" sx={{ml: 2}}>
+                                <Typography variant="overline" component="p" color="textPrimary" sx={{ ml: 2 }}>
                                     Datatensor
                                 </Typography>
                             </Box>
@@ -39,19 +55,22 @@ const Footer: FC = () => {
                             Join our newsletter for regular updates. No spam ever.
                         </Typography>
 
-                        <Box display="flex" alignItems="center" mt={2} maxWidth={350}>
+                        <Box display="flex" alignItems="center" mt={2} maxWidth={400}>
                             <TextField
                                 fullWidth
                                 label="Enter your email"
                                 name="email"
                                 variant="filled"
                                 size="small"
-                                sx={{mr: 2}}
+                                sx={{ mr: 2 }}
                             />
                             <Button>Subscribe</Button>
                         </Box>
-                    </Grid>
-                    <Grid item xs={12} md={3}>
+                    </Box>
+
+                    <Box flexGrow={1} />
+
+                    <Box className={classes.block}>
                         <Typography variant="body1" color="textPrimary" fontWeight={600} gutterBottom>
                             Product
                         </Typography>
@@ -64,8 +83,8 @@ const Footer: FC = () => {
                         <Link component={RouterLink} to="/" variant="body1" color="textSecondary">
                             Roadmap
                         </Link>
-                    </Grid>
-                    <Grid item xs={12} md={3}>
+                    </Box>
+                    <Box className={classes.block}>
                         <Typography variant="body1" color="textPrimary" fontWeight={600} gutterBottom>
                             Company
                         </Typography>
@@ -73,20 +92,26 @@ const Footer: FC = () => {
                             About
                         </Link>
                         <Link component={RouterLink} to="/" variant="body1" color="textSecondary">
-                            Vision
-                        </Link>
-                        <Link component={RouterLink} to="/" variant="body1" color="textSecondary">
                             Terms
                         </Link>
                         <Link component={RouterLink} to="/" variant="body1" color="textSecondary">
                             Privacy
                         </Link>
-                    </Grid>
-                </Grid>
+                    </Box>
+                </Box>
 
                 <Divider />
 
-                <Box display="flex" alignItems="center" justifyContent="space-between" py={4} width="100%">
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        width: '100%',
+                        pt: 2,
+                        pb: 4
+                    }}
+                >
                     <Typography variant="body2" color="textSecondary">
                         Copyright © 2022 Datatensor
                     </Typography>
@@ -99,7 +124,7 @@ const Footer: FC = () => {
                             <LinkedInIcon />
                         </IconButton>
                         <IconButton component={RouterLink} to="/">
-                            <CoffeIcon />
+                            <CoffeeIcon />
                         </IconButton>
                     </Box>
                 </Box>
