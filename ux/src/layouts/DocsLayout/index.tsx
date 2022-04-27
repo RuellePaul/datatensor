@@ -8,7 +8,6 @@ import makeStyles from '@mui/styles/makeStyles';
 import NavBar, {items} from './NavBar';
 import TopBar from './TopBar';
 import components from './mdx';
-import Footer from 'src/layouts/MainLayout/Footer';
 
 interface DocsLayoutProps {
     children?: ReactNode;

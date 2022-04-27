@@ -17,3 +17,7 @@ class PublicSampleBody(BaseModel):
     image_id: str
     operations: List[Operation]
     labels: List[Label]
+
+
+class NewsletterBody(BaseModel):
+    email: str

@@ -1,11 +1,15 @@
 import React, {FC} from 'react';
 import {Link as RouterLink, useHistory, useLocation} from 'react-router-dom';
+import {Formik} from 'formik';
+import {useSnackbar} from 'notistack';
+import * as Yup from 'yup';
 import {Box, Button, Container, Divider, IconButton, Link, TextField, Typography} from '@mui/material';
 import {Coffee as CoffeeIcon, GitHub as GithubIcon, LinkedIn as LinkedInIcon} from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
 import Logo from 'src/components/utils/Logo';
 import goToHash from 'src/utils/goToHash';
-
+import useIsMountedRef from 'src/hooks/useIsMountedRef';
+import api from 'src/utils/api';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -30,6 +34,63 @@ const useStyles = makeStyles(theme => ({
         }
     }
 }));
+
+const NewsletterForm = () => {
+    const isMountedRef = useIsMountedRef();
+    const {enqueueSnackbar} = useSnackbar();
+
+    return (
+        <Formik
+            initialValues={{
+                email: ''
+            }}
+            validationSchema={Yup.object().shape({
+                email: Yup.string()
+                    .email('Must be a valid email.')
+                    .max(255)
+            })}
+            onSubmit={async (values, {setStatus, setSubmitting, resetForm}) => {
+                try {
+                    await api.post('/public/newsletter', {email: values.email});
+                    resetForm();
+                    enqueueSnackbar('Newsletter subscription confirmed !', {variant: 'success'});
+
+                    if (isMountedRef.current) {
+                        setStatus({success: true});
+                        setSubmitting(false);
+                    }
+                } catch (error) {
+                    if (isMountedRef.current) {
+                        setStatus({success: false});
+                        setSubmitting(false);
+                    }
+                }
+            }}
+        >
+            {({errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values}) => (
+                <form noValidate onSubmit={handleSubmit}>
+                    <Box display="flex" alignItems="center" mt={2} maxWidth={400}>
+                        <TextField
+                            error={Boolean(touched.email && errors.email)}
+                            fullWidth
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            label="Enter your email"
+                            name="email"
+                            value={values.email}
+                            variant="filled"
+                            size="small"
+                            sx={{mr: 2}}
+                        />
+                        <Button color="primary" disabled={isSubmitting} type="submit">
+                            Subscribe
+                        </Button>
+                    </Box>
+                </form>
+            )}
+        </Formik>
+    );
+};
 
 const Footer: FC = () => {
     const classes = useStyles();
@@ -59,17 +120,7 @@ const Footer: FC = () => {
                             Join our newsletter for regular updates. No spam ever.
                         </Typography>
 
-                        <Box display="flex" alignItems="center" mt={2} maxWidth={400}>
-                            <TextField
-                                fullWidth
-                                label="Enter your email"
-                                name="email"
-                                variant="filled"
-                                size="small"
-                                sx={{mr: 2}}
-                            />
-                            <Button>Subscribe</Button>
-                        </Box>
+                        <NewsletterForm />
                     </Box>
 
                     <Box flexGrow={1} />
@@ -81,7 +132,7 @@ const Footer: FC = () => {
                             </Typography>
                             <Link
                                 onClick={() => {
-                                    location.pathname === '/' ? goToHash('features') : history.push('/#features')
+                                    location.pathname === '/' ? goToHash('features') : history.push('/#features');
                                 }}
                                 variant="body1"
                                 color="textSecondary"
