@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import {Link as RouterLink} from 'react-router-dom';
+import {Link as RouterLink, useHistory, useLocation} from 'react-router-dom';
 import {Box, Button, Container, Divider, IconButton, Link, TextField, Typography} from '@mui/material';
 import {Coffee as CoffeeIcon, GitHub as GithubIcon, LinkedIn as LinkedInIcon} from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
@@ -34,6 +34,9 @@ const useStyles = makeStyles(theme => ({
 const Footer: FC = () => {
     const classes = useStyles();
 
+    const history = useHistory();
+    const location = useLocation();
+
     return (
         <div className={classes.root}>
             <Container component="section" maxWidth="md">
@@ -43,7 +46,7 @@ const Footer: FC = () => {
                             <Box display="flex" alignItems="center" mb={2.5}>
                                 <Logo />
 
-                                <Typography variant="overline" component="p" color="textPrimary" sx={{ ml: 2 }}>
+                                <Typography variant="overline" component="p" color="textPrimary" sx={{ml: 2}}>
                                     Datatensor
                                 </Typography>
                             </Box>
@@ -63,7 +66,7 @@ const Footer: FC = () => {
                                 name="email"
                                 variant="filled"
                                 size="small"
-                                sx={{ mr: 2 }}
+                                sx={{mr: 2}}
                             />
                             <Button>Subscribe</Button>
                         </Box>
@@ -76,7 +79,13 @@ const Footer: FC = () => {
                             <Typography variant="body1" color="textPrimary" fontWeight={600} gutterBottom>
                                 Product
                             </Typography>
-                            <Link onClick={() => goToHash('features')} variant="body1" color="textSecondary">
+                            <Link
+                                onClick={() => {
+                                    location.pathname === '/' ? goToHash('features') : history.push('/#features')
+                                }}
+                                variant="body1"
+                                color="textSecondary"
+                            >
                                 Features
                             </Link>
                             <Link
