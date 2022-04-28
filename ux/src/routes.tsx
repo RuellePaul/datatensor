@@ -7,6 +7,8 @@ import HomeView from 'src/views/home/HomeView';
 import AuthGuard from 'src/components/guards/AuthGuard';
 import GuestGuard from 'src/components/guards/GuestGuard';
 import SplashScreen from 'src/components/screens/SplashScreen';
+import TermsView from './views/legal/Terms';
+import PrivacyView from './views/legal/Privacy';
 
 type Routes = {
     exact?: boolean;
@@ -55,6 +57,18 @@ const routes: Routes = [
         exact: true,
         path: '/',
         component: HomeView
+    },
+    {
+        layout: MainLayout,
+        exact: true,
+        path: '/terms',
+        component: TermsView
+    },
+    {
+        layout: MainLayout,
+        exact: true,
+        path: '/privacy',
+        component: PrivacyView
     },
     {
         path: '/auth',

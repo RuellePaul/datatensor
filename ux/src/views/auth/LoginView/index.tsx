@@ -10,7 +10,6 @@ import JWTLogin from './JWTLogin';
 import OAuthLoginButton from './OAuthLoginButton';
 import parseQueryArgs from 'src/utils/parseQueryArgs';
 
-
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         backgroundColor: theme.palette.background.default,
@@ -38,11 +37,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 const LoginView: FC = () => {
     const classes = useStyles();
     const history = useHistory();
-    const { enqueueSnackbar } = useSnackbar();
+    const {enqueueSnackbar} = useSnackbar();
 
     useEffect(() => {
         if (parseQueryArgs('expired')) {
-            enqueueSnackbar(`Session expired.`, { variant: 'warning' });
+            enqueueSnackbar(`Session expired.`, {variant: 'warning'});
             history.replace('/auth/login');
         }
 

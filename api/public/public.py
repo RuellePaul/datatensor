@@ -6,6 +6,7 @@ from typing import List
 import cv2
 from fastapi import APIRouter
 
+import errors
 from config import Config
 from logger import logger
 from routers.images.models import Image
@@ -13,7 +14,7 @@ from routers.labels.models import Label
 from routers.pipelines.core import perform_sample
 from routers.pipelines.models import SampleResponse
 from utils import parse
-from .models import PublicDatasetResponse, PublicSampleBody
+from .models import PublicDatasetResponse, PublicSampleBody, NewsletterBody
 
 db = Config.db
 
@@ -66,3 +67,17 @@ def get_public_sample(payload: PublicSampleBody):
         'images': base64_encoded_images,
         'images_labels': parse(augmented_labels)
     }
+
+
+@public.post('/newsletter')
+def register_newsletter(payload: NewsletterBody):
+    email = payload.email
+
+    if not email:
+        raise errors.BadRequest('Newsletter', "Missing email")
+
+    if email in [user['email'] for user in list(db.newsletter_users.find())]:
+        raise errors.Forbidden('Newsletter', f"Email {email} already registered to newsletter")
+
+    db.newsletter_users.insert_one({'email': payload.email})
+    logger.notify('Newsletter', f'Add {payload.email} in newsletter email collection')

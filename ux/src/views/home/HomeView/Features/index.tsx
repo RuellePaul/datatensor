@@ -188,7 +188,7 @@ const Features: FC<FeatureProps> = ({className, ...rest}) => {
     );
 
     return (
-        <div className={clsx(classes.root, className)} {...rest}>
+        <div className={clsx(classes.root, className)} id="features" {...rest}>
             <Container component="section" maxWidth="lg">
                 <Grid container spacing={isMobile ? 0 : 6}>
                     <Grid item md={5} xs={12}>

@@ -1,5 +1,4 @@
-import type {FC, ReactNode} from 'react';
-import React, {useMemo, useState} from 'react';
+import React, {FC, ReactNode, useMemo, useState} from 'react';
 import {Link as RouterLink, useLocation} from 'react-router-dom';
 import {MDXProvider} from '@mdx-js/react';
 import Scrollbar from 'src/components/utils/Scrollbar';
@@ -10,12 +9,11 @@ import NavBar, {items} from './NavBar';
 import TopBar from './TopBar';
 import components from './mdx';
 
-
 interface DocsLayoutProps {
     children?: ReactNode;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     wrapper: {
         backgroundColor: theme.palette.background.default,
         display: 'flex',
@@ -51,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
 
 const DocsButtons: FC = () => {
     const classes = useStyles();
-    const { pathname } = useLocation();
+    const {pathname} = useLocation();
 
     const pages = useMemo(() => items.map(item => item.items).flat(), []);
     const index = pages.map(page => page.href).indexOf(pathname);
@@ -89,27 +87,19 @@ const DocsButtons: FC = () => {
     );
 };
 
-const DocsLayout: FC<DocsLayoutProps> = ({ children }) => {
+const DocsLayout: FC<DocsLayoutProps> = ({children}) => {
     const classes = useStyles();
     const [isMobileNavOpen, setMobileNavOpen] = useState<boolean>(false);
 
     return (
         <>
             <TopBar onMobileNavOpen={() => setMobileNavOpen(true)} />
-            <NavBar
-                onMobileClose={() => setMobileNavOpen(false)}
-                openMobile={isMobileNavOpen}
-            />
+            <NavBar onMobileClose={() => setMobileNavOpen(false)} openMobile={isMobileNavOpen} />
             <div className={classes.wrapper}>
                 <Scrollbar>
                     <div className={classes.contentContainer}>
-                        <Container
-                            maxWidth="md"
-                            className={classes.content}
-                        >
-                            <MDXProvider components={components}>
-                                {children}
-                            </MDXProvider>
+                        <Container maxWidth="md" className={classes.content}>
+                            <MDXProvider components={components}>{children}</MDXProvider>
 
                             <DocsButtons />
                         </Container>
