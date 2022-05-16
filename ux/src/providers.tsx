@@ -40,11 +40,7 @@ const InnerSettingsProviders: FC = ({children}) => {
                         maxSnack={3}
                         ref={snackbarRef}
                         action={key => (
-                            <IconButton
-                                onClick={onCloseSnackbar(key)}
-                                size="large"
-                                style={{color: 'inherit'}}
-                            >
+                            <IconButton onClick={onCloseSnackbar(key)} size="large" style={{color: 'inherit'}}>
                                 <CloseIcon color="inherit" />
                             </IconButton>
                         )}

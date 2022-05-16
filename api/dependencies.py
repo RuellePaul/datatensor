@@ -1,6 +1,6 @@
 from typing import Optional, Union
 
-from fastapi import Depends, Header
+from fastapi import Depends, Header, Request
 
 import errors
 from authentication.core import verify_access_token
@@ -30,3 +30,10 @@ def dataset_belongs_to_user(dataset_id, user: User = Depends(logged_user)) -> Da
     if dataset.user_id != user.id:
         raise errors.Forbidden('Auth', errors.NOT_YOUR_DATASET)
     return Dataset.parse_obj(dataset)
+
+
+def get_ip_address(request: Request, x_forwarded_for: Union[str, None] = Header(None)) -> Union[str, None]:
+    print(dict(request.headers))
+    if Config.ENVIRONMENT == 'development':
+        return '127.0.0.1'
+    return x_forwarded_for

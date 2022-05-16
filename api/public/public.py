@@ -4,10 +4,11 @@ import os
 from typing import List
 
 import cv2
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 import errors
 from config import Config
+from dependencies import get_ip_address
 from logger import logger
 from routers.images.models import Image
 from routers.labels.models import Label
@@ -34,8 +35,8 @@ def _find_public_labels(image_id) -> List[Label]:
 
 
 @public.get('/', response_model=PublicDatasetResponse)
-def get_public_data():
-    logger.notify('Public', f'Fetch public data')
+def get_public_data(ip_address: str = Depends(get_ip_address)):
+    logger.notify('Public', f'Fetch public data from {ip_address or "unknown"}')
     return public_data
 
 

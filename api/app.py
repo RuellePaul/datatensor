@@ -123,4 +123,6 @@ if __name__ == '__main__':
                 host='127.0.0.1',
                 port=4069,
                 debug=Config.ENVIRONMENT == 'development',
-                reload=Config.ENVIRONMENT == 'development')
+                reload=Config.ENVIRONMENT == 'development',
+                proxy_headers=True,
+                forwarded_allow_ips='*')
