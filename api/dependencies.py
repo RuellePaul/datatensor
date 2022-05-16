@@ -33,6 +33,7 @@ def dataset_belongs_to_user(dataset_id, user: User = Depends(logged_user)) -> Da
 
 
 def get_ip_address(request: Request, x_forwarded_for: Union[str, None] = Header(None)) -> Union[str, None]:
+    print(dict(request.headers))
     if Config.ENVIRONMENT == 'development':
         return '127.0.0.1'
     return x_forwarded_for
