@@ -11,7 +11,6 @@ from config import Config
 from routers.images.models import Image, ImageExtended
 from routers.labels.core import find_labels_from_image_ids, regroup_labels_by_category
 from routers.labels.models import Label
-from utils import update_task, increment_task_progress
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
@@ -47,6 +46,7 @@ def upload_image(image_bytes, image_id):
         path = f"{Config.S3_LOCATION}{image_id}"
         return path
     except Exception as e:
+        print(e)
         raise errors.InternalError('Images', f'Cannot upload file to S3, {str(e)}')
 
 
