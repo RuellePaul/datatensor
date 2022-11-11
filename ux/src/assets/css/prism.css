@@ -1,0 +1,310 @@
+.hide {
+    display: none !important;
+}
+
+.hidden {
+    position: absolute !important;
+    overflow: hidden !important;
+    width: 0.1px !important;
+    height: 0.1px !important;
+    opacity: 0 !important;
+    z-index: -1 !important;
+}
+
+.visible {
+    opacity: 1 !important;
+}
+
+.invisible {
+    opacity: 0 !important;
+    z-index: -10 !important;
+}
+
+.relative {
+    position: relative !important;
+}
+
+.scrollbar-container {
+    width: 100%;
+}
+
+.flex {
+    display: flex;
+}
+
+.flexGrow {
+    flex-grow: 700;
+}
+
+.smaller {
+    font-size: 0.7em !important;
+    vertical-align: middle !important;
+}
+
+.apex-tooltip {
+    padding: 8px 16px;
+    font-weight: bold;
+}
+
+.blinking {
+    animation: blinker 1.5s ease infinite;
+}
+
+.labelHighlight {
+    animation: labelHighlight 3s ease infinite;
+}
+
+@keyframes blinker {
+    30% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    70% {
+        opacity: 1;
+    }
+}
+
+@keyframes labelHighlight {
+    50% {
+        opacity: 1;
+    }
+    53% {
+        opacity: 0.8;
+    }
+    56% {
+        opacity: 1;
+    }
+    59% {
+        opacity: 0.8;
+    }
+    65% {
+        opacity: 1;
+    }
+}
+
+/* Google One Tap */
+#credential_picker_container {
+    top: unset !important;
+    left: unset !important;
+    bottom: 16px;
+    right: 16px;
+}
+
+kbd {
+    background-color: #eee;
+    border-radius: 3px;
+    border: 1px solid #b4b4b4;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2), 0 2px 0 0 rgba(255, 255, 255, 0.7) inset;
+    color: #333;
+    display: inline-block;
+    font-size: 0.85em;
+    font-weight: 700;
+    line-height: 1;
+    padding: 2px 4px;
+    white-space: nowrap;
+    margin: 0px 5px;
+}
+
+pre {
+    color: white;
+    border-radius: 4px;
+    background-color: #191c27;
+    padding: 16px;
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+code[class*='language-'],
+pre[class*='language-'] {
+    color: rgb(191, 199, 213);
+    font-family: Inconsolata, Monaco, Consolas, 'Courier New', Courier, monospace;
+    direction: ltr;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    line-height: 1.5;
+    tab-size: 4;
+    hyphens: none;
+}
+
+/* Code blocks */
+pre[class*='language-'] {
+    padding: 1em;
+    margin: 0.5em 0;
+    overflow: auto;
+    border-radius: 0.3em;
+}
+
+:not(pre) > code[class*='language-'],
+pre[class*='language-'] {
+    background: #1d1f21;
+}
+
+/* Inline code */
+:not(pre) > code[class*='language-'] {
+    padding: 0.1em;
+    border-radius: 0.3em;
+}
+
+.token.prolog {
+    color: rgb(0, 0, 128);
+}
+
+.token.parameter {
+    color: rgb(255, 255, 255);
+}
+
+.token.comment {
+    color: rgb(106, 153, 85);
+}
+
+.token.doctype {
+    color: rgb(191, 199, 213);
+}
+
+.token.cdata {
+    color: rgb(191, 199, 213);
+}
+
+.token.punctuation {
+    color: rgb(136, 198, 190);
+}
+
+.token.property {
+    color: rgb(252, 146, 158);
+}
+
+.token.tag {
+    color: rgb(252, 146, 158);
+}
+
+.token.class-name {
+    color: rgb(250, 200, 99);
+}
+
+.token.boolean {
+}
+
+.token.constant {
+    color: rgb(100, 102, 149);
+}
+
+.token.symbol {
+    color: rgb(141, 200, 145);
+}
+
+.token.deleted {
+    color: rgb(141, 200, 145);
+}
+
+.token.number {
+    color: rgb(181, 206, 168);
+}
+
+.token.inserted {
+    color: rgb(181, 206, 168);
+}
+
+.token.selector {
+    color: rgb(215, 186, 125);
+}
+
+.token.char {
+    color: rgb(209, 105, 105);
+}
+
+.token.builtin {
+    color: rgb(197, 165, 197);
+}
+
+.token.changed {
+    color: rgb(197, 165, 197);
+}
+
+.token.keyword {
+    color: rgb(197, 165, 197);
+}
+
+.token.string {
+    color: rgb(195, 232, 141);
+}
+
+.token.attr-name {
+    color: rgb(156, 220, 254);
+}
+
+.token.variable {
+    color: rgb(156, 220, 254);
+}
+
+.token.operator {
+    color: #ededed;
+}
+
+.token.entity {
+    color: #ffffb6;
+    cursor: help;
+}
+
+.token.url {
+    color: #96cbfe;
+}
+
+.language-css .token.string,
+.style .token.string {
+    color: #87c38a;
+}
+
+.token.atrule,
+.token.attr-value {
+    color: #f9ee98;
+}
+
+.token.function {
+    color: rgb(121, 182, 242);
+}
+
+.token.regex {
+    color: #e9c062;
+}
+
+.token.important {
+    color: #fd971f;
+}
+
+.token.important,
+.token.bold {
+    font-weight: bold;
+}
+
+.token.italic {
+    font-style: italic;
+}
+
+.highlight {
+    color: white;
+    animation: highlight 3s ease infinite;
+}
+
+@keyframes highlight {
+    0% {
+        border-radius: 50%;
+        transform: scale(0.975);
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+    }
+
+    70% {
+        border-radius: 50%;
+        transform: scale(1);
+        box-shadow: 0 0 0 5px rgba(255, 255, 255, 0);
+    }
+
+    100% {
+        border-radius: 50%;
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    }
+}

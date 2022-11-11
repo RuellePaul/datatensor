@@ -1,0 +1,23 @@
+# === UI image ====
+FROM node:14.16.0-alpine3.13
+
+# ==== Arg section ====
+# System args
+ARG ENVIRONMENT
+
+# ==== Env section ====
+# System env
+ENV ENVIRONMENT=$ENVIRONMENT
+
+WORKDIR /ux
+
+ENV PATH /ux/node_modules/.bin:$PATH
+
+COPY ux /ux
+
+COPY builds/${ENVIRONMENT}/.env /ux/.env
+
+RUN yarn add package.json --silent
+RUN yarn run build
+
+CMD yarn run serve:production

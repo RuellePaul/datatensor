@@ -1,0 +1,891 @@
+{
+    "datasets": [
+        {
+            "id": "00000000-0000-0000-0000-000000000000",
+            "user_id": "46eaee40-0663-4132-a0c4-bde9633ec208",
+            "name": "Humans, cats & dogs",
+            "description": "Case study of object recognition, human and pet detection",
+            "is_public": true,
+            "created_at": "2021-12-06T08:47:45.144546",
+            "image_count": 6846,
+            "augmented_count": 0,
+            "categories": [
+                {
+                    "id": "5026ac72-05f1-4de5-a6b6-60ec7c5d5428",
+                    "dataset_id": "00000000-0000-0000-0000-000000000000",
+                    "name": "Dog",
+                    "supercategory": "animal",
+                    "labels_count": 4504
+                },
+                {
+                    "id": "fa8316b2-b493-4475-8e3a-82a78294ff54",
+                    "dataset_id": "00000000-0000-0000-0000-000000000000",
+                    "name": "Cat",
+                    "supercategory": "animal",
+                    "labels_count": 5437
+                },
+                {
+                    "id": "be90a15e-19d0-48dc-8a3d-5a6ad93f25ec",
+                    "dataset_id": "00000000-0000-0000-0000-000000000000",
+                    "name": "Person",
+                    "supercategory": "person",
+                    "labels_count": 12274
+                }
+            ],
+            "user": {
+                "id": "46eaee40-0663-4132-a0c4-bde9633ec208",
+                "email": "anika.visser@datatensor.io",
+                "name": "Anika Visser",
+                "created_at": "2021-09-10T12:13:26.724000",
+                "is_verified": true,
+                "is_admin": false,
+                "scope": "github",
+                "avatar": "/public-data/personas/1.png",
+                "phone": "06",
+                "country": "",
+                "city": "",
+                "is_public": true
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "user_id": "e831fa25-75b6-4310-bbf5-a6c60e462725",
+            "name": "Cerebral injuries",
+            "description": "Extraction and assistance in the detection of brain lesions.",
+            "is_public": false,
+            "created_at": "2021-12-06T08:47:45.144546",
+            "image_count": 3487,
+            "augmented_count": 0,
+            "categories": [
+                {
+                    "id": "673eef6c-2b33-4702-8ece-55c86228f78c",
+                    "dataset_id": "00000000-0000-0000-0000-000000000000",
+                    "name": "Cerebral lesion",
+                    "supercategory": "person",
+                    "labels_count": 6484
+                }
+            ],
+            "user": {
+                "id": "00000000-0000-0000-0000-000000000001",
+                "email": "demo@datatensor.io",
+                "name": "Stan Goodman",
+                "created_at": "2021-08-09T12:13:26.724000",
+                "is_verified": true,
+                "is_admin": false,
+                "scope": "google",
+                "avatar": "/public-data/personas/2.jpeg",
+                "phone": "06",
+                "country": "",
+                "city": "",
+                "is_public": true
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000002",
+            "user_id": "ded244a4-3208-4c07-95b2-7590cedff7fe",
+            "name": "Bullets impact",
+            "description": "In order to create an algorithm capable of counting the impacts of a rifle bullet",
+            "is_public": false,
+            "created_at": "2021-12-06T08:47:45.144546",
+            "image_count": 3487,
+            "augmented_count": 0,
+            "categories": [
+                {
+                    "id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808",
+                    "dataset_id": "00000000-0000-0000-0000-000000000002",
+                    "name": "Bullet impact",
+                    "supercategory": "miscellaneous",
+                    "labels_count": 1436
+                }
+            ],
+            "user": {
+                "id": "ded244a4-3208-4c07-95b2-7590cedff7fe",
+                "email": "demo@datatensor.io",
+                "name": "Siegbert Gottfried",
+                "created_at": "2021-08-09T12:13:26.724000",
+                "is_verified": true,
+                "is_admin": false,
+                "scope": null,
+                "avatar": "/public-data/personas/3.png",
+                "phone": "06",
+                "country": "",
+                "city": "",
+                "is_public": true
+            }
+        }
+    ],
+    "images": [
+        {
+            "id": "24d31047-46ce-4b82-a2b1-e49b885feea4",
+            "dataset_id": "00000000-0000-0000-0000-000000000000",
+            "path": "/public-data/datasets/1.jpeg",
+            "name": "1.jpeg",
+            "size": 345602,
+            "width": 1280,
+            "height": 816,
+            "labels": [
+                {
+                    "id": "78b0767d-111e-48ad-8bc6-221cb461ac16",
+                    "x": 0.281452,
+                    "y": 0.436478,
+                    "w": 0.222581,
+                    "h": 0.464151,
+                    "image_id": "24d31047-46ce-4b82-a2b1-e49b885feea4",
+                    "category_id": "fa8316b2-b493-4475-8e3a-82a78294ff54"
+                },
+                {
+                    "id": "d299000f-d674-4871-9a35-3c560f42c3e4",
+                    "x": 0.025806,
+                    "y": 0.193711,
+                    "w": 0.400806,
+                    "h": 0.558491,
+                    "image_id": "24d31047-46ce-4b82-a2b1-e49b885feea4",
+                    "category_id": "5026ac72-05f1-4de5-a6b6-60ec7c5d5428"
+                },
+                {
+                    "id": "3b2a6dd9-e1bd-42e2-9114-7048cfb785f6",
+                    "x": 0.402419,
+                    "y": 0.226415,
+                    "w": 0.235484,
+                    "h": 0.642767,
+                    "image_id": "24d31047-46ce-4b82-a2b1-e49b885feea4",
+                    "category_id": "5026ac72-05f1-4de5-a6b6-60ec7c5d5428"
+                }
+            ]
+        },
+        {
+            "id": "b47aff63-4ccf-45d9-9066-54d1efaa58e7",
+            "dataset_id": "00000000-0000-0000-0000-000000000000",
+            "path": "/public-data/datasets/2.jpeg",
+            "name": "2.jpeg",
+            "size": 286293,
+            "width": 1280,
+            "height": 850,
+            "labels": [
+                {
+                    "id": "91ea5359-686b-4e73-8ae1-fc8f3c4f61d9",
+                    "x": 0.392742,
+                    "y": 0.451691,
+                    "w": 0.259677,
+                    "h": 0.541063,
+                    "image_id": "b47aff63-4ccf-45d9-9066-54d1efaa58e7",
+                    "category_id": "be90a15e-19d0-48dc-8a3d-5a6ad93f25ec"
+                }
+            ]
+        },
+        {
+            "id": "888eafd5-a277-4bbe-82e2-2764a442d333",
+            "dataset_id": "00000000-0000-0000-0000-000000000000",
+            "path": "/public-data/datasets/3.jpeg",
+            "name": "3.jpeg",
+            "size": 78016,
+            "width": 650,
+            "height": 426,
+            "labels": [
+                {
+                    "id": "d99cc5e1-6d0f-4b62-a7d2-3777c3dde14f",
+                    "x": 0.216935,
+                    "y": 0.156671,
+                    "w": 0.26129,
+                    "h": 0.50918,
+                    "image_id": "888eafd5-a277-4bbe-82e2-2764a442d333",
+                    "category_id": "fa8316b2-b493-4475-8e3a-82a78294ff54"
+                },
+                {
+                    "id": "93749a82-11f4-416a-acb4-90271dc665f7",
+                    "x": 0.443548,
+                    "y": 0.152999,
+                    "w": 0.555645,
+                    "h": 0.840881,
+                    "image_id": "888eafd5-a277-4bbe-82e2-2764a442d333",
+                    "category_id": "5026ac72-05f1-4de5-a6b6-60ec7c5d5428"
+                },
+                {
+                    "id": "6bb4c258-caa0-4632-acef-e208c99efe86",
+                    "x": 0.001613,
+                    "y": 0.363525,
+                    "w": 0.918548,
+                    "h": 0.629131,
+                    "image_id": "888eafd5-a277-4bbe-82e2-2764a442d333",
+                    "category_id": "be90a15e-19d0-48dc-8a3d-5a6ad93f25ec"
+                }
+            ]
+        },
+        {
+            "id": "2c95e066-6dcb-41f8-a2f6-16d5c410a2d1",
+            "dataset_id": "00000000-0000-0000-0000-000000000000",
+            "path": "/public-data/datasets/4.jpeg",
+            "name": "4.jpeg",
+            "size": 256948,
+            "width": 1280,
+            "height": 853,
+            "labels": [
+                {
+                    "id": "44c357cc-1b35-4e9c-aacc-96d9d581c22f",
+                    "x": 0.255645,
+                    "y": 0.169675,
+                    "w": 0.534677,
+                    "h": 0.826715,
+                    "image_id": "2c95e066-6dcb-41f8-a2f6-16d5c410a2d1",
+                    "category_id": "be90a15e-19d0-48dc-8a3d-5a6ad93f25ec"
+                },
+                {
+                    "id": "135b7be4-61d4-4306-b576-92fdadabe98b",
+                    "x": 0.349194,
+                    "y": 0.34657,
+                    "w": 0.326613,
+                    "h": 0.45728,
+                    "image_id": "2c95e066-6dcb-41f8-a2f6-16d5c410a2d1",
+                    "category_id": "fa8316b2-b493-4475-8e3a-82a78294ff54"
+                }
+            ]
+        },
+        {
+            "id": "9a561cfe-b709-417a-be2d-925f4ab9cf54",
+            "dataset_id": "00000000-0000-0000-0000-000000000000",
+            "path": "/public-data/datasets/5.jpeg",
+            "name": "5.jpeg",
+            "size": 85599,
+            "width": 728,
+            "height": 486,
+            "labels": [
+                {
+                    "id": "ec8c1c88-1645-494b-9404-9a4b9edac0d7",
+                    "x": 0.275,
+                    "y": 0.201923,
+                    "w": 0.223387,
+                    "h": 0.558894,
+                    "image_id": "9a561cfe-b709-417a-be2d-925f4ab9cf54",
+                    "category_id": "5026ac72-05f1-4de5-a6b6-60ec7c5d5428"
+                },
+                {
+                    "id": "ec9bfc88-67e2-489c-beeb-ce25471e3081",
+                    "x": 0.472581,
+                    "y": 0.204327,
+                    "w": 0.2,
+                    "h": 0.637019,
+                    "image_id": "9a561cfe-b709-417a-be2d-925f4ab9cf54",
+                    "category_id": "5026ac72-05f1-4de5-a6b6-60ec7c5d5428"
+                }
+            ]
+        },
+        {
+            "id": "6d2a63c0-a695-4e09-8a04-dac16e70fe14",
+            "dataset_id": "00000000-0000-0000-0000-000000000000",
+            "path": "/public-data/datasets/6.jpeg",
+            "name": "6.jpeg",
+            "size": 343671,
+            "width": 1000,
+            "height": 666,
+            "labels": [
+                {
+                    "id": "9ad4a9ff-0ef4-4b02-a7c8-ed477439648d",
+                    "x": 0.116935,
+                    "y": 0.16747,
+                    "w": 0.122581,
+                    "h": 0.501205,
+                    "image_id": "6d2a63c0-a695-4e09-8a04-dac16e70fe14",
+                    "category_id": "be90a15e-19d0-48dc-8a3d-5a6ad93f25ec"
+                },
+                {
+                    "id": "7fad310d-de53-4a70-a32b-7bd217020b55",
+                    "x": 0.239516,
+                    "y": 0.153012,
+                    "w": 0.116935,
+                    "h": 0.420482,
+                    "image_id": "6d2a63c0-a695-4e09-8a04-dac16e70fe14",
+                    "category_id": "be90a15e-19d0-48dc-8a3d-5a6ad93f25ec"
+                },
+                {
+                    "id": "c9fe9775-c666-40ab-90a5-3342d8e13fe0",
+                    "x": 0.4266125483870968,
+                    "y": 0.20602418072289155,
+                    "w": 0.097581,
+                    "h": 0.301205,
+                    "image_id": "6d2a63c0-a695-4e09-8a04-dac16e70fe14",
+                    "category_id": "be90a15e-19d0-48dc-8a3d-5a6ad93f25ec"
+                },
+                {
+                    "id": "d029339c-34f1-4519-ada9-5801b5b5d424",
+                    "x": 0.903226,
+                    "y": 0.227711,
+                    "w": 0.047581,
+                    "h": 0.168675,
+                    "image_id": "6d2a63c0-a695-4e09-8a04-dac16e70fe14",
+                    "category_id": "be90a15e-19d0-48dc-8a3d-5a6ad93f25ec"
+                },
+                {
+                    "id": "be548a8e-0728-4665-ac17-11f81eff2b03",
+                    "x": 0.840323,
+                    "y": 0.23012,
+                    "w": 0.045968,
+                    "h": 0.163855,
+                    "image_id": "6d2a63c0-a695-4e09-8a04-dac16e70fe14",
+                    "category_id": "be90a15e-19d0-48dc-8a3d-5a6ad93f25ec"
+                },
+                {
+                    "id": "69c6800a-5601-4571-be15-043afb8c2837",
+                    "x": 0.816129,
+                    "y": 0.228916,
+                    "w": 0.049194,
+                    "h": 0.184337,
+                    "image_id": "6d2a63c0-a695-4e09-8a04-dac16e70fe14",
+                    "category_id": "be90a15e-19d0-48dc-8a3d-5a6ad93f25ec"
+                },
+                {
+                    "id": "5ab21f04-04e4-4463-ad4a-a4b4466af6b8",
+                    "x": 0.778226,
+                    "y": 0.23734918072289155,
+                    "w": 0.035484,
+                    "h": 0.162651,
+                    "image_id": "6d2a63c0-a695-4e09-8a04-dac16e70fe14",
+                    "category_id": "be90a15e-19d0-48dc-8a3d-5a6ad93f25ec"
+                },
+                {
+                    "id": "57bdf66d-526c-42db-8600-61ca4949d270",
+                    "x": 0.783871,
+                    "y": 0.242169,
+                    "w": 0.033871,
+                    "h": 0.166265,
+                    "image_id": "6d2a63c0-a695-4e09-8a04-dac16e70fe14",
+                    "category_id": "be90a15e-19d0-48dc-8a3d-5a6ad93f25ec"
+                },
+                {
+                    "id": "42fd2dd4-88c6-463c-8f64-d5ecdbb70e53",
+                    "x": 0.700806,
+                    "y": 0.195181,
+                    "w": 0.08871,
+                    "h": 0.245783,
+                    "image_id": "6d2a63c0-a695-4e09-8a04-dac16e70fe14",
+                    "category_id": "be90a15e-19d0-48dc-8a3d-5a6ad93f25ec"
+                },
+                {
+                    "id": "7db33415-2ea4-4c08-be88-a1e99649217d",
+                    "x": 0.6830644516129033,
+                    "y": 0.21445818072289155,
+                    "w": 0.066129,
+                    "h": 0.219277,
+                    "image_id": "6d2a63c0-a695-4e09-8a04-dac16e70fe14",
+                    "category_id": "be90a15e-19d0-48dc-8a3d-5a6ad93f25ec"
+                },
+                {
+                    "id": "c452d821-10b2-49d9-89c2-ff6e532f18f4",
+                    "x": 0.635484,
+                    "y": 0.218072,
+                    "w": 0.048387,
+                    "h": 0.244578,
+                    "image_id": "6d2a63c0-a695-4e09-8a04-dac16e70fe14",
+                    "category_id": "be90a15e-19d0-48dc-8a3d-5a6ad93f25ec"
+                },
+                {
+                    "id": "93be9e3e-8a86-44e4-b6e6-8bf60617b339",
+                    "x": 0.5983875483870967,
+                    "y": 0.22048236144578315,
+                    "w": 0.047580645161290326,
+                    "h": 0.15903572289156626,
+                    "image_id": "6d2a63c0-a695-4e09-8a04-dac16e70fe14",
+                    "category_id": "be90a15e-19d0-48dc-8a3d-5a6ad93f25ec"
+                },
+                {
+                    "id": "f96e82f6-d101-4e1c-a1c2-11f2a7a7bb6d",
+                    "x": 0.537903,
+                    "y": 0.226506,
+                    "w": 0.054839,
+                    "h": 0.171084,
+                    "image_id": "6d2a63c0-a695-4e09-8a04-dac16e70fe14",
+                    "category_id": "be90a15e-19d0-48dc-8a3d-5a6ad93f25ec"
+                },
+                {
+                    "id": "2ca4d5e3-e3ea-4a7d-badd-2998dce66bb3",
+                    "x": 0.498387,
+                    "y": 0.210843,
+                    "w": 0.041935,
+                    "h": 0.192771,
+                    "image_id": "6d2a63c0-a695-4e09-8a04-dac16e70fe14",
+                    "category_id": "be90a15e-19d0-48dc-8a3d-5a6ad93f25ec"
+                },
+                {
+                    "id": "97c370d9-0d3d-49e3-ace9-cfa68ae0c71d",
+                    "x": 0.429839,
+                    "y": 0.216867,
+                    "w": 0.029839,
+                    "h": 0.185542,
+                    "image_id": "6d2a63c0-a695-4e09-8a04-dac16e70fe14",
+                    "category_id": "be90a15e-19d0-48dc-8a3d-5a6ad93f25ec"
+                },
+                {
+                    "id": "f8a1c355-2929-4b24-871c-e774913f5aec",
+                    "x": 0.470161,
+                    "y": 0.214458,
+                    "w": 0.05,
+                    "h": 0.20241,
+                    "image_id": "6d2a63c0-a695-4e09-8a04-dac16e70fe14",
+                    "category_id": "be90a15e-19d0-48dc-8a3d-5a6ad93f25ec"
+                },
+                {
+                    "id": "a580d36d-772d-4268-9c90-b505c44f3a99",
+                    "x": 0.327419,
+                    "y": 0.20000036144578315,
+                    "w": 0.075,
+                    "h": 0.240964,
+                    "image_id": "6d2a63c0-a695-4e09-8a04-dac16e70fe14",
+                    "category_id": "be90a15e-19d0-48dc-8a3d-5a6ad93f25ec"
+                },
+                {
+                    "id": "8c416e1d-cddf-4ea6-a59f-76cc8c7d1702",
+                    "x": 0.228226,
+                    "y": 0.185542,
+                    "w": 0.03629,
+                    "h": 0.218072,
+                    "image_id": "6d2a63c0-a695-4e09-8a04-dac16e70fe14",
+                    "category_id": "be90a15e-19d0-48dc-8a3d-5a6ad93f25ec"
+                },
+                {
+                    "id": "cd47dfb1-a11c-4ee8-81c5-29cc663800e4",
+                    "x": 0.203226,
+                    "y": 0.198795,
+                    "w": 0.037097,
+                    "h": 0.274699,
+                    "image_id": "6d2a63c0-a695-4e09-8a04-dac16e70fe14",
+                    "category_id": "be90a15e-19d0-48dc-8a3d-5a6ad93f25ec"
+                },
+                {
+                    "id": "75bee038-4e8e-4ff7-8139-22354ec56497",
+                    "x": 0.083871,
+                    "y": 0.219277,
+                    "w": 0.037903,
+                    "h": 0.175904,
+                    "image_id": "6d2a63c0-a695-4e09-8a04-dac16e70fe14",
+                    "category_id": "be90a15e-19d0-48dc-8a3d-5a6ad93f25ec"
+                },
+                {
+                    "id": "d1ddad0d-1e21-4a3c-96be-344ac613a384",
+                    "x": 0.320161,
+                    "y": 0.189157,
+                    "w": 0.050806,
+                    "h": 0.26506,
+                    "image_id": "6d2a63c0-a695-4e09-8a04-dac16e70fe14",
+                    "category_id": "be90a15e-19d0-48dc-8a3d-5a6ad93f25ec"
+                },
+                {
+                    "id": "2c68c4e7-4b4b-4dbd-9f7d-49e0ab785c9f",
+                    "x": 0.187097,
+                    "y": 0.19759,
+                    "w": 0.030645,
+                    "h": 0.144578,
+                    "image_id": "6d2a63c0-a695-4e09-8a04-dac16e70fe14",
+                    "category_id": "be90a15e-19d0-48dc-8a3d-5a6ad93f25ec"
+                }
+            ]
+        },
+        {
+            "id": "6cac9b6b-73ac-4253-b065-61996ab7022c",
+            "dataset_id": "00000000-0000-0000-0000-000000000001",
+            "path": "/public-data/datasets/brain-1.jpeg",
+            "name": "brain-1.jpeg",
+            "size": 36356,
+            "width": 600,
+            "height": 364,
+            "pipeline_id": null,
+            "original_image_id": null,
+            "labels": [
+                {
+                    "id": "75f9ed99-eb27-412e-9e72-33bf1bc75efb",
+                    "x": 0.536585,
+                    "y": 0.451183,
+                    "w": 0.022584,
+                    "h": 0.025148,
+                    "image_id": "6cac9b6b-73ac-4253-b065-61996ab7022c",
+                    "category_id": "673eef6c-2b33-4702-8ece-55c86228f78c"
+                },
+                {
+                    "id": "6abc024c-e54b-433c-82d7-caaf754b23fa",
+                    "x": 0.470641,
+                    "y": 0.377219,
+                    "w": 0.026197,
+                    "h": 0.032544,
+                    "image_id": "6cac9b6b-73ac-4253-b065-61996ab7022c",
+                    "category_id": "673eef6c-2b33-4702-8ece-55c86228f78c"
+                }
+            ]
+        },
+        {
+            "id": "e410ddc6-d61d-457d-a933-388e71d0dc2a",
+            "dataset_id": "00000000-0000-0000-0000-000000000001",
+            "path": "/public-data/datasets/brain-2.jpeg",
+            "name": "brain-2.jpeg",
+            "size": 31546,
+            "width": 350,
+            "height": 350,
+            "pipeline_id": null,
+            "original_image_id": null,
+            "labels": [
+                {
+                    "id": "1a457ab7-7d41-4e5f-8dc0-24b08ddd7d61",
+                    "x": 0.565492,
+                    "y": 0.128713,
+                    "w": 0.030714,
+                    "h": 0.027903,
+                    "image_id": "e410ddc6-d61d-457d-a933-388e71d0dc2a",
+                    "category_id": "673eef6c-2b33-4702-8ece-55c86228f78c"
+                },
+                {
+                    "id": "d53584f1-282b-48c8-92b8-94c3687ccd33",
+                    "x": 0.599819,
+                    "y": 0.429343,
+                    "w": 0.049684,
+                    "h": 0.048605,
+                    "image_id": "e410ddc6-d61d-457d-a933-388e71d0dc2a",
+                    "category_id": "673eef6c-2b33-4702-8ece-55c86228f78c"
+                },
+                {
+                    "id": "ab2386d9-1001-471d-81af-4f4ab4820dfe",
+                    "x": 0.754291,
+                    "y": 0.587759,
+                    "w": 0.051491,
+                    "h": 0.056706,
+                    "image_id": "e410ddc6-d61d-457d-a933-388e71d0dc2a",
+                    "category_id": "673eef6c-2b33-4702-8ece-55c86228f78c"
+                }
+            ]
+        },
+        {
+            "id": "4a812c52-2d4e-4b55-9d3f-bcb8b585cc91",
+            "dataset_id": "00000000-0000-0000-0000-000000000001",
+            "path": "/public-data/datasets/brain-3.jpeg",
+            "name": "brain-3.jpeg",
+            "size": 20343,
+            "width": 256,
+            "height": 192,
+            "pipeline_id": null,
+            "original_image_id": null,
+            "labels": [
+                {
+                    "id": "3b6032d8-9cff-4db6-97f7-95f68bcc98f1",
+                    "x": 0.553749,
+                    "y": 0.155875,
+                    "w": 0.04607,
+                    "h": 0.058753,
+                    "image_id": "4a812c52-2d4e-4b55-9d3f-bcb8b585cc91",
+                    "category_id": "673eef6c-2b33-4702-8ece-55c86228f78c"
+                },
+                {
+                    "id": "1558629f-3aee-4957-ae07-9e5037b4ed0b",
+                    "x": 0.535682,
+                    "y": 0.450839,
+                    "w": 0.053297,
+                    "h": 0.073141,
+                    "image_id": "4a812c52-2d4e-4b55-9d3f-bcb8b585cc91",
+                    "category_id": "673eef6c-2b33-4702-8ece-55c86228f78c"
+                },
+                {
+                    "id": "980561e2-a3a3-46a9-8503-3f58df91d32d",
+                    "x": 0.355917,
+                    "y": 0.420863,
+                    "w": 0.084914,
+                    "h": 0.052758,
+                    "image_id": "4a812c52-2d4e-4b55-9d3f-bcb8b585cc91",
+                    "category_id": "673eef6c-2b33-4702-8ece-55c86228f78c"
+                }
+            ]
+        },
+        {
+            "id": "0bfe5684-5785-4166-9c06-3d1580077f94",
+            "dataset_id": "00000000-0000-0000-0000-000000000001",
+            "path": "/public-data/datasets/brain-4.jpeg",
+            "name": "brain-4.jpeg",
+            "size": 85777,
+            "width": 704,
+            "height": 704,
+            "pipeline_id": null,
+            "original_image_id": null,
+            "labels": [
+                {
+                    "id": "5e20cc88-6698-42f5-ad10-7314935bc173",
+                    "x": 0.750678,
+                    "y": 0.180018,
+                    "w": 0.077687,
+                    "h": 0.036904,
+                    "image_id": "0bfe5684-5785-4166-9c06-3d1580077f94",
+                    "category_id": "673eef6c-2b33-4702-8ece-55c86228f78c"
+                },
+                {
+                    "id": "01078b3b-709e-4879-a9a3-e28a354f757b",
+                    "x": 0.816621,
+                    "y": 0.349235,
+                    "w": 0.036134,
+                    "h": 0.082808,
+                    "image_id": "0bfe5684-5785-4166-9c06-3d1580077f94",
+                    "category_id": "673eef6c-2b33-4702-8ece-55c86228f78c"
+                },
+                {
+                    "id": "e6526470-88f8-48b7-8963-ba763363792e",
+                    "x": 0.560072,
+                    "y": 0.346535,
+                    "w": 0.112014,
+                    "h": 0.055806,
+                    "image_id": "0bfe5684-5785-4166-9c06-3d1580077f94",
+                    "category_id": "673eef6c-2b33-4702-8ece-55c86228f78c"
+                }
+            ]
+        },
+        {
+            "id": "becfcbb8-a1ca-466b-93e6-2fc4b02b91e3",
+            "dataset_id": "00000000-0000-0000-0000-000000000002",
+            "path": "/public-data/datasets/bullets-1.jpeg",
+            "name": "bullets-1.jpeg",
+            "size": 84027,
+            "width": 612,
+            "height": 408,
+            "original_image_id": null,
+            "labels": [
+                {
+                    "id": "bb38ea8a-b438-44d2-8f8c-aba583c5fd91",
+                    "x": 0.14838754838709675,
+                    "y": 0.274368,
+                    "w": 0.13225809677419353,
+                    "h": 0.19013226113116727,
+                    "image_id": "becfcbb8-a1ca-466b-93e6-2fc4b02b91e3",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "e889febd-fdf1-4879-ae07-2bfa842c71e0",
+                    "x": 0.5879027419354839,
+                    "y": 0.086643,
+                    "w": 0.13871,
+                    "h": 0.229844,
+                    "image_id": "becfcbb8-a1ca-466b-93e6-2fc4b02b91e3",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "64a991f6-2f3d-475e-bb75-82e81ce29be3",
+                    "x": 0.649194,
+                    "y": 0.694344,
+                    "w": 0.18871,
+                    "h": 0.184116,
+                    "image_id": "becfcbb8-a1ca-466b-93e6-2fc4b02b91e3",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                }
+            ]
+        },
+        {
+            "id": "c82e9722-f478-4108-9466-ec27a687f872",
+            "dataset_id": "00000000-0000-0000-0000-000000000002",
+            "path": "/public-data/datasets/bullets-2.jpeg",
+            "name": "bullets-2.jpeg",
+            "size": 77258,
+            "width": 600,
+            "height": 338,
+            "pipeline_id": null,
+            "original_image_id": null,
+            "labels": [
+                {
+                    "id": "1516b3b5-904d-44d7-a7f7-65cad0215d3a",
+                    "x": 0.149051,
+                    "y": 0.522293,
+                    "w": 0.052394,
+                    "h": 0.08758,
+                    "image_id": "c82e9722-f478-4108-9466-ec27a687f872",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "06868321-dc98-43a0-84d8-20f92e2a045a",
+                    "x": 0.676603315266486,
+                    "y": 0.14331192993630573,
+                    "w": 0.065041,
+                    "h": 0.106688,
+                    "image_id": "c82e9722-f478-4108-9466-ec27a687f872",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "6414d222-bd94-46e2-a63b-d01dfa1aaa6a",
+                    "x": 0.611563,
+                    "y": 0.234076,
+                    "w": 0.077687,
+                    "h": 0.128981,
+                    "image_id": "c82e9722-f478-4108-9466-ec27a687f872",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "b539167c-e2e8-490a-b493-5c5bc8d09297",
+                    "x": 0.172538342366757,
+                    "y": 0.5828025732484076,
+                    "w": 0.080397630532972,
+                    "h": 0.13535035668789808,
+                    "image_id": "c82e9722-f478-4108-9466-ec27a687f872",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "eb9c5782-8706-4929-b2c5-8fa76729f150",
+                    "x": 0.781391315266486,
+                    "y": 0.14012764331210192,
+                    "w": 0.081301,
+                    "h": 0.13535,
+                    "image_id": "c82e9722-f478-4108-9466-ec27a687f872",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "405da1db-6453-40bb-a0d7-4598efab026a",
+                    "x": 0.866305,
+                    "y": 0.04777028662420382,
+                    "w": 0.085818,
+                    "h": 0.183121,
+                    "image_id": "c82e9722-f478-4108-9466-ec27a687f872",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "529d62ac-dc53-4900-97fb-cc58a05bd554",
+                    "x": 0.448058,
+                    "y": 0.4156052866242038,
+                    "w": 0.098464,
+                    "h": 0.178344,
+                    "image_id": "c82e9722-f478-4108-9466-ec27a687f872",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                }
+            ]
+        },
+        {
+            "id": "2e9487a2-3b4f-4cb8-963b-303e1db67177",
+            "dataset_id": "00000000-0000-0000-0000-000000000002",
+            "path": "/public-data/datasets/bullets-3.jpeg",
+            "name": "bullets-3.jpeg",
+            "size": 172800,
+            "width": 600,
+            "height": 400,
+            "pipeline_id": null,
+            "original_image_id": null,
+            "labels": [
+                {
+                    "id": "0c1c690a-1ef3-471b-a752-a8d1335a9be7",
+                    "x": 0.831978711833785,
+                    "y": 0.32345054447439353,
+                    "w": 0.04878026106594399,
+                    "h": 0.07142832884097036,
+                    "image_id": "2e9487a2-3b4f-4cb8-963b-303e1db67177",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "155cf005-5edb-4d35-85ef-097756e1fe4d",
+                    "x": 0.915989054200542,
+                    "y": 0.10242612668463612,
+                    "w": 0.04878060343270099,
+                    "h": 0.07277645552560646,
+                    "image_id": "2e9487a2-3b4f-4cb8-963b-303e1db67177",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "3bb43e7a-ac7d-4bac-a2e4-1b81b434333c",
+                    "x": 0.737127,
+                    "y": 0.429919,
+                    "w": 0.046070684733514,
+                    "h": 0.07816716442048517,
+                    "image_id": "2e9487a2-3b4f-4cb8-963b-303e1db67177",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "114d1bf4-f273-4bd6-9f33-abd142bfd4b6",
+                    "x": 0.41011702710027104,
+                    "y": 0.6361184177897573,
+                    "w": 0.05239394579945799,
+                    "h": 0.07816745552560646,
+                    "image_id": "2e9487a2-3b4f-4cb8-963b-303e1db67177",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "03bf8bd6-8aa0-4e38-97d3-4599a0a0e689",
+                    "x": 0.700090342366757,
+                    "y": 0.385445,
+                    "w": 0.052393972899729,
+                    "h": 0.08220987331536388,
+                    "image_id": "2e9487a2-3b4f-4cb8-963b-303e1db67177",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "282b1792-e68a-4c71-b5eb-0d81a4c48097",
+                    "x": 0.145438,
+                    "y": 0.622642,
+                    "w": 0.056911,
+                    "h": 0.091644,
+                    "image_id": "2e9487a2-3b4f-4cb8-963b-303e1db67177",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "c86c3e80-7087-4b30-9cae-b011d231fe53",
+                    "x": 0.5582653423667571,
+                    "y": 0.38274883557951483,
+                    "w": 0.060523603432700995,
+                    "h": 0.08894916442048517,
+                    "image_id": "2e9487a2-3b4f-4cb8-963b-303e1db67177",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "1a0f9ff6-e2ee-4a19-ba06-b93088a8cdf1",
+                    "x": 0.43541068473351396,
+                    "y": 0.443396,
+                    "w": 0.059621,
+                    "h": 0.092992,
+                    "image_id": "2e9487a2-3b4f-4cb8-963b-303e1db67177",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "ad649d91-aa51-483a-9db2-8eced8888a19",
+                    "x": 0.339657,
+                    "y": 0.673854,
+                    "w": 0.064137,
+                    "h": 0.102426,
+                    "image_id": "2e9487a2-3b4f-4cb8-963b-303e1db67177",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "98a39321-a4c6-4d2d-a6f3-18f889be8fbc",
+                    "x": 0.08672065763324299,
+                    "y": 0.770889,
+                    "w": 0.065041,
+                    "h": 0.101078,
+                    "image_id": "2e9487a2-3b4f-4cb8-963b-303e1db67177",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                }
+            ]
+        },
+        {
+            "id": "f8acaba0-9e65-49f0-9f07-40af8b4fe1b7",
+            "dataset_id": "00000000-0000-0000-0000-000000000002",
+            "path": "/public-data/datasets/bullets-4.jpeg",
+            "name": "bullets-4.jpeg",
+            "size": 50238,
+            "width": 600,
+            "height": 400,
+            "pipeline_id": null,
+            "original_image_id": null,
+            "labels": [
+                {
+                    "id": "9bbfe9e5-e7e0-4ceb-8a8b-098bcb5ce70a",
+                    "x": 0.861788684733514,
+                    "y": 0.15633383557951483,
+                    "w": 0.08401128816621499,
+                    "h": 0.10646916442048518,
+                    "image_id": "f8acaba0-9e65-49f0-9f07-40af8b4fe1b7",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "e3d5a2b2-3e8d-44b0-a1c9-8122d8659b24",
+                    "x": 0.186991945799458,
+                    "y": 0.0795147088948787,
+                    "w": 0.222222,
+                    "h": 0.297844,
+                    "image_id": "f8acaba0-9e65-49f0-9f07-40af8b4fe1b7",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                },
+                {
+                    "id": "e813c0f3-16ca-472a-b5b8-74aa1cdf42e4",
+                    "x": 0.563686,
+                    "y": 0.590296,
+                    "w": 0.238482,
+                    "h": 0.30593,
+                    "image_id": "f8acaba0-9e65-49f0-9f07-40af8b4fe1b7",
+                    "category_id": "dcec7454-ef99-47d0-ad8a-b43ff6b0f808"
+                }
+            ]
+        }
+    ]
+}
